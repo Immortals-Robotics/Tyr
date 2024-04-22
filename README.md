@@ -1,1 +1,1 @@
-# Odin god of gods
+# Loki, God of mischief
