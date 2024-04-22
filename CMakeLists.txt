@@ -13,3 +13,4 @@ project(loki)
 
 add_subdirectory(source/protos)
 add_subdirectory(source/common)
+add_subdirectory(source/gui)

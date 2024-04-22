@@ -1,7 +1,6 @@
 project(${CMAKE_PROJECT_NAME}-common)
 
 find_package(asio CONFIG REQUIRED)
-find_package(Protobuf CONFIG REQUIRED)
 find_package(quill CONFIG REQUIRED)
 
 find_package(PkgConfig REQUIRED)
@@ -33,9 +32,8 @@ target_include_directories(${PROJECT_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FILES})
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PUBLIC
 	${CMAKE_PROJECT_NAME}-protos
-    protobuf::libprotobuf
     asio::asio
     PkgConfig::tomlplusplus
     quill::quill)
