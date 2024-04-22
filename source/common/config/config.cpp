@@ -1,6 +1,6 @@
 #include "config.h"
 
-namespace Immortals
+namespace Loki::Common
 {
 ConfigReader::ConfigReader(const std::string_view t_file_path)
 {
@@ -17,4 +17,4 @@ void ConfigReader::load()
 
     m_table = std::move(config).table();
 }
-} // namespace Immortals
+} // namespace Loki::Common

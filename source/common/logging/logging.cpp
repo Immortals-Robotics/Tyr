@@ -6,7 +6,7 @@
 
 #include <quill/Quill.h>
 
-namespace Immortals
+namespace Loki::Common
 {
 // Filter class for our file handler
 class LogFilter final : public quill::FilterBase
@@ -100,4 +100,4 @@ std::filesystem::path Logger::getNewLogFilePath() const
     std::filesystem::path log_file(new_log_file_path);
     return log_file;
 }
-} // namespace Immortals
+} // namespace Loki::Common

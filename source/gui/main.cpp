@@ -7,7 +7,7 @@ Protos::RoboCup2014Legacy::Geometry::SSL_GeometryFieldSize* ssl_field;
 Protos::SSL_WrapperPacket* ssl_packet;
 Protos::SSL_WrapperPacket* ssl_packet_off;
 FieldRenderer* field_renderer;
-Immortals::UdpClient* sslClient;
+Loki::Common::UdpClient* sslClient;
 Protos::Immortals::Debug_Draw* world_state;
 Protos::Immortals::Debug_Draw* world_state_off;
 
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
 	robot->set_y(2460);
 	robot->set_confidence(0.95);
 
-	sslClient = new Immortals::UdpClient({"224.5.23.2", 10006});
+	sslClient = new Loki::Common::UdpClient({"224.5.23.2", 10006});
 
 	std::atomic<bool> running(true);
 

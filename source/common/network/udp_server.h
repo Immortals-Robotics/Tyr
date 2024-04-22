@@ -2,7 +2,7 @@
 
 #include "../setting.h"
 
-namespace Immortals
+namespace Loki::Common
 {
 class UdpServer
 {
@@ -33,4 +33,4 @@ private:
 
     std::array<char, Setting::kMaxUdpPacketSize> m_buffer = {};
 };
-} // namespace Immortals
+} // namespace Loki::Common

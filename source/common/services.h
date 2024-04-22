@@ -3,7 +3,7 @@
 #include "logging/logging.h"
 #include "timer/timer.h"
 
-namespace Immortals
+namespace Loki::Common
 {
 struct Services
 {
@@ -51,4 +51,4 @@ static Timer &global_timer()
 {
     return Services::global_timer();
 }
-} // namespace Immortals
+} // namespace Loki::Common

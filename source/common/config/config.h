@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <toml++/toml.h>
 
-namespace Immortals
+namespace Loki::Common
 {
 class ConfigReader
 {
@@ -31,4 +31,4 @@ protected:
 public:
     virtual void load(toml::node_view<const toml::node> t_node) = 0;
 };
-} // namespace Immortals::Soccer
+} // namespace Loki::Common

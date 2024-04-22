@@ -14,7 +14,7 @@
 
 #pragma once
 
-namespace Immortals
+namespace Loki::Common
 {
 class Timer
 {
@@ -26,4 +26,4 @@ public:
     double time();
     double interval();
 };
-} // namespace Immortals::Common
+} // namespace Loki::Common

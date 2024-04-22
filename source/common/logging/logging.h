@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace Immortals
+namespace Loki::Common
 {
 class Logger
 {
@@ -14,4 +14,4 @@ protected:
 private:
     std::filesystem::path getNewLogFilePath() const;
 };
-} // namespace Immortals
+} // namespace Loki::Common
