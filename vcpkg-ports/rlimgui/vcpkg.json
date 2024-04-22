@@ -1,0 +1,17 @@
+{
+	"name": "rlimgui",
+	"version-string": "1.0.0",
+	"description": "A Raylib integration with DearImGui",
+	"dependencies": [
+		"imgui",
+		"raylib",
+		{
+			"name": "vcpkg-cmake",
+			"host": true
+		},
+		{
+			"name": "vcpkg-cmake-config",
+			"host": true
+		}
+	]
+}

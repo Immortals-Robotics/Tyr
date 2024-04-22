@@ -1,0 +1,44 @@
+/*========================================================================
+ timer.h : Simple C++ wrapper for making interval timers
+ ------------------------------------------------------------------------
+ Copyright (C) 1999-2002  James R. Bruce
+ School of Computer Science, Carnegie Mellon University
+ ------------------------------------------------------------------------
+ This software is distributed under the GNU General Public License,
+ version 2.  If you do not have a copy of this licence, visit
+ www.gnu.org, or write: Free Software Foundation, 59 Temple Place,
+ Suite 330 Boston, MA 02111-1307 USA.  This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY,
+ including MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ ========================================================================*/
+
+#include "timer.h"
+
+namespace Immortals
+{
+void Timer::start()
+{
+    tv1 = std::chrono::high_resolution_clock::now();
+}
+
+void Timer::end()
+{
+    tv2 = std::chrono::high_resolution_clock::now();
+}
+
+double Timer::time()
+{
+    end();
+    const auto time_span = std::chrono::duration_cast<std::chrono::duration<double>>(tv2 - tv1);
+    return time_span.count();
+}
+
+double Timer::interval()
+{
+    double t;
+    //	tv2 = high_resolution_clock::now();
+    t   = time();
+    tv1 = tv2;
+    return (t);
+}
+} // namespace Immortals::Common

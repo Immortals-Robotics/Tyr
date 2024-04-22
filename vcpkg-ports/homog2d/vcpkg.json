@@ -1,0 +1,16 @@
+{
+  "name": "homog2d",
+  "version": "2.11.0",
+  "description": "C++ 2D geometry library, handles points, lines, polylines, planar transformations (and other primitives), using homogeneous coordinates. Provided with complete manual and samples.",
+  "homepage": "https://github.com/skramm/homog2d",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
