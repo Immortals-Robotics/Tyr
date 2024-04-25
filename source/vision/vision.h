@@ -4,25 +4,18 @@
 //  vision.h
 //
 //  This file contains all the functions necessary for processing
-//  raw vision data 
+//  raw vision data
 //
 ////////////////////////////////////////////////////////////////////
 
-#include <iostream>
-
 #include "kalman/filtered_object.h"
 
-#include "../WorldState.h"
-#include "../../Common/GameSetting.h"
-#include "../../Common/poly_find.h"
-#include <deque>
-
 #ifndef INT_MAX
-#define INT_MAX       2147483647    /* maximum (signed) int value */
+#define INT_MAX 2147483647 /* maximum (signed) int value */
 #endif
 
 #ifndef POWED_DIS
-#define POWED_DIS(a,b,c,d) (((a-c)*(a-c))+((b-d)*(b-d)))
+#define POWED_DIS(a, b, c, d) (((a - c) * (a - c)) + ((b - d) * (b - d)))
 #endif
 
 #define PREDICT_STEPS 7.0f
@@ -37,80 +30,70 @@
 
 #define BALL_BUFFER_FRAMES 30
 
-
-/**
-Class VisionModule : Captures the vision packet from the network, and sends it to the rest
-of the AI class.
-@author Ali Salehi ( Rewritten from original 2009 source code )
-@version 0.1
-June 2010
-Changes include : 
-**/
-
+namespace Loki::Vision
+{
 class VisionModule
 {
 public:
-
-    VisionModule(GameSetting* settings,WorldState* State);
+    VisionModule(Common::WorldState *State);
     ~VisionModule();
 
+    bool recievePacket(void);
+    bool connectToVisionServer(void);
+    void recieveAllCameras(void);
+    void ProcessVision(void);
+    bool isConnected(void);
 
-    bool recievePacket ( void );
-    bool connectToVisionServer ( void );
-    void recieveAllCameras( void );
-    void ProcessVision ( void );
-    bool isConnected ( void );
+    void ProcessRobots(Common::WorldState *);
+    int  ExtractBlueRobots(void);
+    int  ExtractYellowRobots(void);
+    int  MergeRobots(int num);
+    void FilterRobots(int num, bool own);
+    void predictRobotsForward(Common::WorldState *);
+    void SendStates(Common::WorldState *);
 
-    void ProcessRobots ( WorldState * );
-    int ExtractBlueRobots ( void );
-    int ExtractYellowRobots ( void );
-    int MergeRobots ( int num );
-    void FilterRobots ( int num , bool own );
-    void predictRobotsForward( WorldState * );
-    void SendStates ( WorldState * );
+    void ProcessBalls(Common::WorldState *);
+    int  ExtractBalls(void);
+    int  MergeBalls(int num);
+    void FilterBalls(int num, Common::WorldState *);
+    void predictBallForward(Common::WorldState *);
+    void calculateBallHeight(void);
 
-    void ProcessBalls ( WorldState * );
-    int ExtractBalls ( void );
-    int MergeBalls ( int num );
-    void FilterBalls ( int num , WorldState * );
-    void predictBallForward( WorldState * );
-    void calculateBallHeight ( void );
-
-	void ProcessParam ( WorldState * );
+    void ProcessParam(Common::WorldState *);
 
 private:
-	bool our_color;
-	bool our_side;
+    bool our_color;
+    bool our_side;
 
-    std::unique_ptr<UdpClient> m_visionUDP;
-    std::unique_ptr<UdpClient> m_GUIUDP;
+    std::unique_ptr<Common::UdpClient> m_visionUDP;
+    std::unique_ptr<Common::UdpClient> m_GUIUDP;
 
-	WorldState* playState;
+    Common::WorldState *playState;
 
-	bool packet_recieved[Setting::kCamCount];
+    bool   packet_recieved[Common::Setting::kCamCount];
     float2 ball_pos_buff[BALL_BUFFER_FRAMES];
 
-//    int ballBufferIndex;
-//    float ballBufferX[BALL_BUFFER_FRAMES];
-//    float ballBufferY[BALL_BUFFER_FRAMES];
+    //    int ballBufferIndex;
+    //    float ballBufferX[BALL_BUFFER_FRAMES];
+    //    float ballBufferY[BALL_BUFFER_FRAMES];
 
-    SSL_DetectionBall lastRawBall;//The last position of the locked ball
-    FilteredObject ball_kalman;
-    int ball_not_seen = MAX_BALL_NOT_SEEN + 1;
+    Protos::SSL_DetectionBall lastRawBall; // The last position of the locked ball
+    FilteredObject            ball_kalman;
+    int                       ball_not_seen = MAX_BALL_NOT_SEEN + 1;
 
-    RobotState robotState[2][Setting::kMaxRobots];
-    FilteredObject robot_kalman[2][Setting::kMaxRobots];
-    int robot_not_seen[2][Setting::kMaxRobots];
+    Common::RobotState robotState[2][Common::Setting::kMaxRobots];
+    FilteredObject     robot_kalman[2][Common::Setting::kMaxRobots];
+    int                robot_not_seen[2][Common::Setting::kMaxRobots];
 
-    MedianFilter<float> AngleFilter[2][Setting::kMaxRobots];
-    float rawAngles[2][Setting::kMaxRobots];
+    Common::MedianFilter<float> AngleFilter[2][Common::Setting::kMaxRobots];
+    float                       rawAngles[2][Common::Setting::kMaxRobots];
 
-    SSL_WrapperPacket packet;
-    SSL_DetectionFrame frame[Setting::kCamCount];
-    SSL_DetectionBall d_ball[MAX_BALLS*Setting::kCamCount];
-    SSL_DetectionRobot robot[Setting::kMaxRobots*Setting::kCamCount];
+    Protos::SSL_WrapperPacket  packet;
+    Protos::SSL_DetectionFrame frame[Common::Setting::kCamCount];
+    Protos::SSL_DetectionBall  d_ball[MAX_BALLS * Common::Setting::kCamCount];
+    Protos::SSL_DetectionRobot robot[Common::Setting::kMaxRobots * Common::Setting::kCamCount];
 
-//	double t_capture_buff[MAX_BALLS*Setting::kCamCount];
-//    deque<TVec2> ball_dir_buff;
+    //	double t_capture_buff[MAX_BALLS*Setting::kCamCount];
+    //    deque<TVec2> ball_dir_buff;
 };
-
+} // namespace Loki::Vision

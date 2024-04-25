@@ -8,22 +8,21 @@
  * WRITTEN BY: Brett Browning
  */
 /* LICENSE:  =========================================================================
-	RoboCup F180 Referee Box Source Code Release
+    RoboCup F180 Referee Box Source Code Release
   -------------------------------------------------------------------------
-	Copyright (C) 2003 RoboCup Federation
+    Copyright (C) 2003 RoboCup Federation
   -------------------------------------------------------------------------
-	This software is distributed under the GNU General Public License,
-	version 2.  If you do not have a copy of this licence, visit
-	www.gnu.org, or write: Free Software Foundation, 59 Temple Place,
-	Suite 330 Boston, MA 02111-1307 USA.  This program is distributed
-	in the hope that it will be useful, but WITHOUT ANY WARRANTY,
-	including MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    This software is distributed under the GNU General Public License,
+    version 2.  If you do not have a copy of this licence, visit
+    www.gnu.org, or write: Free Software Foundation, 59 Temple Place,
+    Suite 330 Boston, MA 02111-1307 USA.  This program is distributed
+    in the hope that it will be useful, but WITHOUT ANY WARRANTY,
+    including MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   -------------------------------------------------------------------------
 
  */
 
-#ifndef __COMMANDS_H__
-#define __COMMANDS_H__
+#pragma once
 
 // play commands
 #define COMM_HALT Protos::SSL_Referee_Command_HALT
@@ -81,5 +80,3 @@
 
 // acceptable referee commands
 #define COMM_CMD_STRING "iIfFpPkKnrRyYdDgGcztTaoO2h1 HsS"
-
-#endif /* __COMMANDS_H__ */
