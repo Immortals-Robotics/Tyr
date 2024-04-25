@@ -1,14 +1,15 @@
 {
-	"version": 4,
+	"version": 6,
 	"cmakeMinimumRequired": {
 		"major": 3,
-		"minor": 23,
+		"minor": 25,
 		"patch": 0
 	},
 	"configurePresets": [
 		{
 			"name": "base",
 			"hidden": true,
+			"toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
 			"binaryDir": "${sourceDir}/out/build/${presetName}",
 			"installDir": "${sourceDir}/out/install/${presetName}"
 		},
@@ -88,22 +89,29 @@
 			"toolset": "ClangCL"
 		},
 		{
-			"name": "windows-debug",
+			"name": "windows-ninja-base",
 			"inherits": "windows-base",
+			"hidden": true,
 			"generator": "Ninja",
 			"architecture": {
 				"value": "x64",
 				"strategy": "external"
 			},
 			"cacheVariables": {
-				"CMAKE_BUILD_TYPE": "Debug",
 				"CMAKE_C_COMPILER": "cl.exe",
 				"CMAKE_CXX_COMPILER": "cl.exe"
 			}
 		},
 		{
+			"name": "windows-debug",
+			"inherits": "windows-ninja-base",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
 			"name": "windows-release",
-			"inherits": "windows-debug",
+			"inherits": "windows-ninja-base",
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": "Release"
 			}
@@ -135,26 +143,14 @@
 			"configurePreset": "windows-release"
 		}
 	],
-	"testPresets": [
-		{
-			"name": "linux-debug",
-			"configurePreset": "linux-debug"
-		},
+	"packagePresets": [
 		{
 			"name": "linux-release",
 			"configurePreset": "linux-release"
 		},
 		{
-			"name": "macos-debug",
-			"configurePreset": "macos-debug"
-		},
-		{
 			"name": "macos-release",
 			"configurePreset": "macos-release"
-		},
-		{
-			"name": "windows-debug",
-			"configurePreset": "windows-debug"
 		},
 		{
 			"name": "windows-release",

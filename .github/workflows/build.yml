@@ -1,0 +1,86 @@
+name: Build
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lukka/get-cmake@latest
+      - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: 215a2535590f1f63788ac9bd2ed58ad15e6afdff
+      - name: Run CMake and run vcpkg to build packages
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: "linux-release"
+          buildPreset: "linux-release"
+          packagePreset: "linux-release"
+      - name: Release
+        uses: softprops/action-gh-release@v0.1.15
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          draft: true
+          files: "out/build/linux-release/dist/*"
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install system packages
+        uses: ConorMacBride/install-package@v1
+        with:
+          brew: pkg-config
+      - uses: lukka/get-cmake@latest
+      - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: 215a2535590f1f63788ac9bd2ed58ad15e6afdff
+      - name: Run CMake and run vcpkg to build packages
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: "macos-release"
+          buildPreset: "macos-release"
+          packagePreset: "macos-release"
+      - name: Release
+        uses: softprops/action-gh-release@v0.1.15
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          draft: true
+          files: "out/build/macos-release/dist/*"
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lukka/get-cmake@latest
+      - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: 215a2535590f1f63788ac9bd2ed58ad15e6afdff
+      - name: Run CMake and run vcpkg to build packages
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: "windows-release"
+          buildPreset: "windows-release"
+          packagePreset: "windows-release"
+      - name: Release
+        uses: softprops/action-gh-release@v0.1.15
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          draft: true
+          files: "out/build/windows-release/dist/*"
+          fail_on_unmatched_files: true
+          generate_release_notes: true
