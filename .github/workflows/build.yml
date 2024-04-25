@@ -15,6 +15,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+      - name: Install system packages
+        uses: ConorMacBride/install-package@v1
+        with:
+          apt: xinerama xcursor xorg libglu1-mesa pkg-config libxrandr
       - uses: lukka/get-cmake@latest
       - name: Install dependencies # saves / restores cache to avoid rebuilding dependencies
         uses: lukka/run-vcpkg@v11
