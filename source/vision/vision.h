@@ -71,7 +71,7 @@ private:
     Common::WorldState *playState;
 
     bool   packet_recieved[Common::Setting::kCamCount];
-    float2 ball_pos_buff[BALL_BUFFER_FRAMES];
+    Common::vec2 ball_pos_buff[BALL_BUFFER_FRAMES];
 
     //    int ballBufferIndex;
     //    float ballBufferX[BALL_BUFFER_FRAMES];

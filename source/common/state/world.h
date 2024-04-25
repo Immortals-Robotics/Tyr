@@ -6,6 +6,8 @@
 #define RIGHT_SIDE true
 #define LEFT_SIDE false
 
+#include "../math/vector.h"
+
 namespace Loki::Common
 {
 enum SeenState
@@ -28,7 +30,7 @@ struct RobotState
 {
     int vision_id;
 
-    float2   Position;
+    vec2     Position;
     Velocity velocity;
 
     float Angle = 0.0f;
@@ -47,13 +49,13 @@ struct RobotState
 
 struct BallState
 {
-    float2   Position;
+    vec2     Position;
     Velocity velocity;
 
     SeenState seenState;
 
-    float2 First_Pos_when_shooted;
-    float2 path_dir;
+    vec2   First_Pos_when_shooted;
+    vec2   path_dir;
     double t_capture;
 
     friend std::ostream &operator<<(std::ostream &oo, const BallState &state)
@@ -74,14 +76,14 @@ struct WorldState
     RobotState OwnRobot[Setting::kMaxRobots];
     RobotState OppRobot[Setting::kMaxRobots];
 
-    float3 lastCMDS[Setting::kMaxRobots][11];
+    vec3 lastCMDS[Setting::kMaxRobots][11];
 
     double t_capture       = -1;
     double delta_t_capture = -1;
 
     WorldState()
     {
-        ball.Position           = float2(0.0f);
+        ball.Position           = vec2(0.0f);
         ball.velocity.x         = 0.0f;
         ball.velocity.y         = 0.0f;
         ball.velocity.direction = 0.0f;
@@ -95,7 +97,7 @@ struct WorldState
         {
             OwnRobot[i].Angle              = 0.0f;
             OwnRobot[i].AngularVelocity    = 0.0f;
-            OwnRobot[i].Position           = float2(0.0f);
+            OwnRobot[i].Position           = vec2(0.0f);
             OwnRobot[i].seenState          = CompletelyOut;
             OwnRobot[i].OutForSubsitute    = true;
             OwnRobot[i].velocity.direction = 0.0f;
@@ -105,7 +107,7 @@ struct WorldState
             OwnRobot[i].vision_id          = i;
             for (int j = 0; j < 11; j++)
             {
-                lastCMDS[i][j] = float3(0.0f);
+                lastCMDS[i][j] = vec3(0.0f);
             }
         }
         oppRobots_num = 0;
@@ -113,7 +115,7 @@ struct WorldState
         { // TODO not in the last code...
             OppRobot[i].Angle              = 0.0f;
             OppRobot[i].AngularVelocity    = 0.0f;
-            OppRobot[i].Position           = float2(0.0f);
+            OppRobot[i].Position           = vec2(0.0f);
             OppRobot[i].seenState          = CompletelyOut;
             OppRobot[i].OutForSubsitute    = true;
             OppRobot[i].velocity.direction = 0.0f;

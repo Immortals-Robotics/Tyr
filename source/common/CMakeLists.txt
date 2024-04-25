@@ -15,6 +15,7 @@ set(HEADER_FILES
     config/config.h
     logging/logging.h
     math/median_filter.h
+    math/vector.h
     network/udp_client.h
     network/udp_server.h
     state/game_commands.h

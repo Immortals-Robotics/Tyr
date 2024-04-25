@@ -9,7 +9,7 @@ struct RefereeState
     unsigned short goals_blue;
     unsigned short goals_yellow;
     unsigned char  counter;
-    float2         placeBallTargetPosition;
+    vec2           placeBallTargetPosition;
     int            oppGK;
 
     RefereeState()
@@ -19,7 +19,7 @@ struct RefereeState
         goals_blue              = 0;
         goals_yellow            = 0;
         counter                 = 0;
-        placeBallTargetPosition = float2(0.0f);
+        placeBallTargetPosition = vec2(0.0f);
     }
 };
 } // namespace Loki::Common

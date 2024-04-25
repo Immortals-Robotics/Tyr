@@ -25,31 +25,31 @@ namespace Loki::Common
 class GameState
 {
 public:
-    static const int GAME_ON  = (1 << 0);
-    static const int GAME_OFF = (1 << 1);
-    static const int HALTED   = (1 << 2);
+    static const int STATE_GAME_ON  = (1 << 0);
+    static const int STATE_GAME_OFF = (1 << 1);
+    static const int STATE_HALTED   = (1 << 2);
 
-    static const int KICKOFF  = (1 << 3);
-    static const int PENALTY  = (1 << 4);
-    static const int DIRECT   = (1 << 5);
-    static const int INDIRECT = (1 << 6);
-    static const int RESTART  = (KICKOFF | PENALTY | DIRECT | INDIRECT);
+    static const int STATE_KICKOFF  = (1 << 3);
+    static const int STATE_PENALTY  = (1 << 4);
+    static const int STATE_DIRECT   = (1 << 5);
+    static const int STATE_INDIRECT = (1 << 6);
+    static const int STATE_RESTART  = (STATE_KICKOFF | STATE_PENALTY | STATE_DIRECT | STATE_INDIRECT);
 
-    static const int BLUE   = (1 << 8);
-    static const int YELLOW = (1 << 9);
+    static const int STATE_BLUE   = (1 << 8);
+    static const int STATE_YELLOW = (1 << 9);
 
-    static const int READY    = (1 << 10);
-    static const int NOTREADY = (1 << 11);
+    static const int STATE_READY    = (1 << 10);
+    static const int STATE_NOTREADY = (1 << 11);
 
-    static const int PLACE_BALL = (1 << 12);
+    static const int STATE_PLACE_BALL = (1 << 12);
 
     int state;
 
     // The set of possible states are:
     //
-    // { GAME_ON, GAME_OFF, HALTED, NEUTRAL,
-    //   { { KICKOFF, PENALTY, DIRECT, INDIRECT } |
-    //     { BLUE, YELLOW } | { READY, NOTREADY } } }
+    // { STATE_GAME_ON, STATE_GAME_OFF, STATE_HALTED, NEUTRAL,
+    //   { { STATE_KICKOFF, STATE_PENALTY, STATE_DIRECT, STATE_INDIRECT } |
+    //     { STATE_BLUE, STATE_YELLOW } | { STATE_READY, STATE_NOTREADY } } }
     //
 
     int color;
@@ -57,13 +57,13 @@ public:
 public:
     GameState()
     {
-        color = BLUE;
-        state = GAME_OFF;
+        color = STATE_BLUE;
+        state = STATE_GAME_OFF;
     }
 
     void init(int _color)
     {
-        color = (_color == TEAM_BLUE) ? BLUE : YELLOW;
+        color = (_color == TEAM_BLUE) ? STATE_BLUE : STATE_YELLOW;
     }
 
     int get()
@@ -82,76 +82,76 @@ public:
         if (ref_command == COMM_HALT)
         {
             // std::cout<<"COMM_HALT"<<std::endl;
-            state = HALTED;
+            state = STATE_HALTED;
             return;
         }
 
         if (ref_command == COMM_STOP)
         {
             // std::cout<<"COMM_STOP"<<std::endl;
-            state = GAME_OFF;
+            state = STATE_GAME_OFF;
             return;
         }
 
         if (ref_command == COMM_FORCE_START)
         {
             // std::cout<<"We can touch the ball now"<<std::endl;
-            state = GAME_ON;
+            state = STATE_GAME_ON;
             return;
         }
 
-        if (ref_command == COMM_NORMAL_START && state & NOTREADY)
+        if (ref_command == COMM_NORMAL_START && state & STATE_NOTREADY)
         {
             // std::cout<<"We can do the action (penalty or indirect)"<<std::endl;
-            state &= ~NOTREADY;
-            state |= READY;
+            state &= ~STATE_NOTREADY;
+            state |= STATE_READY;
             return;
         }
 
-        if (state & READY && ball_kicked)
+        if (state & STATE_READY && ball_kicked)
         {
             // std::cout<<"Back to normal"<<std::endl;
-            state = GAME_ON;
+            state = STATE_GAME_ON;
             return;
         }
 
-        if (state == GAME_OFF)
+        if (state == STATE_GAME_OFF)
         {
             switch (ref_command)
             {
             case COMM_KICKOFF_BLUE:
-                state = KICKOFF | BLUE | NOTREADY;
+                state = STATE_KICKOFF | STATE_BLUE | STATE_NOTREADY;
                 return;
             case COMM_KICKOFF_YELLOW:
-                state = KICKOFF | YELLOW | NOTREADY;
+                state = STATE_KICKOFF | STATE_YELLOW | STATE_NOTREADY;
                 return;
 
             case COMM_PENALTY_BLUE:
-                state = PENALTY | BLUE | NOTREADY;
+                state = STATE_PENALTY | STATE_BLUE | STATE_NOTREADY;
                 return;
             case COMM_PENALTY_YELLOW:
-                state = PENALTY | YELLOW | NOTREADY;
+                state = STATE_PENALTY | STATE_YELLOW | STATE_NOTREADY;
                 return;
 
             case COMM_DIRECT_BLUE:
-                state = DIRECT | BLUE | READY;
+                state = STATE_DIRECT | STATE_BLUE | STATE_READY;
                 return;
             case COMM_DIRECT_YELLOW:
-                state = DIRECT | YELLOW | READY;
+                state = STATE_DIRECT | STATE_YELLOW | STATE_READY;
                 return;
 
             case COMM_INDIRECT_BLUE:
-                state = INDIRECT | BLUE | READY;
+                state = STATE_INDIRECT | STATE_BLUE | STATE_READY;
                 return;
             case COMM_INDIRECT_YELLOW:
-                state = INDIRECT | YELLOW | READY;
+                state = STATE_INDIRECT | STATE_YELLOW | STATE_READY;
                 return;
 
             case COMM_PLACEBALL_BLUE:
-                state = PLACE_BALL | BLUE | NOTREADY;
+                state = STATE_PLACE_BALL | STATE_BLUE | STATE_NOTREADY;
                 return;
             case COMM_PLACEBALL_YELLOW:
-                state = PLACE_BALL | YELLOW | NOTREADY;
+                state = STATE_PLACE_BALL | STATE_YELLOW | STATE_NOTREADY;
                 return;
 
             default:
@@ -162,17 +162,17 @@ public:
 
     bool stop()
     {
-        return (state == GAME_OFF);
+        return (state == STATE_GAME_OFF);
     }
 
     bool gameOn()
     {
-        return (state == GAME_ON);
+        return (state == STATE_GAME_ON);
     }
 
     bool restart()
     {
-        return (state & RESTART);
+        return (state & STATE_RESTART);
     }
     bool ourRestart()
     {
@@ -185,7 +185,7 @@ public:
 
     bool kickoff()
     {
-        return (state & KICKOFF);
+        return (state & STATE_KICKOFF);
     }
     bool ourKickoff()
     {
@@ -198,7 +198,7 @@ public:
 
     bool penaltyKick()
     {
-        return (state & PENALTY);
+        return (state & STATE_PENALTY);
     }
     bool ourPenaltyKick()
     {
@@ -211,7 +211,7 @@ public:
 
     bool directKick()
     {
-        return (state & DIRECT);
+        return (state & STATE_DIRECT);
     }
     bool ourDirectKick()
     {
@@ -224,7 +224,7 @@ public:
 
     bool indirectKick()
     {
-        return (state & INDIRECT);
+        return (state & STATE_INDIRECT);
     }
     bool ourIndirectKick()
     {
@@ -237,7 +237,7 @@ public:
 
     bool placeBall()
     {
-        return (state & PLACE_BALL);
+        return (state & STATE_PLACE_BALL);
     }
     bool ourPlaceBall()
     {
@@ -263,7 +263,7 @@ public:
 
     bool canMove()
     {
-        return (state != HALTED);
+        return (state != STATE_HALTED);
     }
 
     bool allowedNearBall()
@@ -273,7 +273,7 @@ public:
 
     bool canKickBall()
     {
-        return gameOn() || (ourRestart() && (state & READY));
+        return gameOn() || (ourRestart() && (state & STATE_READY));
     }
 };
 } // namespace Loki::Common

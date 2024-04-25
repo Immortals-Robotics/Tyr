@@ -17,7 +17,7 @@ VisionModule::VisionModule(Common::WorldState *_State)
 
     for (int i = 0; i < BALL_BUFFER_FRAMES; i++)
     {
-        ball_pos_buff[i] = float2(0.0, 0.0);
+        ball_pos_buff[i] = Common::vec2(0.0, 0.0);
     }
 
     lastRawBall.set_x(0.0f);
