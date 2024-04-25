@@ -10,6 +10,7 @@ project(loki)
 
 add_subdirectory(source/protos)
 add_subdirectory(source/common)
+add_subdirectory(source/vision)
 add_subdirectory(source/gui)
 
 set(CPACK_GENERATOR ZIP)
