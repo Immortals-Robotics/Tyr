@@ -20,3 +20,8 @@
 #include <set>
 
 #include <quill/Quill.h>
+
+#include <linalg.h>
+using namespace linalg::aliases;
+
+#include <ssl-refbox/referee.pb.h>

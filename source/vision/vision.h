@@ -10,16 +10,8 @@
 
 #include <iostream>
 
-#include "../../Network/Protobuf/messages_robocup_ssl_detection.pb.h"
-#include "../../Network/Protobuf/messages_robocup_ssl_geometry.pb.h"
-#include "../../Network/Protobuf/messages_robocup_ssl_wrapper.pb.h"
+#include "kalman/filtered_object.h"
 
-
-#include "../../Common/network/udp_client.h"
-#include "../../Common/network/udp_server.h"
-#include "Kalman/FilteredObject.h"
-#include "../../Common/MedianFilter.h"
-#include "../../Common/MATHS_REGRESSION_PARABOLIC.h"
 #include "../WorldState.h"
 #include "../../Common/GameSetting.h"
 #include "../../Common/poly_find.h"
@@ -96,7 +88,7 @@ private:
 	WorldState* playState;
 
 	bool packet_recieved[Setting::kCamCount];
-    TVec2 ball_pos_buff[BALL_BUFFER_FRAMES];
+    float2 ball_pos_buff[BALL_BUFFER_FRAMES];
 
 //    int ballBufferIndex;
 //    float ballBufferX[BALL_BUFFER_FRAMES];
