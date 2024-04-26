@@ -3,6 +3,10 @@ project(${CMAKE_PROJECT_NAME}-soccer)
 set(HEADER_FILES
     pch.h
     ai.h
+    errt/errt.h
+    errt/obstacle_new.h
+    errt/obstacle.h
+    errt/tree.h
     robot/robot.h
     robot/trapezoid.h
     robot/velocity_profile.h)
@@ -10,6 +14,12 @@ set(HEADER_FILES
 set(SOURCE_FILES
     ai.cpp
     ai_process.cpp
+    errt/errt.cpp
+    errt/obstacle_circle.cpp
+    errt/obstacle_map.cpp
+    errt/obstacle_rect.cpp
+    errt/obstacle.cpp
+    errt/tree.cpp
     robot/robot.cpp
     robot/trapezoid.cpp)
 
