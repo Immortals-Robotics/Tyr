@@ -13,8 +13,8 @@ ConfigReader::ConfigReader(const std::string_view t_file_path)
 
 void ConfigReader::load()
 {
-    toml::parse_result config = toml::parse_file(m_file_path.string());
+    // toml::parse_result config = toml::parse_file(m_file_path.string());
 
-    m_table = std::move(config).table();
+    // m_table = std::move(config).table();
 }
 } // namespace Tyr::Common

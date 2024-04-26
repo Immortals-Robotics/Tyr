@@ -21,7 +21,7 @@ public:
                                 quill::MacroMetadata const &t_metadata,
                                 quill::fmt_buffer_t const  &t_formatted_record) noexcept override
     {
-        return t_metadata.log_level() >= m_log_level;
+        return t_metadata.level() >= m_log_level;
     }
 };
 

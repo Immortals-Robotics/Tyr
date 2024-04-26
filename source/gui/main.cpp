@@ -1,13 +1,15 @@
 #include "drawing/FieldRenderer.h"
+#include "drawing/FieldRendererRaylib.h"
 
-int m_width = 1600;
+int m_width = 1300;
 int m_height = 900;
 
-Protos::RoboCup2014Legacy::Geometry::SSL_GeometryFieldSize* ssl_field;
+Protos::SSL_GeometryFieldSize* ssl_field;
 Protos::SSL_WrapperPacket* ssl_packet;
 Protos::SSL_WrapperPacket* ssl_packet_off;
 FieldRenderer* field_renderer;
-Tyr::Common::UdpClient* sslClient;
+VisualizationRenderer* visualizationRenderer;
+Loki::Common::UdpClient* sslClient;
 Protos::Immortals::Debug_Draw* world_state;
 Protos::Immortals::Debug_Draw* world_state_off;
 
@@ -16,11 +18,12 @@ std::mutex reality_mutex;
 
 void DrawSpeedGraph();
 
+
 void init()
 {
 	SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
     InitWindow(m_width, m_height, "Immortals SSL");
-    SetTargetFPS(144);
+    SetTargetFPS(60);
     rlImGuiSetup(true);
 }
 
@@ -40,9 +43,9 @@ void update()
 	// start ImGui Conent
 	rlImGuiBegin();
 
-	static bool opened = true;
+	static bool opened = true, opened2 = true;
 	ImVec2 margin = ImVec2(30,30)*2;
-	ImVec2 wSize = ImVec2(900.f, 600.f)+margin;
+	ImVec2 wSize = ImVec2(900.f, 700.f) + margin;
 	// TODO: draw gui
 	ImGui::SetNextWindowSize(wSize, ImGuiCond_FirstUseEver);
 	if (!ImGui::Begin("Field", &opened))
@@ -50,27 +53,30 @@ void update()
 		ImGui::End();
 	}
 	else {
-		ImDrawList *draw_list = ImGui::GetWindowDrawList();
-
-		field_renderer->SetWidgetProperties(ImGui::GetWindowPos() + ImGui::GetCursorPos(), ImGui::GetWindowSize() - ImGui::GetCursorPos() * 2.f);
-		field_renderer->SetDrawList(draw_list);
-		field_renderer->DrawFieldLegacy(*ssl_field);
-
-		vision_mutex.lock();
-		field_renderer->DrawBalls(ssl_packet->detection().balls());
-		field_renderer->DrawRobots(ssl_packet->detection().robots_blue(), Blue);
-		field_renderer->DrawRobots(ssl_packet->detection().robots_yellow(), Yellow);
-
-		DrawSpeedGraph();
-
-		vision_mutex.unlock();
-		reality_mutex.lock();
-		field_renderer->DrawBalls(world_state->circle());
-		reality_mutex.unlock();
-
+	visualizationRenderer->StartDraw();
+	visualizationRenderer->DrawField(*ssl_field);
+	vision_mutex.lock();
+	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_blue(), Blue);
+	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_yellow(), Yellow);
+	vision_mutex.unlock();
+	visualizationRenderer->EndDraw();
+	rlImGuiImageRenderTextureFit(&visualizationRenderer->visualisaionTexture, true);
+	// DrawTexture(visualizationRenderer->visualisaionTexture.texture, 0, 0, WHITE);
+		// rlImGuiImage(&visualizationRenderer->visualisaionTexture.texture);
+		ImGui::End();
+	}
+	ImGui::SetNextWindowSize(wSize, ImGuiCond_FirstUseEver);
+	if (!ImGui::Begin("Field", &opened2))
+	{
+		ImGui::End();
+	}
+	else
+	{
+		ImGui::Image((ImTextureID)&visualizationRenderer->visualisaionTexture.texture, ImVec2(900, 700));
 		ImGui::End();
 	}
 
+	DrawSpeedGraph();
 	// end ImGui Content
 	rlImGuiEnd();
 
@@ -113,19 +119,19 @@ int main(int argc, char *argv[])
 	init();
 	
 	field_renderer = new FieldRenderer();
+	visualizationRenderer = new VisualizationRenderer(ImVec2(900.f, 700.f));
 
-	ssl_field = new Protos::RoboCup2014Legacy::Geometry::SSL_GeometryFieldSize();
-	ssl_field->set_field_length(9000);
-	ssl_field->set_field_width(6000);
-	ssl_field->set_boundary_width(700);
-	ssl_field->set_referee_width(300);
-	ssl_field->set_center_circle_radius(500);
-	ssl_field->set_defense_radius(1000);
-	ssl_field->set_defense_stretch(500);
-	ssl_field->set_goal_width(1000);
+	ssl_field = new Protos::SSL_GeometryFieldSize();
+	ssl_field->set_field_length(12000);
+	ssl_field->set_field_width(9000);
+	ssl_field->set_goal_width(1800);
 	ssl_field->set_goal_depth(180);
 
-	field_renderer->SetFieldSizeLegacy(*ssl_field);
+	ssl_field->set_boundary_width(300);
+	ssl_field->set_center_circle_radius(500);
+	ssl_field->set_penalty_area_depth(1800);
+	ssl_field->set_penalty_area_width(3600);
+
 
 	ssl_packet_off = new Protos::SSL_WrapperPacket();
 	ssl_packet = new Protos::SSL_WrapperPacket();
@@ -137,7 +143,7 @@ int main(int argc, char *argv[])
 	auto robot = ssl_packet->mutable_detection()->add_robots_blue();
 	robot->set_x(1500);
 	robot->set_confidence(0.7);
-	robot->set_orientation(1.5);
+	robot->set_orientation(87);
 	robot = ssl_packet->mutable_detection()->add_robots_yellow();
 	robot->set_y(2460);
 	robot->set_confidence(0.95);
