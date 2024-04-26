@@ -20,7 +20,3 @@
 #include <vector>
 
 #include <quill/Quill.h>
-
-#include <linalg.h>
-
-#include <ssl-refbox/referee.pb.h>
