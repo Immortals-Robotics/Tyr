@@ -16,6 +16,7 @@ set(HEADER_FILES
     debug/common_colors.h
     debug/debug.h
     logging/logging.h
+    math/linear.h
     math/median_filter.h
     math/vector.h
     math/random.h
@@ -32,6 +33,7 @@ set(SOURCE_FILES
     debug/common_colors.cpp
     debug/debug.cpp
     logging/logging.cpp
+    math/linear.cpp
     math/random.cpp
     network/udp_client.cpp
     network/udp_server.cpp
