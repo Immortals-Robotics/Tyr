@@ -65,8 +65,6 @@ Robot::Robot(void)
     State.velocity.x         = 0.0f;
     State.velocity.y         = 0.0f;
     State.Position           = Common::vec2(0.0f);
-    State.velocity.magnitude = 0.0f;
-    State.velocity.direction = 0.0f;
     shoot                    = 0;
     chip                     = 0;
     dribbler                 = 0;
@@ -134,7 +132,7 @@ void Robot::Dribble(int pow)
 
 void Robot::face(Common::vec2 _target)
 {
-    target.Angle = AngleWith(State.Position, _target);
+    target.angle = Common::angle_with(State.Position, _target);
 }
 
 Common::vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityProfile *velocityProfile)
@@ -146,7 +144,6 @@ Common::vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityPro
 
     if (fabs(target.Position.y) > field_h + field_extra_area)
         target.Position.y = std::copysign(field_h + field_extra_area, target.Position.y);
-    target.Angle = NormalizeAngle(target.Angle);
 
     if (speed < 0)
         speed = 0;
@@ -185,14 +182,14 @@ void Robot::MoveByMotion(Common::vec3 motion)
         //        target_orientation.f32 = target.Angle;
         convert_float_to_2x_buff(data + 3, motion.x);
         convert_float_to_2x_buff(data + 5, motion.y);
-        convert_float_to_2x_buff(data + 7, target.Angle);
+        convert_float_to_2x_buff(data + 7, target.angle.deg());
     }
     else
     {
 
         int VelX      = motion.x;
         int VelY      = motion.y;
-        int targetAng = target.Angle;
+        int targetAng = target.angle.deg();
 
         data[3] = abs(VelX); // VelX
         data[4] = abs(VelY); // VelY
@@ -207,7 +204,7 @@ void Robot::MoveByMotion(Common::vec3 motion)
 
         data[7] = 0x00; // the signes
 
-        if (target.Angle < 0)
+        if (target.angle.deg() < 0)
             data[7] |= 0x80;
         if (motion.y < 0)
             data[7] |= 0x20;
@@ -239,7 +236,7 @@ void Robot::makeSendingDataReady(void)
             data[1] = 15; // length=10
             data[2] = 12; // Command to move with new protocol
 
-            convert_float_to_2x_buff(data + 9, State.Angle);
+            convert_float_to_2x_buff(data + 9, State.angle.deg());
             if (shoot > 0)
             {
                 data[11] = shoot;
@@ -261,7 +258,7 @@ void Robot::makeSendingDataReady(void)
         else
         {
 
-            int currAng = State.Angle;
+            int currAng = State.angle.deg();
 
             // Robots ID
             data[1] = 0x0A; // length=10
@@ -269,7 +266,7 @@ void Robot::makeSendingDataReady(void)
 
             data[5] = abs(currAng); // Current angle
 
-            if (State.Angle < 0)
+            if (State.angle.deg() < 0)
                 data[7] |= 0x40;
 
             if (shoot > 0)

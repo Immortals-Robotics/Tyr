@@ -4,7 +4,6 @@ namespace Tyr::Common
 {
 void Linear::calculate(int n, float *x, float *y)
 {
-
     // calculate the averages of arrays x and y
     double xa = 0, ya = 0;
     for (int i = 0; i < n; i++)

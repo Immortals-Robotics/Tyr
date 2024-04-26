@@ -92,16 +92,8 @@ Common::vec3 TrapezoidPlanner::Plan(Common::RobotState *_init, Common::RobotStat
 
     Common::vec3 ans = Common::vec3(0.0f);
 
-    ans.z = init_state->Angle - final_state->Angle;
-    while (ans.z > 180)
-        ans.z -= 360;
-    while (ans.z < -180)
-        ans.z += 360;
-    ans.z *= 3.0f;
-    if (ans.z > 180)
-        ans.z = 180;
-    if (ans.z < -180)
-        ans.z = -180;
+    ans.z = (init_state->angle - final_state->angle).deg();
+    ans.z = std::clamp(ans.z * 3.0f, -180.0f, 180.0f);
 
     if (std::fabs(oldAns.x - init_state->velocity.x) > 1000.0f)
         oldAns.x = (oldAns.x + init_state->velocity.x) / 2.0f;

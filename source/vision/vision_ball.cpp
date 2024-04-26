@@ -215,17 +215,6 @@ void VisionModule::predictBallForward(Common::WorldState *state)
     state->ball.Position.x *= (float) 1000.0;
     state->ball.Position.y *= (float) 1000.0;
 
-    state->ball.velocity.direction = atan((state->ball.velocity.y) / (state->ball.velocity.x));
-    state->ball.velocity.direction *= 180.0f / 3.1415f;
-    if (state->ball.velocity.x < 0)
-        state->ball.velocity.direction += 180;
-    while (state->ball.velocity.direction > 180)
-        state->ball.velocity.direction -= 360;
-    while (state->ball.velocity.direction < -180)
-        state->ball.velocity.direction += 360;
-    state->ball.velocity.magnitude =
-        sqrt((state->ball.velocity.x * state->ball.velocity.x) + (state->ball.velocity.y * state->ball.velocity.y));
-
     //    static int CNT = 0;
     //    CNT++;
     //    if(CNT%20 == 0) {
