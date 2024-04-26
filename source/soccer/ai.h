@@ -1,5 +1,6 @@
 #pragma once
 
+#include "one_touch_detector.h"
 #include "errt/errt.h"
 #include "dss/dss.h"
 

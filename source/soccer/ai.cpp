@@ -67,7 +67,7 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     gamma  = 0.14; // Reflect factor
     shootK = 4000.0f;
 
-    lastReferee = Common::GameState::GAME_OFF;
+    lastReferee = Common::GameState::STATE_GAME_OFF;
 
     attack = cmf;
     mid1   = rmf;
@@ -129,7 +129,7 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     lastBallDirection       = 0;
     lastBallMagnitude       = 0;
     circleReachedBehindBall = false;
-    PredictedBall           = Common::vec2(0);
+    PredictedBall           = Common::vec2();
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
         requiredRobots[i] = false;

@@ -3,6 +3,7 @@ project(${CMAKE_PROJECT_NAME}-soccer)
 set(HEADER_FILES
     pch.h
     ai.h
+    one_touch_detector.h
     dss/dss.h
     dss/parabolic.h
     dss/trajectory.h
