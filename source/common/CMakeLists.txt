@@ -18,6 +18,7 @@ set(HEADER_FILES
     logging/logging.h
     math/median_filter.h
     math/vector.h
+    math/random.h
     network/udp_client.h
     network/udp_server.h
     state/game_commands.h
@@ -31,6 +32,7 @@ set(SOURCE_FILES
     debug/common_colors.cpp
     debug/debug.cpp
     logging/logging.cpp
+    math/random.cpp
     network/udp_client.cpp
     network/udp_server.cpp
     timer/timer.cpp)
