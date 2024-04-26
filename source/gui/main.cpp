@@ -23,7 +23,8 @@ void init()
 {
 	SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
     InitWindow(m_width, m_height, "Immortals SSL");
-    SetTargetFPS(60);
+	SetTraceLogLevel(LOG_WARNING);
+    SetTargetFPS(144);
     rlImGuiSetup(true);
 }
 
@@ -58,25 +59,15 @@ void update()
 	vision_mutex.lock();
 	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_blue(), Blue);
 	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_yellow(), Yellow);
+	visualizationRenderer->DrawBalls(ssl_packet->detection().balls());
 	vision_mutex.unlock();
 	visualizationRenderer->EndDraw();
-	rlImGuiImageRenderTextureFit(&visualizationRenderer->visualisaionTexture, true);
-	// DrawTexture(visualizationRenderer->visualisaionTexture.texture, 0, 0, WHITE);
-		// rlImGuiImage(&visualizationRenderer->visualisaionTexture.texture);
-		ImGui::End();
+	visualizationRenderer->ApplyShader();
+	rlImGuiImageRenderTextureFit(&visualizationRenderer->shaderVisualizationTexture, true);
+	ImGui::End();
 	}
-	ImGui::SetNextWindowSize(wSize, ImGuiCond_FirstUseEver);
-	if (!ImGui::Begin("Field", &opened2))
-	{
-		ImGui::End();
-	}
-	else
-	{
-		ImGui::Image((ImTextureID)&visualizationRenderer->visualisaionTexture.texture, ImVec2(900, 700));
-		ImGui::End();
-	}
-
-	DrawSpeedGraph();
+	std::cout << "FPS: " << GetFPS() << std::endl;
+	// DrawSpeedGraph();
 	// end ImGui Content
 	rlImGuiEnd();
 
@@ -119,7 +110,7 @@ int main(int argc, char *argv[])
 	init();
 	
 	field_renderer = new FieldRenderer();
-	visualizationRenderer = new VisualizationRenderer(ImVec2(900.f, 700.f));
+	visualizationRenderer = new VisualizationRenderer(ImVec2(1800.f, 1400.f));
 
 	ssl_field = new Protos::SSL_GeometryFieldSize();
 	ssl_field->set_field_length(12000);
@@ -135,18 +126,6 @@ int main(int argc, char *argv[])
 
 	ssl_packet_off = new Protos::SSL_WrapperPacket();
 	ssl_packet = new Protos::SSL_WrapperPacket();
-	auto ball = ssl_packet->mutable_detection()->add_balls();
-	ball->set_x(0.f);
-	ball->set_y(0.f);
-	
-
-	auto robot = ssl_packet->mutable_detection()->add_robots_blue();
-	robot->set_x(1500);
-	robot->set_confidence(0.7);
-	robot->set_orientation(87);
-	robot = ssl_packet->mutable_detection()->add_robots_yellow();
-	robot->set_y(2460);
-	robot->set_confidence(0.95);
 
 	sslClient = new Tyr::Common::UdpClient({"224.5.23.2", 10006});
 
@@ -194,6 +173,7 @@ int main(int argc, char *argv[])
 
 	while (!WindowShouldClose())
 	{
+		visualizationRenderer->init();
 		update();
 	}
 
