@@ -11,9 +11,10 @@ UdpServer::UdpServer()
 
 bool UdpServer::send(const google::protobuf::MessageLite &t_message, const NetworkAddress &t_address)
 {
-    if (!t_message.SerializeToArray(m_buffer.data(), m_buffer.size())){
+    if (!t_message.SerializeToArray(m_buffer.data(), m_buffer.size()))
+    {
         LOG_ERROR("Failed to serializeToArray (Maybe need to adjust Setting::kMaxUdpPacketSize)");
-	return false;
+        return false;
     }
 
     const size_t serialized_size = t_message.ByteSizeLong();

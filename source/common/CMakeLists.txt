@@ -6,7 +6,7 @@ find_package(quill CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(tomlplusplus REQUIRED IMPORTED_TARGET tomlplusplus)
 
-find_path(HOMOG2D_INCLUDE_DIRS "homog2d.hpp")
+find_path(LINALG_INCLUDE_DIRS "linalg.h")
 
 set(HEADER_FILES
     pch.h
@@ -14,8 +14,14 @@ set(HEADER_FILES
     setting.h
     config/config.h
     logging/logging.h
+    math/median_filter.h
+    math/vector.h
     network/udp_client.h
     network/udp_server.h
+    state/game_commands.h
+    state/game.h
+    state/referee.h
+    state/world.h
     timer/timer.h)
 
 set(SOURCE_FILES
@@ -33,12 +39,13 @@ target_include_directories(${PROJECT_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FILES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-	${CMAKE_PROJECT_NAME}-protos
+    ${CMAKE_PROJECT_NAME}-protos
     asio::asio
     PkgConfig::tomlplusplus
     quill::quill)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${HOMOG2D_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PUBLIC 
+    ${LINALG_INCLUDE_DIRS})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC TOML_EXCEPTIONS=0)
 if (WIN32)
