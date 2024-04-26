@@ -1,5 +1,8 @@
 #pragma once
 
+#include "errt/errt.h"
+#include "dss/dss.h"
+
 #define NEW_FIELD_2018
 
 #define mark_in_stop 0

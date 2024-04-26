@@ -7,6 +7,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <float.h>
 
 #include <math/linear.h>
 #include <math/random.h>

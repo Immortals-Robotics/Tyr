@@ -3,6 +3,9 @@ project(${CMAKE_PROJECT_NAME}-soccer)
 set(HEADER_FILES
     pch.h
     ai.h
+    dss/dss.h
+    dss/parabolic.h
+    dss/trajectory.h
     errt/errt.h
     errt/obstacle_new.h
     errt/obstacle.h
@@ -14,6 +17,9 @@ set(HEADER_FILES
 set(SOURCE_FILES
     ai.cpp
     ai_process.cpp
+    dss/dss.cpp
+    dss/parabolic.cpp
+    dss/trajectory.cpp
     errt/errt.cpp
     errt/obstacle_circle.cpp
     errt/obstacle_map.cpp
