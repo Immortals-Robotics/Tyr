@@ -7,9 +7,9 @@ set(HEADER_FILES
     dss/parabolic.h
     dss/trajectory.h
     errt/errt.h
-    errt/obstacle_new.h
-    errt/obstacle.h
     errt/tree.h
+    obstacle/obstacle_new.h
+    obstacle/obstacle.h
     robot/robot.h
     robot/trapezoid.h
     robot/velocity_profile.h)
@@ -21,11 +21,11 @@ set(SOURCE_FILES
     dss/parabolic.cpp
     dss/trajectory.cpp
     errt/errt.cpp
-    errt/obstacle_circle.cpp
-    errt/obstacle_map.cpp
-    errt/obstacle_rect.cpp
-    errt/obstacle.cpp
     errt/tree.cpp
+    obstacle/obstacle_circle.cpp
+    obstacle/obstacle_map.cpp
+    obstacle/obstacle_rect.cpp
+    obstacle/obstacle.cpp
     robot/robot.cpp
     robot/trapezoid.cpp)
 

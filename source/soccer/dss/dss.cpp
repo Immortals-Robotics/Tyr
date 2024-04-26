@@ -1,6 +1,6 @@
 #include "dss.h"
 
-#include "../errt/obstacle.h"
+#include "../obstacle/obstacle.h"
 #include "trajectory.h"
 
 namespace Tyr::Soccer

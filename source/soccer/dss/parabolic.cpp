@@ -1,5 +1,5 @@
 #include "parabolic.h"
-#include "../errt/obstacle.h"
+#include "../obstacle/obstacle.h"
 
 namespace Tyr::Soccer
 {
