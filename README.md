@@ -1,4 +1,4 @@
-# Loki, God of mischief
+# Tyr: God of valor and justice
 
 [![Build](https://github.com/Immortals-Robotics/Loki/actions/workflows/build.yml/badge.svg)](https://github.com/Immortals-Robotics/Loki/actions/workflows/build.yml)
 
