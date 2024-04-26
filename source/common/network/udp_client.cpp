@@ -1,6 +1,6 @@
 #include "udp_client.h"
 
-namespace Loki::Common
+namespace Tyr::Common
 {
 UdpClient::UdpClient(const NetworkAddress &t_address)
 {
@@ -31,4 +31,4 @@ bool UdpClient::receive(google::protobuf::MessageLite *const t_message)
 
     return false;
 }
-} // namespace Loki::Common
+} // namespace Tyr::Common

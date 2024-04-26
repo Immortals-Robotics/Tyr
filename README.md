@@ -1,6 +1,6 @@
 # Tyr: God of valor and justice
 
-[![Build](https://github.com/Immortals-Robotics/Loki/actions/workflows/build.yml/badge.svg)](https://github.com/Immortals-Robotics/Loki/actions/workflows/build.yml)
+[![Build](https://github.com/Immortals-Robotics/Tyr/actions/workflows/build.yml/badge.svg)](https://github.com/Immortals-Robotics/Tyr/actions/workflows/build.yml)
 
 ## Building
 We actively test on Windows and macOS, but other systems that meet the requirements should in theory work fine.

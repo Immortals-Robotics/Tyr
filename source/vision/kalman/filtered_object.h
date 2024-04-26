@@ -18,7 +18,7 @@
  * Date : June 2002
  **/
 
-namespace Loki::Vision
+namespace Tyr::Vision
 {
 class FilteredObject
 {
@@ -59,4 +59,4 @@ private:
     /// The number of time it has been used
     long usageCount;
 };
-} // namespace Loki::Vision
+} // namespace Tyr::Vision

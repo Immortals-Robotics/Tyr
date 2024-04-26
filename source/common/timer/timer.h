@@ -14,7 +14,7 @@
 
 #pragma once
 
-namespace Loki::Common
+namespace Tyr::Common
 {
 class Timer
 {
@@ -26,4 +26,4 @@ public:
     double time();
     double interval();
 };
-} // namespace Loki::Common
+} // namespace Tyr::Common

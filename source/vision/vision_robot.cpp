@@ -1,6 +1,6 @@
 #include "vision.h"
 
-namespace Loki::Vision
+namespace Tyr::Vision
 {
 // Don't add prediction to Ball or Opponents if both velocities are below this threshold
 const float IGNORE_PREDICTION = 0.045f;
@@ -357,4 +357,4 @@ void VisionModule::SendStates(Common::WorldState *state)
         state->OppRobot[i] = robotState[1][i];
     }
 }
-} // namespace Loki::Vision
+} // namespace Tyr::Vision

@@ -10,7 +10,7 @@
 
 const float VELOCITY_THRES = 0.5;
 
-namespace Loki::Vision
+namespace Tyr::Vision
 {
 FilteredObject::FilteredObject()
 {
@@ -204,4 +204,4 @@ void FilteredObject::updatePosition(float z[2], float filtOut[2][2])
     filtStateP[1][0] = tempfiltStateP[1][0];
     filtStateP[1][1] = tempfiltStateP[1][1];
 }
-} // namespace Loki::Vision
+} // namespace Tyr::Vision

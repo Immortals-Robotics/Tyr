@@ -14,7 +14,7 @@
 
 #include "timer.h"
 
-namespace Loki::Common
+namespace Tyr::Common
 {
 void Timer::start()
 {
@@ -41,4 +41,4 @@ double Timer::interval()
     tv1 = tv2;
     return (t);
 }
-} // namespace Loki::Common
+} // namespace Tyr::Common

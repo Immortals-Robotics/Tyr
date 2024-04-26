@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <vector>
 
-namespace Loki::Common
+namespace Tyr::Common
 {
 template <class T>
 class MedianFilter
@@ -49,4 +49,4 @@ public:
         index = false;
     }
 };
-} // namespace Loki::Common
+} // namespace Tyr::Common

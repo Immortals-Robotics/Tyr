@@ -1,6 +1,6 @@
 #include "vision.h"
 
-namespace Loki::Vision
+namespace Tyr::Vision
 {
 bool VisionModule::connectToVisionServer(void)
 {
@@ -31,4 +31,4 @@ bool VisionModule::isConnected(void)
 {
     return m_visionUDP != nullptr && m_visionUDP->isConnected();
 }
-} // namespace Loki::Vision
+} // namespace Tyr::Vision

@@ -1,6 +1,6 @@
 #include "vision.h"
 
-namespace Loki::Vision
+namespace Tyr::Vision
 {
 VisionModule::VisionModule(Common::WorldState *_State)
 {
@@ -85,4 +85,4 @@ void VisionModule::ProcessVision()
     for (int i = 0; i < Common::Setting::kCamCount; i++)
         packet_recieved[i] = false;
 }
-} // namespace Loki::Vision
+} // namespace Tyr::Vision

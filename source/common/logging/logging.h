@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace Loki::Common
+namespace Tyr::Common
 {
 class Logger
 {
@@ -14,4 +14,4 @@ protected:
 private:
     std::filesystem::path getNewLogFilePath() const;
 };
-} // namespace Loki::Common
+} // namespace Tyr::Common

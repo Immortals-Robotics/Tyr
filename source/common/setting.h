@@ -2,7 +2,7 @@
 
 #include "config/config.h"
 
-namespace Loki::Common
+namespace Tyr::Common
 {
 enum class TeamColor
 {
@@ -260,4 +260,4 @@ inline void Setting::load(const toml::node_view<const toml::node> t_node)
     }
 }
 
-} // namespace Loki::Common
+} // namespace Tyr::Common

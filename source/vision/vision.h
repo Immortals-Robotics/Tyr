@@ -30,7 +30,7 @@
 
 #define BALL_BUFFER_FRAMES 30
 
-namespace Loki::Vision
+namespace Tyr::Vision
 {
 class VisionModule
 {
@@ -96,4 +96,4 @@ private:
     //	double t_capture_buff[MAX_BALLS*Setting::kCamCount];
     //    deque<TVec2> ball_dir_buff;
 };
-} // namespace Loki::Vision
+} // namespace Tyr::Vision

@@ -8,7 +8,7 @@
 
 #include "../math/vector.h"
 
-namespace Loki::Common
+namespace Tyr::Common
 {
 enum SeenState
 {
@@ -138,4 +138,4 @@ struct WorldState
         return oo;
     }
 };
-} // namespace Loki::Common
+} // namespace Tyr::Common

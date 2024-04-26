@@ -1,6 +1,6 @@
 #include "vision.h"
 
-namespace Loki::Vision
+namespace Tyr::Vision
 {
 void VisionModule::ProcessParam(Common::WorldState *state)
 {
@@ -19,4 +19,4 @@ void VisionModule::ProcessParam(Common::WorldState *state)
     state->delta_t_capture = avg - state->t_capture;
     state->t_capture       = avg;
 }
-} // namespace Loki::Vision
+} // namespace Tyr::Vision

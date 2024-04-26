@@ -20,7 +20,7 @@
 
 #include "game_commands.h"
 
-namespace Loki::Common
+namespace Tyr::Common
 {
 class GameState
 {
@@ -276,4 +276,4 @@ public:
         return gameOn() || (ourRestart() && (state & STATE_READY));
     }
 };
-} // namespace Loki::Common
+} // namespace Tyr::Common

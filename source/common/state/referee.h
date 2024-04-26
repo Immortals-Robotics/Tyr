@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Loki::Common
+namespace Tyr::Common
 {
 struct RefereeState
 {
@@ -22,4 +22,4 @@ struct RefereeState
         placeBallTargetPosition = vec2(0.0f);
     }
 };
-} // namespace Loki::Common
+} // namespace Tyr::Common

@@ -1,6 +1,6 @@
 #include "udp_server.h"
 
-namespace Loki::Common
+namespace Tyr::Common
 {
 UdpServer::UdpServer()
 {
@@ -31,4 +31,4 @@ bool UdpServer::send(const size_t t_size, const NetworkAddress &t_address)
 
     return m_sent_size == t_size;
 }
-} // namespace Loki::Common
+} // namespace Tyr::Common

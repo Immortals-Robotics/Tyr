@@ -16,7 +16,7 @@
 
 #include "../setting.h"
 
-namespace Loki::Common
+namespace Tyr::Common
 {
 class UdpClient
 {
@@ -56,4 +56,4 @@ private:
 
     std::array<char, Setting::kMaxUdpPacketSize> m_buffer = {};
 };
-} // namespace Loki::Common
+} // namespace Tyr::Common

@@ -2,7 +2,7 @@
 
 #define MAX_BALL_2FRAMES_DISTANCE 1450000.0f
 
-namespace Loki::Vision
+namespace Tyr::Vision
 {
 void VisionModule::ProcessBalls(Common::WorldState *state)
 {
@@ -279,4 +279,4 @@ void VisionModule::calculateBallHeight(void)
     // ballParabolic.calculate ( BALL_BUFFER_FRAMES , ballBufferY , ballBufferX );
     // std::cout << (int)ballParabolic.get_a() << std::endl;
 }
-} // namespace Loki::Vision
+} // namespace Tyr::Vision
