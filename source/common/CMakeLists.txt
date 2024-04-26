@@ -54,7 +54,6 @@ endif()
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC QUILL_ROOT_LOGGER_ONLY)
 
-option(TRACE_BUILD_TIME "Use -ftime-trace to generate build time trace" OFF)
 if (${TRACE_BUILD_TIME})
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "[Cc]lang")
     target_compile_options(${PROJECT_NAME} PUBLIC -ftime-trace)

@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(USE_UNITY_BUILDS "Enable unity build to improve build times" OFF)
+option(TRACE_BUILD_TIME "Use -ftime-trace to generate build time trace" OFF)
 
 project(loki)
 

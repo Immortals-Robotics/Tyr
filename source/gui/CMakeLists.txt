@@ -24,6 +24,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	imgui::imgui
 	rlimgui::rlimgui)
 
+if (${TRACE_BUILD_TIME})
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "[Cc]lang")
+	target_compile_options(${PROJECT_NAME} PUBLIC -ftime-trace)
+endif()
+endif()
+
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch.h")

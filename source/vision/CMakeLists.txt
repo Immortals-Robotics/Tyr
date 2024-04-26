@@ -23,7 +23,6 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FIL
 target_link_libraries(${PROJECT_NAME} PUBLIC
 	${CMAKE_PROJECT_NAME}-common)
 
-option(TRACE_BUILD_TIME "Use -ftime-trace to generate build time trace" OFF)
 if (${TRACE_BUILD_TIME})
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "[Cc]lang")
     target_compile_options(${PROJECT_NAME} PUBLIC -ftime-trace)
