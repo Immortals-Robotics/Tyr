@@ -2,10 +2,16 @@ project(${CMAKE_PROJECT_NAME}-soccer)
 
 set(HEADER_FILES
     pch.h
-    ai.h)
+    ai.h
+    robot/robot.h
+    robot/trapezoid.h
+    robot/velocity_profile.h)
 
 set(SOURCE_FILES
-    ai.cpp)
+    ai.cpp
+    ai_process.cpp
+    robot/robot.cpp
+    robot/trapezoid.cpp)
 
 add_library(${PROJECT_NAME}
     ${SOURCE_FILES} ${HEADER_FILES})
@@ -15,7 +21,8 @@ target_include_directories(${PROJECT_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FILES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-	${CMAKE_PROJECT_NAME}-common)
+	${CMAKE_PROJECT_NAME}-common
+	${CMAKE_PROJECT_NAME}-sender)
 
 if (${TRACE_BUILD_TIME})
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "[Cc]lang")
