@@ -11,8 +11,6 @@ namespace Tyr::Referee
 class Referee
 {
 private:
-    bool our_color;
-
     std::unique_ptr<Common::UdpClient> m_udp;
 
     Common::RefereeState *RefState;

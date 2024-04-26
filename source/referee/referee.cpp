@@ -8,14 +8,13 @@ Referee::Referee(Common::WorldState *world_state, Common::RefereeState *referee_
     {
         std::cout << "Referee: \"world_state\" is NULL" << std::endl;
     }
-    our_color = Common::setting().our_color == Common::TeamColor::Yellow ? COLOR_YELLOW : COLOR_BLUE;
 
     command_CNT = -1;
 
     RefState = referee_state;
     ballData = &(world_state->ball);
 
-    RefState->State->init(our_color);
+    RefState->State->init(Common::setting().our_color);
 }
 
 bool Referee::connectToRefBox(void)
@@ -49,7 +48,7 @@ void Referee::process()
 
         LastPlacedBall = ballData->Position;
 
-        if (our_color == TEAM_BLUE)
+        if (Common::setting().our_color == Common::TeamColor::Blue)
             RefState->oppGK = pSSLRef.yellow().goalie();
         else
             RefState->oppGK = pSSLRef.blue().goalie();
