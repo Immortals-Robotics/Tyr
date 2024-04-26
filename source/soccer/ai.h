@@ -1,8 +1,8 @@
 #pragma once
 
-#include "one_touch_detector.h"
-#include "errt/errt.h"
 #include "dss/dss.h"
+#include "errt/errt.h"
+#include "one_touch_detector.h"
 
 #define NEW_FIELD_2018
 
@@ -13,10 +13,10 @@ namespace Tyr::Soccer
 class Ai
 {
 private:
-    Common::WorldState *worldState;
-	Common::RefereeState *refereeState;
-    Sender::Sender     *senderBase;
-    Common::GameState  *REF_playState;
+    Common::WorldState   *worldState;
+    Common::RefereeState *refereeState;
+    Sender::Sender       *senderBase;
+    Common::GameState    *REF_playState;
 
     Common::Random random;
 
@@ -120,11 +120,13 @@ private:
     float        calculateBallRobotReachTime(int robot_num, VelocityProfile *vel_profile);
 
     // boz ha
-    void         ManageAttRoles(void);
-    void         CalcIsDefending(void);
-    void         MarkManager(bool restart = true);
-    PlayBook    *playBook;
-    int          strategy_weight(void);
+    void ManageAttRoles(void);
+    void CalcIsDefending(void);
+    void MarkManager(bool restart = true);
+
+    Protos::Immortals::PlayBook *playBook;
+    int                          strategy_weight(void);
+
     float        lastBallDirection, lastBallMagnitude;
     Common::vec2 PredictedBall;
     bool         circleReachedBehindBall;

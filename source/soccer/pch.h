@@ -1,13 +1,13 @@
 #pragma once
 
 #include <deque>
+#include <float.h>
 #include <fstream>
 #include <iostream>
+#include <limits.h>
 #include <map>
 #include <math.h>
 #include <stdlib.h>
-#include <limits.h>
-#include <float.h>
 
 #include <math/linear.h>
 #include <math/random.h>
@@ -19,3 +19,5 @@
 
 #include <protocol/writer.h>
 #include <sender.h>
+
+#include <immortals/strategy.pb.h>
