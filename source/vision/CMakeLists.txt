@@ -10,7 +10,8 @@ set(SOURCE_FILES
     vision_comminucation.cpp
     vision_param.cpp
     vision_robot.cpp
-    vision.cpp)
+    vision.cpp
+    kalman/filtered_object.cpp)
 
 add_library(${PROJECT_NAME}
     ${SOURCE_FILES} ${HEADER_FILES})

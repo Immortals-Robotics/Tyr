@@ -1,7 +1,5 @@
 #include "vision.h"
 
-#include "kalman/filtered_object.h"
-
 namespace Loki::Vision
 {
 VisionModule::VisionModule(Common::WorldState *_State)

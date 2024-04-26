@@ -2,8 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined FILTEREDOBJECT_H
-#define FILTEREDOBJECT_H
+#pragma once
 
 /**
  * Class FilteredObject
@@ -19,10 +18,8 @@
  * Date : June 2002
  **/
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
+namespace Loki::Vision
+{
 class FilteredObject
 {
 public:
@@ -62,5 +59,4 @@ private:
     /// The number of time it has been used
     long usageCount;
 };
-
-#endif // !defined FILTEREDOBJECT_H
+} // namespace Loki::Vision
