@@ -13,6 +13,8 @@ set(HEADER_FILES
     services.h
     setting.h
     config/config.h
+    debug/common_colors.h
+    debug/debug.h
     logging/logging.h
     math/median_filter.h
     math/vector.h
@@ -26,6 +28,8 @@ set(HEADER_FILES
 
 set(SOURCE_FILES
     config/config.cpp
+    debug/common_colors.cpp
+    debug/debug.cpp
     logging/logging.cpp
     network/udp_client.cpp
     network/udp_server.cpp
