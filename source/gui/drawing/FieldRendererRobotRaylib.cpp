@@ -7,11 +7,10 @@ void VisualizationRenderer::DrawRobots(const google::protobuf::RepeatedPtrField<
 {
     auto lTextColor = color == Yellow ? BLACK : WHITE;
 	auto lBaseColor = color == Yellow ? YELLOW : BLUE;
-	
     for (auto robot : data)
 	{
 		auto position = ImVec2(robot.x(), robot.y());
 		DrawCircleSectorVec(position, this->robotRadius, lBaseColor, this->robotArcAngle - robot.orientation() * RAD2DEG, 360. - this->robotArcAngle - robot.orientation() * RAD2DEG, true);
-		DrawTextVec(position + ImVec2(TEXT_OFFSET_X, TEXT_OFFSET_Y), std::to_string(robot.robot_id()), 40, lTextColor);
+		DrawTextVec(position + ImVec2(TEXT_OFFSET_X, TEXT_OFFSET_Y), std::to_string(robot.robot_id()), 14, lTextColor);
 	}
 }

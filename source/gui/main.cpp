@@ -24,7 +24,7 @@ void init()
 	SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
     InitWindow(m_width, m_height, "Immortals SSL");
 	SetTraceLogLevel(LOG_WARNING);
-    SetTargetFPS(144);
+    SetTargetFPS(60);
     rlImGuiSetup(true);
 }
 
@@ -55,25 +55,22 @@ void update()
 		ImGui::End();
 	}
 	else {
-	visualizationRenderer->StartDraw();
 	visualizationRenderer->DrawField(*ssl_field);
 	vision_mutex.lock();
 	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_blue(), Blue);
 	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_yellow(), Yellow);
 	visualizationRenderer->DrawBalls(ssl_packet->detection().balls());
 	vision_mutex.unlock();
-	visualizationRenderer->EndDraw();
+	
 	visualizationRenderer->ApplyShader();
 	rlImGuiImageRenderTextureFit(&visualizationRenderer->shaderVisualizationTexture, true);
 	ImGui::End();
 	}
-	// std::cout << "FPS: " << GetFPS() << std::endl;
 	// DrawSpeedGraph();
 	// end ImGui Content
 	rlImGuiEnd();
 
 	EndDrawing();
-
 }
 
 std::vector<float> plot_data[12 * 2];
@@ -111,7 +108,7 @@ int main(int argc, char *argv[])
 	init();
 	
 	field_renderer = new FieldRenderer();
-	visualizationRenderer = new VisualizationRenderer(ImVec2(1800.f, 1400.f));
+	visualizationRenderer = new VisualizationRenderer(ImVec2(900.f, 700.f), 4.);
 
 	ssl_field = new Protos::SSL_GeometryFieldSize();
 	ssl_field->set_field_length(12000);
