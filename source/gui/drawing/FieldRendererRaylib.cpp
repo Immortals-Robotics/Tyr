@@ -16,12 +16,7 @@ VisualizationRenderer::VisualizationRenderer(ImVec2 _wSize) : ballRadius(21.5f),
 
 void VisualizationRenderer::init()
 {
-    static int shaderReady = 0;
-    if (shaderReady < 2) {
-        fxaaShader = LoadShader("../../../../../source/gui/shaders/raylibVertex.vs", "../../../../../source/gui/shaders/fxaa.fs");
-        shaderReady++;
-        std::cout<<"talash mikonam "<< shaderReady<<std::endl;
-    }
+    fxaaShader = LoadShader("shaders/raylibVertex.vs", "shaders/fxaa.fs");
 }
 
 Vector2 VisualizationRenderer::ConvertSignedVecToPixelVec(ImVec2 _signedVec)
@@ -103,7 +98,7 @@ void VisualizationRenderer::DrawCircleSectorVec(ImVec2 _center, float _rad, Colo
 void VisualizationRenderer::DrawTextVec(ImVec2 _pos, std::string _str, int _fontSize, Color _color)
 {
     Vector2 pos = ConvertSignedVecToPixelVec(_pos);
-    Font font = LoadFont("../../../../../source/gui/fonts/OpenSans-Regular.ttf");
+    Font font = LoadFont("fonts/OpenSans-Regular.ttf");
     DrawTextEx(font, _str.c_str(), pos, _fontSize, 0., _color);
 }
 

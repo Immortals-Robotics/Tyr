@@ -38,6 +38,7 @@ void shutdown()
 
 void update()
 {
+
 	BeginDrawing();
 	ClearBackground(DARKGRAY);
 
@@ -66,7 +67,7 @@ void update()
 	rlImGuiImageRenderTextureFit(&visualizationRenderer->shaderVisualizationTexture, true);
 	ImGui::End();
 	}
-	std::cout << "FPS: " << GetFPS() << std::endl;
+	// std::cout << "FPS: " << GetFPS() << std::endl;
 	// DrawSpeedGraph();
 	// end ImGui Content
 	rlImGuiEnd();
@@ -170,10 +171,10 @@ int main(int argc, char *argv[])
 	world_state_off = new Protos::Immortals::Debug_Draw();
 
 	std::thread vision_thread(vision_func);
-
+	
+	visualizationRenderer->init();
 	while (!WindowShouldClose())
 	{
-		visualizationRenderer->init();
 		update();
 	}
 
