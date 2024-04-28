@@ -18,8 +18,11 @@ set(HEADER_FILES
     math/helpers.h
     math/linear.h
     math/median_filter.h
-    math/vector.h
     math/random.h
+    math/vector.h
+    math/geom/circle.h
+    math/geom/line.h
+    math/geom/rect.h
     network/udp_client.h
     network/udp_server.h
     state/game_commands.h
@@ -36,8 +39,11 @@ set(SOURCE_FILES
     math/angle.cpp
     math/helpers.cpp
     math/linear.cpp
-    math/vector.cpp
     math/random.cpp
+    math/vector.cpp
+    math/geom/circle.cpp
+    math/geom/line.cpp
+    math/geom/rect.cpp
     network/udp_client.cpp
     network/udp_server.cpp
     timer/timer.cpp)
