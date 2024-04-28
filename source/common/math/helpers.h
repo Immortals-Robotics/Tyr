@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 namespace Tyr::Common
 {
 bool almostEqual(float t_a, float t_b);

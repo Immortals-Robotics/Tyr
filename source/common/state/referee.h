@@ -1,5 +1,7 @@
 #pragma once
 
+#include "game.h"
+
 namespace Tyr::Common
 {
 struct RefereeState
