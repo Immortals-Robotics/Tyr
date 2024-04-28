@@ -1,4 +1,4 @@
-#include "FieldRendererRaylib.h"
+#include "VisualizationRenderer.h"
 
 void VisualizationRenderer::DrawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall>& data)
 {

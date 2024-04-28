@@ -1,4 +1,4 @@
-#include "drawing/FieldRendererRaylib.h"
+#include "drawing/VisualizationRenderer.h"
 #include "menu/configMenu.h"
 
 int m_width = 1300;

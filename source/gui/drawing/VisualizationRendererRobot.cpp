@@ -1,4 +1,4 @@
-#include "FieldRendererRaylib.h"
+#include "VisualizationRenderer.h"
 #include "raylib.h"
 #define TEXT_OFFSET_X 50.
 #define TEXT_OFFSET_Y 300.

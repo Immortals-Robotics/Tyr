@@ -1,4 +1,4 @@
-#include "FieldRendererRaylib.h"
+#include "VisualizationRenderer.h"
 #include "raylib.h"
 #include <cmath>
 #include "../utility/vector_helper.h"
