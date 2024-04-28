@@ -1,6 +1,5 @@
 #pragma once
 
-#include "trapezoid.h"
 #include "velocity_profile.h"
 
 #define PREDICT_CMDS 6
@@ -32,8 +31,6 @@ public:
 
     Common::Vec3 lastCMDs[11];
     int          CMDindex;
-
-    TrapezoidPlanner trapezoid;
 
     int   remainingPIDParams;
     float p, i, iMax, torque;

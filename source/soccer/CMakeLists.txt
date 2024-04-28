@@ -3,21 +3,25 @@ project(${CMAKE_PROJECT_NAME}-soccer)
 set(HEADER_FILES
     pch.h
     ai.h
+
     dss/dss.h
     dss/parabolic.h
     dss/trajectory.h
     errt/errt.h
     errt/tree.h
-    helpers/one_touch_detector.h
+
     obstacle/obstacle_new.h
     obstacle/obstacle.h
+
+    helpers/one_touch_detector.h
+
     robot/robot.h
-    robot/trapezoid.h
     robot/velocity_profile.h)
 
 set(SOURCE_FILES
     ai.cpp
     ai_process.cpp
+
     dss/dss.cpp
     dss/parabolic.cpp
     dss/trajectory.cpp
@@ -66,8 +70,8 @@ set(SOURCE_FILES
 
     skills/tech_circle.cpp
 
-    robot/robot.cpp
-    robot/trapezoid.cpp)
+    robot/motion_plan.cpp
+    robot/robot.cpp)
 
 add_library(${PROJECT_NAME}
     ${SOURCE_FILES} ${HEADER_FILES})

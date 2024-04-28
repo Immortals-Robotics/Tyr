@@ -60,8 +60,6 @@ Robot::Robot(void)
     for (int i = 0; i < 10; i++)
         lastCMDs[i] = Common::Vec3();
 
-    trapezoid.init(Common::Vec2(4500.0f), Common::Vec2(1400.0f), Common::Vec2(3000.0f), 1.0f / 61.0f);
-
     State.velocity.x = 0.0f;
     State.velocity.y = 0.0f;
     State.Position   = Common::Vec2(0.0f);
