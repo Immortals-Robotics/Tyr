@@ -1,6 +1,8 @@
 #pragma once
 #include "../vector.h"
 
+#include <numbers>
+
 namespace Tyr::Common
 {
 struct Circle

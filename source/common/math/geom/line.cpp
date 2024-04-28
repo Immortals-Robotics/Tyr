@@ -1,6 +1,7 @@
 #include "line.h"
 
 #include "../helpers.h"
+#include "line_segment.h"
 
 namespace Tyr::Common
 {
@@ -33,6 +34,11 @@ Line Line::fromTwoPoints(const Vec2 t_pos_a, const Vec2 t_pos_b)
 Line Line::fromPointAndAngle(const Vec2 t_pos, const Angle t_ang)
 {
     return fromTwoPoints(t_pos, t_pos + t_ang.toUnitVec());
+}
+
+Line Line::fromSegment(LineSegment segment)
+{
+    return fromTwoPoints(segment.start, segment.end);
 }
 
 float Line::y(const float t_x) const

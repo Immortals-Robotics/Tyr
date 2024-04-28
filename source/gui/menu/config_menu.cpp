@@ -1,11 +1,11 @@
-#include "ConfigMenu.h"
-#include <regex>
+#include "config_menu.h"
 
-ConfigMenu::ConfigMenu(ImVec2 _wsize)
-    : menuWidth(300.), menuWidthMinimized(20.), networkNeedsUpdate(NETWORK_NONE), visionIpAddress("224.5.23.2"),
+namespace Tyr::Gui
+{
+ConfigMenu::ConfigMenu()
+    : menuWidth(300.), menuWidthMinimized(20.), networkNeedsUpdate(NetworkInput::None), visionIpAddress("224.5.23.2"),
       visionPort("10006")
 {
-    wsize       = _wsize;
     windowFlags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
 }
 
@@ -15,7 +15,7 @@ int ConfigMenu::HandleVisionIpChange(ImGuiInputTextCallbackData *_data)
 
     if (std::regex_match(_data->Buf, ipRegex))
     {
-        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, VISION_IP);
+        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, NetworkInput::VisionIp);
     }
     return 0;
 }
@@ -25,27 +25,27 @@ int ConfigMenu::HandleVisionPortChange(ImGuiInputTextCallbackData *_data)
     static const std::regex portRegex("^[1-9][0-9]*$");
     if (std::regex_match(_data->Buf, portRegex))
     {
-        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, VISION_PORT);
+        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, NetworkInput::VisionPort);
     }
     return 0;
 }
 
-void ConfigMenu::SetNetworkInput(std::string _data, networkInput_t _inputType)
+void ConfigMenu::SetNetworkInput(std::string _data, NetworkInput _inputType)
 {
     switch (_inputType)
     {
-    case VISION_IP:
+    case NetworkInput::VisionIp:
         if (_data != this->visionIpAddress)
         {
             this->visionIpAddress    = _data;
-            this->networkNeedsUpdate = VISION_IP;
+            this->networkNeedsUpdate = NetworkInput::VisionIp;
         }
         break;
-    case VISION_PORT:
+    case NetworkInput::VisionPort:
         if (_data != this->visionPort)
         {
             this->visionPort         = _data;
-            this->networkNeedsUpdate = VISION_PORT;
+            this->networkNeedsUpdate = NetworkInput::VisionPort;
         }
         break;
     default:
@@ -53,14 +53,14 @@ void ConfigMenu::SetNetworkInput(std::string _data, networkInput_t _inputType)
     }
 }
 
-std::string ConfigMenu::GetNetworkParam(networkInput_t _inputType)
+std::string ConfigMenu::GetNetworkParam(NetworkInput _inputType)
 {
     switch (_inputType)
     {
-    case VISION_IP:
+    case NetworkInput::VisionIp:
         return this->visionIpAddress;
         break;
-    case VISION_PORT:
+    case NetworkInput::VisionPort:
         return this->visionPort;
         break;
     default:
@@ -110,15 +110,16 @@ void ConfigMenu::Draw()
     }
 }
 
-networkInput_t ConfigMenu::IsNetworkDataUpdated()
+NetworkInput ConfigMenu::IsNetworkDataUpdated()
 {
     return this->networkNeedsUpdate;
 }
 
 void ConfigMenu::UpdateNetworkData()
 {
-    this->networkNeedsUpdate = NETWORK_NONE;
+    this->networkNeedsUpdate = NetworkInput::None;
 }
 
 ConfigMenu::~ConfigMenu()
 {}
+} // namespace Tyr::Gui
