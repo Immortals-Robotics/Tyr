@@ -7,6 +7,7 @@ Grsim::Grsim(Common::NetworkAddress address) : address(address)
     socket = std::make_unique<Common::UdpServer>();
 }
 
+#if GRSIM_FIXED
 void Grsim::SendData(const Robot *const robots, const int robot_count, bool color)
 {
     Protos::grSim_Packet packet;
@@ -71,4 +72,5 @@ void Grsim::SendData(const Robot *const robots, const int robot_count, bool colo
         socket->send(packet, address);
     }
 }
+#endif
 } // namespace Tyr::Sender
