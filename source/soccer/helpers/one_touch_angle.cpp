@@ -18,18 +18,18 @@ Common::Angle Ai::calculateOneTouchAngle(int robot_num, Common::Vec2 oneTouchPos
 
     Common::Line targetLine =
         Common::Line::fromTwoPoints(Common::Vec2(-side * field_width, -100), Common::Vec2(-side * field_width, 100));
-    Common::Vec2 boz = calculateOpenAngleToGoal(oneTouchPosition, robot_num);
+    OpenAngle boz = calculateOpenAngleToGoal(oneTouchPosition, robot_num);
     // boz.x = AngleWith(oneTouchPosition, Common::Vec2(-side*field_width, 0));
-    std::cout << "	Open angle : " << boz.x << "	" << boz.y << std::endl;
-    Common::Line ball_line = Common::Line::fromPointAndAngle(oneTouchPosition, Common::Angle::fromDeg(boz.x));
+    std::cout << "	Open angle : " << boz.center.deg() << "	" << boz.magnitude.deg() << std::endl;
+    Common::Line ball_line = Common::Line::fromPointAndAngle(oneTouchPosition, boz.center);
 
     Common::Vec2 ans;
 
-    ans = Common::Line::fromPointAndAngle(oneTouchPosition, Common::Angle::fromDeg(boz.x + boz.y / 2.0f))
+    ans = Common::Line::fromPointAndAngle(oneTouchPosition, boz.center + boz.magnitude / 2.0f)
               .intersect(targetLine)
               .value_or(Common::Vec2());
 
-    ans = Common::Line::fromPointAndAngle(oneTouchPosition, Common::Angle::fromDeg(boz.x - boz.y / 2.0f))
+    ans = Common::Line::fromPointAndAngle(oneTouchPosition, boz.center - boz.magnitude / 2.0f)
               .intersect(targetLine)
               .value_or(Common::Vec2());
 

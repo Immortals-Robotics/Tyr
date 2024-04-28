@@ -56,8 +56,8 @@ void Ai::NormalPlayDef(void)
         }
     }
 
-    Common::Vec2  openAngle  = calculateOpenAngleToGoal(ball.Position, attack);
-    Common::Angle shootAngle = Common::Angle::fromDeg(180 + openAngle.x);
+    OpenAngle     openAngle  = calculateOpenAngleToGoal(ball.Position, attack);
+    Common::Angle shootAngle = Common::Angle::fromDeg(180) + openAngle.center;
 
     float shoot_pow = 1;
     float chip_pow  = 1;

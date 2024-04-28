@@ -39,17 +39,17 @@ void Ai::Stop_def(void)
     ERRTNavigate2Point(dmf, static_pos[dmf], 0, 40, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(mid1, true, true);
-    OwnRobot[mid1].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[mid1].face(ball.Position);
     ERRTNavigate2Point(mid1, static_pos[mid1], 0, 40, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(mid2, true, true);
-    OwnRobot[mid2].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[mid2].face(ball.Position);
     ERRTNavigate2Point(mid2, static_pos[mid2], 0, 40, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(attack, true, true);
-    OwnRobot[attack].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[attack].face(ball.Position);
     ERRTNavigate2Point(attack,
-                       Common::Vec2(ball.Position.x, ball.Position.y)
+                       ball.Position
                            .circleAroundPoint(ball.Position.angleWith(Common::Vec2(side * field_width, 0)), 580),
                        0, 40, &VELOCITY_PROFILE_AROOM);
 }

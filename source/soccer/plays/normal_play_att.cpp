@@ -16,7 +16,7 @@ void Ai::NormalPlayAtt(void)
     {
         ERRTSetObstacles(attack, false, true);
         OwnRobot[attack].face(Common::Vec2(-side * field_width, 0));
-        // OwnRobot[robot_num].target.Angle=-90;
+        // OwnRobot[robot_num].target.angle=-90;
         ERRTNavigate2Point(attack, allafPos[attack], 0, 100, &VELOCITY_PROFILE_MAMOOLI);
         if (timer.time() > 2.5)
         {
@@ -39,7 +39,7 @@ void Ai::NormalPlayAtt(void)
         }
         else
         {
-            Common::Vec2 openAngle = calculateOpenAngleToGoal(ball.Position, attack);
+            OpenAngle openAngle = calculateOpenAngleToGoal(ball.Position, attack);
 
             bool mid1Reached = OwnRobot[mid1].State.velocity.length() < 500;
             bool mid2Reached = OwnRobot[mid2].State.velocity.length() < 500;
@@ -71,8 +71,8 @@ void Ai::NormalPlayAtt(void)
                     mid1Suitable = false;
             }
 
-            LOG_DEBUG("open angle: {}", openAngle.y);
-            if (openAngle.y < 8 &&
+            LOG_DEBUG("open angle: {}", openAngle.magnitude.deg());
+            if (openAngle.magnitude.deg() < 8 &&
                 (findKickerOpp(-1, 150.0f) ==
                  -1)) //&& ( ball.Position.x * side < -2300 ) && ( std::fabs ( ball.Position.y ) > 1800 ) )
             {
@@ -107,7 +107,7 @@ void Ai::NormalPlayAtt(void)
             {
 
                 Common::Angle shootAngle;
-                shootAngle = Common::Angle::fromDeg(180.0f + openAngle.x);
+                shootAngle = Common::Angle::fromDeg(180.0f) + openAngle.center;
 
                 // ADDED by Dot_Blue:
                 //                float shoot_pow;

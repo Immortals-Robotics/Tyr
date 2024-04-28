@@ -33,7 +33,7 @@ bool Ai::goal_blocked(Common::Vec2 init_pos, float max_shoot_blocker_dis, float 
                 continue;
 
             if
-    (ballGoalLine.getDistanceWithPoint(Common::Vec2(OwnRobot[i].State.Position.x,OwnRobot[i].State.Position.y))<shoot_blocker_r)
+    (ballGoalLine.distanceTo(Common::Vec2(OwnRobot[i].State.Position.x,OwnRobot[i].State.Position.y))<shoot_blocker_r)
     { oppGoalOpen = false; break;
             }
         }

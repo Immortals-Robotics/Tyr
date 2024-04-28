@@ -68,6 +68,19 @@ set(SOURCE_FILES
     plays/their_place_ball.cpp
     plays/throwin_chip_shoot.cpp
 
+    skills/circle_ball.cpp
+    skills/def_2018.cpp
+    skills/def_hi.cpp
+    skills/defence_wall.cpp
+    skills/gk_hi.cpp
+    skills/mark_to_ball.cpp
+    skills/mark_to_goal.cpp
+    skills/mark.cpp
+    skills/navigation.cpp
+    skills/pass_gool.cpp
+    skills/pass_omghi.cpp
+    skills/pass.cpp
+    skills/recieve_pass.cpp
     skills/tech_circle.cpp
 
     robot/motion_plan.cpp

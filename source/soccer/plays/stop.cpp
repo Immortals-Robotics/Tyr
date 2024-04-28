@@ -58,10 +58,10 @@ void Ai::Stop(void)
             else if (own == lmf)
             {
                 ERRTSetObstacles(lmf, true, true);
-                OwnRobot[lmf].face(Common::Vec2(ball.Position.x, ball.Position.y));
+                OwnRobot[lmf].face(ball.Position);
                 ERRTNavigate2Point(
                     lmf,
-                    circleAroundPoint(Common::Vec2(ball.Position.x, ball.Position.y),
+                    circleAroundPoint(ball.Position,
                                       NormalizeAngle(-20 + Common::Vec2::angleWith(
                                                                ball.Position, Common::Vec2(side * field_width, 0))),
                                       650),
@@ -71,10 +71,10 @@ void Ai::Stop(void)
             else if (own == rmf)
             {
                 ERRTSetObstacles(rmf, true, true);
-                OwnRobot[rmf].face(Common::Vec2(ball.Position.x, ball.Position.y));
+                OwnRobot[rmf].face(ball.Position);
                 ERRTNavigate2Point(
                     rmf,
-                    circleAroundPoint(Common::Vec2(ball.Position.x, ball.Position.y),
+                    circleAroundPoint(ball.Position,
                                       NormalizeAngle(20 + Common::Vec2::angleWith(ball.Position,
                                                                                   Common::Vec2(side * field_width, 0))),
                                       650),
@@ -98,7 +98,7 @@ void Ai::Stop(void)
     OwnRobot[dmf].Shoot(0);
 
     ERRTSetObstacles(lmf, true, true);
-    OwnRobot[lmf].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[lmf].face(ball.Position);
     ERRTNavigate2Point(lmf,
                        ball.Position.circleAroundPoint(Common::Angle::fromDeg(-20.0f) +
                                                            ball.Position.angleWith(Common::Vec2(side * field_width, 0)),
@@ -107,7 +107,7 @@ void Ai::Stop(void)
     OwnRobot[lmf].Shoot(0);
 
     ERRTSetObstacles(rmf, true, true);
-    OwnRobot[rmf].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[rmf].face(ball.Position);
     ERRTNavigate2Point(rmf,
                        ball.Position.circleAroundPoint(Common::Angle::fromDeg(20.0f) +
                                                            ball.Position.angleWith(Common::Vec2(side * field_width, 0)),
@@ -117,7 +117,7 @@ void Ai::Stop(void)
 #endif
 
     ERRTSetObstacles(cmf, true, true);
-    OwnRobot[cmf].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[cmf].face(ball.Position);
     ERRTNavigate2Point(
         cmf, ball.Position.circleAroundPoint(ball.Position.angleWith(Common::Vec2(side * field_width, 0)), 650), 0, 100,
         &VELOCITY_PROFILE_AROOM);

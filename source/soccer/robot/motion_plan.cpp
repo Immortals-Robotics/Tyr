@@ -84,7 +84,7 @@ Common::Vec3 Robot::MotionPlan(Common::RobotState state, Common::RobotState targ
 
     target.Position = target.Position - state.Position;
 
-    /*float trans_rad = ( 90.0f - state.Angle ) * ( 3.1415f / 180.0f );
+    /*float trans_rad = ( 90.0f - state.angle ) * ( 3.1415f / 180.0f );
      target.Position = Common::Vec2 (
      cos(trans_rad)*target.Position.x - sin(trans_rad)*target.Position.y ,
      sin(trans_rad)*target.Position.x + cos(trans_rad)*target.Position.y );*/

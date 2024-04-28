@@ -55,7 +55,7 @@ void Ai::our_place_ball_shoot(void)
 
     ERRTSetObstacles(mid2, false, true);
     AddCircle(ball.Position.x, ball.Position.y, 1010.0f);
-    OwnRobot[mid2].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[mid2].face(ball.Position);
     ERRTNavigate2Point(
         mid2, ball.Position.circleAroundPoint(ball.Position.angleWith(Common::Vec2(side * field_width, 0)), 1090), 0,
         100, &VELOCITY_PROFILE_AROOM);
@@ -84,7 +84,7 @@ void Ai::our_place_ball_shoot(void)
             FUNC_CNT   = 0;
         }
 
-        //        OwnRobot[attack].target.Angle = temp_opp_ang;
+        //        OwnRobot[attack].target.angle = temp_opp_ang;
         OwnRobot[dmf].target.angle = move_angle;
         //        ERRTSetObstacles(attack,0,0);
         //        AddCircle(ball.Position.x, ball.Position.y, 150.0f);
@@ -115,7 +115,7 @@ void Ai::our_place_ball_shoot(void)
 
         circle_ball_free(attack, move_angle, 18, 0, 0.0);
         WaitForPass(dmf, false, &OwnRobot[attack].State.Position);
-        //        OwnRobot[dmf].target.Angle = 90;
+        //        OwnRobot[dmf].target.angle = 90;
         if (OwnRobot[attack].State.Position.distanceTo(ball.Position) > 400)
         {
             FUNC_CNT++;
@@ -131,7 +131,7 @@ void Ai::our_place_ball_shoot(void)
     {
 
         WaitForPass(dmf, false, &OwnRobot[attack].State.Position);
-        //        OwnRobot[dmf].target.Angle = 90;
+        //        OwnRobot[dmf].target.angle = 90;
 
         if (temp_time.time() > 2)
         {
@@ -278,11 +278,11 @@ void Ai::our_place_ball_shoot(void)
         ERRTSetObstacles(dmf, 1, 1);
         ERRTNavigate2Point(dmf, targetBallPlacement->circleAroundPoint(t_ang, 550), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
-        //        OwnRobot[attack].target.Angle = 0;
-        //        OwnRobot[dmf].target.Angle = 0;
-        //        t_ang = NormalizeAngle(OwnRobot[attack].State.Angle + 180);
+        //        OwnRobot[attack].target.angle = 0;
+        //        OwnRobot[dmf].target.angle = 0;
+        //        t_ang = NormalizeAngle(OwnRobot[attack].State.angle + 180);
         //        Navigate2Point(attack, CircleAroundPoint(ball.Position, t_ang, 170), 0, 20,
-        //        &BALL_PLACE_KHEYLI_SOOSKI); t_ang = NormalizeAngle(OwnRobot[dmf].State.Angle + 180);
+        //        &BALL_PLACE_KHEYLI_SOOSKI); t_ang = NormalizeAngle(OwnRobot[dmf].State.angle + 180);
         //        Navigate2Point(dmf, CircleAroundPoint(ball.Position, t_ang, 170), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
         bool success = targetBallPlacement->distanceTo(ball.Position) < 100.0;
@@ -361,10 +361,10 @@ void Ai::our_place_ball_shoot_V2(void)
             {
                 ERRTSetObstacles(mid2, false, true);
                 AddCircle(ball.Position.x, ball.Position.y, 1010.0f);
-                OwnRobot[mid2].face(Common::Vec2(ball.Position.x, ball.Position.y));
+                OwnRobot[mid2].face(ball.Position);
                 ERRTNavigate2Point(
                     mid2,
-                    CircleAroundPoint(Common::Vec2(ball.Position.x, ball.Position.y),
+                    CircleAroundPoint(ball.Position,
                                       NormalizeAngle(AngleWith(ball.Position, Common::Vec2(side * field_width, 0))),
                                       1090),
                     0, 100, &VELOCITY_PROFILE_AROOM);
@@ -407,7 +407,7 @@ void Ai::our_place_ball_shoot_V2(void)
 
     ERRTSetObstacles(mid2, false, true);
     AddCircle(ball.Position.x, ball.Position.y, 1010.0f);
-    OwnRobot[mid2].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[mid2].face(ball.Position);
     ERRTNavigate2Point(
         mid2, ball.Position.circleAroundPoint(ball.Position.angleWith(Common::Vec2(side * field_width, 0)), 1090), 0,
         100, &VELOCITY_PROFILE_AROOM);
@@ -512,7 +512,7 @@ void Ai::our_place_ball_shoot_V2(void)
             outFieldAng.setDeg(0.0f);
         }
 
-        //        OwnRobot[attack].target.Angle = temp_opp_ang;
+        //        OwnRobot[attack].target.angle = temp_opp_ang;
         OwnRobot[dmf].target.angle = move_angle;
         //        ERRTSetObstacles(attack,0,0);
         //        AddCircle(ball.Position.x, ball.Position.y, 150.0f);
@@ -544,7 +544,7 @@ void Ai::our_place_ball_shoot_V2(void)
 
         circle_ball_free(attack, move_angle, 18, 0, 0.0);
         WaitForPass(dmf, false, &OwnRobot[attack].State.Position);
-        //        OwnRobot[dmf].target.Angle = 90;
+        //        OwnRobot[dmf].target.angle = 90;
         if (last_state_ball_pos.distanceTo(ball.Position) > 400)
         { // TODO added this TEST IT with the kicker on (already tested without the kicker)
             FUNC_CNT++;
@@ -564,7 +564,7 @@ void Ai::our_place_ball_shoot_V2(void)
     {
 
         WaitForPass(dmf, false, &OwnRobot[attack].State.Position);
-        //        OwnRobot[dmf].target.Angle = 90;
+        //        OwnRobot[dmf].target.angle = 90;
 
         if (temp_time.time() > 2)
         {
@@ -728,11 +728,11 @@ void Ai::our_place_ball_shoot_V2(void)
         ERRTSetObstacles(dmf, 1, 1);
         ERRTNavigate2Point(dmf, targetBallPlacement->circleAroundPoint(t_ang, 550), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
-        //        OwnRobot[attack].target.Angle = 0;
-        //        OwnRobot[dmf].target.Angle = 0;
-        //        t_ang = NormalizeAngle(OwnRobot[attack].State.Angle + 180);
+        //        OwnRobot[attack].target.angle = 0;
+        //        OwnRobot[dmf].target.angle = 0;
+        //        t_ang = NormalizeAngle(OwnRobot[attack].State.angle + 180);
         //        Navigate2Point(attack, CircleAroundPoint(ball.Position, t_ang, 170), 0, 20,
-        //        &BALL_PLACE_KHEYLI_SOOSKI); t_ang = NormalizeAngle(OwnRobot[dmf].State.Angle + 180);
+        //        &BALL_PLACE_KHEYLI_SOOSKI); t_ang = NormalizeAngle(OwnRobot[dmf].State.angle + 180);
         //        Navigate2Point(dmf, CircleAroundPoint(ball.Position, t_ang, 170), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
         bool success = targetBallPlacement->distanceTo(ball.Position) < 100.0;
@@ -811,7 +811,7 @@ void Ai::our_place_ball_shoot_taki(void)
 
     ERRTSetObstacles(mid2, false, true);
     AddCircle(ball.Position.x, ball.Position.y, 1010.0f);
-    OwnRobot[mid2].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[mid2].face(ball.Position);
     ERRTNavigate2Point(
         mid2, ball.Position.circleAroundPoint(ball.Position.angleWith(Common::Vec2(side * field_width, 0)), 1090), 0,
         100, &VELOCITY_PROFILE_AROOM);
@@ -837,7 +837,7 @@ void Ai::our_place_ball_shoot_taki(void)
             FUNC_CNT   = 0;
         }
 
-        //        OwnRobot[attack].target.Angle = temp_opp_ang;
+        //        OwnRobot[attack].target.angle = temp_opp_ang;
         OwnRobot[dmf].target.angle = move_angle;
         //        ERRTSetObstacles(attack,0,0);
         //        AddCircle(ball.Position.x, ball.Position.y, 150.0f);
@@ -867,7 +867,7 @@ void Ai::our_place_ball_shoot_taki(void)
 
         circle_ball_free(attack, move_angle, 60, 0, 0.0);
         WaitForPass(dmf, false, &OwnRobot[attack].State.Position);
-        //        OwnRobot[dmf].target.Angle = 90;
+        //        OwnRobot[dmf].target.angle = 90;
         if (OwnRobot[attack].State.Position.distanceTo(ball.Position) > 400)
         {
             FUNC_CNT++;
@@ -883,7 +883,7 @@ void Ai::our_place_ball_shoot_taki(void)
     {
 
         WaitForPass(dmf, false, &OwnRobot[attack].State.Position);
-        //        OwnRobot[dmf].target.Angle = 90;
+        //        OwnRobot[dmf].target.angle = 90;
 
         if (temp_time.time() > 2)
         {
@@ -899,7 +899,7 @@ void Ai::our_place_ball_shoot_taki(void)
     else if (FUNC_state == 3)
     {
 
-        //        OwnRobot[attack].target.Angle = move_angle;
+        //        OwnRobot[attack].target.angle = move_angle;
         //        ERRTSetObstacles(attack,0,0);
         //        AddCircle(ball.Position.x, ball.Position.y, 150.0f);
         VelocityProfile temp_vel = BALL_PLACE_KHEYLI_SOOSKI;
@@ -915,7 +915,7 @@ void Ai::our_place_ball_shoot_taki(void)
         Navigate2Point(dmf, targetBallPlacement->circleAroundPoint(move_angle, 75), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
         //        float angle_to_face = AngleWith(*targetBallPlacement,OwnRobot[attack].State.Position);
-        //        OwnRobot[dmf].target.Angle = angle_to_face;
+        //        OwnRobot[dmf].target.angle = angle_to_face;
         //        ERRTSetObstacles(dmf,0,0);
         ////        TEMP_VEL_PRO.max_spd
         //        ERRTNavigate2Point(dmf, CircleAroundPoint(*targetBallPlacement, angle_to_face + 180, 100), 0, 5,
@@ -944,11 +944,11 @@ void Ai::our_place_ball_shoot_taki(void)
         ERRTSetObstacles(dmf, 1, 1);
         ERRTNavigate2Point(dmf, targetBallPlacement->circleAroundPoint(t_ang, 550), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
-        //        OwnRobot[attack].target.Angle = 0;
-        //        OwnRobot[dmf].target.Angle = 0;
-        //        t_ang = NormalizeAngle(OwnRobot[attack].State.Angle + 180);
+        //        OwnRobot[attack].target.angle = 0;
+        //        OwnRobot[dmf].target.angle = 0;
+        //        t_ang = NormalizeAngle(OwnRobot[attack].State.angle + 180);
         //        Navigate2Point(attack, CircleAroundPoint(ball.Position, t_ang, 170), 0, 20,
-        //        &BALL_PLACE_KHEYLI_SOOSKI); t_ang = NormalizeAngle(OwnRobot[dmf].State.Angle + 180);
+        //        &BALL_PLACE_KHEYLI_SOOSKI); t_ang = NormalizeAngle(OwnRobot[dmf].State.angle + 180);
         //        Navigate2Point(dmf, CircleAroundPoint(ball.Position, t_ang, 170), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
         bool success = targetBallPlacement->distanceTo(ball.Position) < 100.0;

@@ -134,7 +134,15 @@ private:
     void SetEvaulateOBJs(int robot_num1, int robot_num2);
     void PassEvaluation();
 
-    Common::Vec2 calculateOpenAngleToGoal(Common::Vec2 init, int robot_num);
+    struct OpenAngle
+    {
+        // Center of the angle
+        Common::Angle center;
+        // how big it is
+        Common::Angle magnitude;
+    };
+
+    OpenAngle calculateOpenAngleToGoal(Common::Vec2 init, int robot_num);
 
     bool         ballIsGoaling();
     int          findNearestAsshole(Common::Vec2 pos, int mask, bool acceptNearBall = true);
@@ -193,8 +201,6 @@ private:
                      float near_dis_override = -1.0f);
     void circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_pow, int chip_pow, float precision,
                           float near_dis_override = -1.0f);
-    void circle_ball_free_V2(int robot_num, Common::Angle tagret_angle, int shoot_pow, int chip_pow, float precision,
-                             VelocityProfile temp_vel, float near_dis_override = -1.0f);
 
     void DefMid(int &robot_num, int &rightdef_num, int &leftdef_num, Common::Vec2 *defendTarget = NULL,
                 bool stop = false, bool replace = true);

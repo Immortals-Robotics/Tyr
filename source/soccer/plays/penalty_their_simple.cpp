@@ -19,9 +19,9 @@ void Ai::penalty_their_simple(void)
     }
     else
     {
-        //		float gkp_y = Line::makeLineFromTwoPoints ( Common::Vec2 ( OppRobot[index].Position.x ,
+        //		float gkp_y = Common::Line::fromTwoPoints ( Common::Vec2 ( OppRobot[index].Position.x ,
         // OppRobot[index].Position.y ) , Common::Vec2 ( ball.Position.x , ball.Position.y ) ).intersect (
-        // Line::makeLineFromTwoPoints ( Common::Vec2 ( side * penalty_x , 100 ) , Common::Vec2 ( side * penalty_x ,
+        // Common::Line::fromTwoPoints ( Common::Vec2 ( side * penalty_x , 100 ) , Common::Vec2 ( side * penalty_x ,
         // -100 ) ) ).getY ( );
         // TODO #7 check this!!!!
         float gkp_y = Common::Line::fromPointAndAngle(ball.Position, OppRobot[index].angle)

@@ -274,7 +274,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
 
         Common::debug().drawCircle(Common::Vec2(0, 0), 1000, "", Common::Red);
         // hehe = angle;
-        // if ( OwnRobot[2].State.Angle < 0 )
+        // if ( OwnRobot[2].State.angle < 0 )
         if ((kick) || (chip))
         {
 
@@ -291,7 +291,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
                     targetPoint =
                         PredictedBall.circleAroundPoint(angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / (tetta)));
 
-                // Line newLine = Line::makeLineFromTwoPoints ( Common::Vec2 ( targetPoint.x , targetPoint.y ) ,
+                // Common::Line newLine = Common::Line::fromTwoPoints ( Common::Vec2 ( targetPoint.x , targetPoint.y ) ,
                 // Common::Vec2 ( OwnRobot[robot_num].State.Position.x , OwnRobot[robot_num].State.Position.y ) ); Circle
                 // newCircle ( Common::Vec2 ( OwnRobot[robot_num].State.Position.x , OwnRobot[robot_num].State.Position.y
                 // ) , Common::Vec2::distance(targetPoint, OwnRobot.State.Position) * 2 );

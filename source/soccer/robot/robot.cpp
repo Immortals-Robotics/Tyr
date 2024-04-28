@@ -177,7 +177,7 @@ void Robot::MoveByMotion(Common::Vec3 motion)
 
         //        velocity.x.f32 = motion.x;
         //        velocity.y.f32 = motion.y;
-        //        target_orientation.f32 = target.Angle;
+        //        target_orientation.f32 = target.angle;
         convert_float_to_2x_buff(data + 3, motion.x);
         convert_float_to_2x_buff(data + 5, motion.y);
         convert_float_to_2x_buff(data + 7, target.angle.deg());

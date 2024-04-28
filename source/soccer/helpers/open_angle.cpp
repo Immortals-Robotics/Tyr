@@ -12,7 +12,7 @@ float normalizeAngleR(float angle) // radian
     return (angle);
 }
 
-Common::Vec2 Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
+Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 {
 
     int          counter  = 0;
@@ -104,7 +104,7 @@ Common::Vec2 Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 
         // No Free Angel
         if (dtmp[1] > ttmp[1] && dtmp[0] < ttmp[0])
-            return Common::Vec2(midGoalAngel * 180.0f / 3.1415f, 0);
+            return {Common::Angle::fromRad(midGoalAngel), Common::Angle::fromRad(0.0f)};
 
         if (dtmp[0] > ttmp[1] || dtmp[1] < ttmp[0])
         {
@@ -125,7 +125,7 @@ Common::Vec2 Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
     // Completely Free
     if (counter == 0)
     {
-        return Common::Vec2(midGoalAngel * 180.0f / 3.1415f, std::fabs(t2Angel - t1Angel) * 180.0f / 3.1415f);
+        return {Common::Angle::fromRad(midGoalAngel), Common::Angle::fromRad(std::fabs(t2Angel - t1Angel))};
     }
 
     float step = (t2Angel - t1Angel) / 100.0f;
@@ -163,15 +163,15 @@ Common::Vec2 Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
     }
     int   maxFree   = 0;
     int   freeCount = 0;
-    float max  = 0;
+    float max       = 0;
     for (int i = 0; i < 100; i++)
     {
         if (freeAngel[i] == 1)
         {
             if (freeCount > maxFree)
             {
-                maxFree  = freeCount;
-                max = i - maxFree / 2;
+                maxFree = freeCount;
+                max     = i - maxFree / 2;
             }
             freeCount = 0;
         }
@@ -183,8 +183,8 @@ Common::Vec2 Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 
     if (freeCount > maxFree)
     {
-        maxFree  = freeCount;
-        max = 100 - maxFree / 2;
+        maxFree = freeCount;
+        max     = 100 - maxFree / 2;
         ;
     }
     max = t1Angel + max * step;
@@ -192,18 +192,18 @@ Common::Vec2 Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 
     // std::cout << "	Salam Olaghe aziz :	" << maxFree << std::endl;
 
-    Common::Vec2 finalAns;
+    OpenAngle finalAns;
 
     if (maxFree == 0)
-        finalAns = Common::Vec2(midGoalAngel * 180.0f / 3.1415f, 0);
+        finalAns = OpenAngle(Common::Angle::fromRad(midGoalAngel), Common::Angle::fromRad(0.0f));
     else
-        finalAns = Common::Vec2(max * 180.0f / 3.1415f, (maxFree * 180.0f / 3.1415f) * step);
+        finalAns = OpenAngle(Common::Angle::fromRad(max), Common::Angle::fromRad(maxFree * step));
 
 #if 1
-    static Common::MedianFilter<float> freeAngleFilter[Common::Setting::kMaxOnFieldTeamRobots];
+    static Common::MedianFilter<Common::Angle> freeAngleFilter[Common::Setting::kMaxOnFieldTeamRobots];
 
-    freeAngleFilter[robot_num].AddData(finalAns.x);
-    finalAns.x = freeAngleFilter[robot_num].GetCurrent();
+    freeAngleFilter[robot_num].AddData(finalAns.center);
+    finalAns.center = freeAngleFilter[robot_num].GetCurrent();
 
 #endif
 
