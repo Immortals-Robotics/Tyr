@@ -21,6 +21,9 @@ set(HEADER_FILES
 set(SOURCE_FILES
     ai.cpp
     ai_process.cpp
+    internal_finalize.cpp
+    internal_process_data.cpp
+    play_book.cpp
 
     dss/dss.cpp
     dss/parabolic.cpp
@@ -51,6 +54,7 @@ set(SOURCE_FILES
     helpers/open_angle.cpp
     helpers/out_of_field.cpp
     helpers/robot_check.cpp
+    helpers/strategy_weight.cpp
 
     plays/corner_their_global.cpp
     plays/halt.cpp
