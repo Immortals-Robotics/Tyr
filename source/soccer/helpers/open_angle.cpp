@@ -195,9 +195,9 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
     OpenAngle finalAns;
 
     if (maxFree == 0)
-        finalAns = OpenAngle(Common::Angle::fromRad(midGoalAngel), Common::Angle::fromRad(0.0f));
+        finalAns = OpenAngle{Common::Angle::fromRad(midGoalAngel), Common::Angle::fromRad(0.0f)};
     else
-        finalAns = OpenAngle(Common::Angle::fromRad(max), Common::Angle::fromRad(maxFree * step));
+        finalAns = OpenAngle{Common::Angle::fromRad(max), Common::Angle::fromRad(maxFree * step)};
 
 #if 1
     static Common::MedianFilter<Common::Angle> freeAngleFilter[Common::Setting::kMaxOnFieldTeamRobots];
