@@ -12,6 +12,7 @@ find_package(rlimgui CONFIG REQUIRED)
 file(GLOB_RECURSE GEN_SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.c" "*.cpp")
 file(GLOB_RECURSE GEN_HEADER_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h" "*.hpp")
 
+
 set(SOURCE_FILES
     ${GEN_HEADER_FILES}
     ${GEN_SOURCE_FILES})
@@ -35,3 +36,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS}
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch.h")
 
 install(TARGETS ${PROJECT_NAME})
+
+file(COPY ${CMAKE_SOURCE_DIR}/source/gui/shaders DESTINATION ${CMAKE_BINARY_DIR}/source/gui)
+file(COPY ${CMAKE_SOURCE_DIR}/source/gui/fonts DESTINATION ${CMAKE_BINARY_DIR}/source/gui)
