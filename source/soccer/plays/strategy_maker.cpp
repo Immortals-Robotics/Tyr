@@ -78,7 +78,7 @@ void Ai::strategy_maker(void)
     LOG_INFO("STRATEGY: {}", strategy.name());
 
     int xSgn = side;
-    int ySgn = std::copysign(1.0f, -ball.Position.y);
+    int ySgn = Common::sign(-ball.Position.y);
 
     // std::cout << timer.time() << std::endl;
     if (timer.time() < 0.5)

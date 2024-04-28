@@ -133,7 +133,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
             PredictedBall = predictBallForwardAI(d);
         }
 
-        AddDebugCircle(PredictedBall, 100, Common::Blue);
+        Common::debug().drawCircle(PredictedBall, 100, "", Common::Blue);
 
         /*float d = Common::Vec2::distance ( OwnRobot[robot_num].State.Position , Common::circleAroundPoint (
         ball.Position , angle , 200.0f ) ); d += Common::Vec2::distance ( ball.Position , Common::circleAroundPoint (
@@ -175,14 +175,14 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     Common::Vec2 ballVelToGoal     = Common::Vec2(ballToGoal.x * ballVelToGoalDot, ballToGoal.y * ballVelToGoalDot);
     Common::Vec2 ballVelPrepToGoal = Common::Vec2(ball.velocity.x - ballVelToGoal.x, ball.velocity.y - ballVelToGoal.y);
 
-    // AddDebugLine(ball.Position,ball.Position+Common::Vec2(ball.velocity.x, ball.velocity.y)/1.0f);
-    // AddDebugLine(ball.Position,ball.Position+ballVelToGoal/1.0f , Pink);
-    // AddDebugLine(ball.Position,ball.Position+ballVelPrepToGoal/1.0f , Green);
+    // Common::debug().drawLineSegment(ball.Position,ball.Position+Common::Vec2(ball.velocity.x, ball.velocity.y)/1.0f);
+    // Common::debug().drawLineSegment(ball.Position,ball.Position+ballVelToGoal/1.0f , Pink);
+    // Common::debug().drawLineSegment(ball.Position,ball.Position+ballVelPrepToGoal/1.0f , Green);
 
     // PredictedBall += ballVelPrepToGoal * prepPredictMul;
     // PredictedBall += ballVelToGoal * goalPredictMul;
 
-    // AddDebugCircle(PredictedBall, 70, Purple);
+    // Common::debug().drawCircle(PredictedBall, 70, Purple);
 
     Common::Vec2 robotToBall    = OwnRobot[robot_num].State.Position - ball.Position;
     float        robotToBallDot = robotToBall.x * ballVelPrepToGoal.x + robotToBall.y * ballVelPrepToGoal.y;
@@ -200,7 +200,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
 
     if (passedBall)
     {
-        AddDebugCircle(OwnRobot[robot_num].State.Position, 200, Common::Gold);
+        Common::debug().drawCircle(OwnRobot[robot_num].State.Position, 200, "", Common::Gold);
     }
 
     if (ball.Position.distanceTo(OwnRobot[robot_num].State.Position) < 400)
@@ -272,7 +272,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     if ((std::fabs(hehe.deg()) < tetta)) //|| ( circleReachedBehindBall ) )
     {
 
-        AddDebugCircle(Common::Vec2(0, 0), 1000, Common::Red);
+        Common::debug().drawCircle(Common::Vec2(0, 0), 1000, "", Common::Red);
         // hehe = angle;
         // if ( OwnRobot[2].State.Angle < 0 )
         if ((kick) || (chip))
@@ -357,10 +357,10 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     }
     else
     {
-        AddDebugCircle(Common::Vec2(0, 0), 1000, Common::Orange);
+        Common::debug().drawCircle(Common::Vec2(0, 0), 1000, "", Common::Orange);
 
         hehe = PredictedBall.angleWith(OwnRobot[robot_num].State.Position) +
-               Common::Angle::fromDeg(std::copysign(tetta, hehe.deg()));
+               Common::Angle::fromDeg(Common::sign(hehe.deg()) * tetta);
         // if ( Common::Vec2::distance ( OwnRobot[robot_num].State.Position , ball.Position ) < 200 )
         //	ERRTNavigate2Point ( robot_num , Common::circleAroundPoint ( PredictedBall , hehe , r ) , 0 , 20 );
         // else
@@ -370,11 +370,12 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
             ERRTNavigate2Point(robot_num, PredictedBall.circleAroundPoint(hehe, r), 0, 100, &VELOCITY_PROFILE_KHARAKI);
     }
 
-    AddDebugCircle(OwnRobot[robot_num].State.Position, 90, Common::Blue_Violet);
-    AddDebugLine(OwnRobot[robot_num].State.Position,
-                 OwnRobot[robot_num].State.Position +
-                     (OwnRobot[robot_num].target.Position - OwnRobot[robot_num].State.Position).normalized() * 1000.0f,
-                 Common::Black);
+    Common::debug().drawCircle(OwnRobot[robot_num].State.Position, 90, "", Common::Blue_Violet);
+    Common::debug().drawLineSegment(
+        OwnRobot[robot_num].State.Position,
+        OwnRobot[robot_num].State.Position +
+            (OwnRobot[robot_num].target.Position - OwnRobot[robot_num].State.Position).normalized() * 1000.0f,
+        "", Common::Black);
 
     if ((kick > 0) || (chip > 0))
     {

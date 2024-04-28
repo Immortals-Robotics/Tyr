@@ -187,7 +187,7 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     }
 
     const float error = ComputeError(target_a_cmd, a_cmd);
-    // if (error > 0 && state.seenState != CompletelyOut)
+    // if (error > 0 && state.seenState != Common::CompletelyOut)
     {
         // std::cout << "dss changed motion: " << state.vision_id << ", error: " << error << std::endl;
     }

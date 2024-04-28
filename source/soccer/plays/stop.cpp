@@ -11,7 +11,7 @@ void Ai::Stop(void)
     }
 #endif
 
-    // AddDebugCircle(ball.Position,500,Red);
+    // Common::debug().drawCircle(ball.Position,500,Red);
 
     if (OwnRobot[attack].State.OutForSubsitute)
     {

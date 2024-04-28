@@ -200,24 +200,4 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
 
     timer.start();
 }
-
-void Ai::AddDebugPoint(const Common::Vec2 &p, const Common::CommonColor _color)
-{
-    Common::debug().drawPoint(p);
-}
-
-void Ai::AddDebugLine(const Common::Vec2 &p1, const Common::Vec2 &p2, const Common::CommonColor _color)
-{
-    Common::debug().drawLineSegment(p1, p2);
-}
-
-void Ai::AddDebugRect(const Common::Vec2 &p, const float w, const float h, const Common::CommonColor _color)
-{
-    Common::debug().drawRect(p, w, h);
-}
-
-void Ai::AddDebugCircle(const Common::Vec2 &p, const float r, const Common::CommonColor _color)
-{
-    Common::debug().drawCircle(p, r, "", Common::Color::createColor(_color));
-}
 } // namespace Tyr::Soccer

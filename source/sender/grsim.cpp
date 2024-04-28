@@ -27,11 +27,11 @@ void Grsim::SendData(const Robot *const robots, const int robot_count, bool colo
         command->set_wheel3(edtV3->text().toDouble());
         command->set_wheel4(edtV4->text().toDouble());*/
 
-        const int  cmd_idx   = robots[robot_idx].lastCMDs[10].X;
-        const Vec3 motion    = robots[robot_idx].lastCMDs[cmd_idx];
-        float      robot_ang = (90 - robot->State.Angle) * 3.1415 / 180.0;
-        float      new_VelX  = motion.X * cos(robot_ang) - motion.Y * sin(robot_ang);
-        float      new_VelY  = motion.X * sin(robot_ang) + motion.Y * cos(robot_ang);
+        const int          cmd_idx   = robots[robot_idx].lastCMDs[10].x;
+        const Common::Vec3 motion    = robots[robot_idx].lastCMDs[cmd_idx];
+        float              robot_ang = (90 - robot->State.Angle) * 3.1415 / 180.0;
+        float              new_VelX  = motion.x * cos(robot_ang) - motion.y * sin(robot_ang);
+        float              new_VelY  = motion.x * sin(robot_ang) + motion.y * cos(robot_ang);
 
         command->set_veltangent(new_VelY / 20.0);
         command->set_velnormal(-new_VelX / 20.0);

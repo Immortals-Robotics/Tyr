@@ -11,12 +11,14 @@ void Ai::Process(Common::WorldState *worldState)
     internalProcessData(worldState);
 
     debugDraw = true;
-    AddDebugCircle(ball.Position, 40, Common::Red);
-    //	AddDebugLine(ball.Position,Vec2(ball.velocity.x,ball.velocity.y) + ball.Position, Black);
+    Common::debug().drawCircle(ball.Position, 40, "", Common::Red);
+    //	Common::debug().drawLineSegment(ball.Position,Common::Vec2(ball.velocity.x,ball.velocity.y) + ball.Position,
+    //Black);
 
-    //    TVec2 spd_v= worldState->ball.path_dir;
-    //    AddDebugLine(ball.Position,spd_v + ball.Position, Yellow);
-    //    AddDebugLine(ball.Position,Vec2(ball.velocity.x,ball.velocity.y) + ball.Position, Yellow);
+    //    Common::Vec2 spd_v= worldState->ball.path_dir;
+    //    Common::debug().drawLineSegment(ball.Position,spd_v + ball.Position, Yellow);
+    //    Common::debug().drawLineSegment(ball.Position,Common::Vec2(ball.velocity.x,ball.velocity.y) + ball.Position,
+    //    Yellow);
     debugDraw = false;
 
     if (REF_playState)

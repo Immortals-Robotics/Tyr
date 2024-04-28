@@ -243,10 +243,5 @@ public:
 
 protected:
     bool debugDraw;
-    void AddDebugPoint(const Common::Vec2 &p, const Common::CommonColor _color = Common::White);
-    void AddDebugLine(const Common::Vec2 &p1, const Common::Vec2 &p2, const Common::CommonColor _color = Common::White);
-    void AddDebugRect(const Common::Vec2 &p, const float w, const float h,
-                      const Common::CommonColor _color = Common::White);
-    void AddDebugCircle(const Common::Vec2 &p, const float r, const Common::CommonColor _color = Common::White);
 };
 } // namespace Tyr::Soccer

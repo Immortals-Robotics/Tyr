@@ -22,11 +22,31 @@ set(SOURCE_FILES
     dss/parabolic.cpp
     dss/trajectory.cpp
     errt/errt.cpp
+    errt/set_obstacles.cpp
     errt/tree.cpp
+
     obstacle/obstacle_circle.cpp
     obstacle/obstacle_map.cpp
     obstacle/obstacle_rect.cpp
     obstacle/obstacle.cpp
+
+    helpers/attack_fucking_angle.cpp
+    helpers/ball_is_goaling.cpp
+    helpers/ball_trajectory.cpp
+    helpers/calc_is_defending.cpp
+    helpers/calculate_mark_cost.cpp
+    helpers/calculate_opp_threat.cpp
+    helpers/calculate_swicth_to_attacker_score.cpp
+    helpers/def_ghuz.cpp
+    helpers/find_kicker_opp.cpp
+    helpers/goal_blocked.cpp
+    helpers/manage_att_roles.cpp
+    helpers/mark_manager.cpp
+    helpers/nearest_asshole.cpp
+    helpers/one_touch_angle.cpp
+    helpers/open_angle.cpp
+    helpers/out_of_field.cpp
+    helpers/robot_check.cpp
 
     plays/corner_their_global.cpp
     plays/kickoff_their_one_wall.cpp

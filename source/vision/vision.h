@@ -93,7 +93,7 @@ private:
     Protos::SSL_DetectionBall  d_ball[MAX_BALLS * Common::Setting::kCamCount];
     Protos::SSL_DetectionRobot robot[Common::Setting::kMaxRobots * Common::Setting::kCamCount];
 
-    //	double t_capture_buff[MAX_BALLS*Setting::kCamCount];
-    //    deque<TVec2> ball_dir_buff;
+    //	double t_capture_buff[MAX_BALLS*Common::Setting::kCamCount];
+    //    deque<Common::Vec2> ball_dir_buff;
 };
 } // namespace Tyr::Vision

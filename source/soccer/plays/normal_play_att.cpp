@@ -74,13 +74,13 @@ void Ai::NormalPlayAtt(void)
             LOG_DEBUG("open angle: {}", openAngle.y);
             if (openAngle.y < 8 &&
                 (findKickerOpp(-1, 150.0f) ==
-                 -1)) //&& ( ball.Position.x * side < -2300 ) && ( fabs ( ball.Position.y ) > 1800 ) )
+                 -1)) //&& ( ball.Position.x * side < -2300 ) && ( std::fabs ( ball.Position.y ) > 1800 ) )
             {
 
                 // float passAngle = Common::Vec2::angleWith (
                 // OwnRobot[randomParam<0.3?dmf:(randomParam<0.6?rmf:lmf)].State.Position , ball.Position );
                 Common::Angle passAngle =
-                    Common::Vec2(-side * 1700, std::copysign(1700.0f, -ball.Position.y)).angleWith(ball.Position);
+                    Common::Vec2(-side * 1700, Common::sign(-ball.Position.y) * 1700.0f).angleWith(ball.Position);
                 float chip_pow = 40;
 
                 if (mid1Suitable)

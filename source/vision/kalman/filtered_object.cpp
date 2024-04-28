@@ -144,7 +144,7 @@ void FilteredObject::updatePosition(float z[2], float filtOut[2][2])
     // add in the check to revert to the fast filter state if certain conditions are met
     // filtState = CimpInv * (filtOutP - Dimp*z)
     // x-axis
-    if (fabs(filtOut[0][1] - filtOutP[0][1]) > VELOCITY_THRES)
+    if (std::fabs(filtOut[0][1] - filtOutP[0][1]) > VELOCITY_THRES)
     {
         // x-axis
         filtState[0][0] =
@@ -157,7 +157,7 @@ void FilteredObject::updatePosition(float z[2], float filtOut[2][2])
         filtOut[0][1] = Cimp[1][0] * filtState[0][0] + Cimp[1][1] * filtState[0][1] + Dimp[1] * z[0];
     }
 
-    if (fabs(filtOut[1][1] - filtOutP[1][1]) > VELOCITY_THRES)
+    if (std::fabs(filtOut[1][1] - filtOutP[1][1]) > VELOCITY_THRES)
     {
         // y-axis
         filtState[1][0] =

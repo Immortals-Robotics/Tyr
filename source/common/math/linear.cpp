@@ -39,14 +39,14 @@ void Linear::calculate(int n, float *x, float *y)
     }
 
     m_b = xy / xx;
-    if (fabs(m_b) > 50)
+    if (std::fabs(m_b) > 50)
     {
         amoodi = true;
         xinter = xa;
         return;
     }
     m_a     = ya - m_b * xa;
-    m_coeff = (fabs(yy) == 0) ? 1 : xy / sqrt(xx * yy);
+    m_coeff = (std::fabs(yy) == 0) ? 1 : xy / sqrt(xx * yy);
 }
 
 //! Evaluates the linear regression function at the given abscissa.
@@ -90,8 +90,8 @@ float Linear::getXIntercept()
 float Linear::getDisToPoint(Vec2 p)
 {
     if (amoodi)
-        return fabs(p.x - xinter);
-    return fabs(m_b * p.x - p.y + m_a) / sqrt(m_b * m_b + 1.0);
+        return std::fabs(p.x - xinter);
+    return std::fabs(m_b * p.x - p.y + m_a) / sqrt(m_b * m_b + 1.0);
 }
 
 void Linear::chapeKon(void)

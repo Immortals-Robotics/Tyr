@@ -139,11 +139,11 @@ Common::Vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityPro
 {
     const float field_extra_area = 200.f;
 
-    if (fabs(target.Position.x) > field_w + field_extra_area)
-        target.Position.x = std::copysign(field_w + field_extra_area, target.Position.x);
+    if (std::fabs(target.Position.x) > field_w + field_extra_area)
+        target.Position.x = Common::sign(target.Position.x) * (field_w + field_extra_area);
 
-    if (fabs(target.Position.y) > field_h + field_extra_area)
-        target.Position.y = std::copysign(field_h + field_extra_area, target.Position.y);
+    if (std::fabs(target.Position.y) > field_h + field_extra_area)
+        target.Position.y = Common::sign(target.Position.y) * (field_h + field_extra_area);
 
     if (speed < 0)
         speed = 0;
@@ -162,7 +162,7 @@ void Robot::MoveByMotion(Common::Vec3 motion)
 {
     motion.x = std::min(100.0f, std::max(-100.0f, motion.x));
     motion.y = std::min(100.0f, std::max(-100.0f, motion.y));
-    // motion.X=0;
+    // motion.x=0;
     lastCMDs[CMDindex] = motion;
     lastCMDs[10].x     = CMDindex;
     lastCMDs[10].y     = PREDICT_CMDS;
@@ -177,8 +177,8 @@ void Robot::MoveByMotion(Common::Vec3 motion)
     if (true)
     { // new protocol
 
-        //        velocity.x.f32 = motion.X;
-        //        velocity.y.f32 = motion.Y;
+        //        velocity.x.f32 = motion.x;
+        //        velocity.y.f32 = motion.y;
         //        target_orientation.f32 = target.Angle;
         convert_float_to_2x_buff(data + 3, motion.x);
         convert_float_to_2x_buff(data + 5, motion.y);

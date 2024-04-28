@@ -4,6 +4,8 @@ namespace Tyr::Common
 {
 bool almostEqual(float t_a, float t_b);
 
+float sign(float t_f);
+
 // STL functions:
 float average_deque(std::deque<float> _q);
 float variance_deque(std::deque<float> _q);

@@ -1,7 +1,7 @@
 #include "obstacle.h"
 
-#define world2mapX(a) min(729, max(0, ((a / 10) + 364)))
-#define world2mapY(a) min(529, max(0, ((a / 10) + 264)))
+#define world2mapX(a) std::min(729, std::max(0, ((a / 10) + 364)))
+#define world2mapY(a) std::min(529, std::max(0, ((a / 10) + 264)))
 
 namespace Tyr::Soccer
 {
@@ -119,7 +119,7 @@ bool collisionDetect(Common::Vec2 p1, Common::Vec2 p2)
 
                 if ( IsInObstacle ( current ) )
                         return true;
-                advance_dis = min ( max ( 1 , map.NearestDistance(current.x,current.y) ) , Common::Vec2::distance (
+                advance_dis = std::min ( std::max ( 1 , map.NearestDistance(current.x,current.y) ) , Common::Vec2::distance (
 current , p2 ) ); if ( advance_dis <= 0 ) return true;
 
                 current.x += coss * advance_dis;

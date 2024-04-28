@@ -17,14 +17,14 @@ void clear_map ( void )
 
 bool IsInObstacle ( Common::Vec2 p )
 {
-    return obs_lut[(int)p.X][(int)p.Y];
+    return obs_lut[(int)p.x][(int)p.y];
 }
 
 bool collisionDetect ( Common::Vec2 p1 , Common::Vec2 p2 )
 {
     float coss , sinn;
-    coss = ( p2.X - p1.X ) / DIS ( p1 , p2 );
-    sinn = ( p2.Y - p1.Y ) / DIS ( p1 , p2 );
+    coss = ( p2.x - p1.x ) / DIS ( p1 , p2 );
+    sinn = ( p2.y - p1.y ) / DIS ( p1 , p2 );
 
     Common::Vec2 current = p1;
 
@@ -33,8 +33,8 @@ bool collisionDetect ( Common::Vec2 p1 , Common::Vec2 p2 )
         if ( IsInObstacle ( current ) )
             return true;
 
-        current.X += coss * 9;
-        current.Y += sinn * 9;
+        current.x += coss * 9;
+        current.y += sinn * 9;
     }
 
     return false;

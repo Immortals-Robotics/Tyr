@@ -35,7 +35,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
             (OwnRobot[i].State.vision_id != OwnRobot[robot_num].State.vision_id))
         {
             AddCircle(OwnRobot[i].State.Position.x, OwnRobot[i].State.Position.y, current_robot_radius + robotRadius);
-            // AddDebugCircle(OwnRobot[i].State.Position,ownRobotRadius + (!dribble)*ownRobotRadius,Cyan);
+            // Common::debug().drawCircle(OwnRobot[i].State.Position,ownRobotRadius + (!dribble)*ownRobotRadius,Cyan);
         }
     }
 
@@ -47,7 +47,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
             const float radius = calculateRobotRadius(OppRobot[i]);
 
             AddCircle(OppRobot[i].Position.x, OppRobot[i].Position.y, radius + current_robot_radius);
-            // AddDebugCircle(OppRobot[i].Position,ownRobotRadius + (!dribble)*ownRobotRadius,Cyan);
+            // Common::debug().drawCircle(OppRobot[i].Position,ownRobotRadius + (!dribble)*ownRobotRadius,Cyan);
         }
     }
 
@@ -84,7 +84,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
                      -(penalty_area_half_width + current_robot_radius),
                      side * (penaltyAreaExtensionBehindGoal + current_robot_radius + big_penalty_area_r),
                      big_penalty_area_w + 2 * current_robot_radius);
-        //		AddDebugRect( Vec2(-side*(field_width+185.0f) , -penalty_circle_center_y - 200) ,
+        //		Common::debug().drawRect( Common::Vec2(-side*(field_width+185.0f) , -penalty_circle_center_y - 200) ,
         // side*(385.0f+big_penalty_area_r) , penalty_area_width + 400,Purple );
     }
 

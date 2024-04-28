@@ -30,9 +30,9 @@ void Ai::Stop_def(void)
     DefMid(def, rw, lw, NULL, true);
 
     std::map<int, Common::Vec2> static_pos;
-    static_pos[dmf]  = Common::Vec2(side * 4200, std::copysign(1000.0f, ball.Position.y));
-    static_pos[mid1] = Common::Vec2(side * 4500, std::copysign(3000.0f, -ball.Position.y));
-    static_pos[mid2] = Common::Vec2(side * 4200, std::copysign(1000.0f, -ball.Position.y));
+    static_pos[dmf]  = Common::Vec2(side * 4200, Common::sign(ball.Position.y) * 1000.0f);
+    static_pos[mid1] = Common::Vec2(side * 4500, Common::sign(-ball.Position.y) * 3000.0f);
+    static_pos[mid2] = Common::Vec2(side * 4200, Common::sign(-ball.Position.y) * 1000.0f);
 
     ERRTSetObstacles(dmf, true, true);
     OwnRobot[dmf].face(ball.Position);

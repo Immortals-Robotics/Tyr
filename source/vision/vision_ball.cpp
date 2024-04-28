@@ -224,11 +224,11 @@ void VisionModule::predictBallForward(Common::WorldState *state)
     //
     //    float tempAng,lastAng;
     //    if(ball_dir_buff.size()) {
-    //        deque<TVec2>::iterator delete_until_here = ball_dir_buff.begin();
-    //        for (deque<TVec2>::iterator it = ball_dir_buff.begin(), it2 = ball_dir_buff.begin() + 1;
+    //        deque<Common::Vec2>::iterator delete_until_here = ball_dir_buff.begin();
+    //        for (deque<Common::Vec2>::iterator it = ball_dir_buff.begin(), it2 = ball_dir_buff.begin() + 1;
     //             it2 != ball_dir_buff.end(); ++it, ++it2) {
     //            tempAng = Angle(*it2 - *it);
-    //            if (it != ball_dir_buff.begin() && fabs(tempAng - lastAng) > 5) {
+    //            if (it != ball_dir_buff.begin() && std::fabs(tempAng - lastAng) > 5) {
     //                delete_until_here = it;
     //            }
     //            lastAng = tempAng;
@@ -243,17 +243,17 @@ void VisionModule::predictBallForward(Common::WorldState *state)
     //    float tempAngdelta = NormalizeAngle(Angle(state->ball.path_dir) - state -> ball.velocity.direction);
     //    if(tempAngdelta != tempAngdelta)//tempAngdelta is NaN (Don't erase it)
     //        tempAngdelta = 0.0;
-    //    if(fabs(tempAngdelta) > 15){
+    //    if(std::fabs(tempAngdelta) > 15){
     //        std::cout<<"NEW ANGLE____________"<<tempAngdelta<<std::endl;
     //    }
     //
-    //    if(state -> ball.velocity.length > 10 && state -> ball.seenState == Seen && fabs(tempAngdelta) <= 15) {
+    //    if(state -> ball.velocity.length > 10 && state -> ball.seenState == Common::Seen && std::fabs(tempAngdelta) <= 15) {
     //        state->ball.path_dir = (ball_dir_buff.front() - ball_dir_buff.back());
     //        std::cout<<"we got here"<<std::endl;
     //
     //    }else if(state -> ball.seenState != TemprolilyOut){
     //        state->ball.First_Pos_when_shooted = state->ball.Position;
-    //        std::cout<<"SEE: "<<fabs(tempAngdelta)<<std::endl;
+    //        std::cout<<"SEE: "<<std::fabs(tempAngdelta)<<std::endl;
     //    }
 }
 

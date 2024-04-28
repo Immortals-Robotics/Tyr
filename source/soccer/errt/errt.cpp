@@ -125,7 +125,7 @@ Common::Vec2 Planner::nearest_free(Common::Vec2 state)
 
     // Common::Vec2 ans = Common::Vec2 ( std::min ( 729 , std::max ( 0 , state.x + sgn ( x ) * abs ( y ) ) ) , std::min
     // ( 529 , std::max ( 0 , state.y + sgn ( y ) * abs ( x ) ) ) );
-    Common::Vec2 ans = Common::Vec2(state.x + std::copysign(abs(y), x), state.y + std::copysign(abs(x), y));
+    Common::Vec2 ans = Common::Vec2(state.x + Common::sign(x) * std::abs(y), state.y + Common::sign(y) * std::abs(x));
 
     // if ( IsInObstacle ( ans ) )
     //	return nearest_free ( ans );

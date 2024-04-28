@@ -20,7 +20,7 @@ void Ai::kickoff_their_one_wall()
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if ((fabs(OppRobot[i].Position.x) < 1500) && (fabs(OppRobot[i].Position.y) > 600) &&
+        if ((std::fabs(OppRobot[i].Position.x) < 1500) && (std::fabs(OppRobot[i].Position.y) > 600) &&
             (OppRobot[i].seenState != Common::CompletelyOut))
         {
             if (OppRobot[i].Position.y > 0)
@@ -40,7 +40,7 @@ void Ai::kickoff_their_one_wall()
             OwnRobot[mid1].face(Common::Vec2(-side * field_width, 0));
             ERRTNavigate2Point(
                 mid1, OppRobot[indexN].Position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
-                                                                      (fabs(OppRobot[indexN].Position.x) + 14) * 1.5));
+                                                                      (std::fabs(OppRobot[indexN].Position.x) + 14) * 1.5));
             markMap[&mid1] = indexN;
         }
         else
@@ -89,7 +89,7 @@ void Ai::kickoff_their_one_wall()
             OwnRobot[mid1].face(Common::Vec2(-side * field_width, 0));
             ERRTNavigate2Point(
                 mid1, OppRobot[indexP].Position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
-                                                                      (fabs(OppRobot[indexP].Position.x) + 14) * 1.5));
+                                                                      (std::fabs(OppRobot[indexP].Position.x) + 14) * 1.5));
             markMap[&mid1] = indexP;
         }
         else
@@ -98,7 +98,7 @@ void Ai::kickoff_their_one_wall()
             OwnRobot[mid2].face(Common::Vec2(-side * field_width, 0));
             ERRTNavigate2Point(
                 mid2, OppRobot[indexP].Position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
-                                                                      (fabs(OppRobot[indexP].Position.x) + 14) * 1.5));
+                                                                      (std::fabs(OppRobot[indexP].Position.x) + 14) * 1.5));
             markMap[&mid2] = indexP;
         }
     }

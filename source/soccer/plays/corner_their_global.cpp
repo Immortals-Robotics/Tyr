@@ -22,7 +22,7 @@ void Ai::corner_their_global()
     DefenceWall(attack, false);
 
     std::map<int, Common::Vec2> static_pos;
-    static_pos[dmf]  = Common::Vec2(side * 3500, std::copysign(1100.0f, -ball.Position.y));
+    static_pos[dmf]  = Common::Vec2(side * 3500, Common::sign(-ball.Position.y) * 1100.0f);
     static_pos[mid1] = Common::Vec2(side * 3200, 600);
     static_pos[mid2] = Common::Vec2(side * 3200, 0);
 

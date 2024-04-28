@@ -39,12 +39,12 @@ float RectangleObstacle::NearestDistance(float _x, float _y)
 
     if ((_x > x) && (_x < x + w))
     {
-        return std::min(fabs(_y - y), fabs(_y - y - h));
+        return std::min(std::fabs(_y - y), std::fabs(_y - y - h));
     }
 
     if ((_y > y) && (_y < y + h))
     {
-        return std::min(fabs(_x - x), fabs(_x - x - w));
+        return std::min(std::fabs(_x - x), std::fabs(_x - x - w));
     }
 
     if ((_x < x) && (_y < y))
