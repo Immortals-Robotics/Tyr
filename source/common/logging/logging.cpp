@@ -73,7 +73,7 @@ std::filesystem::path Logger::getNewLogFilePath() const
     unsigned log_file_idx = 0;
     for (const auto &log_entry : std::filesystem::directory_iterator(LOG_DIR))
     {
-//        std::cout << log_entry.path() << std::endl;
+        //        std::cout << log_entry.path() << std::endl;
 
         std::stringstream ss;
         ss << std::setw(4) << std::setfill('0') << log_file_idx;
@@ -85,14 +85,14 @@ std::filesystem::path Logger::getNewLogFilePath() const
             log_file_idx++;
         }
     }
-        std::cout << "Found " << log_file_idx << " log files." << std::endl;
+    std::cout << "Found " << log_file_idx << " log files." << std::endl;
 
     std::time_t t  = std::time(nullptr);
     std::tm     tm = *std::localtime(&t);
 
     std::stringstream ss;
     ss << LOG_DIR << "/ai_log_" << std::setw(4) << std::setfill('0') << log_file_idx
-        << std::put_time(&tm, "_%Y_%m_%d__%H_%M_%S") << ".imm_ai_log";
+       << std::put_time(&tm, "_%Y_%m_%d__%H_%M_%S") << ".imm_ai_log";
 
     std::string new_log_file_path = ss.str();
     std::cout << "Creating new log file:  " << new_log_file_path << std::endl;
