@@ -1,13 +1,12 @@
 #include "VisualizationRenderer.h"
-#include "raylib.h"
 #define TEXT_OFFSET_X 50.
 #define TEXT_OFFSET_Y 300.
 
 void VisualizationRenderer::DrawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data,
-                                       TeamColor                                                             color)
+                                       Tyr::Common::TeamColor                                                color)
 {
-    auto lTextColor = color == TEAM_COLOR_YELLOW ? BLACK : WHITE;
-    auto lBaseColor = color == TEAM_COLOR_YELLOW ? YELLOW : BLUE;
+    auto lTextColor = color == Tyr::Common::TeamColor::Yellow ? BLACK : WHITE;
+    auto lBaseColor = color == Tyr::Common::TeamColor::Yellow ? YELLOW : BLUE;
     for (auto robot : data)
     {
         auto position = ImVec2(robot.x(), robot.y());

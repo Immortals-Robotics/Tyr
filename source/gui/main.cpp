@@ -60,8 +60,8 @@ void update()
     {
         visualizationRenderer->DrawField(*ssl_field);
         vision_mutex.lock();
-        visualizationRenderer->DrawRobots(ssl_packet->detection().robots_blue(), TEAM_COLOR_BLUE);
-        visualizationRenderer->DrawRobots(ssl_packet->detection().robots_yellow(), TEAM_COLOR_YELLOW);
+        visualizationRenderer->DrawRobots(ssl_packet->detection().robots_blue(), Tyr::Common::TeamColor::Blue);
+        visualizationRenderer->DrawRobots(ssl_packet->detection().robots_yellow(), Tyr::Common::TeamColor::Yellow);
         visualizationRenderer->DrawBalls(ssl_packet->detection().balls());
         if (configMenu->IsNetworkDataUpdated() == VISION_PORT || configMenu->IsNetworkDataUpdated() == VISION_IP)
         {
@@ -86,7 +86,7 @@ void update()
 }
 
 std::vector<float> plot_data[12 * 2];
-void               DrawSpeedGraph()
+void DrawSpeedGraph()
 {
     static bool p_open = true;
 

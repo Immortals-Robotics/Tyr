@@ -1,11 +1,6 @@
 #pragma once
 #include "../utility/vector_helper.h"
 
-enum TeamColor
-{
-    TEAM_COLOR_BLUE   = 0,
-    TEAM_COLOR_YELLOW = 1,
-};
 class VisualizationRenderer
 {
 private:
@@ -38,7 +33,7 @@ public:
                      unsigned char _transparency = 255);
 
     void DrawField(const Protos::SSL_GeometryFieldSize &data);
-    void DrawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data, TeamColor color);
+    void DrawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data, Tyr::Common::TeamColor color);
     void DrawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall> &data);
     void ApplyShader(void);
 };
