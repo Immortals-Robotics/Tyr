@@ -2,14 +2,14 @@
 
 namespace Tyr::Sender
 {
-Grsim::Grsim(NetworkAddress address) : address(address)
+Grsim::Grsim(Common::NetworkAddress address) : address(address)
 {
     socket = std::make_unique<Common::UdpServer>();
 }
 
 void Grsim::SendData(const Robot *const robots, const int robot_count, bool color)
 {
-    grSim_Packet packet;
+    Protos::grSim_Packet packet;
     packet.mutable_commands()->set_isteamyellow(color);
     packet.mutable_commands()->set_timestamp(0.0);
 
@@ -17,7 +17,7 @@ void Grsim::SendData(const Robot *const robots, const int robot_count, bool colo
     {
         const Robot *const robot = robots + robot_idx;
 
-        grSim_Robot_Command *command = packet.mutable_commands()->add_robot_commands();
+        Protos::grSim_Robot_Command *command = packet.mutable_commands()->add_robot_commands();
         command->set_id(robot->vision_id);
 
         command->set_wheelsspeed(false);
@@ -26,11 +26,11 @@ void Grsim::SendData(const Robot *const robots, const int robot_count, bool colo
         command->set_wheel3(edtV3->text().toDouble());
         command->set_wheel4(edtV4->text().toDouble());*/
 
-        const int   cmd_idx   = robots[robot_idx].lastCMDs[10].X;
-        const TVec3 motion    = robots[robot_idx].lastCMDs[cmd_idx];
-        float       robot_ang = (90 - robot->State.Angle) * 3.1415 / 180.0;
-        float       new_VelX  = motion.X * cos(robot_ang) - motion.Y * sin(robot_ang);
-        float       new_VelY  = motion.X * sin(robot_ang) + motion.Y * cos(robot_ang);
+        const int  cmd_idx   = robots[robot_idx].lastCMDs[10].X;
+        const Vec3 motion    = robots[robot_idx].lastCMDs[cmd_idx];
+        float      robot_ang = (90 - robot->State.Angle) * 3.1415 / 180.0;
+        float      new_VelX  = motion.X * cos(robot_ang) - motion.Y * sin(robot_ang);
+        float      new_VelY  = motion.X * sin(robot_ang) + motion.Y * cos(robot_ang);
 
         command->set_veltangent(new_VelY / 20.0);
         command->set_velnormal(-new_VelX / 20.0);
@@ -68,16 +68,7 @@ void Grsim::SendData(const Robot *const robots, const int robot_count, bool colo
 
         command->set_spinner(robot->dribbler);
 
-        const size_t dgram_len = packet.ByteSize();
-        char *const  dgram     = new char[dgram_len];
-        packet.SerializeToArray(dgram, dgram_len);
-        socket->sendTo(dgram, dgram_len, address.ip, address.port);
-        delete[] dgram;
+        socket->send(packet, address);
     }
-}
-
-Grsim::~Grsim()
-{
-    delete socket;
 }
 } // namespace Tyr::Sender

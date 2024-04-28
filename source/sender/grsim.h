@@ -14,7 +14,8 @@ private:
 
 public:
     Grsim(Common::NetworkAddress address);
-    ~Grsim();
+    ~Grsim() = default;
+	
     void sendData(const Robot *const robots, const int robot_count, bool color);
 };
 } // namespace Tyr::Sender
