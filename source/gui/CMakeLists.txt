@@ -15,7 +15,6 @@ set(HEADER_FILES
 	app.h
 	renderer/renderer.h
 	menu/config_menu.h
-	utility/vector_helper.h
 )
 
 set(SOURCE_FILES
@@ -25,7 +24,6 @@ set(SOURCE_FILES
 	renderer/renderer_ball.cpp
 	renderer/renderer_robot.cpp
 	renderer/renderer.cpp
-	utility/vector_helper.cpp
 )
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})

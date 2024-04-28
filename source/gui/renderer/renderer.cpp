@@ -2,7 +2,8 @@
 
 namespace Tyr::Gui
 {
-Renderer::Renderer(ImVec2 _wSize, float _upScalingFactor) : ballRadius(21.5f), robotRadius(90.f), robotArcAngle(50.f)
+Renderer::Renderer(Common::Vec2 _wSize, float _upScalingFactor)
+    : ballRadius(21.5f), robotRadius(90.f), robotArcAngle(50.f)
 {
     wSize                      = _wSize * _upScalingFactor;
     upScalingFactor            = _upScalingFactor;
@@ -21,7 +22,7 @@ void Renderer::init()
     SetShaderValue(fxaaShader, GetShaderLocation(fxaaShader, "resolution"), resolution.data(), SHADER_UNIFORM_VEC2);
 }
 
-Vector2 Renderer::ConvertSignedVecToPixelVec(ImVec2 _signedVec)
+Vector2 Renderer::ConvertSignedVecToPixelVec(Common::Vec2 _signedVec)
 {
     _signedVec.y *= -1.;
     _signedVec  = _signedVec * this->zoomScale + this->wSize / 2;
@@ -34,47 +35,48 @@ int Renderer::ConvertRealityUnitToPixels(float _value)
     return _value * zoomScale;
 }
 
-void Renderer::DrawRectVec(ImVec2 _v1, ImVec2 _v2, Color _color, bool _isFilled, float _thickness,
-                           unsigned char _transparency)
+void Renderer::drawRect(Common::Rect rect, Color _color, bool _isFilled, float _thickness, unsigned char _transparency)
 {
-    Vector2 v1     = ConvertSignedVecToPixelVec(_v1);
-    Vector2 v2     = ConvertSignedVecToPixelVec(_v2);
-    _thickness     = _thickness * upScalingFactor;
-    float posX     = (v1.x < v2.x) ? v1.x : v2.x;
-    float posY     = (v1.y < v2.y) ? v1.y : v2.y;
-    float length   = (v1.x < v2.x) ? v2.x - v1.x : v1.x - v2.x;
-    float width    = (v1.y < v2.y) ? v2.y - v1.y : v1.y - v2.y;
-    _color.a       = _transparency;
-    Rectangle rect = {.x = posX, .y = posY, .width = length, .height = width};
+    Vector2 v1   = ConvertSignedVecToPixelVec(rect.min);
+    Vector2 v2   = ConvertSignedVecToPixelVec(rect.max);
+    _thickness   = _thickness * upScalingFactor;
+    float posX   = (v1.x < v2.x) ? v1.x : v2.x;
+    float posY   = (v1.y < v2.y) ? v1.y : v2.y;
+    float length = (v1.x < v2.x) ? v2.x - v1.x : v1.x - v2.x;
+    float width  = (v1.y < v2.y) ? v2.y - v1.y : v1.y - v2.y;
+    _color.a     = _transparency;
+
+    Rectangle ray_rect = {.x = posX, .y = posY, .width = length, .height = width};
 
     BeginTextureMode(visualizaionTexture);
     if (_isFilled)
     {
-        DrawRectangleRec(rect, _color);
+        DrawRectangleRec(ray_rect, _color);
     }
     else
     {
-        DrawRectangleLinesEx(rect, _thickness, _color);
+        DrawRectangleLinesEx(ray_rect, _thickness, _color);
     }
     EndTextureMode();
 }
 
-void Renderer::DrawLineVec(ImVec2 _v1, ImVec2 _v2, Color _color, float _thickness, unsigned char _transparency)
+void Renderer::drawLineSegment(Common::LineSegment line_segment, Color _color, float _thickness,
+                               unsigned char _transparency)
 {
     _thickness = _thickness * upScalingFactor;
-    Vector2 v1 = ConvertSignedVecToPixelVec(_v1);
-    Vector2 v2 = ConvertSignedVecToPixelVec(_v2);
+    Vector2 v1 = ConvertSignedVecToPixelVec(line_segment.start);
+    Vector2 v2 = ConvertSignedVecToPixelVec(line_segment.end);
     _color.a   = _transparency;
     BeginTextureMode(visualizaionTexture);
     DrawLineEx(v1, v2, _thickness, _color);
     BeginTextureMode(visualizaionTexture);
 }
 
-void Renderer::DrawCircleVec(ImVec2 _center, float _rad, Color _color, bool _isFilled, float _thickness,
-                             unsigned char _transparency)
+void Renderer::drawCircle(Common::Circle circle, Color _color, bool _isFilled, float _thickness,
+                          unsigned char _transparency)
 {
-    Vector2 center = ConvertSignedVecToPixelVec(_center);
-    _rad           = ConvertRealityUnitToPixels(_rad);
+    Vector2 center = ConvertSignedVecToPixelVec(circle.center);
+    float   _rad   = ConvertRealityUnitToPixels(circle.r);
     _thickness     = _thickness * upScalingFactor;
     _color.a       = _transparency;
     BeginTextureMode(visualizaionTexture);
@@ -89,11 +91,11 @@ void Renderer::DrawCircleVec(ImVec2 _center, float _rad, Color _color, bool _isF
     EndTextureMode();
 }
 
-void Renderer::DrawCircleSectorVec(ImVec2 _center, float _rad, Color _color, float _startAngle, float _endAngle,
-                                   bool _isFilled, unsigned char _transparency)
+void Renderer::drawCircleSector(Common::Circle circle, Color _color, float _startAngle, float _endAngle, bool _isFilled,
+                                unsigned char _transparency)
 {
-    Vector2 center = ConvertSignedVecToPixelVec(_center);
-    _rad           = ConvertRealityUnitToPixels(_rad);
+    Vector2 center = ConvertSignedVecToPixelVec(circle.center);
+    float   _rad   = ConvertRealityUnitToPixels(circle.r);
     Vector2 p1 = {.x = center.x + _rad * cos(_startAngle * DEG2RAD), .y = center.y + _rad * sin(_startAngle * DEG2RAD)};
     Vector2 p2 = {.x = center.x + _rad * cos(_endAngle * DEG2RAD), .y = center.y + _rad * sin(_endAngle * DEG2RAD)};
     _color.a   = _transparency;
@@ -111,7 +113,7 @@ void Renderer::DrawCircleSectorVec(ImVec2 _center, float _rad, Color _color, flo
     EndTextureMode();
 }
 
-void Renderer::DrawTextVec(ImVec2 _pos, std::string _str, int _fontSize, Color _color, unsigned char _transparency)
+void Renderer::drawText(Common::Vec2 _pos, std::string _str, int _fontSize, Color _color, unsigned char _transparency)
 {
     Vector2 pos = ConvertSignedVecToPixelVec(_pos);
     BeginTextureMode(visualizaionTexture);
@@ -121,12 +123,12 @@ void Renderer::DrawTextVec(ImVec2 _pos, std::string _str, int _fontSize, Color _
 
 void Renderer::CalculateZoom()
 {
-    bool   x        = this->wSize.x < this->wSize.y;
-    ImVec2 ratio    = ImVec2(this->wSize.x / overallFieldSize.x, this->wSize.y / overallFieldSize.y);
-    this->zoomScale = x ? (ratio.x > ratio.y ? ratio.x : ratio.y) : (ratio.x > ratio.y ? ratio.y : ratio.x);
+    bool         x     = this->wSize.x < this->wSize.y;
+    Common::Vec2 ratio = Common::Vec2(this->wSize.x / overallFieldSize.x, this->wSize.y / overallFieldSize.y);
+    this->zoomScale    = x ? (ratio.x > ratio.y ? ratio.x : ratio.y) : (ratio.x > ratio.y ? ratio.y : ratio.x);
 }
 
-void Renderer::ApplyShader()
+void Renderer::applyShader()
 {
     BeginTextureMode(shaderVisualizationTexture);
     BeginShaderMode(fxaaShader);
@@ -135,7 +137,7 @@ void Renderer::ApplyShader()
     EndTextureMode();
 }
 
-void Renderer::DrawField(const Protos::SSL_GeometryFieldSize &data)
+void Renderer::drawField(const Protos::SSL_GeometryFieldSize &data)
 {
     BeginTextureMode(this->visualizaionTexture);
     ClearBackground(GREEN);
@@ -146,39 +148,39 @@ void Renderer::DrawField(const Protos::SSL_GeometryFieldSize &data)
 
     CalculateZoom();
 
-    ImVec2 fieldWallStartPoint =
-        ImVec2(data.field_length() / -2 - data.boundary_width(), data.field_width() / -2 - data.boundary_width());
-    ImVec2 fieldWallEndPoint =
-        ImVec2(data.field_length() / 2 + data.boundary_width(), data.field_width() / 2 + data.boundary_width());
-    ImVec2 fieldStartPoint = ImVec2(data.field_length() / -2, data.field_width() / -2);
-    ImVec2 fieldEndPoint   = ImVec2(data.field_length() / 2, data.field_width() / 2);
-    ImVec2 fieldCenter     = ImVec2(0, 0);
+    Common::Vec2 fieldWallStartPoint =
+        Common::Vec2(data.field_length() / -2 - data.boundary_width(), data.field_width() / -2 - data.boundary_width());
+    Common::Vec2 fieldWallEndPoint =
+        Common::Vec2(data.field_length() / 2 + data.boundary_width(), data.field_width() / 2 + data.boundary_width());
+    Common::Vec2 fieldStartPoint = Common::Vec2(data.field_length() / -2, data.field_width() / -2);
+    Common::Vec2 fieldEndPoint   = Common::Vec2(data.field_length() / 2, data.field_width() / 2);
+    Common::Vec2 fieldCenter     = Common::Vec2(0, 0);
 
-    ImVec2 ourGoalStartPoint = ImVec2(data.field_length() / -2 - data.goal_depth(), data.goal_width() / 2);
-    ImVec2 ourGoalEndPoint   = ImVec2(data.field_length() / -2, data.goal_width() / -2);
-    ImVec2 oppGoalStartPoint = ourGoalStartPoint * -1;
-    ImVec2 oppGoalEndPoint   = ourGoalEndPoint * -1;
+    Common::Vec2 ourGoalStartPoint = Common::Vec2(data.field_length() / -2 - data.goal_depth(), data.goal_width() / 2);
+    Common::Vec2 ourGoalEndPoint   = Common::Vec2(data.field_length() / -2, data.goal_width() / -2);
+    Common::Vec2 oppGoalStartPoint = ourGoalStartPoint * -1;
+    Common::Vec2 oppGoalEndPoint   = ourGoalEndPoint * -1;
 
-    ImVec2 ourPenaltyStartPoint = ImVec2(data.field_length() / -2, data.penalty_area_width() / 2);
-    ImVec2 ourPenaltyEndPoint =
-        ImVec2(data.field_length() / -2 + data.penalty_area_depth(), data.penalty_area_width() / -2);
+    Common::Vec2 ourPenaltyStartPoint = Common::Vec2(data.field_length() / -2, data.penalty_area_width() / 2);
+    Common::Vec2 ourPenaltyEndPoint =
+        Common::Vec2(data.field_length() / -2 + data.penalty_area_depth(), data.penalty_area_width() / -2);
 
-    ImVec2 oppenaltyStartPoint = ourPenaltyStartPoint * -1;
-    ImVec2 oppPenaltyEndPoint  = ourPenaltyEndPoint * -1;
+    Common::Vec2 oppenaltyStartPoint = ourPenaltyStartPoint * -1;
+    Common::Vec2 oppPenaltyEndPoint  = ourPenaltyEndPoint * -1;
 
-    ImVec2 centerLineStartPoint = ImVec2(0, data.field_width() / -2);
-    ImVec2 centerLineEndPoint   = centerLineStartPoint * -1;
+    Common::Vec2 centerLineStartPoint = Common::Vec2(0, data.field_width() / -2);
+    Common::Vec2 centerLineEndPoint   = centerLineStartPoint * -1;
 
-    int centerCircleRad = data.center_circle_radius();
+    float centerCircleRad = data.center_circle_radius();
 
-    DrawRectVec(fieldWallStartPoint, fieldWallEndPoint, BROWN, false, 3);
-    DrawRectVec(fieldEndPoint, fieldStartPoint, WHITE, false);
-    DrawRectVec(ourGoalEndPoint, ourGoalStartPoint, WHITE, false);
-    DrawRectVec(oppGoalStartPoint, oppGoalEndPoint, WHITE, false);
-    DrawRectVec(ourPenaltyStartPoint, ourPenaltyEndPoint, WHITE, false);
-    DrawRectVec(oppenaltyStartPoint, oppPenaltyEndPoint, WHITE, false);
-    DrawLineVec(centerLineStartPoint, centerLineEndPoint, WHITE);
-    DrawCircleVec(fieldCenter, centerCircleRad, WHITE, false);
-    DrawTextVec(fieldWallEndPoint + ImVec2(-800., 300.), "GUI FPS: " + std::to_string(GetFPS()), 14, BLACK);
+    drawRect({fieldWallStartPoint, fieldWallEndPoint}, BROWN, false, 3);
+    drawRect({fieldEndPoint, fieldStartPoint}, WHITE, false);
+    drawRect({ourGoalEndPoint, ourGoalStartPoint}, WHITE, false);
+    drawRect({oppGoalStartPoint, oppGoalEndPoint}, WHITE, false);
+    drawRect({ourPenaltyStartPoint, ourPenaltyEndPoint}, WHITE, false);
+    drawRect({oppenaltyStartPoint, oppPenaltyEndPoint}, WHITE, false);
+    drawLineSegment({centerLineStartPoint, centerLineEndPoint}, WHITE);
+    drawCircle({fieldCenter, centerCircleRad}, WHITE, false);
+    drawText(fieldWallEndPoint + Common::Vec2(-800., 300.), "GUI FPS: " + std::to_string(GetFPS()), 14, BLACK);
 }
 } // namespace Tyr::Gui

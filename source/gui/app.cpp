@@ -12,7 +12,7 @@ void Application::init(const int width, const int height)
     SetTraceLogLevel(LOG_WARNING);
     rlImGuiSetup(true);
 
-    renderer    = std::make_unique<Renderer>(ImVec2(900.f, 700.f), 4.0f);
+    renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 700.f), 4.0f);
     config_menu = std::make_unique<ConfigMenu>(ImVec2(m_width, m_height));
 
     ssl_field.set_field_length(12000);
@@ -25,7 +25,7 @@ void Application::init(const int width, const int height)
     ssl_field.set_penalty_area_depth(1800);
     ssl_field.set_penalty_area_width(3600);
 
-    udp_client = std::make_unique<Tyr::Common::UdpClient>(Common::NetworkAddress{"224.5.23.2", 10006});
+    udp_client = std::make_unique<Common::UdpClient>(Common::NetworkAddress{"224.5.23.2", 10006});
 
     renderer->init();
 
@@ -53,22 +53,22 @@ void Application::update()
     // start ImGui Conent
     rlImGuiBegin();
 
-    static bool opened = true, opened2 = true;
-    ImVec2      margin = ImVec2(30, 30) * 2;
-    ImVec2      wSize  = ImVec2(900.f, 700.f) + margin;
+    static bool  opened = true, opened2 = true;
+    Common::Vec2 margin = Common::Vec2(30, 30) * 2;
+    Common::Vec2 wSize  = Common::Vec2(900.f, 700.f) + margin;
     // TODO: draw gui
-    ImGui::SetNextWindowSize(wSize, ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(wSize.x, wSize.y), ImGuiCond_FirstUseEver);
     if (!ImGui::Begin("Field", &opened))
     {
         ImGui::End();
     }
     else
     {
-        renderer->DrawField(ssl_field);
+        renderer->drawField(ssl_field);
         vision_mutex.lock();
-        renderer->DrawRobots(ssl_packet.detection().robots_blue(), Tyr::Common::TeamColor::Blue);
-        renderer->DrawRobots(ssl_packet.detection().robots_yellow(), Tyr::Common::TeamColor::Yellow);
-        renderer->DrawBalls(ssl_packet.detection().balls());
+        renderer->drawRobots(ssl_packet.detection().robots_blue(), Common::TeamColor::Blue);
+        renderer->drawRobots(ssl_packet.detection().robots_yellow(), Common::TeamColor::Yellow);
+        renderer->drawBalls(ssl_packet.detection().balls());
         if (config_menu->IsNetworkDataUpdated() == NetworkInput::VisionPort ||
             config_menu->IsNetworkDataUpdated() == NetworkInput::VisionIp)
         {
@@ -80,7 +80,7 @@ void Application::update()
         }
         vision_mutex.unlock();
 
-        renderer->ApplyShader();
+        renderer->applyShader();
         rlImGuiImageRenderTextureFit(&renderer->shaderVisualizationTexture, true);
         ImGui::End();
     }

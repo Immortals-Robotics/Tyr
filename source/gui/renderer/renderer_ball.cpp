@@ -2,13 +2,19 @@
 
 namespace Tyr::Gui
 {
-void Renderer::DrawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall> &data)
+void Renderer::drawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall> &data)
 {
-    for (auto ball : data)
+    for (const auto &ball : data)
     {
-        auto position = ImVec2(ball.x(), ball.y());
-        DrawCircleVec(position, ballRadius, ORANGE, true);
-        DrawCircleVec(position, ballRadius + 10., BLACK, false, 1.);
+        drawBall(ball);
     }
 }
+
+void Renderer::drawBall(const Protos::SSL_DetectionBall &ball)
+{
+    auto position = Common::Vec2(ball.x(), ball.y());
+    drawCircle({position, ballRadius}, ORANGE, true);
+    drawCircle({position, ballRadius + 10.0f}, BLACK, false, 1.0f);
+}
+
 } // namespace Tyr::Gui

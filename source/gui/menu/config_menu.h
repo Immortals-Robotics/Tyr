@@ -22,11 +22,12 @@ private:
     std::string      visionPort;
     NetworkInput     networkNeedsUpdate;
 
-    void       DrawTabBar(void);
-    void       DrawNetworkTab(void);
+    void DrawTabBar(void);
+    void DrawNetworkTab(void);
+    void SetNetworkInput(std::string _data, NetworkInput _inputType);
+
     static int HandleVisionIpChange(ImGuiInputTextCallbackData *_data);
     static int HandleVisionPortChange(ImGuiInputTextCallbackData *_data);
-    void       SetNetworkInput(std::string _data, NetworkInput _inputType);
 
 public:
     ConfigMenu(ImVec2 _wsize);

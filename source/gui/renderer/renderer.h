@@ -1,46 +1,49 @@
 #pragma once
-#include "../utility/vector_helper.h"
 
 namespace Tyr::Gui
 {
 class Renderer
 {
 public:
-    Renderer(ImVec2 _wSize, float _upScalingFactor);
+    Renderer(Common::Vec2 _wSize, float _upScalingFactor);
     void init(void);
 
-    void DrawRectVec(ImVec2 _v1, ImVec2 _v2, Color _color, bool _isFilled, float _thickness = 1,
-                     unsigned char transparency = 255);
-    void DrawCircleVec(ImVec2 _center, float _rad, Color _color, bool _isFilled, float _thickness = 1,
-                       unsigned char _transparency = 255);
-    void DrawCircleSectorVec(ImVec2 _center, float _rad, Color _color, float _startAngle, float _endAngle,
-                             bool _isFilled, unsigned char _transparency = 255);
-    void DrawLineVec(ImVec2 _v1, ImVec2 _v2, Color _color, float _thickness = 1, unsigned char _transparency = 255);
-    void DrawTextVec(ImVec2 _pos, std::string _str, int _fontSize = 12, Color _color = WHITE,
-                     unsigned char _transparency = 255);
+    void drawRect(Common::Rect rect, Color _color, bool _isFilled, float _thickness = 1,
+                  unsigned char transparency = 255);
+    void drawCircle(Common::Circle circle, Color _color, bool _isFilled, float _thickness = 1,
+                    unsigned char _transparency = 255);
+    void drawCircleSector(Common::Circle circle, Color _color, float _startAngle, float _endAngle, bool _isFilled,
+                          unsigned char _transparency = 255);
+    void drawLineSegment(Common::LineSegment line_segment, Color _color, float _thickness = 1, unsigned char _transparency = 255);
+    void drawText(Common::Vec2 _pos, std::string _str, int _fontSize = 12, Color _color = WHITE,
+                  unsigned char _transparency = 255);
 
-    void DrawField(const Protos::SSL_GeometryFieldSize &data);
-    void DrawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data,
-                    Tyr::Common::TeamColor                                                color);
-    void DrawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall> &data);
-    void ApplyShader(void);
+    void drawField(const Protos::SSL_GeometryFieldSize &data);
+    void drawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data,
+                    Common::TeamColor                                                     color);
+    void drawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall> &data);
+
+    void drawRobot(const Protos::SSL_DetectionRobot &robot, Common::TeamColor color);
+    void drawBall(const Protos::SSL_DetectionBall &ball);
+
+    void applyShader(void);
 
     RenderTexture visualizaionTexture, shaderVisualizationTexture;
 
 private:
-    const float ballRadius;
-    const float robotRadius;
-    const float robotArcAngle;
-    ImVec2      wSize;
-    ImVec2      overallFieldSize;
-    float       zoomScale;
-    float       upScalingFactor;
-    Font        visualizationFont;
+    const float  ballRadius;
+    const float  robotRadius;
+    const float  robotArcAngle;
+    Common::Vec2 wSize;
+    Common::Vec2 overallFieldSize;
+    float        zoomScale;
+    float        upScalingFactor;
+    Font         visualizationFont;
 
     Shader fxaaShader;
 
     void    CalculateZoom();
-    Vector2 ConvertSignedVecToPixelVec(ImVec2 _signedVec);
+    Vector2 ConvertSignedVecToPixelVec(Common::Vec2 _signedVec);
     int     ConvertRealityUnitToPixels(float _value);
 };
 } // namespace Tyr::Gui

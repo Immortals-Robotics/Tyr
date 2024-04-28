@@ -20,3 +20,7 @@
 #include <ssl-vision/messages_robocup_ssl_wrapper.pb.h>
 
 #include <network/udp_client.h>
+#include <math/geom/circle.h>
+#include <math/geom/line_segment.h>
+#include <math/geom/line.h>
+#include <math/geom/rect.h>
