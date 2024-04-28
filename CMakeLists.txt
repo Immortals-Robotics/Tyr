@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.22)
 
 set(USE_FOLDERS ON)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
 option(USE_UNITY_BUILDS "Enable unity build to improve build times" OFF)
 option(TRACE_BUILD_TIME "Use -ftime-trace to generate build time trace" OFF)
@@ -13,6 +16,8 @@ add_subdirectory(source/protos)
 add_subdirectory(source/common)
 add_subdirectory(source/vision)
 add_subdirectory(source/referee)
+add_subdirectory(source/sender)
+add_subdirectory(source/soccer)
 add_subdirectory(source/gui)
 
 set(CPACK_GENERATOR ZIP)

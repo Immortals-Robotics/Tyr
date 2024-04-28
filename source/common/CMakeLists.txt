@@ -6,16 +6,23 @@ find_package(quill CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(tomlplusplus REQUIRED IMPORTED_TARGET tomlplusplus)
 
-find_path(LINALG_INCLUDE_DIRS "linalg.h")
-
 set(HEADER_FILES
     pch.h
     services.h
     setting.h
     config/config.h
+    debug/common_colors.h
+    debug/debug.h
     logging/logging.h
+    math/angle.h
+    math/helpers.h
+    math/linear.h
     math/median_filter.h
+    math/random.h
     math/vector.h
+    math/geom/circle.h
+    math/geom/line.h
+    math/geom/rect.h
     network/udp_client.h
     network/udp_server.h
     state/game_commands.h
@@ -26,7 +33,17 @@ set(HEADER_FILES
 
 set(SOURCE_FILES
     config/config.cpp
+    debug/common_colors.cpp
+    debug/debug.cpp
     logging/logging.cpp
+    math/angle.cpp
+    math/helpers.cpp
+    math/linear.cpp
+    math/random.cpp
+    math/vector.cpp
+    math/geom/circle.cpp
+    math/geom/line.cpp
+    math/geom/rect.cpp
     network/udp_client.cpp
     network/udp_server.cpp
     timer/timer.cpp)
@@ -43,9 +60,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     asio::asio
     PkgConfig::tomlplusplus
     quill::quill)
-
-target_include_directories(${PROJECT_NAME} PUBLIC 
-    ${LINALG_INCLUDE_DIRS})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC TOML_EXCEPTIONS=0)
 if (WIN32)
@@ -65,4 +79,4 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC LOG_DIR="${CMAKE_SOURCE_DIR}/l
 
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})
 
-target_precompile_headers(${PROJECT_NAME} PUBLIC ${HEADER_FILES})
+target_precompile_headers(${PROJECT_NAME} PUBLIC pch.h)

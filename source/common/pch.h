@@ -1,6 +1,5 @@
 #pragma once
 
-#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <filesystem>
@@ -9,7 +8,7 @@
 #include <memory>
 #include <numbers>
 #include <optional>
-#include <random>
+#include <cstdlib>
 #include <span>
 #include <string>
 #include <thread>
@@ -20,3 +19,9 @@
 #include <vector>
 
 #include <quill/Quill.h>
+
+#include "math/vector.h"
+#include "math/angle.h"
+#include "math/geom/circle.h"
+#include "math/geom/line.h"
+#include "math/geom/rect.h"

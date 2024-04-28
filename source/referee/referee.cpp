@@ -8,14 +8,13 @@ Referee::Referee(Common::WorldState *world_state, Common::RefereeState *referee_
     {
         std::cout << "Referee: \"world_state\" is NULL" << std::endl;
     }
-    our_color = Common::setting().our_color == Common::TeamColor::Yellow ? COLOR_YELLOW : COLOR_BLUE;
 
     command_CNT = -1;
 
     RefState = referee_state;
     ballData = &(world_state->ball);
 
-    RefState->State->init(our_color);
+    RefState->State->init(Common::setting().our_color);
 }
 
 bool Referee::connectToRefBox(void)
@@ -38,7 +37,7 @@ void Referee::process()
         //		std::cout<<"BALL TARGET POSITION
         // IS:"<<pSSLRef.designated_position().x()<<'_'<<pSSLRef.designated_position().y()<<std::endl;
         RefState->placeBallTargetPosition =
-            Common::vec2(pSSLRef.designated_position().x(), pSSLRef.designated_position().y());
+            Common::Vec2(pSSLRef.designated_position().x(), pSSLRef.designated_position().y());
     }
     //	else
     //		std::cout<<"no new packet received"<<std::endl;
@@ -49,7 +48,7 @@ void Referee::process()
 
         LastPlacedBall = ballData->Position;
 
-        if (our_color == TEAM_BLUE)
+        if (Common::setting().our_color == Common::TeamColor::Blue)
             RefState->oppGK = pSSLRef.yellow().goalie();
         else
             RefState->oppGK = pSSLRef.blue().goalie();
@@ -67,7 +66,7 @@ void Referee::process()
     //    	std::cout << "kicked" << std::endl;
 }
 
-bool Referee::isKicked(Common::vec2 ballPos)
+bool Referee::isKicked(Common::Vec2 ballPos)
 {
     int   requiredHys = 5;
     float requiredDis = 50.0f;
@@ -80,7 +79,7 @@ bool Referee::isKicked(Common::vec2 ballPos)
         }
     }
     //	std::cout<<"the distance: "<<DIS ( ballPos , LastPlacedBall )<<std::endl;
-    if (Common::distance(ballPos, LastPlacedBall) > requiredDis)
+    if (ballPos.distanceTo(LastPlacedBall) > requiredDis)
     {
         move_hys++;
     }

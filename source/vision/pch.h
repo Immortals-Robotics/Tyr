@@ -12,5 +12,6 @@
 #include <math/median_filter.h>
 #include <network/udp_client.h>
 #include <network/udp_server.h>
+#include <services.h>
 #include <setting.h>
 #include <state/world.h>

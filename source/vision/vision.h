@@ -71,7 +71,7 @@ private:
     Common::WorldState *playState;
 
     bool   packet_recieved[Common::Setting::kCamCount];
-    Common::vec2 ball_pos_buff[BALL_BUFFER_FRAMES];
+    Common::Vec2 ball_pos_buff[BALL_BUFFER_FRAMES];
 
     //    int ballBufferIndex;
     //    float ballBufferX[BALL_BUFFER_FRAMES];
@@ -93,7 +93,7 @@ private:
     Protos::SSL_DetectionBall  d_ball[MAX_BALLS * Common::Setting::kCamCount];
     Protos::SSL_DetectionRobot robot[Common::Setting::kMaxRobots * Common::Setting::kCamCount];
 
-    //	double t_capture_buff[MAX_BALLS*Setting::kCamCount];
-    //    deque<TVec2> ball_dir_buff;
+    //	double t_capture_buff[MAX_BALLS*Common::Setting::kCamCount];
+    //    deque<Common::Vec2> ball_dir_buff;
 };
 } // namespace Tyr::Vision

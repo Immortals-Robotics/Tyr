@@ -11,14 +11,12 @@ namespace Tyr::Referee
 class Referee
 {
 private:
-    bool our_color;
-
     std::unique_ptr<Common::UdpClient> m_udp;
 
     Common::RefereeState *RefState;
     Common::BallState    *ballData;
 
-    Common::vec2 LastPlacedBall;
+    Common::Vec2 LastPlacedBall;
     int          move_hys; // For isKicked
 
     Common::Timer timer;
@@ -34,7 +32,7 @@ public:
     bool connectToRefBox(void);
     bool isConnected(void);
     bool recieve(void);
-    bool isKicked(Common::vec2 ballPos);
+    bool isKicked(Common::Vec2 ballPos);
     void process(void);
 
     int oppGK;

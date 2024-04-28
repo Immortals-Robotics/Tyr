@@ -15,9 +15,6 @@
 
 #pragma once
 
-#define TEAM_BLUE false
-#define TEAM_YELLOW true
-
 #include "game_commands.h"
 
 namespace Tyr::Common
@@ -61,9 +58,9 @@ public:
         state = STATE_GAME_OFF;
     }
 
-    void init(int _color)
+    void init(Common::TeamColor color)
     {
-        color = (_color == TEAM_BLUE) ? STATE_BLUE : STATE_YELLOW;
+        this->color = (color == Common::TeamColor::Blue) ? STATE_BLUE : STATE_YELLOW;
     }
 
     int get()
