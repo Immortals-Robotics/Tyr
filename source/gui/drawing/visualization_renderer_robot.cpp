@@ -1,7 +1,9 @@
 #include "VisualizationRenderer.h"
+
 #define TEXT_OFFSET_X 50.
 #define TEXT_OFFSET_Y 300.
-
+namespace Tyr::Gui
+{
 void VisualizationRenderer::DrawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data,
                                        Tyr::Common::TeamColor                                                color)
 {
@@ -16,3 +18,4 @@ void VisualizationRenderer::DrawRobots(const google::protobuf::RepeatedPtrField<
         DrawTextVec(position + ImVec2(TEXT_OFFSET_X, TEXT_OFFSET_Y), std::to_string(robot.robot_id()), 14, lTextColor);
     }
 }
+} // namespace Tyr::Gui

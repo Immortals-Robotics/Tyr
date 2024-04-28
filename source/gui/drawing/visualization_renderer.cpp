@@ -1,7 +1,7 @@
 #include "VisualizationRenderer.h"
-#include <cmath>
-#include "raylib.h"
 
+namespace Tyr::Gui
+{
 VisualizationRenderer::VisualizationRenderer(ImVec2 _wSize, float _upScalingFactor)
     : ballRadius(21.5f), robotRadius(90.f), robotArcAngle(50.f)
 {
@@ -17,7 +17,7 @@ void VisualizationRenderer::init()
 {
     std::array<float, 2> resolution = {static_cast<float>(wSize.x), static_cast<float>(wSize.y)};
 
-    fxaaShader        = LoadShader("shaders/raylibVertex.vs", "shaders/fxaa.fs");
+    fxaaShader        = LoadShader("shaders/raylib_vertex.vs", "shaders/fxaa.fs");
     visualizationFont = LoadFont("fonts/OpenSans-Bold.ttf");
     SetShaderValue(fxaaShader, GetShaderLocation(fxaaShader, "resolution"), resolution.data(), SHADER_UNIFORM_VEC2);
 }
@@ -184,3 +184,4 @@ void VisualizationRenderer::DrawField(const Protos::SSL_GeometryFieldSize &data)
     DrawCircleVec(fieldCenter, centerCircleRad, WHITE, false);
     DrawTextVec(fieldWallEndPoint + ImVec2(-800., 300.), "GUI FPS: " + std::to_string(GetFPS()), 14, BLACK);
 }
+} // namespace Tyr::Gui

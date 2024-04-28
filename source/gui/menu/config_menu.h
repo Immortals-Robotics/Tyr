@@ -1,5 +1,7 @@
 #pragma once
 
+namespace Tyr::Gui
+{
 typedef enum
 {
     VISION_IP,
@@ -34,3 +36,4 @@ public:
     void           Draw(void);
     ~ConfigMenu();
 };
+} // namespace Tyr::Gui

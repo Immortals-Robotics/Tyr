@@ -1,6 +1,7 @@
 #include "ConfigMenu.h"
-#include <regex>
 
+namespace Tyr::Gui
+{
 ConfigMenu::ConfigMenu(ImVec2 _wsize)
     : menuWidth(300.), menuWidthMinimized(20.), networkNeedsUpdate(NETWORK_NONE), visionIpAddress("224.5.23.2"),
       visionPort("10006")
@@ -122,3 +123,4 @@ void ConfigMenu::UpdateNetworkData()
 
 ConfigMenu::~ConfigMenu()
 {}
+} // namespace Tyr::Gui
