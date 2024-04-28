@@ -21,6 +21,7 @@ set(HEADER_FILES
     math/random.h
     math/vector.h
     math/geom/circle.h
+    math/geom/line_segment.h
     math/geom/line.h
     math/geom/rect.h
     network/udp_client.h
