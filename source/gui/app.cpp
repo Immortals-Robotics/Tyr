@@ -4,16 +4,13 @@ namespace Tyr::Gui
 {
 void Application::init(const int width, const int height)
 {
-    m_width  = width;
-    m_height = height;
-
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
-    InitWindow(m_width, m_height, "Immortals SSL");
+    InitWindow(width, height, "Tyr");
     SetTraceLogLevel(LOG_WARNING);
     rlImGuiSetup(true);
 
     renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 700.f), 4.0f);
-    config_menu = std::make_unique<ConfigMenu>(ImVec2(m_width, m_height));
+    config_menu = std::make_unique<ConfigMenu>();
 
     ssl_field.set_field_length(12000);
     ssl_field.set_field_width(9000);

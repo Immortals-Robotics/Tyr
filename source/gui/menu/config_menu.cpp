@@ -2,11 +2,10 @@
 
 namespace Tyr::Gui
 {
-ConfigMenu::ConfigMenu(ImVec2 _wsize)
+ConfigMenu::ConfigMenu()
     : menuWidth(300.), menuWidthMinimized(20.), networkNeedsUpdate(NetworkInput::None), visionIpAddress("224.5.23.2"),
       visionPort("10006")
 {
-    wsize       = _wsize;
     windowFlags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
 }
 

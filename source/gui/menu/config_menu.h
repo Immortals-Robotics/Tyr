@@ -16,7 +16,6 @@ class ConfigMenu
 private:
     const float      menuWidth;
     const float      menuWidthMinimized;
-    ImVec2           wsize;
     ImGuiWindowFlags windowFlags;
     std::string      visionIpAddress;
     std::string      visionPort;
@@ -30,7 +29,7 @@ private:
     static int HandleVisionPortChange(ImGuiInputTextCallbackData *_data);
 
 public:
-    ConfigMenu(ImVec2 _wsize);
+    ConfigMenu();
     ~ConfigMenu();
 
     std::string  GetNetworkParam(NetworkInput _inputType);

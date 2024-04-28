@@ -15,9 +15,6 @@ public:
     bool shouldClose() const;
 
 private:
-    int m_width;
-    int m_height;
-
     Protos::SSL_GeometryFieldSize ssl_field;
     Protos::SSL_WrapperPacket     ssl_packet;
     Protos::SSL_WrapperPacket     ssl_packet_off;
