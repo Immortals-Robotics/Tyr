@@ -212,7 +212,7 @@ float Vec2::magnitude() const
     return sqrt(x * x + y * y);
 }
 
-float Vec2::magnitude_pow2() const
+float Vec2::magnitudePow2() const
 {
     return x * x + y * y;
 }
@@ -227,22 +227,22 @@ float Vec2::dot(const Vec2 t_a, const Vec2 t_b)
     return t_a.x * t_b.x + t_a.y * t_b.y;
 }
 
-Angle Vec2::angle_with(const Vec2 a, const Vec2 b)
+Angle Vec2::angleWith(const Vec2 a, const Vec2 b)
 {
     return (b - a).toAngle();
 }
 
-Angle Vec2::angle_diff(const Vec2 a, const Vec2 b)
+Angle Vec2::angleDiff(const Vec2 a, const Vec2 b)
 {
     return b.toAngle() - a.toAngle();
 }
 
-Vec2 Vec2::circle_around_point(Vec2 point, Angle angle, float radius)
+Vec2 Vec2::circleAroundPoint(Vec2 point, Angle angle, float radius)
 {
     return point + angle.toUnitVec() * radius;
 }
 
-Vec2 Vec2::point_on_connecting_line(Vec2 first_point, Vec2 second_point, float distance)
+Vec2 Vec2::pointOnConnectingLine(Vec2 first_point, Vec2 second_point, float distance)
 {
     float m = (second_point.y - first_point.y) / (second_point.x - first_point.x);
     Vec2  ans;

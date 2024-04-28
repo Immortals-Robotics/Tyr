@@ -24,7 +24,7 @@ public:
         return (center - t_point).magnitude() < r;
     }
 
-    bool inside_offset(const Vec2 t_point, float offset) const
+    bool insideOffset(const Vec2 t_point, float offset) const
     {
         return (center - t_point).magnitude() < (r + offset);
     }

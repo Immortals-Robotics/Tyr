@@ -14,18 +14,18 @@ struct Vec2
 
     [[nodiscard]] Vec2  normalized() const;
     [[nodiscard]] float magnitude() const;
-    [[nodiscard]] float magnitude_pow2() const;
+    [[nodiscard]] float magnitudePow2() const;
     [[nodiscard]] Vec2  rotated(Angle t_ang) const;
 
     [[nodiscard]] Angle toAngle() const;
 
     static float dot(Vec2 t_a, Vec2 t_b);
 
-    static Angle angle_with(Vec2 a, Vec2 b);
-    static Angle angle_diff(Vec2 a, Vec2 b);
+    static Angle angleWith(Vec2 a, Vec2 b);
+    static Angle angleDiff(Vec2 a, Vec2 b);
 
-    Vec2 point_on_connecting_line(Vec2 FirstPoint, Vec2 SecondPoint, float distance);
-    Vec2 circle_around_point(Vec2 point, Angle angle, float radius);
+    Vec2 pointOnConnectingLine(Vec2 FirstPoint, Vec2 SecondPoint, float distance);
+    Vec2 circleAroundPoint(Vec2 point, Angle angle, float radius);
 
     Vec2 operator+(Vec2 t_v) const;
     Vec2 operator-(Vec2 t_v) const;
@@ -69,7 +69,7 @@ struct Vec3
     float y = 0.0;
     float z = 0.0;
 
-	Vec3() = default;
+    Vec3() = default;
     Vec3(float t_x, float t_y, float t_z);
 
     [[nodiscard]] Vec3  normalized() const;

@@ -4,17 +4,12 @@ namespace Tyr::Common
 {
 bool Rect::inside(const Vec2 t_point) const
 {
-    return min_x <= t_point.x &&
-           max_x >= t_point.x &&
-           min_y <= t_point.y &&
-           max_y >= t_point.y;
+    return min_x <= t_point.x && max_x >= t_point.x && min_y <= t_point.y && max_y >= t_point.y;
 }
 
-bool Rect::inside_offset(const Vec2 t_point, float offset) const
+bool Rect::insideOffset(const Vec2 t_point, float offset) const
 {
-    return (min_x - offset) <= t_point.x &&
-           (max_x + offset) >= t_point.x &&
-           (min_y - offset) <= t_point.y &&
+    return (min_x - offset) <= t_point.x && (max_x + offset) >= t_point.x && (min_y - offset) <= t_point.y &&
            (max_y + offset) >= t_point.y;
 }
 

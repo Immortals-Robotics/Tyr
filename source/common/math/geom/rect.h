@@ -16,7 +16,7 @@ public:
 
     bool inside(Vec2 t_point) const;
 
-    bool inside_offset(const Vec2 t_point, float offset) const;
+    bool insideOffset(const Vec2 t_point, float offset) const;
 
     Vec2 nearestOutside(Vec2 t_point) const;
 
