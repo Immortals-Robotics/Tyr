@@ -1,4 +1,3 @@
-#include "drawing/FieldRenderer.h"
 #include "drawing/FieldRendererRaylib.h"
 #include "menu/configMenu.h"
 
@@ -61,8 +60,8 @@ void update()
 	else {
 	visualizationRenderer->DrawField(*ssl_field);
 	vision_mutex.lock();
-	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_blue(), Blue);
-	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_yellow(), Yellow);
+	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_blue(), TEAM_BLUE);
+	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_yellow(), TEAM_YELLOW);
 	visualizationRenderer->DrawBalls(ssl_packet->detection().balls());
 	if (configMenu->IsNetworkDataUpdated() == VISION_PORT || configMenu->IsNetworkDataUpdated() == VISION_IP) {
 		updatedAddress.ip = configMenu->GetNetworkParam(VISION_IP);

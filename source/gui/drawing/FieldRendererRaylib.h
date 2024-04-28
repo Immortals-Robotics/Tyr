@@ -1,5 +1,10 @@
 #pragma once
 
+enum TeamColor
+{
+	TEAM_BLUE = 0,
+	TEAM_YELLOW = 1,
+};
 class VisualizationRenderer {
 private:
     const float ballRadius;

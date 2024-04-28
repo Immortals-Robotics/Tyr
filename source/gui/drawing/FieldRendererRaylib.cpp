@@ -1,7 +1,7 @@
 #include "FieldRendererRaylib.h"
 #include "raylib.h"
 #include <cmath>
-// #include <filesystem>
+#include "../utility/vector_helper.h"
 
 VisualizationRenderer::VisualizationRenderer(ImVec2 _wSize, float _upScalingFactor)
     : ballRadius(21.5f)
