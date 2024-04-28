@@ -1,5 +1,5 @@
 #include "drawing/VisualizationRenderer.h"
-#include "menu/configMenu.h"
+#include "menu/ConfigMenu.h"
 
 int m_width = 1300;
 int m_height = 900;
