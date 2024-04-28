@@ -5,8 +5,8 @@
 
 void VisualizationRenderer::DrawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot>& data, TeamColor color)
 {
-    auto lTextColor = color == TEAM_YELLOW ? BLACK : WHITE;
-    auto lBaseColor = color == TEAM_YELLOW ? YELLOW : BLUE;
+    auto lTextColor = color == TEAM_COLOR_YELLOW ? BLACK : WHITE;
+    auto lBaseColor = color == TEAM_COLOR_YELLOW ? YELLOW : BLUE;
     for (auto robot : data) {
         auto position = ImVec2(robot.x(), robot.y());
         DrawCircleSectorVec(position, this->robotRadius, lBaseColor, this->robotArcAngle - robot.orientation() * RAD2DEG, 360. - this->robotArcAngle - robot.orientation() * RAD2DEG, true);

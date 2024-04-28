@@ -1,9 +1,10 @@
 #pragma once
+#include "../utility/vector_helper.h"
 
 enum TeamColor
 {
-	TEAM_BLUE = 0,
-	TEAM_YELLOW = 1,
+	TEAM_COLOR_BLUE = 0,
+	TEAM_COLOR_YELLOW = 1,
 };
 class VisualizationRenderer {
 private:

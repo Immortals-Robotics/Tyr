@@ -37,14 +37,12 @@ void ConfigMenu::SetNetworkInput(std::string _data, networkInput_t _inputType)
         case VISION_IP:
             if (_data != this->visionIpAddress) {
                 this->visionIpAddress = _data;
-                std::cout << "vision" + this->visionIpAddress << std::endl;
                 this->networkNeedsUpdate = VISION_IP;
             }
             break;
         case VISION_PORT:
             if (_data != this->visionPort) {
                 this->visionPort = _data;
-                std::cout << "port" + this->visionPort << std::endl;
                 this->networkNeedsUpdate = VISION_PORT;
             }
             break;

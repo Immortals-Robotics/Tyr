@@ -60,8 +60,8 @@ void update()
 	else {
 	visualizationRenderer->DrawField(*ssl_field);
 	vision_mutex.lock();
-	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_blue(), TEAM_BLUE);
-	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_yellow(), TEAM_YELLOW);
+	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_blue(), TEAM_COLOR_BLUE);
+	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_yellow(), TEAM_COLOR_YELLOW);
 	visualizationRenderer->DrawBalls(ssl_packet->detection().balls());
 	if (configMenu->IsNetworkDataUpdated() == VISION_PORT || configMenu->IsNetworkDataUpdated() == VISION_IP) {
 		updatedAddress.ip = configMenu->GetNetworkParam(VISION_IP);
@@ -146,7 +146,6 @@ int main(int argc, char *argv[])
 		Protos::SSL_WrapperPacket tmp_ssl_packet;
 
 		while (running) {
-			std::cout << "main loop"<<std::endl;
 			sslClient->receive(&tmp_ssl_packet);
 
 			if (tmp_ssl_packet.has_detection())
