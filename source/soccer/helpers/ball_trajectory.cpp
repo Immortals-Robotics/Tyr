@@ -68,13 +68,11 @@ void Ai::CalculateBallTrajectory()
 
     if (!ballLine.isAmoodi())
     {
-        Line        new_line(1.0, -ballLine.getSlope(), -ballLine.getIntercept());
-        VecPosition ballN, lastN;
-        ballN = new_line.getPointOnLineClosestTo(VecPosition(ball.Position.x, ball.Position.y));
-        lastN = new_line.getPointOnLineClosestTo(VecPosition(ballHist[i].Position.x, ballHist[i].Position.y));
-        Common::debug().drawLineSegment(Common::Vec2(ballN.getX(), ballN.getY()),
-                                        Common::Vec2(lastN.getX(), lastN.getY()), "",
-                                        isVertical ? Common::Yellow : Common::Red);
+        Common::Line new_line(1.0, -ballLine.getSlope(), -ballLine.getIntercept());
+        Common::Vec2 ballN, lastN;
+        ballN = new_line.closestPoint(ball.Position);
+        lastN = new_line.closestPoint(ballHist[i].Position);
+        Common::debug().drawLineSegment(ballN, lastN, "", isVertical ? Common::Yellow : Common::Red);
     }
 
     for (i = std::max((int) ballHist.size() - 60, 0); i < ballHist.size(); i += 10)

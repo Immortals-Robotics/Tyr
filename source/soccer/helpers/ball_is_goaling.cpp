@@ -17,15 +17,14 @@ bool Ai::ballIsGoaling()
     if (ball.velocity.length() < 200.0f)
         return false;
 
-    Line ball_line =
-        Line::makeLineFromPositionAndAngle(VecPosition(ball.Position.x, ball.Position.y), ball.velocity.direction);
-    Line targetLine =
-        Line::makeLineFromTwoPoints(VecPosition(side * field_width, -100), VecPosition(side * field_width, 100));
-    VecPosition ballInter = ball_line.getIntersection(targetLine);
+    Common::Line ball_line = Common::Line::fromPointAndAngle(ball.Position, ball.velocity.toAngle());
+    Common::Line targetLine =
+        Common::Line::fromTwoPoints(Common::Vec2(side * field_width, -100), Common::Vec2(side * field_width, 100));
+    Common::Vec2 ballInter = ball_line.intersect(targetLine).value_or(Common::Vec2());
 
-    Common::debug().drawPoint(Common::Vec2(ballInter.getX(), ballInter.getY()));
+    Common::debug().drawPoint(ballInter);
 
-    if (std::fabs(ballInter.getY()) < (goal_width / 2) + 100.0)
+    if (std::fabs(ballInter.y) < (goal_width / 2) + 100.0f)
         return true;
 
     return false;

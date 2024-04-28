@@ -6,8 +6,7 @@ bool Ai::goal_blocked(Common::Vec2 init_pos, float max_shoot_blocker_dis, float 
 {
     bool oppGoalOpen = true;
 
-    Line ballGoalLine =
-        Line::makeLineFromTwoPoints(VecPosition(-side * field_width, 0), VecPosition(init_pos.x, init_pos.y));
+    Common::Line ballGoalLine = Common::Line::fromTwoPoints(Common::Vec2(-side * field_width, 0), init_pos);
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seenState == Common::CompletelyOut)
@@ -17,8 +16,7 @@ bool Ai::goal_blocked(Common::Vec2 init_pos, float max_shoot_blocker_dis, float 
         if (OppRobot[i].Position.distanceTo(init_pos) > max_shoot_blocker_dis)
             continue;
 
-        if (ballGoalLine.getDistanceWithPoint(VecPosition(OppRobot[i].Position.x, OppRobot[i].Position.y)) <
-            shoot_blocker_r)
+        if (ballGoalLine.distanceTo(OppRobot[i].Position) < shoot_blocker_r)
         {
             oppGoalOpen = false;
             break;
@@ -35,7 +33,7 @@ bool Ai::goal_blocked(Common::Vec2 init_pos, float max_shoot_blocker_dis, float 
                 continue;
 
             if
-    (ballGoalLine.getDistanceWithPoint(VecPosition(OwnRobot[i].State.Position.x,OwnRobot[i].State.Position.y))<shoot_blocker_r)
+    (ballGoalLine.getDistanceWithPoint(Common::Vec2(OwnRobot[i].State.Position.x,OwnRobot[i].State.Position.y))<shoot_blocker_r)
     { oppGoalOpen = false; break;
             }
         }

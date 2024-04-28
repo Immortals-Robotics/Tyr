@@ -30,7 +30,7 @@ public:
 
     [[nodiscard]] Line  tangentLine(Vec2 t_pos) const;
     [[nodiscard]] Vec2  closestPoint(Vec2 t_pos) const;
-    [[nodiscard]] float getDistanceFromPoint(Vec2 t_pos) const;
+    [[nodiscard]] float distanceTo(Vec2 t_pos) const;
 
     float a = 0.0;
     float b = 0.0;

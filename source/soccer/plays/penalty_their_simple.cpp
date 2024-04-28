@@ -19,16 +19,16 @@ void Ai::penalty_their_simple(void)
     }
     else
     {
-        //		float gkp_y = Line::makeLineFromTwoPoints ( VecPosition ( OppRobot[index].Position.x ,
-        // OppRobot[index].Position.y ) , VecPosition ( ball.Position.x , ball.Position.y ) ).getIntersection (
-        // Line::makeLineFromTwoPoints ( VecPosition ( side * penalty_x , 100 ) , VecPosition ( side * penalty_x , -100
-        // ) ) ).getY ( );
+        //		float gkp_y = Line::makeLineFromTwoPoints ( Common::Vec2 ( OppRobot[index].Position.x ,
+        // OppRobot[index].Position.y ) , Common::Vec2 ( ball.Position.x , ball.Position.y ) ).intersect (
+        // Line::makeLineFromTwoPoints ( Common::Vec2 ( side * penalty_x , 100 ) , Common::Vec2 ( side * penalty_x ,
+        // -100 ) ) ).getY ( );
         // TODO #7 check this!!!!
-        float gkp_y =
-            Line::makeLineFromPositionAndAngle(VecPosition(ball.Position.x, ball.Position.y), OppRobot[index].Angle)
-                .getIntersection(Line::makeLineFromTwoPoints(VecPosition(side * penalty_x, 100),
-                                                             VecPosition(side * penalty_x, -100)))
-                .getY();
+        float gkp_y = Common::Line::fromPointAndAngle(ball.Position, OppRobot[index].angle)
+                          .intersect(Common::Line::fromTwoPoints(Common::Vec2(side * penalty_x, 100),
+                                                                 Common::Vec2(side * penalty_x, -100)))
+                          .value_or(Common::Vec2())
+                          .y;
         float max_reach_y = (goal_width / 2.0) - 50.0;
         if (max_reach_y < gkp_y)
             gkp_y = max_reach_y;
