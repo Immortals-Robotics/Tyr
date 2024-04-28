@@ -26,8 +26,6 @@ public:
     bool receive(google::protobuf::MessageLite *t_message);
 
     void Update(const NetworkAddress &t_address);
-
-    void HandleReceiveAsync(const asio::error_code& error, std::size_t bytes_transferred);
     
     [[nodiscard]] asio::ip::udp::endpoint getListenEndpoint() const
     {

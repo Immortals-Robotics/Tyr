@@ -1,8 +1,4 @@
 #include "udp_client.h"
-#include <chrono>
-#include <future>
-
-typedef asio::detail::socket_option::integer<SOL_SOCKET, SO_RCVTIMEO> rcv_timeout_option;
 
 namespace Tyr::Common
 {
@@ -47,7 +43,7 @@ void UdpClient::Update(const NetworkAddress &t_address)
     if (m_socket->is_open())
     {
         m_socket->close();
-        m_socket = std::make_unique<asio::ip::udp::socket>(*m_context);
+        // m_socket = std::make_unique<asio::ip::udp::socket>(*m_context);
     }
     m_address         = asio::ip::make_address(t_address.ip);
     m_listen_endpoint = asio::ip::udp::endpoint{asio::ip::udp::v4(), t_address.port};
