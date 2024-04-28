@@ -27,6 +27,23 @@ set(SOURCE_FILES
     obstacle/obstacle_map.cpp
     obstacle/obstacle_rect.cpp
     obstacle/obstacle.cpp
+
+    plays/corner_their_global.cpp
+    plays/kickoff_their_one_wall.cpp
+    plays/kickoff_us_chip.cpp
+    plays/normal_play_att.cpp
+    plays/normal_play_def.cpp
+    plays/normal_play.cpp
+    plays/penalty_their_simple.cpp
+    plays/penalty_us_shootout.cpp
+    plays/stop_def.cpp
+    plays/stop.cpp
+    plays/strategy_maker.cpp
+    plays/tech_khers.cpp
+    plays/throwin_chip_shoot.cpp
+
+    skills/tech_circle.cpp
+
     robot/robot.cpp
     robot/trapezoid.cpp)
 

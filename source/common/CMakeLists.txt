@@ -36,6 +36,7 @@ set(SOURCE_FILES
     logging/logging.cpp
     math/angle.cpp
     math/linear.cpp
+    math/vector.cpp
     math/random.cpp
     network/udp_client.cpp
     network/udp_server.cpp

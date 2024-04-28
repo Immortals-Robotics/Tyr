@@ -12,8 +12,8 @@ struct RobotProperty
 };
 
 Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sender::Sender *sender)
-    : maxBallHist(240), worldState(worldState), refereeState(refereeState), senderBase(sender), cmf(0), rmf(1),
-      lmf(2), gk(3), dmf(4), def(5), rw(6), lw(7)
+    : maxBallHist(240), worldState(worldState), refereeState(refereeState), senderBase(sender), cmf(0), rmf(1), lmf(2),
+      gk(3), dmf(4), def(5), rw(6), lw(7)
 {
     std::cout << "	Running Immortals SSL AI module 09" << std::endl << "	Hope us luck :D " << std::endl;
 
@@ -124,10 +124,10 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     //	OwnRobot[rw].set_vision_id(6);
     //	OwnRobot[lw].set_vision_id(7);
 
-    chip_head = 200;
+    chip_head = Common::Angle::fromDeg(200);
 
-    lastBallDirection       = 0;
-    lastBallMagnitude       = 0;
+    lastBallVelocity = Common::vec2();
+
     circleReachedBehindBall = false;
     PredictedBall           = Common::vec2();
 
@@ -199,18 +199,6 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     }
 
     timer.start();
-}
-
-Common::vec2 Ai::PointOnConnectingLine(Common::vec2 FirstPoint, Common::vec2 SecondPoint, float distance)
-{
-    float        m = (SecondPoint.y - FirstPoint.y) / (SecondPoint.x - FirstPoint.x);
-    Common::vec2 ans;
-    if (SecondPoint.x - FirstPoint.x > 0)
-        ans.x = FirstPoint.x + distance / sqrt(pow(m, 2) + 1);
-    else
-        ans.x = FirstPoint.x - distance / sqrt(pow(m, 2) + 1);
-    ans.y = FirstPoint.y + m * (ans.x - FirstPoint.x);
-    return ans;
 }
 
 void Ai::AddDebugPoint(const Common::vec2 &p, const Common::CommonColor _color)
