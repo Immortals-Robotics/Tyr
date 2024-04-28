@@ -1,5 +1,6 @@
 project(${CMAKE_PROJECT_NAME}-gui)
 
+# TODO: find out why this is needed and fix it
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_SYSTEM_NAME MATCHES "Darwin")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
@@ -9,15 +10,25 @@ find_package(raylib CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(rlimgui CONFIG REQUIRED)
 
-file(GLOB_RECURSE GEN_SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.c" "*.cpp")
-file(GLOB_RECURSE GEN_HEADER_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h" "*.hpp")
-
+set(HEADER_FILES
+	pch.h
+	app.h
+	drawing/visualization_renderer.h
+	menu/config_menu.h
+	utility/vector_helper.h
+)
 
 set(SOURCE_FILES
-    ${GEN_HEADER_FILES}
-    ${GEN_SOURCE_FILES})
+	main.cpp
+	app.cpp
+	drawing/visualization_renderer_ball.cpp
+	drawing/visualization_renderer_robot.cpp
+	drawing/visualization_renderer.cpp
+	menu/config_menu.cpp
+	utility/vector_helper.cpp
+)
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	${CMAKE_PROJECT_NAME}-common

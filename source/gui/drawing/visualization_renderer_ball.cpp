@@ -1,4 +1,4 @@
-#include "VisualizationRenderer.h"
+#include "visualization_renderer.h"
 
 namespace Tyr::Gui
 {

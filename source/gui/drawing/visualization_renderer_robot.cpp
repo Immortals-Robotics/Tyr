@@ -1,4 +1,4 @@
-#include "VisualizationRenderer.h"
+#include "visualization_renderer.h"
 
 #define TEXT_OFFSET_X 50.
 #define TEXT_OFFSET_Y 300.
