@@ -49,6 +49,7 @@ set(SOURCE_FILES
     helpers/robot_check.cpp
 
     plays/corner_their_global.cpp
+    plays/halt.cpp
     plays/kickoff_their_one_wall.cpp
     plays/kickoff_us_chip.cpp
     plays/normal_play_att.cpp
@@ -56,9 +57,11 @@ set(SOURCE_FILES
     plays/normal_play.cpp
     plays/penalty_their_simple.cpp
     plays/penalty_us_shootout.cpp
+    plays/place_ball.cpp
     plays/stop_def.cpp
     plays/stop.cpp
     plays/strategy_maker.cpp
+    plays/their_place_ball.cpp
     plays/throwin_chip_shoot.cpp
 
     skills/tech_circle.cpp
