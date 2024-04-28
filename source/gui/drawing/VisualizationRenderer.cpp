@@ -37,7 +37,7 @@ int VisualizationRenderer::ConvertRealityUnitToPixels(float _value)
     return _value * zoomScale;
 }
 
-void VisualizationRenderer::DrawRectVec(ImVec2 _v1, ImVec2 _v2, Color _color, bool _isFilled, float _thickness)
+void VisualizationRenderer::DrawRectVec(ImVec2 _v1, ImVec2 _v2, Color _color, bool _isFilled, float _thickness, unsigned char _transparency)
 {
     Vector2 v1 = ConvertSignedVecToPixelVec(_v1);
     Vector2 v2 = ConvertSignedVecToPixelVec(_v2);
@@ -46,7 +46,7 @@ void VisualizationRenderer::DrawRectVec(ImVec2 _v1, ImVec2 _v2, Color _color, bo
     float posY = (v1.y < v2.y) ? v1.y : v2.y;
     float length = (v1.x < v2.x) ? v2.x - v1.x : v1.x - v2.x;
     float width = (v1.y < v2.y) ? v2.y - v1.y : v1.y - v2.y;
-
+    _color.a = _transparency;
     Rectangle rect = { .x = posX, .y = posY, .width = length, .height = width };
 
     BeginTextureMode(visualizaionTexture);
@@ -58,22 +58,23 @@ void VisualizationRenderer::DrawRectVec(ImVec2 _v1, ImVec2 _v2, Color _color, bo
     EndTextureMode();
 }
 
-void VisualizationRenderer::DrawLineVec(ImVec2 _v1, ImVec2 _v2, Color _color, float _thickness)
+void VisualizationRenderer::DrawLineVec(ImVec2 _v1, ImVec2 _v2, Color _color, float _thickness, unsigned char _transparency)
 {
     _thickness = _thickness * upScalingFactor;
     Vector2 v1 = ConvertSignedVecToPixelVec(_v1);
     Vector2 v2 = ConvertSignedVecToPixelVec(_v2);
-
+    _color.a = _transparency;
     BeginTextureMode(visualizaionTexture);
     DrawLineEx(v1, v2, _thickness, _color);
     BeginTextureMode(visualizaionTexture);
 }
 
-void VisualizationRenderer::DrawCircleVec(ImVec2 _center, float _rad, Color _color, bool _isFilled, float _thickness)
+void VisualizationRenderer::DrawCircleVec(ImVec2 _center, float _rad, Color _color, bool _isFilled, float _thickness, unsigned char _transparency)
 {
     Vector2 center = ConvertSignedVecToPixelVec(_center);
     _rad = ConvertRealityUnitToPixels(_rad);
     _thickness = _thickness * upScalingFactor;
+    _color.a = _transparency;
     BeginTextureMode(visualizaionTexture);
     if (_isFilled) {
         DrawCircleV(center, _rad, _color);
@@ -83,13 +84,13 @@ void VisualizationRenderer::DrawCircleVec(ImVec2 _center, float _rad, Color _col
     EndTextureMode();
 }
 
-void VisualizationRenderer::DrawCircleSectorVec(ImVec2 _center, float _rad, Color _color, float _startAngle, float _endAngle, bool _isFilled)
+void VisualizationRenderer::DrawCircleSectorVec(ImVec2 _center, float _rad, Color _color, float _startAngle, float _endAngle, bool _isFilled, unsigned char _transparency)
 {
     Vector2 center = ConvertSignedVecToPixelVec(_center);
     _rad = ConvertRealityUnitToPixels(_rad);
     Vector2 p1 = { .x = center.x + _rad * cos(_startAngle * DEG2RAD), .y = center.y + _rad * sin(_startAngle * DEG2RAD) };
     Vector2 p2 = { .x = center.x + _rad * cos(_endAngle * DEG2RAD), .y = center.y + _rad * sin(_endAngle * DEG2RAD) };
-
+    _color.a = _transparency;
     BeginTextureMode(visualizaionTexture);
     if (_isFilled) {
         DrawCircleSector(center, _rad, _startAngle, _endAngle, 200, _color);
@@ -101,7 +102,7 @@ void VisualizationRenderer::DrawCircleSectorVec(ImVec2 _center, float _rad, Colo
     EndTextureMode();
 }
 
-void VisualizationRenderer::DrawTextVec(ImVec2 _pos, std::string _str, int _fontSize, Color _color)
+void VisualizationRenderer::DrawTextVec(ImVec2 _pos, std::string _str, int _fontSize, Color _color, unsigned char _transparency)
 {
     Vector2 pos = ConvertSignedVecToPixelVec(_pos);
     BeginTextureMode(visualizaionTexture);
