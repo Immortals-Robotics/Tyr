@@ -1,5 +1,6 @@
 #include "drawing/FieldRenderer.h"
 #include "drawing/FieldRendererRaylib.h"
+#include "menu/configMenu.h"
 
 int m_width = 1300;
 int m_height = 900;
@@ -7,14 +8,17 @@ int m_height = 900;
 Protos::SSL_GeometryFieldSize* ssl_field;
 Protos::SSL_WrapperPacket* ssl_packet;
 Protos::SSL_WrapperPacket* ssl_packet_off;
-FieldRenderer* field_renderer;
 VisualizationRenderer* visualizationRenderer;
+ConfigMenu* configMenu;
 Loki::Common::UdpClient* sslClient;
 Protos::Immortals::Debug_Draw* world_state;
 Protos::Immortals::Debug_Draw* world_state_off;
+Loki::Common::NetworkAddress updatedAddress;
 
 std::mutex vision_mutex;
 std::mutex reality_mutex;
+
+bool isVisionUpdating = false;
 
 void DrawSpeedGraph();
 
@@ -60,6 +64,12 @@ void update()
 	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_blue(), Blue);
 	visualizationRenderer->DrawRobots(ssl_packet->detection().robots_yellow(), Yellow);
 	visualizationRenderer->DrawBalls(ssl_packet->detection().balls());
+	if (configMenu->IsNetworkDataUpdated() == VISION_PORT || configMenu->IsNetworkDataUpdated() == VISION_IP) {
+		updatedAddress.ip = configMenu->GetNetworkParam(VISION_IP);
+		updatedAddress.port = static_cast<unsigned short>(std::stoi(configMenu->GetNetworkParam(VISION_PORT)));
+		configMenu->UpdateNetworkData();
+		sslClient->Update(updatedAddress);
+	}
 	vision_mutex.unlock();
 	
 	visualizationRenderer->ApplyShader();
@@ -68,6 +78,8 @@ void update()
 	}
 	// DrawSpeedGraph();
 	// end ImGui Content
+	configMenu->Draw();
+
 	rlImGuiEnd();
 
 	EndDrawing();
@@ -104,11 +116,10 @@ int main(int argc, char *argv[])
 {
 	for (auto & data : plot_data)
 		data.resize(300, 0.0f);
-
 	init();
 	
-	field_renderer = new FieldRenderer();
 	visualizationRenderer = new VisualizationRenderer(ImVec2(900.f, 700.f), 4.);
+	configMenu = new ConfigMenu(ImVec2(m_width, m_height));
 
 	ssl_field = new Protos::SSL_GeometryFieldSize();
 	ssl_field->set_field_length(12000);
@@ -131,10 +142,12 @@ int main(int argc, char *argv[])
 
 	auto vision_func = [&]()
 	{
+		
 		std::map<uint32_t, Protos::SSL_DetectionFrame> frame_map;
 		Protos::SSL_WrapperPacket tmp_ssl_packet;
 
 		while (running) {
+			std::cout << "main loop"<<std::endl;
 			sslClient->receive(&tmp_ssl_packet);
 
 			if (tmp_ssl_packet.has_detection())
