@@ -17,9 +17,11 @@ VisualizationRenderer::VisualizationRenderer(ImVec2 _wSize, float _upScalingFact
 
 void VisualizationRenderer::init()
 {
+    std::array<float, 2> resolution = { static_cast<float>(wSize.x), static_cast<float>(wSize.y) };
+
     fxaaShader = LoadShader("shaders/raylibVertex.vs", "shaders/fxaa.fs");
     visualizationFont = LoadFont("fonts/OpenSans-Bold.ttf");
-    SetShaderValue(fxaaShader, GetShaderLocation(fxaaShader, "resolution"), (float[2]) { (float)wSize.x, (float)wSize.y }, SHADER_UNIFORM_VEC2);
+    SetShaderValue(fxaaShader, GetShaderLocation(fxaaShader, "resolution"), resolution.data(), SHADER_UNIFORM_VEC2);
 }
 
 Vector2 VisualizationRenderer::ConvertSignedVecToPixelVec(ImVec2 _signedVec)
@@ -45,7 +47,7 @@ void VisualizationRenderer::DrawRectVec(ImVec2 _v1, ImVec2 _v2, Color _color, bo
     float length = (v1.x < v2.x) ? v2.x - v1.x : v1.x - v2.x;
     float width = (v1.y < v2.y) ? v2.y - v1.y : v1.y - v2.y;
 
-    Rectangle rect = { .width = length, .height = width, .x = posX, .y = posY };
+    Rectangle rect = { .x = posX, .y = posY, .width = length, .height = width };
 
     BeginTextureMode(visualizaionTexture);
     if (_isFilled) {
