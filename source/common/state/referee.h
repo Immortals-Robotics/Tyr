@@ -9,7 +9,7 @@ struct RefereeState
     unsigned short goals_blue;
     unsigned short goals_yellow;
     unsigned char  counter;
-    vec2           placeBallTargetPosition;
+    Vec2           placeBallTargetPosition;
     int            oppGK;
 
     RefereeState()
@@ -19,7 +19,7 @@ struct RefereeState
         goals_blue              = 0;
         goals_yellow            = 0;
         counter                 = 0;
-        placeBallTargetPosition = vec2(0.0f);
+        placeBallTargetPosition = Vec2();
     }
 };
 } // namespace Tyr::Common

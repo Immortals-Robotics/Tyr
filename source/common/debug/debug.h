@@ -35,14 +35,14 @@ public:
     // Plotting
     void plotPoint(std::string_view t_func_name, double t_x, double t_y, std::string_view t_point_name = "") const;
 
-    void drawPoint(vec2 t_pos, std::string_view t_layer = "point_0", Color t_color = Color(255, 0, 0)) const;
-    void drawLineSegment(vec2 t_pos1, vec2 t_pos2, std::string_view t_layer = "line_0",
+    void drawPoint(Vec2 t_pos, std::string_view t_layer = "point_0", Color t_color = Color(255, 0, 0)) const;
+    void drawLineSegment(Vec2 t_pos1, Vec2 t_pos2, std::string_view t_layer = "line_0",
                          Color t_color = Color(0, 255, 0)) const;
-    void drawRect(const vec2 &p, float w, float h, std::string_view t_layer = "rect_0",
+    void drawRect(const Vec2 &p, float w, float h, std::string_view t_layer = "rect_0",
                   Color t_color = Color(0, 0, 255)) const;
-    void drawCircle(const vec2 &center, float r, std::string_view t_layer = "cir_0",
+    void drawCircle(const Vec2 &center, float r, std::string_view t_layer = "cir_0",
                     Color t_color = Color(255, 255, 0)) const;
-    void drawRobot(vec2 t_pos, float t_angle, int t_id, std::string_view t_layer = "bot_0",
+    void drawRobot(Vec2 t_pos, float t_angle, int t_id, std::string_view t_layer = "bot_0",
                    Color t_color = Color(255, 255, 0)) const;
 
     // Text Logging

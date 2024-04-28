@@ -85,7 +85,7 @@ Angle Angle::operator/(float f) const
     return fromDeg(m_deg / f);
 }
 
-vec2 Angle::toUnitVec() const
+Vec2 Angle::toUnitVec() const
 {
     const float rad = this->rad();
     return {std::cos(rad), std::sin(rad)};
@@ -106,8 +106,8 @@ bool Angle::isBetween(const Angle a, const Angle b) const
 
 Angle Angle::average(const Angle a, const Angle b)
 {
-    const vec2 average_vector = (a.toUnitVec() + b.toUnitVec()) / 2.0f;
-    return to_angle(average_vector);
+    const Vec2 average_vector = (a.toUnitVec() + b.toUnitVec()) / 2.0f;
+    return average_vector.toAngle();
 }
 
 Angle Angle::fromDeg(const float deg)
@@ -123,25 +123,4 @@ Angle Angle::fromRad(const float rad)
     ang.setRad(rad);
     return ang;
 }
-
-Angle angle_with(const vec2 &a, const vec2 &b)
-{
-    return to_angle(b - a);
-}
-
-Angle to_angle(const vec2 &v)
-{
-    if (v.y == 0.0 && v.x == 0.0)
-    {
-        return Angle::fromDeg(0.0);
-    }
-
-    Angle ans = Angle::fromRad(std::atan(v.y / v.x));
-
-    if (v.x < 0)
-        ans += Angle::fromDeg(180);
-
-    return ans;
-}
-
 } // namespace Tyr::Common

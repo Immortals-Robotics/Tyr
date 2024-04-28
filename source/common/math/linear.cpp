@@ -87,7 +87,7 @@ float Linear::getXIntercept()
     return xinter;
 }
 
-float Linear::getDisToPoint(vec2 p)
+float Linear::getDisToPoint(Vec2 p)
 {
     if (amoodi)
         return fabs(p.x - xinter);

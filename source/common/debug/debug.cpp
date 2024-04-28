@@ -49,7 +49,7 @@ void Debug::plotPoint(const std::string_view t_func_name, const double t_x, cons
     // point->set_name(t_point_name.data(), t_point_name.size());
 }
 
-void Debug::drawPoint(const vec2 t_pos, const std::string_view t_layer, const Color t_color) const
+void Debug::drawPoint(const Vec2 t_pos, const std::string_view t_layer, const Color t_color) const
 {
     Protos::Immortals::Debug_Point *const point = m_wrapper->mutable_dbg_draw()->add_point();
 
@@ -62,7 +62,7 @@ void Debug::drawPoint(const vec2 t_pos, const std::string_view t_layer, const Co
     point->set_col_b(t_color.b);
 }
 
-void Debug::drawLineSegment(vec2 t_pos1, vec2 t_pos2, const std::string_view t_layer, const Color t_color) const
+void Debug::drawLineSegment(Vec2 t_pos1, Vec2 t_pos2, const std::string_view t_layer, const Color t_color) const
 {
     Protos::Immortals::Debug_Line *const line = m_wrapper->mutable_dbg_draw()->add_line();
 
@@ -77,7 +77,7 @@ void Debug::drawLineSegment(vec2 t_pos1, vec2 t_pos2, const std::string_view t_l
     line->set_col_b(t_color.b);
 }
 
-void Debug::drawRect(const vec2 &p, float w, float h, const std::string_view t_layer, const Color t_color) const
+void Debug::drawRect(const Vec2 &p, float w, float h, const std::string_view t_layer, const Color t_color) const
 {
     Protos::Immortals::Debug_Rect *const rect = m_wrapper->mutable_dbg_draw()->add_rect();
 
@@ -92,7 +92,7 @@ void Debug::drawRect(const vec2 &p, float w, float h, const std::string_view t_l
     rect->set_col_b(t_color.b);
 }
 
-void Debug::drawCircle(const vec2 &center, float r, const std::string_view t_layer, const Color t_color) const
+void Debug::drawCircle(const Vec2 &center, float r, const std::string_view t_layer, const Color t_color) const
 {
     if (std::isnan(center.x) || std::isnan(center.y))
         return;
@@ -109,7 +109,7 @@ void Debug::drawCircle(const vec2 &center, float r, const std::string_view t_lay
     circle->set_col_b(t_color.b);
 }
 
-void Debug::drawRobot(const vec2 t_pos, float t_angle, const int t_id, const std::string_view t_layer,
+void Debug::drawRobot(const Vec2 t_pos, float t_angle, const int t_id, const std::string_view t_layer,
                       const Color t_color) const
 {
     Protos::Immortals::Debug_Robot *const robot = m_wrapper->mutable_dbg_draw()->add_robot();

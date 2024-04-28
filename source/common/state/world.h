@@ -22,8 +22,8 @@ struct RobotState
 {
     int vision_id;
 
-    vec2 Position;
-    vec2 velocity;
+    Vec2 Position;
+    Vec2 velocity;
 
     Angle angle;
     Angle AngularVelocity;
@@ -41,13 +41,13 @@ struct RobotState
 
 struct BallState
 {
-    vec2 Position;
-    vec2 velocity;
+    Vec2 Position;
+    Vec2 velocity;
 
     SeenState seenState;
 
-    vec2   First_Pos_when_shooted;
-    vec2   path_dir;
+    Vec2   First_Pos_when_shooted;
+    Vec2   path_dir;
     double t_capture;
 
     friend std::ostream &operator<<(std::ostream &oo, const BallState &state)
@@ -68,15 +68,15 @@ struct WorldState
     RobotState OwnRobot[Setting::kMaxRobots];
     RobotState OppRobot[Setting::kMaxRobots];
 
-    vec3 lastCMDS[Setting::kMaxRobots][11];
+    Vec3 lastCMDS[Setting::kMaxRobots][11];
 
     double t_capture       = -1;
     double delta_t_capture = -1;
 
     WorldState()
     {
-        ball.Position  = vec2(0.0f);
-        ball.velocity  = vec2(0.0f);
+        ball.Position  = Vec2();
+        ball.velocity  = Vec2();
         ball.t_capture = 0.0f;
         ball.seenState = CompletelyOut;
         has_ball       = false;
@@ -86,14 +86,14 @@ struct WorldState
         {
             OwnRobot[i].angle           = Angle();
             OwnRobot[i].AngularVelocity = Angle();
-            OwnRobot[i].Position        = vec2(0.0f);
+            OwnRobot[i].Position        = Vec2();
             OwnRobot[i].seenState       = CompletelyOut;
             OwnRobot[i].OutForSubsitute = true;
-            OwnRobot[i].velocity        = vec2(0.0f);
+            OwnRobot[i].velocity        = Vec2();
             OwnRobot[i].vision_id       = i;
             for (int j = 0; j < 11; j++)
             {
-                lastCMDS[i][j] = vec3(0.0f);
+                lastCMDS[i][j] = Vec3();
             }
         }
         oppRobots_num = 0;
@@ -101,10 +101,10 @@ struct WorldState
         { // TODO not in the last code...
             OppRobot[i].angle           = Angle();
             OppRobot[i].AngularVelocity = Angle();
-            OppRobot[i].Position        = vec2(0.0f);
+            OppRobot[i].Position        = Vec2();
             OppRobot[i].seenState       = CompletelyOut;
             OppRobot[i].OutForSubsitute = true;
-            OppRobot[i].velocity        = vec2(0.0f);
+            OppRobot[i].velocity        = Vec2();
             OppRobot[i].vision_id       = i;
         }
     }

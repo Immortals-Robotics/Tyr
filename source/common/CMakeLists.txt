@@ -6,8 +6,6 @@ find_package(quill CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(tomlplusplus REQUIRED IMPORTED_TARGET tomlplusplus)
 
-find_path(LINALG_INCLUDE_DIRS "linalg.h")
-
 set(HEADER_FILES
     pch.h
     services.h
@@ -17,6 +15,7 @@ set(HEADER_FILES
     debug/debug.h
     logging/logging.h
     math/angle.h
+    math/helpers.h
     math/linear.h
     math/median_filter.h
     math/vector.h
@@ -35,6 +34,7 @@ set(SOURCE_FILES
     debug/debug.cpp
     logging/logging.cpp
     math/angle.cpp
+    math/helpers.cpp
     math/linear.cpp
     math/vector.cpp
     math/random.cpp
@@ -54,9 +54,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     asio::asio
     PkgConfig::tomlplusplus
     quill::quill)
-
-target_include_directories(${PROJECT_NAME} PUBLIC 
-    ${LINALG_INCLUDE_DIRS})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC TOML_EXCEPTIONS=0)
 if (WIN32)

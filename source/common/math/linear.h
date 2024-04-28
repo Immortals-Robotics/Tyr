@@ -40,7 +40,7 @@ public:
 
     float getXIntercept();
 
-    float getDisToPoint(vec2 p);
+    float getDisToPoint(Vec2 p);
 
     void chapeKon(void);
 

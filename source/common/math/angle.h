@@ -2,8 +2,6 @@
 
 #include <numbers>
 
-#include "vector.h"
-
 namespace Tyr::Common
 {
 struct Angle
@@ -23,7 +21,7 @@ struct Angle
     [[nodiscard]] float cos() const;
     [[nodiscard]] float tan() const;
 
-    [[nodiscard]] vec2 toUnitVec() const;
+    [[nodiscard]] Vec2 toUnitVec() const;
 
     [[nodiscard]] bool isBetween(Angle a, Angle b) const;
 
@@ -45,8 +43,5 @@ private:
 
     float m_deg = 0.0;
 };
-
-Angle angle_with(const vec2 &a, const vec2 &b);
-Angle to_angle(const vec2 &v);
 
 } // namespace Tyr::Common
