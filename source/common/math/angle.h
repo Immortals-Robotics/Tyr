@@ -4,6 +4,8 @@
 
 namespace Tyr::Common
 {
+struct Vec2;
+
 struct Angle
 {
     Angle() = default;

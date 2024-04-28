@@ -222,24 +222,29 @@ float Vec3::magnitude() const
     return sqrt(x * x + y * y + z * z);
 }
 
-float Vec2::dot(const Vec2 t_a, const Vec2 t_b)
+float Vec2::dot(const Vec2 t_v)
 {
-    return t_a.x * t_b.x + t_a.y * t_b.y;
+    return x * t_v.x + y * t_v.y;
 }
 
-Angle Vec2::angleWith(const Vec2 a, const Vec2 b)
+float Vec2::distanceTo(Vec2 t_v)
 {
-    return (b - a).toAngle();
+    return (t_v - *this).magnitude();
 }
 
-Angle Vec2::angleDiff(const Vec2 a, const Vec2 b)
+Angle Vec2::angleWith(const Vec2 t_v)
 {
-    return b.toAngle() - a.toAngle();
+    return (t_v - *this).toAngle();
 }
 
-Vec2 Vec2::circleAroundPoint(Vec2 point, Angle angle, float radius)
+Angle Vec2::angleDiff(const Vec2 t_v)
 {
-    return point + angle.toUnitVec() * radius;
+    return t_v.toAngle() - this->toAngle();
+}
+
+Vec2 Vec2::circleAroundPoint(Angle angle, float radius)
+{
+    return *this + angle.toUnitVec() * radius;
 }
 
 Vec2 Vec2::pointOnConnectingLine(Vec2 first_point, Vec2 second_point, float distance)
@@ -273,11 +278,6 @@ bool Vec2::operator==(const Vec2 t_v) const
 bool Vec2::operator!=(const Vec2 t_v) const
 {
     return !(*this == t_v);
-}
-
-float Vec2::operator^(const Vec2 t_v) const
-{
-    return sqrt(pow(t_v.x - x, 2) + pow(t_v.y - y, 2));
 }
 
 Angle Vec2::toAngle() const

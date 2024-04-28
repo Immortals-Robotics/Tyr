@@ -1,13 +1,15 @@
 #pragma once
 
+#include <ostream>
+
 namespace Tyr::Common
 {
 struct Angle;
 
 struct Vec2
 {
-    float x = 0.0;
-    float y = 0.0;
+    float x = 0.0f;
+    float y = 0.0f;
 
     Vec2() = default;
     Vec2(float t_x, float t_y);
@@ -19,21 +21,22 @@ struct Vec2
 
     [[nodiscard]] Angle toAngle() const;
 
-    static float dot(Vec2 t_a, Vec2 t_b);
+    [[nodiscard]] float dot(Vec2 t_v);
+    [[nodiscard]] float distanceTo(Vec2 t_v);
 
-    static Angle angleWith(Vec2 a, Vec2 b);
-    static Angle angleDiff(Vec2 a, Vec2 b);
+    [[nodiscard]] Angle angleWith(Vec2 t_v);
+    [[nodiscard]] Angle angleDiff(Vec2 t_v);
 
-    Vec2 pointOnConnectingLine(Vec2 FirstPoint, Vec2 SecondPoint, float distance);
-    Vec2 circleAroundPoint(Vec2 point, Angle angle, float radius);
+    [[nodiscard]] Vec2 pointOnConnectingLine(Vec2 FirstPoint, Vec2 SecondPoint, float distance);
+    [[nodiscard]] Vec2 circleAroundPoint(Angle angle, float radius);
 
-    Vec2 operator+(Vec2 t_v) const;
-    Vec2 operator-(Vec2 t_v) const;
-    Vec2 operator*(Vec2 t_v) const;
-    Vec2 operator/(Vec2 t_v) const;
+    [[nodiscard]] Vec2 operator+(Vec2 t_v) const;
+    [[nodiscard]] Vec2 operator-(Vec2 t_v) const;
+    [[nodiscard]] Vec2 operator*(Vec2 t_v) const;
+    [[nodiscard]] Vec2 operator/(Vec2 t_v) const;
 
-    Vec2 operator*(float t_d) const;
-    Vec2 operator/(float t_d) const;
+    [[nodiscard]] Vec2 operator*(float t_d) const;
+    [[nodiscard]] Vec2 operator/(float t_d) const;
 
     Vec2 &operator+=(Vec2 t_v);
     Vec2 &operator-=(Vec2 t_v);
@@ -43,18 +46,13 @@ struct Vec2
     Vec2 &operator*=(float t_d);
     Vec2 &operator/=(float t_d);
 
-    Vec2 operator-() const;
-    Vec2 operator+() const;
-
-    /**
-     * This operation calculates the distance of two vectors
-     */
-    float operator^(Vec2 t_v) const;
+    [[nodiscard]] Vec2 operator-() const;
+    [[nodiscard]] Vec2 operator+() const;
 
     // TODO: floating-point numbers cannot be checked for equality
     // either drop these or implement an approximation
-    bool operator==(Vec2 t_v) const;
-    bool operator!=(Vec2 t_v) const;
+    [[nodiscard]] bool operator==(Vec2 t_v) const;
+    [[nodiscard]] bool operator!=(Vec2 t_v) const;
 
     friend std::ostream &operator<<(std::ostream &t_oo, const Vec2 &t_vec)
     {
@@ -65,9 +63,9 @@ struct Vec2
 
 struct Vec3
 {
-    float x = 0.0;
-    float y = 0.0;
-    float z = 0.0;
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
 
     Vec3() = default;
     Vec3(float t_x, float t_y, float t_z);

@@ -16,7 +16,7 @@ private:
     Common::RefereeState *RefState;
     Common::BallState    *ballData;
 
-    Common::vec2 LastPlacedBall;
+    Common::Vec2 LastPlacedBall;
     int          move_hys; // For isKicked
 
     Common::Timer timer;
@@ -32,7 +32,7 @@ public:
     bool connectToRefBox(void);
     bool isConnected(void);
     bool recieve(void);
-    bool isKicked(Common::vec2 ballPos);
+    bool isKicked(Common::Vec2 ballPos);
     void process(void);
 
     int oppGK;

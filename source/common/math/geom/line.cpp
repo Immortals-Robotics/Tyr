@@ -131,7 +131,7 @@ Vec2 Line::closestPoint(const Vec2 t_pos) const
 float Line::getDistanceFromPoint(Vec2 t_pos) const
 {
     Vec2 close_point = this->closestPoint(t_pos);
-    return close_point ^ t_pos;
+    return close_point.distanceTo(t_pos);
 }
 
 } // namespace Tyr::Common

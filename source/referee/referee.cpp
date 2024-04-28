@@ -37,7 +37,7 @@ void Referee::process()
         //		std::cout<<"BALL TARGET POSITION
         // IS:"<<pSSLRef.designated_position().x()<<'_'<<pSSLRef.designated_position().y()<<std::endl;
         RefState->placeBallTargetPosition =
-            Common::vec2(pSSLRef.designated_position().x(), pSSLRef.designated_position().y());
+            Common::Vec2(pSSLRef.designated_position().x(), pSSLRef.designated_position().y());
     }
     //	else
     //		std::cout<<"no new packet received"<<std::endl;
@@ -66,7 +66,7 @@ void Referee::process()
     //    	std::cout << "kicked" << std::endl;
 }
 
-bool Referee::isKicked(Common::vec2 ballPos)
+bool Referee::isKicked(Common::Vec2 ballPos)
 {
     int   requiredHys = 5;
     float requiredDis = 50.0f;
@@ -79,7 +79,7 @@ bool Referee::isKicked(Common::vec2 ballPos)
         }
     }
     //	std::cout<<"the distance: "<<DIS ( ballPos , LastPlacedBall )<<std::endl;
-    if (Common::distance(ballPos, LastPlacedBall) > requiredDis)
+    if (ballPos.distanceTo(LastPlacedBall) > requiredDis)
     {
         move_hys++;
     }
