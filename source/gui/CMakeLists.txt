@@ -13,7 +13,7 @@ find_package(rlimgui CONFIG REQUIRED)
 set(HEADER_FILES
 	pch.h
 	app.h
-	drawing/visualization_renderer.h
+	renderer/renderer.h
 	menu/config_menu.h
 	utility/vector_helper.h
 )
@@ -21,10 +21,10 @@ set(HEADER_FILES
 set(SOURCE_FILES
 	main.cpp
 	app.cpp
-	drawing/visualization_renderer_ball.cpp
-	drawing/visualization_renderer_robot.cpp
-	drawing/visualization_renderer.cpp
 	menu/config_menu.cpp
+	renderer/renderer_ball.cpp
+	renderer/renderer_robot.cpp
+	renderer/renderer.cpp
 	utility/vector_helper.cpp
 )
 

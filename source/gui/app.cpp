@@ -12,7 +12,7 @@ void Application::init(const int width, const int height)
     SetTraceLogLevel(LOG_WARNING);
     rlImGuiSetup(true);
 
-    renderer    = std::make_unique<VisualizationRenderer>(ImVec2(900.f, 700.f), 4.0f);
+    renderer    = std::make_unique<Renderer>(ImVec2(900.f, 700.f), 4.0f);
     config_menu = std::make_unique<ConfigMenu>(ImVec2(m_width, m_height));
 
     ssl_field.set_field_length(12000);
@@ -69,10 +69,12 @@ void Application::update()
         renderer->DrawRobots(ssl_packet.detection().robots_blue(), Tyr::Common::TeamColor::Blue);
         renderer->DrawRobots(ssl_packet.detection().robots_yellow(), Tyr::Common::TeamColor::Yellow);
         renderer->DrawBalls(ssl_packet.detection().balls());
-        if (config_menu->IsNetworkDataUpdated() == VISION_PORT || config_menu->IsNetworkDataUpdated() == VISION_IP)
+        if (config_menu->IsNetworkDataUpdated() == NetworkInput::VisionPort ||
+            config_menu->IsNetworkDataUpdated() == NetworkInput::VisionIp)
         {
-            updated_address.ip   = config_menu->GetNetworkParam(VISION_IP);
-            updated_address.port = static_cast<unsigned short>(std::stoi(config_menu->GetNetworkParam(VISION_PORT)));
+            updated_address.ip = config_menu->GetNetworkParam(NetworkInput::VisionIp);
+            updated_address.port =
+                static_cast<unsigned short>(std::stoi(config_menu->GetNetworkParam(NetworkInput::VisionPort)));
             config_menu->UpdateNetworkData();
             udp_client->Update(updated_address);
         }

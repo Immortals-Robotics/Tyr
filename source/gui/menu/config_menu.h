@@ -2,14 +2,14 @@
 
 namespace Tyr::Gui
 {
-typedef enum
+enum class NetworkInput
 {
-    VISION_IP,
-    VISION_PORT,
-    REF_IP,
-    REF_PORT,
-    NETWORK_NONE
-} networkInput_t;
+    None = 0,
+    VisionIp,
+    VisionPort,
+    RefereeIp,
+    RefereePort,
+};
 
 class ConfigMenu
 {
@@ -20,20 +20,21 @@ private:
     ImGuiWindowFlags windowFlags;
     std::string      visionIpAddress;
     std::string      visionPort;
-    networkInput_t   networkNeedsUpdate;
+    NetworkInput     networkNeedsUpdate;
 
     void       DrawTabBar(void);
     void       DrawNetworkTab(void);
     static int HandleVisionIpChange(ImGuiInputTextCallbackData *_data);
     static int HandleVisionPortChange(ImGuiInputTextCallbackData *_data);
-    void       SetNetworkInput(std::string _data, networkInput_t _inputType);
+    void       SetNetworkInput(std::string _data, NetworkInput _inputType);
 
 public:
     ConfigMenu(ImVec2 _wsize);
-    std::string    GetNetworkParam(networkInput_t _inputType);
-    networkInput_t IsNetworkDataUpdated();
-    void           UpdateNetworkData();
-    void           Draw(void);
     ~ConfigMenu();
+
+    std::string  GetNetworkParam(NetworkInput _inputType);
+    NetworkInput IsNetworkDataUpdated();
+    void         UpdateNetworkData();
+    void         Draw(void);
 };
 } // namespace Tyr::Gui

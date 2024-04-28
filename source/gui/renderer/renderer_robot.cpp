@@ -1,11 +1,11 @@
-#include "visualization_renderer.h"
+#include "renderer.h"
 
 #define TEXT_OFFSET_X 50.
 #define TEXT_OFFSET_Y 300.
 namespace Tyr::Gui
 {
-void VisualizationRenderer::DrawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data,
-                                       Tyr::Common::TeamColor                                                color)
+void Renderer::DrawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data,
+                          Tyr::Common::TeamColor                                                color)
 {
     auto lTextColor = color == Tyr::Common::TeamColor::Yellow ? BLACK : WHITE;
     auto lBaseColor = color == Tyr::Common::TeamColor::Yellow ? YELLOW : BLUE;

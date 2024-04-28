@@ -1,8 +1,8 @@
-#include "visualization_renderer.h"
+#include "renderer.h"
 
 namespace Tyr::Gui
 {
-void VisualizationRenderer::DrawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall> &data)
+void Renderer::DrawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall> &data)
 {
     for (auto ball : data)
     {

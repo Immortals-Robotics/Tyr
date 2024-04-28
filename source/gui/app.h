@@ -1,7 +1,7 @@
 #pragma once
 
-#include "drawing/visualization_renderer.h"
 #include "menu/config_menu.h"
+#include "renderer/renderer.h"
 
 namespace Tyr::Gui
 {
@@ -24,11 +24,11 @@ private:
     Protos::Immortals::Debug_Draw world_state;
     Protos::Immortals::Debug_Draw world_state_off;
 
-    std::unique_ptr<VisualizationRenderer> renderer;
-    std::unique_ptr<ConfigMenu>            config_menu;
+    std::unique_ptr<Renderer>   renderer;
+    std::unique_ptr<ConfigMenu> config_menu;
 
-    std::unique_ptr<Tyr::Common::UdpClient> udp_client;
-    Tyr::Common::NetworkAddress             updated_address;
+    std::unique_ptr<Common::UdpClient> udp_client;
+    Common::NetworkAddress             updated_address;
 
     std::mutex        vision_mutex;
     std::thread       vision_thread;

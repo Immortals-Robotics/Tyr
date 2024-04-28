@@ -1,9 +1,8 @@
-#include "visualization_renderer.h"
+#include "renderer.h"
 
 namespace Tyr::Gui
 {
-VisualizationRenderer::VisualizationRenderer(ImVec2 _wSize, float _upScalingFactor)
-    : ballRadius(21.5f), robotRadius(90.f), robotArcAngle(50.f)
+Renderer::Renderer(ImVec2 _wSize, float _upScalingFactor) : ballRadius(21.5f), robotRadius(90.f), robotArcAngle(50.f)
 {
     wSize                      = _wSize * _upScalingFactor;
     upScalingFactor            = _upScalingFactor;
@@ -13,7 +12,7 @@ VisualizationRenderer::VisualizationRenderer(ImVec2 _wSize, float _upScalingFact
     SetTextureFilter(shaderVisualizationTexture.texture, TEXTURE_FILTER_BILINEAR);
 }
 
-void VisualizationRenderer::init()
+void Renderer::init()
 {
     std::array<float, 2> resolution = {static_cast<float>(wSize.x), static_cast<float>(wSize.y)};
 
@@ -22,7 +21,7 @@ void VisualizationRenderer::init()
     SetShaderValue(fxaaShader, GetShaderLocation(fxaaShader, "resolution"), resolution.data(), SHADER_UNIFORM_VEC2);
 }
 
-Vector2 VisualizationRenderer::ConvertSignedVecToPixelVec(ImVec2 _signedVec)
+Vector2 Renderer::ConvertSignedVecToPixelVec(ImVec2 _signedVec)
 {
     _signedVec.y *= -1.;
     _signedVec  = _signedVec * this->zoomScale + this->wSize / 2;
@@ -30,13 +29,13 @@ Vector2 VisualizationRenderer::ConvertSignedVecToPixelVec(ImVec2 _signedVec)
     return vec;
 }
 
-int VisualizationRenderer::ConvertRealityUnitToPixels(float _value)
+int Renderer::ConvertRealityUnitToPixels(float _value)
 {
     return _value * zoomScale;
 }
 
-void VisualizationRenderer::DrawRectVec(ImVec2 _v1, ImVec2 _v2, Color _color, bool _isFilled, float _thickness,
-                                        unsigned char _transparency)
+void Renderer::DrawRectVec(ImVec2 _v1, ImVec2 _v2, Color _color, bool _isFilled, float _thickness,
+                           unsigned char _transparency)
 {
     Vector2 v1     = ConvertSignedVecToPixelVec(_v1);
     Vector2 v2     = ConvertSignedVecToPixelVec(_v2);
@@ -60,8 +59,7 @@ void VisualizationRenderer::DrawRectVec(ImVec2 _v1, ImVec2 _v2, Color _color, bo
     EndTextureMode();
 }
 
-void VisualizationRenderer::DrawLineVec(ImVec2 _v1, ImVec2 _v2, Color _color, float _thickness,
-                                        unsigned char _transparency)
+void Renderer::DrawLineVec(ImVec2 _v1, ImVec2 _v2, Color _color, float _thickness, unsigned char _transparency)
 {
     _thickness = _thickness * upScalingFactor;
     Vector2 v1 = ConvertSignedVecToPixelVec(_v1);
@@ -72,8 +70,8 @@ void VisualizationRenderer::DrawLineVec(ImVec2 _v1, ImVec2 _v2, Color _color, fl
     BeginTextureMode(visualizaionTexture);
 }
 
-void VisualizationRenderer::DrawCircleVec(ImVec2 _center, float _rad, Color _color, bool _isFilled, float _thickness,
-                                          unsigned char _transparency)
+void Renderer::DrawCircleVec(ImVec2 _center, float _rad, Color _color, bool _isFilled, float _thickness,
+                             unsigned char _transparency)
 {
     Vector2 center = ConvertSignedVecToPixelVec(_center);
     _rad           = ConvertRealityUnitToPixels(_rad);
@@ -91,8 +89,8 @@ void VisualizationRenderer::DrawCircleVec(ImVec2 _center, float _rad, Color _col
     EndTextureMode();
 }
 
-void VisualizationRenderer::DrawCircleSectorVec(ImVec2 _center, float _rad, Color _color, float _startAngle,
-                                                float _endAngle, bool _isFilled, unsigned char _transparency)
+void Renderer::DrawCircleSectorVec(ImVec2 _center, float _rad, Color _color, float _startAngle, float _endAngle,
+                                   bool _isFilled, unsigned char _transparency)
 {
     Vector2 center = ConvertSignedVecToPixelVec(_center);
     _rad           = ConvertRealityUnitToPixels(_rad);
@@ -113,8 +111,7 @@ void VisualizationRenderer::DrawCircleSectorVec(ImVec2 _center, float _rad, Colo
     EndTextureMode();
 }
 
-void VisualizationRenderer::DrawTextVec(ImVec2 _pos, std::string _str, int _fontSize, Color _color,
-                                        unsigned char _transparency)
+void Renderer::DrawTextVec(ImVec2 _pos, std::string _str, int _fontSize, Color _color, unsigned char _transparency)
 {
     Vector2 pos = ConvertSignedVecToPixelVec(_pos);
     BeginTextureMode(visualizaionTexture);
@@ -122,14 +119,14 @@ void VisualizationRenderer::DrawTextVec(ImVec2 _pos, std::string _str, int _font
     EndTextureMode();
 }
 
-void VisualizationRenderer::CalculateZoom()
+void Renderer::CalculateZoom()
 {
     bool   x        = this->wSize.x < this->wSize.y;
     ImVec2 ratio    = ImVec2(this->wSize.x / overallFieldSize.x, this->wSize.y / overallFieldSize.y);
     this->zoomScale = x ? (ratio.x > ratio.y ? ratio.x : ratio.y) : (ratio.x > ratio.y ? ratio.y : ratio.x);
 }
 
-void VisualizationRenderer::ApplyShader()
+void Renderer::ApplyShader()
 {
     BeginTextureMode(shaderVisualizationTexture);
     BeginShaderMode(fxaaShader);
@@ -138,7 +135,7 @@ void VisualizationRenderer::ApplyShader()
     EndTextureMode();
 }
 
-void VisualizationRenderer::DrawField(const Protos::SSL_GeometryFieldSize &data)
+void Renderer::DrawField(const Protos::SSL_GeometryFieldSize &data)
 {
     BeginTextureMode(this->visualizaionTexture);
     ClearBackground(GREEN);
