@@ -2,6 +2,7 @@ project(${CMAKE_PROJECT_NAME}-sender)
 
 set(HEADER_FILES
     pch.h
+    grsim.h
     sender.h
     protocol/data_lite.h
     protocol/defines.h
@@ -15,6 +16,7 @@ set(C_SOURCE_FILES
     protocol/writer.c)
 
 set(SOURCE_FILES
+    grsim.cpp
     sender.cpp
     ${C_SOURCE_FILES})
 
