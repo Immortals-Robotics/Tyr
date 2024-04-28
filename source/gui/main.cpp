@@ -10,10 +10,10 @@ Protos::SSL_WrapperPacket* ssl_packet;
 Protos::SSL_WrapperPacket* ssl_packet_off;
 VisualizationRenderer* visualizationRenderer;
 ConfigMenu* configMenu;
-Loki::Common::UdpClient* sslClient;
+Tyr::Common::UdpClient* sslClient;
 Protos::Immortals::Debug_Draw* world_state;
 Protos::Immortals::Debug_Draw* world_state_off;
-Loki::Common::NetworkAddress updatedAddress;
+Tyr::Common::NetworkAddress updatedAddress;
 
 std::mutex vision_mutex;
 std::mutex reality_mutex;

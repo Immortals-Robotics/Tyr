@@ -48,6 +48,8 @@ void ConfigMenu::SetNetworkInput(std::string _data, networkInput_t _inputType)
                 this->networkNeedsUpdate = VISION_PORT;
             }
             break;
+            default:
+            break;
     }
 }
 
@@ -59,6 +61,9 @@ std::string ConfigMenu::GetNetworkParam(networkInput_t _inputType)
             break;
         case VISION_PORT:
             return this->visionPort;
+            break;
+        default:
+            return "";
             break;
     }
 }

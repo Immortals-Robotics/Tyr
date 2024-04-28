@@ -4,7 +4,7 @@
 
 typedef asio::detail::socket_option::integer<SOL_SOCKET, SO_RCVTIMEO> rcv_timeout_option;
 
-namespace Loki::Common {
+namespace Tyr::Common {
 UdpClient::UdpClient(const NetworkAddress& t_address)
 {
     m_context = std::make_unique<asio::io_context>();
@@ -55,4 +55,4 @@ void UdpClient::Update(const NetworkAddress& t_address)
     }
 }
 
-} // namespace Loki::Common
+} // namespace Tyr::Common
