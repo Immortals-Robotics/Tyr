@@ -79,4 +79,4 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC LOG_DIR="${CMAKE_SOURCE_DIR}/l
 
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})
 
-target_precompile_headers(${PROJECT_NAME} PUBLIC ${HEADER_FILES})
+target_precompile_headers(${PROJECT_NAME} PUBLIC pch.h)
