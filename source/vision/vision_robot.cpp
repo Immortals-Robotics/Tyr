@@ -171,7 +171,7 @@ void VisionModule::FilterRobots(int num, bool own)
             // robotState[own][i].velocity.y = 0.0f;
 
             // robotState[own][i].velocity.direction = 0.0f;
-            // robotState[own][i].velocity.magnitude = 0.0f;
+            // robotState[own][i].velocity.length = 0.0f;
 
             // robotState[own][i].Position.X += robotState[own][i].velocity.x / 61.0;
             // robotState[own][i].Position.Y += robotState[own][i].velocity.y / 61.0;

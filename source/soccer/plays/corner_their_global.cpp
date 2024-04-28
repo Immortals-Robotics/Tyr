@@ -8,7 +8,7 @@ void Ai::corner_their_global()
     {
         ERRTSetObstacles(gk, 0, 0);
         OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
-        ERRTNavigate2Point(gk, Common::vec2(side * (field_width - 100), 0), 0, 100, &VELOCITY_PROFILE_MAMOOLI);
+        ERRTNavigate2Point(gk, Common::Vec2(side * (field_width - 100), 0), 0, 100, &VELOCITY_PROFILE_MAMOOLI);
 
         DefMid(def, rw, lw, NULL, false);
     }
@@ -21,10 +21,10 @@ void Ai::corner_their_global()
     isDefending = true;
     DefenceWall(attack, false);
 
-    std::map<int, Common::vec2> static_pos;
-    static_pos[dmf]  = Common::vec2(side * 3500, std::copysign(1100.0f, -ball.Position.y));
-    static_pos[mid1] = Common::vec2(side * 3200, 600);
-    static_pos[mid2] = Common::vec2(side * 3200, 0);
+    std::map<int, Common::Vec2> static_pos;
+    static_pos[dmf]  = Common::Vec2(side * 3500, std::copysign(1100.0f, -ball.Position.y));
+    static_pos[mid1] = Common::Vec2(side * 3200, 600);
+    static_pos[mid2] = Common::Vec2(side * 3200, 0);
 
     MarkManager(true);
 
@@ -37,7 +37,7 @@ void Ai::corner_their_global()
         {
             if (static_pos.find(own) != static_pos.end())
             {
-                OwnRobot[own].face(Common::vec2(-side * field_width, 0));
+                OwnRobot[own].face(Common::Vec2(-side * field_width, 0));
                 ERRTSetObstacles(own, 1, 1);
                 ERRTNavigate2Point(own, static_pos[own], 0, 100, &VELOCITY_PROFILE_MAMOOLI);
             }

@@ -29,29 +29,28 @@ void Ai::Stop_def(void)
     // DefHi(def,NULL, true);
     DefMid(def, rw, lw, NULL, true);
 
-    std::map<int, Common::vec2> static_pos;
-    static_pos[dmf]  = Common::vec2(side * 4200, Common::copysign(1000.0f, ball.Position.y));
-    static_pos[mid1] = Common::vec2(side * 4500, Common::copysign(3000.0f, -ball.Position.y));
-    static_pos[mid2] = Common::vec2(side * 4200, Common::copysign(1000.0f, -ball.Position.y));
+    std::map<int, Common::Vec2> static_pos;
+    static_pos[dmf]  = Common::Vec2(side * 4200, std::copysign(1000.0f, ball.Position.y));
+    static_pos[mid1] = Common::Vec2(side * 4500, std::copysign(3000.0f, -ball.Position.y));
+    static_pos[mid2] = Common::Vec2(side * 4200, std::copysign(1000.0f, -ball.Position.y));
 
     ERRTSetObstacles(dmf, true, true);
     OwnRobot[dmf].face(ball.Position);
     ERRTNavigate2Point(dmf, static_pos[dmf], 0, 40, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(mid1, true, true);
-    OwnRobot[mid1].face(Common::vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[mid1].face(Common::Vec2(ball.Position.x, ball.Position.y));
     ERRTNavigate2Point(mid1, static_pos[mid1], 0, 40, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(mid2, true, true);
-    OwnRobot[mid2].face(Common::vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[mid2].face(Common::Vec2(ball.Position.x, ball.Position.y));
     ERRTNavigate2Point(mid2, static_pos[mid2], 0, 40, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(attack, true, true);
-    OwnRobot[attack].face(Common::vec2(ball.Position.x, ball.Position.y));
+    OwnRobot[attack].face(Common::Vec2(ball.Position.x, ball.Position.y));
     ERRTNavigate2Point(attack,
-                       Common::circle_around_point(Common::vec2(ball.Position.x, ball.Position.y),
-                                                 Common::angle_with(ball.Position, Common::vec2(side * field_width, 0)),
-                                                 580),
+                       Common::Vec2(ball.Position.x, ball.Position.y)
+                           .circleAroundPoint(ball.Position.angleWith(Common::Vec2(side * field_width, 0)), 580),
                        0, 40, &VELOCITY_PROFILE_AROOM);
 }
 } // namespace Tyr::Soccer

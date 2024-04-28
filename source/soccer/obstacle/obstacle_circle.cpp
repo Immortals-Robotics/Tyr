@@ -14,7 +14,7 @@ bool CircleObstacle::IsInObstacle(float _x, float _y)
     if ((_x > x + r) || (_x < x - r) || (_y > y + r) || (_y < y - r))
         return false;
 
-    if (Common::distance(Common::vec2(x, y), Common::vec2(_x, _y)) <= r)
+    if (Common::Vec2(x, y).distanceTo(Common::Vec2(_x, _y)) <= r)
         return true;
 
     return false;
@@ -22,6 +22,6 @@ bool CircleObstacle::IsInObstacle(float _x, float _y)
 
 float CircleObstacle::NearestDistance(float _x, float _y)
 {
-    return Common::distance(Common::vec2(x, y), Common::vec2(_x, _y)) - r;
+    return Common::Vec2(x, y).distanceTo(Common::Vec2(_x, _y)) - r;
 }
 } // namespace Tyr::Soccer

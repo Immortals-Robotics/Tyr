@@ -99,7 +99,7 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
         oneTouchType[i]     = oneTouch;
         oneTouchTypeUsed[i] = false;
 
-        allafPos[i] = Common::vec2(0, 0);
+        allafPos[i] = Common::Vec2(0, 0);
     }
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
@@ -126,35 +126,35 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
 
     chip_head = Common::Angle::fromDeg(200);
 
-    lastBallVelocity = Common::vec2();
+    lastBallVelocity = Common::Vec2();
 
     circleReachedBehindBall = false;
-    PredictedBall           = Common::vec2();
+    PredictedBall           = Common::Vec2();
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
         requiredRobots[i] = false;
 
-    BALL_PLACE_KHEYLI_SOOSKI.max_spd   = Common::vec2(10.0f);
-    BALL_PLACE_KHEYLI_SOOSKI.max_dec   = Common::vec2(1.0f);
-    BALL_PLACE_KHEYLI_SOOSKI.max_acc   = Common::vec2(0.6f);
+    BALL_PLACE_KHEYLI_SOOSKI.max_spd   = Common::Vec2(10.0f);
+    BALL_PLACE_KHEYLI_SOOSKI.max_dec   = Common::Vec2(1.0f);
+    BALL_PLACE_KHEYLI_SOOSKI.max_acc   = Common::Vec2(0.6f);
     BALL_PLACE_KHEYLI_SOOSKI.max_w_acc = 40.0f;
     BALL_PLACE_KHEYLI_SOOSKI.max_w_dec = 140.0f;
 
-    VELOCITY_PROFILE_AROOM.max_spd   = Common::vec2(20.0f);
-    VELOCITY_PROFILE_AROOM.max_dec   = Common::vec2(1.0f);
-    VELOCITY_PROFILE_AROOM.max_acc   = Common::vec2(0.8f);
+    VELOCITY_PROFILE_AROOM.max_spd   = Common::Vec2(20.0f);
+    VELOCITY_PROFILE_AROOM.max_dec   = Common::Vec2(1.0f);
+    VELOCITY_PROFILE_AROOM.max_acc   = Common::Vec2(0.8f);
     VELOCITY_PROFILE_AROOM.max_w_acc = 40.0f;
     VELOCITY_PROFILE_AROOM.max_w_dec = 140.0f;
 
-    VELOCITY_PROFILE_MAMOOLI.max_spd   = Common::vec2(40.0f);
-    VELOCITY_PROFILE_MAMOOLI.max_dec   = Common::vec2(1.5f);
-    VELOCITY_PROFILE_MAMOOLI.max_acc   = Common::vec2(1.0f);
+    VELOCITY_PROFILE_MAMOOLI.max_spd   = Common::Vec2(40.0f);
+    VELOCITY_PROFILE_MAMOOLI.max_dec   = Common::Vec2(1.5f);
+    VELOCITY_PROFILE_MAMOOLI.max_acc   = Common::Vec2(1.0f);
     VELOCITY_PROFILE_MAMOOLI.max_w_acc = 40.0f;
     VELOCITY_PROFILE_MAMOOLI.max_w_dec = 140.0f;
 
-    VELOCITY_PROFILE_KHARAKI.max_spd   = Common::vec2(40.0f);
-    VELOCITY_PROFILE_KHARAKI.max_dec   = Common::vec2(1.8f);
-    VELOCITY_PROFILE_KHARAKI.max_acc   = Common::vec2(1.3f);
+    VELOCITY_PROFILE_KHARAKI.max_spd   = Common::Vec2(40.0f);
+    VELOCITY_PROFILE_KHARAKI.max_dec   = Common::Vec2(1.8f);
+    VELOCITY_PROFILE_KHARAKI.max_acc   = Common::Vec2(1.3f);
     VELOCITY_PROFILE_KHARAKI.max_w_acc = 40.0f;
     VELOCITY_PROFILE_KHARAKI.max_w_dec = 140.0f;
 
@@ -201,22 +201,22 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     timer.start();
 }
 
-void Ai::AddDebugPoint(const Common::vec2 &p, const Common::CommonColor _color)
+void Ai::AddDebugPoint(const Common::Vec2 &p, const Common::CommonColor _color)
 {
     Common::debug().drawPoint(p);
 }
 
-void Ai::AddDebugLine(const Common::vec2 &p1, const Common::vec2 &p2, const Common::CommonColor _color)
+void Ai::AddDebugLine(const Common::Vec2 &p1, const Common::Vec2 &p2, const Common::CommonColor _color)
 {
     Common::debug().drawLineSegment(p1, p2);
 }
 
-void Ai::AddDebugRect(const Common::vec2 &p, const float w, const float h, const Common::CommonColor _color)
+void Ai::AddDebugRect(const Common::Vec2 &p, const float w, const float h, const Common::CommonColor _color)
 {
     Common::debug().drawRect(p, w, h);
 }
 
-void Ai::AddDebugCircle(const Common::vec2 &p, const float r, const Common::CommonColor _color)
+void Ai::AddDebugCircle(const Common::Vec2 &p, const float r, const Common::CommonColor _color)
 {
     Common::debug().drawCircle(p, r, "", Common::Color::createColor(_color));
 }

@@ -11,15 +11,15 @@ inline float sign(float num)
 
 TrapezoidPlanner::TrapezoidPlanner()
 {
-    init(Common::vec2(0.0f), Common::vec2(0.0f), Common::vec2(0.0f), 0.0f);
+    init(Common::Vec2(0.0f), Common::Vec2(0.0f), Common::Vec2(0.0f), 0.0f);
 }
 
-TrapezoidPlanner::TrapezoidPlanner(Common::vec2 _max_acc, Common::vec2 _max_dec, Common::vec2 _max_spd, float _period)
+TrapezoidPlanner::TrapezoidPlanner(Common::Vec2 _max_acc, Common::Vec2 _max_dec, Common::Vec2 _max_spd, float _period)
 {
     init(_max_acc, _max_dec, _max_spd, _period);
 }
 
-void TrapezoidPlanner::init(Common::vec2 _max_acc, Common::vec2 _max_dec, Common::vec2 _max_spd, float _period)
+void TrapezoidPlanner::init(Common::Vec2 _max_acc, Common::Vec2 _max_dec, Common::Vec2 _max_spd, float _period)
 {
     init_state  = NULL;
     final_state = NULL;
@@ -30,7 +30,7 @@ void TrapezoidPlanner::init(Common::vec2 _max_acc, Common::vec2 _max_dec, Common
 
     period = _period;
 
-    oldAns = Common::vec3(0.0f);
+    oldAns = Common::Vec3(0.0f);
 }
 
 float TrapezoidPlanner::Plan1D(float d, float v, float tmp_max_spd, float tmp_max_acc, float tmp_max_dec)
@@ -82,15 +82,15 @@ float TrapezoidPlanner::Plan1D(float d, float v, float tmp_max_spd, float tmp_ma
     return ans;
 }
 
-Common::vec3 TrapezoidPlanner::Plan(Common::RobotState *_init, Common::RobotState *_final)
+Common::Vec3 TrapezoidPlanner::Plan(Common::RobotState *_init, Common::RobotState *_final)
 {
     init_state  = _init;
     final_state = _final;
 
     if ((init_state == NULL) || (final_state == NULL))
-        return Common::vec3(0.0f);
+        return Common::Vec3();
 
-    Common::vec3 ans = Common::vec3(0.0f);
+    Common::Vec3 ans = Common::Vec3();
 
     ans.z = (init_state->angle - final_state->angle).deg();
     ans.z = std::clamp(ans.z * 3.0f, -180.0f, 180.0f);
@@ -100,9 +100,9 @@ Common::vec3 TrapezoidPlanner::Plan(Common::RobotState *_init, Common::RobotStat
     if (std::fabs(oldAns.y - init_state->velocity.y) > 1000.0f)
         oldAns.y = (oldAns.y + init_state->velocity.y) / 2.0f;
 
-    float target_dis = Common::distance(init_state->Position, final_state->Position);
+    float target_dis = init_state->Position.distanceTo(final_state->Position);
 
-    Common::vec2 tmp_max_speed;
+    Common::Vec2 tmp_max_speed;
     tmp_max_speed.x = max_spd.x * std::fabs(final_state->Position.x - init_state->Position.x) / target_dis;
     tmp_max_speed.y = max_spd.y * std::fabs(final_state->Position.y - init_state->Position.y) / target_dis;
 

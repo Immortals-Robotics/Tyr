@@ -24,28 +24,28 @@ void Ai::NormalPlayDef(void)
             {
                 int oppAttacker = findKickerOpp(-1);
 
-                OwnRobot[own].face(Common::vec2(-side * field_width, 0));
+                OwnRobot[own].face(Common::Vec2(-side * field_width, 0));
                 ERRTSetObstacles(own, 0, 1);
 
                 if (own == dmf)
                 {
-                    ERRTNavigate2Point(
-                        dmf, Common::point_on_connecting_line(ball.Position, Common::vec2(side * field_width, 0), 1800), 0,
-                        100, &VELOCITY_PROFILE_MAMOOLI);
+                    ERRTNavigate2Point(dmf,
+                                       ball.Position.pointOnConnectingLine(Common::Vec2(side * field_width, 0), 1800),
+                                       0, 100, &VELOCITY_PROFILE_MAMOOLI);
                 }
                 else if (own == mid1)
                 {
                     if (oppAttacker != -1)
                         Mark2Goal(own, oppAttacker, 500);
                     else
-                        ERRTNavigate2Point(own, Common::vec2(ball.Position.x, 1000), 0, 100, &VELOCITY_PROFILE_MAMOOLI);
+                        ERRTNavigate2Point(own, Common::Vec2(ball.Position.x, 1000), 0, 100, &VELOCITY_PROFILE_MAMOOLI);
                 }
                 else if (own == mid2)
                 {
                     if (oppAttacker != -1)
                         Mark2Goal(own, oppAttacker, 500);
                     else
-                        ERRTNavigate2Point(own, Common::vec2(ball.Position.x, -1000), 0, 100,
+                        ERRTNavigate2Point(own, Common::Vec2(ball.Position.x, -1000), 0, 100,
                                            &VELOCITY_PROFILE_MAMOOLI);
                 }
             }
@@ -56,12 +56,12 @@ void Ai::NormalPlayDef(void)
         }
     }
 
-    Common::vec2  openAngle  = calculateOpenAngleToGoal(ball.Position, attack);
+    Common::Vec2  openAngle  = calculateOpenAngleToGoal(ball.Position, attack);
     Common::Angle shootAngle = Common::Angle::fromDeg(180 + openAngle.x);
 
     float shoot_pow = 1;
     float chip_pow  = 1;
-    if (Common::distance(OwnRobot[attack].State.Position, ball.Position) > 400)
+    if (OwnRobot[attack].State.Position.distanceTo(ball.Position) > 400)
     {
         chip_pow = 1;
     }
@@ -71,9 +71,8 @@ void Ai::NormalPlayDef(void)
     }
     else if (!goal_blocked(ball.Position, 3000, 130))
     {
-        shoot_pow = 50 - Common::length(OwnRobot[attack].State.velocity) * 0.005;
-        ;
-        chip_pow = 0;
+        shoot_pow = 50 - OwnRobot[attack].State.velocity.length() * 0.005f;
+        chip_pow  = 0;
     }
     else
     {
@@ -87,7 +86,7 @@ void Ai::NormalPlayDef(void)
 #if 1
     if (attackFuckingAngle() && kicker_opp != -1)
     {
-        shootAngle = Common::angle_with(ball.Position, Common::vec2(side * field_width, 0));
+        shootAngle = ball.Position.angleWith(Common::Vec2(side * field_width, 0));
         shoot_pow  = 1;
         chip_pow   = 0;
     }
@@ -97,7 +96,7 @@ void Ai::NormalPlayDef(void)
     {
         LOG_DEBUG("in def we trust");
 
-        shootAngle = Common::angle_with(OppRobot[kicker_opp].Position, ball.Position);
+        shootAngle = OppRobot[kicker_opp].Position.angleWith(ball.Position);
         shoot_pow  = 1;
         chip_pow   = 0;
     }

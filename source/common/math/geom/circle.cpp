@@ -13,7 +13,7 @@ std::vector<Vec2> Circle::intersect(const Circle &t_other) const
 {
     // first calculate distance between two centers circles P0 and P1.
     const Vec2  d_vec = t_other.center - center;
-    const float d_mag = d_vec.magnitude();
+    const float d_mag = d_vec.length();
 
     // normalize differences
     const Vec2 d_normal = d_vec.normalized();
@@ -56,7 +56,7 @@ std::vector<Vec2> Circle::intersect(const Circle &t_other) const
 float Circle::intersectionArea(const Circle &t_other) const
 {
     const Vec2  d_vec = t_other.center - center;
-    const float d_mag = d_vec.magnitude(); // dist between two centers
+    const float d_mag = d_vec.length(); // dist between two centers
 
     if (d_mag > t_other.r + r) // circles do not intersect
     {
@@ -91,11 +91,11 @@ float Circle::intersectionArea(const Circle &t_other) const
 
     const Vec2 int_mid = (intersection[0] + intersection[1]) * 0.5;
 
-    const float d = (intersection[0] - int_mid).magnitude();
+    const float d = (intersection[0] - int_mid).length();
 
     float area = 0.0;
     {
-        const float h   = (int_mid - center).magnitude();
+        const float h   = (int_mid - center).length();
         const Angle ang = Angle::fromRad(std::asin(d / r));
 
         area += ang.rad() * r * r;
@@ -104,7 +104,7 @@ float Circle::intersectionArea(const Circle &t_other) const
 
     {
         // and now for the other segment the same story
-        const float h   = (int_mid - t_other.center).magnitude();
+        const float h   = (int_mid - t_other.center).length();
         const Angle ang = Angle::fromRad(std::asin(d / t_other.r));
 
         area += ang.rad() * t_other.r * t_other.r;

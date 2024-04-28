@@ -52,7 +52,7 @@ bool Parabolic::HasStaticOverlap(const Parabolic &a)
     for (int t_idx = 0; t_idx < check_t_count; ++t_idx)
     {
         const float        t = check_t[t_idx];
-        const Common::vec2 p = a.Evaluate(t);
+        const Common::Vec2 p = a.Evaluate(t);
         if (IsInObstacle(p))
         {
             return true;
@@ -78,14 +78,14 @@ bool Parabolic::HasCollision(const Parabolic &a, const Parabolic &b, const float
 
 float Parabolic::Distance(const Parabolic &a, const Parabolic &b, const float t)
 {
-    const Common::vec2 p_a = a.Evaluate(t);
-    const Common::vec2 p_b = b.Evaluate(t);
-    return Common::distance(p_a, p_b);
+    const Common::Vec2 p_a = a.Evaluate(t);
+    const Common::Vec2 p_b = b.Evaluate(t);
+    return p_a.distanceTo(p_b);
 }
 
-Common::vec2 Parabolic::Evaluate(const float t) const
+Common::Vec2 Parabolic::Evaluate(const float t) const
 {
-    if (Common::length(a) < 1e-10 && Common::length(v) < 1e-10)
+    if (a.length() < 1e-10 && v.length() < 1e-10)
     {
         return p;
     }
@@ -93,12 +93,12 @@ Common::vec2 Parabolic::Evaluate(const float t) const
     const float dt = t - t0;
     const float x  = p.x + (v.x * dt) + (a.x * (dt * dt * .5f));
     const float y  = p.y + (v.y * dt) + (a.y * (dt * dt * .5f));
-    return Common::vec2(x, y);
+    return Common::Vec2(x, y);
 }
 
-Common::vec2 Parabolic::EvaluateDerivative(const float t) const
+Common::Vec2 Parabolic::EvaluateDerivative(const float t) const
 {
-    if (Common::length(a) < 1e-10)
+    if (a.length() < 1e-10)
     {
         return v;
     }
@@ -106,6 +106,6 @@ Common::vec2 Parabolic::EvaluateDerivative(const float t) const
     const float dt = t - t0;
     const float x  = v.x + (a.x * dt);
     const float y  = v.y + (a.y * dt);
-    return Common::vec2(x, y);
+    return Common::Vec2(x, y);
 }
 } // namespace Tyr::Soccer

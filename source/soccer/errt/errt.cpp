@@ -25,7 +25,7 @@ Planner::Planner(void)
 Planner::~Planner()
 {}
 
-void Planner::init(Common::vec2 init, Common::vec2 final, float step)
+void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
 {
 
     init_state  = nearest_free(init);
@@ -57,14 +57,14 @@ void Planner::set_field_params(float _w, float _h)
     field_height = _h;
 }
 
-Common::vec2 Planner::random_state(void)
+Common::Vec2 Planner::random_state(void)
 {
-    // return Common::vec2 ( ( rnd ( ) * 10000.0 ) - 5000.0 , ( rnd ( ) * 10000.0 ) - 5000.0 );
-    return Common::vec2(((random.get() - 0.5f) * 2.0f * (field_width + 250.0f)),
+    // return Common::Vec2 ( ( rnd ( ) * 10000.0 ) - 5000.0 , ( rnd ( ) * 10000.0 ) - 5000.0 );
+    return Common::Vec2(((random.get() - 0.5f) * 2.0f * (field_width + 250.0f)),
                         ((random.get() - 0.5f) * 2.0f * (field_height + 250.0f)));
 }
 
-Common::vec2 Planner::nearest_free(Common::vec2 state)
+Common::Vec2 Planner::nearest_free(Common::Vec2 state)
 {
     return nearest_free_prob(state);
     int r = 678, l = -678, u = 478, d = -478;
@@ -77,7 +77,7 @@ Common::vec2 Planner::nearest_free(Common::vec2 state)
 
     for (int i = state.x; i < 678; i++)
     {
-        if (!IsInObstacle(Common::vec2(i, state.y)))
+        if (!IsInObstacle(Common::Vec2(i, state.y)))
         {
             r = i - state.x;
             break;
@@ -86,7 +86,7 @@ Common::vec2 Planner::nearest_free(Common::vec2 state)
 
     for (int i = state.x; i > 52; i--)
     {
-        if (!IsInObstacle(Common::vec2(i, state.y)))
+        if (!IsInObstacle(Common::Vec2(i, state.y)))
         {
             l = i - state.x;
             break;
@@ -95,7 +95,7 @@ Common::vec2 Planner::nearest_free(Common::vec2 state)
 
     for (int i = state.y; i < 478; i++)
     {
-        if (!IsInObstacle(Common::vec2(state.x, i)))
+        if (!IsInObstacle(Common::Vec2(state.x, i)))
         {
             u = i - state.y;
             break;
@@ -104,7 +104,7 @@ Common::vec2 Planner::nearest_free(Common::vec2 state)
 
     for (int i = state.y; i > 52; i--)
     {
-        if (!IsInObstacle(Common::vec2(state.x, i)))
+        if (!IsInObstacle(Common::Vec2(state.x, i)))
         {
             d = i - state.y;
             break;
@@ -123,20 +123,20 @@ Common::vec2 Planner::nearest_free(Common::vec2 state)
     else
         y = d;
 
-    // Common::vec2 ans = Common::vec2 ( std::min ( 729 , std::max ( 0 , state.x + sgn ( x ) * abs ( y ) ) ) , std::min
+    // Common::Vec2 ans = Common::Vec2 ( std::min ( 729 , std::max ( 0 , state.x + sgn ( x ) * abs ( y ) ) ) , std::min
     // ( 529 , std::max ( 0 , state.y + sgn ( y ) * abs ( x ) ) ) );
-    Common::vec2 ans = Common::vec2(state.x + std::copysign(abs(y), x), state.y + std::copysign(abs(x), y));
+    Common::Vec2 ans = Common::Vec2(state.x + std::copysign(abs(y), x), state.y + std::copysign(abs(x), y));
 
     // if ( IsInObstacle ( ans ) )
     //	return nearest_free ( ans );
 
     float coss, sinn;
-    coss = (state.x - ans.x) / Common::distance(ans, state);
-    sinn = (state.y - ans.y) / Common::distance(ans, state);
+    coss = (state.x - ans.x) / ans.distanceTo(state);
+    sinn = (state.y - ans.y) / ans.distanceTo(state);
 
-    Common::vec2 current = ans;
+    Common::Vec2 current = ans;
 
-    while ((Common::distance(current, state) > 2) && (!IsInObstacle(current)))
+    while ((current.distanceTo(state) > 2) && (!IsInObstacle(current)))
     {
         ans = current;
 
@@ -147,22 +147,22 @@ Common::vec2 Planner::nearest_free(Common::vec2 state)
     return ans;
 }
 
-Common::vec2 Planner::nearest_free_prob(Common::vec2 state)
+Common::Vec2 Planner::nearest_free_prob(Common::Vec2 state)
 {
     const float acceptable_free_dis = 50;
     if (!IsInObstacle(state))
         return state;
 
-    Common::vec2 ans    = state;
+    Common::Vec2 ans    = state;
     float        minDis = (field_width + field_height) * 10.0f;
 
     for (int i = 0; i < 1000; i++)
     {
-        Common::vec2 newRndPoint = random_state();
-        if ((!IsInObstacle(newRndPoint)) && Common::distance(state, newRndPoint) < minDis)
+        Common::Vec2 newRndPoint = random_state();
+        if ((!IsInObstacle(newRndPoint)) && state.distanceTo(newRndPoint) < minDis)
         {
             ans    = newRndPoint;
-            minDis = Common::distance(state, newRndPoint);
+            minDis = state.distanceTo(newRndPoint);
             if (minDis < acceptable_free_dis)
                 break;
         }
@@ -171,7 +171,7 @@ Common::vec2 Planner::nearest_free_prob(Common::vec2 state)
     return ans;
 }
 
-Common::vec2 Planner::choose_target(int *type)
+Common::Vec2 Planner::choose_target(int *type)
 {
     float r = random.get();
 
@@ -197,11 +197,11 @@ Common::vec2 Planner::choose_target(int *type)
     return random_state();
 }
 
-Node *Planner::extend(Node *s, Common::vec2 &target)
+Node *Planner::extend(Node *s, Common::Vec2 &target)
 {
-    Common::vec2 new_state;
+    Common::Vec2 new_state;
     float        dx, dy, dis;
-    dis = Common::distance(s->state, target);
+    dis = s->state.distanceTo(target);
 
     if (dis < step_size)
         return NULL;
@@ -250,7 +250,7 @@ void Planner::SetWayPoints(void)
 
 void Planner::reverse_waypoints(void)
 {
-    Common::vec2 tmp;
+    Common::Vec2 tmp;
     for (int i = 0; i < waypoints / 2; i++)
     {
         tmp                         = waypoint[i];
@@ -259,11 +259,11 @@ void Planner::reverse_waypoints(void)
     }
 }
 
-Common::vec2 Planner::GetWayPoint(unsigned int i)
+Common::Vec2 Planner::GetWayPoint(unsigned int i)
 {
     if (i < waypoints)
         return waypoint[i];
-    return Common::vec2();
+    return Common::Vec2();
 }
 
 unsigned int Planner::GetWayPointNum(void)
@@ -273,12 +273,12 @@ unsigned int Planner::GetWayPointNum(void)
 
 bool Planner::IsReached(void)
 {
-    if (Common::distance(final_state, tree.NearestNeighbour(final_state)->state) <= acceptable_dis)
+    if (final_state.distanceTo(tree.NearestNeighbour(final_state)->state) <= acceptable_dis)
         return true;
     return false;
 }
 
-Common::vec2 Planner::Plan(void)
+Common::Vec2 Planner::Plan(void)
 {
     // return final_state;
     if (!collisionDetect(init_state, final_state))
@@ -289,7 +289,7 @@ Common::vec2 Planner::Plan(void)
     {
         Node        *new_s;
         int          type = 0;
-        Common::vec2 r;
+        Common::Vec2 r;
         for (int i = 0; ((i < MAX_NODES) && (!IsReached())); i++)
         {
             r     = choose_target(&type);
@@ -307,7 +307,7 @@ Common::vec2 Planner::Plan(void)
             //	r = choose_target ( );
         }
         if ((IsReached()) && (!IsInObstacle(final_state)) &&
-            (Common::distance(final_state, tree.NearestNeighbour(final_state)->state) > 1))
+            (final_state.distanceTo(tree.NearestNeighbour(final_state)->state) > 1))
         {
             tree.AddNode(final_state, tree.NearestNeighbour(final_state));
         }
@@ -318,7 +318,7 @@ Common::vec2 Planner::Plan(void)
     // if ( ( ! IsInObstacle ( init_state ) ) && ( GetWayPointNum() > 2 ) )
     optimize_tree();
 
-    Common::vec2 ans;
+    Common::Vec2 ans;
     if (waypoints > 1)
     {
         if (started_in_obs)
@@ -347,7 +347,7 @@ void Planner::optimize_tree(void)
     {
         if (collisionDetect(waypoint[i], waypoint[GetWayPointNum() - 1]) == false)
         {
-            Common::vec2 tmp               = waypoint[i + 1];
+            Common::Vec2 tmp               = waypoint[i + 1];
             waypoint[i + 1]                = waypoint[GetWayPointNum() - 1];
             waypoint[GetWayPointNum() - 1] = tmp;
             waypoints                      = i + 2;

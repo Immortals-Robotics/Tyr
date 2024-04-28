@@ -21,22 +21,21 @@ public:
     }
     bool IsArriving(float angleTol = 40, float passAngleLimit = 80)
     {
-        return IsArriving(Common::vec2(-(*side) * field_w, 0), angleTol, passAngleLimit);
+        return IsArriving(Common::Vec2(-(*side) * field_w, 0), angleTol, passAngleLimit);
     }
-    bool IsArriving(const Common::vec2 &target, float angleTol, float passAngleLimit)
+    bool IsArriving(const Common::Vec2 &target, float angleTol, float passAngleLimit)
     {
-        const float ballDistBeforeStop = (Common::length(bState->velocity) * Common::length(bState->velocity)) / 500.0f;
+        const float ballDistBeforeStop = (bState->velocity.lengthPow2()) / 500.0f;
         // ballDistBeforeStop += 100.0f;
-        const Common::Angle angleWithTarget = Common::angle_with(rState->Position, target);
-        if ((fabs((Common::to_angle(bState->velocity) -
-                   Common::angle_with(bState->Position, Common::vec2(rState->Position.x + BAR * angleWithTarget.cos(),
-                                                                     rState->Position.y + BAR * angleWithTarget.sin())))
+        const Common::Angle angleWithTarget = rState->Position.angleWith(target);
+        if ((fabs((bState->velocity.toAngle() -
+                   bState->Position.angleWith(Common::Vec2(rState->Position.x + BAR * angleWithTarget.cos(),
+                                                           rState->Position.y + BAR * angleWithTarget.sin())))
                       .deg()) < angleTol) &&
-            (fabs((Common::Angle::fromDeg(180) + Common::to_angle(bState->velocity) -
-                   Common::angle_with(rState->Position, target))
+            (fabs((Common::Angle::fromDeg(180) + bState->velocity.toAngle() - rState->Position.angleWith(target))
                       .deg()) < passAngleLimit) &&
-            //( bState->velocity.magnitude > 50 ) )
-            (Common::distance(rState->Position, bState->Position) < ballDistBeforeStop))
+            //( bState->velocity.length > 50 ) )
+            (rState->Position.distanceTo(bState->Position) < ballDistBeforeStop))
         //&&(abs(ball.vel_angle-90)>0.01)&&
         //(abs(ball.vel_angle+90)>0.01)&&
         //(abs(ball.vel_angle-180)>0.01)&&
@@ -45,7 +44,7 @@ public:
             hys = 10;
             return true;
         }
-        else if ((hys > 0) && (Common::length(bState->velocity) > 50))
+        else if ((hys > 0) && (bState->velocity.length() > 50))
         // &&(abs(ball.vel_angle-90)>0.01)&&(abs(ball.vel_angle+90)>0.01)&&(abs(ball.vel_angle-180)>0.01)&&(abs(ball.vel_angle+180)>0.01))
         {
             hys--;

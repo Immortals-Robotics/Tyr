@@ -49,22 +49,22 @@ float RectangleObstacle::NearestDistance(float _x, float _y)
 
     if ((_x < x) && (_y < y))
     {
-        return Common::distance(Common::vec2(_x, _y), Common::vec2(x, y));
+        return Common::Vec2(_x, _y).distanceTo(Common::Vec2(x, y));
     }
 
     if ((_x < x) && (_y > y + h))
     {
-        return Common::distance(Common::vec2(_x, _y), Common::vec2(x, y + h));
+        return Common::Vec2(_x, _y).distanceTo(Common::Vec2(x, y + h));
     }
 
     if ((_x > x + w) && (_y < y))
     {
-        return Common::distance(Common::vec2(_x, _y), Common::vec2(x + w, y));
+        return Common::Vec2(_x, _y).distanceTo(Common::Vec2(x + w, y));
     }
 
     if ((_x > x + w) && (_y > y + h))
     {
-        return Common::distance(Common::vec2(_x, _y), Common::vec2(x + w, y + h));
+        return Common::Vec2(_x, _y).distanceTo(Common::Vec2(x + w, y + h));
     }
 
     return 0;

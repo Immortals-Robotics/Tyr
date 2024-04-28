@@ -21,12 +21,12 @@ public:
 
     bool inside(const Vec2 t_point) const
     {
-        return (center - t_point).magnitude() < r;
+        return (center - t_point).length() < r;
     }
 
     bool insideOffset(const Vec2 t_point, float offset) const
     {
-        return (center - t_point).magnitude() < (r + offset);
+        return (center - t_point).length() < (r + offset);
     }
 
     Vec2 nearestOutside(Vec2 t_point, float t_extra_r = 0.0) const;

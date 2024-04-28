@@ -15,18 +15,18 @@ void clear_map ( void )
         }
 }
 
-bool IsInObstacle ( Common::vec2 p )
+bool IsInObstacle ( Common::Vec2 p )
 {
     return obs_lut[(int)p.X][(int)p.Y];
 }
 
-bool collisionDetect ( Common::vec2 p1 , Common::vec2 p2 )
+bool collisionDetect ( Common::Vec2 p1 , Common::Vec2 p2 )
 {
     float coss , sinn;
     coss = ( p2.X - p1.X ) / DIS ( p1 , p2 );
     sinn = ( p2.Y - p1.Y ) / DIS ( p1 , p2 );
 
-    Common::vec2 current = p1;
+    Common::Vec2 current = p1;
 
     while ( DIS ( current , p2 ) > 9 )
     {
@@ -51,8 +51,8 @@ void AddCircle ( int x , int y , int r )
 }*/
 
 void clear_map(void);
-bool IsInObstacle(Common::vec2 p);
-bool collisionDetect(Common::vec2 p1, Common::vec2 p2);
+bool IsInObstacle(Common::Vec2 p);
+bool collisionDetect(Common::Vec2 p1, Common::Vec2 p2);
 void AddCircle(float x, float y, float r);
 void AddRectangle(float x, float y, float w, float h);
 } // namespace Tyr::Soccer

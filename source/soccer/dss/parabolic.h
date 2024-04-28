@@ -9,9 +9,9 @@ private:
     static float Distance(const Parabolic &a, const Parabolic &b, const float t);
 
 public:
-    Common::vec2 a;
-    Common::vec2 v;
-    Common::vec2 p;
+    Common::Vec2 a;
+    Common::Vec2 v;
+    Common::Vec2 p;
 
     float t0;
     float t1;
@@ -19,7 +19,7 @@ public:
     static bool HaveOverlap(const Parabolic &a, const Parabolic &b, const float r);
     static bool HasStaticOverlap(const Parabolic &a);
 
-    Common::vec2 Evaluate(const float t) const;
-    Common::vec2 EvaluateDerivative(const float t) const;
+    Common::Vec2 Evaluate(const float t) const;
+    Common::Vec2 EvaluateDerivative(const float t) const;
 };
 } // namespace Tyr::Soccer

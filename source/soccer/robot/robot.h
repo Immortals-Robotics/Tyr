@@ -30,7 +30,7 @@ public:
     bool               halted;
     bool               new_comm_ready;
 
-    Common::vec3 lastCMDs[11];
+    Common::Vec3 lastCMDs[11];
     int          CMDindex;
 
     TrapezoidPlanner trapezoid;
@@ -56,18 +56,18 @@ public:
 
     void Dribble(int pow);
 
-    void face(Common::vec2 _target);
+    void face(Common::Vec2 _target);
 
-    Common::vec3 MotionPlan(Common::RobotState state, Common::RobotState target, float speed, bool accurate,
-                            Common::vec3 *cmd, VelocityProfile *velocityProfile);
+    Common::Vec3 MotionPlan(Common::RobotState state, Common::RobotState target, float speed, bool accurate,
+                            Common::Vec3 *cmd, VelocityProfile *velocityProfile);
 
     void Move(bool accurate, float speed, VelocityProfile *velocityProfile);
 
-    void MoveByMotion(Common::vec3 motion);
+    void MoveByMotion(Common::Vec3 motion);
 
-    Common::vec3 ComputeMotionCommand(bool accurate, float speed, VelocityProfile *velocityProfile);
+    Common::Vec3 ComputeMotionCommand(bool accurate, float speed, VelocityProfile *velocityProfile);
 
-    Common::vec3 GetCurrentMotionCommand(void) const;
+    Common::Vec3 GetCurrentMotionCommand(void) const;
 
     void makeSendingDataReady(void);
 };

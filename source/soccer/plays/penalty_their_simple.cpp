@@ -7,15 +7,15 @@ void Ai::penalty_their_simple(void)
     float penalty_x = field_width - 85.0;
 
     static VelocityProfile VELOCITY_PROFILE_KILLER = VELOCITY_PROFILE_KHARAKI;
-    VELOCITY_PROFILE_KILLER.max_spd                = Common::vec2(40.0f);
-    VELOCITY_PROFILE_KILLER.max_dec                = Common::vec2(1.8f);
-    VELOCITY_PROFILE_KILLER.max_acc                = Common::vec2(1.3f);
+    VELOCITY_PROFILE_KILLER.max_spd                = Common::Vec2(40.0f);
+    VELOCITY_PROFILE_KILLER.max_dec                = Common::Vec2(1.8f);
+    VELOCITY_PROFILE_KILLER.max_acc                = Common::Vec2(1.3f);
 
     int index = findKickerOpp(-1);
     if (index == -1)
     {
         OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
-        Navigate2Point(gk, Common::vec2(side * penalty_x, 0));
+        Navigate2Point(gk, Common::Vec2(side * penalty_x, 0));
     }
     else
     {
@@ -37,21 +37,21 @@ void Ai::penalty_their_simple(void)
 
         OwnRobot[gk].face(ball.Position);
 
-        Navigate2Point(gk, Common::vec2(side * penalty_x, gkp_y), false, 100, &VELOCITY_PROFILE_KILLER);
+        Navigate2Point(gk, Common::Vec2(side * penalty_x, gkp_y), false, 100, &VELOCITY_PROFILE_KILLER);
     }
     ERRTSetObstacles(lw, true, true);
-    ERRTNavigate2Point(lw, Common::vec2(-side * 4300, 500), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(lw, Common::Vec2(-side * 4300, 500), false, 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(rw, true, true);
-    ERRTNavigate2Point(rw, Common::vec2(-side * 4300, -500), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(rw, Common::Vec2(-side * 4300, -500), false, 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(def, true, true);
-    ERRTNavigate2Point(def, Common::vec2(-side * 4300, 800), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(def, Common::Vec2(-side * 4300, 800), false, 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(dmf, true, true);
-    ERRTNavigate2Point(dmf, Common::vec2(-side * 4300, -800), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(dmf, Common::Vec2(-side * 4300, -800), false, 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(mid1, true, true);
-    ERRTNavigate2Point(mid1, Common::vec2(-side * 4300, -1500), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(mid1, Common::Vec2(-side * 4300, -1500), false, 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(mid2, true, true);
-    ERRTNavigate2Point(mid2, Common::vec2(-side * 4300, 1500), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(mid2, Common::Vec2(-side * 4300, 1500), false, 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(attack, true, true);
-    ERRTNavigate2Point(attack, Common::vec2(-side * 4300, 0), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(attack, Common::Vec2(-side * 4300, 0), false, 80, &VELOCITY_PROFILE_AROOM);
 }
 } // namespace Tyr::Soccer

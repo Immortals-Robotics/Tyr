@@ -12,23 +12,25 @@ struct Vec2
     float y = 0.0f;
 
     Vec2() = default;
+	Vec2(float t_f);
     Vec2(float t_x, float t_y);
 
     [[nodiscard]] Vec2  normalized() const;
-    [[nodiscard]] float magnitude() const;
-    [[nodiscard]] float magnitudePow2() const;
+    [[nodiscard]] float length() const;
+    [[nodiscard]] float lengthPow2() const;
     [[nodiscard]] Vec2  rotated(Angle t_ang) const;
 
     [[nodiscard]] Angle toAngle() const;
 
-    [[nodiscard]] float dot(Vec2 t_v);
-    [[nodiscard]] float distanceTo(Vec2 t_v);
+    [[nodiscard]] float dot(Vec2 t_v) const;
+    [[nodiscard]] float distanceTo(Vec2 t_v) const;
 
-    [[nodiscard]] Angle angleWith(Vec2 t_v);
-    [[nodiscard]] Angle angleDiff(Vec2 t_v);
+    [[nodiscard]] Angle angleWith(Vec2 t_v) const;
+    [[nodiscard]] Angle angleDiff(Vec2 t_v) const;
 
-    [[nodiscard]] Vec2 pointOnConnectingLine(Vec2 FirstPoint, Vec2 SecondPoint, float distance);
-    [[nodiscard]] Vec2 circleAroundPoint(Angle angle, float radius);
+	// TODO: this should be replaced by line / circle usage
+    [[nodiscard]] Vec2 pointOnConnectingLine(Vec2 secondPoint, float distance) const;
+    [[nodiscard]] Vec2 circleAroundPoint(Angle angle, float radius) const;
 
     [[nodiscard]] Vec2 operator+(Vec2 t_v) const;
     [[nodiscard]] Vec2 operator-(Vec2 t_v) const;
@@ -68,10 +70,11 @@ struct Vec3
     float z = 0.0f;
 
     Vec3() = default;
+	Vec3(float t_f);
     Vec3(float t_x, float t_y, float t_z);
 
     [[nodiscard]] Vec3  normalized() const;
-    [[nodiscard]] float magnitude() const;
+    [[nodiscard]] float length() const;
 
     static float dot(Vec3 t_a, Vec3 t_b);
 

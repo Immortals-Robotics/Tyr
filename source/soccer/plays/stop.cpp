@@ -49,34 +49,35 @@ void Ai::Stop(void)
                 OwnRobot[dmf].face(ball.Position);
                 ERRTNavigate2Point(
                     dmf,
-                    point_on_connecting_line(ball.Position, Common::vec2(side * field_width, 0),
-                                          Common::distance(ball.Position, Common::vec2(side * field_width, 0)) / 3.0f),
+                    pointOnConnectingLine(ball.Position, Common::Vec2(side * field_width, 0),
+                                          Common::Vec2::distance(ball.Position, Common::Vec2(side * field_width, 0)) /
+                                              3.0f),
                     0, 100, &VELOCITY_PROFILE_AROOM);
                 OwnRobot[dmf].Shoot(0);
             }
             else if (own == lmf)
             {
                 ERRTSetObstacles(lmf, true, true);
-                OwnRobot[lmf].face(Common::vec2(ball.Position.x, ball.Position.y));
+                OwnRobot[lmf].face(Common::Vec2(ball.Position.x, ball.Position.y));
                 ERRTNavigate2Point(
                     lmf,
-                    circle_around_point(
-                        Common::vec2(ball.Position.x, ball.Position.y),
-                        NormalizeAngle(-20 + Common::angle_with(ball.Position, Common::vec2(side * field_width, 0))),
-                        650),
+                    circleAroundPoint(Common::Vec2(ball.Position.x, ball.Position.y),
+                                      NormalizeAngle(-20 + Common::Vec2::angleWith(
+                                                               ball.Position, Common::Vec2(side * field_width, 0))),
+                                      650),
                     0, 100, &VELOCITY_PROFILE_AROOM);
                 OwnRobot[lmf].Shoot(0);
             }
             else if (own == rmf)
             {
                 ERRTSetObstacles(rmf, true, true);
-                OwnRobot[rmf].face(Common::vec2(ball.Position.x, ball.Position.y));
+                OwnRobot[rmf].face(Common::Vec2(ball.Position.x, ball.Position.y));
                 ERRTNavigate2Point(
                     rmf,
-                    circle_around_point(
-                        Common::vec2(ball.Position.x, ball.Position.y),
-                        NormalizeAngle(20 + Common::angle_with(ball.Position, Common::vec2(side * field_width, 0))),
-                        650),
+                    circleAroundPoint(Common::Vec2(ball.Position.x, ball.Position.y),
+                                      NormalizeAngle(20 + Common::Vec2::angleWith(ball.Position,
+                                                                                  Common::Vec2(side * field_width, 0))),
+                                      650),
                     0, 100, &VELOCITY_PROFILE_AROOM);
                 OwnRobot[rmf].Shoot(0);
             }
@@ -91,41 +92,35 @@ void Ai::Stop(void)
     OwnRobot[dmf].face(ball.Position);
     ERRTNavigate2Point(
         dmf,
-        Common::point_on_connecting_line(ball.Position, Common::vec2(side * field_width, 0),
-                                      Common::distance(ball.Position, Common::vec2(side * field_width, 0)) / 3.0f),
+        ball.Position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
+                                            ball.Position.distanceTo(Common::Vec2(side * field_width, 0)) / 3.0f),
         0, 100, &VELOCITY_PROFILE_AROOM);
     OwnRobot[dmf].Shoot(0);
 
     ERRTSetObstacles(lmf, true, true);
-    OwnRobot[lmf].face(Common::vec2(ball.Position.x, ball.Position.y));
-    ERRTNavigate2Point(
-        lmf,
-        Common::circle_around_point(Common::vec2(ball.Position.x, ball.Position.y),
-                                  Common::Angle::fromDeg(-20.0f) +
-                                      Common::angle_with(ball.Position, Common::vec2(side * field_width, 0)),
-                                  650),
-        0, 100, &VELOCITY_PROFILE_AROOM);
+    OwnRobot[lmf].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    ERRTNavigate2Point(lmf,
+                       ball.Position.circleAroundPoint(Common::Angle::fromDeg(-20.0f) +
+                                                           ball.Position.angleWith(Common::Vec2(side * field_width, 0)),
+                                                       650),
+                       0, 100, &VELOCITY_PROFILE_AROOM);
     OwnRobot[lmf].Shoot(0);
 
     ERRTSetObstacles(rmf, true, true);
-    OwnRobot[rmf].face(Common::vec2(ball.Position.x, ball.Position.y));
-    ERRTNavigate2Point(
-        rmf,
-        Common::circle_around_point(Common::vec2(ball.Position.x, ball.Position.y),
-                                  Common::Angle::fromDeg(20.0f) +
-                                      Common::angle_with(ball.Position, Common::vec2(side * field_width, 0)),
-                                  650),
-        0, 100, &VELOCITY_PROFILE_AROOM);
+    OwnRobot[rmf].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    ERRTNavigate2Point(rmf,
+                       ball.Position.circleAroundPoint(Common::Angle::fromDeg(20.0f) +
+                                                           ball.Position.angleWith(Common::Vec2(side * field_width, 0)),
+                                                       650),
+                       0, 100, &VELOCITY_PROFILE_AROOM);
     OwnRobot[rmf].Shoot(0);
 #endif
 
     ERRTSetObstacles(cmf, true, true);
-    OwnRobot[cmf].face(Common::vec2(ball.Position.x, ball.Position.y));
-    ERRTNavigate2Point(cmf,
-                       Common::circle_around_point(Common::vec2(ball.Position.x, ball.Position.y),
-                                                 Common::angle_with(ball.Position, Common::vec2(side * field_width, 0)),
-                                                 650),
-                       0, 100, &VELOCITY_PROFILE_AROOM);
+    OwnRobot[cmf].face(Common::Vec2(ball.Position.x, ball.Position.y));
+    ERRTNavigate2Point(
+        cmf, ball.Position.circleAroundPoint(ball.Position.angleWith(Common::Vec2(side * field_width, 0)), 650), 0, 100,
+        &VELOCITY_PROFILE_AROOM);
     OwnRobot[cmf].Shoot(0);
 }
 } // namespace Tyr::Soccer

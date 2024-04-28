@@ -16,20 +16,20 @@ void clear_map ( void )
                 }
 }
 
-bool IsInObstacle ( Common::vec2 p )
+bool IsInObstacle ( Common::Vec2 p )
 {
         return obs_lut[(int)p.x][(int)p.y];
 }
 
-/*bool collisionDetect ( Common::vec2 p1 , Common::vec2 p2 )
+/*bool collisionDetect ( Common::Vec2 p1 , Common::Vec2 p2 )
 {
         float coss , sinn;
-        coss = ( p2.x - p1.x ) / Common::distance ( p1 , p2 );
-        sinn = ( p2.y - p1.y ) / Common::distance ( p1 , p2 );
+        coss = ( p2.x - p1.x ) / Common::Vec2::distance ( p1 , p2 );
+        sinn = ( p2.y - p1.y ) / Common::Vec2::distance ( p1 , p2 );
 
-        Common::vec2 current = p1;
+        Common::Vec2 current = p1;
 
-        while ( Common::distance ( current , p2 ) > 9 )
+        while ( Common::Vec2::distance ( current , p2 ) > 9 )
         {
                 if ( IsInObstacle ( current ) )
                         return true;
@@ -71,20 +71,20 @@ void clear_map(void)
     map.resetMap();
 }
 
-bool IsInObstacle(Common::vec2 p)
+bool IsInObstacle(Common::Vec2 p)
 {
     return map.IsInObstacle(p.x, p.y);
 }
 
-bool collisionDetect(Common::vec2 p1, Common::vec2 p2)
+bool collisionDetect(Common::Vec2 p1, Common::Vec2 p2)
 {
     float coss, sinn;
-    coss = (p2.x - p1.x) / Common::distance(p1, p2);
-    sinn = (p2.y - p1.y) / Common::distance(p1, p2);
+    coss = (p2.x - p1.x) / p1.distanceTo(p2);
+    sinn = (p2.y - p1.y) / p1.distanceTo(p2);
 
-    Common::vec2 current = p1;
+    Common::Vec2 current = p1;
 
-    while (Common::distance(current, p2) > 10.0f)
+    while (current.distanceTo(p2) > 10.0f)
     {
         if (IsInObstacle(current))
             return true;
@@ -96,12 +96,12 @@ bool collisionDetect(Common::vec2 p1, Common::vec2 p2)
     return false;
 }
 
-/*bool collisionDetect ( Common::vec2 p1 , Common::vec2 p2 )
+/*bool collisionDetect ( Common::Vec2 p1 , Common::Vec2 p2 )
 {
         if ( map.getObsNum() == 0 )
             return false;
         float coss , sinn , dis;
-        dis = Common::distance ( p1 , p2 );
+        dis = Common::Vec2::distance ( p1 , p2 );
 
         if ( dis < 0.1 )
                 return false;
@@ -109,19 +109,18 @@ bool collisionDetect(Common::vec2 p1, Common::vec2 p2)
         coss = ( p2.x - p1.x ) / dis;
         sinn = ( p2.y - p1.y ) / dis;
 
-        Common::vec2 current = p1;
+        Common::Vec2 current = p1;
         float advance_dis = 1;
 
-        for ( int i = 0 ; Common::distance ( current , p2 ) > 2 ; i ++ )
+        for ( int i = 0 ; Common::Vec2::distance ( current , p2 ) > 2 ; i ++ )
         {
                 if ( i > 10 )
                     return true;
 
                 if ( IsInObstacle ( current ) )
                         return true;
-                advance_dis = min ( max ( 1 , map.NearestDistance(current.x,current.y) ) , Common::distance ( current , p2 ) );
-                if ( advance_dis <= 0 )
-                    return true;
+                advance_dis = min ( max ( 1 , map.NearestDistance(current.x,current.y) ) , Common::Vec2::distance (
+current , p2 ) ); if ( advance_dis <= 0 ) return true;
 
                 current.x += coss * advance_dis;
                 current.y += sinn * advance_dis;

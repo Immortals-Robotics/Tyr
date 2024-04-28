@@ -12,7 +12,7 @@ void Tree::reset(void)
     nodes_num = 0;
 }
 
-Node *Tree::AddNode(Common::vec2 &s, Node *p)
+Node *Tree::AddNode(Common::Vec2 &s, Node *p)
 {
     if (nodes_num < MAX_NODES)
     {
@@ -30,18 +30,18 @@ Node *Tree::AddNode(Common::vec2 &s, Node *p)
     return &(node[nodes_num - 1]);
 }
 
-Node *Tree::NearestNeighbour(Common::vec2 &s)
+Node *Tree::NearestNeighbour(Common::Vec2 &s)
 {
     if (nodes_num == 0)
         return NULL;
     if (nodes_num == 1)
         return &node[0];
-    float d     = Common::distance(s, node[0].state);
+    float d     = s.distanceTo(node[0].state);
     float tmp_d = d;
     int   ans   = 0;
     for (int i = 0; i < nodes_num; i++)
     {
-        tmp_d = Common::distance(s, node[i].state);
+        tmp_d = s.distanceTo(node[i].state);
         if (tmp_d < d)
         {
             ans = i;

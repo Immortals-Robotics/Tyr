@@ -6,7 +6,7 @@ struct Node
 {
     Node        *parent;
     unsigned int childs_num;
-    Common::vec2        state;
+    Common::Vec2        state;
 };
 
 #define MAX_NODES 1000
@@ -20,8 +20,8 @@ class Tree
 public:
     Tree(void);
     void         reset(void);
-    Node        *AddNode(Common::vec2 &s, Node *p);
-    Node        *NearestNeighbour(Common::vec2 &s);
+    Node        *AddNode(Common::Vec2 &s, Node *p);
+    Node        *NearestNeighbour(Common::Vec2 &s);
     unsigned int tree_size(void);
     Node        *GetNode(unsigned int num);
 };

@@ -58,20 +58,20 @@ Robot::Robot(void)
 
     CMDindex = 0;
     for (int i = 0; i < 10; i++)
-        lastCMDs[i] = Common::vec3(0.0f);
+        lastCMDs[i] = Common::Vec3();
 
-    trapezoid.init(Common::vec2(4500.0f), Common::vec2(1400.0f), Common::vec2(3000.0f), 1.0f / 61.0f);
+    trapezoid.init(Common::Vec2(4500.0f), Common::Vec2(1400.0f), Common::Vec2(3000.0f), 1.0f / 61.0f);
 
-    State.velocity.x         = 0.0f;
-    State.velocity.y         = 0.0f;
-    State.Position           = Common::vec2(0.0f);
-    shoot                    = 0;
-    chip                     = 0;
-    dribbler                 = 0;
-    Break                    = false;
-    halted                   = false;
-    data[0]                  = 1;
-    data[9]                  = 200;
+    State.velocity.x = 0.0f;
+    State.velocity.y = 0.0f;
+    State.Position   = Common::Vec2(0.0f);
+    shoot            = 0;
+    chip             = 0;
+    dribbler         = 0;
+    Break            = false;
+    halted           = false;
+    data[0]          = 1;
+    data[9]          = 200;
 
     angleSendTimer.start();
 }
@@ -130,12 +130,12 @@ void Robot::Dribble(int pow)
     dribbler = 16 * pow;
 }
 
-void Robot::face(Common::vec2 _target)
+void Robot::face(Common::Vec2 _target)
 {
-    target.angle = Common::angle_with(State.Position, _target);
+    target.angle = State.Position.angleWith(_target);
 }
 
-Common::vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityProfile *velocityProfile)
+Common::Vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityProfile *velocityProfile)
 {
     const float field_extra_area = 200.f;
 
@@ -150,7 +150,7 @@ Common::vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityPro
     if (speed > 100)
         speed = 100;
 
-    Common::vec3 motion = MotionPlan(State, target, speed, accurate, lastCMDs, velocityProfile);
+    Common::Vec3 motion = MotionPlan(State, target, speed, accurate, lastCMDs, velocityProfile);
 
     target.velocity.x = 0;
     target.velocity.y = 0;
@@ -158,7 +158,7 @@ Common::vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityPro
     return motion;
 }
 
-void Robot::MoveByMotion(Common::vec3 motion)
+void Robot::MoveByMotion(Common::Vec3 motion)
 {
     motion.x = std::min(100.0f, std::max(-100.0f, motion.x));
     motion.y = std::min(100.0f, std::max(-100.0f, motion.y));
@@ -290,7 +290,7 @@ void Robot::makeSendingDataReady(void)
     new_comm_ready = true;
 }
 
-Common::vec3 Robot::GetCurrentMotionCommand(void) const
+Common::Vec3 Robot::GetCurrentMotionCommand(void) const
 {
     const int motion_idx = static_cast<int>(lastCMDs[10].x);
     return lastCMDs[motion_idx];

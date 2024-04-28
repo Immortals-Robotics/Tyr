@@ -3,12 +3,12 @@ project(${CMAKE_PROJECT_NAME}-soccer)
 set(HEADER_FILES
     pch.h
     ai.h
-    one_touch_detector.h
     dss/dss.h
     dss/parabolic.h
     dss/trajectory.h
     errt/errt.h
     errt/tree.h
+    helpers/one_touch_detector.h
     obstacle/obstacle_new.h
     obstacle/obstacle.h
     robot/robot.h
@@ -39,7 +39,6 @@ set(SOURCE_FILES
     plays/stop_def.cpp
     plays/stop.cpp
     plays/strategy_maker.cpp
-    plays/tech_khers.cpp
     plays/throwin_chip_shoot.cpp
 
     skills/tech_circle.cpp

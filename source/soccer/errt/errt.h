@@ -8,8 +8,8 @@ namespace Tyr::Soccer
 class Planner
 {
     float        step_size;
-    Common::vec2 init_state, final_state;
-    Common::vec2 waypoint[MAX_NODES];
+    Common::Vec2 init_state, final_state;
+    Common::Vec2 waypoint[MAX_NODES];
     unsigned int waypoints, cached_waypoints, cache_start;
 
     void reverse_waypoints(void);
@@ -30,20 +30,20 @@ public:
     ~Planner(void);
     Tree         tree;
     void         set_field_params(float _w, float _h);
-    void         init(Common::vec2 init, Common::vec2 final, float step);
-    Common::vec2 random_state(void);
-    Common::vec2 nearest_free(Common::vec2 state);
-    Common::vec2 nearest_free_prob(Common::vec2 state);
+    void         init(Common::Vec2 init, Common::Vec2 final, float step);
+    Common::Vec2 random_state(void);
+    Common::Vec2 nearest_free(Common::Vec2 state);
+    Common::Vec2 nearest_free_prob(Common::Vec2 state);
 
-    Common::vec2 choose_target(int *type = NULL);
-    Node        *extend(Node *s, Common::vec2 &target);
+    Common::Vec2 choose_target(int *type = NULL);
+    Node        *extend(Node *s, Common::Vec2 &target);
     void         SetWayPoints(void);
-    Common::vec2 GetWayPoint(unsigned int i);
+    Common::Vec2 GetWayPoint(unsigned int i);
     unsigned int GetWayPointNum(void);
     bool         IsReached(void);
 
     void optimize_tree(void);
 
-    Common::vec2 Plan(void);
+    Common::Vec2 Plan(void);
 };
 } // namespace Tyr::Soccer
