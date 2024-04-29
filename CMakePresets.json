@@ -145,12 +145,24 @@
 	],
 	"packagePresets": [
 		{
+			"name": "ubuntu-debug",
+			"configurePreset": "ubuntu-debug"
+		},
+		{
 			"name": "ubuntu-release",
 			"configurePreset": "ubuntu-release"
 		},
 		{
+			"name": "macos-debug",
+			"configurePreset": "macos-debug"
+		},
+		{
 			"name": "macos-release",
 			"configurePreset": "macos-release"
+		},
+		{
+			"name": "windows-debug",
+			"configurePreset": "windows-debug"
 		},
 		{
 			"name": "windows-release",
