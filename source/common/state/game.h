@@ -78,28 +78,24 @@ public:
     {
         if (ref_command == COMM_HALT)
         {
-            // std::cout<<"COMM_HALT"<<std::endl;
             state = STATE_HALTED;
             return;
         }
 
         if (ref_command == COMM_STOP)
         {
-            // std::cout<<"COMM_STOP"<<std::endl;
             state = STATE_GAME_OFF;
             return;
         }
 
         if (ref_command == COMM_FORCE_START)
         {
-            // std::cout<<"We can touch the ball now"<<std::endl;
             state = STATE_GAME_ON;
             return;
         }
 
         if (ref_command == COMM_NORMAL_START && state & STATE_NOTREADY)
         {
-            // std::cout<<"We can do the action (penalty or indirect)"<<std::endl;
             state &= ~STATE_NOTREADY;
             state |= STATE_READY;
             return;
@@ -107,7 +103,6 @@ public:
 
         if (state & STATE_READY && ball_kicked)
         {
-            // std::cout<<"Back to normal"<<std::endl;
             state = STATE_GAME_ON;
             return;
         }

@@ -116,10 +116,6 @@ float Circle::intersectionArea(const Circle &t_other) const
 
 bool Circle::isCircleCross(const Vec2 t_point1, const Vec2 t_point2, float t_r) const
 {
-    //        std::cout << "t_point1: " << t_point1;
-    //        std::cout << "t_point2: " << t_point2;
-    //        std::cout << "center: " << center;
-
     float y1 = t_point1.y;
     float x1 = t_point1.x;
 
@@ -144,22 +140,18 @@ bool Circle::isCircleCross(const Vec2 t_point1, const Vec2 t_point2, float t_r) 
 
     if (v_a * x1 + v_b * y1 + v_c >= 0 && v_a * x2 + v_b * y2 + v_c >= 0)
     {
-        // std::cout << "First State!!" << std::endl;
         if (inside(t_point1) || inside(t_point2))
             return true;
     }
     else if (v_a * x1 + v_b * y1 + v_c <= 0 && v_a * x2 + v_b * y2 + v_c <= 0)
     {
-        // std::cout << "Second State!!" << std::endl;
         if (inside(t_point1) || inside(t_point2))
         {
-            // std::cout << "True State!!" << std::endl;
             return true;
         }
     }
     else
     {
-        // std::cout << "Third State!!" << std::endl;
         return true;
     }
     return false;

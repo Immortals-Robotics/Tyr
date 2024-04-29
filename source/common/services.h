@@ -10,11 +10,11 @@ struct Services
 {
     static void initialize()
     {
+        s_logger = new Logger();
+
         const ConfigReader config("config.toml");
         s_setting = new Setting();
         s_setting->load(config.getRoot());
-
-        s_logger = new Logger();
 
         s_debug = new Debug(s_setting->debug_address, s_setting->enable_debug);
 
@@ -26,8 +26,8 @@ struct Services
     {
         delete s_setting;
         delete s_debug;
-        delete s_logger;
         delete s_global_timer;
+        delete s_logger;
     }
 
     static const Setting &setting()
