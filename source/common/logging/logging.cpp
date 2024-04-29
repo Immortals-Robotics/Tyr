@@ -1,11 +1,5 @@
 #include "logging.h"
 
-#include <iomanip>
-#include <iostream>
-#include <regex>
-
-#include <quill/Quill.h>
-
 namespace Tyr::Common
 {
 // Filter class for our file handler
