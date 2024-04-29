@@ -6,7 +6,7 @@ Referee::Referee(Common::WorldState *world_state, Common::RefereeState *referee_
 {
     if (!world_state)
     {
-        std::cout << "Referee: \"world_state\" is NULL" << std::endl;
+        LOG_CRITICAL("Referee: \"world_state\" is NULL");
     }
 
     command_CNT = -1;
@@ -33,14 +33,14 @@ void Referee::process()
 {
     if (pSSLRef.has_designated_position())
     {
-        //		std::cout<<"HAS POSITION!!!!!"<<std::endl;
-        //		std::cout<<"BALL TARGET POSITION
-        // IS:"<<pSSLRef.designated_position().x()<<'_'<<pSSLRef.designated_position().y()<<std::endl;
+        LOG_DEBUG("HAS POSITION. BALL TARGET POSITION IS: [{}, {}]", pSSLRef.designated_position().x(),
+                  pSSLRef.designated_position().y());
+
         RefState->placeBallTargetPosition =
             Common::Vec2(pSSLRef.designated_position().x(), pSSLRef.designated_position().y());
     }
-    //	else
-    //		std::cout<<"no new packet received"<<std::endl;
+    else
+        LOG_DEBUG("no new packet received");
 
     if (command_CNT != pSSLRef.command_counter())
     { // Update only when there is a new command
@@ -57,13 +57,13 @@ void Referee::process()
 
         timer.start();
 
-        //		std::cout << "command: " << pSSLRef.command() << std::endl;
-        //		std::cout << "command_CNT: " << pSSLRef.command_counter() << std::endl;
+        LOG_DEBUG("command: {}", (int) pSSLRef.command());
+        LOG_DEBUG("command_CNT: {}", pSSLRef.command_counter());
     }
 
     RefState->State->transition(pSSLRef.command(), isKicked(ballData->Position) || timer.time() > 5);
-    //    if ( isKicked(ballData->Position) )
-    //    	std::cout << "kicked" << std::endl;
+    if (isKicked(ballData->Position))
+        LOG_DEBUG("kicked");
 }
 
 bool Referee::isKicked(Common::Vec2 ballPos)

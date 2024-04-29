@@ -16,7 +16,7 @@ public:
 
     static Line fromTwoPoints(Vec2 t_pos_a, Vec2 t_pos_b);
     static Line fromPointAndAngle(Vec2 t_pos, Angle t_ang);
-	static Line fromSegment(LineSegment segment);
+    static Line fromSegment(LineSegment segment);
 
     [[nodiscard]] float slope() const
     {
