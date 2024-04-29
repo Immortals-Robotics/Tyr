@@ -2,9 +2,40 @@
 
 namespace Tyr::Gui
 {
+
+static void logCallback(const int msg_type, const char *const text, va_list args)
+{
+    static constexpr int kBufferSize = 1024;
+    char                 buffer[kBufferSize];
+
+    const int size = std::vsnprintf(buffer, kBufferSize, text, args);
+
+    const std::string_view formatted(buffer, size);
+
+    switch (msg_type)
+    {
+    case LOG_INFO:
+        Common::logInfo("{}", formatted);
+        break;
+    case LOG_ERROR:
+        Common::logError("{}", formatted);
+        break;
+    case LOG_WARNING:
+        Common::logWarning("{}", formatted);
+        break;
+    case LOG_DEBUG:
+        Common::logDebug("{}", formatted);
+        break;
+    default:
+        break;
+    }
+}
+
 void Application::init(const int width, const int height)
 {
     Common::Services::initialize();
+
+    SetTraceLogCallback(logCallback);
 
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
     InitWindow(width, height, "Tyr");

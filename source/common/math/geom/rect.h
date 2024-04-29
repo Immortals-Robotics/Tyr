@@ -1,4 +1,7 @@
 #pragma once
+
+#include <algorithm>
+
 #include "../vector.h"
 
 namespace Tyr::Common
