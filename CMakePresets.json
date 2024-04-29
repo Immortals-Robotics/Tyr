@@ -14,7 +14,7 @@
 			"installDir": "${sourceDir}/out/install/${presetName}"
 		},
 		{
-			"name": "linux-base",
+			"name": "ubuntu-base",
 			"inherits": "base",
 			"hidden": true,
 			"generator": "Ninja",
@@ -25,15 +25,15 @@
 			}
 		},
 		{
-			"name": "linux-debug",
-			"inherits": "linux-base",
+			"name": "ubuntu-debug",
+			"inherits": "ubuntu-base",
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": "Debug"
 			}
 		},
 		{
-			"name": "linux-release",
-			"inherits": "linux-base",
+			"name": "ubuntu-release",
+			"inherits": "ubuntu-base",
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": "Release"
 			}
@@ -119,12 +119,12 @@
 	],
 	"buildPresets": [
 		{
-			"name": "linux-debug",
-			"configurePreset": "linux-debug"
+			"name": "ubuntu-debug",
+			"configurePreset": "ubuntu-debug"
 		},
 		{
-			"name": "linux-release",
-			"configurePreset": "linux-release"
+			"name": "ubuntu-release",
+			"configurePreset": "ubuntu-release"
 		},
 		{
 			"name": "macos-debug",
@@ -145,12 +145,24 @@
 	],
 	"packagePresets": [
 		{
-			"name": "linux-release",
-			"configurePreset": "linux-release"
+			"name": "ubuntu-debug",
+			"configurePreset": "ubuntu-debug"
+		},
+		{
+			"name": "ubuntu-release",
+			"configurePreset": "ubuntu-release"
+		},
+		{
+			"name": "macos-debug",
+			"configurePreset": "macos-debug"
 		},
 		{
 			"name": "macos-release",
 			"configurePreset": "macos-release"
+		},
+		{
+			"name": "windows-debug",
+			"configurePreset": "windows-debug"
 		},
 		{
 			"name": "windows-release",
