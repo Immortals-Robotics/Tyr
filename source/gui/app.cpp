@@ -4,6 +4,8 @@ namespace Tyr::Gui
 {
 void Application::init(const int width, const int height)
 {
+    Common::Services::initialize();
+
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
     InitWindow(width, height, "Tyr");
     SetTraceLogLevel(LOG_WARNING);
@@ -31,6 +33,8 @@ void Application::init(const int width, const int height)
 
 int Application::shutdown()
 {
+    Common::Services::shutdown();
+
     running = false;
     vision_thread.join();
 

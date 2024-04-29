@@ -1,7 +1,7 @@
 #pragma once
 
 #include <filesystem>
-#include <toml++/toml.h>
+#include <toml++/toml.hpp>
 
 namespace Tyr::Common
 {
