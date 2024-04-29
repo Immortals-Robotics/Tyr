@@ -1,9 +1,8 @@
 #pragma once
 
 #include <numbers>
-#include <ostream>
 
-#include <quill/Utility.h>
+#include <fmt/format.h>
 
 namespace Tyr::Common
 {
@@ -42,14 +41,6 @@ struct Angle
     Angle operator*(float f) const;
     Angle operator/(float f) const;
 
-    QUILL_COPY_LOGGABLE;
-
-    friend std::ostream &operator<<(std::ostream &t_stream, const Angle &t_angle)
-    {
-        t_stream << t_angle.deg() << " deg";
-        return t_stream;
-    }
-
 private:
     // limits the angle to the range of -180 to 180
     void normalize();
@@ -60,5 +51,10 @@ private:
 } // namespace Tyr::Common
 
 template <>
-struct fmtquill::formatter<Tyr::Common::Angle> : ostream_formatter
-{};
+struct fmt::formatter<Tyr::Common::Angle> : fmt::formatter<std::string>
+{
+    auto format(Tyr::Common::Angle t_angle, format_context &t_ctx) const
+    {
+        return fmt::format_to(t_ctx.out(), "{} deg", t_angle.deg());
+    }
+};

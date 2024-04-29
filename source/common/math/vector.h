@@ -2,7 +2,7 @@
 
 #include <ostream>
 
-#include <quill/Utility.h>
+#include <fmt/format.h>
 
 namespace Tyr::Common
 {
@@ -57,14 +57,6 @@ struct Vec2
     // either drop these or implement an approximation
     [[nodiscard]] bool operator==(Vec2 t_v) const;
     [[nodiscard]] bool operator!=(Vec2 t_v) const;
-
-    QUILL_COPY_LOGGABLE;
-
-    friend std::ostream &operator<<(std::ostream &t_stream, const Vec2 &t_vec)
-    {
-        t_stream << "[" << t_vec.x << ", " << t_vec.y << "]";
-        return t_stream;
-    }
 };
 
 struct Vec3
@@ -100,22 +92,24 @@ struct Vec3
 
     [[nodiscard]] Vec3 operator-() const;
     [[nodiscard]] Vec3 operator+() const;
-
-    QUILL_COPY_LOGGABLE;
-
-    friend std::ostream &operator<<(std::ostream &t_stream, const Vec3 &t_vec)
-    {
-        t_stream << "[" << t_vec.x << ", " << t_vec.y << ", " << t_vec.z << "]";
-        return t_stream;
-    }
 };
 
 } // namespace Tyr::Common
 
 template <>
-struct fmtquill::formatter<Tyr::Common::Vec2> : ostream_formatter
-{};
+struct fmt::formatter<Tyr::Common::Vec2> : fmt::formatter<std::string>
+{
+    auto format(Tyr::Common::Vec2 t_v, format_context &t_ctx) const
+    {
+        return fmt::format_to(t_ctx.out(), "[{}, {}]", t_v.x, t_v.y);
+    }
+};
 
 template <>
-struct fmtquill::formatter<Tyr::Common::Vec3> : ostream_formatter
-{};
+struct fmt::formatter<Tyr::Common::Vec3> : fmt::formatter<std::string>
+{
+    auto format(Tyr::Common::Vec3 t_v, format_context &t_ctx) const
+    {
+        return fmt::format_to(t_ctx.out(), "[{}, {}, {}]", t_v.x, t_v.y, t_v.z);
+    }
+};
