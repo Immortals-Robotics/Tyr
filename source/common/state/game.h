@@ -58,9 +58,9 @@ public:
         state = STATE_GAME_OFF;
     }
 
-    void init(Common::TeamColor color)
+    void init(TeamColor color)
     {
-        this->color = (color == Common::TeamColor::Blue) ? STATE_BLUE : STATE_YELLOW;
+        this->color = (color == TeamColor::Blue) ? STATE_BLUE : STATE_YELLOW;
     }
 
     int get()
