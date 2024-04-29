@@ -1,6 +1,6 @@
 #pragma once
 
-#include "debug/debug.h"
+#include "debugging/debug.h"
 #include "logging/logging.h"
 #include "setting.h"
 #include "timer/timer.h"

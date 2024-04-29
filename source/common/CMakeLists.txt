@@ -11,8 +11,8 @@ set(HEADER_FILES
     services.h
     setting.h
     config/config.h
-    debug/common_colors.h
-    debug/debug.h
+    debugging/common_colors.h
+    debugging/debug.h
     logging/logging.h
     logging/macros.h
     math/angle.h
@@ -36,8 +36,8 @@ set(HEADER_FILES
 set(SOURCE_FILES
     setting.cpp
     config/config.cpp
-    debug/common_colors.cpp
-    debug/debug.cpp
+    debugging/common_colors.cpp
+    debugging/debug.cpp
     logging/logging.cpp
     math/angle.cpp
     math/helpers.cpp
