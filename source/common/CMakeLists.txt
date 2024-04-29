@@ -2,9 +2,7 @@ project(${CMAKE_PROJECT_NAME}-common)
 
 find_package(asio CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(tomlplusplus REQUIRED IMPORTED_TARGET tomlplusplus)
+find_package(tomlplusplus CONFIG REQUIRED)
 
 set(HEADER_FILES
     pch.h
@@ -60,7 +58,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FIL
 target_link_libraries(${PROJECT_NAME} PUBLIC
     ${CMAKE_PROJECT_NAME}-protos
     asio::asio
-    PkgConfig::tomlplusplus
+    tomlplusplus::tomlplusplus
     spdlog::spdlog)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC TOML_EXCEPTIONS=0)

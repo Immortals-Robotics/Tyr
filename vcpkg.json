@@ -1,6 +1,5 @@
 {
 	"dependencies": [
-		"vcpkg-pkgconfig-get-modules",
 		"asio",
 		"protobuf",
 		"tomlplusplus",
