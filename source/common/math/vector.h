@@ -79,15 +79,15 @@ struct Vec3
     [[nodiscard]] Vec3  normalized() const;
     [[nodiscard]] float length() const;
 
-    static float dot(Vec3 t_a, Vec3 t_b);
+    [[nodiscard]] float dot(Vec3 t_v);
 
-    Vec3 operator+(Vec3 t_v) const;
-    Vec3 operator-(Vec3 t_v) const;
-    Vec3 operator*(Vec3 t_v) const;
-    Vec3 operator/(Vec3 t_v) const;
+    [[nodiscard]] Vec3 operator+(Vec3 t_v) const;
+    [[nodiscard]] Vec3 operator-(Vec3 t_v) const;
+    [[nodiscard]] Vec3 operator*(Vec3 t_v) const;
+    [[nodiscard]] Vec3 operator/(Vec3 t_v) const;
 
-    Vec3 operator*(float t_d) const;
-    Vec3 operator/(float t_d) const;
+    [[nodiscard]] Vec3 operator*(float t_d) const;
+    [[nodiscard]] Vec3 operator/(float t_d) const;
 
     Vec3 &operator+=(Vec3 t_v);
     Vec3 &operator-=(Vec3 t_v);
@@ -97,8 +97,8 @@ struct Vec3
     Vec3 &operator*=(float t_d);
     Vec3 &operator/=(float t_d);
 
-    Vec3 operator-() const;
-    Vec3 operator+() const;
+    [[nodiscard]] Vec3 operator-() const;
+    [[nodiscard]] Vec3 operator+() const;
 
     QUILL_COPY_LOGGABLE;
 

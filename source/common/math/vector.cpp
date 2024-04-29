@@ -265,9 +265,9 @@ Vec2 Vec2::pointOnConnectingLine(Vec2 secondPoint, float distance) const
     return ans;
 }
 
-float Vec3::dot(const Vec3 t_a, const Vec3 t_b)
+float Vec3::dot(const Vec3 t_v)
 {
-    return t_a.x * t_b.x + t_a.y * t_b.y + t_a.z * t_b.z;
+    return x * t_v.x + y * t_v.y + z * t_v.z;
 }
 
 Vec2 Vec2::rotated(const Angle t_ang) const
