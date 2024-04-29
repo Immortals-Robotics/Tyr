@@ -28,17 +28,17 @@ void Ai::penalty_us_shootout()
 
     if (!canKickBall)
     {
-        LOG_INFO("step0 - Waiting for permission");
+        Common::logInfo("step0 - Waiting for permission");
     }
     else if (ball.Position.distanceTo(Common::Vec2(-side * field_width, 0)) > 3000)
     {
         circle_ball(attack, Common::Vec2(-side * field_width, 0).angleWith(ball.Position), 1, 0, 0);
-        LOG_INFO("step1 - Moving forward - waiting to get close to the opp goal");
+        Common::logInfo("step1 - Moving forward - waiting to get close to the opp goal");
     }
     else
     {
         circle_ball(attack, Common::Vec2(-side * field_width, 400).angleWith(ball.Position), 60, 0, 0);
-        LOG_INFO("step2 - Kick in the goal!!!!");
+        Common::logInfo("step2 - Kick in the goal!!!!");
     }
 }
 } // namespace Tyr::Soccer

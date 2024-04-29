@@ -1,4 +1,5 @@
 #pragma once
+
 #include "debug/debug.h"
 #include "logging/logging.h"
 #include "setting.h"
@@ -40,6 +41,11 @@ struct Services
         return *s_debug;
     }
 
+    static Logger &logger()
+    {
+        return *s_logger;
+    }
+
     static Timer &global_timer()
     {
         return *s_global_timer;
@@ -62,8 +68,15 @@ static Debug &debug()
     return Services::debug();
 }
 
+static Logger &logger()
+{
+    return Services::logger();
+}
+
 static Timer &global_timer()
 {
     return Services::global_timer();
 }
 } // namespace Tyr::Common
+
+#include "logging/macros.h"

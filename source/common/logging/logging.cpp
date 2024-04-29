@@ -1,32 +1,21 @@
 #include "logging.h"
 
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+
+#include "../services.h"
+
 namespace Tyr::Common
 {
 Logger::Logger()
 {
-    quill::Config config;
-    config.enable_console_colours = true;
+    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    console_sink->set_level(spdlog::level::warn);
 
-    {
-        const std::filesystem::path log_dir(LOG_DIR);
-        const std::filesystem::path log_file_name("log.txt");
+    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/multisink.txt", true);
+    file_sink->set_level(spdlog::level::trace);
 
-        const std::filesystem::path log_path = log_dir / log_file_name;
-
-        quill::FileHandlerConfig file_config;
-        file_config.set_open_mode('w');
-        file_config.set_append_to_filename(quill::FilenameAppend::StartDateTime);
-
-        std::shared_ptr<quill::Handler> file_handler = quill::file_handler(log_path, file_config);
-        config.default_handlers.push_back(std::move(file_handler));
-    }
-
-    quill::configure(config);
-    quill::start();
-
-    m_logger = quill::get_root_logger();
-    m_logger->set_log_level(quill::LogLevel::TraceL3);
-
-    LOG_INFO("Initialized the logger");
+    m_logger = std::make_unique<spdlog::logger>("default", spdlog::sinks_init_list{console_sink, file_sink});
+    m_logger->set_level(spdlog::level::debug);
 }
 } // namespace Tyr::Common

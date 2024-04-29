@@ -165,7 +165,7 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     if (playBook)
     {
 #if 1
-        LOG_INFO("Strategy loaded with size {}", playBook->strategy_size());
+        Common::logInfo("Strategy loaded with size {}", playBook->strategy_size());
 #else
         std::cout << playBook->strategy_size() << " ";
         std::cout << playBook->strategy(0).name() << std::endl;
@@ -195,7 +195,7 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     }
     else
     {
-        LOG_CRITICAL("Could not open \"strategy.ims\"");
+        Common::logCritical("Could not open \"strategy.ims\"");
     }
 
     timer.start();

@@ -742,19 +742,19 @@ void Ai::our_place_ball_shoot_V2(void)
                   << targetBallPlacement->y - ball.Position.y << std::endl;
         if (success)
         {
-            LOG_INFO("MADE it!!!");
+            Common::logInfo("MADE it!!!");
         }
         else
         {
-            LOG_WARNING("lost it!!!");
+            Common::logWarning("lost it!!!");
         }
     }
-    LOG_INFO("______IN___STATE_{}_____", FUNC_state);
+    Common::logInfo("______IN___STATE_{}_____", FUNC_state);
 
-    LOG_INFO("___DIS___{}", targetBallPlacement->distanceTo(ball.Position));
-    LOG_INFO("___BALL__POS_XY__{}, {}", ball.Position.x, ball.Position.y);
-    LOG_INFO("___TARGET__POS_XY__{}, {}", targetBallPlacement->x, targetBallPlacement->y);
-    LOG_INFO("__OUT__{}", outOfField(ball.Position));
+    Common::logInfo("___DIS___{}", targetBallPlacement->distanceTo(ball.Position));
+    Common::logInfo("___BALL__POS_XY__{}, {}", ball.Position.x, ball.Position.y);
+    Common::logInfo("___TARGET__POS_XY__{}, {}", targetBallPlacement->x, targetBallPlacement->y);
+    Common::logInfo("__OUT__{}", outOfField(ball.Position));
 }
 
 void Ai::our_place_ball_shoot_taki(void)

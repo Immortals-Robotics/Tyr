@@ -45,10 +45,10 @@ bool Ai::read_playBook_str(char *buffer, int length)
     }
 
     for (const auto strategy : playBook->strategy())
-        LOG_INFO("STRATEGY: {}", strategy.name());
+        Common::logInfo("STRATEGY: {}", strategy.name());
 
     for (const auto weight : playBook->weight())
-        LOG_INFO("Weight: {}", weight);
+        Common::logInfo("Weight: {}", weight);
 
     return true;
 }
@@ -75,7 +75,7 @@ void Ai::strategy_maker(void)
     }
 
     Protos::Immortals::Strategy strategy = playBook->strategy(curr_str_id);
-    LOG_INFO("STRATEGY: {}", strategy.name());
+    Common::logInfo("STRATEGY: {}", strategy.name());
 
     int xSgn = side;
     int ySgn = Common::sign(-ball.Position.y);

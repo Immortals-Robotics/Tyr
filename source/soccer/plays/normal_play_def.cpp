@@ -94,7 +94,7 @@ void Ai::NormalPlayDef(void)
 
     if (kicker_opp != -1)
     {
-        LOG_DEBUG("in def we trust");
+        Common::logDebug("in def we trust");
 
         shootAngle = OppRobot[kicker_opp].Position.angleWith(ball.Position);
         shoot_pow  = 1;

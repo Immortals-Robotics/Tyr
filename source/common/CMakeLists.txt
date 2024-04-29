@@ -1,7 +1,7 @@
 project(${CMAKE_PROJECT_NAME}-common)
 
 find_package(asio CONFIG REQUIRED)
-find_package(quill CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(tomlplusplus REQUIRED IMPORTED_TARGET tomlplusplus)
@@ -14,6 +14,7 @@ set(HEADER_FILES
     debug/common_colors.h
     debug/debug.h
     logging/logging.h
+    logging/macros.h
     math/angle.h
     math/helpers.h
     math/linear.h
@@ -60,14 +61,12 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     ${CMAKE_PROJECT_NAME}-protos
     asio::asio
     PkgConfig::tomlplusplus
-    quill::quill)
+    spdlog::spdlog)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC TOML_EXCEPTIONS=0)
 if (WIN32)
     target_compile_definitions(${PROJECT_NAME} PUBLIC _WIN32_WINNT=_WIN32_WINNT_WIN10)
 endif()
-
-target_compile_definitions(${PROJECT_NAME} PUBLIC QUILL_ROOT_LOGGER_ONLY)
 
 if (${TRACE_BUILD_TIME})
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "[Cc]lang")

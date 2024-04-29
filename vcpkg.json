@@ -4,7 +4,7 @@
 		"asio",
 		"protobuf",
 		"tomlplusplus",
-		"quill",
+		"spdlog",
 		"imgui",
 		"raylib",
 		"rlimgui"

@@ -25,7 +25,7 @@ Node *Tree::AddNode(Common::Vec2 &s, Node *p)
     }
     else
     {
-        LOG_WARNING("Tree node limit of {} reached", MAX_NODES);
+        Common::logWarning("Tree node limit of {} reached", MAX_NODES);
     }
     return &(node[nodes_num - 1]);
 }

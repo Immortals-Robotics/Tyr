@@ -20,8 +20,6 @@
 #include <set>
 #include <vector>
 
-#include <quill/Quill.h>
-
 #include "math/angle.h"
 #include "math/geom/circle.h"
 #include "math/geom/line.h"

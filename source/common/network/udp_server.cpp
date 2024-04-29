@@ -1,5 +1,7 @@
 #include "udp_server.h"
 
+#include "../services.h"
+
 namespace Tyr::Common
 {
 UdpServer::UdpServer()
@@ -13,7 +15,7 @@ bool UdpServer::send(const google::protobuf::MessageLite &t_message, const Netwo
 {
     if (!t_message.SerializeToArray(m_buffer.data(), m_buffer.size()))
     {
-        LOG_ERROR("Failed to serializeToArray (Maybe need to adjust Setting::kMaxUdpPacketSize)");
+        logError("Failed to serializeToArray (Maybe need to adjust Setting::kMaxUdpPacketSize)");
         return false;
     }
 

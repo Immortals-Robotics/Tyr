@@ -19,6 +19,8 @@ void VisionModule::ProcessBalls(Common::WorldState *state)
 
     // We're almost done, only Prediction remains undone!
     predictBallForward(state);
+
+    //Common::logDebug("ball pos: {}", state->ball.Position);
 }
 
 int VisionModule::ExtractBalls(void)
@@ -247,7 +249,8 @@ void VisionModule::predictBallForward(Common::WorldState *state)
     //        std::cout<<"NEW ANGLE____________"<<tempAngdelta<<std::endl;
     //    }
     //
-    //    if(state -> ball.velocity.length > 10 && state -> ball.seenState == Common::Seen && std::fabs(tempAngdelta) <= 15) {
+    //    if(state -> ball.velocity.length > 10 && state -> ball.seenState == Common::Seen && std::fabs(tempAngdelta) <=
+    //    15) {
     //        state->ball.path_dir = (ball_dir_buff.front() - ball_dir_buff.back());
     //        std::cout<<"we got here"<<std::endl;
     //

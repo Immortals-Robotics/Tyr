@@ -55,7 +55,7 @@ void Ai::NormalPlayAtt(void)
                                        .normalized()
                                        .dot((Common::Vec2(side * field_width, 0) - ball.Position).normalized()) < 0.75f;
 
-            LOG_DEBUG("pass angle ok mid1 : {}, mid2: {}", mid1PassAngleOk, mid2PassAngleOk);
+            Common::logDebug("pass angle ok mid1 : {}, mid2: {}", mid1PassAngleOk, mid2PassAngleOk);
 
             bool mid1Seen = OwnRobot[mid1].State.seenState != Common::CompletelyOut;
             bool mid2Seen = OwnRobot[mid2].State.seenState != Common::CompletelyOut;
@@ -71,7 +71,7 @@ void Ai::NormalPlayAtt(void)
                     mid1Suitable = false;
             }
 
-            LOG_DEBUG("open angle: {}", openAngle.magnitude.deg());
+            Common::logDebug("open angle: {}", openAngle.magnitude.deg());
             if (openAngle.magnitude.deg() < 8 &&
                 (findKickerOpp(-1, 150.0f) ==
                  -1)) //&& ( ball.Position.x * side < -2300 ) && ( std::fabs ( ball.Position.y ) > 1800 ) )
