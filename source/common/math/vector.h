@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ostream>
+
 #include <quill/Utility.h>
 
 namespace Tyr::Common
@@ -61,7 +62,7 @@ struct Vec2
 
     friend std::ostream &operator<<(std::ostream &t_stream, const Vec2 &t_vec)
     {
-        t_stream << "[" << t_vec.x << ", " << t_vec.y << "]" << std::endl;
+        t_stream << "[" << t_vec.x << ", " << t_vec.y << "]";
         return t_stream;
     }
 };
@@ -104,7 +105,7 @@ struct Vec3
 
     friend std::ostream &operator<<(std::ostream &t_stream, const Vec3 &t_vec)
     {
-        t_stream << "[" << t_vec.x << ", " << t_vec.y << ", " << t_vec.z << "]" << std::endl;
+        t_stream << "[" << t_vec.x << ", " << t_vec.y << ", " << t_vec.z << "]";
         return t_stream;
     }
 };
