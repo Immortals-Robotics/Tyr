@@ -37,8 +37,8 @@ public:
     [[nodiscard]] Vec2  closestPoint(Vec2 t_pos) const;
     [[nodiscard]] float distanceTo(Vec2 t_pos) const;
 
-    float a = 0.0;
-    float b = 0.0;
-    float c = 0.0;
+    float a = 0.0f;
+    float b = 0.0f;
+    float c = 0.0f;
 };
 } // namespace Tyr::Common

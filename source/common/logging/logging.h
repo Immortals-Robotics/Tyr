@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <source_location>
 
 #include <spdlog/spdlog.h>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #if defined(_WIN32)
 #define NOGDI  // All GDI defines and routines
 #define NOUSER // All USER defines and routines
@@ -26,7 +28,7 @@ public:
     bool receive(google::protobuf::MessageLite *t_message);
 
     void Update(const NetworkAddress &t_address);
-    
+
     [[nodiscard]] asio::ip::udp::endpoint getListenEndpoint() const
     {
         return m_listen_endpoint;

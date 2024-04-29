@@ -1,7 +1,5 @@
 #pragma once
 
-#include <ostream>
-
 #include <fmt/format.h>
 
 namespace Tyr::Common

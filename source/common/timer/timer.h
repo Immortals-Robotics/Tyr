@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <chrono>
+
 namespace Tyr::Common
 {
 class Timer

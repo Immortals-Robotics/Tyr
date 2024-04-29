@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 #define COLOR_BLUE false
 #define COLOR_YELLOW true
 
