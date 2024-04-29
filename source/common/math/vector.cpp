@@ -1,8 +1,5 @@
 #include "vector.h"
 
-#include "angle.h"
-#include "helpers.h"
-
 namespace Tyr::Common
 {
 Vec2::Vec2(const float t_x, const float t_y) : x(t_x), y(t_y)

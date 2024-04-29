@@ -11,7 +11,7 @@ Debug::Debug(NetworkAddress t_address, const bool t_enabled) : m_address(std::mo
     m_enabled = t_enabled;
     if (m_enabled)
     {
-        std::cerr << "Warning: Debugger is enabled" << std::endl;
+        logWarning("Debugger is enabled");
     }
 
     m_udp = std::make_unique<UdpServer>();
@@ -24,7 +24,7 @@ void Debug::broadcast()
     if (!m_enabled)
     {
         m_wrapper->Clear();
-        std::cerr << "Debug::broadcast(): Can't broadcast!" << std::endl;
+        logError("Debug::broadcast(): Can't broadcast!");
         return;
     }
 

@@ -1,10 +1,5 @@
 #include "logging.h"
 
-#include <spdlog/sinks/basic_file_sink.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-
-#include "../services.h"
-
 namespace Tyr::Common
 {
 Logger::Logger()

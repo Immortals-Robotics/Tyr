@@ -1,8 +1,5 @@
 #include "line.h"
 
-#include "../helpers.h"
-#include "line_segment.h"
-
 namespace Tyr::Common
 {
 Line::Line(const float t_a, const float t_b, const float t_c) : a(t_a), b(t_b), c(t_c)

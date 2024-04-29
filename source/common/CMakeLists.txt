@@ -34,6 +34,7 @@ set(HEADER_FILES
     timer/timer.h)
 
 set(SOURCE_FILES
+    setting.cpp
     config/config.cpp
     debug/common_colors.cpp
     debug/debug.cpp
