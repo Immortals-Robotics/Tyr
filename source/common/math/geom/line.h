@@ -1,5 +1,8 @@
 #pragma once
 
+#include <optional>
+#include <vector>
+
 #include "../angle.h"
 #include "../vector.h"
 
@@ -16,7 +19,7 @@ public:
 
     static Line fromTwoPoints(Vec2 t_pos_a, Vec2 t_pos_b);
     static Line fromPointAndAngle(Vec2 t_pos, Angle t_ang);
-	static Line fromSegment(LineSegment segment);
+    static Line fromSegment(LineSegment segment);
 
     [[nodiscard]] float slope() const
     {
@@ -34,8 +37,8 @@ public:
     [[nodiscard]] Vec2  closestPoint(Vec2 t_pos) const;
     [[nodiscard]] float distanceTo(Vec2 t_pos) const;
 
-    float a = 0.0;
-    float b = 0.0;
-    float c = 0.0;
+    float a = 0.0f;
+    float b = 0.0f;
+    float c = 0.0f;
 };
 } // namespace Tyr::Common

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <span>
 
 #if defined(_WIN32)

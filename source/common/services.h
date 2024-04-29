@@ -1,4 +1,5 @@
 #pragma once
+
 #include "debug/debug.h"
 #include "logging/logging.h"
 #include "setting.h"
@@ -10,11 +11,11 @@ struct Services
 {
     static void initialize()
     {
+        s_logger = new Logger();
+
         const ConfigReader config("config.toml");
         s_setting = new Setting();
         s_setting->load(config.getRoot());
-
-        s_logger = new Logger();
 
         s_debug = new Debug(s_setting->debug_address, s_setting->enable_debug);
 
@@ -26,8 +27,8 @@ struct Services
     {
         delete s_setting;
         delete s_debug;
-        delete s_logger;
         delete s_global_timer;
+        delete s_logger;
     }
 
     static const Setting &setting()
@@ -38,6 +39,11 @@ struct Services
     static Debug &debug()
     {
         return *s_debug;
+    }
+
+    static Logger &logger()
+    {
+        return *s_logger;
     }
 
     static Timer &global_timer()
@@ -62,8 +68,15 @@ static Debug &debug()
     return Services::debug();
 }
 
+static Logger &logger()
+{
+    return Services::logger();
+}
+
 static Timer &global_timer()
 {
     return Services::global_timer();
 }
 } // namespace Tyr::Common
+
+#include "logging/macros.h"

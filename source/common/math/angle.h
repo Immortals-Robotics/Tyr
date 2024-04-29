@@ -2,6 +2,8 @@
 
 #include <numbers>
 
+#include <fmt/format.h>
+
 namespace Tyr::Common
 {
 struct Vec2;
@@ -47,3 +49,12 @@ private:
 };
 
 } // namespace Tyr::Common
+
+template <>
+struct fmt::formatter<Tyr::Common::Angle> : fmt::formatter<std::string>
+{
+    auto format(Tyr::Common::Angle t_angle, format_context &t_ctx) const
+    {
+        return fmt::format_to(t_ctx.out(), "{} deg", t_angle.deg());
+    }
+};

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+#include <string_view>
+
 #include <immortals/Imm_wrapper.pb.h>
 
 #include "../math/vector.h"
@@ -13,10 +16,10 @@ class Color
 public:
     Color(const int t_r, const int t_g, const int t_b) : r(t_r), g(t_g), b(t_b)
     {}
-	Color(CommonColor commonColor);
+    Color(CommonColor commonColor);
 
     ~Color() = default;
-    int          r, g, b;
+    int r, g, b;
 };
 
 class Debug

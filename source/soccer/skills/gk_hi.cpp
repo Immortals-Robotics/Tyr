@@ -8,7 +8,7 @@ void Ai::GKHi(int robot_num, bool stop)
 {
     gkIntercepting = false;
 
-    LOG_DEBUG("GKhi: {} _ {}", ballIsGoaling(),
+    Common::logDebug("GKhi: {} _ {}", ballIsGoaling(),
               ball.Position.distanceTo(OwnRobot[robot_num].State.Position) / ball.velocity.length());
     // side = -side;
     debugDraw = true; // TODO #10 Comment this in the game
@@ -45,7 +45,7 @@ void Ai::GKHi(int robot_num, bool stop)
         ERRTSetGkClearObstacles(robot_num);
         if ((IsInObstacle(ball.Position)) && (ball.velocity.length() < 1500) && REF_playState->canKickBall() && (!stop))
         {
-            LOG_DEBUG("GK intercepting");
+            Common::logDebug("GK intercepting");
 
             gkIntercepting = true;
 
@@ -107,7 +107,7 @@ void Ai::GKHi(int robot_num, bool stop)
 
 void Ai::GK_shirje(int robot_num)
 {
-    LOG_DEBUG("GK shirje");
+    Common::logDebug("GK shirje");
 
     Common::Line ball_line =
         Common::Line::fromPointAndAngle(ball.Position, ball.velocity.toAngle());

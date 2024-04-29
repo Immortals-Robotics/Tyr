@@ -70,7 +70,7 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     //    if(1)
     {
 #if DEBUG_DEF
-        LOG_DEBUG("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");
+        Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");
 #endif
         ERRTSetObstacles(robot_num, 0, 1);
         // tech_circle(robot_num,Common::sign(ball.Position.y)*side*60 ,0,15,false);
@@ -88,12 +88,12 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
 void Ai::DefBy1(int thelastdef_num, Common::Vec2 *defendTarget, bool stop)
 {
 #if DEBUG_DEF
-    LOG_DEBUG("__________IN_DEF_BY_1_____________________________________________");
+    Common::logDebug("__________IN_DEF_BY_1_____________________________________________");
 #endif
     if (thelastdef_num != -1)
     {
 #if DEBUG_DEF
-        LOG_DEBUG("1111111111111111111111111111111111111111111111111111111111");
+        Common::logDebug("1111111111111111111111111111111111111111111111111111111111");
 #endif
         Common::Angle alpha =
             Common::Vec2(side * field_width, 0).angleWith(ball.Position) + Common::Angle::fromDeg(90 + side * 90);
@@ -119,7 +119,7 @@ void Ai::DefBy1(int thelastdef_num, Common::Vec2 *defendTarget, bool stop)
                     TARGET_BALL_IN_GOAL.y = -200.0;
                 }
 #if DEBUG_DEF
-                LOG_DEBUG("TARGET_BALL_IN_GOAL.y: {}", TARGET_BALL_IN_GOAL.y);
+                Common::logDebug("TARGET_BALL_IN_GOAL.y: {}", TARGET_BALL_IN_GOAL.y);
 #endif
                 Common::Line ball_line  = Common::Line::fromTwoPoints(ball.Position, TARGET_BALL_IN_GOAL);
                 Common::Line Front_line = Common::Line::fromPointAndAngle(
@@ -268,7 +268,7 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
                 }
 
 #if DEBUG_DEF
-                LOG_DEBUG("TARGET_BALL_IN_GOAL.y: {}", TARGET_BALL_IN_GOAL.y);
+                Common::logDebug("TARGET_BALL_IN_GOAL.y: {}", TARGET_BALL_IN_GOAL.y);
 #endif
                 Common::Line ball_line  = Common::Line::fromTwoPoints(ball.Position, TARGET_BALL_IN_GOAL);
                 Common::Line Front_line = Common::Line::fromPointAndAngle(
@@ -521,7 +521,7 @@ void Ai::DefMid(int &middef_num, int &rightdef_num, int &leftdef_num, Common::Ve
     alpha.setDeg(std::clamp(alpha.deg(), -90.0f, 90.0f));
     float alphaSgn = Common::sign(alpha.deg());
 #if DEBUG_DEF
-    LOG_DEBUG("ALPHA: {}", alpha);
+    Common::logDebug("ALPHA: {}", alpha);
 #endif
 
     if (!defendTarget)
