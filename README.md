@@ -21,18 +21,54 @@ Also make sure to get submodules in the repo.
 
 Then you should be able to generate build scripts and build the project using one of the CMake presets in CMakePresets.json.
 
-## **Usage**
+## Usage
 **TBD**
 
-## **Coding standard**
+## Coding standard
 We use [cppbestpractices by Jason Turner](https://lefticus.gitbooks.io/cpp-best-practices/content/) as the basis for our standard.
 
-**.clang-tidy** file contains the current naming convention we use. In addition, file and folder names should be **lower_case**. C++ files should have a **.cpp** extension, C files **.c**, and header files **.h**.
+**.clang-tidy** file contains the current naming convention we use. In addition, file and folder names should be ****lower_case****. C++ files should have a **.cpp** extension, C files **.c**, and header files **.h**.
 
 **.clang-format** file contains the current formatting style we use.
 
 Both **.clang-tidy** and **.clang-format** are supported in most IDEs, and can help validate your code according to the standards, and even make necessary changes to be conformant.
 
-## **License**
+## Style Guide
+
+Ensure consistency and readability by following these naming conventions throughout codebase:
+
+### Namespace
+- Use **CamelCase** for namespaces. Root namespace is `Tyr`.
+
+### Types
+- Use **CamelCase** for struct, class, enum, union, typedef, and type alias names.
+
+### Functions
+- Use **camelBack** naming convention for function names, including global functions.
+- Main-like functions can be ignored.
+
+### Fields
+- Use **lower_case** for member variables.
+- Use `m_` prefix for private and protected member variables.
+
+
+### Enums
+- Use **CamelCase** for both scoped and non-scoped enum constant names.
+
+### Variables
+- Use **lower_case** for variables.
+- Use `g_` prefix for global variables.
+- Use `s_` prefix for static variables.
+
+### Parameters
+- Use **lower_case** with `t_` prefix for function parameters.
+
+### Constants
+- Use **CamelCase** for all constant (member, static, local, global, constexpr) variables with `k` prefix.
+
+### Macros
+- Use **UPPER_CASE** for macro definitions.
+
+## License
 This project is licensed under the terms of the GNU GPLv3.
 
