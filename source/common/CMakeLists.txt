@@ -68,12 +68,6 @@ if (WIN32)
     target_compile_definitions(${PROJECT_NAME} PUBLIC _WIN32_WINNT=_WIN32_WINNT_WIN10)
 endif()
 
-if (${TRACE_BUILD_TIME})
-if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "[Cc]lang")
-    target_compile_options(${PROJECT_NAME} PUBLIC -ftime-trace)
-endif()
-endif()
-
 target_compile_definitions(${PROJECT_NAME} PUBLIC DATA_DIR="${CMAKE_SOURCE_DIR}/data")
 target_compile_definitions(${PROJECT_NAME} PUBLIC LOG_DIR="${CMAKE_SOURCE_DIR}/log")
 

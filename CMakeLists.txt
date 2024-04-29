@@ -8,9 +8,31 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 option(USE_UNITY_BUILDS "Enable unity build to improve build times" OFF)
-option(TRACE_BUILD_TIME "Use -ftime-trace to generate build time trace" OFF)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	option(TRACE_BUILD_TIME "Use -ftime-trace to generate build time trace" OFF)
+else()
+	set(TRACE_BUILD_TIME OFF)
+endif()
+option(ENABLE_SANITIZERS "Enable address and undefined behavior sanitizers" OFF)
 
 project(tyr)
+
+# Raylib's vcpkg port forces sanitizers to be on in debug,
+# we therefore need to force enable it in debug to avoid linking issues
+if(${ENABLE_SANITIZERS} OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+	add_compile_options(-fsanitize=address)
+	add_link_options(-fsanitize=address)
+
+	# undefined behavior sanitizer is not available on MSVC
+	if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+		add_compile_options(-fno-omit-frame-pointer -fsanitize=undefined)
+		add_link_options(-fno-omit-frame-pointer -fsanitize=undefined)
+	endif()
+endif()
+
+if (${TRACE_BUILD_TIME})
+	add_compile_options(-ftime-trace)
+endif()
 
 add_subdirectory(source/protos)
 add_subdirectory(source/common)
