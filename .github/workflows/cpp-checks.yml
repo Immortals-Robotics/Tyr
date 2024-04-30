@@ -7,6 +7,9 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read 
+      pull-requests: read
 
     steps:
       - uses: actions/checkout@v4
@@ -19,6 +22,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          files-changed-only: false
           lines-changed-only: ${{ github.event_name != 'workflow_dispatch' }}
           style: file
           tidy-checks: ''
