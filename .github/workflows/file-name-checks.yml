@@ -20,6 +20,11 @@ jobs:
             *.hpp
             *.c
             *.cpp
+            *.fs
+            *.vs
+            *.toml
+            *.yml
+            *.ttf
 
       - name: Check filenames
         uses: julie-ng/lowercase-linter@v1
