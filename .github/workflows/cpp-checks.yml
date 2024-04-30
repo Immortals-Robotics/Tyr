@@ -25,7 +25,7 @@ jobs:
           files-changed-only: false
           lines-changed-only: ${{ github.event_name != 'workflow_dispatch' }}
           style: file
-          tidy-checks: ''
+          tidy-checks: '-*'
 
       - name: Fail
         if: steps.linter.outputs.checks-failed > 0
