@@ -30,7 +30,6 @@ jobs:
 
       - name: Check filenames
         uses: julie-ng/lowercase-linter@v1
-        id: check
         with:
           path: '.'
           pr-comment: true
