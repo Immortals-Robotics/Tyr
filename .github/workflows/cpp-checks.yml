@@ -1,0 +1,28 @@
+name: C++ checks
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: C/C++ Linter
+        uses: cpp-linter/cpp-linter-action@v2
+        id: linter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          lines-changed-only: ${{ github.event_name != 'workflow_dispatch' }}
+          style: file
+          tidy-checks: ''
+
+      - name: Fail
+        if: steps.linter.outputs.checks-failed > 0
+        run: exit 1

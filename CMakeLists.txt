@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+project(tyr)
+
 option(USE_UNITY_BUILDS "Enable unity build to improve build times" OFF)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	option(TRACE_BUILD_TIME "Use -ftime-trace to generate build time trace" OFF)
@@ -15,7 +17,6 @@ else()
 endif()
 option(ENABLE_SANITIZERS "Enable address and undefined behavior sanitizers" OFF)
 
-project(tyr)
 
 # Raylib's vcpkg port forces sanitizers to be on in debug,
 # we therefore need to force enable it in debug to avoid linking issues
