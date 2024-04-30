@@ -1,0 +1,30 @@
+name: Typo check
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            *.h
+            *.hpp
+            *.c
+            *.cpp
+            *.fs
+            *.vs
+            *.toml
+            *.yml
+            *.ttf
+
+      - name: Check for typos
+        uses: crate-ci/typos@v1.21.0
+        id: check
