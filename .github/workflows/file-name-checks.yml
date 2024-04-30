@@ -1,0 +1,23 @@
+name: File name checks
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read 
+      pull-requests: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Check filenames
+        uses: batista/lint-filenames@v1
+        with:
+          path: './source'
+          pattern: '[a-z0-9]+(?:_[a-z0-9]+)*\.(?:h|cpp)'
