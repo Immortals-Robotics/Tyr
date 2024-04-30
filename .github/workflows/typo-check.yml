@@ -26,9 +26,5 @@ jobs:
       - name: Check for typos
         uses: crate-ci/typos@v1.21.0
         id: check
-        continue-on-error: true
-
-      - name: Fail
-        if: steps.check.outcome != 'success'
-        run: exit 1
-  
+        with:
+          config: true
