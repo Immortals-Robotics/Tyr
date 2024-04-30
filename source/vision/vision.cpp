@@ -22,9 +22,9 @@ VisionModule::VisionModule(Common::WorldState *_State)
     lastRawBall.set_y(0.0f);
 
     std::string fast_filter_path(DATA_DIR);
-    fast_filter_path.append("/ballFilterFast.txt");
+    fast_filter_path.append("/ball_filter_fast.txt");
     std::string slow_filter_path(DATA_DIR);
-    slow_filter_path.append("/ballFilterSlow.txt");
+    slow_filter_path.append("/ball_filter_slow.txt");
 
     ball_kalman.initialize(fast_filter_path.c_str(), slow_filter_path.c_str());
 
