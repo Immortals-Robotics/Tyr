@@ -33,9 +33,36 @@ We use [cppbestpractices by Jason Turner](https://lefticus.gitbooks.io/cpp-best-
 
 Both **.clang-tidy** and **.clang-format** are supported in most IDEs, and can help validate your code according to the standards, and even make necessary changes to be conformant.
 
-## Style Guide
+## General style
+### Indentation
+Indent with 4 spaces.
+
+### Spaces
+Add spaces after C-style casts. Do not add spaces within angle brackets for template parameters.
+
+### Brace style
+Place opening braces on the line after control statements, classes, enums, functions, namespaces, structs, unions, and extern blocks.
+
+### Namespace
+Use compact namespaces (`A::B`) when possible.
+
+### Include directives
+Group include directives into categories and order them as follows:
+  1. Corresponding include (*file.h* for *file.cpp*) (`"..."`)
+  2. System includes (`<...>`)
+  3. Dependency includes (`<...>`)
+  4. Other includes (`"..."`)
+  
+### Alignment
+- Align consecutive assignments and declarations.
+- Align operands when breaking expressions.
+
+## Naming style
 
 Ensure consistency and readability by following these naming conventions throughout codebase:
+
+### Files and folders
+- Use **lower_case** for file and folder names.
 
 ### Namespace
 - Use **CamelCase** for namespaces. Root namespace is `Tyr`.
