@@ -13,11 +13,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Check filenames
-        uses: batista/lint-filenames@v1
+        uses: julie-ng/lowercase-linter@v1
+        id: check
+        continue-on-error: true
         with:
-          path: './source'
-          pattern: '[a-z0-9]+(?:_[a-z0-9]+)*\.(?:h|cpp)'
+          path: '.'
+          pr-comment: true
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fail
+        if: steps.check.outcome != 'success'
+        run: exit 1
+  
