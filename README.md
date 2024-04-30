@@ -1,6 +1,7 @@
 # Tyr: God of valor and justice
 
 [![Build](https://github.com/Immortals-Robotics/Tyr/actions/workflows/build.yml/badge.svg)](https://github.com/Immortals-Robotics/Tyr/actions/workflows/build.yml)
+[![C++ checks](https://github.com/Immortals-Robotics/Tyr/actions/workflows/cpp-checks.yml/badge.svg)](https://github.com/Immortals-Robotics/Tyr/actions/workflows/cpp-checks.yml)
 
 ## Building
 We actively test on Windows and macOS, but other systems that meet the requirements should in theory work fine.
