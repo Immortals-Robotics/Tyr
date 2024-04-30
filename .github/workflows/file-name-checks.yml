@@ -13,6 +13,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            *.h
+            *.hpp
+            *.c
+            *.cpp
 
       - name: Check filenames
         uses: julie-ng/lowercase-linter@v1
