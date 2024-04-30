@@ -1,0 +1,41 @@
+name: File name check
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read 
+      pull-requests: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            *.h
+            *.hpp
+            *.c
+            *.cpp
+            *.fs
+            *.vs
+            *.toml
+            *.yml
+            *.ttf
+
+      - name: Check filenames
+        uses: julie-ng/lowercase-linter@v1
+        id: check
+        continue-on-error: true
+        with:
+          path: '.'
+          pr-comment: true
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fail
+        if: steps.check.outcome != 'success'
+        run: exit 1
+  
