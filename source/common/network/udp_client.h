@@ -25,9 +25,11 @@ class UdpClient
 public:
     explicit UdpClient(const NetworkAddress &t_address);
 
+    void Update(const NetworkAddress &t_address);
+
     bool receive(google::protobuf::MessageLite *t_message);
 
-    void Update(const NetworkAddress &t_address);
+    std::span<char> receiveRaw();
 
     [[nodiscard]] asio::ip::udp::endpoint getListenEndpoint() const
     {
