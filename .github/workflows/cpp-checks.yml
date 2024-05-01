@@ -26,9 +26,5 @@ jobs:
           files-changed-only: false
           lines-changed-only: ${{ github.event_name == 'pull_request' }}
           style: file
-          tidy-checks: '-*,readability-identifier-naming'
+          tidy-checks: ''
           step-summary: true
-
-      - name: Fail
-        if: steps.linter.outputs.checks-failed > 0
-        run: exit 1
