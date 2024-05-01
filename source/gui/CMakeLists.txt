@@ -30,7 +30,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})
 
-target_precompile_headers(${PROJECT_NAME} PRIVATE "pch.h")
+get_target_property(COMMON_PCHS ${CMAKE_PROJECT_NAME}-common INTERFACE_PRECOMPILE_HEADERS)
+
+target_precompile_headers(${PROJECT_NAME}
+	PRIVATE ${COMMON_PCHS}
+	PRIVATE pch.h)
 
 install(TARGETS ${PROJECT_NAME})
 

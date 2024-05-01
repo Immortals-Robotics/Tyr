@@ -62,8 +62,8 @@ public:
     bool  IsInObstacle(float _x, float _y);
     float NearestDistance(float _x, float _y);
 
-    void resetMap(void);
+    void resetMap();
 
-    int getObsNum(void);
+    int getObsNum();
 };
 } // namespace Tyr::Soccer

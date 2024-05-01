@@ -1,7 +1,5 @@
 #pragma once
 
-#include <ostream>
-
 #define COLOR_BLUE false
 #define COLOR_YELLOW true
 
@@ -10,6 +8,7 @@
 
 #include "../math/angle.h"
 #include "../math/vector.h"
+#include "../setting.h"
 
 namespace Tyr::Common
 {

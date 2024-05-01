@@ -41,6 +41,7 @@ add_subdirectory(source/vision)
 add_subdirectory(source/referee)
 add_subdirectory(source/sender)
 add_subdirectory(source/soccer)
+add_subdirectory(source/cli)
 add_subdirectory(source/gui)
 
 set(CPACK_GENERATOR ZIP)

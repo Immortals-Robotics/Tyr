@@ -17,7 +17,7 @@ Referee::Referee(Common::WorldState *world_state, Common::RefereeState *referee_
     RefState->State->init(Common::setting().our_color);
 }
 
-bool Referee::connectToRefBox(void)
+bool Referee::connectToRefBox()
 {
     m_udp = std::make_unique<Common::UdpClient>(Common::setting().referee_address);
 
@@ -91,7 +91,7 @@ bool Referee::isKicked(Common::Vec2 ballPos)
     return false;
 }
 
-bool Referee::recieve(void)
+bool Referee::recieve()
 {
     if (!isConnected())
         return false;

@@ -24,8 +24,6 @@
 
 #pragma once
 
-#include <ssl-refbox/referee.pb.h>
-
 // play commands
 #define COMM_HALT Protos::SSL_Referee_Command_HALT
 #define COMM_STOP Protos::SSL_Referee_Command_STOP

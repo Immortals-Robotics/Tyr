@@ -1,9 +1,5 @@
 #pragma once
 
-#include <span>
-
-#include <network/udp_server.h>
-
 namespace Tyr::Sender
 {
 class Sender

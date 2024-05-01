@@ -4,7 +4,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::our_place_ball_shoot(void)
+void Ai::our_place_ball_shoot()
 {
 
     GKHi(gk, true);
@@ -304,7 +304,7 @@ void Ai::our_place_ball_shoot(void)
     std::cout << "___DIS___" << targetBallPlacement->distanceTo(ball.Position) << std::endl;
 }
 
-void Ai::our_place_ball_shoot_V2(void)
+void Ai::our_place_ball_shoot_V2()
 {
 
     GKHi(gk, true);
@@ -757,7 +757,7 @@ void Ai::our_place_ball_shoot_V2(void)
     Common::logInfo("__OUT__{}", outOfField(ball.Position));
 }
 
-void Ai::our_place_ball_shoot_taki(void)
+void Ai::our_place_ball_shoot_taki()
 {
 
     GKHi(gk, true);

@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 Common::Timer activeShootTimer;
 
-void Ai::NormalPlayAtt(void)
+void Ai::NormalPlayAtt()
 {
     ManageAttRoles(); // sets the mid1, mid2, attack
 

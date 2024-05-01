@@ -1,8 +1,5 @@
 #pragma once
 
-#include <numbers>
-#include <vector>
-
 #include "../vector.h"
 
 namespace Tyr::Common

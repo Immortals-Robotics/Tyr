@@ -18,11 +18,11 @@ class Tree
     unsigned int nodes_num;
 
 public:
-    Tree(void);
-    void         reset(void);
+    Tree();
+    void         reset();
     Node        *AddNode(Common::Vec2 &s, Node *p);
     Node        *NearestNeighbour(Common::Vec2 &s);
-    unsigned int tree_size(void);
+    unsigned int tree_size();
     Node        *GetNode(unsigned int num);
 };
 } // namespace Tyr::Soccer

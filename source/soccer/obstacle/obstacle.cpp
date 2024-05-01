@@ -7,7 +7,7 @@ namespace Tyr::Soccer
 {
 /*bool obs_lut[605][405];
 
-void clear_map ( void )
+void clear_map ()
 {
         for ( int i = 0 ; i < 605 ; i ++ )
                 for ( int j = 0 ; j < 405 ; j ++ )
@@ -66,7 +66,7 @@ void AddRectangle ( int x , int y , int w , int h )
 
 ObsMap map(100);
 
-void clear_map(void)
+void clear_map()
 {
     map.resetMap();
 }

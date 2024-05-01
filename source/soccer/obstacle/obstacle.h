@@ -6,7 +6,7 @@ namespace Tyr::Soccer
 {
 /*bool obs_lut[605][405];
 
-void clear_map ( void )
+void clear_map ()
 {
     for ( int i = 0 ; i < 605 ; i ++ )
         for ( int j = 0 ; j < 405 ; j ++ )
@@ -50,7 +50,7 @@ void AddCircle ( int x , int y , int r )
         }
 }*/
 
-void clear_map(void);
+void clear_map();
 bool IsInObstacle(Common::Vec2 p);
 bool collisionDetect(Common::Vec2 p1, Common::Vec2 p2);
 void AddCircle(float x, float y, float r);

@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 Common::Timer activeShootTimer_omid;
 
-void Ai::NewNormalPlay(void)
+void Ai::NewNormalPlay()
 {
     //	GKHi(gk, 0);
     // side = -side;

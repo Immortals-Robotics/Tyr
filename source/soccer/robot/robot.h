@@ -35,7 +35,7 @@ public:
     int   remainingPIDParams;
     float p, i, iMax, torque;
 
-    Robot(void);
+    Robot();
 
     void sendPID(float _p, float _i, float _iMax, float _torque);
 
@@ -64,8 +64,8 @@ public:
 
     Common::Vec3 ComputeMotionCommand(bool accurate, float speed, VelocityProfile *velocityProfile);
 
-    Common::Vec3 GetCurrentMotionCommand(void) const;
+    Common::Vec3 GetCurrentMotionCommand() const;
 
-    void makeSendingDataReady(void);
+    void makeSendingDataReady();
 };
 } // namespace Tyr::Soccer

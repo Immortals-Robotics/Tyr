@@ -2,12 +2,12 @@
 
 namespace Tyr::Soccer
 {
-Tree::Tree(void)
+Tree::Tree()
 {
     reset();
 }
 
-void Tree::reset(void)
+void Tree::reset()
 {
     nodes_num = 0;
 }
@@ -51,7 +51,7 @@ Node *Tree::NearestNeighbour(Common::Vec2 &s)
     return &node[ans];
 }
 
-unsigned int Tree::tree_size(void)
+unsigned int Tree::tree_size()
 {
     return nodes_num;
 }

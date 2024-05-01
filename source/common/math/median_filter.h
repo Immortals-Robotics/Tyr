@@ -1,6 +1,4 @@
 #pragma once
-#include <algorithm>
-#include <vector>
 
 namespace Tyr::Common
 {
@@ -34,7 +32,7 @@ public:
         }
     }
 
-    T GetCurrent(void)
+    T GetCurrent()
     {
         temp = data;
         std::sort(temp.begin(), temp.end());
@@ -43,7 +41,7 @@ public:
         return temp.at(temp.size() / 2);
     }
 
-    void reset(void)
+    void reset()
     {
         data.clear();
         index = false;

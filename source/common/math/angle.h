@@ -1,9 +1,5 @@
 #pragma once
 
-#include <numbers>
-
-#include <fmt/format.h>
-
 namespace Tyr::Common
 {
 struct Vec2;

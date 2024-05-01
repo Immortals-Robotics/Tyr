@@ -2,7 +2,7 @@
 
 namespace Tyr::Vision
 {
-VisionModule::VisionModule(Common::WorldState *_State)
+Vision::Vision(Common::WorldState *_State)
 {
     playState = _State;
 
@@ -44,10 +44,10 @@ VisionModule::VisionModule(Common::WorldState *_State)
         std::cout << "Failed to connect to Vision UDP" << std::endl;
     }
 }
-VisionModule::~VisionModule()
+Vision::~Vision()
 {}
 
-void VisionModule::recieveAllCameras(void)
+void Vision::recieveAllCameras()
 {
     if (!isConnected())
     {
@@ -76,7 +76,7 @@ void VisionModule::recieveAllCameras(void)
     }
 }
 
-void VisionModule::ProcessVision()
+void Vision::ProcessVision()
 {
     ProcessBalls(this->playState);
     ProcessRobots(this->playState);

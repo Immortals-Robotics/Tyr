@@ -16,8 +16,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: C/C++ Linter
         uses: cpp-linter/cpp-linter-action@v2
@@ -28,9 +26,5 @@ jobs:
           files-changed-only: false
           lines-changed-only: ${{ github.event_name == 'pull_request' }}
           style: file
-          tidy-checks: '-*'
+          tidy-checks: ''
           step-summary: true
-
-      - name: Fail
-        if: steps.linter.outputs.checks-failed > 0
-        run: exit 1

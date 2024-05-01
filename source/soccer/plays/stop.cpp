@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::Stop(void)
+void Ai::Stop()
 {
 #if !mark_in_stop
     for (std::map<int *, int>::const_iterator i = markMap.begin(); i != markMap.end(); ++i)

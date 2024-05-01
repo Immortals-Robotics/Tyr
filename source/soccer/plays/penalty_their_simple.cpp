@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::penalty_their_simple(void)
+void Ai::penalty_their_simple()
 {
     float penalty_x = field_width - 85.0;
 

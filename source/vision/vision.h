@@ -32,32 +32,32 @@
 
 namespace Tyr::Vision
 {
-class VisionModule
+class Vision
 {
 public:
-    VisionModule(Common::WorldState *State);
-    ~VisionModule();
+    Vision(Common::WorldState *State);
+    ~Vision();
 
-    bool recievePacket(void);
-    bool connectToVisionServer(void);
-    void recieveAllCameras(void);
-    void ProcessVision(void);
-    bool isConnected(void);
+    bool recievePacket();
+    bool connectToVisionServer();
+    void recieveAllCameras();
+    void ProcessVision();
+    bool isConnected();
 
     void ProcessRobots(Common::WorldState *);
-    int  ExtractBlueRobots(void);
-    int  ExtractYellowRobots(void);
+    int  ExtractBlueRobots();
+    int  ExtractYellowRobots();
     int  MergeRobots(int num);
     void FilterRobots(int num, bool own);
     void predictRobotsForward(Common::WorldState *);
     void SendStates(Common::WorldState *);
 
     void ProcessBalls(Common::WorldState *);
-    int  ExtractBalls(void);
+    int  ExtractBalls();
     int  MergeBalls(int num);
     void FilterBalls(int num, Common::WorldState *);
     void predictBallForward(Common::WorldState *);
-    void calculateBallHeight(void);
+    void calculateBallHeight();
 
     void ProcessParam(Common::WorldState *);
 
