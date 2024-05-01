@@ -35,7 +35,7 @@ void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
     tree.reset();
     tree.AddNode(init_state, NULL);
 
-    started_in_obs = IsInObstacle(init);
+    started_in_obs = obs_map.isInObstacle(init);
 
     /*init_state = init;
     final_state = nearest_free ( nearest_free ( final ) );
@@ -44,7 +44,7 @@ void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
     tree.reset ( );
     tree.AddNode ( init_state , NULL );
 
-    if ( IsInObstacle ( init_state ) )
+    if ( obs_map.isInObstacle ( init_state ) )
     {
             init = nearest_free ( nearest_free ( init ) );
             tree.AddNode ( init , tree.GetNode ( 0 ) );
@@ -72,12 +72,12 @@ Common::Vec2 Planner::nearest_free(Common::Vec2 state)
     state.x = std::min(678.0f, std::max(52.0f, state.x));
     state.y = std::min(478.0f, std::max(52.0f, state.y));
 
-    if (!IsInObstacle(state))
+    if (!obs_map.isInObstacle(state))
         return state;
 
     for (int i = state.x; i < 678; i++)
     {
-        if (!IsInObstacle(Common::Vec2(i, state.y)))
+        if (!obs_map.isInObstacle(Common::Vec2(i, state.y)))
         {
             r = i - state.x;
             break;
@@ -86,7 +86,7 @@ Common::Vec2 Planner::nearest_free(Common::Vec2 state)
 
     for (int i = state.x; i > 52; i--)
     {
-        if (!IsInObstacle(Common::Vec2(i, state.y)))
+        if (!obs_map.isInObstacle(Common::Vec2(i, state.y)))
         {
             l = i - state.x;
             break;
@@ -95,7 +95,7 @@ Common::Vec2 Planner::nearest_free(Common::Vec2 state)
 
     for (int i = state.y; i < 478; i++)
     {
-        if (!IsInObstacle(Common::Vec2(state.x, i)))
+        if (!obs_map.isInObstacle(Common::Vec2(state.x, i)))
         {
             u = i - state.y;
             break;
@@ -104,7 +104,7 @@ Common::Vec2 Planner::nearest_free(Common::Vec2 state)
 
     for (int i = state.y; i > 52; i--)
     {
-        if (!IsInObstacle(Common::Vec2(state.x, i)))
+        if (!obs_map.isInObstacle(Common::Vec2(state.x, i)))
         {
             d = i - state.y;
             break;
@@ -127,7 +127,7 @@ Common::Vec2 Planner::nearest_free(Common::Vec2 state)
     // ( 529 , std::max ( 0 , state.y + sgn ( y ) * abs ( x ) ) ) );
     Common::Vec2 ans = Common::Vec2(state.x + Common::sign(x) * std::abs(y), state.y + Common::sign(y) * std::abs(x));
 
-    // if ( IsInObstacle ( ans ) )
+    // if ( obs_map.isInObstacle ( ans ) )
     //	return nearest_free ( ans );
 
     float coss, sinn;
@@ -136,7 +136,7 @@ Common::Vec2 Planner::nearest_free(Common::Vec2 state)
 
     Common::Vec2 current = ans;
 
-    while ((current.distanceTo(state) > 2) && (!IsInObstacle(current)))
+    while ((current.distanceTo(state) > 2) && (!obs_map.isInObstacle(current)))
     {
         ans = current;
 
@@ -150,7 +150,7 @@ Common::Vec2 Planner::nearest_free(Common::Vec2 state)
 Common::Vec2 Planner::nearest_free_prob(Common::Vec2 state)
 {
     const float acceptable_free_dis = 50;
-    if (!IsInObstacle(state))
+    if (!obs_map.isInObstacle(state))
         return state;
 
     Common::Vec2 ans    = state;
@@ -159,7 +159,7 @@ Common::Vec2 Planner::nearest_free_prob(Common::Vec2 state)
     for (int i = 0; i < 1000; i++)
     {
         Common::Vec2 newRndPoint = random_state();
-        if ((!IsInObstacle(newRndPoint)) && state.distanceTo(newRndPoint) < minDis)
+        if ((!obs_map.isInObstacle(newRndPoint)) && state.distanceTo(newRndPoint) < minDis)
         {
             ans    = newRndPoint;
             minDis = state.distanceTo(newRndPoint);
@@ -220,10 +220,10 @@ Node *Planner::extend(Node *s, Common::Vec2 &target)
     //         return NULL;
 
     // collision check
-    if (IsInObstacle(new_state))
+    if (obs_map.isInObstacle(new_state))
         return NULL;
 
-    if (collisionDetect(new_state, s->state))
+    if (obs_map.collisionDetect(new_state, s->state))
         return NULL;
 
     return tree.AddNode(new_state, s);
@@ -281,7 +281,7 @@ bool Planner::IsReached()
 Common::Vec2 Planner::Plan()
 {
     // return final_state;
-    if (!collisionDetect(init_state, final_state))
+    if (!obs_map.collisionDetect(init_state, final_state))
     {
         tree.AddNode(final_state, tree.NearestNeighbour(init_state));
     }
@@ -296,7 +296,7 @@ Common::Vec2 Planner::Plan()
             new_s = extend(tree.NearestNeighbour(r), r);
             if (new_s)
             {
-                /*if ( !collisionDetect ( new_s->state , final_state ) )
+                /*if ( !obs_map.collisionDetect ( new_s->state , final_state ) )
                 {
                     for (; ( !IsReached ( ) ) && ( new_s ) && (i < MAX_NODES ) ; i ++ )
                                 new_s = extend ( new_s , final_state );
@@ -306,7 +306,7 @@ Common::Vec2 Planner::Plan()
             // while ( !extend ( tree.NearestNeighbour ( r ) , r ) )
             //	r = choose_target ( );
         }
-        if ((IsReached()) && (!IsInObstacle(final_state)) &&
+        if ((IsReached()) && (!obs_map.isInObstacle(final_state)) &&
             (final_state.distanceTo(tree.NearestNeighbour(final_state)->state) > 1))
         {
             tree.AddNode(final_state, tree.NearestNeighbour(final_state));
@@ -315,7 +315,7 @@ Common::Vec2 Planner::Plan()
 
     SetWayPoints();
 
-    // if ( ( ! IsInObstacle ( init_state ) ) && ( GetWayPointNum() > 2 ) )
+    // if ( ( ! obs_map.isInObstacle ( init_state ) ) && ( GetWayPointNum() > 2 ) )
     optimize_tree();
 
     Common::Vec2 ans;
@@ -345,7 +345,7 @@ void Planner::optimize_tree()
 {
     for (int i = 0; i < GetWayPointNum(); i++)
     {
-        if (collisionDetect(waypoint[i], waypoint[GetWayPointNum() - 1]) == false)
+        if (obs_map.collisionDetect(waypoint[i], waypoint[GetWayPointNum() - 1]) == false)
         {
             Common::Vec2 tmp               = waypoint[i + 1];
             waypoint[i + 1]                = waypoint[GetWayPointNum() - 1];

@@ -43,7 +43,7 @@ void Ai::GKHi(int robot_num, bool stop)
         my_hys = 0;
 
         ERRTSetGkClearObstacles(robot_num);
-        if ((IsInObstacle(ball.Position)) && (ball.velocity.length() < 1500) && REF_playState->canKickBall() && (!stop))
+        if ((obs_map.isInObstacle(ball.Position)) && (ball.velocity.length() < 1500) && REF_playState->canKickBall() && (!stop))
         {
             Common::logDebug("GK intercepting");
 

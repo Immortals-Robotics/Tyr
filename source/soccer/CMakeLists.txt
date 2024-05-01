@@ -10,7 +10,6 @@ set(HEADER_FILES
 	errt/errt.h
 	errt/tree.h
 
-	obstacle/obstacle_new.h
 	obstacle/obstacle.h
 
 	helpers/one_touch_detector.h
@@ -35,7 +34,6 @@ set(SOURCE_FILES
 	obstacle/obstacle_circle.cpp
 	obstacle/obstacle_map.cpp
 	obstacle/obstacle_rect.cpp
-	obstacle/obstacle.cpp
 
 	helpers/attack_fucking_angle.cpp
 	helpers/ball_is_goaling.cpp

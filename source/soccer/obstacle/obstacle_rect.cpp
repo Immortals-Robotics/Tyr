@@ -1,4 +1,4 @@
-#include "obstacle_new.h"
+#include "obstacle.h"
 
 namespace Tyr::Soccer
 {

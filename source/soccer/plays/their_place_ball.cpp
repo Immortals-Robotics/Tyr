@@ -72,13 +72,13 @@ void Ai::their_place_ball()
     }
 #else
     ERRTSetObstacles(dmf, true, true);
-    AddCircle({ball.Position, 1010.0f});
-    AddCircle({*targetBallPlacement, 1010.0f});
+    obs_map.addCircle({ball.Position, 1010.0f});
+    obs_map.addCircle({*targetBallPlacement, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seenState != Common::CompletelyOut)
         {
-            AddCircle({OppRobot[i].Position, 300.0f});
+            obs_map.addCircle({OppRobot[i].Position, 300.0f});
         }
     }
     OwnRobot[dmf].face(ball.Position);
@@ -89,13 +89,13 @@ void Ai::their_place_ball()
         0, 100, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(rw, true, true);
-    AddCircle({ball.Position, 1010.0f});
-    AddCircle({*targetBallPlacement, 1010.0f});
+    obs_map.addCircle({ball.Position, 1010.0f});
+    obs_map.addCircle({*targetBallPlacement, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seenState != Common::CompletelyOut)
         {
-            AddCircle({OppRobot[i].Position, 300.0f});
+            obs_map.addCircle({OppRobot[i].Position, 300.0f});
         }
     }
     OwnRobot[rw].face(ball.Position);
@@ -107,13 +107,13 @@ void Ai::their_place_ball()
         0, 100, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(lw, true, true);
-    AddCircle({ball.Position, 1010.0f});
-    AddCircle({*targetBallPlacement, 1010.0f});
+    obs_map.addCircle({ball.Position, 1010.0f});
+    obs_map.addCircle({*targetBallPlacement, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seenState != Common::CompletelyOut)
         {
-            AddCircle({OppRobot[i].Position, 300.0f});
+            obs_map.addCircle({OppRobot[i].Position, 300.0f});
         }
     }
     OwnRobot[lw].face(ball.Position);
@@ -124,13 +124,13 @@ void Ai::their_place_ball()
                        0, 100, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(lmf, true, true);
-    AddCircle({ball.Position, 1010.0f});
-    AddCircle({*targetBallPlacement, 1010.0f});
+    obs_map.addCircle({ball.Position, 1010.0f});
+    obs_map.addCircle({*targetBallPlacement, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seenState != Common::CompletelyOut)
         {
-            AddCircle({OppRobot[i].Position, 300.0f});
+            obs_map.addCircle({OppRobot[i].Position, 300.0f});
         }
     }
     OwnRobot[lmf].face(ball.Position);
@@ -141,13 +141,13 @@ void Ai::their_place_ball()
                        0, 100, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(rmf, true, true);
-    AddCircle({ball.Position, 1010.0f});
-    AddCircle({*targetBallPlacement, 1010.0f});
+    obs_map.addCircle({ball.Position, 1010.0f});
+    obs_map.addCircle({*targetBallPlacement, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seenState != Common::CompletelyOut)
         {
-            AddCircle({OppRobot[i].Position, 300.0f});
+            obs_map.addCircle({OppRobot[i].Position, 300.0f});
         }
     }
     OwnRobot[rmf].face(ball.Position);
@@ -158,13 +158,13 @@ void Ai::their_place_ball()
                        0, 100, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(cmf, true, true);
-    AddCircle({ball.Position, 1010.0f});
-    AddCircle({*targetBallPlacement, 1010.0f});
+    obs_map.addCircle({ball.Position, 1010.0f});
+    obs_map.addCircle({*targetBallPlacement, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seenState != Common::CompletelyOut)
         {
-            AddCircle({OppRobot[i].Position, 300.0f});
+            obs_map.addCircle({OppRobot[i].Position, 300.0f});
         }
     }
     OwnRobot[cmf].face(ball.Position);
