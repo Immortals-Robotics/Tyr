@@ -163,6 +163,7 @@ void Robot::MoveByMotion(Common::Vec3 motion)
     // motion.x=0;
 
     Sender::Command &command = lastCMDs[CMDindex];
+    command.vision_id        = vision_id;
     command.motion           = motion;
     command.current_angle    = State.angle;
     command.target_angle     = target.angle;
