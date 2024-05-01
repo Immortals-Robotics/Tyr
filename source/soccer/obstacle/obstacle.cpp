@@ -1,69 +1,7 @@
 #include "obstacle.h"
 
-#define world2mapX(a) std::min(729, std::max(0, ((a / 10) + 364)))
-#define world2mapY(a) std::min(529, std::max(0, ((a / 10) + 264)))
-
 namespace Tyr::Soccer
 {
-/*bool obs_lut[605][405];
-
-void clear_map ()
-{
-        for ( int i = 0 ; i < 605 ; i ++ )
-                for ( int j = 0 ; j < 405 ; j ++ )
-                {
-                        obs_lut[i][j] = false;
-                }
-}
-
-bool IsInObstacle ( Common::Vec2 p )
-{
-        return obs_lut[(int)p.x][(int)p.y];
-}
-
-/*bool collisionDetect ( Common::Vec2 p1 , Common::Vec2 p2 )
-{
-        float coss , sinn;
-        coss = ( p2.x - p1.x ) / Common::Vec2::distance ( p1 , p2 );
-        sinn = ( p2.y - p1.y ) / Common::Vec2::distance ( p1 , p2 );
-
-        Common::Vec2 current = p1;
-
-        while ( Common::Vec2::distance ( current , p2 ) > 9 )
-        {
-                if ( IsInObstacle ( current ) )
-                        return true;
-
-                current.x += coss * 9;
-                current.y += sinn * 9;
-        }
-
-        return false;
-}*/
-
-/*void AddCircle ( int x , int y , int r )
-{
-    x = world2mapX(x);
-    y = world2mapY(y);
-        for ( int i = 0 ; i < 605 ; i ++ )
-                for ( int j = 0 ; j < 405 ; j ++ )
-                {
-                        //obs_lut[i][j] = false;
-                        //if ( (i-x) * (i-x) + (j-y) * (j-y) < r * r )	obs_lut[i][j] = true;
-                }
-}
-
-void AddRectangle ( int x , int y , int w , int h )
-{
-    x = world2mapX(x);
-    y = world2mapY(y);
-    for ( int i = x ; i < x+w ; i ++ )
-        for ( int j = y ; j < y+h ; j ++ )
-        {
-            //obs_lut[i][j] = true;
-        }
-}*/
-
 ObsMap map{};
 
 void clear_map()
@@ -71,12 +9,12 @@ void clear_map()
     map.resetMap();
 }
 
-bool IsInObstacle(Common::Vec2 p)
+bool IsInObstacle(const Common::Vec2 p)
 {
-    return map.IsInObstacle(p.x, p.y);
+    return map.IsInObstacle(p);
 }
 
-bool collisionDetect(Common::Vec2 p1, Common::Vec2 p2)
+bool collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2)
 {
     float coss, sinn;
     coss = (p2.x - p1.x) / p1.distanceTo(p2);

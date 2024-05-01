@@ -2,71 +2,46 @@
 
 namespace Tyr::Soccer
 {
-RectangleObstacle::RectangleObstacle(float _x, float _y, float _w, float _h)
+bool RectangleObstacle::IsInObstacle(const Common::Vec2 t_point)
 {
-    if (_w < 0)
-    {
-        x = _x + _w;
-        w = -_w;
-    }
-    else
-    {
-        x = _x;
-        w = _w;
-    }
-
-    if (_h < 0)
-    {
-        y = _y + _h;
-        h = _h;
-    }
-    else
-    {
-        y = _y;
-        h = _h;
-    }
+    return m_rect.inside(t_point);
 }
 
-bool RectangleObstacle::IsInObstacle(float _x, float _y)
+float RectangleObstacle::NearestDistance(const Common::Vec2 t_point)
 {
-    return (_x < x + w) && (_x > x) && (_y < y + h) && (_y > y);
-}
-
-float RectangleObstacle::NearestDistance(float _x, float _y)
-{
-    if (IsInObstacle(_x, _y))
+    if (IsInObstacle(t_point))
         return -1.0f;
 
-    if ((_x > x) && (_x < x + w))
+    if ((t_point.x > m_rect.min.x) && (t_point.x < m_rect.max.x))
     {
-        return std::min(std::fabs(_y - y), std::fabs(_y - y - h));
+        return std::min(std::fabs(t_point.y - m_rect.min.y), std::fabs(t_point.y - m_rect.max.y));
     }
 
-    if ((_y > y) && (_y < y + h))
+    if ((t_point.y > m_rect.min.y) && (t_point.y < m_rect.max.y))
     {
-        return std::min(std::fabs(_x - x), std::fabs(_x - x - w));
+        return std::min(std::fabs(t_point.x - m_rect.min.x), std::fabs(t_point.x - m_rect.max.x));
     }
 
-    if ((_x < x) && (_y < y))
+    if ((t_point.x < m_rect.min.x) && (t_point.y < m_rect.min.y))
     {
-        return Common::Vec2(_x, _y).distanceTo(Common::Vec2(x, y));
+        return t_point.distanceTo(m_rect.min);
     }
 
-    if ((_x < x) && (_y > y + h))
+    if ((t_point.x < m_rect.min.x) && (t_point.y > m_rect.max.y))
     {
-        return Common::Vec2(_x, _y).distanceTo(Common::Vec2(x, y + h));
+        return t_point.distanceTo(Common::Vec2(m_rect.min.x, m_rect.max.y));
     }
 
-    if ((_x > x + w) && (_y < y))
+    if ((t_point.x > m_rect.max.x) && (t_point.y < m_rect.min.y))
     {
-        return Common::Vec2(_x, _y).distanceTo(Common::Vec2(x + w, y));
+        return t_point.distanceTo(Common::Vec2(m_rect.max.x, m_rect.min.y));
     }
 
-    if ((_x > x + w) && (_y > y + h))
+    if ((t_point.x > m_rect.max.x) && (t_point.y > m_rect.max.y))
     {
-        return Common::Vec2(_x, _y).distanceTo(Common::Vec2(x + w, y + h));
+        return t_point.distanceTo(Common::Vec2(m_rect.max.x, m_rect.max.y));
     }
 
-    return 0;
+    return 0.0f;
 }
 } // namespace Tyr::Soccer

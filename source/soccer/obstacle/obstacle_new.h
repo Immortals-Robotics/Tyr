@@ -7,43 +7,34 @@ class BaseObstacle
 public:
     virtual ~BaseObstacle() = default;
 
-    virtual bool  IsInObstacle(float _x, float _y)    = 0;
-    virtual float NearestDistance(float _x, float _y) = 0;
+    virtual bool  IsInObstacle(Common::Vec2 t_point)    = 0;
+    virtual float NearestDistance(Common::Vec2 t_point) = 0;
 };
 
-class CircleObstacle : public BaseObstacle
+class CircleObstacle final : public BaseObstacle
 {
 private:
-    float x, y;
-    float r;
+    Common::Circle m_circle;
 
 public:
-    CircleObstacle(float _x, float _y, float _r);
-    bool  IsInObstacle(float _x, float _y);
-    float NearestDistance(float _x, float _y);
+    CircleObstacle(const Common::Circle t_circle) : m_circle(t_circle)
+    {}
+
+    bool  IsInObstacle(Common::Vec2 t_point) override;
+    float NearestDistance(Common::Vec2 t_point) override;
 };
 
-class RectangleObstacle : public BaseObstacle
+class RectangleObstacle final : public BaseObstacle
 {
 private:
-    float x, y;
-    float w, h;
+    Common::Rect m_rect;
 
 public:
-    RectangleObstacle(float _x, float _y, float _w, float _h);
-    bool  IsInObstacle(float _x, float _y);
-    float NearestDistance(float _x, float _y);
-};
+    RectangleObstacle(const Common::Rect t_rect) : m_rect(t_rect)
+    {}
 
-class HalfPlaneObstacle : public BaseObstacle
-{
-private:
-    float w, h;
-
-public:
-    HalfPlaneObstacle(float _x, float _y, float _w, float _h);
-    bool  IsInObstacle(float _x, float _y);
-    float NearestDistance(float _x, float _y);
+    bool  IsInObstacle(Common::Vec2 t_point) override;
+    float NearestDistance(Common::Vec2 t_point) override;
 };
 
 class ObsMap
@@ -57,8 +48,8 @@ public:
     void AddCircle(float _x, float _y, float _r);
     void AddRectangle(float _x, float _y, float _w, float _h);
 
-    bool  IsInObstacle(float _x, float _y);
-    float NearestDistance(float _x, float _y);
+    bool  IsInObstacle(Common::Vec2 t_point);
+    float NearestDistance(Common::Vec2 t_point);
 
     void resetMap();
 
