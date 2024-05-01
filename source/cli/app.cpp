@@ -86,8 +86,15 @@ void Application::aiThreadEentry()
         m_vision->ProcessVision();
         m_ai->Process(m_world_state.get());
 
-        // m_grsim->SendData(m_ai->OwnRobot, Setting::kMaxOnFieldTeamRobots,
-        //                     settings->our_color);
+		std::vector<Sender::Command> commands;
+		commands.reserve(Common::Setting::kMaxOnFieldTeamRobots);
+
+		for (int robot_idx = 0; robot_idx <  Common::Setting::kMaxOnFieldTeamRobots; ++robot_idx)
+		{
+			commands.emplace_back(m_ai->OwnRobot[robot_idx].GetCurrentCommand());
+		}
+
+        m_grsim->sendData(commands);
 
         m_sender->sendAll();
 

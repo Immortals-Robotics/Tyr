@@ -64,7 +64,7 @@ void AddRectangle ( int x , int y , int w , int h )
         }
 }*/
 
-ObsMap map(100);
+ObsMap map{};
 
 void clear_map()
 {

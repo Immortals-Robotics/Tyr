@@ -5,6 +5,8 @@ namespace Tyr::Soccer
 class BaseObstacle
 {
 public:
+    virtual ~BaseObstacle() = default;
+
     virtual bool  IsInObstacle(float _x, float _y)    = 0;
     virtual float NearestDistance(float _x, float _y) = 0;
 };
@@ -47,17 +49,13 @@ public:
 class ObsMap
 {
 private:
-    unsigned int obsNum, maxObs;
-
-    BaseObstacle **obstacle;
+    std::vector<std::unique_ptr<BaseObstacle>> m_obstacles;
 
 public:
-    ObsMap(unsigned int _maxObs);
+    ObsMap();
 
     void AddCircle(float _x, float _y, float _r);
     void AddRectangle(float _x, float _y, float _w, float _h);
-    // void AddHalfPlane ( float _x , float _y , float _w , float _h );
-    void AddObstacle(BaseObstacle *obs);
 
     bool  IsInObstacle(float _x, float _y);
     float NearestDistance(float _x, float _y);

@@ -2,45 +2,31 @@
 
 namespace Tyr::Soccer
 {
-ObsMap::ObsMap(unsigned int _maxObs)
-{
-    obstacle = new BaseObstacle *[_maxObs];
-
-    obsNum = 0;
-    maxObs = _maxObs;
-}
+ObsMap::ObsMap()
+{}
 
 void ObsMap::AddCircle(float _x, float _y, float _r)
 {
-    if ((_r > 0) && (obsNum < maxObs))
+    // TODO: verify if this check is needed
+    if (_r > 0)
     {
-        obstacle[obsNum++] = new CircleObstacle(_x, _y, _r);
+        m_obstacles.emplace_back(std::make_unique<CircleObstacle>(_x, _y, _r));
     }
 }
 void ObsMap::AddRectangle(float _x, float _y, float _w, float _h)
 {
-    if (obsNum < maxObs)
-    {
-        obstacle[obsNum++] = new RectangleObstacle(_x, _y, _w, _h);
-    }
-}
-
-void ObsMap::AddObstacle(BaseObstacle *obs)
-{
-    if ((obs) && (obsNum < maxObs))
-    {
-        obstacle[obsNum++] = obs;
-    }
+    m_obstacles.emplace_back(std::make_unique<RectangleObstacle>(_x, _y, _w, _h));
 }
 
 bool ObsMap::IsInObstacle(float _x, float _y)
 {
-    for (int i = 0; i < obsNum; i++)
+    for (int i = 0; i < getObsNum(); i++)
     {
-        if (obstacle[i]->IsInObstacle(_x, _y))
+        if (m_obstacles[i]->IsInObstacle(_x, _y))
             return true;
     }
-    if (std::fabs(_x) > 10000 || std::fabs(_y) > 10000) // If the  values where getting to much (this fixes the errors for now...
+    if (std::fabs(_x) > 10000 ||
+        std::fabs(_y) > 10000) // If the  values where getting to much (this fixes the errors for now...
     {
         return true;
     }
@@ -49,13 +35,11 @@ bool ObsMap::IsInObstacle(float _x, float _y)
 
 float ObsMap::NearestDistance(float _x, float _y)
 {
-    if (obsNum == 0)
-        return INT_MAX;
-    float dis = obstacle[0]->NearestDistance(_x, _y);
+    float dis = std::numeric_limits<float>::max();
     float tmp_dis;
-    for (int i = 0; i < obsNum; i++)
+    for (int i = 0; i < getObsNum(); i++)
     {
-        tmp_dis = obstacle[i]->NearestDistance(_x, _y);
+        tmp_dis = m_obstacles[i]->NearestDistance(_x, _y);
         if (tmp_dis < dis)
             dis = tmp_dis;
         if (dis <= 0)
@@ -67,20 +51,11 @@ float ObsMap::NearestDistance(float _x, float _y)
 
 void ObsMap::resetMap()
 {
-    for (int i = 0; i < obsNum; i++)
-    {
-        delete obstacle[i];
-    }
-
-    free(obstacle);
-
-    obstacle = new BaseObstacle *[maxObs];
-
-    obsNum = 0;
+    m_obstacles.clear();
 }
 
 int ObsMap::getObsNum()
 {
-    return obsNum;
+    return m_obstacles.size();
 }
 } // namespace Tyr::Soccer

@@ -2,6 +2,7 @@ project(${CMAKE_PROJECT_NAME}-sender)
 
 set(HEADER_FILES
 	pch.h
+	command.h
 	grsim.h
 	sender.h
 	protocol/data_lite.h

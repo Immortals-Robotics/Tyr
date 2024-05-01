@@ -1,5 +1,7 @@
 #pragma once
 
+#include "command.h"
+
 namespace Tyr::Sender
 {
 class Grsim
@@ -12,9 +14,6 @@ public:
     Grsim(Common::NetworkAddress address);
     ~Grsim() = default;
 
-// TODO: fix and remove
-#if GRSIM_FIXED
-    void sendData(const Robot *const robots, const int robot_count, bool color);
-#endif
+    void sendData(const std::vector<Command>& commands);
 };
 } // namespace Tyr::Sender

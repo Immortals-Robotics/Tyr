@@ -7,70 +7,54 @@ Grsim::Grsim(Common::NetworkAddress address) : address(address)
     socket = std::make_unique<Common::UdpServer>();
 }
 
-#if GRSIM_FIXED
-void Grsim::SendData(const Robot *const robots, const int robot_count, bool color)
+void Grsim::sendData(const std::vector<Command> &commands)
 {
     Protos::grSim_Packet packet;
-    packet.mutable_commands()->set_isteamyellow(color);
+    packet.mutable_commands()->set_isteamyellow(Common::setting().our_color == Common::TeamColor::Yellow);
     packet.mutable_commands()->set_timestamp(0.0);
 
-    for (int robot_idx = 0; robot_idx < robot_count; ++robot_idx)
+    for (const Command &command : commands)
     {
-        const Robot *const robot = robots + robot_idx;
+        Protos::grSim_Robot_Command *proto_command = packet.mutable_commands()->add_robot_commands();
+        proto_command->set_id(command.vision_id);
 
-        Protos::grSim_Robot_Command *command = packet.mutable_commands()->add_robot_commands();
-        command->set_id(robot->vision_id);
+        proto_command->set_wheelsspeed(false);
 
-        command->set_wheelsspeed(false);
-        /*command->set_wheel1(edtV1->text().toDouble());
-        command->set_wheel2(edtV2->text().toDouble());
-        command->set_wheel3(edtV3->text().toDouble());
-        command->set_wheel4(edtV4->text().toDouble());*/
+        const Common::Vec3 motion = command.motion;
 
-        const int          cmd_idx   = robots[robot_idx].lastCMDs[10].x;
-        const Common::Vec3 motion    = robots[robot_idx].lastCMDs[cmd_idx];
-        float              robot_ang = (90 - robot->State.Angle) * 3.1415 / 180.0;
-        float              new_VelX  = motion.x * cos(robot_ang) - motion.y * sin(robot_ang);
-        float              new_VelY  = motion.x * sin(robot_ang) + motion.y * cos(robot_ang);
+        float robot_ang = (Common::Angle::fromDeg(90.0f) - command.current_angle).rad();
 
-        command->set_veltangent(new_VelY / 20.0);
-        command->set_velnormal(-new_VelX / 20.0);
+        float new_VelX = motion.x * cos(robot_ang) - motion.y * sin(robot_ang);
+        float new_VelY = motion.x * sin(robot_ang) + motion.y * cos(robot_ang);
 
-        float w = robot->target.Angle - robot->State.Angle;
-        while (w > 180)
-        {
-            w -= 360;
-        }
-        while (w < -180)
-        {
-            w += 360;
-        }
+        proto_command->set_veltangent(new_VelY / 20.0);
+        proto_command->set_velnormal(-new_VelX / 20.0);
+
+        float w = (command.target_angle - command.current_angle).deg();
         w /= 10.0f;
 
-        command->set_velangular(w);
-        // command->set_velangular(0);
+        proto_command->set_velangular(w);
 
-        if (robot->shoot > 0)
+        if (command.shoot > 0)
         {
-            command->set_kickspeedx(robot->shoot / 10.f);
-            command->set_kickspeedz(0);
+            proto_command->set_kickspeedx(command.shoot / 10.f);
+            proto_command->set_kickspeedz(0);
         }
-        else if (robot->chip > 0)
+        else if (command.chip > 0)
         {
-            float chip = 0.f; // robot->chip / 25.0f;
-            command->set_kickspeedx(chip * 0.707f);
-            command->set_kickspeedz(chip / 0.707f);
+            float chip = command.chip / 25.0f;
+            proto_command->set_kickspeedx(chip * 0.707f);
+            proto_command->set_kickspeedz(chip / 0.707f);
         }
         else
         {
-            command->set_kickspeedx(.0f);
-            command->set_kickspeedz(.0f);
+            proto_command->set_kickspeedx(.0f);
+            proto_command->set_kickspeedz(.0f);
         }
 
-        command->set_spinner(robot->dribbler);
+        proto_command->set_spinner(command.dribbler);
 
         socket->send(packet, address);
     }
 }
-#endif
 } // namespace Tyr::Sender

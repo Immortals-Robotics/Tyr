@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 Common::Vec2 vdes_ann;
 
 Common::Vec3 Robot::MotionPlan(Common::RobotState state, Common::RobotState target, float speed, bool accurate,
-                               Common::Vec3 *cmd, VelocityProfile *velocityProfile)
+                               VelocityProfile *velocityProfile)
 {
     /*Common::Vec2 max_spd = Common::Vec2 ( 100.0f );
     Common::Vec2 max_dec = Common::Vec2 ( 2.3f );
