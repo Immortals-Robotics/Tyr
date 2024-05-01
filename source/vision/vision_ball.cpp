@@ -20,7 +20,7 @@ void Vision::ProcessBalls(Common::WorldState *state)
     // We're almost done, only Prediction remains undone!
     predictBallForward(state);
 
-    //Common::logDebug("ball pos: {}", state->ball.Position);
+    // Common::logDebug("ball pos: {}", state->ball.Position);
 }
 
 int Vision::ExtractBalls()
@@ -46,19 +46,22 @@ int Vision::MergeBalls(int num)
     int balls_num = 0;
     for (int i = 0; i < num; i++)
     {
+        const Common::Vec2 ball_i{d_ball[i].x(), d_ball[i].y()};
+
         for (int j = i + 1; j < num; j++)
         {
-            if (POWED_DIS(d_ball[i].x(), d_ball[i].y(), d_ball[j].x(), d_ball[j].y()) < MERGE_DISTANCE)
+            const Common::Vec2 ball_j{d_ball[j].x(), d_ball[j].y()};
+
+            if (ball_i.distanceTo(ball_j) < MERGE_DISTANCE)
             {
-                d_ball[i].set_x((d_ball[i].x() + d_ball[j].x()) / (float) 2.0);
-                d_ball[i].set_y((d_ball[i].y() + d_ball[j].y()) / (float) 2.0);
+                const Common::Vec2 ball_merged = (ball_i + ball_j) / 2.0f;
+
+                d_ball[i].set_x(ball_merged.x);
+                d_ball[i].set_y(ball_merged.y);
                 if (d_ball[i].has_z())
                     d_ball[i].set_z((d_ball[i].z() + d_ball[j].z()) / (float) 2.0);
 
-                //                t_capture_buff[i] = (t_capture_buff[i]+t_capture_buff[j]) / (float)2.0;
-
                 d_ball[j] = d_ball[num - 1];
-                //                t_capture_buff[j] = t_capture_buff[num-1];
                 num--;
 
                 j--;
@@ -73,17 +76,21 @@ int Vision::MergeBalls(int num)
 void Vision::FilterBalls(int num, Common::WorldState *state)
 {
     int   id  = 100;
-    float dis = 214748364.0f;
+    float dis = std::numeric_limits<float>::max();
+
+    const Common::Vec2 raw_ball{lastRawBall.x(), lastRawBall.y()};
+
     for (int i = 0; i < num; i++)
     {
-        if (POWED_DIS(d_ball[i].x(), d_ball[i].y(), lastRawBall.x(), lastRawBall.y()) < dis)
+        const Common::Vec2 ball_i{d_ball[i].x(), d_ball[i].y()};
+
+        const float curr_dis = ball_i.distanceTo(raw_ball);
+        if (curr_dis < dis)
         {
-            dis = POWED_DIS(d_ball[i].x(), d_ball[i].y(), lastRawBall.x(), lastRawBall.y());
+            dis = curr_dis;
             id  = i;
         }
     }
-    //	std::cout << d_ball[id].x() <<std::endl
-    //		 << d_ball[id].y() <<std::endl;
 
     if (dis < MAX_BALL_2FRAMES_DISTANCE)
     {

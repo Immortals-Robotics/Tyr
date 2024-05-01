@@ -91,9 +91,13 @@ int Vision::MergeRobots(int num)
     int robots_num = 0;
     for (int i = 0; i < num; i++)
     {
+        const Common::Vec2 robot_i{robot[i].x(), robot[i].y()};
+
         for (int j = i + 1; j < num; j++)
         {
-            if (POWED_DIS(robot[i].x(), robot[i].y(), robot[j].x(), robot[j].y()) < MERGE_DISTANCE)
+            const Common::Vec2 robot_j{robot[j].x(), robot[j].y()};
+
+            if (robot_i.distanceTo(robot_j) < MERGE_DISTANCE)
             {
                 robot[i].set_x((robot[i].x() + robot[j].x()) / (float) 2.0);
                 robot[i].set_y((robot[i].y() + robot[j].y()) / (float) 2.0);
@@ -141,8 +145,8 @@ void Vision::FilterRobots(int num, bool own)
 
                 AngleFilter[own][i].AddData((robot[j].orientation() - rawAngles[own][i]) * 61.0f);
                 rawAngles[own][i] = robot[j].orientation();
-                // if ( std::fabs ( (AngleFilter[own][i].GetCurrent()*180.0f/3.1415f) - robotState[own][i].AngularVelocity )
-                // > 30.0f ) 	AngleFilter[own][i].reset(); else
+                // if ( std::fabs ( (AngleFilter[own][i].GetCurrent()*180.0f/3.1415f) -
+                // robotState[own][i].AngularVelocity ) > 30.0f ) 	AngleFilter[own][i].reset(); else
                 {
                     robotState[own][i].AngularVelocity = Common::Angle::fromRad(AngleFilter[own][i].GetCurrent());
                 }

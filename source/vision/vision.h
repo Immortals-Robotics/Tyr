@@ -10,14 +10,6 @@
 
 #include "kalman/filtered_object.h"
 
-#ifndef INT_MAX
-#define INT_MAX 2147483647 /* maximum (signed) int value */
-#endif
-
-#ifndef POWED_DIS
-#define POWED_DIS(a, b, c, d) (((a - c) * (a - c)) + ((b - d) * (b - d)))
-#endif
-
 #define PREDICT_STEPS 7.0f
 
 #define MAX_BALLS 10
@@ -26,7 +18,7 @@
 #define MAX_ROBOT_NOT_SEEN 200
 #define MAX_ROBOT_SUBSITUTE 60
 
-#define MERGE_DISTANCE 5000
+#define MERGE_DISTANCE 70
 
 #define BALL_BUFFER_FRAMES 30
 
