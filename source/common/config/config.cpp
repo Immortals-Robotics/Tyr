@@ -1,5 +1,5 @@
 #include "config.h"
-
+#include <fstream>
 namespace Tyr::Common
 {
 ConfigReader::ConfigReader(const std::string_view t_file_path)
@@ -17,4 +17,12 @@ void ConfigReader::load()
 
     m_table = std::move(config);
 }
+
+void ConfigReader::save(toml::table t_table)
+{
+    std::ofstream ofs(m_file_path.string());
+    ofs << t_table;
+    ofs.close();
+}
+
 } // namespace Tyr::Common
