@@ -2,7 +2,7 @@
 
 namespace Tyr::Vision
 {
-void VisionModule::ProcessParam(Common::WorldState *state)
+void Vision::ProcessParam(Common::WorldState *state)
 {
     double avg   = 0;
     int    count = 0;

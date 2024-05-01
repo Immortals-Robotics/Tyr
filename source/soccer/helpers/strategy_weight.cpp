@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-int Ai::strategy_weight(void)
+int Ai::strategy_weight()
 {
     if (!playBook)
     {

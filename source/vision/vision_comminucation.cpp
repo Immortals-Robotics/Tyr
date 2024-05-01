@@ -2,13 +2,13 @@
 
 namespace Tyr::Vision
 {
-bool VisionModule::connectToVisionServer(void)
+bool Vision::connectToVisionServer()
 {
     m_visionUDP = std::make_unique<Common::UdpClient>(Common::setting().vision_address);
     return isConnected();
 }
 
-bool VisionModule::recievePacket(void)
+bool Vision::recievePacket()
 {
     if (!isConnected())
         return false;
@@ -27,7 +27,7 @@ bool VisionModule::recievePacket(void)
     return false;
 }
 
-bool VisionModule::isConnected(void)
+bool Vision::isConnected()
 {
     return m_visionUDP != nullptr && m_visionUDP->isConnected();
 }

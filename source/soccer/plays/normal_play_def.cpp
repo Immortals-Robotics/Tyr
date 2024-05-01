@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::NormalPlayDef(void)
+void Ai::NormalPlayDef()
 {
     ManageAttRoles();
 

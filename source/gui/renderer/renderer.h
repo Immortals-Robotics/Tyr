@@ -6,7 +6,7 @@ class Renderer
 {
 public:
     Renderer(Common::Vec2 _wSize, float _upScalingFactor);
-    void init(void);
+    void init();
 
     void drawRect(Common::Rect rect, Color _color, bool _isFilled, float _thickness = 1,
                   unsigned char transparency = 255);
@@ -26,7 +26,7 @@ public:
     void drawRobot(const Protos::SSL_DetectionRobot &robot, Common::TeamColor color);
     void drawBall(const Protos::SSL_DetectionBall &ball);
 
-    void applyShader(void);
+    void applyShader();
 
     RenderTexture visualizaionTexture, shaderVisualizationTexture;
 

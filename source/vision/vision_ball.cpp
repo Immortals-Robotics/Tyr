@@ -4,7 +4,7 @@
 
 namespace Tyr::Vision
 {
-void VisionModule::ProcessBalls(Common::WorldState *state)
+void Vision::ProcessBalls(Common::WorldState *state)
 {
     int balls_num = 0;
 
@@ -23,7 +23,7 @@ void VisionModule::ProcessBalls(Common::WorldState *state)
     //Common::logDebug("ball pos: {}", state->ball.Position);
 }
 
-int VisionModule::ExtractBalls(void)
+int Vision::ExtractBalls()
 {
     int ans = 0;
     for (int i = 0; i < Common::Setting::kCamCount; i++)
@@ -41,7 +41,7 @@ int VisionModule::ExtractBalls(void)
     }
     return ans;
 }
-int VisionModule::MergeBalls(int num)
+int Vision::MergeBalls(int num)
 {
     int balls_num = 0;
     for (int i = 0; i < num; i++)
@@ -70,7 +70,7 @@ int VisionModule::MergeBalls(int num)
     return balls_num;
 }
 
-void VisionModule::FilterBalls(int num, Common::WorldState *state)
+void Vision::FilterBalls(int num, Common::WorldState *state)
 {
     int   id  = 100;
     float dis = 214748364.0f;
@@ -160,7 +160,7 @@ void VisionModule::FilterBalls(int num, Common::WorldState *state)
     }
 }
 
-void VisionModule::predictBallForward(Common::WorldState *state)
+void Vision::predictBallForward(Common::WorldState *state)
 {
     state->ball.Position.x /= (float) 100.0;
     state->ball.Position.y /= (float) 100.0;
@@ -260,7 +260,7 @@ void VisionModule::predictBallForward(Common::WorldState *state)
     //    }
 }
 
-void VisionModule::calculateBallHeight(void)
+void Vision::calculateBallHeight()
 {
     /*const float XO = -1358.2;
     const float YO = 60.93;

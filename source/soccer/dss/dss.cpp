@@ -123,7 +123,7 @@ float Dss::ComputeError(const Common::Vec2 &target, const Common::Vec2 &current)
     return target.distanceTo(current);
 }
 
-void Dss::Reset(void)
+void Dss::Reset()
 {
     for (int robot_idx = 0; robot_idx < Common::Setting::kMaxOnFieldTeamRobots; ++robot_idx)
     {

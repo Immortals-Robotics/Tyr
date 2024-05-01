@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 static int attackerChangeHys = 0;
 
-void Ai::ManageAttRoles(void)
+void Ai::ManageAttRoles()
 {
     if (OwnRobot[attack].State.Position.distanceTo(ball.Position) >
         600) // Check if the current attacker has lost the ball, before switching its role

@@ -21,8 +21,8 @@ private:
     std::string      visionPort;
     NetworkInput     networkNeedsUpdate;
 
-    void DrawTabBar(void);
-    void DrawNetworkTab(void);
+    void DrawTabBar();
+    void DrawNetworkTab();
     void SetNetworkInput(std::string _data, NetworkInput _inputType);
 
     static int HandleVisionIpChange(ImGuiInputTextCallbackData *_data);
@@ -35,6 +35,6 @@ public:
     std::string  GetNetworkParam(NetworkInput _inputType);
     NetworkInput IsNetworkDataUpdated();
     void         UpdateNetworkData();
-    void         Draw(void);
+    void         Draw();
 };
 } // namespace Tyr::Gui

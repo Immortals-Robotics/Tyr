@@ -8,7 +8,7 @@
 
 namespace Tyr::Soccer
 {
-Planner::Planner(void)
+Planner::Planner()
 {
     waypoints        = 0;
     cached_waypoints = 0;
@@ -57,7 +57,7 @@ void Planner::set_field_params(float _w, float _h)
     field_height = _h;
 }
 
-Common::Vec2 Planner::random_state(void)
+Common::Vec2 Planner::random_state()
 {
     // return Common::Vec2 ( ( rnd ( ) * 10000.0 ) - 5000.0 , ( rnd ( ) * 10000.0 ) - 5000.0 );
     return Common::Vec2(((random.get() - 0.5f) * 2.0f * (field_width + 250.0f)),
@@ -229,7 +229,7 @@ Node *Planner::extend(Node *s, Common::Vec2 &target)
     return tree.AddNode(new_state, s);
 }
 
-void Planner::SetWayPoints(void)
+void Planner::SetWayPoints()
 {
     waypoints   = 1;
     Node *n     = tree.NearestNeighbour(final_state);
@@ -248,7 +248,7 @@ void Planner::SetWayPoints(void)
     cache_start = 0;
 }
 
-void Planner::reverse_waypoints(void)
+void Planner::reverse_waypoints()
 {
     Common::Vec2 tmp;
     for (int i = 0; i < waypoints / 2; i++)
@@ -266,19 +266,19 @@ Common::Vec2 Planner::GetWayPoint(unsigned int i)
     return Common::Vec2();
 }
 
-unsigned int Planner::GetWayPointNum(void)
+unsigned int Planner::GetWayPointNum()
 {
     return waypoints;
 }
 
-bool Planner::IsReached(void)
+bool Planner::IsReached()
 {
     if (final_state.distanceTo(tree.NearestNeighbour(final_state)->state) <= acceptable_dis)
         return true;
     return false;
 }
 
-Common::Vec2 Planner::Plan(void)
+Common::Vec2 Planner::Plan()
 {
     // return final_state;
     if (!collisionDetect(init_state, final_state))
@@ -341,7 +341,7 @@ Common::Vec2 Planner::Plan(void)
     return ans;
 }
 
-void Planner::optimize_tree(void)
+void Planner::optimize_tree()
 {
     for (int i = 0; i < GetWayPointNum(); i++)
     {

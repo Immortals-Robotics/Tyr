@@ -65,7 +65,7 @@ float ObsMap::NearestDistance(float _x, float _y)
     return dis;
 }
 
-void ObsMap::resetMap(void)
+void ObsMap::resetMap()
 {
     for (int i = 0; i < obsNum; i++)
     {
@@ -79,7 +79,7 @@ void ObsMap::resetMap(void)
     obsNum = 0;
 }
 
-int ObsMap::getObsNum(void)
+int ObsMap::getObsNum()
 {
     return obsNum;
 }

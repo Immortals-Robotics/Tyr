@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::InitAIPlayBook(void)
+void Ai::InitAIPlayBook()
 {
     AIPlayBook.clear();
 

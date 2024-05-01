@@ -29,11 +29,11 @@ private:
 
 public:
     Referee(Common::WorldState *world_state, Common::RefereeState *referee_state);
-    bool connectToRefBox(void);
-    bool isConnected(void);
-    bool recieve(void);
+    bool connectToRefBox();
+    bool isConnected();
+    bool recieve();
     bool isKicked(Common::Vec2 ballPos);
-    void process(void);
+    void process();
 
     int oppGK;
 };

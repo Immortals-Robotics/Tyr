@@ -14,7 +14,7 @@ std::ofstream outfile("outf.txt");
 std::ofstream delay_data("delay.txt");
 unsigned int  fr_num = 0;
 
-void VisionModule::ProcessRobots(Common::WorldState *state)
+void Vision::ProcessRobots(Common::WorldState *state)
 {
     int robots_num = 0;
 
@@ -52,7 +52,7 @@ void VisionModule::ProcessRobots(Common::WorldState *state)
     // delay_data << fr_num++ << "	" << state->OwnRobot[6].Position.x << "	" << state->OwnRobot[6].Position.y << "	" <<
     // state->lastCMDS[6][cmdIndex].x << "	" << state->lastCMDS[6][cmdIndex].y << std::endl;
 }
-int VisionModule::ExtractBlueRobots(void)
+int Vision::ExtractBlueRobots()
 {
     int ans = 0;
     for (int i = 0; i < Common::Setting::kCamCount; i++)
@@ -69,7 +69,7 @@ int VisionModule::ExtractBlueRobots(void)
     return ans;
 }
 
-int VisionModule::ExtractYellowRobots(void)
+int Vision::ExtractYellowRobots()
 {
     int ans = 0;
     for (int i = 0; i < Common::Setting::kCamCount; i++)
@@ -86,7 +86,7 @@ int VisionModule::ExtractYellowRobots(void)
     return ans;
 }
 
-int VisionModule::MergeRobots(int num)
+int Vision::MergeRobots(int num)
 {
     int robots_num = 0;
     for (int i = 0; i < num; i++)
@@ -109,7 +109,7 @@ int VisionModule::MergeRobots(int num)
     return robots_num;
 }
 
-void VisionModule::FilterRobots(int num, bool own)
+void Vision::FilterRobots(int num, bool own)
 {
     float filtout[2][2];
     float filtpos[2];
@@ -208,7 +208,7 @@ void VisionModule::FilterRobots(int num, bool own)
     }
 }
 
-void VisionModule::predictRobotsForward(Common::WorldState *state)
+void Vision::predictRobotsForward(Common::WorldState *state)
 {
     for (int own = 1; own < 2; own++)
     {
@@ -281,7 +281,7 @@ void VisionModule::predictRobotsForward(Common::WorldState *state)
     // outfile << robotState[0][1].AngularVelocity << std::endl;
 }
 
-void VisionModule::SendStates(Common::WorldState *state)
+void Vision::SendStates(Common::WorldState *state)
 {
     state->ownRobots_num = 0;
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)

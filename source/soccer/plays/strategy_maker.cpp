@@ -59,7 +59,7 @@ static int curr_str_id                                     = -1;
 
 bool recievers_reached = false;
 
-void Ai::strategy_maker(void)
+void Ai::strategy_maker()
 {
     int str_id = int(currentPlayParam);
     if (timer.time() < 0.5)

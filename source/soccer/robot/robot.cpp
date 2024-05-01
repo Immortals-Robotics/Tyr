@@ -51,7 +51,7 @@ float getCalibratedShootPow(int vision_id, float raw_shoot, float coeffs[Common:
     return calib_shoot;
 }
 
-Robot::Robot(void)
+Robot::Robot()
 {
     oldRobot       = false;
     new_comm_ready = false;
@@ -211,7 +211,7 @@ void Robot::MoveByMotion(Common::Vec3 motion)
     }
 }
 
-void Robot::makeSendingDataReady(void)
+void Robot::makeSendingDataReady()
 {
 
     data[0] = this->vision_id;
@@ -288,7 +288,7 @@ void Robot::makeSendingDataReady(void)
     new_comm_ready = true;
 }
 
-Common::Vec3 Robot::GetCurrentMotionCommand(void) const
+Common::Vec3 Robot::GetCurrentMotionCommand() const
 {
     const int motion_idx = static_cast<int>(lastCMDs[10].x);
     return lastCMDs[motion_idx];

@@ -42,7 +42,7 @@ public:
 
     float getDisToPoint(Vec2 p);
 
-    void chapeKon(void);
+    void chapeKon();
 
 private:
     float m_a, m_b, m_coeff, xinter;

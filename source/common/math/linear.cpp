@@ -94,7 +94,7 @@ float Linear::getDisToPoint(Vec2 p)
     return std::fabs(m_b * p.x - p.y + m_a) / sqrt(m_b * m_b + 1.0);
 }
 
-void Linear::chapeKon(void)
+void Linear::chapeKon()
 {
     m_a = -m_a / m_b;
     m_b = 1.0f / m_b;

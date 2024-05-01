@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::kickoff_us_chip(void)
+void Ai::kickoff_us_chip()
 {
     bool canKickBall = bool(currentPlayParam);
     GKHi(gk, true);

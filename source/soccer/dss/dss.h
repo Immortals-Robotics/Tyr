@@ -36,7 +36,7 @@ public:
     Dss(const Robot *const own_robots, const Common::RobotState *const opp_robots, const float robot_r,
         const float cmd_dt, const float max_dec, const float max_dec_opp);
 
-    void Reset(void);
+    void Reset();
 
     Common::Vec2 ComputeSafeMotion(const int robot_num, const Common::Vec2 &motion);
 };
