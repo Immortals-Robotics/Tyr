@@ -72,34 +72,9 @@ void AddCircle(const Common::Circle t_circle)
     map.addCircle(t_circle);
 }
 
-void AddRectangle(float x, float y, float w, float h)
+void AddRectangle(const Common::Rect t_rect)
 {
-    Common::Vec2 start{};
-    Common::Vec2 size{};
 
-    if (w < 0)
-    {
-        start.x = x + w;
-        size.x  = -w;
-    }
-    else
-    {
-        start.x = x;
-        size.x  = w;
-    }
-
-    if (h < 0)
-    {
-        start.y = y + h;
-        // TODO: shouldn't this be -h?
-        size.y = h;
-    }
-    else
-    {
-        start.y = y;
-        size.y  = h;
-    }
-
-    map.addRectangle(Common::Rect{start, start + size});
+    map.addRectangle(t_rect);
 }
 } // namespace Tyr::Soccer

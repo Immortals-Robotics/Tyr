@@ -60,18 +60,24 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
 
     if (ourPenalty)
     {
-        AddRectangle(side * (field_width + penaltyAreaExtensionBehindGoal),
-                     -(penalty_area_half_width + current_robot_radius),
-                     -side * (penaltyAreaExtensionBehindGoal + current_robot_radius + penalty_area_r),
-                     penalty_area_width + 2 * current_robot_radius);
+        const Common::Vec2 start{side * (field_width + penaltyAreaExtensionBehindGoal),
+                                 -(penalty_area_half_width + current_robot_radius)};
+
+        const float w = -side * (penaltyAreaExtensionBehindGoal + current_robot_radius + penalty_area_r);
+        const float h = penalty_area_width + 2 * current_robot_radius;
+
+        AddRectangle({start, w, h});
     }
 
     if (oppPenalty)
     {
-        AddRectangle(-side * (field_width + penaltyAreaExtensionBehindGoal),
-                     -(penalty_area_half_width + current_robot_radius),
-                     side * (penaltyAreaExtensionBehindGoal + current_robot_radius + penalty_area_r),
-                     penalty_area_width + 2 * current_robot_radius);
+        const Common::Vec2 start{-side * (field_width + penaltyAreaExtensionBehindGoal),
+                                 -(penalty_area_half_width + current_robot_radius)};
+
+        const float w = side * (penaltyAreaExtensionBehindGoal + current_robot_radius + penalty_area_r);
+        const float h = penalty_area_width + 2 * current_robot_radius;
+
+        AddRectangle({start, w, h});
     }
 
     if (oppPenaltyBig)
@@ -80,12 +86,13 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
         const float big_penalty_area_w      = penalty_area_width + bigPenaltyAddition;
         const float penalty_area_half_width = big_penalty_area_w / 2.0f;
 
-        AddRectangle(-side * (field_width + penaltyAreaExtensionBehindGoal),
-                     -(penalty_area_half_width + current_robot_radius),
-                     side * (penaltyAreaExtensionBehindGoal + current_robot_radius + big_penalty_area_r),
-                     big_penalty_area_w + 2 * current_robot_radius);
-        //		Common::debug().drawRect( Common::Vec2(-side*(field_width+185.0f) , -penalty_circle_center_y - 200) ,
-        // side*(385.0f+big_penalty_area_r) , penalty_area_width + 400,Purple );
+        const Common::Vec2 start{-side * (field_width + penaltyAreaExtensionBehindGoal),
+                                 -(penalty_area_half_width + current_robot_radius)};
+
+        const float w = side * (penaltyAreaExtensionBehindGoal + current_robot_radius + big_penalty_area_r);
+        const float h = big_penalty_area_w + 2 * current_robot_radius;
+
+        AddRectangle({start, w, h});
     }
 
     // avoid the line between the ball and the placement point
@@ -110,7 +117,12 @@ void Ai::ERRTSetGkClearObstacles(int robot_num)
     // our penalty area
     static constexpr float area_extension_size     = 200.0f;
     const float            penalty_area_half_width = penalty_area_width / 2.0f;
-    AddRectangle(side * field_width, -(penalty_area_half_width + area_extension_size),
-                 -side * (area_extension_size + penalty_area_r), penalty_area_width + 2 * area_extension_size);
+
+    const Common::Vec2 start{side * field_width, -(penalty_area_half_width + area_extension_size)};
+
+    const float w = -side * (area_extension_size + penalty_area_r);
+    const float h = penalty_area_width + 2 * area_extension_size;
+
+    AddRectangle({start, w, h});
 }
 } // namespace Tyr::Soccer
