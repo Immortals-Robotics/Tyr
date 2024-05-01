@@ -43,6 +43,8 @@ bool Application::initialize()
         return false;
     }
 
+    m_strategy_udp = std::make_unique<Common::UdpClient>(Common::setting().strategy_address);
+
     m_sender = std::make_unique<Sender::Sender>();
 
     m_ai = std::make_unique<Soccer::Ai>(m_world_state.get(), m_referee_state.get(), m_sender.get());
@@ -112,31 +114,31 @@ void Application::refereeThreadEentry()
 
 void Application::strategyThreadEentry()
 {
-    std::shared_ptr<Common::UdpClient> strategyUDP =
-        std::make_shared<Common::UdpClient>(Common::setting().strategy_address);
-
     while ((!m_exited) && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
+        auto received_strategy = m_strategy_udp->receiveRaw();
 
-        auto                 receivedStrategy = strategyUDP->receiveRaw();
-        const std::string    strategySrcAdd   = strategyUDP->getLastReceiveEndpoint().address().to_string();
-        const unsigned short strategySrcPort  = strategyUDP->getLastReceiveEndpoint().port();
-        if (receivedStrategy.size() > 11)
+        if (received_strategy.size() > 11)
         {
+            const auto receive_endpoint = m_strategy_udp->getLastReceiveEndpoint();
             Common::logInfo("Received \"strategy.ims\" with size: {} KB, from {} on port {}",
-                            float(receivedStrategy.size()) / 1000.0f, strategySrcAdd, strategySrcPort);
+                            float(received_strategy.size()) / 1000.0f, receive_endpoint.address().to_string(),
+                            receive_endpoint.port());
+
             m_lock.lock();
-            m_ai->read_playBook_str(receivedStrategy.data(), receivedStrategy.size());
+            m_ai->read_playBook_str(received_strategy);
             m_lock.unlock();
-            std::string strategy_path(DATA_DIR);
-            strategy_path.append("/strategy.ims");
-            std::ofstream strategyFile(strategy_path.c_str(), std::ios::out | std::ios::binary);
-            strategyFile.write(receivedStrategy.data(), receivedStrategy.size());
+
+            const std::filesystem::path strategy_path =
+                std::filesystem::path{DATA_DIR} / std::filesystem::path{"strategy.ims"};
+
+            std::ofstream strategyFile(strategy_path, std::ios::out | std::ios::binary);
+            strategyFile.write(received_strategy.data(), received_strategy.size());
             strategyFile.close();
         }
         else
         {
-            Common::logWarning("Invalid \"strategy.ims\" received with size: {}", receivedStrategy.size());
+            Common::logWarning("Invalid \"strategy.ims\" received with size: {}", received_strategy.size());
         }
     }
 }

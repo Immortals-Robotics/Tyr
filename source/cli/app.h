@@ -33,5 +33,7 @@ private:
     std::unique_ptr<Sender::Sender> m_sender;
     std::unique_ptr<Soccer::Ai>     m_ai;
     std::unique_ptr<Sender::Grsim>  m_grsim;
+
+	std::unique_ptr<Common::UdpClient> m_strategy_udp;
 };
 } // namespace Tyr::Cli
