@@ -58,7 +58,7 @@ Robot::Robot()
 
     CMDindex = 0;
     for (int i = 0; i < 10; i++)
-        lastCMDs[i] = Common::Vec3();
+        lastCMDs[i] = Sender::Command();
 
     State.velocity.x = 0.0f;
     State.velocity.y = 0.0f;
@@ -148,7 +148,7 @@ Common::Vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityPro
     if (speed > 100)
         speed = 100;
 
-    Common::Vec3 motion = MotionPlan(State, target, speed, accurate, lastCMDs, velocityProfile);
+    Common::Vec3 motion = MotionPlan(State, target, speed, accurate, velocityProfile);
 
     target.velocity.x = 0;
     target.velocity.y = 0;
@@ -161,9 +161,13 @@ void Robot::MoveByMotion(Common::Vec3 motion)
     motion.x = std::min(100.0f, std::max(-100.0f, motion.x));
     motion.y = std::min(100.0f, std::max(-100.0f, motion.y));
     // motion.x=0;
-    lastCMDs[CMDindex] = motion;
-    lastCMDs[10].x     = CMDindex;
-    lastCMDs[10].y     = PREDICT_CMDS;
+
+    Sender::Command &command = lastCMDs[CMDindex];
+    command.motion           = motion;
+    command.current_angle    = State.angle;
+    command.target_angle     = target.angle;
+
+    last_cmd_idx = CMDindex;
 
     CMDindex++;
     if (CMDindex > PREDICT_CMDS - 1)
@@ -288,9 +292,8 @@ void Robot::makeSendingDataReady()
     new_comm_ready = true;
 }
 
-Common::Vec3 Robot::GetCurrentMotionCommand() const
+Sender::Command Robot::GetCurrentCommand() const
 {
-    const int motion_idx = static_cast<int>(lastCMDs[10].x);
-    return lastCMDs[motion_idx];
+    return lastCMDs[last_cmd_idx];
 }
 } // namespace Tyr::Soccer

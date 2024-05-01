@@ -30,7 +30,7 @@ void Ai::internalFinalize(Common::WorldState *worldState)
             continue;
         for (int j = 0; j < 11; j++) // kheyli tof malie...
         {
-            worldState->lastCMDS[OwnRobot[i].State.vision_id][j] = OwnRobot[i].lastCMDs[j];
+            worldState->lastCMDS[OwnRobot[i].State.vision_id][j] = OwnRobot[i].lastCMDs[j].motion;
         }
     }
 }
