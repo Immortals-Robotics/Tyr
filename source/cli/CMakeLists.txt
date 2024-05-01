@@ -2,10 +2,12 @@ project(${CMAKE_PROJECT_NAME}-cli)
 
 set(HEADER_FILES
 	pch.h
+	app.h
 )
 
 set(SOURCE_FILES
 	main.cpp
+	app.cpp
 )
 
 add_executable(${PROJECT_NAME}

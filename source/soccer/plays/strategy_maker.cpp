@@ -11,26 +11,26 @@ bool Ai::read_playBook(const char *fileName)
 
     // get length of file:
     file.seekg(0, std::ios::end);
-    int length = file.tellg();
+    size_t length = file.tellg();
     std::cout << length << " ";
     file.seekg(0, std::ios::beg);
 
     // allocate memory:
-    char *buffer = new char[length];
+    std::unique_ptr<char[]> buffer = std::make_unique<char[]>(length);
 
     // read data as a block:
-    file.read(buffer, length);
+    file.read(buffer.get(), length);
     file.close();
 
-    return read_playBook_str(buffer, length);
+    return read_playBook_str({buffer.get(), length});
 }
 
-bool Ai::read_playBook_str(char *buffer, int length)
+bool Ai::read_playBook_str(std::span<char> buffer)
 {
     if (!playBook)
         playBook = new Protos::Immortals::PlayBook();
 
-    if (!playBook->ParseFromArray(buffer, length))
+    if (!playBook->ParseFromArray(buffer.data(), buffer.size()))
     {
         delete playBook;
         playBook = NULL;
