@@ -21,14 +21,14 @@ enum class TeamSide
     Right = 1,
 };
 
-struct NetworkAddress final : public IConfig
+struct NetworkAddress
 {
     NetworkAddress() = default;
 
     NetworkAddress(const std::string_view ip, const unsigned short port) : ip(ip), port(port)
     {}
 
-    void load(toml::node_view<const toml::node> t_node) override
+    void load(toml::node_view<const toml::node> t_node)
     {
         ip   = t_node["ip"].value_or(ip);
         port = t_node["port"].value_or(port);
@@ -58,14 +58,18 @@ private:
     Setting()  = default;
     ~Setting() = default;
 
-    void load(toml::node_view<const toml::node> t_node) override;
-
+    void load(toml::table t_table) override;
+    toml::table m_config_table;
     friend struct Services;
 
 public:
     Setting(const Setting &)            = delete;
     Setting &operator=(const Setting &) = delete;
+    
+    template<typename T>
+    void updateSetting(const std::string& _settings_key,const T& _new_value);
 
+    toml::table getConfigTable(void);
     static constexpr size_t kMaxUdpPacketSize = 1024 * 16; // TODO what should the size be really?
 
     // The variety of standard patterns that we can have is 16
