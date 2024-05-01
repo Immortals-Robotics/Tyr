@@ -16,8 +16,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: C/C++ Linter
         uses: cpp-linter/cpp-linter-action@v2
