@@ -8,7 +8,6 @@ pkg_check_modules(tomlplusplus REQUIRED IMPORTED_TARGET tomlplusplus)
 
 set(HEADER_FILES
 	pch.h
-	pch_private.h
 	services.h
 	setting.h
 	config/config.h
@@ -79,5 +78,4 @@ get_target_property(PROTOS_PCHS ${CMAKE_PROJECT_NAME}-protos INTERFACE_PRECOMPIL
 target_precompile_headers(${PROJECT_NAME}
 	PUBLIC ${PROTOS_PCHS}
 	PUBLIC pch.h
-	PRIVATE pch_private.h
 	INTERFACE ${HEADER_FILES})
