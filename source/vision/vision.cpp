@@ -4,7 +4,7 @@ namespace Tyr::Vision
 {
 Vision::Vision(Common::WorldState *_State)
 {
-    playState = _State;
+    m_state = _State;
 
     // Initializing the settings:
     our_color = Common::setting().our_color == Common::TeamColor::Yellow ? COLOR_YELLOW : COLOR_BLUE;
@@ -12,11 +12,6 @@ Vision::Vision(Common::WorldState *_State)
 
     for (int i = 0; i < Common::Setting::kCamCount; i++)
         packet_recieved[i] = false;
-
-    for (int i = 0; i < BALL_BUFFER_FRAMES; i++)
-    {
-        ball_pos_buff[i] = Common::Vec2(0.0, 0.0);
-    }
 
     lastRawBall.set_x(0.0f);
     lastRawBall.set_y(0.0f);
@@ -78,9 +73,9 @@ void Vision::recieveAllCameras()
 
 void Vision::ProcessVision()
 {
-    ProcessBalls(this->playState);
-    ProcessRobots(this->playState);
-    ProcessParam(this->playState);
+    ProcessBalls();
+    ProcessRobots();
+    ProcessParam();
 
     for (int i = 0; i < Common::Setting::kCamCount; i++)
         packet_recieved[i] = false;

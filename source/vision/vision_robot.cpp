@@ -14,7 +14,7 @@ std::ofstream outfile("outf.txt");
 std::ofstream delay_data("delay.txt");
 unsigned int  fr_num = 0;
 
-void Vision::ProcessRobots(Common::WorldState *state)
+void Vision::ProcessRobots()
 {
     int robots_num = 0;
 
@@ -39,18 +39,18 @@ void Vision::ProcessRobots(Common::WorldState *state)
     FilterRobots(robots_num, !(this->our_color));
 
     // We're almost done, only Prediction remains undone!
-    predictRobotsForward(state);
-    // RunANN(state);
-    // PredictWithANN(state);
+    predictRobotsForward();
+    // RunANN(m_state);
+    // PredictWithANN(m_state);
     // TrainANN(0.1f);
-    // RunANN(state);
+    // RunANN(m_state);
 
     // Now we send Robots States to the AI!
-    SendStates(state);
+    SendStates();
 
-    // int cmdIndex = state->lastCMDS[6][10].x;
-    // delay_data << fr_num++ << "	" << state->OwnRobot[6].Position.x << "	" << state->OwnRobot[6].Position.y << "	" <<
-    // state->lastCMDS[6][cmdIndex].x << "	" << state->lastCMDS[6][cmdIndex].y << std::endl;
+    // int cmdIndex = m_state->lastCMDS[6][10].x;
+    // delay_data << fr_num++ << "	" << m_state->OwnRobot[6].Position.x << "	" << m_state->OwnRobot[6].Position.y <<
+    // "	" << m_state->lastCMDS[6][cmdIndex].x << "	" << m_state->lastCMDS[6][cmdIndex].y << std::endl;
 }
 int Vision::ExtractBlueRobots()
 {
@@ -212,7 +212,7 @@ void Vision::FilterRobots(int num, bool own)
     }
 }
 
-void Vision::predictRobotsForward(Common::WorldState *state)
+void Vision::predictRobotsForward()
 {
     for (int own = 1; own < 2; own++)
     {
@@ -267,32 +267,32 @@ void Vision::predictRobotsForward(Common::WorldState *state)
         if (robotState[0][i].seenState != Common::Seen)
         {
             robotState[0][i].Position.x =
-                robotState[0][i].Position.x + state->lastCMDS[i][(int) state->lastCMDS[i][10].x].x / 1.2f;
+                robotState[0][i].Position.x + m_state->lastCMDS[i][(int) m_state->lastCMDS[i][10].x].x / 1.2f;
             robotState[0][i].Position.y =
-                robotState[0][i].Position.y + state->lastCMDS[i][(int) state->lastCMDS[i][10].x].y / 1.2f;
+                robotState[0][i].Position.y + m_state->lastCMDS[i][(int) m_state->lastCMDS[i][10].x].y / 1.2f;
         }
         else
         {
             for (int j = 0; j < 10; j++)
             {
-                robotState[0][i].Position.x = robotState[0][i].Position.x + state->lastCMDS[i][j].x / 1.4f;
-                robotState[0][i].Position.y = robotState[0][i].Position.y + state->lastCMDS[i][j].y / 1.4f;
+                robotState[0][i].Position.x = robotState[0][i].Position.x + m_state->lastCMDS[i][j].x / 1.4f;
+                robotState[0][i].Position.y = robotState[0][i].Position.y + m_state->lastCMDS[i][j].y / 1.4f;
                 // if (( i == 3 ) )
-                //	robotState[0][i].Angle = robotState[0][i].Angle - state -> lastCMDS[i][j].Z * 0.04f;
+                //	robotState[0][i].Angle = robotState[0][i].Angle - m_state -> lastCMDS[i][j].Z * 0.04f;
             }
         }
     }
     // outfile << robotState[0][1].AngularVelocity << std::endl;
 }
 
-void Vision::SendStates(Common::WorldState *state)
+void Vision::SendStates()
 {
-    state->ownRobots_num = 0;
+    m_state->ownRobots_num = 0;
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         robotState[0][i].vision_id = i;
 
-        state->ownRobots_num++;
+        m_state->ownRobots_num++;
         if (robot_not_seen[0][i] == 0)
         {
             robotState[0][i].seenState = Common::Seen;
@@ -304,7 +304,7 @@ void Vision::SendStates(Common::WorldState *state)
         else
         {
             robotState[0][i].seenState = Common::CompletelyOut;
-            state->ownRobots_num--;
+            m_state->ownRobots_num--;
         }
 
         if (robot_not_seen[0][i] < MAX_ROBOT_SUBSITUTE)
@@ -316,15 +316,15 @@ void Vision::SendStates(Common::WorldState *state)
             robotState[0][i].OutForSubsitute = true;
         }
 
-        state->OwnRobot[i] = robotState[0][i];
+        m_state->OwnRobot[i] = robotState[0][i];
     }
 
-    state->oppRobots_num = 0;
+    m_state->oppRobots_num = 0;
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         robotState[1][i].vision_id = i;
 
-        state->oppRobots_num++;
+        m_state->oppRobots_num++;
         if (robot_not_seen[1][i] == 0)
         {
             robotState[1][i].seenState = Common::Seen;
@@ -336,10 +336,10 @@ void Vision::SendStates(Common::WorldState *state)
         else
         {
             robotState[1][i].seenState = Common::CompletelyOut;
-            state->oppRobots_num--;
+            m_state->oppRobots_num--;
         }
 
-        state->OppRobot[i] = robotState[1][i];
+        m_state->OppRobot[i] = robotState[1][i];
     }
 }
 } // namespace Tyr::Vision

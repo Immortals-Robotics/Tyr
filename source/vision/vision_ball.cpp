@@ -4,7 +4,7 @@
 
 namespace Tyr::Vision
 {
-void Vision::ProcessBalls(Common::WorldState *state)
+void Vision::ProcessBalls()
 {
     int balls_num = 0;
 
@@ -15,12 +15,12 @@ void Vision::ProcessBalls(Common::WorldState *state)
     balls_num = MergeBalls(balls_num);
 
     // The most important part, The Kalman Filter!
-    FilterBalls(balls_num, state);
+    FilterBalls(balls_num);
 
     // We're almost done, only Prediction remains undone!
-    predictBallForward(state);
+    predictBallForward();
 
-    // Common::logDebug("ball pos: {}", state->ball.Position);
+    // Common::logDebug("ball pos: {}", m_state->ball.Position);
 }
 
 int Vision::ExtractBalls()
@@ -73,7 +73,7 @@ int Vision::MergeBalls(int num)
     return balls_num;
 }
 
-void Vision::FilterBalls(int num, Common::WorldState *state)
+void Vision::FilterBalls(int num)
 {
     int   id  = 100;
     float dis = std::numeric_limits<float>::max();
@@ -105,14 +105,14 @@ void Vision::FilterBalls(int num, Common::WorldState *state)
 
         ball_kalman.updatePosition(filtpos, filtout);
 
-        state->ball.Position.x = filtout[0][0];
-        state->ball.Position.y = filtout[1][0];
-        state->ball.velocity.x = filtout[0][1];
-        state->ball.velocity.y = filtout[1][1];
+        m_state->ball.Position.x = filtout[0][0];
+        m_state->ball.Position.y = filtout[1][0];
+        m_state->ball.velocity.x = filtout[0][1];
+        m_state->ball.velocity.y = filtout[1][1];
 
         ball_not_seen         = 0;
-        state->has_ball       = true;
-        state->ball.seenState = Common::Seen;
+        m_state->has_ball       = true;
+        m_state->ball.seenState = Common::Seen;
     }
 
     else
@@ -130,63 +130,63 @@ void Vision::FilterBalls(int num, Common::WorldState *state)
 
                 ball_kalman.updatePosition(filtpos, filtout);
 
-                state->ball.Position.x = filtout[0][0];
-                state->ball.Position.y = filtout[1][0];
-                state->ball.velocity.x = filtout[0][1];
-                state->ball.velocity.y = filtout[1][1];
+                m_state->ball.Position.x = filtout[0][0];
+                m_state->ball.Position.y = filtout[1][0];
+                m_state->ball.velocity.x = filtout[0][1];
+                m_state->ball.velocity.y = filtout[1][1];
 
                 ball_not_seen         = 0;
-                state->has_ball       = true;
-                state->ball.seenState = Common::Seen;
+                m_state->has_ball       = true;
+                m_state->ball.seenState = Common::Seen;
             }
             else
             {
-                state->ball.velocity.x = 0;
-                state->ball.velocity.y = 0;
+                m_state->ball.velocity.x = 0;
+                m_state->ball.velocity.y = 0;
 
-                state->ball.Position.x /= (float) 10.0;
-                state->ball.Position.y /= (float) 10.0;
+                m_state->ball.Position.x /= (float) 10.0;
+                m_state->ball.Position.y /= (float) 10.0;
 
                 lastRawBall.set_x(0.0f);
                 lastRawBall.set_y(0.0f);
 
-                state->has_ball       = false;
-                state->ball.seenState = Common::CompletelyOut;
+                m_state->has_ball       = false;
+                m_state->ball.seenState = Common::CompletelyOut;
             }
         }
         else
         {
-            state->ball.velocity.x /= (float) 10.0;
-            state->ball.velocity.y /= (float) 10.0;
+            m_state->ball.velocity.x /= (float) 10.0;
+            m_state->ball.velocity.y /= (float) 10.0;
 
-            state->ball.Position.x /= (float) 10.0;
-            state->ball.Position.y /= (float) 10.0;
+            m_state->ball.Position.x /= (float) 10.0;
+            m_state->ball.Position.y /= (float) 10.0;
 
-            state->ball.seenState = Common::TemprolilyOut;
+            m_state->ball.seenState = Common::TemprolilyOut;
         }
     }
 }
 
-void Vision::predictBallForward(Common::WorldState *state)
+void Vision::predictBallForward()
 {
-    state->ball.Position.x /= (float) 100.0;
-    state->ball.Position.y /= (float) 100.0;
-    state->ball.velocity.x /= (float) 100.0;
-    state->ball.velocity.y /= (float) 100.0;
+    m_state->ball.Position.x /= (float) 100.0;
+    m_state->ball.Position.y /= (float) 100.0;
+    m_state->ball.velocity.x /= (float) 100.0;
+    m_state->ball.velocity.y /= (float) 100.0;
     float k          = 0.25f; // velocity derate every sec(units (m/s)/s)
     float frame_rate = 61.0f;
     float tsample    = (float) 1.0f / (float) frame_rate;
 
-    float vx_vision = state->ball.velocity.x;
-    float vy_vision = state->ball.velocity.y;
+    float vx_vision = m_state->ball.velocity.x;
+    float vy_vision = m_state->ball.velocity.y;
 
-    float xpos_vision = state->ball.Position.x;
-    float ypos_vision = state->ball.Position.y;
+    float xpos_vision = m_state->ball.Position.x;
+    float ypos_vision = m_state->ball.Position.y;
 
     float vball_vision = float(sqrt(vx_vision * vx_vision + vy_vision * vy_vision));
 
     float t;
-    if (state->ball.seenState == Common::TemprolilyOut)
+    if (m_state->ball.seenState == Common::TemprolilyOut)
         t = tsample;
     else
         t = PREDICT_STEPS * tsample;
@@ -213,21 +213,21 @@ void Vision::predictBallForward(Common::WorldState *state)
 
     if (vball_vision != 0)
     {
-        state->ball.velocity.x = vball_pred * (vx_vision) / vball_vision;
-        state->ball.velocity.y = vball_pred * (vy_vision) / vball_vision;
-        state->ball.Position.x = (xpos_vision + dist * (vx_vision) / vball_vision);
-        state->ball.Position.y = (ypos_vision + dist * (vy_vision) / vball_vision);
+        m_state->ball.velocity.x = vball_pred * (vx_vision) / vball_vision;
+        m_state->ball.velocity.y = vball_pred * (vy_vision) / vball_vision;
+        m_state->ball.Position.x = (xpos_vision + dist * (vx_vision) / vball_vision);
+        m_state->ball.Position.y = (ypos_vision + dist * (vy_vision) / vball_vision);
     }
 
-    state->ball.velocity.x *= (float) 1000.0;
-    state->ball.velocity.y *= (float) 1000.0;
-    state->ball.Position.x *= (float) 1000.0;
-    state->ball.Position.y *= (float) 1000.0;
+    m_state->ball.velocity.x *= (float) 1000.0;
+    m_state->ball.velocity.y *= (float) 1000.0;
+    m_state->ball.Position.x *= (float) 1000.0;
+    m_state->ball.Position.y *= (float) 1000.0;
 
     //    static int CNT = 0;
     //    CNT++;
     //    if(CNT%20 == 0) {
-    //        ball_dir_buff.push_back(state->ball.Position);
+    //        ball_dir_buff.push_back(m_state->ball.Position);
     //        CNT = 0;
     //    }
     //
@@ -246,36 +246,25 @@ void Vision::predictBallForward(Common::WorldState *state)
     //        while (delete_until_here != ball_dir_buff.begin())
     //            ball_dir_buff.pop_front();
     //		if(ball_dir_buff.size() >=2)
-    //        	state->ball.path_dir = ( ball_dir_buff.back() - ball_dir_buff.front());
+    //        	m_state->ball.path_dir = ( ball_dir_buff.back() - ball_dir_buff.front());
     //    }
 
-    //    float tempAngdelta = NormalizeAngle(Angle(state->ball.path_dir) - state -> ball.velocity.direction);
+    //    float tempAngdelta = NormalizeAngle(Angle(m_state->ball.path_dir) - m_state -> ball.velocity.direction);
     //    if(tempAngdelta != tempAngdelta)//tempAngdelta is NaN (Don't erase it)
     //        tempAngdelta = 0.0;
     //    if(std::fabs(tempAngdelta) > 15){
     //        std::cout<<"NEW ANGLE____________"<<tempAngdelta<<std::endl;
     //    }
     //
-    //    if(state -> ball.velocity.length > 10 && state -> ball.seenState == Common::Seen && std::fabs(tempAngdelta) <=
+    //    if(m_state -> ball.velocity.length > 10 && m_state -> ball.seenState == Common::Seen && std::fabs(tempAngdelta) <=
     //    15) {
-    //        state->ball.path_dir = (ball_dir_buff.front() - ball_dir_buff.back());
+    //        m_state->ball.path_dir = (ball_dir_buff.front() - ball_dir_buff.back());
     //        std::cout<<"we got here"<<std::endl;
     //
-    //    }else if(state -> ball.seenState != TemprolilyOut){
-    //        state->ball.First_Pos_when_shooted = state->ball.Position;
+    //    }else if(m_state -> ball.seenState != TemprolilyOut){
+    //        m_state->ball.First_Pos_when_shooted = m_state->ball.Position;
     //        std::cout<<"SEE: "<<std::fabs(tempAngdelta)<<std::endl;
     //    }
 }
 
-void Vision::calculateBallHeight()
-{
-    /*const float XO = -1358.2;
-    const float YO = 60.93;
-    float y0,x0,yp,xp,ya,xa,slopeAO,slopeL;
-    y0 = ballBufferY[0];
-    x0 = ballBufferX[0];*/
-
-    // ballParabolic.calculate ( BALL_BUFFER_FRAMES , ballBufferY , ballBufferX );
-    // std::cout << (int)ballParabolic.get_a() << std::endl;
-}
 } // namespace Tyr::Vision

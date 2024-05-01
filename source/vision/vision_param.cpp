@@ -2,7 +2,7 @@
 
 namespace Tyr::Vision
 {
-void Vision::ProcessParam(Common::WorldState *state)
+void Vision::ProcessParam()
 {
     double avg   = 0;
     int    count = 0;
@@ -16,7 +16,7 @@ void Vision::ProcessParam(Common::WorldState *state)
     }
 
     avg /= count;
-    state->delta_t_capture = avg - state->t_capture;
-    state->t_capture       = avg;
+    m_state->delta_t_capture = avg - m_state->t_capture;
+    m_state->t_capture       = avg;
 }
 } // namespace Tyr::Vision

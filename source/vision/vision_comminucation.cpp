@@ -4,7 +4,7 @@ namespace Tyr::Vision
 {
 bool Vision::connectToVisionServer()
 {
-    m_visionUDP = std::make_unique<Common::UdpClient>(Common::setting().vision_address);
+    m_udp = std::make_unique<Common::UdpClient>(Common::setting().vision_address);
     return isConnected();
 }
 
@@ -13,7 +13,7 @@ bool Vision::recievePacket()
     if (!isConnected())
         return false;
 
-    if (m_visionUDP->receive(&packet))
+    if (m_udp->receive(&packet))
     {
         if (packet.has_detection())
         {
@@ -29,6 +29,6 @@ bool Vision::recievePacket()
 
 bool Vision::isConnected()
 {
-    return m_visionUDP != nullptr && m_visionUDP->isConnected();
+    return m_udp != nullptr && m_udp->isConnected();
 }
 } // namespace Tyr::Vision

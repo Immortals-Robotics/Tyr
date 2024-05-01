@@ -20,8 +20,6 @@
 
 #define MERGE_DISTANCE 70
 
-#define BALL_BUFFER_FRAMES 30
-
 namespace Tyr::Vision
 {
 class Vision
@@ -36,38 +34,32 @@ public:
     void ProcessVision();
     bool isConnected();
 
-    void ProcessRobots(Common::WorldState *);
+private:
+    void ProcessRobots();
     int  ExtractBlueRobots();
     int  ExtractYellowRobots();
     int  MergeRobots(int num);
     void FilterRobots(int num, bool own);
-    void predictRobotsForward(Common::WorldState *);
-    void SendStates(Common::WorldState *);
+    void predictRobotsForward();
+    void SendStates();
 
-    void ProcessBalls(Common::WorldState *);
+    void ProcessBalls();
     int  ExtractBalls();
     int  MergeBalls(int num);
-    void FilterBalls(int num, Common::WorldState *);
-    void predictBallForward(Common::WorldState *);
-    void calculateBallHeight();
+    void FilterBalls(int num);
+    void predictBallForward();
 
-    void ProcessParam(Common::WorldState *);
+    void ProcessParam();
 
 private:
     bool our_color;
     bool our_side;
 
-    std::unique_ptr<Common::UdpClient> m_visionUDP;
-    std::unique_ptr<Common::UdpClient> m_GUIUDP;
+    std::unique_ptr<Common::UdpClient> m_udp;
 
-    Common::WorldState *playState;
+    Common::WorldState *m_state;
 
     bool   packet_recieved[Common::Setting::kCamCount];
-    Common::Vec2 ball_pos_buff[BALL_BUFFER_FRAMES];
-
-    //    int ballBufferIndex;
-    //    float ballBufferX[BALL_BUFFER_FRAMES];
-    //    float ballBufferY[BALL_BUFFER_FRAMES];
 
     Protos::SSL_DetectionBall lastRawBall; // The last position of the locked ball
     FilteredObject            ball_kalman;
@@ -84,8 +76,5 @@ private:
     Protos::SSL_DetectionFrame frame[Common::Setting::kCamCount];
     Protos::SSL_DetectionBall  d_ball[MAX_BALLS * Common::Setting::kCamCount];
     Protos::SSL_DetectionRobot robot[Common::Setting::kMaxRobots * Common::Setting::kCamCount];
-
-    //	double t_capture_buff[MAX_BALLS*Common::Setting::kCamCount];
-    //    deque<Common::Vec2> ball_dir_buff;
 };
 } // namespace Tyr::Vision
