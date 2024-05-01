@@ -1,13 +1,12 @@
 #pragma once
 
-#include <ostream>
-
 #define COLOR_BLUE false
 #define COLOR_YELLOW true
 
 #define RIGHT_SIDE true
 #define LEFT_SIDE false
 
+#include "../setting.h"
 #include "../math/angle.h"
 #include "../math/vector.h"
 

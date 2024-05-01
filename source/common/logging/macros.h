@@ -1,9 +1,5 @@
 #pragma once
 
-#include <source_location>
-
-#include <spdlog/spdlog.h>
-
 namespace Tyr::Common
 {
 

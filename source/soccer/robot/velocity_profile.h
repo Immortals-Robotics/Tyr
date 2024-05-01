@@ -1,5 +1,7 @@
 #pragma once
 
+#include <math/vector.h>
+
 namespace Tyr::Soccer
 {
 struct VelocityProfile

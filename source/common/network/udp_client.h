@@ -1,21 +1,5 @@
 #pragma once
 
-#include <array>
-
-#if defined(_WIN32)
-#define NOGDI  // All GDI defines and routines
-#define NOUSER // All USER defines and routines
-#endif
-
-#include <asio.hpp>
-
-#if defined(_WIN32) // raylib uses these names as function parameters
-#undef near
-#undef far
-#endif
-
-#include <google/protobuf/message_lite.h>
-
 #include "../setting.h"
 
 namespace Tyr::Common

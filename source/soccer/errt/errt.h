@@ -1,5 +1,7 @@
 #pragma once
 
+#include <math/random.h>
+
 #include "../obstacle/obstacle.h"
 #include "tree.h"
 

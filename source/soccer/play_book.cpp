@@ -6,7 +6,6 @@ void Ai::InitAIPlayBook()
 {
     AIPlayBook.clear();
 
-    AIPlayBook["my_test"]                = &Ai::my_test;
     AIPlayBook["NewNormalPlay"]          = &Ai::NewNormalPlay;
     AIPlayBook["NormalPlayDef"]          = &Ai::NormalPlayDef;
     AIPlayBook["NormalPlayAtt"]          = &Ai::NormalPlayAtt;
@@ -20,7 +19,6 @@ void Ai::InitAIPlayBook()
     AIPlayBook["penalty_their_simple"]   = &Ai::penalty_their_simple;
 
     AIPlayBook["corner_their_global"]       = &Ai::corner_their_global;
-    AIPlayBook["tech_khers_pass"]           = &Ai::tech_khers_pass;
     AIPlayBook["our_place_ball_shoot"]      = &Ai::our_place_ball_shoot;
     AIPlayBook["our_place_ball_shoot_V2"]   = &Ai::our_place_ball_shoot_V2;
     AIPlayBook["our_place_ball_shoot_taki"] = &Ai::our_place_ball_shoot_taki;

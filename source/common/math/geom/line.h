@@ -1,8 +1,5 @@
 #pragma once
 
-#include <optional>
-#include <vector>
-
 #include "../angle.h"
 #include "../vector.h"
 

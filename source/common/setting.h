@@ -1,7 +1,5 @@
 #pragma once
 
-#include <array>
-
 #include "config/config.h"
 
 namespace Tyr::Common

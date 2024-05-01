@@ -1,8 +1,18 @@
 #pragma once
 
+#include <deque>
+
+#include <state/world.h>
+#include <state/referee.h>
+#include <state/game.h>
+#include <sender.h>
+#include <math/linear.h>
+
 #include "dss/dss.h"
 #include "errt/errt.h"
 #include "helpers/one_touch_detector.h"
+
+#include <immortals/strategy.pb.h>
 
 #define NEW_FIELD_2018
 
