@@ -2,30 +2,54 @@
 
 namespace Tyr::Gui
 {
-ConfigMenu::ConfigMenu()
-    : menuWidth(300.), menuWidthMinimized(20.), networkNeedsUpdate(NetworkInput::None), visionIpAddress("224.5.23.2"),
-      visionPort("10006")
+static const std::regex ipRegex(
+    "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
+static const std::regex portRegex("^[1-9][0-9]*$");
+
+ConfigMenu::ConfigMenu() : menuWidth(300.), menuWidthMinimized(20.), networkNeedsUpdate(NetworkInput::None)
 {
     windowFlags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
+    strcpy(vision_ip_text, Tyr::Common::setting().vision_address.ip.c_str());
+    strcpy(vision_port_text, std::to_string(Tyr::Common::setting().vision_address.port).c_str());
+
+    strcpy(referee_ip_text, Tyr::Common::setting().referee_address.ip.c_str());
+    strcpy(referee_port_text, std::to_string(Tyr::Common::setting().referee_address.port).c_str());
 }
 
+// Vision
 int ConfigMenu::HandleVisionIpChange(ImGuiInputTextCallbackData *_data)
 {
-    static const std::regex ipRegex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$");
-
     if (std::regex_match(_data->Buf, ipRegex))
     {
-        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, NetworkInput::VisionIp);
+        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, NetworkInput::VISION_IP);
     }
     return 0;
 }
 
 int ConfigMenu::HandleVisionPortChange(ImGuiInputTextCallbackData *_data)
 {
-    static const std::regex portRegex("^[1-9][0-9]*$");
     if (std::regex_match(_data->Buf, portRegex))
     {
-        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, NetworkInput::VisionPort);
+        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, NetworkInput::VISION_PORT);
+    }
+    return 0;
+}
+
+// Referee
+int ConfigMenu::HandleRefereeIpChange(ImGuiInputTextCallbackData *_data)
+{
+    if (std::regex_match(_data->Buf, ipRegex))
+    {
+        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, NetworkInput::REF_IP);
+    }
+    return 0;
+}
+
+int ConfigMenu::HandleRefereePortChange(ImGuiInputTextCallbackData *_data)
+{
+    if (std::regex_match(_data->Buf, portRegex))
+    {
+        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, NetworkInput::REF_PORT);
     }
     return 0;
 }
@@ -34,18 +58,40 @@ void ConfigMenu::SetNetworkInput(std::string _data, NetworkInput _inputType)
 {
     switch (_inputType)
     {
-    case NetworkInput::VisionIp:
-        if (_data != this->visionIpAddress)
+    case NetworkInput::VISION_IP:
+        if (_data != this->vision_ip_text)
         {
-            this->visionIpAddress    = _data;
-            this->networkNeedsUpdate = NetworkInput::VisionIp;
+            strcpy(this->vision_ip_text, _data.c_str());
+            this->networkNeedsUpdate = NetworkInput::VISION_IP;
+            Tyr::Common::setting().updateSetting("network.vision.ip", _data);
+            Tyr::Common::Services::saveConfig();
         }
         break;
-    case NetworkInput::VisionPort:
-        if (_data != this->visionPort)
+    case NetworkInput::VISION_PORT:
+        if (_data != this->vision_port_text)
         {
-            this->visionPort         = _data;
-            this->networkNeedsUpdate = NetworkInput::VisionPort;
+            strcpy(this->vision_port_text, _data.c_str());
+            this->networkNeedsUpdate = NetworkInput::VISION_PORT;
+            Tyr::Common::setting().updateSetting("network.vision.port", std::stoi(_data));
+            Tyr::Common::Services::saveConfig();
+        }
+        break;
+    case NetworkInput::REF_IP:
+        if (_data != this->referee_ip_text)
+        {
+            strcpy(this->referee_ip_text, _data.c_str());
+            this->networkNeedsUpdate = NetworkInput::REF_IP;
+            Tyr::Common::setting().updateSetting("network.referee.ip", _data);
+            Tyr::Common::Services::saveConfig();
+        }
+        break;
+    case NetworkInput::REF_PORT:
+        if (_data != this->referee_port_text)
+        {
+            strcpy(this->referee_port_text, _data.c_str());
+            this->networkNeedsUpdate = NetworkInput::REF_PORT;
+            Tyr::Common::setting().updateSetting("network.referee.port", std::stoi(_data));
+            Tyr::Common::Services::saveConfig();
         }
         break;
     default:
@@ -57,11 +103,11 @@ std::string ConfigMenu::GetNetworkParam(NetworkInput _inputType)
 {
     switch (_inputType)
     {
-    case NetworkInput::VisionIp:
-        return this->visionIpAddress;
+    case NetworkInput::VISION_IP:
+        return this->vision_ip_text;
         break;
-    case NetworkInput::VisionPort:
-        return this->visionPort;
+    case NetworkInput::VISION_PORT:
+        return this->vision_port_text;
         break;
     default:
         return "";
@@ -69,15 +115,28 @@ std::string ConfigMenu::GetNetworkParam(NetworkInput _inputType)
     }
 }
 
+void ConfigMenu::drawIpPortInput(std::string _name, int _id, char *_ip_text, char *_port_text,
+                                 int (*_callback_ip)(ImGuiInputTextCallbackData *),
+                                 int (*_callback_port)(ImGuiInputTextCallbackData *))
+{
+    ImGui::Spacing();
+    ImGui::Text(_name.c_str());
+    ImGui::Spacing();
+    ImGui::PushID(_id);
+    ImGui::InputText("Ip", _ip_text, 16, ImGuiInputTextFlags_CallbackAlways, _callback_ip, this);
+    ImGui::InputText("Port", _port_text, 6, ImGuiInputTextFlags_CallbackAlways, _callback_port, this);
+    ImGui::PopID();
+    ImGui::Spacing();
+    ImGui::Separator();
+}
+
 void ConfigMenu::DrawNetworkTab()
 {
-    static char visionIp[16]  = "224.5.23.2";
-    static char visionPort[6] = "10006";
 
-    ImGui::InputText("Vision Ip", visionIp, IM_ARRAYSIZE(visionIp), ImGuiInputTextFlags_CallbackAlways,
-                     &ConfigMenu::HandleVisionIpChange, this);
-    ImGui::InputText("Vision Port", visionPort, IM_ARRAYSIZE(visionPort), ImGuiInputTextFlags_CallbackAlways,
-                     &ConfigMenu::HandleVisionPortChange, this);
+    drawIpPortInput("Vision", 0, vision_ip_text, vision_port_text, &ConfigMenu::HandleVisionIpChange,
+                    &ConfigMenu::HandleVisionPortChange);
+    drawIpPortInput("Referee", 1, referee_ip_text, referee_port_text, &ConfigMenu::HandleRefereeIpChange,
+                    &ConfigMenu::HandleRefereePortChange);
 }
 
 void ConfigMenu::DrawTabBar()
