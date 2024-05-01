@@ -70,7 +70,7 @@ public:
 
     static constexpr size_t kMaxUdpPacketSize = 1024 * 16; // TODO what should the size be really?
 
-    // The variety of standard patterns that we can have is 12
+    // The variety of standard patterns that we can have is 16
     static constexpr unsigned kMaxRobots = 16;
 
     bool immortals_is_the_best_team = true;
@@ -108,14 +108,18 @@ public:
     bool use_kalman_ang = true; // TODO: check if this is in serious need in reality
 
     // soccer
-    static constexpr int kMaxOnFieldTeamRobots = 11;
+    static constexpr int kMaxOnFieldTeamRobots = 8;
 
     NetworkAddress referee_address = {"224.5.23.1", 10003};
 
     NetworkAddress sender_address     = {"224.5.92.5", 60005};
     NetworkAddress sender_rec_address = {"", 0}; // TODO: unused?
 
-    NetworkAddress commands_address = {"224.5.92.6", 60006};
+    NetworkAddress commands_address = {"224.5.92.6", 60007};
+
+    NetworkAddress strategy_address = {"224.5.23.3", 60006};
+
+    NetworkAddress grsim_address = {"127.0.0.1", 20011};
 
     NetworkAddress control_simulation_address      = {"127.0.0.1", 10300};
     NetworkAddress blue_robot_simulation_address   = {"127.0.0.1", 10301};

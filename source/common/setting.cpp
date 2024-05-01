@@ -27,7 +27,12 @@ void Setting::load(const toml::node_view<const toml::node> t_node)
     sender_address.load(network["sender"]);
 
     commands_address.load(network["commands"]);
+
+    strategy_address.load(network["strategy"]);
+
     // sender_rec_address.load(network["referee"]);
+
+    grsim_address.load(network["grsim"]);
 
     control_simulation_address.load(network["control_simulation"]);
     blue_robot_simulation_address.load(network["blue_robot_simulation"]);
