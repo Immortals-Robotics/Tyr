@@ -1,9 +1,5 @@
 #pragma once
 
-#include <state/world.h>
-#include <timer/timer.h>
-#include <protocol/data_lite.h>
-
 #include "velocity_profile.h"
 
 #define PREDICT_CMDS 6

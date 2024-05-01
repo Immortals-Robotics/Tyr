@@ -1,11 +1,5 @@
 #pragma once
 
-#include <network/udp_client.h>
-#include <ssl-refbox/referee.pb.h>
-#include <state/referee.h>
-#include <state/world.h>
-#include <timer/timer.h>
-
 namespace Tyr::Referee
 {
 class Referee

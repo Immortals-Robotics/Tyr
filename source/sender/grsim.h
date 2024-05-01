@@ -1,9 +1,5 @@
 #pragma once
 
-#include <string>
-
-#include <network/udp_server.h>
-
 namespace Tyr::Sender
 {
 class Grsim

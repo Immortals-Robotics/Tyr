@@ -1,7 +1,5 @@
 #pragma once
 
-#include <math/random.h>
-
 #include "../robot/robot.h"
 
 namespace Tyr::Soccer
