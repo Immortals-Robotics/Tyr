@@ -267,7 +267,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     }
 
     else
-        clear_map();
+        obs_map.resetMap();
 
     if ((std::fabs(hehe.deg()) < tetta)) //|| ( circleReachedBehindBall ) )
     {

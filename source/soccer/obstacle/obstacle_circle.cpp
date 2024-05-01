@@ -1,27 +1,14 @@
-#include "obstacle_new.h"
+#include "obstacle.h"
 
 namespace Tyr::Soccer
 {
-CircleObstacle::CircleObstacle(float _x, float _y, float _r)
+bool CircleObstacle::IsInObstacle(const Common::Vec2 t_point)
 {
-    x = _x;
-    y = _y;
-    r = _r;
+    return m_circle.inside(t_point);
 }
 
-bool CircleObstacle::IsInObstacle(float _x, float _y)
+float CircleObstacle::NearestDistance(const Common::Vec2 t_point)
 {
-    if ((_x > x + r) || (_x < x - r) || (_y > y + r) || (_y < y - r))
-        return false;
-
-    if (Common::Vec2(x, y).distanceTo(Common::Vec2(_x, _y)) <= r)
-        return true;
-
-    return false;
-}
-
-float CircleObstacle::NearestDistance(float _x, float _y)
-{
-    return Common::Vec2(x, y).distanceTo(Common::Vec2(_x, _y)) - r;
+    return m_circle.center.distanceTo(t_point) - m_circle.r;
 }
 } // namespace Tyr::Soccer

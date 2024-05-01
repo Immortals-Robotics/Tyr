@@ -1,58 +1,63 @@
 #pragma once
 
-#include "obstacle_new.h"
-
 namespace Tyr::Soccer
 {
-/*bool obs_lut[605][405];
-
-void clear_map ()
+class BaseObstacle
 {
-    for ( int i = 0 ; i < 605 ; i ++ )
-        for ( int j = 0 ; j < 405 ; j ++ )
-        {
-            obs_lut[i][j] = false;
-        }
-}
+public:
+    virtual ~BaseObstacle() = default;
 
-bool IsInObstacle ( Common::Vec2 p )
+    virtual bool  IsInObstacle(Common::Vec2 t_point)    = 0;
+    virtual float NearestDistance(Common::Vec2 t_point) = 0;
+};
+
+class CircleObstacle final : public BaseObstacle
 {
-    return obs_lut[(int)p.x][(int)p.y];
-}
+private:
+    Common::Circle m_circle;
 
-bool collisionDetect ( Common::Vec2 p1 , Common::Vec2 p2 )
+public:
+    CircleObstacle(const Common::Circle t_circle) : m_circle(t_circle)
+    {}
+
+    bool  IsInObstacle(Common::Vec2 t_point) override;
+    float NearestDistance(Common::Vec2 t_point) override;
+};
+
+class RectangleObstacle final : public BaseObstacle
 {
-    float coss , sinn;
-    coss = ( p2.x - p1.x ) / DIS ( p1 , p2 );
-    sinn = ( p2.y - p1.y ) / DIS ( p1 , p2 );
+private:
+    Common::Rect m_rect;
 
-    Common::Vec2 current = p1;
+public:
+    RectangleObstacle(const Common::Rect t_rect) : m_rect(t_rect)
+    {}
 
-    while ( DIS ( current , p2 ) > 9 )
-    {
-        if ( IsInObstacle ( current ) )
-            return true;
+    bool  IsInObstacle(Common::Vec2 t_point) override;
+    float NearestDistance(Common::Vec2 t_point) override;
+};
 
-        current.x += coss * 9;
-        current.y += sinn * 9;
-    }
-
-    return false;
-}
-
-void AddCircle ( int x , int y , int r )
+class ObsMap
 {
-    for ( int i = 0 ; i < 605 ; i ++ )
-        for ( int j = 0 ; j < 405 ; j ++ )
-        {
-            //obs_lut[i][j] = false;
-            if ( (i-x) * (i-x) + (j-y) * (j-y) < r * r )	obs_lut[i][j] = true;
-        }
-}*/
+private:
+    std::vector<std::unique_ptr<BaseObstacle>> m_obstacles;
 
-void clear_map();
-bool IsInObstacle(Common::Vec2 p);
-bool collisionDetect(Common::Vec2 p1, Common::Vec2 p2);
-void AddCircle(float x, float y, float r);
-void AddRectangle(float x, float y, float w, float h);
+public:
+    ObsMap();
+
+    void addCircle(Common::Circle t_circle);
+    void addRectangle(Common::Rect t_rect);
+
+    bool  isInObstacle(Common::Vec2 t_point);
+    float nearestDistance(Common::Vec2 t_point);
+
+	bool collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2);
+
+    void resetMap();
+
+    int getObsNum();
+};
+
+extern ObsMap obs_map;
+
 } // namespace Tyr::Soccer

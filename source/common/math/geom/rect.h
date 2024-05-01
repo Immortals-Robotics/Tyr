@@ -12,6 +12,9 @@ public:
           max(std::max(t_p1.x, t_p2.x), std::max(t_p1.y, t_p2.y))
     {}
 
+    Rect(const Vec2 t_p, const float t_w, const float t_h) : Rect(t_p, t_p + Vec2(t_w, t_h))
+    {}
+
     bool inside(Vec2 t_point) const;
 
     bool insideOffset(const Vec2 t_point, float offset) const;

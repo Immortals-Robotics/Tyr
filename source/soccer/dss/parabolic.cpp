@@ -53,7 +53,7 @@ bool Parabolic::HasStaticOverlap(const Parabolic &a)
     {
         const float        t = check_t[t_idx];
         const Common::Vec2 p = a.Evaluate(t);
-        if (IsInObstacle(p))
+        if (obs_map.isInObstacle(p))
         {
             return true;
         }
