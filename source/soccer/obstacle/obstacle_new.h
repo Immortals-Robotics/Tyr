@@ -45,11 +45,11 @@ private:
 public:
     ObsMap();
 
-    void AddCircle(float _x, float _y, float _r);
-    void AddRectangle(float _x, float _y, float _w, float _h);
+    void addCircle(Common::Circle t_circle);
+    void addRectangle(Common::Rect t_rect);
 
-    bool  IsInObstacle(Common::Vec2 t_point);
-    float NearestDistance(Common::Vec2 t_point);
+    bool  isInObstacle(Common::Vec2 t_point);
+    float nearestDistance(Common::Vec2 t_point);
 
     void resetMap();
 

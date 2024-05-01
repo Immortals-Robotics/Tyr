@@ -11,7 +11,7 @@ void clear_map()
 
 bool IsInObstacle(const Common::Vec2 p)
 {
-    return map.IsInObstacle(p);
+    return map.isInObstacle(p);
 }
 
 bool collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2)
@@ -57,8 +57,8 @@ bool collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2)
 
                 if ( IsInObstacle ( current ) )
                         return true;
-                advance_dis = std::min ( std::max ( 1 , map.NearestDistance(current.x,current.y) ) , Common::Vec2::distance (
-current , p2 ) ); if ( advance_dis <= 0 ) return true;
+                advance_dis = std::min ( std::max ( 1 , map.NearestDistance(current.x,current.y) ) ,
+Common::Vec2::distance ( current , p2 ) ); if ( advance_dis <= 0 ) return true;
 
                 current.x += coss * advance_dis;
                 current.y += sinn * advance_dis;
@@ -69,11 +69,37 @@ current , p2 ) ); if ( advance_dis <= 0 ) return true;
 
 void AddCircle(float x, float y, float r)
 {
-    map.AddCircle(x, y, r);
+    map.addCircle({{x, y}, r});
 }
 
 void AddRectangle(float x, float y, float w, float h)
 {
-    map.AddRectangle(x, y, w, h);
+    Common::Vec2 start{};
+    Common::Vec2 size{};
+
+    if (w < 0)
+    {
+        start.x = x + w;
+        size.x  = -w;
+    }
+    else
+    {
+        start.x = x;
+        size.x  = w;
+    }
+
+    if (h < 0)
+    {
+        start.y = y + h;
+        // TODO: shouldn't this be -h?
+        size.y = h;
+    }
+    else
+    {
+        start.y = y;
+        size.y  = h;
+    }
+
+    map.addRectangle(Common::Rect{start, start + size});
 }
 } // namespace Tyr::Soccer

@@ -5,47 +5,20 @@ namespace Tyr::Soccer
 ObsMap::ObsMap()
 {}
 
-void ObsMap::AddCircle(float _x, float _y, float _r)
+void ObsMap::addCircle(const Common::Circle t_circle)
 {
     // TODO: verify if this check is needed
-    if (_r > 0)
+    if (t_circle.r > 0)
     {
-
-        m_obstacles.emplace_back(std::make_unique<CircleObstacle>(Common::Circle{Common::Vec2{_x, _y}, _r}));
+        m_obstacles.emplace_back(std::make_unique<CircleObstacle>(t_circle));
     }
 }
-void ObsMap::AddRectangle(float _x, float _y, float _w, float _h)
+void ObsMap::addRectangle(const Common::Rect t_rect)
 {
-    Common::Vec2 start{};
-    Common::Vec2 size{};
-
-    if (_w < 0)
-    {
-        start.x = _x + _w;
-        size.x  = -_w;
-    }
-    else
-    {
-        start.x = _x;
-        size.x  = _w;
-    }
-
-    if (_h < 0)
-    {
-        start.y = _y + _h;
-        // TODO: shouldn't this be -h?
-        size.y = _h;
-    }
-    else
-    {
-        start.y = _y;
-        size.y  = _h;
-    }
-
-    m_obstacles.emplace_back(std::make_unique<RectangleObstacle>(Common::Rect{start, start + size}));
+    m_obstacles.emplace_back(std::make_unique<RectangleObstacle>(t_rect));
 }
 
-bool ObsMap::IsInObstacle(const Common::Vec2 t_p)
+bool ObsMap::isInObstacle(const Common::Vec2 t_p)
 {
     for (int i = 0; i < getObsNum(); i++)
     {
@@ -60,7 +33,7 @@ bool ObsMap::IsInObstacle(const Common::Vec2 t_p)
     return false;
 }
 
-float ObsMap::NearestDistance(const Common::Vec2 t_p)
+float ObsMap::nearestDistance(const Common::Vec2 t_p)
 {
     float dis = std::numeric_limits<float>::max();
     float tmp_dis;
