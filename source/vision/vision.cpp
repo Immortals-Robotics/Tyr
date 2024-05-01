@@ -8,7 +8,6 @@ Vision::Vision(Common::WorldState *_State)
 
     // Initializing the settings:
     our_color = Common::setting().our_color == Common::TeamColor::Yellow ? COLOR_YELLOW : COLOR_BLUE;
-    our_side  = Common::setting().our_side == Common::TeamSide::Left ? LEFT_SIDE : RIGHT_SIDE;
 
     for (int i = 0; i < Common::Setting::kCamCount; i++)
         packet_recieved[i] = false;

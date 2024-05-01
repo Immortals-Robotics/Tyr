@@ -2,18 +2,6 @@
 
 namespace Tyr::Vision
 {
-// Don't add prediction to Ball or Opponents if both velocities are below this threshold
-const float IGNORE_PREDICTION = 0.045f;
-
-// If the filtering process yields velocities above these values, reset the filter state
-// All these are in metres/sec
-const float BALL_ERROR_VELOCITY_SQUARED     = 1960000.0f;
-const float OPPONENT_ERROR_VELOCITY_SQUARED = 200000.0f;
-
-std::ofstream outfile("outf.txt");
-std::ofstream delay_data("delay.txt");
-unsigned int  fr_num = 0;
-
 void Vision::ProcessRobots()
 {
     int robots_num = 0;
@@ -40,17 +28,9 @@ void Vision::ProcessRobots()
 
     // We're almost done, only Prediction remains undone!
     predictRobotsForward();
-    // RunANN(m_state);
-    // PredictWithANN(m_state);
-    // TrainANN(0.1f);
-    // RunANN(m_state);
 
     // Now we send Robots States to the AI!
     SendStates();
-
-    // int cmdIndex = m_state->lastCMDS[6][10].x;
-    // delay_data << fr_num++ << "	" << m_state->OwnRobot[6].Position.x << "	" << m_state->OwnRobot[6].Position.y <<
-    // "	" << m_state->lastCMDS[6][cmdIndex].x << "	" << m_state->lastCMDS[6][cmdIndex].y << std::endl;
 }
 int Vision::ExtractBlueRobots()
 {
@@ -140,25 +120,14 @@ void Vision::FilterRobots(int num, bool own)
 
                 robot_kalman[own][i].updatePosition(filtpos, filtout);
 
-                // if ( robot[j].robot_id() == 5 )
-                // robot[j].set_orientation ( robot[j].orientation() + 0.135 );
-
                 AngleFilter[own][i].AddData((robot[j].orientation() - rawAngles[own][i]) * 61.0f);
-                rawAngles[own][i] = robot[j].orientation();
-                // if ( std::fabs ( (AngleFilter[own][i].GetCurrent()*180.0f/3.1415f) -
-                // robotState[own][i].AngularVelocity ) > 30.0f ) 	AngleFilter[own][i].reset(); else
-                {
-                    robotState[own][i].AngularVelocity = Common::Angle::fromRad(AngleFilter[own][i].GetCurrent());
-                }
-                robotState[own][i].angle = Common::Angle::fromRad(robot[j].orientation());
-                // if ( robot[j].robot_id() == 1 )
-                //	std::cout << robotState[own][i].AngularVelocity << std::endl;
+                rawAngles[own][i]                  = robot[j].orientation();
+                robotState[own][i].AngularVelocity = Common::Angle::fromRad(AngleFilter[own][i].GetCurrent());
+                robotState[own][i].angle           = Common::Angle::fromRad(robot[j].orientation());
 
                 // Make sure our filtered velocities are reasonable
                 if (std::fabs(robotState[own][i].AngularVelocity.deg()) < 20.0f)
                     robotState[own][i].AngularVelocity.setDeg(0.0f);
-                /*if ( std::fabs ( robotState[own][i].AngularVelocity ) > 4000.0f )
-                 robotState[own][i].AngularVelocity = 0.0f;*/
             }
         }
 
@@ -168,19 +137,7 @@ void Vision::FilterRobots(int num, bool own)
             if (robot_not_seen[own][i] >= MAX_ROBOT_NOT_SEEN + 1)
                 robot_not_seen[own][i] = MAX_ROBOT_NOT_SEEN + 1;
 
-            // robotState[own][i].Angle = 0.0f;
             robotState[own][i].AngularVelocity.setDeg(0.0f);
-
-            // robotState[own][i].velocity.x = 0.0f;
-            // robotState[own][i].velocity.y = 0.0f;
-
-            // robotState[own][i].velocity.direction = 0.0f;
-            // robotState[own][i].velocity.length = 0.0f;
-
-            // robotState[own][i].Position.x += robotState[own][i].velocity.x / 61.0;
-            // robotState[own][i].Position.y += robotState[own][i].velocity.y / 61.0;
-
-            //}
         }
 
         else
@@ -191,9 +148,7 @@ void Vision::FilterRobots(int num, bool own)
             robotState[own][i].velocity.y = filtout[1][1];
 
             // Make sure our filtered velocities are reasonable
-            if ((robotState[own][i].velocity.x * robotState[own][i].velocity.x) +
-                    (robotState[own][i].velocity.y * robotState[own][i].velocity.y) >
-                OPPONENT_ERROR_VELOCITY_SQUARED)
+            if ((robotState[own][i].velocity.length()) > ROBOT_ERROR_VELOCITY)
             {
                 robotState[own][i].velocity.x = 0.0f;
                 robotState[own][i].velocity.y = 0.0f;
@@ -218,43 +173,8 @@ void Vision::predictRobotsForward()
     {
         for (int i = 0; i < Common::Setting::kMaxRobots; i++)
         {
-            /*robotState[own][i].Position.x /= (float)(1000.0);
-             robotState[own][i].Position.y /= (float)(1000.0);
-             robotState[own][i].velocity.x /= (float)(1000.0);
-             robotState[own][i].velocity.y /= (float)(1000.0);*/
-
-            //====================================
-            //====================================
-            //====================================
-            // Predict the robot to go forward
-            /*if ( ( i == 0 ) || ( i == 4 ) )
-            {
-                robotState[own][i].Position.x = robotState[own][i].Position.x + robotState[own][i].velocity.x / (
-            PREDICT_STEPS * 2.0f );
-
-                // Predict the robot to go forward
-                robotState[own][i].Position.y = robotState[own][i].Position.y + robotState[own][i].velocity.y / (
-            PREDICT_STEPS * 2.0f );
-
-                // Predict the robot to go forward
-                //robotState[own][i].Angle = robotState[own][i].Angle + robotState[own][i].AngularVelocity / (
-            PREDICT_STEPS * 4.0f );
-            }*/
-
-            //====================================
-            //====================================
-            //====================================
-            /*robotState[own][i].Position.x *= (float)(1000.0);
-             robotState[own][i].Position.y *= (float)(1000.0);
-             robotState[own][i].velocity.x *= (float)(1000.0);
-             robotState[own][i].velocity.y *= (float)(1000.0);*/
-
-            robotState[own][i].Position.x =
-                robotState[own][i].Position.x + robotState[own][i].velocity.x / (PREDICT_STEPS * 2.0f);
-
-            // Predict the robot to go forward
-            robotState[own][i].Position.y =
-                robotState[own][i].Position.y + robotState[own][i].velocity.y / (PREDICT_STEPS * 2.0f);
+            robotState[own][i].Position =
+                robotState[own][i].Position + robotState[own][i].velocity / (PREDICT_STEPS * 2.0f);
 
             // Predict the robot to go forward
             robotState[own][i].angle =
@@ -277,12 +197,9 @@ void Vision::predictRobotsForward()
             {
                 robotState[0][i].Position.x = robotState[0][i].Position.x + m_state->lastCMDS[i][j].x / 1.4f;
                 robotState[0][i].Position.y = robotState[0][i].Position.y + m_state->lastCMDS[i][j].y / 1.4f;
-                // if (( i == 3 ) )
-                //	robotState[0][i].Angle = robotState[0][i].Angle - m_state -> lastCMDS[i][j].Z * 0.04f;
             }
         }
     }
-    // outfile << robotState[0][1].AngularVelocity << std::endl;
 }
 
 void Vision::SendStates()
@@ -307,7 +224,7 @@ void Vision::SendStates()
             m_state->ownRobots_num--;
         }
 
-        if (robot_not_seen[0][i] < MAX_ROBOT_SUBSITUTE)
+        if (robot_not_seen[0][i] < MAX_ROBOT_SUBSTITUTE)
         {
             robotState[0][i].OutForSubsitute = false;
         }

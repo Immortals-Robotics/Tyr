@@ -1,7 +1,5 @@
 #include "vision.h"
 
-#define MAX_BALL_2FRAMES_DISTANCE 1450000.0f
-
 namespace Tyr::Vision
 {
 void Vision::ProcessBalls()
@@ -33,8 +31,6 @@ int Vision::ExtractBalls()
             for (int j = 0; j < frame[i].balls_size(); j++)
             {
                 d_ball[ans] = frame[i].balls(j);
-                //                t_capture_buff[ans] = frame[i].t_capture();
-
                 ans++;
             }
         }
@@ -223,48 +219,6 @@ void Vision::predictBallForward()
     m_state->ball.velocity.y *= (float) 1000.0;
     m_state->ball.Position.x *= (float) 1000.0;
     m_state->ball.Position.y *= (float) 1000.0;
-
-    //    static int CNT = 0;
-    //    CNT++;
-    //    if(CNT%20 == 0) {
-    //        ball_dir_buff.push_back(m_state->ball.Position);
-    //        CNT = 0;
-    //    }
-    //
-    //    float tempAng,lastAng;
-    //    if(ball_dir_buff.size()) {
-    //        deque<Common::Vec2>::iterator delete_until_here = ball_dir_buff.begin();
-    //        for (deque<Common::Vec2>::iterator it = ball_dir_buff.begin(), it2 = ball_dir_buff.begin() + 1;
-    //             it2 != ball_dir_buff.end(); ++it, ++it2) {
-    //            tempAng = Angle(*it2 - *it);
-    //            if (it != ball_dir_buff.begin() && std::fabs(tempAng - lastAng) > 5) {
-    //                delete_until_here = it;
-    //            }
-    //            lastAng = tempAng;
-    //        }
-    //
-    //        while (delete_until_here != ball_dir_buff.begin())
-    //            ball_dir_buff.pop_front();
-    //		if(ball_dir_buff.size() >=2)
-    //        	m_state->ball.path_dir = ( ball_dir_buff.back() - ball_dir_buff.front());
-    //    }
-
-    //    float tempAngdelta = NormalizeAngle(Angle(m_state->ball.path_dir) - m_state -> ball.velocity.direction);
-    //    if(tempAngdelta != tempAngdelta)//tempAngdelta is NaN (Don't erase it)
-    //        tempAngdelta = 0.0;
-    //    if(std::fabs(tempAngdelta) > 15){
-    //        std::cout<<"NEW ANGLE____________"<<tempAngdelta<<std::endl;
-    //    }
-    //
-    //    if(m_state -> ball.velocity.length > 10 && m_state -> ball.seenState == Common::Seen && std::fabs(tempAngdelta) <=
-    //    15) {
-    //        m_state->ball.path_dir = (ball_dir_buff.front() - ball_dir_buff.back());
-    //        std::cout<<"we got here"<<std::endl;
-    //
-    //    }else if(m_state -> ball.seenState != TemprolilyOut){
-    //        m_state->ball.First_Pos_when_shooted = m_state->ball.Position;
-    //        std::cout<<"SEE: "<<std::fabs(tempAngdelta)<<std::endl;
-    //    }
 }
 
 } // namespace Tyr::Vision

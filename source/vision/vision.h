@@ -14,9 +14,17 @@
 
 #define MAX_BALLS 10
 #define MAX_BALL_NOT_SEEN 40
+#define MAX_BALL_2FRAMES_DISTANCE 1450000.0f
 
 #define MAX_ROBOT_NOT_SEEN 200
-#define MAX_ROBOT_SUBSITUTE 60
+#define MAX_ROBOT_SUBSTITUTE 60
+
+// Don't add prediction to Ball or Opponents if both velocities are below this threshold
+const float IGNORE_PREDICTION = 0.045f;
+
+// If the filtering process yields velocities above these values, reset the filter state
+// All these are in metres/sec
+const float ROBOT_ERROR_VELOCITY = 450.0f;
 
 #define MERGE_DISTANCE 70
 
@@ -53,7 +61,6 @@ private:
 
 private:
     bool our_color;
-    bool our_side;
 
     std::unique_ptr<Common::UdpClient> m_udp;
 
