@@ -67,9 +67,9 @@ Common::Vec2::distance ( current , p2 ) ); if ( advance_dis <= 0 ) return true;
         return false;
 }*/
 
-void AddCircle(float x, float y, float r)
+void AddCircle(const Common::Circle t_circle)
 {
-    map.addCircle({{x, y}, r});
+    map.addCircle(t_circle);
 }
 
 void AddRectangle(float x, float y, float w, float h)

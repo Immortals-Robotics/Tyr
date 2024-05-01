@@ -34,7 +34,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
         if ((OwnRobot[i].State.seenState != Common::CompletelyOut) && (i != robot_num) &&
             (OwnRobot[i].State.vision_id != OwnRobot[robot_num].State.vision_id))
         {
-            AddCircle(OwnRobot[i].State.Position.x, OwnRobot[i].State.Position.y, current_robot_radius + robotRadius);
+            AddCircle({OwnRobot[i].State.Position, current_robot_radius + robotRadius});
             // Common::debug().drawCircle(OwnRobot[i].State.Position,ownRobotRadius + (!dribble)*ownRobotRadius,Cyan);
         }
     }
@@ -46,14 +46,14 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
         {
             const float radius = calculateRobotRadius(OppRobot[i]);
 
-            AddCircle(OppRobot[i].Position.x, OppRobot[i].Position.y, radius + current_robot_radius);
+            AddCircle({OppRobot[i].Position, radius + current_robot_radius});
             // Common::debug().drawCircle(OppRobot[i].Position,ownRobotRadius + (!dribble)*ownRobotRadius,Cyan);
         }
     }
 
     if (bll || !REF_playState->allowedNearBall())
     {
-        AddCircle(ball.Position.x, ball.Position.y, ballAreaRadius + current_robot_radius);
+        AddCircle({ball.Position, ballAreaRadius + current_robot_radius});
     }
 
     const float penalty_area_half_width = penalty_area_width / 2.0f;
@@ -98,7 +98,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
         {
             const float        t        = (float) i / (float) ball_obs_count;
             const Common::Vec2 ball_obs = ball.Position + ball_line * t;
-            AddCircle(ball_obs.x, ball_obs.y, ballAreaRadius + current_robot_radius);
+            AddCircle({ball_obs, ballAreaRadius + current_robot_radius});
         }
     }
 }

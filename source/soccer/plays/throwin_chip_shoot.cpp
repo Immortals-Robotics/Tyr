@@ -47,7 +47,7 @@ void Ai::throwin_chip_shoot()
 
     OwnRobot[attack].face(Common::Vec2(-side * field_width, 0));
     ERRTSetObstacles(attack, 0, 1); // TODO the Obstacle avoidance for Opp was disabled (just added it)
-    AddCircle(ball.Position.x, ball.Position.y, 320);
+    AddCircle({ball.Position, 320.0f});
     if (randomParam < 0.0)
         ERRTNavigate2Point(
             attack, ball.Position.pointOnConnectingLine(Common::Vec2(-side * field_width, 0), 350 + 700 * reached));
