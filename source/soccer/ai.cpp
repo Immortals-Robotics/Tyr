@@ -15,7 +15,8 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     : maxBallHist(240), worldState(worldState), refereeState(refereeState), senderBase(sender), cmf(0), rmf(1), lmf(2),
       gk(3), dmf(4), def(5), rw(6), lw(7)
 {
-    std::cout << "	Running Immortals SSL AI module 09" << std::endl << "	Hope us luck :D " << std::endl;
+    Common::logInfo("Running Immortals SSL AI module");
+    Common::logInfo("Hope us luck :D ");
 
 #ifndef NEW_FIELD_2018
     field_width  = 4500.0f;
