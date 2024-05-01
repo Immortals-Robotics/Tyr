@@ -1,3 +1,7 @@
+Checks: 'readability-identifier-naming'
+
+FormatStyle: 'file'
+
 CheckOptions:
 # Namespace
   - key:             readability-identifier-naming.NamespaceCase

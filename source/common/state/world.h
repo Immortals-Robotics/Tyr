@@ -6,9 +6,9 @@
 #define RIGHT_SIDE true
 #define LEFT_SIDE false
 
-#include "../setting.h"
 #include "../math/angle.h"
 #include "../math/vector.h"
+#include "../setting.h"
 
 namespace Tyr::Common
 {
