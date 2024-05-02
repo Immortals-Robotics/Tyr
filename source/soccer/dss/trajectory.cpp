@@ -9,7 +9,7 @@ Trajectory Trajectory::MakeTrajectory(const Common::RobotState &state, const Com
 
     const float t0 = 0.f;
 
-    const Common::Vec2 p0 = state.Position;
+    const Common::Vec2 p0 = state.position;
     const Common::Vec2 v0 = Common::Vec2(state.velocity.x, state.velocity.y);
     const Common::Vec2 a0 = a_acc;
 
@@ -53,7 +53,7 @@ Trajectory Trajectory::MakeOpponentTrajectory(const Common::RobotState &state, c
 
     const float t0 = -1.f;
 
-    const Common::Vec2 p0 = state.Position;
+    const Common::Vec2 p0 = state.position;
     const Common::Vec2 v0 = Common::Vec2(state.velocity.x, state.velocity.y);
     const Common::Vec2 a0 = Common::Vec2(0.f, 0.f);
 

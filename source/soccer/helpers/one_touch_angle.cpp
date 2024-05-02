@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 Common::Angle Ai::calculateOneTouchAngle(int robot_num, Common::Vec2 oneTouchPosition)
 {
-    // oneTouchPosition = ball.Position;
+    // oneTouchPosition = ball.position;
     float v0x, v0y;
     float v1x, v1y;
 
@@ -49,8 +49,8 @@ Common::Angle Ai::calculateOneTouchAngle(int robot_num, Common::Vec2 oneTouchPos
               gamma * (v0x - 2 * (v0x * cos(a) + v0y * sin(a)) * cos(a));
         v1y = beta * (-sin(a) * v0x + cos(a) * v0y) * (cos(a)) + shootK * sin(a) +
               gamma * (v0y - 2 * (v0x * cos(a) + v0y * sin(a)) * sin(a));
-        e = v1x * (-OwnRobot[robot_num].State.Position.y + goaly) +
-            v1y * (OwnRobot[robot_num].State.Position.x - goalx);
+        e = v1x * (-OwnRobot[robot_num].State.position.y + goaly) +
+            v1y * (OwnRobot[robot_num].State.position.x - goalx);
         if (std::fabs(e) < max)
         {
             max = std::fabs(e);

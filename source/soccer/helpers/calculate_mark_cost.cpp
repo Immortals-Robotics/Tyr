@@ -4,17 +4,17 @@ namespace Tyr::Soccer
 {
 float Ai::calculateMarkCost(int robot_num, int opp)
 {
-    if (OwnRobot[robot_num].State.seenState == Common::CompletelyOut)
+    if (OwnRobot[robot_num].State.seen_state == Common::SeenState::CompletelyOut)
         return -1;
-    if (OppRobot[opp].seenState == Common::CompletelyOut)
+    if (OppRobot[opp].seen_state == Common::SeenState::CompletelyOut)
         return -1;
 
     const float predict_t = 0.3f;
     auto        predicted_pos_own =
-        Common::Vec2(OwnRobot[robot_num].State.Position.x + OwnRobot[robot_num].State.velocity.x * predict_t,
-                     OwnRobot[robot_num].State.Position.y + OwnRobot[robot_num].State.velocity.y * predict_t);
-    auto predicted_pos_opp = Common::Vec2(OppRobot[opp].Position.x + OppRobot[opp].velocity.x * predict_t,
-                                          OppRobot[opp].Position.y + OppRobot[opp].velocity.y * predict_t);
+        Common::Vec2(OwnRobot[robot_num].State.position.x + OwnRobot[robot_num].State.velocity.x * predict_t,
+                     OwnRobot[robot_num].State.position.y + OwnRobot[robot_num].State.velocity.y * predict_t);
+    auto predicted_pos_opp = Common::Vec2(OppRobot[opp].position.x + OppRobot[opp].velocity.x * predict_t,
+                                          OppRobot[opp].position.y + OppRobot[opp].velocity.y * predict_t);
 
     auto dis_pred       = predicted_pos_own.distanceTo(predicted_pos_opp);
     bool already_marked = false;

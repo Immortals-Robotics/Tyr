@@ -63,7 +63,6 @@ void Vision::process()
 {
     processBalls();
     processRobots();
-    processParam();
 
     for (int i = 0; i < Common::Setting::kCamCount; i++)
         m_packet_received[i] = false;

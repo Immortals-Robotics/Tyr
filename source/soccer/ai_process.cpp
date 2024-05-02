@@ -11,14 +11,10 @@ void Ai::Process(Common::WorldState *worldState)
     internalProcessData(worldState);
 
     debugDraw = true;
-    Common::debug().drawCircle(ball.Position, 40, "", Common::Red);
-    //	Common::debug().drawLineSegment(ball.Position,Common::Vec2(ball.velocity.x,ball.velocity.y) + ball.Position,
+    Common::debug().drawCircle(ball.position, 40, "", Common::Red);
+    //	Common::debug().drawLineSegment(ball.position,Common::Vec2(ball.velocity.x,ball.velocity.y) + ball.position,
     //Black);
 
-    //    Common::Vec2 spd_v= worldState->ball.path_dir;
-    //    Common::debug().drawLineSegment(ball.Position,spd_v + ball.Position, Yellow);
-    //    Common::debug().drawLineSegment(ball.Position,Common::Vec2(ball.velocity.x,ball.velocity.y) + ball.Position,
-    //    Yellow);
     debugDraw = false;
 
     if (REF_playState)
@@ -38,7 +34,7 @@ void Ai::Process(Common::WorldState *worldState)
             FUNC_state = 0;
 
             oppRestarted = false;
-            if (side * ball.Position.x > field_width * 0.7f)
+            if (side * ball.position.x > field_width * 0.7f)
             {
                 currentPlay = "Stop_def";
             }
@@ -133,7 +129,7 @@ void Ai::Process(Common::WorldState *worldState)
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        if ((OwnRobot[i].State.seenState == Common::CompletelyOut) || (!navigated[i]))
+        if ((OwnRobot[i].State.seen_state == Common::SeenState::CompletelyOut) || (!navigated[i]))
         {
             Halt(i);
         }

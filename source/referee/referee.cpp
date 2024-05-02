@@ -46,7 +46,7 @@ void Referee::process()
     { // Update only when there is a new command
         command_CNT = pSSLRef.command_counter();
 
-        LastPlacedBall = ballData->Position;
+        LastPlacedBall = ballData->position;
 
         if (Common::setting().our_color == Common::TeamColor::Blue)
             RefState->oppGK = pSSLRef.yellow().goalie();
@@ -61,8 +61,8 @@ void Referee::process()
         Common::logDebug("command_CNT: {}", pSSLRef.command_counter());
     }
 
-    RefState->State->transition(pSSLRef.command(), isKicked(ballData->Position) || timer.time() > 5);
-    if (isKicked(ballData->Position))
+    RefState->State->transition(pSSLRef.command(), isKicked(ballData->position) || timer.time() > 5);
+    if (isKicked(ballData->position))
         Common::logDebug("kicked");
 }
 

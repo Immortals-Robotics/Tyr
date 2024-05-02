@@ -52,19 +52,19 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        if ((OwnRobot[i].State.seenState != Common::CompletelyOut) && (i != robot_num))
+        if ((OwnRobot[i].State.seen_state != Common::SeenState::CompletelyOut) && (i != robot_num))
         {
-            obs[obsCount][0] = OwnRobot[i].State.Position.x;
-            obs[obsCount][1] = OwnRobot[i].State.Position.y;
+            obs[obsCount][0] = OwnRobot[i].State.position.x;
+            obs[obsCount][1] = OwnRobot[i].State.position.y;
             obsCount++;
         }
     }
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if (OppRobot[i].seenState != Common::CompletelyOut)
+        if (OppRobot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            obs[obsCount][0] = OppRobot[i].Position.x;
-            obs[obsCount][1] = OppRobot[i].Position.y;
+            obs[obsCount][0] = OppRobot[i].position.x;
+            obs[obsCount][1] = OppRobot[i].position.y;
             obsCount++;
         }
     }

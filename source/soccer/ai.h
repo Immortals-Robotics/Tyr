@@ -85,7 +85,6 @@ private:
     Common::Linear                ballLine;
     Common::BallState             ball;
     Common::RobotState            OppRobot[Common::Setting::kMaxRobots];
-    int                           OwnRobotNum, OppRobotNum;
     Planner                       planner[Common::Setting::kMaxOnFieldTeamRobots];
     Dss                          *dss;
 

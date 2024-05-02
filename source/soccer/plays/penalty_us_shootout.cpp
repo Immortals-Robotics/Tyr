@@ -30,14 +30,14 @@ void Ai::penalty_us_shootout()
     {
         Common::logInfo("step0 - Waiting for permission");
     }
-    else if (ball.Position.distanceTo(Common::Vec2(-side * field_width, 0)) > 3000)
+    else if (ball.position.distanceTo(Common::Vec2(-side * field_width, 0)) > 3000)
     {
-        circle_ball(attack, Common::Vec2(-side * field_width, 0).angleWith(ball.Position), 1, 0, 0);
+        circle_ball(attack, Common::Vec2(-side * field_width, 0).angleWith(ball.position), 1, 0, 0);
         Common::logInfo("step1 - Moving forward - waiting to get close to the opp goal");
     }
     else
     {
-        circle_ball(attack, Common::Vec2(-side * field_width, 400).angleWith(ball.Position), 60, 0, 0);
+        circle_ball(attack, Common::Vec2(-side * field_width, 400).angleWith(ball.position), 60, 0, 0);
         Common::logInfo("step2 - Kick in the goal!!!!");
     }
 }

@@ -5,8 +5,8 @@ namespace Tyr::Soccer
 void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, bool accurate, int speed, VelocityProfile *velocityProfile,
                         bool use_dss)
 {
-    OwnRobot[robot_num].target.Position.x = dest.x;
-    OwnRobot[robot_num].target.Position.y = dest.y;
+    OwnRobot[robot_num].target.position.x = dest.x;
+    OwnRobot[robot_num].target.position.y = dest.y;
 
     if (velocityProfile == NULL)
         velocityProfile = &this->VELOCITY_PROFILE_MAMOOLI;
@@ -34,11 +34,11 @@ void Ai::ERRTNavigate2Point(int robot_num, Common::Vec2 dest, bool accurate, int
 {
     // Navigate2Point(robot_num, dest,accurate,speed,velocityProfile);
     // return;
-    if (OwnRobot[robot_num].State.seenState == Common::CompletelyOut)
+    if (OwnRobot[robot_num].State.seen_state == Common::SeenState::CompletelyOut)
         Halt(robot_num);
     else
     {
-        planner[robot_num].init(OwnRobot[robot_num].State.Position, dest, 90.0f);
+        planner[robot_num].init(OwnRobot[robot_num].State.position, dest, 90.0f);
         Common::Vec2 wayp = planner[robot_num].Plan();
 
         // if ( robot_num == 0 )

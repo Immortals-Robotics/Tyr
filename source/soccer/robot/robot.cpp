@@ -62,7 +62,7 @@ Robot::Robot()
 
     State.velocity.x = 0.0f;
     State.velocity.y = 0.0f;
-    State.Position   = Common::Vec2(0.0f);
+    State.position   = Common::Vec2(0.0f);
     shoot            = 0;
     chip             = 0;
     dribbler         = 0;
@@ -130,18 +130,18 @@ void Robot::Dribble(int pow)
 
 void Robot::face(Common::Vec2 _target)
 {
-    target.angle = State.Position.angleWith(_target);
+    target.angle = State.position.angleWith(_target);
 }
 
 Common::Vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityProfile *velocityProfile)
 {
     const float field_extra_area = 200.f;
 
-    if (std::fabs(target.Position.x) > field_w + field_extra_area)
-        target.Position.x = Common::sign(target.Position.x) * (field_w + field_extra_area);
+    if (std::fabs(target.position.x) > field_w + field_extra_area)
+        target.position.x = Common::sign(target.position.x) * (field_w + field_extra_area);
 
-    if (std::fabs(target.Position.y) > field_h + field_extra_area)
-        target.Position.y = Common::sign(target.Position.y) * (field_h + field_extra_area);
+    if (std::fabs(target.position.y) > field_h + field_extra_area)
+        target.position.y = Common::sign(target.position.y) * (field_h + field_extra_area);
 
     if (speed < 0)
         speed = 0;

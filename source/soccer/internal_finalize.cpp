@@ -20,17 +20,17 @@ void Ai::internalFinalize(Common::WorldState *worldState)
     {
         for (int j = 0; j < 10; j++)
         {
-            worldState->lastCMDS[i][j] = Common::Vec3(0.0f);
+            worldState->last_cmds[i][j] = Common::Vec3(0.0f);
         }
     }
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        if (OwnRobot[i].State.seenState == Common::CompletelyOut)
+        if (OwnRobot[i].State.seen_state == Common::SeenState::CompletelyOut)
             continue;
         for (int j = 0; j < 11; j++) // kheyli tof malie...
         {
-            worldState->lastCMDS[OwnRobot[i].State.vision_id][j] = OwnRobot[i].lastCMDs[j].motion;
+            worldState->last_cmds[OwnRobot[i].State.vision_id][j] = OwnRobot[i].lastCMDs[j].motion;
         }
     }
 }

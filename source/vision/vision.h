@@ -26,10 +26,10 @@ private:
     bool receivePacket();
 
     void processRobots();
-    int  extractBlueRobots();
-    int  extractYellowRobots();
-    int  mergeRobots(int num);
-    void filterRobots(int num, Common::TeamColor t_color);
+    void extractBlueRobots();
+    void extractYellowRobots();
+    void mergeRobots();
+    void filterRobots(Common::TeamColor t_color);
     void predictRobots();
     void sendStates();
 
@@ -38,8 +38,6 @@ private:
     void mergeBalls();
     void filterBalls();
     void predictBall();
-
-    void processParam();
 
 private:
     // TODO: move to settings
@@ -70,8 +68,8 @@ private:
     Common::MedianFilter<float> m_angle_filter[2][Common::Setting::kMaxRobots];
     float                       m_raw_angles[2][Common::Setting::kMaxRobots];
 
-    Protos::SSL_DetectionFrame             m_d_frame[Common::Setting::kCamCount];
-    std::vector<Protos::SSL_DetectionBall> m_d_ball;
-    Protos::SSL_DetectionRobot             m_d_robot[Common::Setting::kMaxRobots * Common::Setting::kCamCount];
+    Protos::SSL_DetectionFrame              m_d_frame[Common::Setting::kCamCount];
+    std::vector<Protos::SSL_DetectionBall>  m_d_ball;
+    std::vector<Protos::SSL_DetectionRobot> m_d_robot;
 };
 } // namespace Tyr::Vision

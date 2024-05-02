@@ -99,11 +99,11 @@ void Vision::filterBalls()
         }
 
         m_ball_kalman.updatePosition(filtpos);
-        m_state->ball.Position = m_ball_kalman.getPosition();
+        m_state->ball.position = m_ball_kalman.getPosition();
         m_state->ball.velocity = m_ball_kalman.getVelocity();
 
         m_ball_not_seen         = 0;
-        m_state->ball.seenState = Common::Seen;
+        m_state->ball.seen_state = Common::SeenState::Seen;
     }
 
     else
@@ -119,11 +119,11 @@ void Vision::filterBalls()
                 m_ball_kalman.initializePos(filtpos);
 
                 m_ball_kalman.updatePosition(filtpos);
-                m_state->ball.Position = m_ball_kalman.getPosition();
+                m_state->ball.position = m_ball_kalman.getPosition();
                 m_state->ball.velocity = m_ball_kalman.getVelocity();
 
                 m_ball_not_seen         = 0;
-                m_state->ball.seenState = Common::Seen;
+                m_state->ball.seen_state = Common::SeenState::Seen;
             }
             else
             {
@@ -132,26 +132,26 @@ void Vision::filterBalls()
                 m_last_raw_ball.set_x(0.0f);
                 m_last_raw_ball.set_y(0.0f);
 
-                m_state->ball.seenState = Common::CompletelyOut;
+                m_state->ball.seen_state = Common::SeenState::CompletelyOut;
             }
         }
         else
         {
-            m_state->ball.seenState = Common::TemprolilyOut;
+            m_state->ball.seen_state = Common::SeenState::TemprolilyOut;
         }
     }
 }
 
 void Vision::predictBall()
 {
-    m_state->ball.Position /= 1000.0f;
+    m_state->ball.position /= 1000.0f;
     m_state->ball.velocity /= 1000.0f;
 
     float k       = 0.25f; // velocity derate every sec(units (m/s)/s)
     float tsample = (float) 1.0f / (float) Common::setting().vision_frame_rate;
 
     float t;
-    if (m_state->ball.seenState == Common::TemprolilyOut)
+    if (m_state->ball.seen_state == Common::SeenState::TemprolilyOut)
         t = tsample;
     else
         t = kPredictSteps * tsample;
@@ -171,11 +171,11 @@ void Vision::predictBall()
     if (m_state->ball.velocity.length() > 0)
     {
         m_state->ball.velocity = m_state->ball.velocity.normalized() * vball_pred;
-        m_state->ball.Position += m_state->ball.velocity.normalized() * dist;
+        m_state->ball.position += m_state->ball.velocity.normalized() * dist;
     }
 
     m_state->ball.velocity *= 1000.0f;
-    m_state->ball.Position *= 1000.0f;
+    m_state->ball.position *= 1000.0f;
 }
 
 } // namespace Tyr::Vision

@@ -7,8 +7,7 @@ set(HEADER_FILES
 
 set(SOURCE_FILES
 	vision_ball.cpp
-	vision_comminucation.cpp
-	vision_param.cpp
+	vision_communication.cpp
 	vision_robot.cpp
 	vision.cpp
 	kalman/filtered_object.cpp)

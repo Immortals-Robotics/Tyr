@@ -82,38 +82,38 @@ Common::Vec3 Robot::MotionPlan(Common::RobotState state, Common::RobotState targ
     //            ans.z = -180;
     //    }
 
-    target.Position = target.Position - state.Position;
+    target.position = target.position - state.position;
 
     /*float trans_rad = ( 90.0f - state.angle ) * ( 3.1415f / 180.0f );
-     target.Position = Common::Vec2 (
-     cos(trans_rad)*target.Position.x - sin(trans_rad)*target.Position.y ,
-     sin(trans_rad)*target.Position.x + cos(trans_rad)*target.Position.y );*/
+     target.position = Common::Vec2 (
+     cos(trans_rad)*target.position.x - sin(trans_rad)*target.position.y ,
+     sin(trans_rad)*target.position.x + cos(trans_rad)*target.position.y );*/
 
     Common::Vec2 tmp_max_speed;
 
-    /*if ( std::fabs(target.Position.x) > std::fabs(target.Position.y) )
+    /*if ( std::fabs(target.position.x) > std::fabs(target.position.y) )
      {
      tmp_max_speed.x = max_spd.x;
-     tmp_max_speed.y = max_spd.x * std::fabs(target.Position.y)/std::fabs(target.Position.x);
+     tmp_max_speed.y = max_spd.x * std::fabs(target.position.y)/std::fabs(target.position.x);
 
      tmp_max_speed.y = std::max ( 0 , std::min ( tmp_max_speed.y , max_spd.y ) );
      }
      else
      {
      tmp_max_speed.y = max_spd.y;
-     tmp_max_speed.x = max_spd.y * std::fabs(target.Position.x)/std::fabs(target.Position.y);
+     tmp_max_speed.x = max_spd.y * std::fabs(target.position.x)/std::fabs(target.position.y);
 
      tmp_max_speed.x = std::max ( 0 , std::min ( tmp_max_speed.x , max_spd.x ) );
      }*/
 
-    float target_dis = Common::Vec2(0.0f).distanceTo(target.Position);
-    tmp_max_speed.x  = max_spd.x * std::fabs(target.Position.x) / target_dis;
-    // max_acc.x *= std::fabs(target.Position.x) / target_dis;
-    // max_dec.x *= std::fabs(target.Position.x) / target_dis;
+    float target_dis = Common::Vec2(0.0f).distanceTo(target.position);
+    tmp_max_speed.x  = max_spd.x * std::fabs(target.position.x) / target_dis;
+    // max_acc.x *= std::fabs(target.position.x) / target_dis;
+    // max_dec.x *= std::fabs(target.position.x) / target_dis;
 
-    tmp_max_speed.y = max_spd.y * std::fabs(target.Position.y) / target_dis;
-    // max_acc.y *= std::fabs(target.Position.y) / target_dis;
-    // max_dec.y *= std::fabs(target.Position.y) / target_dis;
+    tmp_max_speed.y = max_spd.y * std::fabs(target.position.y) / target_dis;
+    // max_acc.y *= std::fabs(target.position.y) / target_dis;
+    // max_dec.y *= std::fabs(target.position.y) / target_dis;
 
     float tmp_vel_mag = Common::Vec2(0.0f).distanceTo(tmp_max_speed);
 
@@ -131,7 +131,7 @@ Common::Vec3 Robot::MotionPlan(Common::RobotState state, Common::RobotState targ
      target.velocity.y = 100.0f * sgn ( target.velocity.y );
 
      Common::Vec2 Vel_offset = Common::Vec2 ( 0.0f );
-     float target_dis = DIS ( Common::Vec2 ( 0.0f ) , target.Position );
+     float target_dis = DIS ( Common::Vec2 ( 0.0f ) , target.position );
      target_dis = sqrt ( target_dis * 5.0f * DIS ( Common::Vec2 ( 0.0f ) , max_dec ) );
 
      if ( target_dis < 100 )
@@ -162,17 +162,17 @@ Common::Vec3 Robot::MotionPlan(Common::RobotState state, Common::RobotState targ
     // if ( accurate )
     ans.x = speed;
     // else
-    if (std::fabs(target.Position.x) < Pdis) // always FALSE (?)
+    if (std::fabs(target.position.x) < Pdis) // always FALSE (?)
     {
-        ans.x = KP * max_dec.x * std::fabs(target.Position.x);
+        ans.x = KP * max_dec.x * std::fabs(target.position.x);
     }
     else
     {
-        ans.x = pow(0.6f * max_dec.x * std::fabs(target.Position.x), 0.6f);
+        ans.x = pow(0.6f * max_dec.x * std::fabs(target.position.x), 0.6f);
     }
-    ans.x *= Common::sign(target.Position.x);
+    ans.x *= Common::sign(target.position.x);
     // ans.x += Vel_offset.x;
-    if (std::fabs(target.Position.x) < 5)
+    if (std::fabs(target.position.x) < 5)
         ans.x = 0.0f;
 
     if (ans.x * oldAns[state.vision_id].x <= 0)
@@ -197,7 +197,7 @@ Common::Vec3 Robot::MotionPlan(Common::RobotState state, Common::RobotState targ
         /*if ( !accurate )
          {
          if ( 30.0f * oldAns[state.vision_id].x * oldAns[state.vision_id].x / ( 120.0f * max_dec.x ) >
-         std::fabs(target.Position.x) )
+         std::fabs(target.position.x) )
          {
          ans.x = std::max ( 0 , ( std::fabs ( oldAns[state.vision_id].x ) - max_dec.x ) ) * sgn ( ans.x );
          }
@@ -227,18 +227,18 @@ Common::Vec3 Robot::MotionPlan(Common::RobotState state, Common::RobotState targ
     // if ( accurate )
     ans.y = speed;
     // else
-    if (std::fabs(target.Position.y) < Pdis)
+    if (std::fabs(target.position.y) < Pdis)
     {
-        ans.y = KP * max_dec.y * std::fabs(target.Position.y);
+        ans.y = KP * max_dec.y * std::fabs(target.position.y);
     }
     else
     {
-        ans.y = pow(0.6f * max_dec.y * std::fabs(target.Position.y), 0.6f);
+        ans.y = pow(0.6f * max_dec.y * std::fabs(target.position.y), 0.6f);
     }
-    // ans.y = sqrt ( 2.0f * max_dec.y * std::fabs( target.Position.y ) );
-    ans.y *= Common::sign(target.Position.y);
+    // ans.y = sqrt ( 2.0f * max_dec.y * std::fabs( target.position.y ) );
+    ans.y *= Common::sign(target.position.y);
     // ans.y += Vel_offset.y;
-    if (std::fabs(target.Position.y) < 5)
+    if (std::fabs(target.position.y) < 5)
     {
         ans.y = 0; // std::max(0,std::fabs(oldAns[state.vision_id].y)-max_dec.y)*Common::sign(ans.y);
     }
@@ -262,7 +262,7 @@ Common::Vec3 Robot::MotionPlan(Common::RobotState state, Common::RobotState targ
         /*if ( !accurate )
          {
          if ( 30.0f * oldAns[state.vision_id].y * oldAns[state.vision_id].y / ( 120.0f * max_dec.y ) >
-         std::fabs(target.Position.y) )
+         std::fabs(target.position.y) )
          {
          ans.y = std::max ( 0 , ( std::fabs ( oldAns[state.vision_id].y ) - max_dec.y ) ) * sgn ( ans.y );
          }
@@ -300,7 +300,7 @@ Common::Vec3 Robot::MotionPlan(Common::RobotState state, Common::RobotState targ
         std::cout << std::endl;
     }
 
-    // ans.y = target.Position.y/20.0;
+    // ans.y = target.position.y/20.0;
 
     // ans.y = 0;
 
