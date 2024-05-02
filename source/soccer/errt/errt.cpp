@@ -33,7 +33,7 @@ void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
     step_size   = step;
 
     tree.reset();
-    tree.AddNode(init_state, NULL);
+    tree.AddNode(init_state, nullptr);
 
     started_in_obs = obs_map.isInObstacle(init);
 
@@ -42,7 +42,7 @@ void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
     step_size = step;
 
     tree.reset ( );
-    tree.AddNode ( init_state , NULL );
+    tree.AddNode ( init_state , nullptr );
 
     if ( obs_map.isInObstacle ( init_state ) )
     {
@@ -175,7 +175,7 @@ Common::Vec2 Planner::choose_target(int *type)
 {
     float r = random.get();
 
-    if (type == NULL)
+    if (type == nullptr)
         type = new int;
 
     if (r <= goal_target_prob)
@@ -204,7 +204,7 @@ Node *Planner::extend(Node *s, Common::Vec2 &target)
     dis = s->state.distanceTo(target);
 
     if (dis < step_size)
-        return NULL;
+        return nullptr;
 
     // dx = std::min ( step_size , dis ) * ( target.x - s->state.x ) / dis;
     // dy = std::min ( step_size , dis ) * ( target.y - s->state.y ) / dis;
@@ -217,14 +217,14 @@ Node *Planner::extend(Node *s, Common::Vec2 &target)
 
     // Boundary check
     // if ( ( new_state.x >= 605 ) || ( new_state.x < 0 ) || ( new_state.y >= 405 ) || ( new_state.y < 0 ) )
-    //         return NULL;
+    //         return nullptr;
 
     // collision check
     if (obs_map.isInObstacle(new_state))
-        return NULL;
+        return nullptr;
 
     if (obs_map.collisionDetect(new_state, s->state))
-        return NULL;
+        return nullptr;
 
     return tree.AddNode(new_state, s);
 }
