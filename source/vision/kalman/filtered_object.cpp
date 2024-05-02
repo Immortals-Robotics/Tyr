@@ -50,7 +50,6 @@ FilteredObject::FilteredObject(const std::filesystem::path t_filename1, const st
         matFile >> lossVec[1];
         // close the file
         matFile.close();
-        usageCount = 0;
 
         // calculate the inverse of C matrix
         // inv(C)= inv(a b) =  (1/(ad-bc)) (d  -b)
@@ -107,6 +106,8 @@ void FilteredObject::initializePos(Common::Vec2 t_pos)
     m_state_vel_p.x = lossVecP[1] * t_pos.x;
     m_state_pos_p.y = lossVecP[0] * t_pos.y;
     m_state_vel_p.y = lossVecP[1] * t_pos.y;
+
+    m_initialized = true;
 }
 
 void FilteredObject::updatePosition(Common::Vec2 t_pos)
@@ -114,9 +115,8 @@ void FilteredObject::updatePosition(Common::Vec2 t_pos)
     Common::Vec2 filt_out_pos_p{};
     Common::Vec2 filt_out_vel_p{};
 
-    if (usageCount == 0)
+    if (!m_initialized)
         initializePos(t_pos);
-    usageCount++;
 
     t_pos /= 10.0f;
 
