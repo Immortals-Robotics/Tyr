@@ -46,21 +46,21 @@ void Ai::recievePass(int robot_num, Common::Vec2 staticPos, bool chip)
         maxBallAngle = 0;
     }
 
-    float distCoeff = ball.Position.distanceTo(OwnRobot[robot_num].State.Position) / 1500.0f;
+    float distCoeff = ball.position.distanceTo(OwnRobot[robot_num].State.position) / 1500.0f;
     distCoeff       = std::max(0.8f, distCoeff);
     distCoeff       = std::min(1.2f, distCoeff);
     // angleTol *= distCoeff;
     if (0) //(oneTouchType[robot_num] ==
-           // shirje)&&(oneTouchDetector[robot_num].IsArriving(OwnRobot[dmf].State.Position,angleTol, maxBallAngle)))
+           // shirje)&&(oneTouchDetector[robot_num].IsArriving(OwnRobot[dmf].State.position,angleTol, maxBallAngle)))
     {
-        WaitForPass(robot_num, 0, &OwnRobot[attack].State.Position);
+        WaitForPass(robot_num, 0, &OwnRobot[attack].State.position);
     }
-    /*else if ((oneTouchType[robot_num] == shirje)&&(DIS(ball.Position,
-    OwnRobot[robot_num].State.Position)<450)&&(timer.time()<4.0))
+    /*else if ((oneTouchType[robot_num] == shirje)&&(DIS(ball.position,
+    OwnRobot[robot_num].State.position)<450)&&(timer.time()<4.0))
     {
         int targetRobotNum = (robot_num==lmf)?rmf:lmf;
-        float passAngle = AngleWith ( Common::Vec2 ( -side*2500 , -sgn ( ball.Position.y ) * 1700 ) , ball.Position );
-        //float passAngle = AngleWith ( OwnRobot[targetRobotNum].State.Position , ball.Position );
+        float passAngle = AngleWith ( Common::Vec2 ( -side*2500 , -sgn ( ball.position.y ) * 1700 ) , ball.position );
+        //float passAngle = AngleWith ( OwnRobot[targetRobotNum].State.position , ball.position );
         //tech_circle(robot_num, passAngle, 0, 120, 1, 1, 0, 1);
         circle_ball(robot_num, passAngle, 0, 80, 1.0f);
     }*/
@@ -78,7 +78,7 @@ void Ai::recievePass(int robot_num, Common::Vec2 staticPos, bool chip)
         else if (oneTouchType[robot_num] == shirje)
         {
             WaitForOmghi(robot_num, chip);
-            // WaitForPass(robot_num, 0, &OwnRobot[dmf].State.Position);
+            // WaitForPass(robot_num, 0, &OwnRobot[dmf].State.position);
         }
         else if (oneTouchType[robot_num] == gool)
         {

@@ -19,12 +19,12 @@ void Ai::penalty_their_simple()
     }
     else
     {
-        //		float gkp_y = Common::Line::fromTwoPoints ( Common::Vec2 ( OppRobot[index].Position.x ,
-        // OppRobot[index].Position.y ) , Common::Vec2 ( ball.Position.x , ball.Position.y ) ).intersect (
+        //		float gkp_y = Common::Line::fromTwoPoints ( Common::Vec2 ( OppRobot[index].position.x ,
+        // OppRobot[index].position.y ) , ball.position).intersect (
         // Common::Line::fromTwoPoints ( Common::Vec2 ( side * penalty_x , 100 ) , Common::Vec2 ( side * penalty_x ,
         // -100 ) ) ).getY ( );
         // TODO #7 check this!!!!
-        float gkp_y = Common::Line::fromPointAndAngle(ball.Position, OppRobot[index].angle)
+        float gkp_y = Common::Line::fromPointAndAngle(ball.position, OppRobot[index].angle)
                           .intersect(Common::Line::fromTwoPoints(Common::Vec2(side * penalty_x, 100),
                                                                  Common::Vec2(side * penalty_x, -100)))
                           .value_or(Common::Vec2())
@@ -35,7 +35,7 @@ void Ai::penalty_their_simple()
         if (-max_reach_y > gkp_y)
             gkp_y = -max_reach_y;
 
-        OwnRobot[gk].face(ball.Position);
+        OwnRobot[gk].face(ball.position);
 
         Navigate2Point(gk, Common::Vec2(side * penalty_x, gkp_y), false, 100, &VELOCITY_PROFILE_KILLER);
     }

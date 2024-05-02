@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 void Ai::DefenceWall(int robot_num, bool kickOff)
 {
-    float x     = -side * ball.Position.x;
+    float x     = -side * ball.position.x;
     float tetta = -0.000003f * x * x + 0.0016f * x + 90.0f;
     if (kickOff)
     {
@@ -17,20 +17,20 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
     int index = findKickerOpp(-1);
     if (index == -1)
     {
-        target = ball.Position.circleAroundPoint(ball.Position.angleWith(Common::Vec2(side * field_width, 0)), 730);
+        target = ball.position.circleAroundPoint(ball.position.angleWith(Common::Vec2(side * field_width, 0)), 730);
     }
     else
     {
-        target = OppRobot[index].Position.pointOnConnectingLine(
-            ball.Position, 590 + ball.Position.distanceTo(OppRobot[index].Position));
+        target = OppRobot[index].position.pointOnConnectingLine(
+            ball.position, 590 + ball.position.distanceTo(OppRobot[index].position));
     }
 
     // std::cout << index << std::endl;
 
-    Common::Angle ballAngle = ball.Position.angleWith(target);
+    Common::Angle ballAngle = ball.position.angleWith(target);
     Common::Angle firstLeg =
-        ball.Position.angleWith(Common::Vec2(side * field_width, Common::sign(ball.Position.y) * (350.0f)));
-    Common::Angle secLeg = firstLeg - Common::Angle::fromDeg(tetta * Common::sign(ball.Position.y) * side);
+        ball.position.angleWith(Common::Vec2(side * field_width, Common::sign(ball.position.y) * (350.0f)));
+    Common::Angle secLeg = firstLeg - Common::Angle::fromDeg(tetta * Common::sign(ball.position.y) * side);
 
     // std::cout << "	ball: " << ballAngle << "	f: " << firstLeg << "	s: " << secLeg << std::endl;
 
@@ -40,10 +40,10 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
 
     if (isOut)
     {
-        target = ball.Position.circleAroundPoint(ball.Position.angleWith(Common::Vec2(side * field_width, 0)), 730);
+        target = ball.position.circleAroundPoint(ball.position.angleWith(Common::Vec2(side * field_width, 0)), 730);
     }
 
-    OwnRobot[robot_num].face(ball.Position);
+    OwnRobot[robot_num].face(ball.position);
     ERRTSetObstacles(robot_num, true, true);
     ERRTNavigate2Point(robot_num, target);
 }

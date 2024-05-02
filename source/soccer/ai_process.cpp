@@ -11,34 +11,30 @@ void Ai::Process(Common::WorldState *worldState)
     internalProcessData(worldState);
 
     debugDraw = true;
-    Common::debug().drawCircle(ball.Position, 40, "", Common::Red);
-    //	Common::debug().drawLineSegment(ball.Position,Common::Vec2(ball.velocity.x,ball.velocity.y) + ball.Position,
+    Common::debug().drawCircle(ball.position, 40, "", Common::Red);
+    //	Common::debug().drawLineSegment(ball.position,Common::Vec2(ball.velocity.x,ball.velocity.y) + ball.position,
     //Black);
 
-    //    Common::Vec2 spd_v= worldState->ball.path_dir;
-    //    Common::debug().drawLineSegment(ball.Position,spd_v + ball.Position, Yellow);
-    //    Common::debug().drawLineSegment(ball.Position,Common::Vec2(ball.velocity.x,ball.velocity.y) + ball.Position,
-    //    Yellow);
     debugDraw = false;
 
-    if (REF_playState)
+    if (refereeState)
     {
-        if (lastReferee != REF_playState->get())
+        if (lastReferee != refereeState->get())
         {
             timer.start();
-            lastReferee = REF_playState->get();
+            lastReferee = refereeState->get();
             randomParam = random.get();
             target_str  = strategy_weight();
             FUNC_state  = 0;
             FUNC_CNT    = 0;
         }
 
-        if (REF_playState->stop())
+        if (refereeState->stop())
         {
             FUNC_state = 0;
 
             oppRestarted = false;
-            if (side * ball.Position.x > field_width * 0.7f)
+            if (side * ball.position.x > field_width * 0.7f)
             {
                 currentPlay = "Stop_def";
             }
@@ -47,17 +43,17 @@ void Ai::Process(Common::WorldState *worldState)
                 currentPlay = "Stop";
             }
         }
-        else if (REF_playState->gameOn())
+        else if (refereeState->gameOn())
         {
             currentPlay = "NewNormalPlay";
         }
-        else if (REF_playState->ourKickoff())
+        else if (refereeState->ourKickoff())
         {
             currentPlay = "kickoff_us_chip";
 
-            currentPlayParam = static_cast<uint32_t>(refereeState->State->canKickBall());
+            currentPlayParam = static_cast<uint32_t>(refereeState->canKickBall());
         }
-        else if ((REF_playState->ourDirectKick()) || (REF_playState->ourIndirectKick()))
+        else if ((refereeState->ourDirectKick()) || (refereeState->ourIndirectKick()))
         {
             if (target_str != -1)
             {
@@ -70,37 +66,37 @@ void Ai::Process(Common::WorldState *worldState)
             }
             std::cout << currentPlay << std::endl;
         }
-        else if (REF_playState->ourPenaltyKick())
+        else if (refereeState->ourPenaltyKick())
         {
             currentPlay      = "penalty_us_shootout";
-            currentPlayParam = static_cast<uint32_t>(refereeState->State->canKickBall());
-            //			std::cout << "IN_PENALTY..."<<worldState ->refereeState -> State->canKickBall()<<std::endl;
+            currentPlayParam = static_cast<uint32_t>(refereeState->canKickBall());
+            //			std::cout << "IN_PENALTY..."<<worldState ->refereeState -> state.canKickBall()<<std::endl;
         }
-        else if (REF_playState->ourPlaceBall())
+        else if (refereeState->ourPlaceBall())
         {
-            //            targetBallPlacement->X = -2500;
-            //            targetBallPlacement->Y = -1500;
+            //            refereeState->place_ball_target.X = -2500;
+            //            refereeState->place_ball_target.Y = -1500;
             currentPlay = "our_place_ball_shoot";
             currentPlay = "our_place_ball_shoot_V2"; // COMMENT this if it's not working...
             //			currentPlay = "our_place_ball_shoot_taki";
         }
-        else if (REF_playState->theirFreeKick())
+        else if (refereeState->theirFreeKick())
         {
             currentPlay = "corner_their_global";
         }
-        else if (REF_playState->theirKickoff())
+        else if (refereeState->theirKickoff())
         {
             currentPlay = "kickoff_their_one_wall";
         }
-        else if (REF_playState->theirPenaltyKick())
+        else if (refereeState->theirPenaltyKick())
         {
             currentPlay = "penalty_their_simple";
         }
-        else if (REF_playState->theirPlaceBall())
+        else if (refereeState->theirPlaceBall())
         {
             currentPlay = "their_place_ball";
         }
-        else if (REF_playState->get() == Common::GameState::STATE_HALTED)
+        else if (refereeState->get() == Common::RefereeState::STATE_HALTED)
         {
             currentPlay = "HaltAll";
         }
@@ -109,7 +105,7 @@ void Ai::Process(Common::WorldState *worldState)
             currentPlay = "Stop";
         }
 
-        if (REF_playState->theirRestart())
+        if (refereeState->theirRestart())
         {
             oppRestarted = true;
         }
@@ -133,7 +129,7 @@ void Ai::Process(Common::WorldState *worldState)
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        if ((OwnRobot[i].State.seenState == Common::CompletelyOut) || (!navigated[i]))
+        if ((OwnRobot[i].State.seen_state == Common::SeenState::CompletelyOut) || (!navigated[i]))
         {
             Halt(i);
         }

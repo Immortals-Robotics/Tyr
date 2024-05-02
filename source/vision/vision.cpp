@@ -2,58 +2,42 @@
 
 namespace Tyr::Vision
 {
-Vision::Vision(Common::WorldState *_State)
+Vision::Vision(Common::WorldState *t_state)
 {
-    playState = _State;
-
-    // Initializing the settings:
-    our_color = Common::setting().our_color == Common::TeamColor::Yellow ? COLOR_YELLOW : COLOR_BLUE;
-    our_side  = Common::setting().our_side == Common::TeamSide::Left ? LEFT_SIDE : RIGHT_SIDE;
+    m_state = t_state;
 
     for (int i = 0; i < Common::Setting::kCamCount; i++)
-        packet_recieved[i] = false;
+        m_packet_received[i] = false;
 
-    for (int i = 0; i < BALL_BUFFER_FRAMES; i++)
-    {
-        ball_pos_buff[i] = Common::Vec2(0.0, 0.0);
-    }
+    m_last_raw_ball.set_x(0.0f);
+    m_last_raw_ball.set_y(0.0f);
 
-    lastRawBall.set_x(0.0f);
-    lastRawBall.set_y(0.0f);
+    const std::filesystem::path fast_filter_path = std::filesystem::path{DATA_DIR} / "ball_filter_fast.txt";
+    const std::filesystem::path slow_filter_path = std::filesystem::path{DATA_DIR} / "ball_filter_slow.txt";
 
-    std::string fast_filter_path(DATA_DIR);
-    fast_filter_path.append("/ball_filter_fast.txt");
-    std::string slow_filter_path(DATA_DIR);
-    slow_filter_path.append("/ball_filter_slow.txt");
-
-    ball_kalman.initialize(fast_filter_path.c_str(), slow_filter_path.c_str());
+    m_ball_kalman = FilteredObject{fast_filter_path, slow_filter_path};
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        robot_kalman[0][i].initialize(fast_filter_path.c_str(), slow_filter_path.c_str());
-        robot_kalman[1][i].initialize(fast_filter_path.c_str(), slow_filter_path.c_str());
-        rawAngles[0][i] = 0.0f;
-        rawAngles[1][i] = 0.0f;
+        m_robot_kalman[0][i] = FilteredObject{fast_filter_path, slow_filter_path};
+        m_robot_kalman[1][i] = FilteredObject{fast_filter_path, slow_filter_path};
+
+        m_raw_angles[0][i] = 0.0f;
+        m_raw_angles[1][i] = 0.0f;
     }
 
-    ball_kalman.initialize(fast_filter_path.c_str(), slow_filter_path.c_str());
-
-    // Launching UDP Connections
-    if (!connectToVisionServer())
+    if (!connect())
     {
         std::cout << "Failed to connect to Vision UDP" << std::endl;
     }
 }
-Vision::~Vision()
-{}
 
-void Vision::recieveAllCameras()
+void Vision::receive()
 {
     if (!isConnected())
     {
         std::cout << "	Hey you! Put the LAN cable back in its socket, or ..." << std::endl;
         return;
-        // connectToVisionServer ( setting -> UDP_Adress , setting -> LocalPort );
     }
 
     bool cams_ready = false;
@@ -62,7 +46,7 @@ void Vision::recieveAllCameras()
         cams_ready = true;
         for (int i = 0; i < Common::Setting::kCamCount; i++)
         {
-            bool new_cam_ready = packet_recieved[i] || (!Common::setting().use_camera[i]);
+            bool new_cam_ready = m_packet_received[i] || (!Common::setting().use_camera[i]);
             if (!new_cam_ready)
             {
                 cams_ready = false;
@@ -71,18 +55,16 @@ void Vision::recieveAllCameras()
         }
         if (cams_ready)
             break;
-        // std::cout << "bodo dg    " << cams_ready << std::endl;
-        recievePacket();
+        receivePacket();
     }
 }
 
-void Vision::ProcessVision()
+void Vision::process()
 {
-    ProcessBalls(this->playState);
-    ProcessRobots(this->playState);
-    ProcessParam(this->playState);
+    processBalls();
+    processRobots();
 
     for (int i = 0; i < Common::Setting::kCamCount; i++)
-        packet_recieved[i] = false;
+        m_packet_received[i] = false;
 }
 } // namespace Tyr::Vision

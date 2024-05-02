@@ -8,11 +8,11 @@ void Ai::kickoff_their_one_wall()
     DefMid(def, rw, lw, NULL, false);
 
     ERRTSetObstacles(dmf, true, true);
-    OwnRobot[dmf].face(ball.Position);
+    OwnRobot[dmf].face(ball.position);
     ERRTNavigate2Point(
         dmf,
-        ball.Position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
-                                            ball.Position.distanceTo(Common::Vec2(side * field_width, 0)) / 2.0f),
+        ball.position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
+                                            ball.position.distanceTo(Common::Vec2(side * field_width, 0)) / 2.0f),
         0, 40, &VELOCITY_PROFILE_MAMOOLI);
 
     int indexP = -1;
@@ -20,12 +20,12 @@ void Ai::kickoff_their_one_wall()
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if ((std::fabs(OppRobot[i].Position.x) < 1500) && (std::fabs(OppRobot[i].Position.y) > 600) &&
-            (OppRobot[i].seenState != Common::CompletelyOut))
+        if ((std::fabs(OppRobot[i].position.x) < 1500) && (std::fabs(OppRobot[i].position.y) > 600) &&
+            (OppRobot[i].seen_state != Common::SeenState::CompletelyOut))
         {
-            if (OppRobot[i].Position.y > 0)
+            if (OppRobot[i].position.y > 0)
                 indexP = i;
-            if (OppRobot[i].Position.y < 0)
+            if (OppRobot[i].position.y < 0)
                 indexN = i;
         }
     }
@@ -39,8 +39,8 @@ void Ai::kickoff_their_one_wall()
             ERRTSetObstacles(mid1, true, true);
             OwnRobot[mid1].face(Common::Vec2(-side * field_width, 0));
             ERRTNavigate2Point(
-                mid1, OppRobot[indexN].Position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
-                                                                      (std::fabs(OppRobot[indexN].Position.x) + 14) * 1.5));
+                mid1, OppRobot[indexN].position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
+                                                                      (std::fabs(OppRobot[indexN].position.x) + 14) * 1.5));
             markMap[&mid1] = indexN;
         }
         else
@@ -48,8 +48,8 @@ void Ai::kickoff_their_one_wall()
             ERRTSetObstacles(mid2, true, true);
             OwnRobot[mid2].face(Common::Vec2(-side * field_width, 0));
             ERRTNavigate2Point(
-                mid2, OppRobot[indexN].Position.pointOnConnectingLine(
-                          Common::Vec2(side * field_width, 0), (std::fabs(OppRobot[indexN].Position.x) + 14) * 1.5));
+                mid2, OppRobot[indexN].position.pointOnConnectingLine(
+                          Common::Vec2(side * field_width, 0), (std::fabs(OppRobot[indexN].position.x) + 14) * 1.5));
             markMap[&mid2] = indexN;
         }
     }
@@ -58,11 +58,11 @@ void Ai::kickoff_their_one_wall()
         if (side == -1)
         {
             ERRTSetObstacles(mid1, true, true);
-            OwnRobot[mid1].face(ball.Position);
+            OwnRobot[mid1].face(ball.position);
             ERRTNavigate2Point(
                 mid1,
-                ball.Position.circleAroundPoint(Common::Angle::fromDeg(20.0f) +
-                                                    ball.Position.angleWith(Common::Vec2(side * field_width, 0)),
+                ball.position.circleAroundPoint(Common::Angle::fromDeg(20.0f) +
+                                                    ball.position.angleWith(Common::Vec2(side * field_width, 0)),
                                                 790.0f),
                 0, 100);
             markMap[&mid1] = -1;
@@ -70,11 +70,11 @@ void Ai::kickoff_their_one_wall()
         else
         {
             ERRTSetObstacles(mid2, true, true);
-            OwnRobot[mid2].face(ball.Position);
+            OwnRobot[mid2].face(ball.position);
             ERRTNavigate2Point(
                 mid2,
-                ball.Position.circleAroundPoint(Common::Angle::fromDeg(-20.0f) +
-                                                    ball.Position.angleWith(Common::Vec2(side * field_width, 0)),
+                ball.position.circleAroundPoint(Common::Angle::fromDeg(-20.0f) +
+                                                    ball.position.angleWith(Common::Vec2(side * field_width, 0)),
                                                 790.0f),
                 0, 100);
             markMap[&mid2] = -1;
@@ -88,8 +88,8 @@ void Ai::kickoff_their_one_wall()
             ERRTSetObstacles(mid1, true, true);
             OwnRobot[mid1].face(Common::Vec2(-side * field_width, 0));
             ERRTNavigate2Point(
-                mid1, OppRobot[indexP].Position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
-                                                                      (std::fabs(OppRobot[indexP].Position.x) + 14) * 1.5));
+                mid1, OppRobot[indexP].position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
+                                                                      (std::fabs(OppRobot[indexP].position.x) + 14) * 1.5));
             markMap[&mid1] = indexP;
         }
         else
@@ -97,8 +97,8 @@ void Ai::kickoff_their_one_wall()
             ERRTSetObstacles(mid2, true, true);
             OwnRobot[mid2].face(Common::Vec2(-side * field_width, 0));
             ERRTNavigate2Point(
-                mid2, OppRobot[indexP].Position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
-                                                                      (std::fabs(OppRobot[indexP].Position.x) + 14) * 1.5));
+                mid2, OppRobot[indexP].position.pointOnConnectingLine(Common::Vec2(side * field_width, 0),
+                                                                      (std::fabs(OppRobot[indexP].position.x) + 14) * 1.5));
             markMap[&mid2] = indexP;
         }
     }
@@ -107,22 +107,22 @@ void Ai::kickoff_their_one_wall()
         if (side == 1)
         {
             ERRTSetObstacles(mid1, true, true);
-            OwnRobot[mid1].face(ball.Position);
+            OwnRobot[mid1].face(ball.position);
             ERRTNavigate2Point(
                 mid1,
-                ball.Position.circleAroundPoint(
-                    Common::Angle::fromDeg(20) + ball.Position.angleWith(Common::Vec2(side * field_width, 0)), 790),
+                ball.position.circleAroundPoint(
+                    Common::Angle::fromDeg(20) + ball.position.angleWith(Common::Vec2(side * field_width, 0)), 790),
                 0, 100);
             markMap[&mid1] = -1;
         }
         else
         {
             ERRTSetObstacles(mid2, true, true);
-            OwnRobot[mid2].face(ball.Position);
+            OwnRobot[mid2].face(ball.position);
             ERRTNavigate2Point(
                 mid2,
-                ball.Position.circleAroundPoint(
-                    Common::Angle::fromDeg(-20) + ball.Position.angleWith(Common::Vec2(side * field_width, 0)), 790),
+                ball.position.circleAroundPoint(
+                    Common::Angle::fromDeg(-20) + ball.position.angleWith(Common::Vec2(side * field_width, 0)), 790),
                 0, 100);
             markMap[&mid2] = -1;
         }

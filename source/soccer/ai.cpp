@@ -34,9 +34,6 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     penalty_area_width = 3650.0f;
 #endif
 
-    REF_playState       = refereeState->State;
-    targetBallPlacement = &refereeState->placeBallTargetPosition;
-
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
         oneTouchDetector[i].field_w = field_width;
@@ -68,7 +65,7 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     gamma  = 0.14; // Reflect factor
     shootK = 4000.0f;
 
-    lastReferee = Common::GameState::STATE_GAME_OFF;
+    lastReferee = Common::RefereeState::STATE_GAME_OFF;
 
     attack = cmf;
     mid1   = rmf;
@@ -107,6 +104,8 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     {
         OwnRobot[i].set_vision_id(i + 1);
     }
+
+#if 0
     OwnRobot[gk].set_vision_id(4);
     OwnRobot[def].set_vision_id(10);
     OwnRobot[dmf].set_vision_id(1);
@@ -115,15 +114,17 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     OwnRobot[cmf].set_vision_id(2);
     OwnRobot[rw].set_vision_id(7);
     OwnRobot[lw].set_vision_id(8);
+#else
     // TODO comment this (used fogrSim)
-    //	OwnRobot[gk].set_vision_id(0);
-    //    OwnRobot[def].set_vision_id(1);
-    //    OwnRobot[dmf].set_vision_id(2);
-    //    OwnRobot[lmf].set_vision_id(3);
-    //    OwnRobot[rmf].set_vision_id(4);
-    //    OwnRobot[cmf].set_vision_id(5);
-    //	OwnRobot[rw].set_vision_id(6);
-    //	OwnRobot[lw].set_vision_id(7);
+    OwnRobot[gk].set_vision_id(0);
+    OwnRobot[def].set_vision_id(1);
+    OwnRobot[dmf].set_vision_id(2);
+    OwnRobot[lmf].set_vision_id(3);
+    OwnRobot[rmf].set_vision_id(4);
+    OwnRobot[cmf].set_vision_id(5);
+    OwnRobot[rw].set_vision_id(6);
+    OwnRobot[lw].set_vision_id(7);
+#endif
 
     chip_head = Common::Angle::fromDeg(200);
 

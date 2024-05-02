@@ -17,7 +17,7 @@ bool Ai::ballIsGoaling()
     if (ball.velocity.length() < 200.0f)
         return false;
 
-    Common::Line ball_line = Common::Line::fromPointAndAngle(ball.Position, ball.velocity.toAngle());
+    Common::Line ball_line = Common::Line::fromPointAndAngle(ball.position, ball.velocity.toAngle());
     Common::Line targetLine =
         Common::Line::fromTwoPoints(Common::Vec2(side * field_width, -100), Common::Vec2(side * field_width, 100));
     Common::Vec2 ballInter = ball_line.intersect(targetLine).value_or(Common::Vec2());

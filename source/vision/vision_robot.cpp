@@ -2,102 +2,87 @@
 
 namespace Tyr::Vision
 {
-// Don't add prediction to Ball or Opponents if both velocities are below this threshold
-const float IGNORE_PREDICTION = 0.045f;
-
-// If the filtering process yields velocities above these values, reset the filter state
-// All these are in metres/sec
-const float BALL_ERROR_VELOCITY_SQUARED     = 1960000.0f;
-const float OPPONENT_ERROR_VELOCITY_SQUARED = 200000.0f;
-
-std::ofstream outfile("outf.txt");
-std::ofstream delay_data("delay.txt");
-unsigned int  fr_num = 0;
-
-void Vision::ProcessRobots(Common::WorldState *state)
+void Vision::processRobots()
 {
-    int robots_num = 0;
+    const Common::TeamColor our_color = Common::setting().our_color;
+    const Common::TeamColor opp_color = (Common::TeamColor)(1 - (int) our_color);
 
     // Blue Robots
     // First we have to extract the robots!
-    robots_num = ExtractBlueRobots();
+    extractBlueRobots();
 
     // Now lets merge them!
-    robots_num = MergeRobots(robots_num);
+    mergeRobots();
 
     // The most important part, The Kalman Filter!
-    FilterRobots(robots_num, this->our_color);
+    filterRobots(our_color);
 
     // Yellow Robots
     // First we have to extract the robots!
-    robots_num = ExtractYellowRobots();
+    extractYellowRobots();
 
     // Now lets merge them!
-    robots_num = MergeRobots(robots_num);
+    mergeRobots();
 
     // The most important part, The Kalman Filter!
-    FilterRobots(robots_num, !(this->our_color));
+    filterRobots(opp_color);
 
     // We're almost done, only Prediction remains undone!
-    predictRobotsForward(state);
-    // RunANN(state);
-    // PredictWithANN(state);
-    // TrainANN(0.1f);
-    // RunANN(state);
+    predictRobots();
 
     // Now we send Robots States to the AI!
-    SendStates(state);
-
-    // int cmdIndex = state->lastCMDS[6][10].x;
-    // delay_data << fr_num++ << "	" << state->OwnRobot[6].Position.x << "	" << state->OwnRobot[6].Position.y << "	" <<
-    // state->lastCMDS[6][cmdIndex].x << "	" << state->lastCMDS[6][cmdIndex].y << std::endl;
+    sendStates();
 }
-int Vision::ExtractBlueRobots()
+void Vision::extractBlueRobots()
 {
-    int ans = 0;
+    m_d_robot.clear();
+
     for (int i = 0; i < Common::Setting::kCamCount; i++)
     {
         if (Common::setting().use_camera[i])
         {
-            for (int j = 0; j < std::min((int) Common::Setting::kMaxRobots, frame[i].robots_blue_size()); j++)
+            for (int j = 0; j < std::min((int) Common::Setting::kMaxRobots, m_d_frame[i].robots_blue_size()); j++)
             {
-                robot[ans] = frame[i].robots_blue(j);
-                ans++;
+                m_d_robot.push_back(m_d_frame[i].robots_blue(j));
             }
         }
     }
-    return ans;
 }
 
-int Vision::ExtractYellowRobots()
+void Vision::extractYellowRobots()
 {
-    int ans = 0;
+    m_d_robot.clear();
+
     for (int i = 0; i < Common::Setting::kCamCount; i++)
     {
         if (Common::setting().use_camera[i])
         {
-            for (int j = 0; j < std::min((int) Common::Setting::kMaxRobots, frame[i].robots_yellow_size()); j++)
+            for (int j = 0; j < std::min((int) Common::Setting::kMaxRobots, m_d_frame[i].robots_yellow_size()); j++)
             {
-                robot[ans] = frame[i].robots_yellow(j);
-                ans++;
+                m_d_robot.push_back(m_d_frame[i].robots_yellow(j));
             }
         }
     }
-    return ans;
 }
 
-int Vision::MergeRobots(int num)
+void Vision::mergeRobots()
 {
+    int num = m_d_robot.size();
+
     int robots_num = 0;
     for (int i = 0; i < num; i++)
     {
+        const Common::Vec2 robot_i{m_d_robot[i].x(), m_d_robot[i].y()};
+
         for (int j = i + 1; j < num; j++)
         {
-            if (POWED_DIS(robot[i].x(), robot[i].y(), robot[j].x(), robot[j].y()) < MERGE_DISTANCE)
+            const Common::Vec2 robot_j{m_d_robot[j].x(), m_d_robot[j].y()};
+
+            if (robot_i.distanceTo(robot_j) < Common::setting().merge_distance)
             {
-                robot[i].set_x((robot[i].x() + robot[j].x()) / (float) 2.0);
-                robot[i].set_y((robot[i].y() + robot[j].y()) / (float) 2.0);
-                robot[j] = robot[num - 1];
+                m_d_robot[i].set_x((m_d_robot[i].x() + m_d_robot[j].x()) / (float) 2.0);
+                m_d_robot[i].set_y((m_d_robot[i].y() + m_d_robot[j].y()) / (float) 2.0);
+                m_d_robot[j] = m_d_robot[num - 1];
                 num--;
 
                 j--;
@@ -106,236 +91,164 @@ int Vision::MergeRobots(int num)
         robots_num++;
     }
 
-    return robots_num;
+    m_d_robot.resize(robots_num);
 }
 
-void Vision::FilterRobots(int num, bool own)
+void Vision::filterRobots(Common::TeamColor t_color)
 {
-    float filtout[2][2];
-    float filtpos[2];
+    const int color_id = (int) t_color;
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
+        Common::Vec2 filt_pos{};
+        Common::Vec2 filt_vel{};
+
         bool found = false;
-        for (int j = 0; j < num; j++)
+        for (int j = 0; j < m_d_robot.size(); j++)
         {
-            if (robot[j].robot_id() == i)
+            if (m_d_robot[j].robot_id() == i)
             {
                 found = true;
 
-                filtpos[0] = robot[j].x() / (float) 10.0;
-                filtpos[1] = robot[j].y() / (float) 10.0;
+                Common::Vec2 filtpos{m_d_robot[j].x(), m_d_robot[j].y()};
 
-                if (robot_not_seen[own][i] > 0)
+                if (m_robot_not_seen[color_id][i] > 0)
                 {
-                    robot_kalman[own][i].initializePos(filtpos);
-                    AngleFilter[own][i].reset();
+                    m_robot_kalman[color_id][i].initializePos(filtpos);
+                    m_angle_filter[color_id][i].reset();
                 }
 
-                robot_not_seen[own][i] = 0;
+                m_robot_not_seen[color_id][i] = 0;
 
-                robot_kalman[own][i].updatePosition(filtpos, filtout);
+                m_robot_kalman[color_id][i].updatePosition(filtpos);
+                filt_pos = m_robot_kalman[color_id][i].getPosition();
+                filt_vel = m_robot_kalman[color_id][i].getVelocity();
 
-                // if ( robot[j].robot_id() == 5 )
-                // robot[j].set_orientation ( robot[j].orientation() + 0.135 );
-
-                AngleFilter[own][i].AddData((robot[j].orientation() - rawAngles[own][i]) * 61.0f);
-                rawAngles[own][i] = robot[j].orientation();
-                // if ( std::fabs ( (AngleFilter[own][i].GetCurrent()*180.0f/3.1415f) - robotState[own][i].AngularVelocity )
-                // > 30.0f ) 	AngleFilter[own][i].reset(); else
-                {
-                    robotState[own][i].AngularVelocity = Common::Angle::fromRad(AngleFilter[own][i].GetCurrent());
-                }
-                robotState[own][i].angle = Common::Angle::fromRad(robot[j].orientation());
-                // if ( robot[j].robot_id() == 1 )
-                //	std::cout << robotState[own][i].AngularVelocity << std::endl;
+                m_angle_filter[color_id][i].AddData((m_d_robot[j].orientation() - m_raw_angles[color_id][i]) * 61.0f);
+                m_raw_angles[color_id][i] = m_d_robot[j].orientation();
+                m_robot_state[color_id][i].angular_velocity =
+                    Common::Angle::fromRad(m_angle_filter[color_id][i].GetCurrent());
+                m_robot_state[color_id][i].angle = Common::Angle::fromRad(m_d_robot[j].orientation());
 
                 // Make sure our filtered velocities are reasonable
-                if (std::fabs(robotState[own][i].AngularVelocity.deg()) < 20.0f)
-                    robotState[own][i].AngularVelocity.setDeg(0.0f);
-                /*if ( std::fabs ( robotState[own][i].AngularVelocity ) > 4000.0f )
-                 robotState[own][i].AngularVelocity = 0.0f;*/
+                if (std::fabs(m_robot_state[color_id][i].angular_velocity.deg()) < 20.0f)
+                    m_robot_state[color_id][i].angular_velocity.setDeg(0.0f);
             }
         }
 
         if (!found)
         {
-            robot_not_seen[own][i]++;
-            if (robot_not_seen[own][i] >= MAX_ROBOT_NOT_SEEN + 1)
-                robot_not_seen[own][i] = MAX_ROBOT_NOT_SEEN + 1;
+            m_robot_not_seen[color_id][i]++;
+            if (m_robot_not_seen[color_id][i] >= Common::setting().max_robot_frame_not_seen + 1)
+                m_robot_not_seen[color_id][i] = Common::setting().max_robot_frame_not_seen + 1;
 
-            // robotState[own][i].Angle = 0.0f;
-            robotState[own][i].AngularVelocity.setDeg(0.0f);
-
-            // robotState[own][i].velocity.x = 0.0f;
-            // robotState[own][i].velocity.y = 0.0f;
-
-            // robotState[own][i].velocity.direction = 0.0f;
-            // robotState[own][i].velocity.length = 0.0f;
-
-            // robotState[own][i].Position.x += robotState[own][i].velocity.x / 61.0;
-            // robotState[own][i].Position.y += robotState[own][i].velocity.y / 61.0;
-
-            //}
+            m_robot_state[color_id][i].angular_velocity.setDeg(0.0f);
         }
 
         else
         {
-            robotState[own][i].Position.x = filtout[0][0];
-            robotState[own][i].Position.y = filtout[1][0];
-            robotState[own][i].velocity.x = filtout[0][1];
-            robotState[own][i].velocity.y = filtout[1][1];
+            m_robot_state[color_id][i].position = filt_pos;
+            m_robot_state[color_id][i].velocity = filt_vel;
 
             // Make sure our filtered velocities are reasonable
-            if ((robotState[own][i].velocity.x * robotState[own][i].velocity.x) +
-                    (robotState[own][i].velocity.y * robotState[own][i].velocity.y) >
-                OPPONENT_ERROR_VELOCITY_SQUARED)
+            if ((m_robot_state[color_id][i].velocity.length()) > kRobotErrorVelocity)
             {
-                robotState[own][i].velocity.x = 0.0f;
-                robotState[own][i].velocity.y = 0.0f;
+                m_robot_state[color_id][i].velocity.x = 0.0f;
+                m_robot_state[color_id][i].velocity.y = 0.0f;
             }
 
-            if (std::fabs(robotState[own][i].velocity.x) < IGNORE_PREDICTION * 2.0f)
-                robotState[own][i].velocity.x = 0.0f;
-            if (std::fabs(robotState[own][i].velocity.y) < IGNORE_PREDICTION * 2.0f)
-                robotState[own][i].velocity.y = 0.0f;
-
-            robotState[own][i].Position.x *= 10.0f;
-            robotState[own][i].Position.y *= 10.0f;
-            robotState[own][i].velocity.x *= 10.0f;
-            robotState[own][i].velocity.y *= 10.0f;
+            if (std::fabs(m_robot_state[color_id][i].velocity.x) < kIgnorePrediction * 2.0f)
+                m_robot_state[color_id][i].velocity.x = 0.0f;
+            if (std::fabs(m_robot_state[color_id][i].velocity.y) < kIgnorePrediction * 2.0f)
+                m_robot_state[color_id][i].velocity.y = 0.0f;
         }
     }
 }
 
-void Vision::predictRobotsForward(Common::WorldState *state)
+void Vision::predictRobots()
 {
-    for (int own = 1; own < 2; own++)
+    for (int color_id = 1; color_id < 2; color_id++)
     {
         for (int i = 0; i < Common::Setting::kMaxRobots; i++)
         {
-            /*robotState[own][i].Position.x /= (float)(1000.0);
-             robotState[own][i].Position.y /= (float)(1000.0);
-             robotState[own][i].velocity.x /= (float)(1000.0);
-             robotState[own][i].velocity.y /= (float)(1000.0);*/
-
-            //====================================
-            //====================================
-            //====================================
-            // Predict the robot to go forward
-            /*if ( ( i == 0 ) || ( i == 4 ) )
-            {
-                robotState[own][i].Position.x = robotState[own][i].Position.x + robotState[own][i].velocity.x / (
-            PREDICT_STEPS * 2.0f );
-
-                // Predict the robot to go forward
-                robotState[own][i].Position.y = robotState[own][i].Position.y + robotState[own][i].velocity.y / (
-            PREDICT_STEPS * 2.0f );
-
-                // Predict the robot to go forward
-                //robotState[own][i].Angle = robotState[own][i].Angle + robotState[own][i].AngularVelocity / (
-            PREDICT_STEPS * 4.0f );
-            }*/
-
-            //====================================
-            //====================================
-            //====================================
-            /*robotState[own][i].Position.x *= (float)(1000.0);
-             robotState[own][i].Position.y *= (float)(1000.0);
-             robotState[own][i].velocity.x *= (float)(1000.0);
-             robotState[own][i].velocity.y *= (float)(1000.0);*/
-
-            robotState[own][i].Position.x =
-                robotState[own][i].Position.x + robotState[own][i].velocity.x / (PREDICT_STEPS * 2.0f);
+            m_robot_state[color_id][i].position =
+                m_robot_state[color_id][i].position + m_robot_state[color_id][i].velocity / (kPredictSteps * 2.0f);
 
             // Predict the robot to go forward
-            robotState[own][i].Position.y =
-                robotState[own][i].Position.y + robotState[own][i].velocity.y / (PREDICT_STEPS * 2.0f);
-
-            // Predict the robot to go forward
-            robotState[own][i].angle =
-                robotState[own][i].angle + robotState[own][i].AngularVelocity / (PREDICT_STEPS * 4.0f);
+            m_robot_state[color_id][i].angle =
+                m_robot_state[color_id][i].angle + m_robot_state[color_id][i].angular_velocity / (kPredictSteps * 4.0f);
         }
     }
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if (robotState[0][i].seenState != Common::Seen)
+        if (m_robot_state[0][i].seen_state != Common::SeenState::Seen)
         {
-            robotState[0][i].Position.x =
-                robotState[0][i].Position.x + state->lastCMDS[i][(int) state->lastCMDS[i][10].x].x / 1.2f;
-            robotState[0][i].Position.y =
-                robotState[0][i].Position.y + state->lastCMDS[i][(int) state->lastCMDS[i][10].x].y / 1.2f;
+            m_robot_state[0][i].position.x =
+                m_robot_state[0][i].position.x + m_state->last_cmds[i][(int) m_state->last_cmds[i][10].x].x / 1.2f;
+            m_robot_state[0][i].position.y =
+                m_robot_state[0][i].position.y + m_state->last_cmds[i][(int) m_state->last_cmds[i][10].x].y / 1.2f;
         }
         else
         {
-            for (int j = 0; j < 10; j++)
+            for (int j = 0; j < Common::Setting::kMaxRobots; j++)
             {
-                robotState[0][i].Position.x = robotState[0][i].Position.x + state->lastCMDS[i][j].x / 1.4f;
-                robotState[0][i].Position.y = robotState[0][i].Position.y + state->lastCMDS[i][j].y / 1.4f;
-                // if (( i == 3 ) )
-                //	robotState[0][i].Angle = robotState[0][i].Angle - state -> lastCMDS[i][j].Z * 0.04f;
+                m_robot_state[0][i].position.x = m_robot_state[0][i].position.x + m_state->last_cmds[i][j].x / 1.4f;
+                m_robot_state[0][i].position.y = m_robot_state[0][i].position.y + m_state->last_cmds[i][j].y / 1.4f;
             }
         }
     }
-    // outfile << robotState[0][1].AngularVelocity << std::endl;
 }
 
-void Vision::SendStates(Common::WorldState *state)
+void Vision::sendStates()
 {
-    state->ownRobots_num = 0;
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        robotState[0][i].vision_id = i;
+        m_robot_state[0][i].vision_id = i;
 
-        state->ownRobots_num++;
-        if (robot_not_seen[0][i] == 0)
+        if (m_robot_not_seen[0][i] == 0)
         {
-            robotState[0][i].seenState = Common::Seen;
+            m_robot_state[0][i].seen_state = Common::SeenState::Seen;
         }
-        else if (robot_not_seen[0][i] < MAX_ROBOT_NOT_SEEN)
+        else if (m_robot_not_seen[0][i] < Common::setting().max_robot_frame_not_seen)
         {
-            robotState[0][i].seenState = Common::TemprolilyOut;
+            m_robot_state[0][i].seen_state = Common::SeenState::TemprolilyOut;
         }
         else
         {
-            robotState[0][i].seenState = Common::CompletelyOut;
-            state->ownRobots_num--;
+            m_robot_state[0][i].seen_state = Common::SeenState::CompletelyOut;
         }
 
-        if (robot_not_seen[0][i] < MAX_ROBOT_SUBSITUTE)
+        if (m_robot_not_seen[0][i] < kMaxRobotSubstitute)
         {
-            robotState[0][i].OutForSubsitute = false;
+            m_robot_state[0][i].out_for_substitute = false;
         }
         else
         {
-            robotState[0][i].OutForSubsitute = true;
+            m_robot_state[0][i].out_for_substitute = true;
         }
 
-        state->OwnRobot[i] = robotState[0][i];
+        m_state->own_robot[i] = m_robot_state[0][i];
     }
 
-    state->oppRobots_num = 0;
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        robotState[1][i].vision_id = i;
+        m_robot_state[1][i].vision_id = i;
 
-        state->oppRobots_num++;
-        if (robot_not_seen[1][i] == 0)
+        if (m_robot_not_seen[1][i] == 0)
         {
-            robotState[1][i].seenState = Common::Seen;
+            m_robot_state[1][i].seen_state = Common::SeenState::Seen;
         }
-        else if (robot_not_seen[1][i] < MAX_ROBOT_NOT_SEEN)
+        else if (m_robot_not_seen[1][i] < Common::setting().max_robot_frame_not_seen)
         {
-            robotState[1][i].seenState = Common::TemprolilyOut;
+            m_robot_state[1][i].seen_state = Common::SeenState::TemprolilyOut;
         }
         else
         {
-            robotState[1][i].seenState = Common::CompletelyOut;
-            state->oppRobots_num--;
+            m_robot_state[1][i].seen_state = Common::SeenState::CompletelyOut;
         }
 
-        state->OppRobot[i] = robotState[1][i];
+        m_state->opp_robot[i] = m_robot_state[1][i];
     }
 }
 } // namespace Tyr::Vision

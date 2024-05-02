@@ -215,7 +215,7 @@ float Vec2::length() const
     return sqrt(x * x + y * y);
 }
 
-float Vec2::lengthPow2() const
+float Vec2::lengthSquared() const
 {
     return x * x + y * y;
 }

@@ -16,7 +16,6 @@ private:
     Common::WorldState   *worldState;
     Common::RefereeState *refereeState;
     Sender::Sender       *senderBase;
-    Common::GameState    *REF_playState;
 
     Common::Random random;
 
@@ -41,8 +40,6 @@ private:
     Common::Angle chip_head;
 
     Common::Angle penaltyAngle;
-
-    int oppGK;
 
     float randomParam;
     int   target_str;
@@ -69,7 +66,6 @@ private:
     int lastReferee;
 
     Common::Timer timer;
-    Common::Vec2 *targetBallPlacement;
 
     bool isDefending;
     bool oppRestarted;
@@ -85,7 +81,6 @@ private:
     Common::Linear                ballLine;
     Common::BallState             ball;
     Common::RobotState            OppRobot[Common::Setting::kMaxRobots];
-    int                           OwnRobotNum, OppRobotNum;
     Planner                       planner[Common::Setting::kMaxOnFieldTeamRobots];
     Dss                          *dss;
 

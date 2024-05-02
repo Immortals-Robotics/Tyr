@@ -63,7 +63,7 @@ void Ai::MarkManager(bool restart)
     int def_count = 0;
     for (std::map<int *, int>::const_iterator i = markMap.begin(); i != markMap.end(); ++i)
     {
-        if (OwnRobot[*i->first].State.seenState != Common::CompletelyOut)
+        if (OwnRobot[*i->first].State.seen_state != Common::SeenState::CompletelyOut)
         {
             def_count++;
         }

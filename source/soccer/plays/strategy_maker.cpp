@@ -78,7 +78,7 @@ void Ai::strategy_maker()
     Common::logInfo("STRATEGY: {}", strategy.name());
 
     int xSgn = side;
-    int ySgn = Common::sign(-ball.Position.y);
+    int ySgn = Common::sign(-ball.position.y);
 
     // std::cout << timer.time() << std::endl;
     if (timer.time() < 0.5)
@@ -121,7 +121,7 @@ void Ai::strategy_maker()
             else
             {
                 if (Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .distanceTo(OwnRobot[*stm2AInum[i]].State.Position) <
+                        .distanceTo(OwnRobot[*stm2AInum[i]].State.position) <
                     strategy.role(i).path(step[i]).tolerance())
                 {
                     step[i]    = std::min(strategy.role(i).path_size() - 1, step[i] + 1);
@@ -185,7 +185,7 @@ void Ai::strategy_maker()
             {
                 Common::Angle passAngle =
                     Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(ball.Position);
+                        .angleWith(ball.position);
                 float tmp_mult = 1; // TODO #11 remove this multiplier and fix that strategy maker
                 circle_ball(*stm2AInum[i], passAngle, shoot * tmp_mult, chip, 1.0f);
             }
@@ -193,14 +193,14 @@ void Ai::strategy_maker()
             {
                 Common::Angle passAngle =
                     Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(ball.Position);
+                        .angleWith(ball.position);
                 circle_ball(*stm2AInum[i], passAngle, 0, 0, 1.0f, 140.0f);
             }
             else
             {
                 Common::Angle passAngle =
                     Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(ball.Position);
+                        .angleWith(ball.position);
                 circle_ball(*stm2AInum[i], passAngle, 0, 0, 1.0f);
             }
         }
@@ -235,7 +235,7 @@ void Ai::strategy_maker()
             }
             if (step[i] != strategy.role(i).path_size() - 1)
             {
-                // float dis_to_reach = Common::Vec2::distance(OwnRobot[*stm2AInum[i]].State.Position,
+                // float dis_to_reach = Common::Vec2::distance(OwnRobot[*stm2AInum[i]].State.position,
                 // Common::Vec2(strategy.role(i).path(step[i]).x(),strategy.role(i).path(step[i]).y())); if
                 // ((step[i]>=strategy.role(i).path_size()-2) || (dis_to_reach < 500))
                 OwnRobot[*stm2AInum[i]].face(Common::Vec2(-side * field_width, 0));
@@ -255,7 +255,7 @@ void Ai::strategy_maker()
 
         const float remainingDis =
             Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                .distanceTo(OwnRobot[*stm2AInum[i]].State.Position);
+                .distanceTo(OwnRobot[*stm2AInum[i]].State.position);
 
         switch (strategy.role(i).afterlife())
         {
@@ -282,7 +282,7 @@ void Ai::strategy_maker()
             oneTouchType[*stm2AInum[i]] = allaf;
             if (*stm2AInum[i] == attack)
             {
-                allafPos[*stm2AInum[i]] = ball.Position;
+                allafPos[*stm2AInum[i]] = ball.position;
             }
             else
             {

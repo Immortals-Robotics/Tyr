@@ -6,12 +6,12 @@ void Ai::CalcIsDefending()
 {
     if (isDefending)
     {
-        if (side * ball.Position.x < -200)
+        if (side * ball.position.x < -200)
         {
             isDefending = false;
         }
     }
-    else if (side * ball.Position.x > 300)
+    else if (side * ball.position.x > 300)
     {
         isDefending = true;
     }

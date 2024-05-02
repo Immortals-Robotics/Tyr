@@ -20,7 +20,7 @@ bool Application::initialize()
     Common::logInfo(" Connecting to RefereeBox server at {} on port : {}", Common::setting().referee_address.port,
                     Common::setting().referee_address.port);
     m_referee = std::make_unique<Referee::Referee>(m_world_state.get(), m_referee_state.get());
-    if (m_referee->connectToRefBox())
+    if (m_referee->connect())
     {
         Common::logInfo("Connected to RefBox successfully :)");
     }
@@ -79,11 +79,11 @@ void Application::aiThreadEentry()
     {
         timer.start();
 
-        m_vision->recieveAllCameras();
+        m_vision->receive();
 
         m_lock.lock();
 
-        m_vision->ProcessVision();
+        m_vision->process();
         m_ai->Process(m_world_state.get());
 
 		std::vector<Sender::Command> commands;
@@ -110,7 +110,7 @@ void Application::refereeThreadEentry()
 {
     while ((!m_exited) && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
-        if (m_referee->recieve())
+        if (m_referee->receive())
         {
             m_lock.lock();
             m_referee->process();

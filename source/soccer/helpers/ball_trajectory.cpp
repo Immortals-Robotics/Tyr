@@ -34,12 +34,12 @@ void Ai::CalculateBallTrajectory()
             if (isVertical)
             {
                 ballLine.calculate(ball_x.size(), &ball_y[0], &ball_x[0]);
-                d = ballLine.getDisToPoint(Common::Vec2(ballHist[i].Position.y, ballHist[i].Position.x));
+                d = ballLine.getDisToPoint(Common::Vec2(ballHist[i].position.y, ballHist[i].position.x));
             }
             else
             {
                 ballLine.calculate(ball_x.size(), &ball_x[0], &ball_y[0]);
-                d = ballLine.getDisToPoint(ballHist[i].Position);
+                d = ballLine.getDisToPoint(ballHist[i].position);
             }
 
             dMedian.AddData(d);
@@ -48,8 +48,8 @@ void Ai::CalculateBallTrajectory()
                 break;
             }
         }
-        ball_x.push_back(ballHist[i].Position.x);
-        ball_y.push_back(ballHist[i].Position.y);
+        ball_x.push_back(ballHist[i].position.x);
+        ball_y.push_back(ballHist[i].position.y);
     }
 
     i++;
@@ -63,25 +63,25 @@ void Ai::CalculateBallTrajectory()
         Common::debug().drawLineSegment(Common::Vec2(ballLine.getXIntercept(), -2000),
                                         Common::Vec2(ballLine.getXIntercept(), 2000), "", Common::Purple);
     }
-    Common::debug().drawLineSegment(Common::Vec2(ball.Position.x, ballLine.getValue(ball.Position.x)),
-                                    Common::Vec2(ballHist[i].Position.x, ballLine.getValue(ballHist[i].Position.x)));
+    Common::debug().drawLineSegment(Common::Vec2(ball.position.x, ballLine.getValue(ball.position.x)),
+                                    Common::Vec2(ballHist[i].position.x, ballLine.getValue(ballHist[i].position.x)));
 
     if (!ballLine.isAmoodi())
     {
         Common::Line new_line(1.0, -ballLine.getSlope(), -ballLine.getIntercept());
         Common::Vec2 ballN, lastN;
-        ballN = new_line.closestPoint(ball.Position);
-        lastN = new_line.closestPoint(ballHist[i].Position);
+        ballN = new_line.closestPoint(ball.position);
+        lastN = new_line.closestPoint(ballHist[i].position);
         Common::debug().drawLineSegment(ballN, lastN, "", isVertical ? Common::Yellow : Common::Red);
     }
 
     for (i = std::max((int) ballHist.size() - 60, 0); i < ballHist.size(); i += 10)
     {
-        // Common::debug().drawCircle(ballHist[i].Position,10+10.0*(float(i)/float(ballHist.size())),Red);
+        // Common::debug().drawCircle(ballHist[i].position,10+10.0*(float(i)/float(ballHist.size())),Red);
     }
 
     // Common::debug().drawCircle(Common::Vec2(0, 0),1000,Blue);
 
-    // Common::debug().drawLineSegment(ballHist.front().Position,ballHist.back().Position,Blue);
+    // Common::debug().drawLineSegment(ballHist.front().position,ballHist.back().position,Blue);
 }
 } // namespace Tyr::Soccer

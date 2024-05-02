@@ -9,7 +9,7 @@ void Ai::NormalPlayAtt()
     ManageAttRoles(); // sets the mid1, mid2, attack
 
     debugDraw = true;
-    recievePass(dmf, ball.Position.pointOnConnectingLine(Common::Vec2(side * field_width, 0), 2500));
+    recievePass(dmf, ball.position.pointOnConnectingLine(Common::Vec2(side * field_width, 0), 2500));
     debugDraw = false;
 
     if (oneTouchType[attack] == allaf)
@@ -39,33 +39,33 @@ void Ai::NormalPlayAtt()
         }
         else
         {
-            OpenAngle openAngle = calculateOpenAngleToGoal(ball.Position, attack);
+            OpenAngle openAngle = calculateOpenAngleToGoal(ball.position, attack);
 
             bool mid1Reached = OwnRobot[mid1].State.velocity.length() < 500;
             bool mid2Reached = OwnRobot[mid2].State.velocity.length() < 500;
 
-            bool mid1DisOk = OwnRobot[mid1].State.Position.distanceTo(ball.Position) > 2000;
-            bool mid2DisOk = OwnRobot[mid2].State.Position.distanceTo(ball.Position) > 2000;
+            bool mid1DisOk = OwnRobot[mid1].State.position.distanceTo(ball.position) > 2000;
+            bool mid2DisOk = OwnRobot[mid2].State.position.distanceTo(ball.position) > 2000;
 
-            bool mid1PassAngleOk = (OwnRobot[mid1].State.Position - ball.Position)
+            bool mid1PassAngleOk = (OwnRobot[mid1].State.position - ball.position)
                                        .normalized()
-                                       .dot((Common::Vec2(side * field_width, 0) - ball.Position).normalized()) < 0.75f;
+                                       .dot((Common::Vec2(side * field_width, 0) - ball.position).normalized()) < 0.75f;
 
-            bool mid2PassAngleOk = (OwnRobot[mid2].State.Position - ball.Position)
+            bool mid2PassAngleOk = (OwnRobot[mid2].State.position - ball.position)
                                        .normalized()
-                                       .dot((Common::Vec2(side * field_width, 0) - ball.Position).normalized()) < 0.75f;
+                                       .dot((Common::Vec2(side * field_width, 0) - ball.position).normalized()) < 0.75f;
 
             Common::logDebug("pass angle ok mid1 : {}, mid2: {}", mid1PassAngleOk, mid2PassAngleOk);
 
-            bool mid1Seen = OwnRobot[mid1].State.seenState != Common::CompletelyOut;
-            bool mid2Seen = OwnRobot[mid2].State.seenState != Common::CompletelyOut;
+            bool mid1Seen = OwnRobot[mid1].State.seen_state != Common::SeenState::CompletelyOut;
+            bool mid2Seen = OwnRobot[mid2].State.seen_state != Common::SeenState::CompletelyOut;
 
             bool mid1Suitable = mid1Seen && mid1Reached && mid1DisOk && mid1PassAngleOk;
             bool mid2Suitable = mid2Seen && mid2Reached && mid2DisOk && mid2PassAngleOk;
 
             if (mid1Suitable && mid2Suitable)
             {
-                if (-side * OwnRobot[mid1].State.Position.x > -side * OwnRobot[mid2].State.Position.x)
+                if (-side * OwnRobot[mid1].State.position.x > -side * OwnRobot[mid2].State.position.x)
                     mid2Suitable = false;
                 else
                     mid1Suitable = false;
@@ -74,30 +74,30 @@ void Ai::NormalPlayAtt()
             Common::logDebug("open angle: {}", openAngle.magnitude.deg());
             if (openAngle.magnitude.deg() < 8 &&
                 (findKickerOpp(-1, 150.0f) ==
-                 -1)) //&& ( ball.Position.x * side < -2300 ) && ( std::fabs ( ball.Position.y ) > 1800 ) )
+                 -1)) //&& ( ball.position.x * side < -2300 ) && ( std::fabs ( ball.position.y ) > 1800 ) )
             {
 
                 // float passAngle = Common::Vec2::angleWith (
-                // OwnRobot[randomParam<0.3?dmf:(randomParam<0.6?rmf:lmf)].State.Position , ball.Position );
+                // OwnRobot[randomParam<0.3?dmf:(randomParam<0.6?rmf:lmf)].State.position , ball.position );
                 Common::Angle passAngle =
-                    Common::Vec2(-side * 1700, Common::sign(-ball.Position.y) * 1700.0f).angleWith(ball.Position);
+                    Common::Vec2(-side * 1700, Common::sign(-ball.position.y) * 1700.0f).angleWith(ball.position);
                 float chip_pow = 40;
 
                 if (mid1Suitable)
                 {
-                    passAngle = OwnRobot[mid1].State.Position.angleWith(ball.Position);
-                    chip_pow  = 50.f * OwnRobot[mid1].State.Position.distanceTo(ball.Position) / 4000.0f;
+                    passAngle = OwnRobot[mid1].State.position.angleWith(ball.position);
+                    chip_pow  = 50.f * OwnRobot[mid1].State.position.distanceTo(ball.position) / 4000.0f;
                     chip_pow  = std::min(50.f, chip_pow);
                 }
                 else if (mid2Suitable)
                 {
-                    passAngle = OwnRobot[mid2].State.Position.angleWith(ball.Position);
-                    chip_pow  = 50.f * OwnRobot[mid2].State.Position.distanceTo(ball.Position) / 4000.0f;
+                    passAngle = OwnRobot[mid2].State.position.angleWith(ball.position);
+                    chip_pow  = 50.f * OwnRobot[mid2].State.position.distanceTo(ball.position) / 4000.0f;
                     chip_pow  = std::min(50.f, chip_pow);
                 }
                 else
                 {
-                    passAngle = Common::Vec2(-side * field_width, 0).angleWith(ball.Position);
+                    passAngle = Common::Vec2(-side * field_width, 0).angleWith(ball.position);
                     chip_pow  = 0;
                 }
                 tech_circle(attack, passAngle, 0, chip_pow, 1, 0, 0, 1);
@@ -111,7 +111,7 @@ void Ai::NormalPlayAtt()
 
                 // ADDED by Dot_Blue:
                 //                float shoot_pow;
-                //                if(Common::Vec2::distance(ball.Position,Common::Vec2 ( -side*field_width , 0 )) <
+                //                if(Common::Vec2::distance(ball.position,Common::Vec2 ( -side*field_width , 0 )) <
                 //                2000) {
                 //                    shoot_pow = 70 - OwnRobot[attack].State.velocity.length * 0.01;
                 //                } else {
@@ -123,12 +123,12 @@ void Ai::NormalPlayAtt()
 
                 // if ( openAngle.y < 2 )
                 //     shoot_pow = 0;
-                if (OwnRobot[attack].State.Position.distanceTo(ball.Position) > 400)
+                if (OwnRobot[attack].State.position.distanceTo(ball.position) > 400)
                 {
                     shoot_pow = 1;
                     activeShootTimer.start();
                 }
-                else if (goal_blocked(ball.Position, 200, 90))
+                else if (goal_blocked(ball.position, 200, 90))
                 {
                     shoot_pow = 1;
                 }
@@ -141,7 +141,7 @@ void Ai::NormalPlayAtt()
                 }
 
                 // if (attackFuckingAngle()) {
-                //	shootAngle = Common::Vec2::angleWith(ball.Position, Common::Vec2(side*field_width, 0));
+                //	shootAngle = Common::Vec2::angleWith(ball.position, Common::Vec2(side*field_width, 0));
                 //	shoot_pow = 1;
                 // }
 
@@ -153,7 +153,7 @@ void Ai::NormalPlayAtt()
         }
     }
 
-    if (ball.Position.y > 600)
+    if (ball.position.y > 600)
     {
         recievePass(mid1, Common::Vec2(-side * 250, 0));
     }
@@ -162,7 +162,7 @@ void Ai::NormalPlayAtt()
         recievePass(mid1, Common::Vec2(-side * (field_width - 800), field_height - 800));
     }
 
-    if (ball.Position.y < -600)
+    if (ball.position.y < -600)
     {
         recievePass(mid2, Common::Vec2(-side * 250, 0));
     }

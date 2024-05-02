@@ -78,7 +78,7 @@ bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
         }
 
         const Common::RobotState &other_state = own_robots[robot_idx].State;
-        if (other_state.seenState == Common::CompletelyOut)
+        if (other_state.seen_state == Common::SeenState::CompletelyOut)
         {
             continue;
         }
@@ -94,7 +94,7 @@ bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
     for (int robot_idx = 0; robot_idx < Common::Setting::kMaxRobots; ++robot_idx)
     {
         const Common::RobotState &other_state = opp_robots[robot_idx];
-        if (other_state.seenState == Common::CompletelyOut)
+        if (other_state.seen_state == Common::SeenState::CompletelyOut)
         {
             continue;
         }
@@ -129,7 +129,7 @@ void Dss::Reset()
     {
         const Common::RobotState &state = own_robots[robot_idx].State;
 
-        if (state.seenState == Common::CompletelyOut)
+        if (state.seen_state == Common::SeenState::CompletelyOut)
         {
             computed_motions[robot_idx] = Common::Vec2(0.f, 0.f);
         }
@@ -148,7 +148,7 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     Common::Vec2              a_cmd;
     const Common::RobotState &state = own_robots[robot_num].State;
 
-    if (state.seenState == Common::CompletelyOut || obs_map.isInObstacle(state.Position))
+    if (state.seen_state == Common::SeenState::CompletelyOut || obs_map.isInObstacle(state.position))
     {
         a_cmd = target_a_cmd;
     }
@@ -187,7 +187,7 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     }
 
     const float error = ComputeError(target_a_cmd, a_cmd);
-    // if (error > 0 && state.seenState != Common::CompletelyOut)
+    // if (error > 0 && state.seen_state != Common::SeenState::CompletelyOut)
     {
         // std::cout << "dss changed motion: " << state.vision_id << ", error: " << error << std::endl;
     }
