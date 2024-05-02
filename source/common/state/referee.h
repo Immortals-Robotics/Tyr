@@ -6,22 +6,13 @@ namespace Tyr::Common
 {
 struct RefereeState
 {
-    GameState     *State;
-    unsigned short time_remaining;
-    unsigned short goals_blue;
-    unsigned short goals_yellow;
-    unsigned char  counter;
-    Vec2           placeBallTargetPosition;
-    int            oppGK;
+    GameState state;
 
-    RefereeState()
-    {
-        State                   = new GameState;
-        time_remaining          = 0;
-        goals_blue              = 0;
-        goals_yellow            = 0;
-        counter                 = 0;
-        placeBallTargetPosition = Vec2();
-    }
+    unsigned short time_remaining = 0;
+    unsigned short goals_blue     = 0;
+    unsigned short goals_yellow   = 0;
+    unsigned char  counter        = 0;
+    Vec2           place_ball_target;
+    int            opp_gk = -1;
 };
 } // namespace Tyr::Common

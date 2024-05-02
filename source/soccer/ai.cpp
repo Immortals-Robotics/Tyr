@@ -34,8 +34,8 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     penalty_area_width = 3650.0f;
 #endif
 
-    REF_playState       = refereeState->State;
-    targetBallPlacement = &refereeState->placeBallTargetPosition;
+    REF_playState       = &refereeState->state;
+    targetBallPlacement = &refereeState->place_ball_target;
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {

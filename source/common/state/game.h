@@ -15,8 +15,6 @@
 
 #pragma once
 
-#include "game_commands.h"
-
 namespace Tyr::Common
 {
 class GameState
@@ -76,25 +74,25 @@ public:
     // ref_command as input
     void transition(char ref_command, bool ball_kicked)
     {
-        if (ref_command == COMM_HALT)
+        if (ref_command == Protos::SSL_Referee_Command_HALT)
         {
             state = STATE_HALTED;
             return;
         }
 
-        if (ref_command == COMM_STOP)
+        if (ref_command == Protos::SSL_Referee_Command_STOP)
         {
             state = STATE_GAME_OFF;
             return;
         }
 
-        if (ref_command == COMM_FORCE_START)
+        if (ref_command == Protos::SSL_Referee_Command_FORCE_START)
         {
             state = STATE_GAME_ON;
             return;
         }
 
-        if (ref_command == COMM_NORMAL_START && state & STATE_NOTREADY)
+        if (ref_command == Protos::SSL_Referee_Command_NORMAL_START && (state & STATE_NOTREADY))
         {
             state &= ~STATE_NOTREADY;
             state |= STATE_READY;
@@ -111,38 +109,38 @@ public:
         {
             switch (ref_command)
             {
-            case COMM_KICKOFF_BLUE:
+            case Protos::SSL_Referee_Command_PREPARE_KICKOFF_BLUE:
                 state = STATE_KICKOFF | STATE_BLUE | STATE_NOTREADY;
                 return;
-            case COMM_KICKOFF_YELLOW:
+            case Protos::SSL_Referee_Command_PREPARE_KICKOFF_YELLOW:
                 state = STATE_KICKOFF | STATE_YELLOW | STATE_NOTREADY;
                 return;
 
-            case COMM_PENALTY_BLUE:
+            case Protos::SSL_Referee_Command_PREPARE_PENALTY_BLUE:
                 state = STATE_PENALTY | STATE_BLUE | STATE_NOTREADY;
                 return;
-            case COMM_PENALTY_YELLOW:
+            case Protos::SSL_Referee_Command_PREPARE_PENALTY_YELLOW:
                 state = STATE_PENALTY | STATE_YELLOW | STATE_NOTREADY;
                 return;
 
-            case COMM_DIRECT_BLUE:
+            case Protos::SSL_Referee_Command_DIRECT_FREE_BLUE:
                 state = STATE_DIRECT | STATE_BLUE | STATE_READY;
                 return;
-            case COMM_DIRECT_YELLOW:
+            case Protos::SSL_Referee_Command_DIRECT_FREE_YELLOW:
                 state = STATE_DIRECT | STATE_YELLOW | STATE_READY;
                 return;
 
-            case COMM_INDIRECT_BLUE:
+            case Protos::SSL_Referee_Command_INDIRECT_FREE_BLUE:
                 state = STATE_INDIRECT | STATE_BLUE | STATE_READY;
                 return;
-            case COMM_INDIRECT_YELLOW:
+            case Protos::SSL_Referee_Command_INDIRECT_FREE_YELLOW:
                 state = STATE_INDIRECT | STATE_YELLOW | STATE_READY;
                 return;
 
-            case COMM_PLACEBALL_BLUE:
+            case Protos::SSL_Referee_Command_BALL_PLACEMENT_BLUE:
                 state = STATE_PLACE_BALL | STATE_BLUE | STATE_NOTREADY;
                 return;
-            case COMM_PLACEBALL_YELLOW:
+            case Protos::SSL_Referee_Command_BALL_PLACEMENT_YELLOW:
                 state = STATE_PLACE_BALL | STATE_YELLOW | STATE_NOTREADY;
                 return;
 

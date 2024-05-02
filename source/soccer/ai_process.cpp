@@ -51,7 +51,7 @@ void Ai::Process(Common::WorldState *worldState)
         {
             currentPlay = "kickoff_us_chip";
 
-            currentPlayParam = static_cast<uint32_t>(refereeState->State->canKickBall());
+            currentPlayParam = static_cast<uint32_t>(refereeState->state.canKickBall());
         }
         else if ((REF_playState->ourDirectKick()) || (REF_playState->ourIndirectKick()))
         {
@@ -69,8 +69,8 @@ void Ai::Process(Common::WorldState *worldState)
         else if (REF_playState->ourPenaltyKick())
         {
             currentPlay      = "penalty_us_shootout";
-            currentPlayParam = static_cast<uint32_t>(refereeState->State->canKickBall());
-            //			std::cout << "IN_PENALTY..."<<worldState ->refereeState -> State->canKickBall()<<std::endl;
+            currentPlayParam = static_cast<uint32_t>(refereeState->state.canKickBall());
+            //			std::cout << "IN_PENALTY..."<<worldState ->refereeState -> state.canKickBall()<<std::endl;
         }
         else if (REF_playState->ourPlaceBall())
         {

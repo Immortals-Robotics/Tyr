@@ -7,28 +7,26 @@ class Referee
 private:
     std::unique_ptr<Common::UdpClient> m_udp;
 
-    Common::RefereeState *RefState;
-    Common::BallState    *ballData;
+    Common::RefereeState *m_state;
+    Common::WorldState   *m_world_state;
 
-    Common::Vec2 LastPlacedBall;
-    int          move_hys; // For isKicked
+    Common::Vec2 m_last_placed_ball;
+    int          m_move_hys; // For isKicked
 
-    Common::Timer timer;
+    Common::Timer m_timer;
 
-    int command_CNT;
+    int m_cmd_counter = -1;
 
-    Protos::SSL_Referee         pSSLRef;
-    Protos::SSL_Referee_Stage   playTimeStage;
-    Protos::SSL_Referee_Command commandState;
+    Protos::SSL_Referee m_ssl_ref;
+
+    bool isKicked();
 
 public:
     Referee(Common::WorldState *world_state, Common::RefereeState *referee_state);
-    bool connectToRefBox();
+    bool connect();
     bool isConnected();
-    bool recieve();
-    bool isKicked(Common::Vec2 ballPos);
-    void process();
+    bool receive();
 
-    int oppGK;
+    void process();
 };
 } // namespace Tyr::Referee
