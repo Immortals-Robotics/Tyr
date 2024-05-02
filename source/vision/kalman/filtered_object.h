@@ -28,14 +28,15 @@ public:
     /// Constructor with initialization matrices fed in
     FilteredObject(float A[2][2], float B[2], float C[2][2], float D[2], float lossMat[2]);
     /// Constructor from a file
-    void initialize(const char *filename1, const char *filename2);
+    FilteredObject(std::filesystem::path t_filename1, std::filesystem::path t_filename2);
+
     /// Initialize the position whenever it is lost and refound. Use this for the first initial state too.
     void initializePos(Common::Vec2 t_pos);
 
     /** update the internal state using known vision data
-     * @param z is the measured position.
-     * @param filtOut is a pointer to whether the output position and velocity is output to
-     *  First component is the dimension,  second component indicates whether it is position or velocity
+     * @param t_in_pos is the measured position.
+     * @param t_out_pos is a pointer to whether the output position is output to
+     * @param t_out_vel is a pointer to whether the output velocity is output to
      * @return filtered position and velocity in param filtOut
      **/
     void updatePosition(Common::Vec2 t_in_pos, Common::Vec2 *t_out_pos, Common::Vec2 *t_out_vel);

@@ -28,10 +28,10 @@ FilteredObject::FilteredObject(float A[2][2], float B[2], float C[2][2], float D
     }
 }
 
-void FilteredObject::initialize(const char *filename1, const char *filename2)
+FilteredObject::FilteredObject(const std::filesystem::path t_filename1, const std::filesystem::path t_filename2)
 {
     // open the file 1
-    std::ifstream matFile(filename1);
+    std::ifstream matFile(t_filename1);
     if (matFile.is_open())
     {
         matFile >> Aimp[0][0];
@@ -64,11 +64,11 @@ void FilteredObject::initialize(const char *filename1, const char *filename2)
     }
     else
     {
-        Common::logError("Invalid initialization file 1");
+        Common::logError("Invalid initialization file 1 from {}", t_filename1.string());
     }
 
     // open the file 2
-    std::ifstream matFile2(filename2);
+    std::ifstream matFile2(t_filename2);
     if (matFile2.is_open())
     {
         matFile2 >> AimpP[0][0];
@@ -90,7 +90,7 @@ void FilteredObject::initialize(const char *filename1, const char *filename2)
     }
     else
     {
-        Common::logError("Invalid initialization file 2");
+        Common::logError("Invalid initialization file 2 from {}", t_filename2.string());
     }
 }
 

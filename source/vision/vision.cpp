@@ -15,22 +15,19 @@ Vision::Vision(Common::WorldState *t_state)
     m_last_raw_ball.set_x(0.0f);
     m_last_raw_ball.set_y(0.0f);
 
-    std::string fast_filter_path(DATA_DIR);
-    fast_filter_path.append("/ball_filter_fast.txt");
-    std::string slow_filter_path(DATA_DIR);
-    slow_filter_path.append("/ball_filter_slow.txt");
+    const std::filesystem::path fast_filter_path = std::filesystem::path{DATA_DIR} / "ball_filter_fast.txt";
+    const std::filesystem::path slow_filter_path = std::filesystem::path{DATA_DIR} / "ball_filter_slow.txt";
 
-    m_ball_kalman.initialize(fast_filter_path.c_str(), slow_filter_path.c_str());
+    m_ball_kalman = FilteredObject{fast_filter_path, slow_filter_path};
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        m_robot_kalman[0][i].initialize(fast_filter_path.c_str(), slow_filter_path.c_str());
-        m_robot_kalman[1][i].initialize(fast_filter_path.c_str(), slow_filter_path.c_str());
+        m_robot_kalman[0][i] = FilteredObject{fast_filter_path, slow_filter_path};
+        m_robot_kalman[1][i] = FilteredObject{fast_filter_path, slow_filter_path};
+
         m_raw_angles[0][i] = 0.0f;
         m_raw_angles[1][i] = 0.0f;
     }
-
-    m_ball_kalman.initialize(fast_filter_path.c_str(), slow_filter_path.c_str());
 
     if (!connect())
     {
