@@ -14,7 +14,6 @@ private:
     std::vector<Common::Vec2> m_waypoints;
 
     int m_cached_waypoints = 0;
-    int m_cache_start      = 0;
 
     float m_step_size;
 
@@ -38,7 +37,7 @@ private:
     Common::Vec2 nearestFree(Common::Vec2 state);
     Common::Vec2 nearestFreeProb(Common::Vec2 state);
 
-    Common::Vec2 chooseTarget(int *type = NULL);
+    Common::Vec2 chooseTarget();
     Node        *extend(Node *s, Common::Vec2 &target);
     void         setWayPoints();
     Common::Vec2 getWayPoint(unsigned int i);
