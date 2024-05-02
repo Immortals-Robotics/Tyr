@@ -20,7 +20,7 @@ void Ai::internalProcessData(Common::WorldState *worldState)
         bool halt_this_robot_for_now = false;
         this->OwnRobot[i].State      = worldState->own_robot[OwnRobot[i].vision_id];
 
-        if (refereeState->state.get() == Common::GameState::STATE_GAME_OFF)
+        if (refereeState->get() == Common::RefereeState::STATE_GAME_OFF)
         {
             if (OwnRobot[i].State.out_for_substitute)
             {

@@ -27,7 +27,6 @@ set(HEADER_FILES
 	math/geom/rect.h
 	network/udp_client.h
 	network/udp_server.h
-	state/game.h
 	state/referee.h
 	state/world.h
 	timer/timer.h)

@@ -16,7 +16,6 @@ private:
     Common::WorldState   *worldState;
     Common::RefereeState *refereeState;
     Sender::Sender       *senderBase;
-    Common::GameState    *REF_playState;
 
     Common::Random random;
 

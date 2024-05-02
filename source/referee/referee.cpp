@@ -12,7 +12,7 @@ Referee::Referee(Common::WorldState *world_state, Common::RefereeState *referee_
     m_state       = referee_state;
     m_world_state = world_state;
 
-    m_state->state.init(Common::setting().our_color);
+    m_state->init(Common::setting().our_color);
 }
 
 bool Referee::connect()
@@ -60,7 +60,7 @@ void Referee::process()
     }
 
     const bool is_kicked = isKicked();
-    m_state->state.transition(m_ssl_ref.command(), is_kicked || m_timer.time() > 5);
+    m_state->transition(m_ssl_ref.command(), is_kicked || m_timer.time() > 5);
     if (is_kicked)
         Common::logDebug("kicked");
 }
@@ -71,7 +71,7 @@ bool Referee::isKicked()
     float requiredDis = 50.0f;
     if (m_state)
     {
-        if (m_state->state.ourRestart())
+        if (m_state->ourRestart())
         {
             requiredHys = 5;
             requiredDis = 150.0f;
