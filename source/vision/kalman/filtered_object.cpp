@@ -12,11 +12,6 @@ const float VELOCITY_THRES = 0.5;
 
 namespace Tyr::Vision
 {
-FilteredObject::FilteredObject()
-{
-    usageCount = 0;
-}
-
 FilteredObject::FilteredObject(float A[2][2], float B[2], float C[2][2], float D[2], float lossMat[2])
 {
     // setup up the initial variables
@@ -31,7 +26,6 @@ FilteredObject::FilteredObject(float A[2][2], float B[2], float C[2][2], float D
             Cimp[i][k] = C[i][k];
         }
     }
-    usageCount = 0;
 }
 
 void FilteredObject::initialize(const char *filename1, const char *filename2)
@@ -70,7 +64,7 @@ void FilteredObject::initialize(const char *filename1, const char *filename2)
     }
     else
     {
-        std::cout << "Invalid initialization file 1" << std::endl;
+        Common::logError("Invalid initialization file 1");
     }
 
     // open the file 2
@@ -96,79 +90,81 @@ void FilteredObject::initialize(const char *filename1, const char *filename2)
     }
     else
     {
-        std::cout << "Invalid initialization file 1" << std::endl;
+        Common::logError("Invalid initialization file 2");
     }
 }
 
-void FilteredObject::initializePos(float pos[2])
+void FilteredObject::initializePos(const Common::Vec2 t_pos)
 {
-    filtState[0][0] = lossVec[0] * pos[0];
-    filtState[0][1] = lossVec[1] * pos[0];
-    filtState[1][0] = lossVec[0] * pos[1];
-    filtState[1][1] = lossVec[1] * pos[1];
+    const Common::Vec2 pos_conv = t_pos / 10.0f;
 
-    filtStateP[0][0] = lossVecP[0] * pos[0];
-    filtStateP[0][1] = lossVecP[1] * pos[0];
-    filtStateP[1][0] = lossVecP[0] * pos[1];
-    filtStateP[1][1] = lossVecP[1] * pos[1];
+    filtState[0][0] = lossVec[0] * pos_conv.x;
+    filtState[0][1] = lossVec[1] * pos_conv.x;
+    filtState[1][0] = lossVec[0] * pos_conv.y;
+    filtState[1][1] = lossVec[1] * pos_conv.y;
+
+    filtStateP[0][0] = lossVecP[0] * pos_conv.x;
+    filtStateP[0][1] = lossVecP[1] * pos_conv.x;
+    filtStateP[1][0] = lossVecP[0] * pos_conv.y;
+    filtStateP[1][1] = lossVecP[1] * pos_conv.y;
 }
 
-FilteredObject::~FilteredObject()
+void FilteredObject::updatePosition(const Common::Vec2 t_in_pos, Common::Vec2 *t_out_pos, Common::Vec2 *t_out_vel)
 {
-    // No resources to reclaim. Currently redundant function
-}
-
-void FilteredObject::updatePosition(float z[2], float filtOut[2][2])
-{
-
     float filtOutP[2][2];
 
     if (usageCount == 0)
-        initializePos(z);
+        initializePos(t_in_pos);
     usageCount++;
+
+    const Common::Vec2 in_pos_conv = t_in_pos / 10.0f;
+
     /***********************************************
      filtOut   = Cimp*filtState + Dimp*posMeasure
     ************************************************/
     // x axis
-    filtOut[0][0]  = Cimp[0][0] * filtState[0][0] + Cimp[0][1] * filtState[0][1] + Dimp[0] * z[0];
-    filtOut[0][1]  = Cimp[1][0] * filtState[0][0] + Cimp[1][1] * filtState[0][1] + Dimp[1] * z[0];
-    filtOutP[0][0] = CimpP[0][0] * filtStateP[0][0] + CimpP[0][1] * filtStateP[0][1] + DimpP[0] * z[0];
-    filtOutP[0][1] = CimpP[1][0] * filtStateP[0][0] + CimpP[1][1] * filtStateP[0][1] + DimpP[1] * z[0];
+    t_out_pos->x   = Cimp[0][0] * filtState[0][0] + Cimp[0][1] * filtState[0][1] + Dimp[0] * in_pos_conv.x;
+    t_out_vel->x   = Cimp[1][0] * filtState[0][0] + Cimp[1][1] * filtState[0][1] + Dimp[1] * in_pos_conv.x;
+    filtOutP[0][0] = CimpP[0][0] * filtStateP[0][0] + CimpP[0][1] * filtStateP[0][1] + DimpP[0] * in_pos_conv.x;
+    filtOutP[0][1] = CimpP[1][0] * filtStateP[0][0] + CimpP[1][1] * filtStateP[0][1] + DimpP[1] * in_pos_conv.x;
 
     // y axis
-    filtOut[1][0]  = Cimp[0][0] * filtState[1][0] + Cimp[0][1] * filtState[1][1] + Dimp[0] * z[1];
-    filtOut[1][1]  = Cimp[1][0] * filtState[1][0] + Cimp[1][1] * filtState[1][1] + Dimp[1] * z[1];
-    filtOutP[1][0] = CimpP[0][0] * filtStateP[1][0] + CimpP[0][1] * filtStateP[1][1] + DimpP[0] * z[1];
-    filtOutP[1][1] = CimpP[1][0] * filtStateP[1][0] + CimpP[1][1] * filtStateP[1][1] + DimpP[1] * z[1];
+    t_out_pos->y   = Cimp[0][0] * filtState[1][0] + Cimp[0][1] * filtState[1][1] + Dimp[0] * in_pos_conv.y;
+    t_out_vel->y   = Cimp[1][0] * filtState[1][0] + Cimp[1][1] * filtState[1][1] + Dimp[1] * in_pos_conv.y;
+    filtOutP[1][0] = CimpP[0][0] * filtStateP[1][0] + CimpP[0][1] * filtStateP[1][1] + DimpP[0] * in_pos_conv.y;
+    filtOutP[1][1] = CimpP[1][0] * filtStateP[1][0] + CimpP[1][1] * filtStateP[1][1] + DimpP[1] * in_pos_conv.y;
 
     // add in the check to revert to the fast filter state if certain conditions are met
     // filtState = CimpInv * (filtOutP - Dimp*z)
     // x-axis
-    if (std::fabs(filtOut[0][1] - filtOutP[0][1]) > VELOCITY_THRES)
+    if (std::fabs(t_out_vel->x - filtOutP[0][1]) > VELOCITY_THRES)
     {
         // x-axis
-        filtState[0][0] =
-            CimpInv[0][0] * (filtOutP[0][0] - Dimp[0] * z[0]) + CimpInv[0][1] * (filtOutP[0][1] - Dimp[1] * z[0]);
-        filtState[0][1] =
-            CimpInv[1][0] * (filtOutP[0][0] - Dimp[0] * z[0]) + CimpInv[1][1] * (filtOutP[0][1] - Dimp[1] * z[0]);
+        filtState[0][0] = CimpInv[0][0] * (filtOutP[0][0] - Dimp[0] * in_pos_conv.x) +
+                          CimpInv[0][1] * (filtOutP[0][1] - Dimp[1] * in_pos_conv.x);
+        filtState[0][1] = CimpInv[1][0] * (filtOutP[0][0] - Dimp[0] * in_pos_conv.x) +
+                          CimpInv[1][1] * (filtOutP[0][1] - Dimp[1] * in_pos_conv.x);
         // since there is a change in filter state, update output again
         // x-axis
-        filtOut[0][0] = Cimp[0][0] * filtState[0][0] + Cimp[0][1] * filtState[0][1] + Dimp[0] * z[0];
-        filtOut[0][1] = Cimp[1][0] * filtState[0][0] + Cimp[1][1] * filtState[0][1] + Dimp[1] * z[0];
+        t_out_pos->x = Cimp[0][0] * filtState[0][0] + Cimp[0][1] * filtState[0][1] + Dimp[0] * in_pos_conv.x;
+        t_out_vel->x = Cimp[1][0] * filtState[0][0] + Cimp[1][1] * filtState[0][1] + Dimp[1] * in_pos_conv.x;
     }
 
-    if (std::fabs(filtOut[1][1] - filtOutP[1][1]) > VELOCITY_THRES)
+    if (std::fabs(t_out_vel->y - filtOutP[1][1]) > VELOCITY_THRES)
     {
         // y-axis
-        filtState[1][0] =
-            CimpInv[0][0] * (filtOutP[1][0] - Dimp[0] * z[1]) + CimpInv[0][1] * (filtOutP[1][1] - Dimp[1] * z[1]);
-        filtState[1][1] =
-            CimpInv[1][0] * (filtOutP[1][0] - Dimp[0] * z[1]) + CimpInv[1][1] * (filtOutP[1][1] - Dimp[1] * z[1]);
+        filtState[1][0] = CimpInv[0][0] * (filtOutP[1][0] - Dimp[0] * in_pos_conv.y) +
+                          CimpInv[0][1] * (filtOutP[1][1] - Dimp[1] * in_pos_conv.y);
+        filtState[1][1] = CimpInv[1][0] * (filtOutP[1][0] - Dimp[0] * in_pos_conv.y) +
+                          CimpInv[1][1] * (filtOutP[1][1] - Dimp[1] * in_pos_conv.y);
 
         // y axis
-        filtOut[1][0] = Cimp[0][0] * filtState[1][0] + Cimp[0][1] * filtState[1][1] + Dimp[0] * z[1];
-        filtOut[1][1] = Cimp[1][0] * filtState[1][0] + Cimp[1][1] * filtState[1][1] + Dimp[1] * z[1];
+        t_out_pos->y = Cimp[0][0] * filtState[1][0] + Cimp[0][1] * filtState[1][1] + Dimp[0] * in_pos_conv.y;
+        t_out_vel->y = Cimp[1][0] * filtState[1][0] + Cimp[1][1] * filtState[1][1] + Dimp[1] * in_pos_conv.y;
     }
+
+    (*t_out_pos) *= 10.0f;
+    (*t_out_vel) *= 10.0f;
 
     /***********************************************
     filtState = Aimp*filtState + Bimp*posMeasure
@@ -181,16 +177,16 @@ void FilteredObject::updatePosition(float z[2], float filtOut[2][2])
     float tempfiltState[2][2];
     float tempfiltStateP[2][2];
 
-    tempfiltState[0][0]  = Aimp[0][0] * filtState[0][0] + Aimp[0][1] * filtState[0][1] + Bimp[0] * z[0];
-    tempfiltState[0][1]  = Aimp[1][0] * filtState[0][0] + Aimp[1][1] * filtState[0][1] + Bimp[1] * z[0];
-    tempfiltStateP[0][0] = AimpP[0][0] * filtStateP[0][0] + AimpP[0][1] * filtStateP[0][1] + BimpP[0] * z[0];
-    tempfiltStateP[0][1] = AimpP[1][0] * filtStateP[0][0] + AimpP[1][1] * filtStateP[0][1] + BimpP[1] * z[0];
+    tempfiltState[0][0]  = Aimp[0][0] * filtState[0][0] + Aimp[0][1] * filtState[0][1] + Bimp[0] * in_pos_conv.x;
+    tempfiltState[0][1]  = Aimp[1][0] * filtState[0][0] + Aimp[1][1] * filtState[0][1] + Bimp[1] * in_pos_conv.x;
+    tempfiltStateP[0][0] = AimpP[0][0] * filtStateP[0][0] + AimpP[0][1] * filtStateP[0][1] + BimpP[0] * in_pos_conv.x;
+    tempfiltStateP[0][1] = AimpP[1][0] * filtStateP[0][0] + AimpP[1][1] * filtStateP[0][1] + BimpP[1] * in_pos_conv.x;
 
     // y axis
-    tempfiltState[1][0]  = Aimp[0][0] * filtState[1][0] + Aimp[0][1] * filtState[1][1] + Bimp[0] * z[1];
-    tempfiltState[1][1]  = Aimp[1][0] * filtState[1][0] + Aimp[1][1] * filtState[1][1] + Bimp[1] * z[1];
-    tempfiltStateP[1][0] = AimpP[0][0] * filtStateP[1][0] + AimpP[0][1] * filtStateP[1][1] + BimpP[0] * z[1];
-    tempfiltStateP[1][1] = AimpP[1][0] * filtStateP[1][0] + AimpP[1][1] * filtStateP[1][1] + BimpP[1] * z[1];
+    tempfiltState[1][0]  = Aimp[0][0] * filtState[1][0] + Aimp[0][1] * filtState[1][1] + Bimp[0] * in_pos_conv.y;
+    tempfiltState[1][1]  = Aimp[1][0] * filtState[1][0] + Aimp[1][1] * filtState[1][1] + Bimp[1] * in_pos_conv.y;
+    tempfiltStateP[1][0] = AimpP[0][0] * filtStateP[1][0] + AimpP[0][1] * filtStateP[1][1] + BimpP[0] * in_pos_conv.y;
+    tempfiltStateP[1][1] = AimpP[1][0] * filtStateP[1][0] + AimpP[1][1] * filtStateP[1][1] + BimpP[1] * in_pos_conv.y;
 
     // copy the components of the temp back to the actual
 

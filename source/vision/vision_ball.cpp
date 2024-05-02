@@ -90,8 +90,7 @@ void Vision::filterBalls()
 
     if (dis < Common::setting().max_ball_2_frame_dist)
     {
-        float filtout[2][2];
-        float filtpos[2] = {m_d_ball[id].x() / (float) 10.0, m_d_ball[id].y() / (float) 10.0};
+        const Common::Vec2 filtpos{m_d_ball[id].x(), m_d_ball[id].y()};
         m_last_raw_ball.CopyFrom(m_d_ball[id]);
 
         if (m_ball_not_seen > 0)
@@ -99,14 +98,9 @@ void Vision::filterBalls()
             m_ball_kalman.initializePos(filtpos);
         }
 
-        m_ball_kalman.updatePosition(filtpos, filtout);
+        m_ball_kalman.updatePosition(filtpos, &m_state->ball.Position, &m_state->ball.velocity);
 
-        m_state->ball.Position.x = filtout[0][0];
-        m_state->ball.Position.y = filtout[1][0];
-        m_state->ball.velocity.x = filtout[0][1];
-        m_state->ball.velocity.y = filtout[1][1];
-
-        m_ball_not_seen           = 0;
+        m_ball_not_seen         = 0;
         m_state->ball.seenState = Common::Seen;
     }
 
@@ -118,26 +112,19 @@ void Vision::filterBalls()
         {
             if (m_d_ball.size() > 0)
             {
-                float filtout[2][2];
-                float filtpos[2] = {m_d_ball[id].x() / (float) 10.0, m_d_ball[id].y() / (float) 10.0};
+                float              filtout[2][2];
+                const Common::Vec2 filtpos{m_d_ball[id].x(), m_d_ball[id].y()};
                 m_last_raw_ball.CopyFrom(m_d_ball[id]);
                 m_ball_kalman.initializePos(filtpos);
 
-                m_ball_kalman.updatePosition(filtpos, filtout);
+                m_ball_kalman.updatePosition(filtpos, &m_state->ball.Position, &m_state->ball.velocity);
 
-                m_state->ball.Position.x = filtout[0][0];
-                m_state->ball.Position.y = filtout[1][0];
-                m_state->ball.velocity.x = filtout[0][1];
-                m_state->ball.velocity.y = filtout[1][1];
-
-                m_ball_not_seen           = 0;
+                m_ball_not_seen         = 0;
                 m_state->ball.seenState = Common::Seen;
             }
             else
             {
                 m_state->ball.velocity = Common::Vec2{};
-
-                m_state->ball.Position /= 10.0f;
 
                 m_last_raw_ball.set_x(0.0f);
                 m_last_raw_ball.set_y(0.0f);
@@ -147,9 +134,6 @@ void Vision::filterBalls()
         }
         else
         {
-            m_state->ball.velocity /= 10.0f;
-            m_state->ball.Position /= 10.0f;
-
             m_state->ball.seenState = Common::TemprolilyOut;
         }
     }
@@ -157,8 +141,8 @@ void Vision::filterBalls()
 
 void Vision::predictBall()
 {
-    m_state->ball.Position /= 100.0f;
-    m_state->ball.velocity /= 100.0f;
+    m_state->ball.Position /= 1000.0f;
+    m_state->ball.velocity /= 1000.0f;
 
     float k       = 0.25f; // velocity derate every sec(units (m/s)/s)
     float tsample = (float) 1.0f / (float) Common::setting().vision_frame_rate;

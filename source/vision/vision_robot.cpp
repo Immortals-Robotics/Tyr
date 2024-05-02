@@ -95,11 +95,11 @@ int Vision::mergeRobots(int num)
 
 void Vision::filterRobots(int num, bool own)
 {
-    float filtout[2][2];
-    float filtpos[2];
-
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
+        Common::Vec2 filt_pos{};
+        Common::Vec2 filt_vel{};
+
         bool found = false;
         for (int j = 0; j < num; j++)
         {
@@ -107,8 +107,7 @@ void Vision::filterRobots(int num, bool own)
             {
                 found = true;
 
-                filtpos[0] = m_d_robot[j].x() / (float) 10.0;
-                filtpos[1] = m_d_robot[j].y() / (float) 10.0;
+                Common::Vec2 filtpos{m_d_robot[j].x(), m_d_robot[j].y()};
 
                 if (m_robot_not_seen[own][i] > 0)
                 {
@@ -118,7 +117,7 @@ void Vision::filterRobots(int num, bool own)
 
                 m_robot_not_seen[own][i] = 0;
 
-                m_robot_kalman[own][i].updatePosition(filtpos, filtout);
+                m_robot_kalman[own][i].updatePosition(filtpos, &filt_pos, &filt_vel);
 
                 m_angle_filter[own][i].AddData((m_d_robot[j].orientation() - m_raw_angles[own][i]) * 61.0f);
                 m_raw_angles[own][i]                  = m_d_robot[j].orientation();
@@ -142,10 +141,8 @@ void Vision::filterRobots(int num, bool own)
 
         else
         {
-            m_robot_state[own][i].Position.x = filtout[0][0];
-            m_robot_state[own][i].Position.y = filtout[1][0];
-            m_robot_state[own][i].velocity.x = filtout[0][1];
-            m_robot_state[own][i].velocity.y = filtout[1][1];
+            m_robot_state[own][i].Position = filt_pos;
+            m_robot_state[own][i].velocity = filt_vel;
 
             // Make sure our filtered velocities are reasonable
             if ((m_robot_state[own][i].velocity.length()) > ROBOT_ERROR_VELOCITY)
@@ -158,11 +155,6 @@ void Vision::filterRobots(int num, bool own)
                 m_robot_state[own][i].velocity.x = 0.0f;
             if (std::fabs(m_robot_state[own][i].velocity.y) < IGNORE_PREDICTION * 2.0f)
                 m_robot_state[own][i].velocity.y = 0.0f;
-
-            m_robot_state[own][i].Position.x *= 10.0f;
-            m_robot_state[own][i].Position.y *= 10.0f;
-            m_robot_state[own][i].velocity.x *= 10.0f;
-            m_robot_state[own][i].velocity.y *= 10.0f;
         }
     }
 }
@@ -193,7 +185,7 @@ void Vision::predictRobots()
         }
         else
         {
-            for (int j = 0; j < 10; j++)
+            for (int j = 0; j < Common::Setting::kMaxRobots; j++)
             {
                 m_robot_state[0][i].Position.x = m_robot_state[0][i].Position.x + m_state->lastCMDS[i][j].x / 1.4f;
                 m_robot_state[0][i].Position.y = m_robot_state[0][i].Position.y + m_state->lastCMDS[i][j].y / 1.4f;

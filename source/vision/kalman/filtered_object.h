@@ -24,23 +24,21 @@ class FilteredObject
 {
 public:
     /// Default constructor
-    FilteredObject();
-    /// Constructor with intialization matrices fed in
+    FilteredObject() = default;
+    /// Constructor with initialization matrices fed in
     FilteredObject(float A[2][2], float B[2], float C[2][2], float D[2], float lossMat[2]);
     /// Constructor from a file
     void initialize(const char *filename1, const char *filename2);
-    /// Default Destructor
-    virtual ~FilteredObject();
     /// Initialize the position whenever it is lost and refound. Use this for the first initial state too.
-    void initializePos(float pos[2]);
+    void initializePos(Common::Vec2 t_pos);
 
     /** update the internal state using known vision data
-     * @param z is the measured position. first component is for x axis, and second component is for y axis
+     * @param z is the measured position.
      * @param filtOut is a pointer to whether the output position and velocity is output to
      *  First component is the dimension,  second component indicates whether it is position or velocity
      * @return filtered position and velocity in param filtOut
      **/
-    void updatePosition(float z[2], float filtOut[2][2]);
+    void updatePosition(Common::Vec2 t_in_pos, Common::Vec2 *t_out_pos, Common::Vec2 *t_out_vel);
 
 private:
     /** FilterState : Internal representation for Kalman filter
@@ -57,6 +55,6 @@ private:
     float AimpP[2][2], BimpP[2], CimpP[2][2], DimpP[2], lossVecP[2];
 
     /// The number of time it has been used
-    long usageCount;
+    long usageCount = 0;
 };
 } // namespace Tyr::Vision
