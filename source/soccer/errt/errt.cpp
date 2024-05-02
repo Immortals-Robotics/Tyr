@@ -5,6 +5,7 @@ namespace Tyr::Soccer
 Planner::Planner(const int t_max_nodes) : m_max_nodes(t_max_nodes), m_tree(t_max_nodes)
 {
     m_waypoints.reserve(m_max_nodes);
+    m_cached_waypoints.reserve(m_max_nodes);
 }
 
 void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
@@ -64,13 +65,12 @@ Common::Vec2 Planner::chooseTarget()
     {
         return final_state;
     }
-    else if ((r <= goal_target_prob + waypoint_target_prob) && (m_cached_waypoints > 0))
+    else if ((r <= goal_target_prob + waypoint_target_prob) && (m_cached_waypoints.size() > 0))
     {
         r       = m_random.get();
-        int idx = (int) (r * (m_cached_waypoints));
-        if (idx >= m_cached_waypoints)
-            idx = m_cached_waypoints;
-        return m_waypoints[idx];
+        int idx = (int) (r * (m_cached_waypoints.size()));
+        idx     = std::clamp(idx, 0, (int) m_cached_waypoints.size() - 1);
+        return m_cached_waypoints[idx];
     }
 
     return randomState();
@@ -108,10 +108,9 @@ void Planner::setWayPoints()
         m_waypoints.push_back(n->state);
     }
 
+    m_cached_waypoints.clear();
     if (isReached())
-        m_cached_waypoints = m_waypoints.size();
-    else
-        m_cached_waypoints = 0;
+        m_cached_waypoints = m_waypoints;
 }
 
 Common::Vec2 Planner::getWayPoint(unsigned int i)
@@ -166,7 +165,7 @@ Common::Vec2 Planner::plan()
 
 void Planner::optimize_tree()
 {
-    for (int i = 0; i < getWayPointNum(); i++)
+    for (int i = 0; i < m_waypoints.size() - 1; i++)
     {
         if (obs_map.collisionDetect(m_waypoints[i], m_waypoints.back()) == false)
         {

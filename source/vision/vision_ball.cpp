@@ -99,11 +99,11 @@ void Vision::filterBalls()
         }
 
         m_ball_kalman.updatePosition(filtpos);
-        m_state->ball.position = m_ball_kalman.getPosition();
-        m_state->ball.velocity = m_ball_kalman.getVelocity();
+        Common::worldState().ball.position = m_ball_kalman.getPosition();
+        Common::worldState().ball.velocity = m_ball_kalman.getVelocity();
 
         m_ball_not_seen         = 0;
-        m_state->ball.seen_state = Common::SeenState::Seen;
+        Common::worldState().ball.seen_state = Common::SeenState::Seen;
     }
 
     else
@@ -119,63 +119,63 @@ void Vision::filterBalls()
                 m_ball_kalman.initializePos(filtpos);
 
                 m_ball_kalman.updatePosition(filtpos);
-                m_state->ball.position = m_ball_kalman.getPosition();
-                m_state->ball.velocity = m_ball_kalman.getVelocity();
+                Common::worldState().ball.position = m_ball_kalman.getPosition();
+                Common::worldState().ball.velocity = m_ball_kalman.getVelocity();
 
                 m_ball_not_seen         = 0;
-                m_state->ball.seen_state = Common::SeenState::Seen;
+                Common::worldState().ball.seen_state = Common::SeenState::Seen;
             }
             else
             {
-                m_state->ball.velocity = Common::Vec2{};
+                Common::worldState().ball.velocity = Common::Vec2{};
 
                 m_last_raw_ball.set_x(0.0f);
                 m_last_raw_ball.set_y(0.0f);
 
-                m_state->ball.seen_state = Common::SeenState::CompletelyOut;
+                Common::worldState().ball.seen_state = Common::SeenState::CompletelyOut;
             }
         }
         else
         {
-            m_state->ball.seen_state = Common::SeenState::TemprolilyOut;
+            Common::worldState().ball.seen_state = Common::SeenState::TemprolilyOut;
         }
     }
 }
 
 void Vision::predictBall()
 {
-    m_state->ball.position /= 1000.0f;
-    m_state->ball.velocity /= 1000.0f;
+    Common::worldState().ball.position /= 1000.0f;
+    Common::worldState().ball.velocity /= 1000.0f;
 
     float k       = 0.25f; // velocity derate every sec(units (m/s)/s)
     float tsample = (float) 1.0f / (float) Common::setting().vision_frame_rate;
 
     float t;
-    if (m_state->ball.seen_state == Common::SeenState::TemprolilyOut)
+    if (Common::worldState().ball.seen_state == Common::SeenState::TemprolilyOut)
         t = tsample;
     else
         t = kPredictSteps * tsample;
 
-    float dist       = m_state->ball.velocity.length() * t - k * (t * t) / 2.0f;
-    float vball_pred = m_state->ball.velocity.length() - k * t;
+    float dist       = Common::worldState().ball.velocity.length() * t - k * (t * t) / 2.0f;
+    float vball_pred = Common::worldState().ball.velocity.length() - k * t;
 
     // if speed turns out to be negative..it means that ball has stopped, so calculate that amount of
     // distance traveled
     if (vball_pred < 0)
     {
         vball_pred = 0.0f;
-        dist       = m_state->ball.velocity.lengthSquared() * k / 2.0f;
+        dist       = Common::worldState().ball.velocity.lengthSquared() * k / 2.0f;
         // i.e the ball has stopped, so take a newer vision data for the prediction
     }
 
-    if (m_state->ball.velocity.length() > 0)
+    if (Common::worldState().ball.velocity.length() > 0)
     {
-        m_state->ball.velocity = m_state->ball.velocity.normalized() * vball_pred;
-        m_state->ball.position += m_state->ball.velocity.normalized() * dist;
+        Common::worldState().ball.velocity = Common::worldState().ball.velocity.normalized() * vball_pred;
+        Common::worldState().ball.position += Common::worldState().ball.velocity.normalized() * dist;
     }
 
-    m_state->ball.velocity *= 1000.0f;
-    m_state->ball.position *= 1000.0f;
+    Common::worldState().ball.velocity *= 1000.0f;
+    Common::worldState().ball.position *= 1000.0f;
 }
 
 } // namespace Tyr::Vision

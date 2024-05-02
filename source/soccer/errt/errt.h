@@ -12,8 +12,7 @@ private:
     Common::Vec2 final_state;
 
     std::vector<Common::Vec2> m_waypoints;
-
-    int m_cached_waypoints = 0;
+    std::vector<Common::Vec2> m_cached_waypoints;
 
     float m_step_size;
 

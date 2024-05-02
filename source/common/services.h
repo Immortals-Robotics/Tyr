@@ -1,40 +1,21 @@
 #pragma once
 
-#include "debugging/debug.h"
-#include "logging/logging.h"
-#include "setting.h"
-#include "timer/timer.h"
-
 namespace Tyr::Common
 {
+class Setting;
+class Debug;
+class Logger;
+class Timer;
+class ConfigReader;
+
+struct WorldState;
+struct RefereeState;
+
 struct Services
 {
-    static void initialize()
-    {
-        s_logger = new Logger();
-        s_configReader = new ConfigReader("config.toml");
-
-        s_setting = new Setting();
-        s_setting->load(s_configReader->getRoot());
-
-        s_debug = new Debug(s_setting->debug_address, s_setting->enable_debug);
-
-        s_global_timer = new Timer();
-        s_global_timer->start();
-    }
-
-    static void saveConfig()
-    {
-        s_configReader->save(s_setting->getConfigTable());
-    }
-
-    static void shutdown()
-    {
-        delete s_setting;
-        delete s_debug;
-        delete s_global_timer;
-        delete s_logger;
-    }
+    static void initialize();
+    static void saveConfig();
+    static void shutdown();
 
     static ConfigReader &configReader()
     {
@@ -61,12 +42,25 @@ struct Services
         return *s_global_timer;
     }
 
+    static WorldState &worldState()
+    {
+        return *s_world_state;
+    }
+
+    static RefereeState &refereeState()
+    {
+        return *s_referee_state;
+    }
+
 private:
-    static inline Setting *s_setting;
-    static inline Debug   *s_debug;
-    static inline Logger  *s_logger;
-    static inline Timer   *s_global_timer;
+    static inline Setting      *s_setting;
+    static inline Debug        *s_debug;
+    static inline Logger       *s_logger;
+    static inline Timer        *s_global_timer;
     static inline ConfigReader *s_configReader;
+
+    static inline WorldState   *s_world_state;
+    static inline RefereeState *s_referee_state;
 };
 
 static ConfigReader &configReader()
@@ -92,6 +86,16 @@ static Logger &logger()
 static Timer &global_timer()
 {
     return Services::global_timer();
+}
+
+static WorldState &worldState()
+{
+    return Services::worldState();
+}
+
+static RefereeState &refereeState()
+{
+    return Services::refereeState();
 }
 } // namespace Tyr::Common
 

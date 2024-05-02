@@ -112,8 +112,8 @@ Common::Vec2 Dss::GetRandomAcceleration(const Common::Vec2 &v, const float a_mag
 {
     const float max_acc = 3000.f;
 
-    const float rnd_angle     = random.get() * 2.f * 3.1415f;
-    const float rnd_magnitude = random.get() * a_mag;
+    const float rnd_angle     = m_random.get() * 2.f * 3.1415f;
+    const float rnd_magnitude = m_random.get() * a_mag;
 
     return Common::Vec2(cos(rnd_angle), sin(rnd_angle)) * rnd_magnitude;
 }

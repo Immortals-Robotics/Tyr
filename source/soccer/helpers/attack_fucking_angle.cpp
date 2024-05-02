@@ -6,7 +6,7 @@ bool Ai::attackFuckingAngle()
 {
     bool ans = false;
 
-    static int attfuanHys = 0;
+    static int hys = 0;
 
     int oppAttack = findKickerOpp(-1);
     if (oppAttack != -1)
@@ -22,13 +22,13 @@ bool Ai::attackFuckingAngle()
 
     if (ans)
     {
-        attfuanHys = 30;
+        hys = 30;
         return true;
     }
 
-    if (attfuanHys > 0)
+    if (hys > 0)
     {
-        attfuanHys--;
+        hys--;
         return true;
     }
 

@@ -19,10 +19,10 @@ static float calculateRobotRadius(const Common::RobotState &state)
 
 void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
 {
-    const bool ourPenalty = field || (robot_num != gk && !refereeState->ourPlaceBall());
-    const bool oppPenalty = field || !refereeState->ourPlaceBall();
+    const bool ourPenalty = field || (robot_num != gk && !Common::refereeState().ourPlaceBall());
+    const bool oppPenalty = field || !Common::refereeState().ourPlaceBall();
 
-    const bool oppPenaltyBig = refereeState->freeKick() || refereeState->stop();
+    const bool oppPenaltyBig = Common::refereeState().freeKick() || Common::refereeState().stop();
 
     const float current_robot_radius = calculateRobotRadius(OwnRobot[robot_num].State);
 
@@ -51,7 +51,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
         }
     }
 
-    if (bll || !refereeState->allowedNearBall())
+    if (bll || !Common::refereeState().allowedNearBall())
     {
         obs_map.addCircle({ball.position, ballAreaRadius + current_robot_radius});
     }
@@ -96,9 +96,9 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
     }
 
     // avoid the line between the ball and the placement point
-    if (refereeState->theirPlaceBall())
+    if (Common::refereeState().theirPlaceBall())
     {
-        const Common::Vec2 ball_line      = refereeState->place_ball_target - ball.position;
+        const Common::Vec2 ball_line      = Common::refereeState().place_ball_target - ball.position;
         const int          ball_obs_count = std::ceil(ball_line.length() / (ballAreaRadius + current_robot_radius));
 
         for (int i = 0; i < ball_obs_count; i++)

@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::CalculateBallTrajectory()
+void Ai::calculateBallTrajectory()
 {
     // TODO: replace with epsilon check
     if (ball.velocity.length() == 0.0f)

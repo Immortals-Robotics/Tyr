@@ -2,10 +2,8 @@
 
 namespace Tyr::Vision
 {
-Vision::Vision(Common::WorldState *t_state)
+Vision::Vision()
 {
-    m_state = t_state;
-
     for (int i = 0; i < Common::Setting::kCamCount; i++)
         m_packet_received[i] = false;
 

@@ -13,11 +13,9 @@ namespace Tyr::Soccer
 class Ai
 {
 private:
-    Common::WorldState   *worldState;
-    Common::RefereeState *refereeState;
-    Sender::Sender       *senderBase;
+    Sender::Sender       *m_sender;
 
-    Common::Random random;
+    Common::Random m_random;
 
     float field_width;
     float field_height;
@@ -109,7 +107,7 @@ private:
     Common::Vec2 DefGhuz(Common::Vec2 *defendTarget = nullptr);
     Common::Vec2 CalculatePassPos(int robot_num, const Common::Vec2 &target, const Common::Vec2 &statPos,
                                   float bar = 89.0f);
-    void         CalculateBallTrajectory();
+    void         calculateBallTrajectory();
     float        calculateRobotReachTime(int robot_num, Common::Vec2 dest, VelocityProfile *vel_profile);
     float        calculateBallRobotReachTime(int robot_num, VelocityProfile *vel_profile);
 
@@ -164,7 +162,8 @@ private:
     // Skills
     void Navigate2Point(int robot_num, Common::Vec2 dest, bool accurate = false, int speed = 80,
                         VelocityProfile *velocityProfile = nullptr, bool use_dss = false);
-    void Navigate2Point_2018(int robot_num, Common::Vec2 dest, int speed = 80, VelocityProfile *velocityProfile = nullptr);
+    void Navigate2Point_2018(int robot_num, Common::Vec2 dest, int speed = 80,
+                             VelocityProfile *velocityProfile = nullptr);
     void ERRTNavigate2Point(int robot_num, Common::Vec2 dest, bool accurate = false, int speed = 80,
                             VelocityProfile *velocityProfile = nullptr);
     void ERRTSetObstacles(int robot_num, bool bll = false, bool field = true);
@@ -199,7 +198,8 @@ private:
 
     void DefMid(int &robot_num, int &rightdef_num, int &leftdef_num, Common::Vec2 *defendTarget = nullptr,
                 bool stop = false, bool replace = true);
-    void DefBy3(int robot_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr, bool stop = false);
+    void DefBy3(int robot_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr,
+                bool stop = false);
     void DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr, bool stop = false);
     void DefBy1(int thelastdef_num, Common::Vec2 *defendTarget = nullptr, bool stop = false);
     void runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarget, bool stop);
@@ -232,13 +232,13 @@ private:
 
     void my_test();
 
-    void internalProcessData(Common::WorldState *worldState);
-    void internalFinalize(Common::WorldState *worldState);
+    void internalProcessData();
+    void internalFinalize();
 
 public:
     Robot OwnRobot[Common::Setting::kMaxOnFieldTeamRobots];
-    Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sender::Sender *sender);
-    void Process(Common::WorldState *worldState);
+    Ai(Sender::Sender *sender);
+    void Process();
     bool read_playBook(const char *fileName);
     bool read_playBook_str(std::span<char> buffer);
 

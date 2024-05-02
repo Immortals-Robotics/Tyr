@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::internalFinalize(Common::WorldState *worldState)
+void Ai::internalFinalize()
 {
     // bool saveKinoData = !OwnRobot[cmf].halted;
 
@@ -11,16 +11,16 @@ void Ai::internalFinalize(Common::WorldState *worldState)
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        senderBase->getCommand(OwnRobot[i].data);
+        m_sender->getCommand(OwnRobot[i].data);
         OwnRobot[i].halted = false;
     }
-    senderBase->append_demo_data();
+    m_sender->append_demo_data();
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         for (int j = 0; j < 10; j++)
         {
-            worldState->last_cmds[i][j] = Common::Vec3(0.0f);
+            Common::worldState().last_cmds[i][j] = Common::Vec3(0.0f);
         }
     }
 
@@ -30,7 +30,7 @@ void Ai::internalFinalize(Common::WorldState *worldState)
             continue;
         for (int j = 0; j < 11; j++) // kheyli tof malie...
         {
-            worldState->last_cmds[OwnRobot[i].State.vision_id][j] = OwnRobot[i].lastCMDs[j].motion;
+            Common::worldState().last_cmds[OwnRobot[i].State.vision_id][j] = OwnRobot[i].lastCMDs[j].motion;
         }
     }
 }

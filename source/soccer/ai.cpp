@@ -11,9 +11,8 @@ struct RobotProperty
     bool hasDribble;
 };
 
-Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sender::Sender *sender)
-    : maxBallHist(240), worldState(worldState), refereeState(refereeState), senderBase(sender), cmf(0), rmf(1), lmf(2),
-      gk(3), dmf(4), def(5), rw(6), lw(7)
+Ai::Ai(Sender::Sender *sender)
+    : m_sender(sender), maxBallHist(240), cmf(0), rmf(1), lmf(2), gk(3), dmf(4), def(5), rw(6), lw(7)
 {
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");

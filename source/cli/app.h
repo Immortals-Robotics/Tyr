@@ -24,9 +24,6 @@ private:
     std::thread m_ref_thread;
     std::thread m_str_thread;
 
-    std::unique_ptr<Common::WorldState>   m_world_state;
-    std::unique_ptr<Common::RefereeState> m_referee_state;
-
     std::unique_ptr<Referee::Referee> m_referee;
 
     std::unique_ptr<Vision::Vision> m_vision;

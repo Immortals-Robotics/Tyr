@@ -7,7 +7,7 @@ namespace Tyr::Soccer
 class Dss
 {
 private:
-    Common::Random random;
+    Common::Random m_random;
 
     const float robot_r;
     const float cmd_dt;

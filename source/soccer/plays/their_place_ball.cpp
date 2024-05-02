@@ -73,7 +73,7 @@ void Ai::their_place_ball()
 #else
     ERRTSetObstacles(dmf, true, true);
     obs_map.addCircle({ball.position, 1010.0f});
-    obs_map.addCircle({refereeState->place_ball_target, 1010.0f});
+    obs_map.addCircle({Common::refereeState().place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seen_state != Common::SeenState::CompletelyOut)
@@ -90,7 +90,7 @@ void Ai::their_place_ball()
 
     ERRTSetObstacles(rw, true, true);
     obs_map.addCircle({ball.position, 1010.0f});
-    obs_map.addCircle({refereeState->place_ball_target, 1010.0f});
+    obs_map.addCircle({Common::refereeState().place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seen_state != Common::SeenState::CompletelyOut)
@@ -108,7 +108,7 @@ void Ai::their_place_ball()
 
     ERRTSetObstacles(lw, true, true);
     obs_map.addCircle({ball.position, 1010.0f});
-    obs_map.addCircle({refereeState->place_ball_target, 1010.0f});
+    obs_map.addCircle({Common::refereeState().place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seen_state != Common::SeenState::CompletelyOut)
@@ -125,7 +125,7 @@ void Ai::their_place_ball()
 
     ERRTSetObstacles(lmf, true, true);
     obs_map.addCircle({ball.position, 1010.0f});
-    obs_map.addCircle({refereeState->place_ball_target, 1010.0f});
+    obs_map.addCircle({Common::refereeState().place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seen_state != Common::SeenState::CompletelyOut)
@@ -142,7 +142,7 @@ void Ai::their_place_ball()
 
     ERRTSetObstacles(rmf, true, true);
     obs_map.addCircle({ball.position, 1010.0f});
-    obs_map.addCircle({refereeState->place_ball_target, 1010.0f});
+    obs_map.addCircle({Common::refereeState().place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seen_state != Common::SeenState::CompletelyOut)
@@ -159,7 +159,7 @@ void Ai::their_place_ball()
 
     ERRTSetObstacles(cmf, true, true);
     obs_map.addCircle({ball.position, 1010.0f});
-    obs_map.addCircle({refereeState->place_ball_target, 1010.0f});
+    obs_map.addCircle({Common::refereeState().place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seen_state != Common::SeenState::CompletelyOut)

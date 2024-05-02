@@ -14,12 +14,9 @@ bool Application::initialize()
         return false;
     }
 
-    m_world_state   = std::make_unique<Common::WorldState>();
-    m_referee_state = std::make_unique<Common::RefereeState>();
-
     Common::logInfo(" Connecting to RefereeBox server at {} on port : {}", Common::setting().referee_address.port,
                     Common::setting().referee_address.port);
-    m_referee = std::make_unique<Referee::Referee>(m_world_state.get(), m_referee_state.get());
+    m_referee = std::make_unique<Referee::Referee>();
     if (m_referee->connect())
     {
         Common::logInfo("Connected to RefBox successfully :)");
@@ -32,7 +29,7 @@ bool Application::initialize()
 
     Common::logInfo("Connecting to Vision server at {} on port: {}", Common::setting().vision_address.ip,
                     Common::setting().vision_address.port);
-    m_vision = std::make_unique<Vision::Vision>(m_world_state.get());
+    m_vision = std::make_unique<Vision::Vision>();
     if (m_vision->isConnected())
     {
         Common::logInfo("Connected to Vision successfully :)");
@@ -47,7 +44,7 @@ bool Application::initialize()
 
     m_sender = std::make_unique<Sender::Sender>();
 
-    m_ai = std::make_unique<Soccer::Ai>(m_world_state.get(), m_referee_state.get(), m_sender.get());
+    m_ai = std::make_unique<Soccer::Ai>(m_sender.get());
 
     m_grsim = std::make_unique<Sender::Grsim>(Common::setting().grsim_address);
 
@@ -84,15 +81,15 @@ void Application::aiThreadEentry()
         m_lock.lock();
 
         m_vision->process();
-        m_ai->Process(m_world_state.get());
+        m_ai->Process();
 
-		std::vector<Sender::Command> commands;
-		commands.reserve(Common::Setting::kMaxOnFieldTeamRobots);
+        std::vector<Sender::Command> commands;
+        commands.reserve(Common::Setting::kMaxOnFieldTeamRobots);
 
-		for (int robot_idx = 0; robot_idx <  Common::Setting::kMaxOnFieldTeamRobots; ++robot_idx)
-		{
-			commands.emplace_back(m_ai->OwnRobot[robot_idx].GetCurrentCommand());
-		}
+        for (int robot_idx = 0; robot_idx < Common::Setting::kMaxOnFieldTeamRobots; ++robot_idx)
+        {
+            commands.emplace_back(m_ai->OwnRobot[robot_idx].GetCurrentCommand());
+        }
 
         m_grsim->sendData(commands);
 
