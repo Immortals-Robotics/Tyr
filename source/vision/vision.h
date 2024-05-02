@@ -10,24 +10,12 @@
 
 #include "kalman/filtered_object.h"
 
-// TODO: move to settings
-#define PREDICT_STEPS 7.0f
-#define MAX_ROBOT_SUBSTITUTE 60
-
-// Don't add prediction to Ball or Opponents if both velocities are below this threshold
-const float IGNORE_PREDICTION = 0.045f;
-
-// If the filtering process yields velocities above these values, reset the filter state
-// All these are in metres/sec
-const float ROBOT_ERROR_VELOCITY = 450.0f;
-
 namespace Tyr::Vision
 {
 class Vision
 {
 public:
     Vision(Common::WorldState *t_state);
-    ~Vision();
 
     void receive();
     void process();
@@ -54,6 +42,17 @@ private:
     void processParam();
 
 private:
+    // TODO: move to settings
+    static constexpr float kPredictSteps       = 7.0f;
+    static constexpr int   kMaxRobotSubstitute = 60;
+
+    // Don't add prediction to Ball or Opponents if both velocities are below this threshold
+    static constexpr float kIgnorePrediction = 0.045f;
+
+    // If the filtering process yields velocities above these values, reset the filter state
+    // All these are in metres/sec
+    static constexpr float kRobotErrorVelocity = 450.0f;
+
     bool our_color;
 
     std::unique_ptr<Common::UdpClient> m_udp;

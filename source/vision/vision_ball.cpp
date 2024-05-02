@@ -154,7 +154,7 @@ void Vision::predictBall()
     if (m_state->ball.seenState == Common::TemprolilyOut)
         t = tsample;
     else
-        t = PREDICT_STEPS * tsample;
+        t = kPredictSteps * tsample;
 
     float dist       = m_state->ball.velocity.length() * t - k * (t * t) / 2.0f;
     float vball_pred = m_state->ball.velocity.length() - k * t;

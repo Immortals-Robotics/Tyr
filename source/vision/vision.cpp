@@ -34,8 +34,6 @@ Vision::Vision(Common::WorldState *t_state)
         std::cout << "Failed to connect to Vision UDP" << std::endl;
     }
 }
-Vision::~Vision()
-{}
 
 void Vision::receive()
 {

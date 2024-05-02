@@ -147,15 +147,15 @@ void Vision::filterRobots(int num, bool own)
             m_robot_state[own][i].velocity = filt_vel;
 
             // Make sure our filtered velocities are reasonable
-            if ((m_robot_state[own][i].velocity.length()) > ROBOT_ERROR_VELOCITY)
+            if ((m_robot_state[own][i].velocity.length()) > kRobotErrorVelocity)
             {
                 m_robot_state[own][i].velocity.x = 0.0f;
                 m_robot_state[own][i].velocity.y = 0.0f;
             }
 
-            if (std::fabs(m_robot_state[own][i].velocity.x) < IGNORE_PREDICTION * 2.0f)
+            if (std::fabs(m_robot_state[own][i].velocity.x) < kIgnorePrediction * 2.0f)
                 m_robot_state[own][i].velocity.x = 0.0f;
-            if (std::fabs(m_robot_state[own][i].velocity.y) < IGNORE_PREDICTION * 2.0f)
+            if (std::fabs(m_robot_state[own][i].velocity.y) < kIgnorePrediction * 2.0f)
                 m_robot_state[own][i].velocity.y = 0.0f;
         }
     }
@@ -168,11 +168,11 @@ void Vision::predictRobots()
         for (int i = 0; i < Common::Setting::kMaxRobots; i++)
         {
             m_robot_state[own][i].Position =
-                m_robot_state[own][i].Position + m_robot_state[own][i].velocity / (PREDICT_STEPS * 2.0f);
+                m_robot_state[own][i].Position + m_robot_state[own][i].velocity / (kPredictSteps * 2.0f);
 
             // Predict the m_d_robot to go forward
             m_robot_state[own][i].angle =
-                m_robot_state[own][i].angle + m_robot_state[own][i].AngularVelocity / (PREDICT_STEPS * 4.0f);
+                m_robot_state[own][i].angle + m_robot_state[own][i].AngularVelocity / (kPredictSteps * 4.0f);
         }
     }
 
@@ -218,7 +218,7 @@ void Vision::sendStates()
             m_state->ownRobots_num--;
         }
 
-        if (m_robot_not_seen[0][i] < MAX_ROBOT_SUBSTITUTE)
+        if (m_robot_not_seen[0][i] < kMaxRobotSubstitute)
         {
             m_robot_state[0][i].OutForSubsitute = false;
         }
