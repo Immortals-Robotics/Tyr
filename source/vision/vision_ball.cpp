@@ -98,7 +98,9 @@ void Vision::filterBalls()
             m_ball_kalman.initializePos(filtpos);
         }
 
-        m_ball_kalman.updatePosition(filtpos, &m_state->ball.Position, &m_state->ball.velocity);
+        m_ball_kalman.updatePosition(filtpos);
+        m_state->ball.Position = m_ball_kalman.getPosition();
+        m_state->ball.velocity = m_ball_kalman.getVelocity();
 
         m_ball_not_seen         = 0;
         m_state->ball.seenState = Common::Seen;
@@ -112,12 +114,13 @@ void Vision::filterBalls()
         {
             if (m_d_ball.size() > 0)
             {
-                float              filtout[2][2];
                 const Common::Vec2 filtpos{m_d_ball[id].x(), m_d_ball[id].y()};
                 m_last_raw_ball.CopyFrom(m_d_ball[id]);
                 m_ball_kalman.initializePos(filtpos);
 
-                m_ball_kalman.updatePosition(filtpos, &m_state->ball.Position, &m_state->ball.velocity);
+                m_ball_kalman.updatePosition(filtpos);
+                m_state->ball.Position = m_ball_kalman.getPosition();
+                m_state->ball.velocity = m_ball_kalman.getVelocity();
 
                 m_ball_not_seen         = 0;
                 m_state->ball.seenState = Common::Seen;

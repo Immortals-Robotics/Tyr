@@ -117,7 +117,9 @@ void Vision::filterRobots(int num, bool own)
 
                 m_robot_not_seen[own][i] = 0;
 
-                m_robot_kalman[own][i].updatePosition(filtpos, &filt_pos, &filt_vel);
+                m_robot_kalman[own][i].updatePosition(filtpos);
+                filt_pos = m_robot_kalman[own][i].getPosition();
+                filt_vel = m_robot_kalman[own][i].getVelocity();
 
                 m_angle_filter[own][i].AddData((m_d_robot[j].orientation() - m_raw_angles[own][i]) * 61.0f);
                 m_raw_angles[own][i]                  = m_d_robot[j].orientation();

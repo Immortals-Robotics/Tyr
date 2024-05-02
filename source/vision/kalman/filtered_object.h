@@ -35,20 +35,29 @@ public:
 
     /** update the internal state using known vision data
      * @param t_in_pos is the measured position.
-     * @param t_out_pos is a pointer to whether the output position is output to
-     * @param t_out_vel is a pointer to whether the output velocity is output to
-     * @return filtered position and velocity in param filtOut
      **/
-    void updatePosition(Common::Vec2 t_in_pos, Common::Vec2 *t_out_pos, Common::Vec2 *t_out_vel);
+    void updatePosition(Common::Vec2 t_pos);
+
+    Common::Vec2 getPosition() const
+    {
+        return m_state_pos_out * 10.0f;
+    }
+
+    Common::Vec2 getVelocity() const
+    {
+        return m_state_vel_out * 10.0f;
+    }
 
 private:
-    /** FilterState : Internal representation for Kalman filter
-     * The first component represent the dimension. 0 for x axis, 1 for y axis
-     * The second component represents the current position and velocity component
-     * This is a column vector
-     **/
-    float filtState[2][2];
-    float filtStateP[2][2];
+    // FilterState : Internal representation for Kalman filter
+    Common::Vec2 m_state_pos;
+    Common::Vec2 m_state_vel;
+
+    Common::Vec2 m_state_pos_p;
+    Common::Vec2 m_state_vel_p;
+
+    Common::Vec2 m_state_pos_out;
+    Common::Vec2 m_state_vel_out;
 
     //./ filtered matrices that is determined by matlab
     float Aimp[2][2], Bimp[2], Cimp[2][2], Dimp[2], lossVec[2];
