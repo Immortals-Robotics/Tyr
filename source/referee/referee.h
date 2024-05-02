@@ -21,6 +21,9 @@ private:
 
     bool isKicked();
 
+    // This is the state machine transition function
+    void transition(Protos::SSL_Referee_Command ref_command);
+
 public:
     Referee(Common::WorldState *world_state, Common::RefereeState *referee_state);
     bool connect();

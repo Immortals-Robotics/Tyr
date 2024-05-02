@@ -41,8 +41,6 @@ private:
 
     Common::Angle penaltyAngle;
 
-    int oppGK;
-
     float randomParam;
     int   target_str;
 
@@ -68,7 +66,6 @@ private:
     int lastReferee;
 
     Common::Timer timer;
-    Common::Vec2 *targetBallPlacement;
 
     bool isDefending;
     bool oppRestarted;

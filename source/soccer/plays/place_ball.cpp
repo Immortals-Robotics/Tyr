@@ -11,9 +11,9 @@ void Ai::our_place_ball_shoot()
     DefMid(def, rw, lw, NULL, true);
 
     static Common::Angle move_angle, temp_opp_ang;
-    if (ball.position.distanceTo(*targetBallPlacement) > 100)
+    if (ball.position.distanceTo(refereeState->place_ball_target) > 100)
     {
-        move_angle   = targetBallPlacement->angleWith(ball.position);
+        move_angle   = refereeState->place_ball_target.angleWith(ball.position);
         temp_opp_ang = Common::Angle::fromDeg(move_angle.deg() + 180.0f);
     }
 
@@ -71,14 +71,14 @@ void Ai::our_place_ball_shoot()
     }*/
     if (FUNC_state == 0)
     {
-        if (ball.position.distanceTo(*targetBallPlacement) < 95)
+        if (ball.position.distanceTo(refereeState->place_ball_target) < 95)
         {
             FUNC_state = 7;
             FUNC_CNT   = 0;
             t_ang.setDeg(0.0f);
             t_opp_ang.setDeg(180.0f);
         }
-        else if (ball.position.distanceTo(*targetBallPlacement) < 1000)
+        else if (ball.position.distanceTo(refereeState->place_ball_target) < 1000)
         {
             FUNC_state = 3;
             FUNC_CNT   = 0;
@@ -93,7 +93,7 @@ void Ai::our_place_ball_shoot()
 
         ERRTSetObstacles(dmf, 0, 0);
         obs_map.addCircle({ball.position, 150.0f});
-        ERRTNavigate2Point(dmf, targetBallPlacement->circleAroundPoint(temp_opp_ang, 250), 0, 40,
+        ERRTNavigate2Point(dmf, refereeState->place_ball_target.circleAroundPoint(temp_opp_ang, 250), 0, 40,
                            &VELOCITY_PROFILE_AROOM);
 
         obs_map.resetMap();
@@ -212,9 +212,9 @@ void Ai::our_place_ball_shoot()
     {
         OwnRobot[attack].target.angle = t_ang;
         OwnRobot[dmf].target.angle    = t_opp_ang;
-        Navigate2Point(attack, targetBallPlacement->circleAroundPoint(t_opp_ang, 75), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
+        Navigate2Point(attack, refereeState->place_ball_target.circleAroundPoint(t_opp_ang, 75), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
-        Navigate2Point(dmf, targetBallPlacement->circleAroundPoint(t_ang, 75), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
+        Navigate2Point(dmf, refereeState->place_ball_target.circleAroundPoint(t_ang, 75), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
         bool ball_has_slipt =
             ((OwnRobot[attack].State.position + OwnRobot[dmf].State.position) / 2).distanceTo(ball.position) > 300;
@@ -225,8 +225,8 @@ void Ai::our_place_ball_shoot()
             FUNC_CNT   = 0;
         }
 
-        if (targetBallPlacement->circleAroundPoint(t_opp_ang, 75).distanceTo(OwnRobot[attack].State.position) < 40 &&
-            targetBallPlacement->circleAroundPoint(t_ang, 75).distanceTo(OwnRobot[dmf].State.position) < 40)
+        if (refereeState->place_ball_target.circleAroundPoint(t_opp_ang, 75).distanceTo(OwnRobot[attack].State.position) < 40 &&
+            refereeState->place_ball_target.circleAroundPoint(t_ang, 75).distanceTo(OwnRobot[dmf].State.position) < 40)
         {
             FUNC_CNT++;
         }
@@ -243,18 +243,18 @@ void Ai::our_place_ball_shoot()
         OwnRobot[attack].target.angle = t_ang;
         OwnRobot[dmf].target.angle    = t_opp_ang;
         // OwnRobot[attack].face(ball.position);
-        Navigate2Point(attack, targetBallPlacement->circleAroundPoint(t_opp_ang, 250), 0, 20, &TEMP_VEL_PRO);
+        Navigate2Point(attack, refereeState->place_ball_target.circleAroundPoint(t_opp_ang, 250), 0, 20, &TEMP_VEL_PRO);
         // OwnRobot[dmf].face(ball.position);
-        Navigate2Point(dmf, targetBallPlacement->circleAroundPoint(t_ang, 250), 0, 20, &TEMP_VEL_PRO);
+        Navigate2Point(dmf, refereeState->place_ball_target.circleAroundPoint(t_ang, 250), 0, 20, &TEMP_VEL_PRO);
 
-        if (targetBallPlacement->circleAroundPoint(t_opp_ang, 250).distanceTo(OwnRobot[attack].State.position) < 40 &&
-            targetBallPlacement->circleAroundPoint(t_ang, 250).distanceTo(OwnRobot[dmf].State.position) < 40)
+        if (refereeState->place_ball_target.circleAroundPoint(t_opp_ang, 250).distanceTo(OwnRobot[attack].State.position) < 40 &&
+            refereeState->place_ball_target.circleAroundPoint(t_ang, 250).distanceTo(OwnRobot[dmf].State.position) < 40)
         {
             FUNC_CNT++;
         }
         if (FUNC_CNT >= 30)
         {
-            if (ball.position.distanceTo(*targetBallPlacement) > 95)
+            if (ball.position.distanceTo(refereeState->place_ball_target) > 95)
             {
                 FUNC_state = 3;
                 FUNC_CNT   = 0;
@@ -272,11 +272,11 @@ void Ai::our_place_ball_shoot()
         //        Navigate2Point(attack,OwnRobot[attack].State.position,false,0,&BALL_PLACE_KHEYLI_SOOSKI);
         OwnRobot[attack].face(ball.position); // TODO test this
         ERRTSetObstacles(attack, 1, 1);
-        ERRTNavigate2Point(attack, targetBallPlacement->circleAroundPoint(t_opp_ang, 550), 0, 20,
+        ERRTNavigate2Point(attack, refereeState->place_ball_target.circleAroundPoint(t_opp_ang, 550), 0, 20,
                            &BALL_PLACE_KHEYLI_SOOSKI);
         OwnRobot[dmf].face(ball.position);
         ERRTSetObstacles(dmf, 1, 1);
-        ERRTNavigate2Point(dmf, targetBallPlacement->circleAroundPoint(t_ang, 550), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
+        ERRTNavigate2Point(dmf, refereeState->place_ball_target.circleAroundPoint(t_ang, 550), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
         //        OwnRobot[attack].target.angle = 0;
         //        OwnRobot[dmf].target.angle = 0;
@@ -285,11 +285,11 @@ void Ai::our_place_ball_shoot()
         //        &BALL_PLACE_KHEYLI_SOOSKI); t_ang = NormalizeAngle(OwnRobot[dmf].State.angle + 180);
         //        Navigate2Point(dmf, CircleAroundPoint(ball.position, t_ang, 170), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
-        bool success = targetBallPlacement->distanceTo(ball.position) < 100.0;
+        bool success = refereeState->place_ball_target.distanceTo(ball.position) < 100.0;
 
         std::cout << "______IN___STATE_DONE_____" << std::endl
-                  << targetBallPlacement->x - ball.position.x << std::endl
-                  << targetBallPlacement->y - ball.position.y << std::endl;
+                  << refereeState->place_ball_target.x - ball.position.x << std::endl
+                  << refereeState->place_ball_target.y - ball.position.y << std::endl;
         if (success)
         {
             std::cout << "MADE it!!!" << std::endl;
@@ -301,7 +301,7 @@ void Ai::our_place_ball_shoot()
     }
     std::cout << "______IN___STATE_" << FUNC_state << "_____" << std::endl;
 
-    std::cout << "___DIS___" << targetBallPlacement->distanceTo(ball.position) << std::endl;
+    std::cout << "___DIS___" << refereeState->place_ball_target.distanceTo(ball.position) << std::endl;
 }
 
 void Ai::our_place_ball_shoot_V2()
@@ -311,9 +311,9 @@ void Ai::our_place_ball_shoot_V2()
     DefMid(def, rw, lw, NULL, true);
 
     static Common::Angle move_angle, temp_opp_ang;
-    if (ball.position.distanceTo(*targetBallPlacement) > 100)
+    if (ball.position.distanceTo(refereeState->place_ball_target) > 100)
     {
-        move_angle   = targetBallPlacement->angleWith(ball.position);
+        move_angle   = refereeState->place_ball_target.angleWith(ball.position);
         temp_opp_ang = move_angle + Common::Angle::fromDeg(180.0f);
     }
 
@@ -493,14 +493,14 @@ void Ai::our_place_ball_shoot_V2()
     }
     else if (FUNC_state == 0)
     {
-        if (ball.position.distanceTo(*targetBallPlacement) < 95)
+        if (ball.position.distanceTo(refereeState->place_ball_target) < 95)
         {
             FUNC_state = 7;
             FUNC_CNT   = 0;
             t_ang.setDeg(0.0f);
             t_opp_ang.setDeg(180.0f);
         }
-        else if (ball.position.distanceTo(*targetBallPlacement) < 10000.0f)
+        else if (ball.position.distanceTo(refereeState->place_ball_target) < 10000.0f)
         {
             FUNC_state = 3;
             FUNC_CNT   = 0;
@@ -521,7 +521,7 @@ void Ai::our_place_ball_shoot_V2()
 
         ERRTSetObstacles(dmf, 0, 0);
         obs_map.addCircle({ball.position, 150.0f});
-        ERRTNavigate2Point(dmf, targetBallPlacement->circleAroundPoint(temp_opp_ang, 250), 0, 40,
+        ERRTNavigate2Point(dmf, refereeState->place_ball_target.circleAroundPoint(temp_opp_ang, 250), 0, 40,
                            &VELOCITY_PROFILE_AROOM);
 
         obs_map.resetMap();
@@ -645,9 +645,9 @@ void Ai::our_place_ball_shoot_V2()
     {
         OwnRobot[attack].target.angle = t_ang;
         OwnRobot[dmf].target.angle    = t_opp_ang;
-        Navigate2Point(attack, targetBallPlacement->circleAroundPoint(t_opp_ang, 75), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
+        Navigate2Point(attack, refereeState->place_ball_target.circleAroundPoint(t_opp_ang, 75), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
-        Navigate2Point(dmf, targetBallPlacement->circleAroundPoint(t_ang, 75), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
+        Navigate2Point(dmf, refereeState->place_ball_target.circleAroundPoint(t_ang, 75), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
         bool ball_has_slipt =
             ((OwnRobot[attack].State.position + OwnRobot[dmf].State.position) / 2).distanceTo(ball.position) > 300;
@@ -658,8 +658,8 @@ void Ai::our_place_ball_shoot_V2()
             FUNC_CNT   = 0;
         }
 
-        if (targetBallPlacement->circleAroundPoint(t_opp_ang, 75).distanceTo(OwnRobot[attack].State.position) < 40 &&
-            targetBallPlacement->circleAroundPoint(t_ang, 75).distanceTo(OwnRobot[dmf].State.position) < 40)
+        if (refereeState->place_ball_target.circleAroundPoint(t_opp_ang, 75).distanceTo(OwnRobot[attack].State.position) < 40 &&
+            refereeState->place_ball_target.circleAroundPoint(t_ang, 75).distanceTo(OwnRobot[dmf].State.position) < 40)
         {
             FUNC_CNT++;
         }
@@ -676,7 +676,7 @@ void Ai::our_place_ball_shoot_V2()
         OwnRobot[attack].target.angle = t_ang;
         OwnRobot[dmf].target.angle    = t_opp_ang;
         // OwnRobot[attack].face(ball.position);
-        Common::Vec2 target1 = targetBallPlacement->circleAroundPoint(t_opp_ang, 550);
+        Common::Vec2 target1 = refereeState->place_ball_target.circleAroundPoint(t_opp_ang, 550);
         if (false && outOfField(target1))
         {
             Navigate2Point(attack, Common::Vec2(0, 0), 0, 20, &TEMP_VEL_PRO);
@@ -686,7 +686,7 @@ void Ai::our_place_ball_shoot_V2()
             Navigate2Point(attack, target1, 0, 20, &TEMP_VEL_PRO);
         }
         // OwnRobot[dmf].face(ball.position);
-        Common::Vec2 target2 = targetBallPlacement->circleAroundPoint(t_ang, 550);
+        Common::Vec2 target2 = refereeState->place_ball_target.circleAroundPoint(t_ang, 550);
 
         if (false && outOfField(target1))
         {
@@ -697,14 +697,14 @@ void Ai::our_place_ball_shoot_V2()
             Navigate2Point(dmf, target2, 0, 20, &TEMP_VEL_PRO);
         }
 
-        if (targetBallPlacement->circleAroundPoint(t_opp_ang, 550).distanceTo(OwnRobot[attack].State.position) < 40 &&
-            targetBallPlacement->circleAroundPoint(t_ang, 550).distanceTo(OwnRobot[dmf].State.position) < 40)
+        if (refereeState->place_ball_target.circleAroundPoint(t_opp_ang, 550).distanceTo(OwnRobot[attack].State.position) < 40 &&
+            refereeState->place_ball_target.circleAroundPoint(t_ang, 550).distanceTo(OwnRobot[dmf].State.position) < 40)
         {
             FUNC_CNT++;
         }
         if (FUNC_CNT >= 30)
         {
-            if (ball.position.distanceTo(*targetBallPlacement) > 95)
+            if (ball.position.distanceTo(refereeState->place_ball_target) > 95)
             {
                 FUNC_state = 3;
                 FUNC_CNT   = 0;
@@ -722,11 +722,11 @@ void Ai::our_place_ball_shoot_V2()
         //        Navigate2Point(attack,OwnRobot[attack].State.position,false,0,&BALL_PLACE_KHEYLI_SOOSKI);
         OwnRobot[attack].face(ball.position); // TODO test this
         ERRTSetObstacles(attack, 1, 1);
-        ERRTNavigate2Point(attack, targetBallPlacement->circleAroundPoint(t_opp_ang, 550), 0, 20,
+        ERRTNavigate2Point(attack, refereeState->place_ball_target.circleAroundPoint(t_opp_ang, 550), 0, 20,
                            &BALL_PLACE_KHEYLI_SOOSKI);
         OwnRobot[dmf].face(ball.position);
         ERRTSetObstacles(dmf, 1, 1);
-        ERRTNavigate2Point(dmf, targetBallPlacement->circleAroundPoint(t_ang, 550), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
+        ERRTNavigate2Point(dmf, refereeState->place_ball_target.circleAroundPoint(t_ang, 550), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
         //        OwnRobot[attack].target.angle = 0;
         //        OwnRobot[dmf].target.angle = 0;
@@ -735,11 +735,11 @@ void Ai::our_place_ball_shoot_V2()
         //        &BALL_PLACE_KHEYLI_SOOSKI); t_ang = NormalizeAngle(OwnRobot[dmf].State.angle + 180);
         //        Navigate2Point(dmf, CircleAroundPoint(ball.position, t_ang, 170), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
-        bool success = targetBallPlacement->distanceTo(ball.position) < 100.0;
+        bool success = refereeState->place_ball_target.distanceTo(ball.position) < 100.0;
 
         std::cout << "______IN___STATE_DONE_____" << std::endl
-                  << targetBallPlacement->x - ball.position.x << std::endl
-                  << targetBallPlacement->y - ball.position.y << std::endl;
+                  << refereeState->place_ball_target.x - ball.position.x << std::endl
+                  << refereeState->place_ball_target.y - ball.position.y << std::endl;
         if (success)
         {
             Common::logInfo("MADE it!!!");
@@ -751,9 +751,9 @@ void Ai::our_place_ball_shoot_V2()
     }
     Common::logInfo("______IN___STATE_{}_____", FUNC_state);
 
-    Common::logInfo("___DIS___{}", targetBallPlacement->distanceTo(ball.position));
+    Common::logInfo("___DIS___{}", refereeState->place_ball_target.distanceTo(ball.position));
     Common::logInfo("___BALL__POS_XY__{}, {}", ball.position.x, ball.position.y);
-    Common::logInfo("___TARGET__POS_XY__{}, {}", targetBallPlacement->x, targetBallPlacement->y);
+    Common::logInfo("___TARGET__POS_XY__{}, {}", refereeState->place_ball_target.x, refereeState->place_ball_target.y);
     Common::logInfo("__OUT__{}", outOfField(ball.position));
 }
 
@@ -764,9 +764,9 @@ void Ai::our_place_ball_shoot_taki()
     DefMid(def, rw, lw, NULL, true);
 
     static Common::Angle move_angle, opp_ang;
-    if (ball.position.distanceTo(*targetBallPlacement) > 150)
+    if (ball.position.distanceTo(refereeState->place_ball_target) > 150)
     {
-        move_angle = targetBallPlacement->angleWith(ball.position);
+        move_angle = refereeState->place_ball_target.angleWith(ball.position);
         opp_ang    = move_angle + Common::Angle::fromDeg(180);
     }
 
@@ -824,14 +824,14 @@ void Ai::our_place_ball_shoot_taki()
 
     if (FUNC_state == 0)
     {
-        if (ball.position.distanceTo(*targetBallPlacement) < 95)
+        if (ball.position.distanceTo(refereeState->place_ball_target) < 95)
         {
             FUNC_state = 7;
             FUNC_CNT   = 0;
             t_ang.setDeg(0);
             t_opp_ang.setDeg(180);
         }
-        else if (ball.position.distanceTo(*targetBallPlacement) < 1000)
+        else if (ball.position.distanceTo(refereeState->place_ball_target) < 1000)
         {
             FUNC_state = 3;
             FUNC_CNT   = 0;
@@ -846,7 +846,7 @@ void Ai::our_place_ball_shoot_taki()
 
         ERRTSetObstacles(dmf, 0, 0);
         obs_map.addCircle({ball.position, 150.0f});
-        ERRTNavigate2Point(dmf, targetBallPlacement->circleAroundPoint(opp_ang, 250), 0, 40, &VELOCITY_PROFILE_AROOM);
+        ERRTNavigate2Point(dmf, refereeState->place_ball_target.circleAroundPoint(opp_ang, 250), 0, 40, &VELOCITY_PROFILE_AROOM);
 
         obs_map.resetMap();
         circle_ball_free(attack, move_angle, 0, 0, 0.0);
@@ -904,7 +904,7 @@ void Ai::our_place_ball_shoot_taki()
         //        obs_map.addCircle({ball.position, 150.0f});
         VelocityProfile temp_vel = BALL_PLACE_KHEYLI_SOOSKI;
         temp_vel.max_spd         = Common::Vec2(10.0);
-        if (ball.position.distanceTo(*targetBallPlacement) < 350)
+        if (ball.position.distanceTo(refereeState->place_ball_target) < 350)
             temp_vel.max_spd = Common::Vec2(3.0);
         //        circle_ball_free_V2(attack,move_angle,1,0,0,temp_vel);
 
@@ -912,16 +912,16 @@ void Ai::our_place_ball_shoot_taki()
         OwnRobot[dmf].target.angle    = opp_ang;
         Navigate2Point(attack, t_pos.circleAroundPoint(opp_ang, 75), 0, 20, &temp_vel);
 
-        Navigate2Point(dmf, targetBallPlacement->circleAroundPoint(move_angle, 75), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
+        Navigate2Point(dmf, refereeState->place_ball_target.circleAroundPoint(move_angle, 75), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
-        //        float angle_to_face = AngleWith(*targetBallPlacement,OwnRobot[attack].State.position);
+        //        float angle_to_face = AngleWith(refereeState->place_ball_target,OwnRobot[attack].State.position);
         //        OwnRobot[dmf].target.angle = angle_to_face;
         //        ERRTSetObstacles(dmf,0,0);
         ////        TEMP_VEL_PRO.max_spd
-        //        ERRTNavigate2Point(dmf, CircleAroundPoint(*targetBallPlacement, angle_to_face + 180, 100), 0, 5,
+        //        ERRTNavigate2Point(dmf, CircleAroundPoint(refereeState->place_ball_target, angle_to_face + 180, 100), 0, 5,
         //        &BALL_PLACE_KHEYLI_SOOSKI);
 
-        if (ball.position.distanceTo(*targetBallPlacement) < 100 && ball.velocity.length() < 10)
+        if (ball.position.distanceTo(refereeState->place_ball_target) < 100 && ball.velocity.length() < 10)
         {
 
             FUNC_CNT++;
@@ -938,11 +938,11 @@ void Ai::our_place_ball_shoot_taki()
         //        Navigate2Point(attack,OwnRobot[attack].State.position,false,0,&BALL_PLACE_KHEYLI_SOOSKI);
         OwnRobot[attack].face(ball.position); // TODO test this
         ERRTSetObstacles(attack, 1, 1);
-        ERRTNavigate2Point(attack, targetBallPlacement->circleAroundPoint(t_opp_ang, 550), 0, 20,
+        ERRTNavigate2Point(attack, refereeState->place_ball_target.circleAroundPoint(t_opp_ang, 550), 0, 20,
                            &BALL_PLACE_KHEYLI_SOOSKI);
         OwnRobot[dmf].face(ball.position);
         ERRTSetObstacles(dmf, 1, 1);
-        ERRTNavigate2Point(dmf, targetBallPlacement->circleAroundPoint(t_ang, 550), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
+        ERRTNavigate2Point(dmf, refereeState->place_ball_target.circleAroundPoint(t_ang, 550), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
         //        OwnRobot[attack].target.angle = 0;
         //        OwnRobot[dmf].target.angle = 0;
@@ -951,11 +951,11 @@ void Ai::our_place_ball_shoot_taki()
         //        &BALL_PLACE_KHEYLI_SOOSKI); t_ang = NormalizeAngle(OwnRobot[dmf].State.angle + 180);
         //        Navigate2Point(dmf, CircleAroundPoint(ball.position, t_ang, 170), 0, 20, &BALL_PLACE_KHEYLI_SOOSKI);
 
-        bool success = targetBallPlacement->distanceTo(ball.position) < 100.0;
+        bool success = refereeState->place_ball_target.distanceTo(ball.position) < 100.0;
 
         std::cout << "______IN___STATE_DONE_____" << std::endl
-                  << targetBallPlacement->x - ball.position.x << std::endl
-                  << targetBallPlacement->y - ball.position.y << std::endl;
+                  << refereeState->place_ball_target.x - ball.position.x << std::endl
+                  << refereeState->place_ball_target.y - ball.position.y << std::endl;
         if (success)
         {
             std::cout << "MADE it!!!" << std::endl;
@@ -967,6 +967,6 @@ void Ai::our_place_ball_shoot_taki()
     }
     std::cout << "______IN___STATE_" << FUNC_state << "_____" << std::endl;
 
-    std::cout << "___DIS___" << targetBallPlacement->distanceTo(ball.position) << std::endl;
+    std::cout << "___DIS___" << refereeState->place_ball_target.distanceTo(ball.position) << std::endl;
 }
 } // namespace Tyr::Soccer

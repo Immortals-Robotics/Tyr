@@ -98,7 +98,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
     // avoid the line between the ball and the placement point
     if (refereeState->theirPlaceBall())
     {
-        const Common::Vec2 ball_line      = *targetBallPlacement - ball.position;
+        const Common::Vec2 ball_line      = refereeState->place_ball_target - ball.position;
         const int          ball_obs_count = std::ceil(ball_line.length() / (ballAreaRadius + current_robot_radius));
 
         for (int i = 0; i < ball_obs_count; i++)

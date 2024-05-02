@@ -74,8 +74,8 @@ void Ai::Process(Common::WorldState *worldState)
         }
         else if (refereeState->ourPlaceBall())
         {
-            //            targetBallPlacement->X = -2500;
-            //            targetBallPlacement->Y = -1500;
+            //            refereeState->place_ball_target.X = -2500;
+            //            refereeState->place_ball_target.Y = -1500;
             currentPlay = "our_place_ball_shoot";
             currentPlay = "our_place_ball_shoot_V2"; // COMMENT this if it's not working...
             //			currentPlay = "our_place_ball_shoot_taki";

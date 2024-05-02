@@ -4,8 +4,6 @@ namespace Tyr::Soccer
 {
 void Ai::internalProcessData(Common::WorldState *worldState)
 {
-    this->oppGK = refereeState->opp_gk;
-
     this->ball = worldState->ball;
     if (ball.seen_state != Common::SeenState::CompletelyOut)
         this->ballHist.push_back(this->ball);

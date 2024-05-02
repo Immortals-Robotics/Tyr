@@ -15,260 +15,165 @@
 
 #pragma once
 
+namespace Tyr::Referee
+{
+class Referee;
+}
+
 namespace Tyr::Common
 {
 class RefereeState
 {
 public:
-    static const int STATE_GAME_ON  = (1 << 0);
-    static const int STATE_GAME_OFF = (1 << 1);
-    static const int STATE_HALTED   = (1 << 2);
+    enum State
+    {
+        STATE_GAME_ON    = (1 << 0),
+        STATE_GAME_OFF   = (1 << 1),
+        STATE_HALTED     = (1 << 2),
+        STATE_KICKOFF    = (1 << 3),
+        STATE_PENALTY    = (1 << 4),
+        STATE_DIRECT     = (1 << 5),
+        STATE_INDIRECT   = (1 << 6),
+        STATE_RESTART    = (STATE_KICKOFF | STATE_PENALTY | STATE_DIRECT | STATE_INDIRECT),
+        STATE_READY      = (1 << 10),
+        STATE_NOTREADY   = (1 << 11),
+        STATE_PLACE_BALL = (1 << 12),
+    };
 
-    static const int STATE_KICKOFF  = (1 << 3);
-    static const int STATE_PENALTY  = (1 << 4);
-    static const int STATE_DIRECT   = (1 << 5);
-    static const int STATE_INDIRECT = (1 << 6);
-    static const int STATE_RESTART  = (STATE_KICKOFF | STATE_PENALTY | STATE_DIRECT | STATE_INDIRECT);
+    Vec2 place_ball_target;
+    int  opp_gk = -1;
 
-    static const int STATE_BLUE   = (1 << 8);
-    static const int STATE_YELLOW = (1 << 9);
+protected:
+    friend class Referee::Referee;
 
-    static const int STATE_READY    = (1 << 10);
-    static const int STATE_NOTREADY = (1 << 11);
-
-    static const int STATE_PLACE_BALL = (1 << 12);
-
-    int state;
-
-    // The set of possible states are:
-    //
-    // { STATE_GAME_ON, STATE_GAME_OFF, STATE_HALTED, NEUTRAL,
-    //   { { STATE_KICKOFF, STATE_PENALTY, STATE_DIRECT, STATE_INDIRECT } |
-    //     { STATE_BLUE, STATE_YELLOW } | { STATE_READY, STATE_NOTREADY } } }
-    //
-
-    int color;
-
-	unsigned short time_remaining = 0;
-    unsigned short goals_blue     = 0;
-    unsigned short goals_yellow   = 0;
-    unsigned char  counter        = 0;
-    Vec2           place_ball_target;
-    int            opp_gk = -1;
+    int       state = STATE_GAME_OFF;
+    TeamColor color = TeamColor::Blue;
 
 public:
-    GameState()
+    RefereeState() = default;
+
+    State get() const
     {
-        color = STATE_BLUE;
-        state = STATE_GAME_OFF;
+        return (State) state;
     }
 
-    void init(TeamColor color)
+    bool our() const
     {
-        this->color = (color == TeamColor::Blue) ? STATE_BLUE : STATE_YELLOW;
+        return color == setting().our_color;
     }
 
-    int get()
-    {
-        return state;
-    }
-    void set(int _state)
-    {
-        state = _state;
-    }
-
-    // This is the state machine transition function.  It takes the last
-    // ref_command as input
-    void transition(char ref_command, bool ball_kicked)
-    {
-        if (ref_command == Protos::SSL_Referee_Command_HALT)
-        {
-            state = STATE_HALTED;
-            return;
-        }
-
-        if (ref_command == Protos::SSL_Referee_Command_STOP)
-        {
-            state = STATE_GAME_OFF;
-            return;
-        }
-
-        if (ref_command == Protos::SSL_Referee_Command_FORCE_START)
-        {
-            state = STATE_GAME_ON;
-            return;
-        }
-
-        if (ref_command == Protos::SSL_Referee_Command_NORMAL_START && (state & STATE_NOTREADY))
-        {
-            state &= ~STATE_NOTREADY;
-            state |= STATE_READY;
-            return;
-        }
-
-        if (state & STATE_READY && ball_kicked)
-        {
-            state = STATE_GAME_ON;
-            return;
-        }
-
-        if (state == STATE_GAME_OFF)
-        {
-            switch (ref_command)
-            {
-            case Protos::SSL_Referee_Command_PREPARE_KICKOFF_BLUE:
-                state = STATE_KICKOFF | STATE_BLUE | STATE_NOTREADY;
-                return;
-            case Protos::SSL_Referee_Command_PREPARE_KICKOFF_YELLOW:
-                state = STATE_KICKOFF | STATE_YELLOW | STATE_NOTREADY;
-                return;
-
-            case Protos::SSL_Referee_Command_PREPARE_PENALTY_BLUE:
-                state = STATE_PENALTY | STATE_BLUE | STATE_NOTREADY;
-                return;
-            case Protos::SSL_Referee_Command_PREPARE_PENALTY_YELLOW:
-                state = STATE_PENALTY | STATE_YELLOW | STATE_NOTREADY;
-                return;
-
-            case Protos::SSL_Referee_Command_DIRECT_FREE_BLUE:
-                state = STATE_DIRECT | STATE_BLUE | STATE_READY;
-                return;
-            case Protos::SSL_Referee_Command_DIRECT_FREE_YELLOW:
-                state = STATE_DIRECT | STATE_YELLOW | STATE_READY;
-                return;
-
-            case Protos::SSL_Referee_Command_INDIRECT_FREE_BLUE:
-                state = STATE_INDIRECT | STATE_BLUE | STATE_READY;
-                return;
-            case Protos::SSL_Referee_Command_INDIRECT_FREE_YELLOW:
-                state = STATE_INDIRECT | STATE_YELLOW | STATE_READY;
-                return;
-
-            case Protos::SSL_Referee_Command_BALL_PLACEMENT_BLUE:
-                state = STATE_PLACE_BALL | STATE_BLUE | STATE_NOTREADY;
-                return;
-            case Protos::SSL_Referee_Command_BALL_PLACEMENT_YELLOW:
-                state = STATE_PLACE_BALL | STATE_YELLOW | STATE_NOTREADY;
-                return;
-
-            default:
-                break;
-            }
-        }
-    }
-
-    bool stop()
+    bool stop() const
     {
         return (state == STATE_GAME_OFF);
     }
 
-    bool gameOn()
+    bool gameOn() const
     {
         return (state == STATE_GAME_ON);
     }
 
-    bool restart()
+    bool restart() const
     {
         return (state & STATE_RESTART);
     }
-    bool ourRestart()
+    bool ourRestart() const
     {
-        return restart() && (state & color);
+        return restart() && our();
     }
-    bool theirRestart()
+    bool theirRestart() const
     {
-        return restart() && !(state & color);
+        return restart() && !our();
     }
 
-    bool kickoff()
+    bool kickoff() const
     {
         return (state & STATE_KICKOFF);
     }
-    bool ourKickoff()
+    bool ourKickoff() const
     {
-        return kickoff() && (state & color);
+        return kickoff() && our();
     }
-    bool theirKickoff()
+    bool theirKickoff() const
     {
-        return kickoff() && !(state & color);
+        return kickoff() && !our();
     }
 
-    bool penaltyKick()
+    bool penaltyKick() const
     {
         return (state & STATE_PENALTY);
     }
-    bool ourPenaltyKick()
+    bool ourPenaltyKick() const
     {
-        return penaltyKick() && (state & color);
+        return penaltyKick() && our();
     }
-    bool theirPenaltyKick()
+    bool theirPenaltyKick() const
     {
-        return penaltyKick() && !(state & color);
+        return penaltyKick() && !our();
     }
 
-    bool directKick()
+    bool directKick() const
     {
         return (state & STATE_DIRECT);
     }
-    bool ourDirectKick()
+    bool ourDirectKick() const
     {
-        return directKick() && (state & color);
+        return directKick() && our();
     }
-    bool theirDirectKick()
+    bool theirDirectKick() const
     {
-        return directKick() && !(state & color);
+        return directKick() && !our();
     }
 
-    bool indirectKick()
+    bool indirectKick() const
     {
         return (state & STATE_INDIRECT);
     }
-    bool ourIndirectKick()
+    bool ourIndirectKick() const
     {
-        return indirectKick() && (state & color);
+        return indirectKick() && our();
     }
-    bool theirIndirectKick()
+    bool theirIndirectKick() const
     {
-        return indirectKick() && !(state & color);
+        return indirectKick() && !our();
     }
 
-    bool placeBall()
+    bool placeBall() const
     {
         return (state & STATE_PLACE_BALL);
     }
-    bool ourPlaceBall()
+    bool ourPlaceBall() const
     {
-        return placeBall() && (state & color);
+        return placeBall() && our();
     }
-    bool theirPlaceBall()
+    bool theirPlaceBall() const
     {
-        return placeBall() && !(state & color);
+        return placeBall() && !our();
     }
 
-    bool freeKick()
+    bool freeKick() const
     {
         return directKick() || indirectKick();
     }
-    bool ourFreeKick()
+    bool ourFreeKick() const
     {
         return ourDirectKick() || ourIndirectKick();
     }
-    bool theirFreeKick()
+    bool theirFreeKick() const
     {
         return theirDirectKick() || theirIndirectKick();
     }
 
-    bool canMove()
+    bool canMove() const
     {
         return (state != STATE_HALTED);
     }
 
-    bool allowedNearBall()
+    bool allowedNearBall() const
     {
-        return gameOn() || (state & color);
+        return gameOn() || our();
     }
 
-    bool canKickBall()
+    bool canKickBall() const
     {
         return gameOn() || (ourRestart() && (state & STATE_READY));
     }

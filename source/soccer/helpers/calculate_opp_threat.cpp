@@ -6,7 +6,7 @@ float Ai::calculateOppThreat(int opp, bool restart)
 {
     if (OppRobot[opp].seen_state == Common::SeenState::CompletelyOut)
         return -1;
-    if (opp == oppGK)
+    if (opp == refereeState->opp_gk)
         return -1;
 
     if ((OppRobot[opp].position.distanceTo(ball.position) < 400) &&
