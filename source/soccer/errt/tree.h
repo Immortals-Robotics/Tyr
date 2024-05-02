@@ -4,25 +4,24 @@ namespace Tyr::Soccer
 {
 struct Node
 {
-    Node        *parent;
-    unsigned int childs_num;
-    Common::Vec2        state;
-};
+    Node *parent      = nullptr;
+    int   child_count = 0;
 
-#define MAX_NODES 1000
+    Common::Vec2 state;
+};
 
 class Tree
 {
-    Node node[MAX_NODES];
-
-    unsigned int nodes_num;
+private:
+    std::vector<Node> m_nodes;
 
 public:
-    Tree();
-    void         reset();
-    Node        *AddNode(Common::Vec2 &s, Node *p);
-    Node        *NearestNeighbour(Common::Vec2 &s);
-    unsigned int tree_size();
-    Node        *GetNode(unsigned int num);
+    Tree(size_t t_max_nodes);
+    void reset();
+
+    Node *AddNode(Common::Vec2 s, Node *parent);
+    Node *NearestNeighbour(Common::Vec2 s);
+    int   tree_size();
+    Node *GetNode(int idx);
 };
 } // namespace Tyr::Soccer
