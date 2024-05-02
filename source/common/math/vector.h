@@ -15,7 +15,7 @@ struct Vec2
 
     [[nodiscard]] Vec2  normalized() const;
     [[nodiscard]] float length() const;
-    [[nodiscard]] float lengthPow2() const;
+    [[nodiscard]] float lengthSquared() const;
     [[nodiscard]] Vec2  rotated(Angle t_ang) const;
 
     [[nodiscard]] Angle toAngle() const;

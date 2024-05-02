@@ -12,7 +12,6 @@
 
 #define PREDICT_STEPS 7.0f
 
-#define MAX_BALLS 10
 #define MAX_BALL_NOT_SEEN 40
 #define MAX_BALL_2FRAMES_DISTANCE 1450000.0f
 
@@ -51,10 +50,10 @@ private:
     void predictRobotsForward();
     void SendStates();
 
-    void ProcessBalls();
-    int  ExtractBalls();
-    int  MergeBalls(int num);
-    void FilterBalls(int num);
+    void processBalls();
+    void extractBalls();
+    void mergeBalls();
+    void filterBalls();
     void predictBallForward();
 
     void ProcessParam();
@@ -81,7 +80,7 @@ private:
 
     Protos::SSL_WrapperPacket  packet;
     Protos::SSL_DetectionFrame frame[Common::Setting::kCamCount];
-    Protos::SSL_DetectionBall  d_ball[MAX_BALLS * Common::Setting::kCamCount];
+    std::vector<Protos::SSL_DetectionBall>  d_ball;
     Protos::SSL_DetectionRobot robot[Common::Setting::kMaxRobots * Common::Setting::kCamCount];
 };
 } // namespace Tyr::Vision

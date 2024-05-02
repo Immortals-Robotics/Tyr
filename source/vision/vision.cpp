@@ -72,7 +72,7 @@ void Vision::recieveAllCameras()
 
 void Vision::ProcessVision()
 {
-    ProcessBalls();
+    processBalls();
     ProcessRobots();
     ProcessParam();
 

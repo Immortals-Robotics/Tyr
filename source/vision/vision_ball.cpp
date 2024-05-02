@@ -2,44 +2,44 @@
 
 namespace Tyr::Vision
 {
-void Vision::ProcessBalls()
+void Vision::processBalls()
 {
-    int balls_num = 0;
-
     // First we have to extract the balls!
-    balls_num = ExtractBalls();
+    extractBalls();
 
     // Now lets merge them!
-    balls_num = MergeBalls(balls_num);
+    mergeBalls();
 
     // The most important part, The Kalman Filter!
-    FilterBalls(balls_num);
+    filterBalls();
 
     // We're almost done, only Prediction remains undone!
     predictBallForward();
-
-    // Common::logDebug("ball pos: {}", m_state->ball.Position);
 }
 
-int Vision::ExtractBalls()
+void Vision::extractBalls()
 {
-    int ans = 0;
+    d_ball.clear();
+
+    int count = 0;
     for (int i = 0; i < Common::Setting::kCamCount; i++)
     {
         if (Common::setting().use_camera[i])
         {
             for (int j = 0; j < frame[i].balls_size(); j++)
             {
-                d_ball[ans] = frame[i].balls(j);
-                ans++;
+                d_ball.push_back(frame[i].balls(j));
             }
         }
     }
-    return ans;
 }
-int Vision::MergeBalls(int num)
+
+void Vision::mergeBalls()
 {
     int balls_num = 0;
+
+    int num = d_ball.size();
+
     for (int i = 0; i < num; i++)
     {
         const Common::Vec2 ball_i{d_ball[i].x(), d_ball[i].y()};
@@ -66,17 +66,17 @@ int Vision::MergeBalls(int num)
         balls_num++;
     }
 
-    return balls_num;
+    d_ball.resize(balls_num);
 }
 
-void Vision::FilterBalls(int num)
+void Vision::filterBalls()
 {
     int   id  = 100;
     float dis = std::numeric_limits<float>::max();
 
     const Common::Vec2 raw_ball{lastRawBall.x(), lastRawBall.y()};
 
-    for (int i = 0; i < num; i++)
+    for (int i = 0; i < d_ball.size(); i++)
     {
         const Common::Vec2 ball_i{d_ball[i].x(), d_ball[i].y()};
 
@@ -106,8 +106,7 @@ void Vision::FilterBalls(int num)
         m_state->ball.velocity.x = filtout[0][1];
         m_state->ball.velocity.y = filtout[1][1];
 
-        ball_not_seen         = 0;
-        m_state->has_ball       = true;
+        ball_not_seen           = 0;
         m_state->ball.seenState = Common::Seen;
     }
 
@@ -117,7 +116,7 @@ void Vision::FilterBalls(int num)
 
         if (ball_not_seen > MAX_BALL_NOT_SEEN)
         {
-            if (num > 0)
+            if (d_ball.size() > 0)
             {
                 float filtout[2][2];
                 float filtpos[2] = {d_ball[id].x() / (float) 10.0, d_ball[id].y() / (float) 10.0};
@@ -131,32 +130,25 @@ void Vision::FilterBalls(int num)
                 m_state->ball.velocity.x = filtout[0][1];
                 m_state->ball.velocity.y = filtout[1][1];
 
-                ball_not_seen         = 0;
-                m_state->has_ball       = true;
+                ball_not_seen           = 0;
                 m_state->ball.seenState = Common::Seen;
             }
             else
             {
-                m_state->ball.velocity.x = 0;
-                m_state->ball.velocity.y = 0;
+                m_state->ball.velocity = Common::Vec2{};
 
-                m_state->ball.Position.x /= (float) 10.0;
-                m_state->ball.Position.y /= (float) 10.0;
+                m_state->ball.Position /= 10.0f;
 
                 lastRawBall.set_x(0.0f);
                 lastRawBall.set_y(0.0f);
 
-                m_state->has_ball       = false;
                 m_state->ball.seenState = Common::CompletelyOut;
             }
         }
         else
         {
-            m_state->ball.velocity.x /= (float) 10.0;
-            m_state->ball.velocity.y /= (float) 10.0;
-
-            m_state->ball.Position.x /= (float) 10.0;
-            m_state->ball.Position.y /= (float) 10.0;
+            m_state->ball.velocity /= 10.0f;
+            m_state->ball.Position /= 10.0f;
 
             m_state->ball.seenState = Common::TemprolilyOut;
         }
@@ -165,21 +157,11 @@ void Vision::FilterBalls(int num)
 
 void Vision::predictBallForward()
 {
-    m_state->ball.Position.x /= (float) 100.0;
-    m_state->ball.Position.y /= (float) 100.0;
-    m_state->ball.velocity.x /= (float) 100.0;
-    m_state->ball.velocity.y /= (float) 100.0;
-    float k          = 0.25f; // velocity derate every sec(units (m/s)/s)
-    float frame_rate = 61.0f;
-    float tsample    = (float) 1.0f / (float) frame_rate;
+    m_state->ball.Position /= 100.0f;
+    m_state->ball.velocity /= 100.0f;
 
-    float vx_vision = m_state->ball.velocity.x;
-    float vy_vision = m_state->ball.velocity.y;
-
-    float xpos_vision = m_state->ball.Position.x;
-    float ypos_vision = m_state->ball.Position.y;
-
-    float vball_vision = float(sqrt(vx_vision * vx_vision + vy_vision * vy_vision));
+    float k       = 0.25f; // velocity derate every sec(units (m/s)/s)
+    float tsample = (float) 1.0f / (float) Common::setting().vision_frame_rate;
 
     float t;
     if (m_state->ball.seenState == Common::TemprolilyOut)
@@ -187,38 +169,26 @@ void Vision::predictBallForward()
     else
         t = PREDICT_STEPS * tsample;
 
-    float v     = vball_vision - k * t;
-    float dist0 = vball_vision * t - k * (t * t) / 2.0f;
-
-    float dist;
-    float vball_pred;
+    float dist       = m_state->ball.velocity.length() * t - k * (t * t) / 2.0f;
+    float vball_pred = m_state->ball.velocity.length() - k * t;
 
     // if speed turns out to be negative..it means that ball has stopped, so calculate that amount of
     // distance traveled
-    if (v < 0)
+    if (vball_pred < 0)
     {
         vball_pred = 0.0f;
-        dist       = (vball_vision * vball_vision) * k / 2.0f;
+        dist       = m_state->ball.velocity.lengthSquared() * k / 2.0f;
         // i.e the ball has stopped, so take a newer vision data for the prediction
     }
-    else
+
+    if (m_state->ball.velocity.length() > 0)
     {
-        vball_pred = v;
-        dist       = dist0;
+        m_state->ball.velocity = m_state->ball.velocity.normalized() * vball_pred;
+        m_state->ball.Position += m_state->ball.velocity.normalized() * dist;
     }
 
-    if (vball_vision != 0)
-    {
-        m_state->ball.velocity.x = vball_pred * (vx_vision) / vball_vision;
-        m_state->ball.velocity.y = vball_pred * (vy_vision) / vball_vision;
-        m_state->ball.Position.x = (xpos_vision + dist * (vx_vision) / vball_vision);
-        m_state->ball.Position.y = (ypos_vision + dist * (vy_vision) / vball_vision);
-    }
-
-    m_state->ball.velocity.x *= (float) 1000.0;
-    m_state->ball.velocity.y *= (float) 1000.0;
-    m_state->ball.Position.x *= (float) 1000.0;
-    m_state->ball.Position.y *= (float) 1000.0;
+    m_state->ball.velocity *= 1000.0f;
+    m_state->ball.Position *= 1000.0f;
 }
 
 } // namespace Tyr::Vision

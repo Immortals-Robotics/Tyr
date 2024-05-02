@@ -25,7 +25,7 @@ public:
     }
     bool IsArriving(const Common::Vec2 &target, float angleTol, float passAngleLimit)
     {
-        const float ballDistBeforeStop = (bState->velocity.lengthPow2()) / 500.0f;
+        const float ballDistBeforeStop = (bState->velocity.lengthSquared()) / 500.0f;
         // ballDistBeforeStop += 100.0f;
         const Common::Angle angleWithTarget = rState->Position.angleWith(target);
         if ((std::fabs((bState->velocity.toAngle() -

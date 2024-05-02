@@ -61,8 +61,7 @@ struct BallState
 
 struct WorldState
 {
-    int  ownRobots_num, oppRobots_num;
-    bool has_ball;
+    int ownRobots_num, oppRobots_num;
 
     BallState ball;
 
@@ -80,7 +79,6 @@ struct WorldState
         ball.velocity  = Vec2();
         ball.t_capture = 0.0f;
         ball.seenState = CompletelyOut;
-        has_ball       = false;
 
         ownRobots_num = 0;
         for (int i = 0; i < Setting::kMaxRobots; i++)
@@ -112,8 +110,7 @@ struct WorldState
 
     friend std::ostream &operator<<(std::ostream &oo, const WorldState &state)
     {
-        oo << (int) state.has_ball << " balls,	" << state.ownRobots_num << " Own Robots,	" << state.oppRobots_num
-           << " Opp Robots." << std::endl;
+        oo << state.ownRobots_num << " Own Robots,	" << state.oppRobots_num << " Opp Robots." << std::endl;
         oo << (int) state.ball.Position.x << "	" << (int) state.ball.Position.y << std::endl;
 
         for (int i = 0; i < Setting::kMaxRobots; i++)
