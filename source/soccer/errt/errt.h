@@ -35,7 +35,6 @@ private:
 
     Common::Vec2 randomState();
     Common::Vec2 nearestFree(Common::Vec2 state);
-    Common::Vec2 nearestFreeProb(Common::Vec2 state);
 
     Common::Vec2 chooseTarget();
     Node        *extend(Node *s, Common::Vec2 &target);
