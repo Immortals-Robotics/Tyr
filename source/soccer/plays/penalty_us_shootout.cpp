@@ -12,7 +12,7 @@ void Ai::penalty_us_shootout()
     {
     }
 
-    DefMid(def, rw, lw, NULL, true);
+    DefMid(def, rw, lw, nullptr, true);
 
     OwnRobot[dmf].face(Common::Vec2(-side * field_width, 0));
     ERRTSetObstacles(dmf, true, true);

@@ -30,8 +30,8 @@ void Ai::Stop()
     }
 
     GKHi(gk, true);
-    // DefHi(def,NULL, true);
-    DefMid(def, rw, lw, NULL, true);
+    // DefHi(def,nullptr, true);
+    DefMid(def, rw, lw, nullptr, true);
 
 #if mark_in_stop
     MarkManager(false);

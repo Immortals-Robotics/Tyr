@@ -33,14 +33,14 @@ bool Ai::read_playBook_str(std::span<char> buffer)
     if (!playBook->ParseFromArray(buffer.data(), buffer.size()))
     {
         delete playBook;
-        playBook = NULL;
+        playBook = nullptr;
         return false;
     }
 
     if (playBook->strategy_size() != playBook->weight_size())
     {
         delete playBook;
-        playBook = NULL;
+        playBook = nullptr;
         return false;
     }
 
@@ -133,7 +133,7 @@ void Ai::strategy_maker()
     }
 
     bool new_recievers_reached = true;
-    DefMid(def, rw, lw, NULL, false, false);
+    DefMid(def, rw, lw, nullptr, false, false);
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
         // if ((*stm2AInum[i]==gk)||(*stm2AInum[i]==def)) {
@@ -148,15 +148,15 @@ void Ai::strategy_maker()
                 continue;
             //            else if (*stm2AInum[i]==def)
             //            {
-            //				DefMid(def,rw,lw,NULL,false,false);
+            //				DefMid(def,rw,lw,nullptr,false,false);
             //            }
             //			else if (*stm2AInum[i]==lw)
             //			{
-            //				DefMid(def,rw,lw,NULL,false,false);
+            //				DefMid(def,rw,lw,nullptr,false,false);
             //			}
             //			else if (*stm2AInum[i]==rw)
             //			{
-            //				DefMid(def,rw,lw,NULL,false,false);
+            //				DefMid(def,rw,lw,nullptr,false,false);
             //			}
             else
                 Halt(*stm2AInum[i]);

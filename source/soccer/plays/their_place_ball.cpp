@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 void Ai::their_place_ball()
 {
     GKHi(gk, true);
-    DefMid(def, rw, lw, NULL, true);
+    DefMid(def, rw, lw, nullptr, true);
 
 #if mark_in_stop
     MarkManager(false);

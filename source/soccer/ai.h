@@ -106,7 +106,7 @@ private:
     // Helpers
     Common::Vec2 GK_Ghuz(float predictBallT, float rMul, int def_count = 2);
     Common::Vec2 GK_Ghuz_2018(float predictBallT, float rMul, int def_count = 2);
-    Common::Vec2 DefGhuz(Common::Vec2 *defendTarget = NULL);
+    Common::Vec2 DefGhuz(Common::Vec2 *defendTarget = nullptr);
     Common::Vec2 CalculatePassPos(int robot_num, const Common::Vec2 &target, const Common::Vec2 &statPos,
                                   float bar = 89.0f);
     void         CalculateBallTrajectory();
@@ -163,10 +163,10 @@ private:
 
     // Skills
     void Navigate2Point(int robot_num, Common::Vec2 dest, bool accurate = false, int speed = 80,
-                        VelocityProfile *velocityProfile = NULL, bool use_dss = false);
-    void Navigate2Point_2018(int robot_num, Common::Vec2 dest, int speed = 80, VelocityProfile *velocityProfile = NULL);
+                        VelocityProfile *velocityProfile = nullptr, bool use_dss = false);
+    void Navigate2Point_2018(int robot_num, Common::Vec2 dest, int speed = 80, VelocityProfile *velocityProfile = nullptr);
     void ERRTNavigate2Point(int robot_num, Common::Vec2 dest, bool accurate = false, int speed = 80,
-                            VelocityProfile *velocityProfile = NULL);
+                            VelocityProfile *velocityProfile = nullptr);
     void ERRTSetObstacles(int robot_num, bool bll = false, bool field = true);
     void ERRTSetGkClearObstacles(int robot_num);
     void Mark(int robot_num, int opp, float dist = 220.0f);
@@ -178,15 +178,15 @@ private:
     void GK_shirje_2018(int robot_num, VelocityProfile *VELOCITY_PROFILE);
     void GKHi(int robot_num = 0, bool stop = false);
     void GKHi_Simple(int robot_num = 0, bool stop = false);
-    void OneDef(int robot_num = 1, Common::Vec2 *defendTarget = NULL, bool stop = false);
-    void TwoDef(int robot_num1 = 1, int robot_num2 = 2, Common::Vec2 *defendTarget = NULL);
-    void DefHi(int robot_num, Common::Vec2 *defendTarget = NULL, bool stop = false);
+    void OneDef(int robot_num = 1, Common::Vec2 *defendTarget = nullptr, bool stop = false);
+    void TwoDef(int robot_num1 = 1, int robot_num2 = 2, Common::Vec2 *defendTarget = nullptr);
+    void DefHi(int robot_num, Common::Vec2 *defendTarget = nullptr, bool stop = false);
     void PenaltyUs(int robot_num, Common::Angle angle, int kick = 0, int chip = 0);
     void DefenceWall(int robot_num, bool kickOff = false);
     void tech_circle(int robot_num, Common::Angle angle, int kick = 0, int chip = 0, bool needRRT = true,
                      bool gameRestart = false, bool kiss = false, bool dribbler = false, bool needOppRRT = false);
     void intercept_ball(int robot_num, Common::Angle angle, int shoot_pow, int chip_pow);
-    void WaitForPass(int robot_num, bool chip = false, Common::Vec2 *target = NULL, Common::Vec2 *statPos = NULL);
+    void WaitForPass(int robot_num, bool chip = false, Common::Vec2 *target = nullptr, Common::Vec2 *statPos = nullptr);
     void WaitForOmghi(int robot_num, bool chip = false);
     void WaitForGool(int robot_num, bool chip = false);
     void recievePass(int robot_num, Common::Vec2 staticPos, bool chip = false);
@@ -197,11 +197,11 @@ private:
     void circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_pow, int chip_pow, float precision,
                           float near_dis_override = -1.0f);
 
-    void DefMid(int &robot_num, int &rightdef_num, int &leftdef_num, Common::Vec2 *defendTarget = NULL,
+    void DefMid(int &robot_num, int &rightdef_num, int &leftdef_num, Common::Vec2 *defendTarget = nullptr,
                 bool stop = false, bool replace = true);
-    void DefBy3(int robot_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = NULL, bool stop = false);
-    void DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = NULL, bool stop = false);
-    void DefBy1(int thelastdef_num, Common::Vec2 *defendTarget = NULL, bool stop = false);
+    void DefBy3(int robot_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr, bool stop = false);
+    void DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr, bool stop = false);
+    void DefBy1(int thelastdef_num, Common::Vec2 *defendTarget = nullptr, bool stop = false);
     void runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarget, bool stop);
 
     // Plays

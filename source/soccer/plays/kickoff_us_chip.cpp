@@ -6,7 +6,7 @@ void Ai::kickoff_us_chip()
 {
     bool canKickBall = bool(currentPlayParam);
     GKHi(gk, true);
-    DefMid(def, rw, lw, NULL, false);
+    DefMid(def, rw, lw, nullptr, false);
 
     ERRTSetObstacles(dmf, true, true);
     OwnRobot[dmf].face(ball.position);

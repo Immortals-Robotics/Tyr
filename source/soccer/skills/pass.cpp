@@ -63,14 +63,14 @@ float getCalibratedShootPowCPY(int vision_id, float raw_shoot)
 
 void Ai::WaitForPass(int robot_num, bool chip, Common::Vec2 *target, Common::Vec2 *statPos)
 {
-    Common::Vec2 pos = CalculatePassPos(robot_num, target == NULL ? Common::Vec2(-side * field_width, 0) : *target,
-                                        statPos == NULL ? OwnRobot[robot_num].State.position : *statPos, 78);
+    Common::Vec2 pos = CalculatePassPos(robot_num, target == nullptr ? Common::Vec2(-side * field_width, 0) : *target,
+                                        statPos == nullptr ? OwnRobot[robot_num].State.position : *statPos, 78);
 
-    /*if (target==NULL) {
+    /*if (target==nullptr) {
         target = new Common::Vec2(Common::Vec2(-side*3025, 0));
     }*/
 
-    if (target == NULL)
+    if (target == nullptr)
     {
         OwnRobot[robot_num].target.angle = calculateOneTouchAngle(robot_num, pos);
     }
@@ -95,7 +95,7 @@ void Ai::WaitForPass(int robot_num, bool chip, Common::Vec2 *target, Common::Vec
     ERRTSetObstacles(robot_num, 0, 1);
     ERRTNavigate2Point(robot_num, pos, 0, 100, &VELOCITY_PROFILE_KHARAKI);
 
-    if (target == NULL)
+    if (target == nullptr)
     {
         if (chip)
         {

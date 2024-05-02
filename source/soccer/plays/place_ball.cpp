@@ -8,7 +8,7 @@ void Ai::our_place_ball_shoot()
 {
 
     GKHi(gk, true);
-    DefMid(def, rw, lw, NULL, true);
+    DefMid(def, rw, lw, nullptr, true);
 
     static Common::Angle move_angle, temp_opp_ang;
     if (ball.position.distanceTo(refereeState->place_ball_target) > 100)
@@ -308,7 +308,7 @@ void Ai::our_place_ball_shoot_V2()
 {
 
     GKHi(gk, true);
-    DefMid(def, rw, lw, NULL, true);
+    DefMid(def, rw, lw, nullptr, true);
 
     static Common::Angle move_angle, temp_opp_ang;
     if (ball.position.distanceTo(refereeState->place_ball_target) > 100)
@@ -761,7 +761,7 @@ void Ai::our_place_ball_shoot_taki()
 {
 
     GKHi(gk, true);
-    DefMid(def, rw, lw, NULL, true);
+    DefMid(def, rw, lw, nullptr, true);
 
     static Common::Angle move_angle, opp_ang;
     if (ball.position.distanceTo(refereeState->place_ball_target) > 150)

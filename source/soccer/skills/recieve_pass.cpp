@@ -71,7 +71,7 @@ void Ai::recievePass(int robot_num, Common::Vec2 staticPos, bool chip)
         if (oneTouchType[robot_num] == oneTouch)
         {
             if (timer.time() < contStrStaticTime)
-                WaitForPass(robot_num, chip, NULL, &staticPos);
+                WaitForPass(robot_num, chip, nullptr, &staticPos);
             else
                 WaitForPass(robot_num, chip);
         }

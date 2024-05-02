@@ -160,7 +160,7 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     VELOCITY_PROFILE_KHARAKI.max_w_acc = 40.0f;
     VELOCITY_PROFILE_KHARAKI.max_w_dec = 140.0f;
 
-    playBook = NULL;
+    playBook = nullptr;
     std::string strategy_path(DATA_DIR);
     strategy_path.append("/strategy.ims");
     read_playBook(strategy_path.c_str());

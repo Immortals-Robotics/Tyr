@@ -8,7 +8,7 @@ void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, bool accurate, int spe
     OwnRobot[robot_num].target.position.x = dest.x;
     OwnRobot[robot_num].target.position.y = dest.y;
 
-    if (velocityProfile == NULL)
+    if (velocityProfile == nullptr)
         velocityProfile = &this->VELOCITY_PROFILE_MAMOOLI;
 
     Common::Vec3 motion_cmd = OwnRobot[robot_num].ComputeMotionCommand(accurate, speed, velocityProfile);

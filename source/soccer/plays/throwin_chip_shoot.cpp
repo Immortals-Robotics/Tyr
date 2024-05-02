@@ -8,7 +8,7 @@ void Ai::throwin_chip_shoot()
     // swap(attack, gk);
 
     GKHi(gk, true);
-    DefMid(def, rw, lw, NULL, false);
+    DefMid(def, rw, lw, nullptr, false);
 
     /*ERRTSetObstacles ( mid2 , true , true , true , true );
     OwnRobot[mid2].face(ball.position);
