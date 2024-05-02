@@ -2,9 +2,10 @@
 
 namespace Tyr::Common
 {
-void Setting::load(const toml::node_view<const toml::node> t_node)
+void Setting::load(const toml::table t_table)
 {
-    const auto common = t_node["common"];
+    m_config_table           = t_table;
+    const auto common = t_table["common"];
 
     immortals_is_the_best_team = common["immortals_is_the_best_team"].value_or(immortals_is_the_best_team);
 
@@ -14,7 +15,7 @@ void Setting::load(const toml::node_view<const toml::node> t_node)
 
     enable_debug = common["enable_debug"].value_or(enable_debug);
 
-    const auto network = t_node["network"];
+    const auto network = t_table["network"];
 
     tracker_address.load(network["tracker"]);
     debug_address.load(network["debug"]);
@@ -39,7 +40,7 @@ void Setting::load(const toml::node_view<const toml::node> t_node)
     yellow_robot_simulation_address.load(network["yellow_robot_simulation"]);
 
     // vision
-    const auto vision = t_node["vision"];
+    const auto vision = t_table["vision"];
 
     if (auto *use_camera_array = vision["use_camera"].as_array())
     {
@@ -64,7 +65,7 @@ void Setting::load(const toml::node_view<const toml::node> t_node)
     use_kalman_ang = vision["use_kalman_ang"].value_or(use_kalman_ang);
 
     // soccer
-    const auto soccer = t_node["soccer"];
+    const auto soccer = t_table["soccer"];
 
     fillEnum(soccer["our_side"], our_side);
 
@@ -124,4 +125,44 @@ void Setting::load(const toml::node_view<const toml::node> t_node)
         }
     }
 }
+
+template <typename T>
+void Setting::updateSetting(const std::string &_settings_key, const T &_new_value)
+{
+    toml::node *node = m_config_table.at_path(_settings_key).node();
+    if (!node)
+    {
+        logError("Key not found {}", _settings_key);
+        return;
+    }
+    if constexpr (std::is_same<T, int>::value || std::is_same<T, int64_t>::value)
+    {
+        node->ref<toml::value<int64_t>>() = _new_value;
+    }
+    else if constexpr (std::is_same<T, double>::value)
+    {
+        node->ref<toml::value<double>>() = _new_value;
+    }
+    else if constexpr (std::is_same<T, bool>::value)
+    {
+        node->ref<toml::value<bool>>() = static_cast<int64_t>(_new_value);
+    }
+    else if constexpr (std::is_same<T, std::string>::value)
+    {
+        node->ref<toml::value<std::string>>() = _new_value;
+    }
+
+    load(m_config_table);
+}
+
+template void Setting::updateSetting<int>(const std::string &key, const int &value);
+template void Setting::updateSetting<double>(const std::string &key, const double &value);
+template void Setting::updateSetting<std::string>(const std::string &key, const std::string &value);
+template void Setting::updateSetting<bool>(const std::string &key, const bool &value);
+
+toml::table Setting::getConfigTable(void)
+{
+    return m_config_table;
+}
+
 } // namespace Tyr::Common

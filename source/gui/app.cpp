@@ -101,13 +101,13 @@ void Application::update()
         renderer->drawRobots(ssl_packet.detection().robots_blue(), Common::TeamColor::Blue);
         renderer->drawRobots(ssl_packet.detection().robots_yellow(), Common::TeamColor::Yellow);
         renderer->drawBalls(ssl_packet.detection().balls());
-        if (config_menu->IsNetworkDataUpdated() == NetworkInput::VisionPort ||
-            config_menu->IsNetworkDataUpdated() == NetworkInput::VisionIp)
+        if (config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
+            config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_IP)
         {
-            updated_address.ip = config_menu->GetNetworkParam(NetworkInput::VisionIp);
+            updated_address.ip = config_menu->getNetworkParam(InputCallbackType::VISION_IP);
             updated_address.port =
-                static_cast<unsigned short>(std::stoi(config_menu->GetNetworkParam(NetworkInput::VisionPort)));
-            config_menu->UpdateNetworkData();
+                static_cast<unsigned short>(std::stoi(config_menu->getNetworkParam(InputCallbackType::VISION_PORT)));
+            config_menu->updateNetworkData();
             udp_client->Update(updated_address);
         }
         vision_mutex.unlock();
@@ -117,7 +117,7 @@ void Application::update()
         ImGui::End();
     }
     // end ImGui Content
-    config_menu->Draw();
+    config_menu->draw();
 
     rlImGuiEnd();
 

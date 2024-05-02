@@ -12,15 +12,20 @@ struct Services
     static void initialize()
     {
         s_logger = new Logger();
+        s_configReader = new ConfigReader("config.toml");
 
-        const ConfigReader config("config.toml");
         s_setting = new Setting();
-        s_setting->load(config.getRoot());
+        s_setting->load(s_configReader->getRoot());
 
         s_debug = new Debug(s_setting->debug_address, s_setting->enable_debug);
 
         s_global_timer = new Timer();
         s_global_timer->start();
+    }
+
+    static void saveConfig()
+    {
+        s_configReader->save(s_setting->getConfigTable());
     }
 
     static void shutdown()
@@ -31,7 +36,12 @@ struct Services
         delete s_logger;
     }
 
-    static const Setting &setting()
+    static ConfigReader &configReader()
+    {
+        return *s_configReader;
+    }
+
+    static Setting &setting()
     {
         return *s_setting;
     }
@@ -56,9 +66,15 @@ private:
     static inline Debug   *s_debug;
     static inline Logger  *s_logger;
     static inline Timer   *s_global_timer;
+    static inline ConfigReader *s_configReader;
 };
 
-static const Setting &setting()
+static ConfigReader &configReader()
+{
+    return Services::configReader();
+}
+
+static Setting &setting()
 {
     return Services::setting();
 }

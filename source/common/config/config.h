@@ -11,8 +11,10 @@ public:
 
     [[nodiscard]] auto getRoot() const
     {
-        return static_cast<toml::node_view<const toml::node>>(m_table);
+        return m_table;
     }
+
+    void save(toml::table t_table);
 
 private:
     std::filesystem::path m_file_path;
@@ -26,6 +28,6 @@ protected:
     ~IConfig() = default;
 
 public:
-    virtual void load(toml::node_view<const toml::node> t_node) = 0;
+    virtual void load(toml::table t_table) = 0;
 };
 } // namespace Tyr::Common

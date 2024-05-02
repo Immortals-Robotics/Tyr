@@ -2,91 +2,127 @@
 
 namespace Tyr::Gui
 {
-ConfigMenu::ConfigMenu()
-    : menuWidth(300.), menuWidthMinimized(20.), networkNeedsUpdate(NetworkInput::None), visionIpAddress("224.5.23.2"),
-      visionPort("10006")
+static const std::regex ipRegex(
+    "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
+static const std::regex portRegex("^[1-9][0-9]*$");
+
+ConfigMenu::ConfigMenu() : m_width(300.), m_network_needs_update(InputCallbackType::None)
 {
-    windowFlags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
+    m_window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
+    strcpy(m_vision_ip_text, Tyr::Common::setting().vision_address.ip.c_str());
+    strcpy(m_vision_port_text, std::to_string(Tyr::Common::setting().vision_address.port).c_str());
+
+    strcpy(m_referee_ip_text, Tyr::Common::setting().referee_address.ip.c_str());
+    strcpy(m_referee_port_text, std::to_string(Tyr::Common::setting().referee_address.port).c_str());
+
+    strcpy(m_sender_ip_text, Tyr::Common::setting().sender_address.ip.c_str());
+    strcpy(m_sender_port_text, std::to_string(Tyr::Common::setting().sender_address.port).c_str());
+
+    strcpy(m_strategy_ip_text, Tyr::Common::setting().strategy_address.ip.c_str());
+    strcpy(m_strategy_port_text, std::to_string(Tyr::Common::setting().strategy_address.port).c_str());
+
+    strcpy(m_tracker_ip_text, Tyr::Common::setting().tracker_address.ip.c_str());
+    strcpy(m_tracker_port_text, std::to_string(Tyr::Common::setting().tracker_address.port).c_str());
+
+    strcpy(m_grsim_ip_text, Tyr::Common::setting().grsim_address.ip.c_str());
+    strcpy(m_grsim_port_text, std::to_string(Tyr::Common::setting().grsim_address.port).c_str());
 }
 
-int ConfigMenu::HandleVisionIpChange(ImGuiInputTextCallbackData *_data)
-{
-    static const std::regex ipRegex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$");
+// Vision
 
-    if (std::regex_match(_data->Buf, ipRegex))
+int ConfigMenu::handleInputChange(ImGuiInputTextCallbackData *_data)
+{
+    ConfigCallback *callback = ((ConfigCallback *) _data->UserData);
+
+    if (std::regex_match(_data->Buf, callback->getRegex()))
     {
-        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, NetworkInput::VisionIp);
+        callback->executeCallback(_data->Buf);
     }
     return 0;
 }
 
-int ConfigMenu::HandleVisionPortChange(ImGuiInputTextCallbackData *_data)
+void ConfigMenu::setNetworkInput(std::string _data, InputCallbackType _inputType)
 {
-    static const std::regex portRegex("^[1-9][0-9]*$");
-    if (std::regex_match(_data->Buf, portRegex))
+    try
     {
-        ((ConfigMenu *) _data->UserData)->SetNetworkInput(_data->Buf, NetworkInput::VisionPort);
+        if (_data != this->m_type_input_text_map.at(_inputType))
+        {
+            strcpy(this->m_type_input_text_map.at(_inputType), _data.c_str());
+            this->m_network_needs_update = _inputType;
+            if (_inputType == InputCallbackType::VISION_PORT || _inputType == InputCallbackType::SENDER_PORT ||
+                _inputType == InputCallbackType::STRATEGY_PORT || _inputType == InputCallbackType::REF_PORT ||
+                _inputType == InputCallbackType::GRSIM_PORT || _inputType == InputCallbackType::TRACKER_PORT)
+            {
+                Tyr::Common::setting().updateSetting(config_input_map.at(_inputType), std::stoi(_data));
+            }
+            else
+            {
+                Tyr::Common::setting().updateSetting(config_input_map.at(_inputType), _data);
+            }
+            Tyr::Common::Services::saveConfig();
+        }
     }
-    return 0;
-}
-
-void ConfigMenu::SetNetworkInput(std::string _data, NetworkInput _inputType)
-{
-    switch (_inputType)
+    catch (const std::out_of_range &e)
     {
-    case NetworkInput::VisionIp:
-        if (_data != this->visionIpAddress)
-        {
-            this->visionIpAddress    = _data;
-            this->networkNeedsUpdate = NetworkInput::VisionIp;
-        }
-        break;
-    case NetworkInput::VisionPort:
-        if (_data != this->visionPort)
-        {
-            this->visionPort         = _data;
-            this->networkNeedsUpdate = NetworkInput::VisionPort;
-        }
-        break;
-    default:
-        break;
+        Tyr::Common::logError("Error: Input Key not found in the map");
     }
 }
 
-std::string ConfigMenu::GetNetworkParam(NetworkInput _inputType)
+std::string ConfigMenu::getNetworkParam(InputCallbackType _inputType)
 {
-    switch (_inputType)
+    try
     {
-    case NetworkInput::VisionIp:
-        return this->visionIpAddress;
-        break;
-    case NetworkInput::VisionPort:
-        return this->visionPort;
-        break;
-    default:
+        return this->m_type_input_text_map.at(_inputType);
+    }
+    catch (const std::out_of_range &e)
+    {
+        Tyr::Common::logError("Error: Input Key not found in the map");
         return "";
-        break;
     }
 }
 
-void ConfigMenu::DrawNetworkTab()
+void ConfigMenu::drawIpPortInput(const std::string _name, const int _id, char *_ip_text, char *_port_text,
+                                 ConfigCallback &_callback, const InputCallbackType _callback_type_ip,
+                                 const InputCallbackType _callback_type_port)
 {
-    static char visionIp[16]  = "224.5.23.2";
-    static char visionPort[6] = "10006";
-
-    ImGui::InputText("Vision Ip", visionIp, IM_ARRAYSIZE(visionIp), ImGuiInputTextFlags_CallbackAlways,
-                     &ConfigMenu::HandleVisionIpChange, this);
-    ImGui::InputText("Vision Port", visionPort, IM_ARRAYSIZE(visionPort), ImGuiInputTextFlags_CallbackAlways,
-                     &ConfigMenu::HandleVisionPortChange, this);
+    ImGui::Spacing();
+    ImGui::Text("%s", _name.c_str());
+    ImGui::Spacing();
+    ImGui::PushID(_id);
+    _callback.setParams(_callback_type_ip, ipRegex);
+    ImGui::InputText("Ip", _ip_text, 16, ImGuiInputTextFlags_CallbackAlways, handleInputChange, &_callback);
+    _callback.setParams(_callback_type_port, portRegex);
+    ImGui::InputText("Port", _port_text, 6, ImGuiInputTextFlags_CallbackAlways, handleInputChange, &_callback);
+    ImGui::PopID();
+    ImGui::Spacing();
+    ImGui::Separator();
 }
 
-void ConfigMenu::DrawTabBar()
+void ConfigMenu::drawNetworkTab()
+{
+    static ConfigCallback callback(this);
+
+    drawIpPortInput("Vision", 0, m_vision_ip_text, m_vision_port_text, callback, InputCallbackType::VISION_IP,
+                    InputCallbackType::VISION_PORT);
+    drawIpPortInput("Referee", 1, m_referee_ip_text, m_referee_port_text, callback, InputCallbackType::REF_IP,
+                    InputCallbackType::REF_PORT);
+    drawIpPortInput("Sender", 2, m_sender_ip_text, m_sender_port_text, callback, InputCallbackType::SENDER_IP,
+                    InputCallbackType::SENDER_PORT);
+    drawIpPortInput("Strategy", 3, m_strategy_ip_text, m_strategy_port_text, callback, InputCallbackType::STRATEGY_IP,
+                    InputCallbackType::STRATEGY_PORT);
+    drawIpPortInput("Tracker", 4, m_tracker_ip_text, m_tracker_port_text, callback, InputCallbackType::TRACKER_IP,
+                    InputCallbackType::TRACKER_PORT);
+    drawIpPortInput("Grsim", 5, m_grsim_ip_text, m_grsim_port_text, callback, InputCallbackType::GRSIM_IP,
+                    InputCallbackType::GRSIM_PORT);
+}
+
+void ConfigMenu::drawTabBar()
 {
     if (ImGui::BeginTabBar("Config tabs"))
     {
         if (ImGui::BeginTabItem("Network"))
         {
-            DrawNetworkTab();
+            drawNetworkTab();
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Tab 2"))
@@ -99,27 +135,45 @@ void ConfigMenu::DrawTabBar()
     }
 }
 
-void ConfigMenu::Draw()
+void ConfigMenu::draw()
 {
     ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::SetNextWindowSize(ImVec2(menuWidth, 700), ImGuiCond_FirstUseEver);
-    if (ImGui::Begin("Config", nullptr, windowFlags))
+    ImGui::SetNextWindowSize(ImVec2(m_width, 700), ImGuiCond_FirstUseEver);
+    if (ImGui::Begin("Config", nullptr, m_window_flags))
     {
-        DrawTabBar();
+        drawTabBar();
         ImGui::End();
     }
 }
 
-NetworkInput ConfigMenu::IsNetworkDataUpdated()
+InputCallbackType ConfigMenu::isNetworkDataUpdated()
 {
-    return this->networkNeedsUpdate;
+    return this->m_network_needs_update;
 }
 
-void ConfigMenu::UpdateNetworkData()
+void ConfigMenu::updateNetworkData()
 {
-    this->networkNeedsUpdate = NetworkInput::None;
+    this->m_network_needs_update = InputCallbackType::None;
 }
 
-ConfigMenu::~ConfigMenu()
-{}
+ConfigCallback::ConfigCallback(ConfigMenu *_menu)
+{
+    m_menu = _menu;
+}
+
+void ConfigCallback::setParams(const InputCallbackType _callback_type, const std::regex _regex)
+{
+    m_callback_type = _callback_type;
+    m_regex         = _regex;
+}
+
+const std::regex ConfigCallback::getRegex()
+{
+    return m_regex;
+}
+
+void ConfigCallback::executeCallback(std::string _data)
+{
+    m_menu->setNetworkInput(_data, m_callback_type);
+}
 } // namespace Tyr::Gui
