@@ -1,30 +1,7 @@
 #include "errt.h"
 
-#define map2worldX(a) ((a - 364) * 10)
-#define map2worldY(a) ((a - 264) * 10)
-
-#define world2mapX(a) std::min(729, std::max(0, ((a / 10) + 364)))
-#define world2mapY(a) std::min(529, std::max(0, ((a / 10) + 264)))
-
 namespace Tyr::Soccer
 {
-Planner::Planner()
-{
-    waypoints        = 0;
-    cached_waypoints = 0;
-    cache_start      = 0;
-
-    goal_target_prob     = 0.1;
-    waypoint_target_prob = 0.5;
-    acceptable_dis       = 90.0;
-
-    field_width  = 0;
-    field_height = 0;
-}
-
-Planner::~Planner()
-{}
-
 void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
 {
 
@@ -190,7 +167,7 @@ Common::Vec2 Planner::choose_target(int *type)
         *type = (int) (r * (cached_waypoints));
         if (*type >= cached_waypoints)
             *type >= cached_waypoints;
-        return waypoint[*type];
+        return m_waypoints[*type];
     }
 
     *type = -1;
@@ -231,14 +208,14 @@ Node *Planner::extend(Node *s, Common::Vec2 &target)
 
 void Planner::SetWayPoints()
 {
-    waypoints   = 1;
-    Node *n     = tree.NearestNeighbour(final_state);
-    waypoint[0] = n->state;
+    waypoints      = 1;
+    Node *n        = tree.NearestNeighbour(final_state);
+    m_waypoints[0] = n->state;
 
     while (n->parent)
     {
-        n                     = n->parent;
-        waypoint[waypoints++] = n->state;
+        n                        = n->parent;
+        m_waypoints[waypoints++] = n->state;
     }
 
     if (IsReached())
@@ -250,19 +227,16 @@ void Planner::SetWayPoints()
 
 void Planner::reverse_waypoints()
 {
-    Common::Vec2 tmp;
     for (int i = 0; i < waypoints / 2; i++)
     {
-        tmp                         = waypoint[i];
-        waypoint[i]                 = waypoint[waypoints - i - 1];
-        waypoint[waypoints - i - 1] = tmp;
+        std::swap(m_waypoints[i], m_waypoints[waypoints - i - 1]);
     }
 }
 
 Common::Vec2 Planner::GetWayPoint(unsigned int i)
 {
     if (i < waypoints)
-        return waypoint[i];
+        return m_waypoints[i];
     return Common::Vec2();
 }
 
@@ -290,7 +264,7 @@ Common::Vec2 Planner::Plan()
         Node        *new_s;
         int          type = 0;
         Common::Vec2 r;
-        for (int i = 0; ((i < MAX_NODES) && (!IsReached())); i++)
+        for (int i = 0; ((i < m_max_nodes) && (!IsReached())); i++)
         {
             r     = choose_target(&type);
             new_s = extend(tree.NearestNeighbour(r), r);
@@ -298,7 +272,7 @@ Common::Vec2 Planner::Plan()
             {
                 /*if ( !obs_map.collisionDetect ( new_s->state , final_state ) )
                 {
-                    for (; ( !IsReached ( ) ) && ( new_s ) && (i < MAX_NODES ) ; i ++ )
+                    for (; ( !IsReached ( ) ) && ( new_s ) && (i < m_max_nodes ) ; i ++ )
                                 new_s = extend ( new_s , final_state );
                         //tree.AddNode ( final_state , tree.NearestNeighbour ( r ) );
                 }*/
@@ -323,19 +297,19 @@ Common::Vec2 Planner::Plan()
     {
         if (started_in_obs)
         {
-            ans.x = waypoint[waypoints - 1].x;
-            ans.y = waypoint[waypoints - 1].y;
+            ans.x = m_waypoints[waypoints - 1].x;
+            ans.y = m_waypoints[waypoints - 1].y;
         }
         else
         {
-            ans.x = waypoint[waypoints - 2].x;
-            ans.y = waypoint[waypoints - 2].y;
+            ans.x = m_waypoints[waypoints - 2].x;
+            ans.y = m_waypoints[waypoints - 2].y;
         }
     }
     else
     {
-        ans.x = waypoint[0].x;
-        ans.y = waypoint[0].y;
+        ans.x = m_waypoints[0].x;
+        ans.y = m_waypoints[0].y;
     }
 
     return ans;
@@ -345,12 +319,10 @@ void Planner::optimize_tree()
 {
     for (int i = 0; i < GetWayPointNum(); i++)
     {
-        if (obs_map.collisionDetect(waypoint[i], waypoint[GetWayPointNum() - 1]) == false)
+        if (obs_map.collisionDetect(m_waypoints[i], m_waypoints[GetWayPointNum() - 1]) == false)
         {
-            Common::Vec2 tmp               = waypoint[i + 1];
-            waypoint[i + 1]                = waypoint[GetWayPointNum() - 1];
-            waypoint[GetWayPointNum() - 1] = tmp;
-            waypoints                      = i + 2;
+            std::swap(m_waypoints[i + 1], m_waypoints[GetWayPointNum() - 1]);
+            waypoints = i + 2;
             break;
         }
     }

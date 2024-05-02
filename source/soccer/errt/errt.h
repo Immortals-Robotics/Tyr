@@ -7,27 +7,39 @@ namespace Tyr::Soccer
 {
 class Planner
 {
-    float        step_size;
-    Common::Vec2 init_state, final_state;
-    Common::Vec2 waypoint[MAX_NODES];
-    unsigned int waypoints, cached_waypoints, cache_start;
+private:
+    int m_max_nodes;
 
-    void reverse_waypoints();
+    Common::Vec2              init_state, final_state;
+    std::vector<Common::Vec2> m_waypoints;
 
-    float field_width;
-    float field_height;
+    int waypoints        = 0;
+    int cached_waypoints = 0;
+    int cache_start      = 0;
+
+    float step_size;
+
+    float field_width  = 0.0f;
+    float field_height = 0.0f;
 
     bool started_in_obs;
 
     Common::Random random;
 
-public:
-    float goal_target_prob;
-    float waypoint_target_prob;
-    float acceptable_dis;
+    // TODO: move to setting
+    float goal_target_prob     = 0.1f;
+    float waypoint_target_prob = 0.5f;
+    float acceptable_dis       = 90.0f;
 
-    Planner();
-    ~Planner();
+    void reverse_waypoints();
+
+public:
+    Planner(const int t_max_nodes = 1000) : m_max_nodes(t_max_nodes), tree(t_max_nodes)
+    {
+        m_waypoints.resize(m_max_nodes);
+    }
+    ~Planner() = default;
+
     Tree         tree;
     void         set_field_params(float _w, float _h);
     void         init(Common::Vec2 init, Common::Vec2 final, float step);
