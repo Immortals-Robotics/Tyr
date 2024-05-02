@@ -4,11 +4,11 @@ namespace Tyr::Soccer
 {
 void Ai::corner_their_global()
 {
-    if (side * ball.position.x > field_width - 1000)
+    if (side * ball.position.x > Common::worldState().field.width - 1000)
     {
         ERRTSetObstacles(gk, 0, 0);
         OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
-        ERRTNavigate2Point(gk, Common::Vec2(side * (field_width - 100), 0), 0, 100, &VELOCITY_PROFILE_MAMOOLI);
+        ERRTNavigate2Point(gk, Common::Vec2(side * (Common::worldState().field.width - 100), 0), 0, 100, &VELOCITY_PROFILE_MAMOOLI);
 
         DefMid(def, rw, lw, nullptr, false);
     }
@@ -37,7 +37,7 @@ void Ai::corner_their_global()
         {
             if (static_pos.find(own) != static_pos.end())
             {
-                OwnRobot[own].face(Common::Vec2(-side * field_width, 0));
+                OwnRobot[own].face(Common::Vec2(-side * Common::worldState().field.width, 0));
                 ERRTSetObstacles(own, 1, 1);
                 ERRTNavigate2Point(own, static_pos[own], 0, 100, &VELOCITY_PROFILE_MAMOOLI);
             }

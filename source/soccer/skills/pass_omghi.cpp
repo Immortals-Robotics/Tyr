@@ -12,7 +12,7 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
     }
     Common::Line to_goal_line = Common::Line::fromTwoPoints(
         Common::Vec2(OwnRobot[robot_num].State.position.x, OwnRobot[robot_num].State.position.y),
-        Common::Vec2(-side * field_width, 0));
+        Common::Vec2(-side * Common::worldState().field.width, 0));
 
     Common::Vec2 ans = ball_line.intersect(to_goal_line).value_or(Common::Vec2());
 
@@ -34,12 +34,12 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
 
     OwnRobot[robot_num].target.angle = calculateOneTouchAngle(robot_num, target);
     OwnRobot[robot_num].face(
-        Common::Vec2(-side * field_width, -Common::sign(OwnRobot[robot_num].State.position.y) * 300));
+        Common::Vec2(-side * Common::worldState().field.width, -Common::sign(OwnRobot[robot_num].State.position.y) * 300));
 
     ERRTSetObstacles(robot_num);
 
     target =
-        CalculatePassPos(robot_num, Common::Vec2(-side * field_width, 0), OwnRobot[robot_num].State.position, -200);
+        CalculatePassPos(robot_num, Common::Vec2(-side * Common::worldState().field.width, 0), OwnRobot[robot_num].State.position, -200);
 
     std::cout << "sBAR:	" << sBAR << std::endl;
     ERRTNavigate2Point(robot_num, target, 0, sBAR, &VELOCITY_PROFILE_KHARAKI);

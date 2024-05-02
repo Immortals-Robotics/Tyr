@@ -31,7 +31,7 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
     ballAriving = oneTouchDetector[robot_num].IsArriving(40, 80);
 
     Common::Vec2 oneTouchPos =
-        CalculatePassPos(robot_num, Common::Vec2(-side * field_width, 0), OwnRobot[robot_num].State.position);
+        CalculatePassPos(robot_num, Common::Vec2(-side * Common::worldState().field.width, 0), OwnRobot[robot_num].State.position);
 
     if (oneTouchPos.distanceTo(target) < max_def_move_to_intercept)
     {
@@ -51,12 +51,12 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
 
     oppGoalOpen = true;
     Common::Line ballGoalLine =
-        Common::Line::fromTwoPoints(Common::Vec2(-field_width * side, 0), Common::Vec2(target.x, target.y));
+        Common::Line::fromTwoPoints(Common::Vec2(-Common::worldState().field.width * side, 0), Common::Vec2(target.x, target.y));
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OppRobot[i].seen_state == Common::SeenState::CompletelyOut)
             continue;
-        if ((std::fabs(OppRobot[i].position.x) > field_width) || (std::fabs(OppRobot[i].position.y) > field_height))
+        if ((std::fabs(OppRobot[i].position.x) > Common::worldState().field.width) || (std::fabs(OppRobot[i].position.y) > Common::worldState().field.height))
             continue;
         if (OppRobot[i].position.distanceTo(target) > max_shoot_blocker_dis)
             continue;
@@ -73,8 +73,8 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
         {
             if (OwnRobot[i].State.seen_state == Common::SeenState::CompletelyOut)
                 continue;
-            if ((std::fabs(OwnRobot[i].State.position.x) > field_width) ||
-                (std::fabs(OwnRobot[i].State.position.y) > field_height))
+            if ((std::fabs(OwnRobot[i].State.position.x) > Common::worldState().field.width) ||
+                (std::fabs(OwnRobot[i].State.position.y) > Common::worldState().field.height))
                 continue;
             if (OwnRobot[i].State.position.distanceTo(target) > max_shoot_blocker_dis)
                 continue;
@@ -118,7 +118,7 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
     {
         ERRTSetObstacles(robot_num, 0, 1);
         // tech_circle(robot_num,Common::sign(ball.position.y)*side*60 ,0,15,false);
-        tech_circle(robot_num, ball.position.angleWith(Common::Vec2(side * (field_width + 110), 0)), 0, 500, true, 0, 0,
+        tech_circle(robot_num, ball.position.angleWith(Common::Vec2(side * (Common::worldState().field.width + 110), 0)), 0, 500, true, 0, 0,
                     0);
     }
     else

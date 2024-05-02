@@ -17,7 +17,7 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
     int index = findKickerOpp(-1);
     if (index == -1)
     {
-        target = ball.position.circleAroundPoint(ball.position.angleWith(Common::Vec2(side * field_width, 0)), 730);
+        target = ball.position.circleAroundPoint(ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)), 730);
     }
     else
     {
@@ -29,7 +29,7 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
 
     Common::Angle ballAngle = ball.position.angleWith(target);
     Common::Angle firstLeg =
-        ball.position.angleWith(Common::Vec2(side * field_width, Common::sign(ball.position.y) * (350.0f)));
+        ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, Common::sign(ball.position.y) * (350.0f)));
     Common::Angle secLeg = firstLeg - Common::Angle::fromDeg(tetta * Common::sign(ball.position.y) * side);
 
     // std::cout << "	ball: " << ballAngle << "	f: " << firstLeg << "	s: " << secLeg << std::endl;
@@ -40,7 +40,7 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
 
     if (isOut)
     {
-        target = ball.position.circleAroundPoint(ball.position.angleWith(Common::Vec2(side * field_width, 0)), 730);
+        target = ball.position.circleAroundPoint(ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)), 730);
     }
 
     OwnRobot[robot_num].face(ball.position);

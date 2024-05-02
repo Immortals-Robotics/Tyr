@@ -50,7 +50,7 @@ void Ai::Stop_def()
     OwnRobot[attack].face(ball.position);
     ERRTNavigate2Point(attack,
                        ball.position
-                           .circleAroundPoint(ball.position.angleWith(Common::Vec2(side * field_width, 0)), 580),
+                           .circleAroundPoint(ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)), 580),
                        0, 40, &VELOCITY_PROFILE_AROOM);
 }
 } // namespace Tyr::Soccer

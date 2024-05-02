@@ -19,12 +19,12 @@ bool Ai::ballIsGoaling()
 
     Common::Line ball_line = Common::Line::fromPointAndAngle(ball.position, ball.velocity.toAngle());
     Common::Line targetLine =
-        Common::Line::fromTwoPoints(Common::Vec2(side * field_width, -100), Common::Vec2(side * field_width, 100));
+        Common::Line::fromTwoPoints(Common::Vec2(side * Common::worldState().field.width, -100), Common::Vec2(side * Common::worldState().field.width, 100));
     Common::Vec2 ballInter = ball_line.intersect(targetLine).value_or(Common::Vec2());
 
     Common::debug().drawPoint(ballInter);
 
-    if (std::fabs(ballInter.y) < (goal_width / 2) + 100.0f)
+    if (std::fabs(ballInter.y) < (Common::worldState().field.goal_width / 2) + 100.0f)
         return true;
 
     return false;

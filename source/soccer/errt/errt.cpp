@@ -20,16 +20,10 @@ void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
     m_started_in_obs = obs_map.isInObstacle(init);
 }
 
-void Planner::setFieldParams(float _w, float _h)
-{
-    field_width  = _w;
-    field_height = _h;
-}
-
 Common::Vec2 Planner::randomState()
 {
-    return Common::Vec2((m_random.get(-1.0f, 1.0f) * (field_width + 250.0f)),
-                        (m_random.get(-1.0f, 1.0f) * (field_height + 250.0f)));
+    return Common::Vec2((m_random.get(-1.0f, 1.0f) * (Common::worldState().field.width + 250.0f)),
+                        (m_random.get(-1.0f, 1.0f) * (Common::worldState().field.height + 250.0f)));
 }
 
 Common::Vec2 Planner::nearestFree(Common::Vec2 state)

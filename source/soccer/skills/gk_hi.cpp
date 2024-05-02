@@ -51,7 +51,7 @@ void Ai::GKHi(int robot_num, bool stop)
 
             ERRTSetObstacles(robot_num, 0, 0);
             // tech_circle(robot_num,Common::sign(ball.position.y)*side*60 ,0,15,false);
-            tech_circle(robot_num, ball.position.angleWith(Common::Vec2(side * (field_width + 110), 0)), 0, 80, false,
+            tech_circle(robot_num, ball.position.angleWith(Common::Vec2(side * (Common::worldState().field.width + 110), 0)), 0, 80, false,
                         0, 0, 0);
         }
         else
@@ -63,13 +63,13 @@ void Ai::GKHi(int robot_num, bool stop)
 //			Common::Vec2 target = GK_Ghuz(cornerStartMul*0.4, cornerStartMul>0?(1+0.2*(1-cornerStartMul)):1,1);
 
 			//Added by Dot_blue:
-			float penalty_x = field_width - 85.0;
-			float max_reach_y = (goal_width/2.0) + 20.0;
+			float penalty_x = Common::worldState().field.width - 85.0;
+			float max_reach_y = (Common::worldState().field.goal_width/2.0) + 20.0;
 			float tmp_x,tmp_y;
 			Common::Line GK_Rail = Common::Line::fromTwoPoints(Common::Vec2(side * penalty_x, 100),
 													   Common::Vec2(side * penalty_x, -100));
 			Common::Vec2 ans;
-			if(DIS(ball.position,Common::Vec2(side*field_width,0))<2500 && ball.position.x > side*(field_width -1200) ){
+			if(DIS(ball.position,Common::Vec2(side*Common::worldState().field.width,0))<2500 && ball.position.x > side*(Common::worldState().field.width -1200) ){
 				ans = GK_Rail.closestPoint(ball.position);
 				tmp_x = ans.getX();
 				tmp_y = ans.getY();
@@ -87,15 +87,15 @@ void Ai::GKHi(int robot_num, bool stop)
 			Common::Vec2 target = Common::Vec2(tmp_x, tmp_y);
 			//Done by Dot_Blue TODO #9 test this...
 #else
-            Common::Vec2 target = Common::Vec2(side * field_width, 0).pointOnConnectingLine(ball.position, 1500);
-            target.x            = Common::sign(target.x) * std::min(field_width - 90, std::fabs(target.x));
+            Common::Vec2 target = Common::Vec2(side * Common::worldState().field.width, 0).pointOnConnectingLine(ball.position, 1500);
+            target.x            = Common::sign(target.x) * std::min(Common::worldState().field.width - 90, std::fabs(target.x));
 #endif
             OwnRobot[robot_num].face(ball.position);
             ERRTSetObstacles(robot_num, stop, false);
             ERRTNavigate2Point(robot_num, target, 0, 80, stop ? &VELOCITY_PROFILE_AROOM : &VELOCITY_PROFILE_MAMOOLI);
 
-            //			float R_robot = DIS(Common::Vec2(-field_width, 0),OwnRobot[robot_num].State.position);
-            //			float alpha_robot = AngleWith(Common::Vec2(-field_width, 0),OwnRobot[robot_num].State.position);
+            //			float R_robot = DIS(Common::Vec2(-Common::worldState().field.width, 0),OwnRobot[robot_num].State.position);
+            //			float alpha_robot = AngleWith(Common::Vec2(-Common::worldState().field.width, 0),OwnRobot[robot_num].State.position);
             //			alpha_robot = std::min(90, std::max(-90, alpha_robot));
             //			std::cout<<"GOALIE teta: "<<alpha_robot<<std::endl;
             //			std::cout<<"GOALIE R: "<<R_robot<<std::endl;

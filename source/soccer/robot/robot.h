@@ -11,9 +11,6 @@ class Robot
     Common::Timer angleSendTimer;
 
 public:
-    float field_w;
-    float field_h;
-
     float shootMult = 1.0f;
 
     bool               oldRobot;

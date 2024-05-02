@@ -134,13 +134,6 @@ public:
 
     unsigned char nrf_frq; // TODO: unused
 
-    // Field dimensions since 2023 (Maybe earlier. Check the rules)
-    double field_width        = 12000;
-    double field_length       = 9000;
-    double goal_length        = 1800;
-    double penalty_area_r     = 1800;
-    double penalty_area_width = 3600;
-
     int init_gk_id = 0;
 
     RobotPhysicalStatus robot_physical_status[kMaxRobots];

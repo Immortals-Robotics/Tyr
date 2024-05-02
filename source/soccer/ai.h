@@ -4,8 +4,6 @@
 #include "errt/errt.h"
 #include "helpers/one_touch_detector.h"
 
-#define NEW_FIELD_2018
-
 #define mark_in_stop 0
 
 namespace Tyr::Soccer
@@ -16,13 +14,6 @@ private:
     Sender::Sender       *m_sender;
 
     Common::Random m_random;
-
-    float field_width;
-    float field_height;
-    float goal_width;
-
-    float penalty_area_r;
-    float penalty_area_width;
 
     std::map<std::string, void (Ai::*)()> AIPlayBook;
     std::string                           currentPlay;

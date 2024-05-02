@@ -18,9 +18,6 @@ private:
 
     int m_max_nodes;
 
-    float field_width  = 0.0f;
-    float field_height = 0.0f;
-
     bool m_started_in_obs;
 
     // TODO: move to setting
@@ -48,7 +45,6 @@ public:
     Planner(int t_max_nodes = 1000);
     ~Planner() = default;
 
-    void setFieldParams(float _w, float _h);
     void init(Common::Vec2 init, Common::Vec2 final, float step);
 
     Common::Vec2 plan();

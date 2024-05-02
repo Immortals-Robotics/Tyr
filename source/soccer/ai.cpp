@@ -17,33 +17,6 @@ Ai::Ai(Sender::Sender *sender)
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");
 
-#ifndef NEW_FIELD_2018
-    field_width  = 4500.0f;
-    field_height = 3000.0f;
-    goal_width   = 1000.0f;
-
-    penalty_area_r     = 1000.0f;
-    penalty_area_width = 500.0f;
-#else
-    field_width  = 6000.0f; // The new field is here:
-    field_height = 4500.0f;
-    goal_width   = 1800.0f; // TODO #6 this was 1000 (!!!) Changed it back
-
-    penalty_area_r     = 1850.0f;
-    penalty_area_width = 3650.0f;
-#endif
-
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
-    {
-        oneTouchDetector[i].field_w = field_width;
-        oneTouchDetector[i].field_h = field_height;
-
-        planner[i].setFieldParams(field_width, field_height);
-
-        OwnRobot[i].field_w = field_width;
-        OwnRobot[i].field_h = field_height;
-    }
-
     dss = new Dss(OwnRobot, OppRobot, 92.f, 1.f / 61.57f, 7000.f, 3000.f);
 
     InitAIPlayBook();

@@ -63,7 +63,7 @@ float getCalibratedShootPowCPY(int vision_id, float raw_shoot)
 
 void Ai::WaitForPass(int robot_num, bool chip, Common::Vec2 *target, Common::Vec2 *statPos)
 {
-    Common::Vec2 pos = CalculatePassPos(robot_num, target == nullptr ? Common::Vec2(-side * field_width, 0) : *target,
+    Common::Vec2 pos = CalculatePassPos(robot_num, target == nullptr ? Common::Vec2(-side * Common::worldState().field.width, 0) : *target,
                                         statPos == nullptr ? OwnRobot[robot_num].State.position : *statPos, 78);
 
     /*if (target==nullptr) {
@@ -84,9 +84,9 @@ void Ai::WaitForPass(int robot_num, bool chip, Common::Vec2 *target, Common::Vec
     Common::Line open_line =
         Common::Line::fromPointAndAngle(Common::Vec2(pos.x, pos.y), calculateOpenAngleToGoal(pos, robot_num).center);
     debugDraw = true;
-    Common::debug().drawLineSegment(pos, Common::Vec2(-side * field_width, shoot_line.y(-side * field_width)), "",
+    Common::debug().drawLineSegment(pos, Common::Vec2(-side * Common::worldState().field.width, shoot_line.y(-side * Common::worldState().field.width)), "",
                                     Common::Brown);
-    Common::debug().drawLineSegment(pos, Common::Vec2(-side * field_width, open_line.y(-side * field_width)), "",
+    Common::debug().drawLineSegment(pos, Common::Vec2(-side * Common::worldState().field.width, open_line.y(-side * Common::worldState().field.width)), "",
                                     Common::Pink);
     debugDraw = false;
 

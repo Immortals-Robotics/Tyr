@@ -137,11 +137,11 @@ Common::Vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityPro
 {
     const float field_extra_area = 200.f;
 
-    if (std::fabs(target.position.x) > field_w + field_extra_area)
-        target.position.x = Common::sign(target.position.x) * (field_w + field_extra_area);
+    if (std::fabs(target.position.x) > Common::worldState().field.width + field_extra_area)
+        target.position.x = Common::sign(target.position.x) * (Common::worldState().field.width + field_extra_area);
 
-    if (std::fabs(target.position.y) > field_h + field_extra_area)
-        target.position.y = Common::sign(target.position.y) * (field_h + field_extra_area);
+    if (std::fabs(target.position.y) > Common::worldState().field.height + field_extra_area)
+        target.position.y = Common::sign(target.position.y) * (Common::worldState().field.height + field_extra_area);
 
     if (speed < 0)
         speed = 0;

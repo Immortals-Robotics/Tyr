@@ -9,7 +9,7 @@ void Ai::Mark2Goal(int robot_num, int opp, float dist)
 
     Common::Vec2 predictedOpp = Common::Vec2(OppRobot[opp].position.x + OppRobot[opp].velocity.x * opp_predict_t,
                                              OppRobot[opp].position.y + OppRobot[opp].velocity.y * opp_predict_t);
-    Common::Vec2 target       = predictedOpp.pointOnConnectingLine(Common::Vec2(side * field_width, 0), dist);
+    Common::Vec2 target       = predictedOpp.pointOnConnectingLine(Common::Vec2(side * Common::worldState().field.width, 0), dist);
 
     OwnRobot[robot_num].face(ball.position);
     ERRTSetObstacles(robot_num, 1, 1);

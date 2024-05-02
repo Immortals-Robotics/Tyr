@@ -238,7 +238,7 @@ void Ai::strategy_maker()
                 // float dis_to_reach = Common::Vec2::distance(OwnRobot[*stm2AInum[i]].State.position,
                 // Common::Vec2(strategy.role(i).path(step[i]).x(),strategy.role(i).path(step[i]).y())); if
                 // ((step[i]>=strategy.role(i).path_size()-2) || (dis_to_reach < 500))
-                OwnRobot[*stm2AInum[i]].face(Common::Vec2(-side * field_width, 0));
+                OwnRobot[*stm2AInum[i]].face(Common::Vec2(-side * Common::worldState().field.width, 0));
                 // else
                 //     OwnRobot[*stm2AInum[i]].face(Common::Vec2(strategy.role(i).path(step[i]).x(),strategy.role(i).path(step[i]).y()));
                 ERRTNavigate2Point(

@@ -9,13 +9,13 @@ void Ai::NormalPlayAtt()
     ManageAttRoles(); // sets the mid1, mid2, attack
 
     debugDraw = true;
-    recievePass(dmf, ball.position.pointOnConnectingLine(Common::Vec2(side * field_width, 0), 2500));
+    recievePass(dmf, ball.position.pointOnConnectingLine(Common::Vec2(side * Common::worldState().field.width, 0), 2500));
     debugDraw = false;
 
     if (oneTouchType[attack] == allaf)
     {
         ERRTSetObstacles(attack, false, true);
-        OwnRobot[attack].face(Common::Vec2(-side * field_width, 0));
+        OwnRobot[attack].face(Common::Vec2(-side * Common::worldState().field.width, 0));
         // OwnRobot[robot_num].target.angle=-90;
         ERRTNavigate2Point(attack, allafPos[attack], 0, 100, &VELOCITY_PROFILE_MAMOOLI);
         if (timer.time() > 2.5)
@@ -31,7 +31,7 @@ void Ai::NormalPlayAtt()
         float        ballReachTimeTmp = calculateBallRobotReachTime(attack, &VELOCITY_PROFILE_MAMOOLI) * 1.5;
         Common::Vec2 ballReachPlace   = predictBallForwardAI(ballReachTimeTmp);
         float        ballGoalDot =
-            ball.velocity.normalized().dot((Common::Vec2(-side * field_width, 0) - ballReachPlace).normalized());
+            ball.velocity.normalized().dot((Common::Vec2(-side * Common::worldState().field.width, 0) - ballReachPlace).normalized());
         if (0) // ballGoalDot > -0.6 && ballGoalDot < 0.7 && ball.velocity.length > 900 )
         {
             Common::Angle passAngle = ball.velocity.toAngle();
@@ -49,11 +49,11 @@ void Ai::NormalPlayAtt()
 
             bool mid1PassAngleOk = (OwnRobot[mid1].State.position - ball.position)
                                        .normalized()
-                                       .dot((Common::Vec2(side * field_width, 0) - ball.position).normalized()) < 0.75f;
+                                       .dot((Common::Vec2(side * Common::worldState().field.width, 0) - ball.position).normalized()) < 0.75f;
 
             bool mid2PassAngleOk = (OwnRobot[mid2].State.position - ball.position)
                                        .normalized()
-                                       .dot((Common::Vec2(side * field_width, 0) - ball.position).normalized()) < 0.75f;
+                                       .dot((Common::Vec2(side * Common::worldState().field.width, 0) - ball.position).normalized()) < 0.75f;
 
             Common::logDebug("pass angle ok mid1 : {}, mid2: {}", mid1PassAngleOk, mid2PassAngleOk);
 
@@ -97,7 +97,7 @@ void Ai::NormalPlayAtt()
                 }
                 else
                 {
-                    passAngle = Common::Vec2(-side * field_width, 0).angleWith(ball.position);
+                    passAngle = Common::Vec2(-side * Common::worldState().field.width, 0).angleWith(ball.position);
                     chip_pow  = 0;
                 }
                 tech_circle(attack, passAngle, 0, chip_pow, 1, 0, 0, 1);
@@ -111,7 +111,7 @@ void Ai::NormalPlayAtt()
 
                 // ADDED by Dot_Blue:
                 //                float shoot_pow;
-                //                if(Common::Vec2::distance(ball.position,Common::Vec2 ( -side*field_width , 0 )) <
+                //                if(Common::Vec2::distance(ball.position,Common::Vec2 ( -side*Common::worldState().field.width , 0 )) <
                 //                2000) {
                 //                    shoot_pow = 70 - OwnRobot[attack].State.velocity.length * 0.01;
                 //                } else {
@@ -141,7 +141,7 @@ void Ai::NormalPlayAtt()
                 }
 
                 // if (attackFuckingAngle()) {
-                //	shootAngle = Common::Vec2::angleWith(ball.position, Common::Vec2(side*field_width, 0));
+                //	shootAngle = Common::Vec2::angleWith(ball.position, Common::Vec2(side*Common::worldState().field.width, 0));
                 //	shoot_pow = 1;
                 // }
 
@@ -159,7 +159,7 @@ void Ai::NormalPlayAtt()
     }
     else
     {
-        recievePass(mid1, Common::Vec2(-side * (field_width - 800), field_height - 800));
+        recievePass(mid1, Common::Vec2(-side * (Common::worldState().field.width - 800), Common::worldState().field.height - 800));
     }
 
     if (ball.position.y < -600)
@@ -168,7 +168,7 @@ void Ai::NormalPlayAtt()
     }
     else
     {
-        recievePass(mid2, Common::Vec2(-side * (field_width - 800), -field_height + 800));
+        recievePass(mid2, Common::Vec2(-side * (Common::worldState().field.width - 800), -Common::worldState().field.height + 800));
     }
 }
 } // namespace Tyr::Soccer

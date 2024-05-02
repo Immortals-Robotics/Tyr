@@ -24,13 +24,13 @@ void Ai::NormalPlayDef()
             {
                 int oppAttacker = findKickerOpp(-1);
 
-                OwnRobot[own].face(Common::Vec2(-side * field_width, 0));
+                OwnRobot[own].face(Common::Vec2(-side * Common::worldState().field.width, 0));
                 ERRTSetObstacles(own, 0, 1);
 
                 if (own == dmf)
                 {
                     ERRTNavigate2Point(dmf,
-                                       ball.position.pointOnConnectingLine(Common::Vec2(side * field_width, 0), 1800),
+                                       ball.position.pointOnConnectingLine(Common::Vec2(side * Common::worldState().field.width, 0), 1800),
                                        0, 100, &VELOCITY_PROFILE_MAMOOLI);
                 }
                 else if (own == mid1)
@@ -86,7 +86,7 @@ void Ai::NormalPlayDef()
 #if 1
     if (attackFuckingAngle() && kicker_opp != -1)
     {
-        shootAngle = ball.position.angleWith(Common::Vec2(side * field_width, 0));
+        shootAngle = ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0));
         shoot_pow  = 1;
         chip_pow   = 0;
     }

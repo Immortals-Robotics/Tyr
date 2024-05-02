@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 void Ai::penalty_their_simple()
 {
-    float penalty_x = field_width - 85.0;
+    float penalty_x = Common::worldState().field.width - 85.0;
 
     static VelocityProfile VELOCITY_PROFILE_KILLER = VELOCITY_PROFILE_KHARAKI;
     VELOCITY_PROFILE_KILLER.max_spd                = Common::Vec2(40.0f);
@@ -29,7 +29,7 @@ void Ai::penalty_their_simple()
                                                                  Common::Vec2(side * penalty_x, -100)))
                           .value_or(Common::Vec2())
                           .y;
-        float max_reach_y = (goal_width / 2.0) - 50.0;
+        float max_reach_y = (Common::worldState().field.goal_width / 2.0) - 50.0;
         if (max_reach_y < gkp_y)
             gkp_y = max_reach_y;
         if (-max_reach_y > gkp_y)

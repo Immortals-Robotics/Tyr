@@ -69,15 +69,6 @@
         "command_opp_robots": {
           "type": "boolean"
         },
-        "field_width": {
-          "type": "integer"
-        },
-        "field_length": {
-          "type": "integer"
-        },
-        "goal_length": {
-          "type": "integer"
-        },
         "init_gk_id": {
           "type": "integer",
         },

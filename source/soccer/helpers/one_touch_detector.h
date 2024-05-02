@@ -5,8 +5,6 @@ namespace Tyr::Soccer
 class OneTouchDetector
 {
 public:
-    float               field_w;
-    float               field_h;
     int                 hys;
     Common::RobotState *rState;
     Common::BallState  *bState;
@@ -21,7 +19,7 @@ public:
     }
     bool IsArriving(float angleTol = 40, float passAngleLimit = 80)
     {
-        return IsArriving(Common::Vec2(-(*side) * field_w, 0), angleTol, passAngleLimit);
+        return IsArriving(Common::Vec2(-(*side) * Common::worldState().field.width, 0), angleTol, passAngleLimit);
     }
     bool IsArriving(const Common::Vec2 &target, float angleTol, float passAngleLimit)
     {
