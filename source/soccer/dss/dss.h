@@ -29,7 +29,7 @@ private:
     bool RobotHasStaticCollision(const Common::RobotState &state, const Common::Vec2 &cmd) const;
 
     bool         IsAccSafe(const int robot_num, const Common::Vec2 &cmd);
-    Common::Vec2 GetRandomAcceleration(const Common::Vec2 &v, const float a_mag) const;
+    Common::Vec2 GetRandomAcceleration(const Common::Vec2 &v, const float a_mag);
     static float ComputeError(const Common::Vec2 &target, const Common::Vec2 &current);
 
 public:
