@@ -10,12 +10,8 @@
 
 #include "kalman/filtered_object.h"
 
+// TODO: move to settings
 #define PREDICT_STEPS 7.0f
-
-#define MAX_BALL_NOT_SEEN 40
-#define MAX_BALL_2FRAMES_DISTANCE 1450000.0f
-
-#define MAX_ROBOT_NOT_SEEN 200
 #define MAX_ROBOT_SUBSTITUTE 60
 
 // Don't add prediction to Ball or Opponents if both velocities are below this threshold
@@ -25,38 +21,37 @@ const float IGNORE_PREDICTION = 0.045f;
 // All these are in metres/sec
 const float ROBOT_ERROR_VELOCITY = 450.0f;
 
-#define MERGE_DISTANCE 70
-
 namespace Tyr::Vision
 {
 class Vision
 {
 public:
-    Vision(Common::WorldState *State);
+    Vision(Common::WorldState *t_state);
     ~Vision();
 
-    bool recievePacket();
-    bool connectToVisionServer();
-    void recieveAllCameras();
-    void ProcessVision();
+    void receive();
+    void process();
     bool isConnected();
 
 private:
-    void ProcessRobots();
-    int  ExtractBlueRobots();
-    int  ExtractYellowRobots();
-    int  MergeRobots(int num);
-    void FilterRobots(int num, bool own);
-    void predictRobotsForward();
-    void SendStates();
+    bool connect();
+    bool receivePacket();
+
+    void processRobots();
+    int  extractBlueRobots();
+    int  extractYellowRobots();
+    int  mergeRobots(int num);
+    void filterRobots(int num, bool own);
+    void predictRobots();
+    void sendStates();
 
     void processBalls();
     void extractBalls();
     void mergeBalls();
     void filterBalls();
-    void predictBallForward();
+    void predictBall();
 
-    void ProcessParam();
+    void processParam();
 
 private:
     bool our_color;
@@ -65,22 +60,21 @@ private:
 
     Common::WorldState *m_state;
 
-    bool   packet_recieved[Common::Setting::kCamCount];
+    bool m_packet_received[Common::Setting::kCamCount];
 
-    Protos::SSL_DetectionBall lastRawBall; // The last position of the locked ball
-    FilteredObject            ball_kalman;
-    int                       ball_not_seen = MAX_BALL_NOT_SEEN + 1;
+    Protos::SSL_DetectionBall m_last_raw_ball; // The last position of the locked ball
+    FilteredObject            m_ball_kalman;
+    int                       m_ball_not_seen = Common::setting().max_ball_frame_not_seen + 1;
 
-    Common::RobotState robotState[2][Common::Setting::kMaxRobots];
-    FilteredObject     robot_kalman[2][Common::Setting::kMaxRobots];
-    int                robot_not_seen[2][Common::Setting::kMaxRobots];
+    Common::RobotState m_robot_state[2][Common::Setting::kMaxRobots];
+    FilteredObject     m_robot_kalman[2][Common::Setting::kMaxRobots];
+    int                m_robot_not_seen[2][Common::Setting::kMaxRobots];
 
-    Common::MedianFilter<float> AngleFilter[2][Common::Setting::kMaxRobots];
-    float                       rawAngles[2][Common::Setting::kMaxRobots];
+    Common::MedianFilter<float> m_angle_filter[2][Common::Setting::kMaxRobots];
+    float                       m_raw_angles[2][Common::Setting::kMaxRobots];
 
-    Protos::SSL_WrapperPacket  packet;
-    Protos::SSL_DetectionFrame frame[Common::Setting::kCamCount];
-    std::vector<Protos::SSL_DetectionBall>  d_ball;
-    Protos::SSL_DetectionRobot robot[Common::Setting::kMaxRobots * Common::Setting::kCamCount];
+    Protos::SSL_DetectionFrame             m_d_frame[Common::Setting::kCamCount];
+    std::vector<Protos::SSL_DetectionBall> m_d_ball;
+    Protos::SSL_DetectionRobot             m_d_robot[Common::Setting::kMaxRobots * Common::Setting::kCamCount];
 };
 } // namespace Tyr::Vision

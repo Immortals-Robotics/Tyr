@@ -2,23 +2,25 @@
 
 namespace Tyr::Vision
 {
-bool Vision::connectToVisionServer()
+bool Vision::connect()
 {
     m_udp = std::make_unique<Common::UdpClient>(Common::setting().vision_address);
     return isConnected();
 }
 
-bool Vision::recievePacket()
+bool Vision::receivePacket()
 {
     if (!isConnected())
         return false;
+
+    Protos::SSL_WrapperPacket packet;
 
     if (m_udp->receive(&packet))
     {
         if (packet.has_detection())
         {
-            frame[packet.detection().camera_id()]           = packet.detection();
-            packet_recieved[packet.detection().camera_id()] = true;
+            m_d_frame[packet.detection().camera_id()]           = packet.detection();
+            m_packet_received[packet.detection().camera_id()] = true;
         }
 
         return true;

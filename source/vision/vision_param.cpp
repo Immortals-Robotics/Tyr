@@ -2,7 +2,7 @@
 
 namespace Tyr::Vision
 {
-void Vision::ProcessParam()
+void Vision::processParam()
 {
     double avg   = 0;
     int    count = 0;
@@ -10,7 +10,7 @@ void Vision::ProcessParam()
     {
         if (Common::setting().use_camera[i])
         {
-            avg += frame[i].t_capture();
+            avg += m_d_frame[i].t_capture();
             count++;
         }
     }

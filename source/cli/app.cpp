@@ -79,11 +79,11 @@ void Application::aiThreadEentry()
     {
         timer.start();
 
-        m_vision->recieveAllCameras();
+        m_vision->receive();
 
         m_lock.lock();
 
-        m_vision->ProcessVision();
+        m_vision->process();
         m_ai->Process(m_world_state.get());
 
 		std::vector<Sender::Command> commands;

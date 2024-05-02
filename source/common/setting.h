@@ -99,7 +99,7 @@ public:
     double ball_merge_distance   = 70.0;
     double max_ball_2_frame_dist = 1000.0;
 
-    int max_robot_frame_not_seen = 120; // 2 seconds
+    int max_robot_frame_not_seen = 200;
     int max_ball_frame_not_seen  = 120; // 2 seconds
 
     bool use_kalman_pos = true;

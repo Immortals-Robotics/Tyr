@@ -14,21 +14,21 @@ void Vision::processBalls()
     filterBalls();
 
     // We're almost done, only Prediction remains undone!
-    predictBallForward();
+    predictBall();
 }
 
 void Vision::extractBalls()
 {
-    d_ball.clear();
+    m_d_ball.clear();
 
     int count = 0;
     for (int i = 0; i < Common::Setting::kCamCount; i++)
     {
         if (Common::setting().use_camera[i])
         {
-            for (int j = 0; j < frame[i].balls_size(); j++)
+            for (int j = 0; j < m_d_frame[i].balls_size(); j++)
             {
-                d_ball.push_back(frame[i].balls(j));
+                m_d_ball.push_back(m_d_frame[i].balls(j));
             }
         }
     }
@@ -38,26 +38,26 @@ void Vision::mergeBalls()
 {
     int balls_num = 0;
 
-    int num = d_ball.size();
+    int num = m_d_ball.size();
 
     for (int i = 0; i < num; i++)
     {
-        const Common::Vec2 ball_i{d_ball[i].x(), d_ball[i].y()};
+        const Common::Vec2 ball_i{m_d_ball[i].x(), m_d_ball[i].y()};
 
         for (int j = i + 1; j < num; j++)
         {
-            const Common::Vec2 ball_j{d_ball[j].x(), d_ball[j].y()};
+            const Common::Vec2 ball_j{m_d_ball[j].x(), m_d_ball[j].y()};
 
-            if (ball_i.distanceTo(ball_j) < MERGE_DISTANCE)
+            if (ball_i.distanceTo(ball_j) < Common::setting().merge_distance)
             {
                 const Common::Vec2 ball_merged = (ball_i + ball_j) / 2.0f;
 
-                d_ball[i].set_x(ball_merged.x);
-                d_ball[i].set_y(ball_merged.y);
-                if (d_ball[i].has_z())
-                    d_ball[i].set_z((d_ball[i].z() + d_ball[j].z()) / (float) 2.0);
+                m_d_ball[i].set_x(ball_merged.x);
+                m_d_ball[i].set_y(ball_merged.y);
+                if (m_d_ball[i].has_z())
+                    m_d_ball[i].set_z((m_d_ball[i].z() + m_d_ball[j].z()) / (float) 2.0);
 
-                d_ball[j] = d_ball[num - 1];
+                m_d_ball[j] = m_d_ball[num - 1];
                 num--;
 
                 j--;
@@ -66,7 +66,7 @@ void Vision::mergeBalls()
         balls_num++;
     }
 
-    d_ball.resize(balls_num);
+    m_d_ball.resize(balls_num);
 }
 
 void Vision::filterBalls()
@@ -74,11 +74,11 @@ void Vision::filterBalls()
     int   id  = 100;
     float dis = std::numeric_limits<float>::max();
 
-    const Common::Vec2 raw_ball{lastRawBall.x(), lastRawBall.y()};
+    const Common::Vec2 raw_ball{m_last_raw_ball.x(), m_last_raw_ball.y()};
 
-    for (int i = 0; i < d_ball.size(); i++)
+    for (int i = 0; i < m_d_ball.size(); i++)
     {
-        const Common::Vec2 ball_i{d_ball[i].x(), d_ball[i].y()};
+        const Common::Vec2 ball_i{m_d_ball[i].x(), m_d_ball[i].y()};
 
         const float curr_dis = ball_i.distanceTo(raw_ball);
         if (curr_dis < dis)
@@ -88,49 +88,49 @@ void Vision::filterBalls()
         }
     }
 
-    if (dis < MAX_BALL_2FRAMES_DISTANCE)
+    if (dis < Common::setting().max_ball_2_frame_dist)
     {
         float filtout[2][2];
-        float filtpos[2] = {d_ball[id].x() / (float) 10.0, d_ball[id].y() / (float) 10.0};
-        lastRawBall.CopyFrom(d_ball[id]);
+        float filtpos[2] = {m_d_ball[id].x() / (float) 10.0, m_d_ball[id].y() / (float) 10.0};
+        m_last_raw_ball.CopyFrom(m_d_ball[id]);
 
-        if (ball_not_seen > 0)
+        if (m_ball_not_seen > 0)
         {
-            ball_kalman.initializePos(filtpos);
+            m_ball_kalman.initializePos(filtpos);
         }
 
-        ball_kalman.updatePosition(filtpos, filtout);
+        m_ball_kalman.updatePosition(filtpos, filtout);
 
         m_state->ball.Position.x = filtout[0][0];
         m_state->ball.Position.y = filtout[1][0];
         m_state->ball.velocity.x = filtout[0][1];
         m_state->ball.velocity.y = filtout[1][1];
 
-        ball_not_seen           = 0;
+        m_ball_not_seen           = 0;
         m_state->ball.seenState = Common::Seen;
     }
 
     else
     {
-        ball_not_seen++;
+        m_ball_not_seen++;
 
-        if (ball_not_seen > MAX_BALL_NOT_SEEN)
+        if (m_ball_not_seen > Common::setting().max_ball_frame_not_seen)
         {
-            if (d_ball.size() > 0)
+            if (m_d_ball.size() > 0)
             {
                 float filtout[2][2];
-                float filtpos[2] = {d_ball[id].x() / (float) 10.0, d_ball[id].y() / (float) 10.0};
-                lastRawBall.CopyFrom(d_ball[id]);
-                ball_kalman.initializePos(filtpos);
+                float filtpos[2] = {m_d_ball[id].x() / (float) 10.0, m_d_ball[id].y() / (float) 10.0};
+                m_last_raw_ball.CopyFrom(m_d_ball[id]);
+                m_ball_kalman.initializePos(filtpos);
 
-                ball_kalman.updatePosition(filtpos, filtout);
+                m_ball_kalman.updatePosition(filtpos, filtout);
 
                 m_state->ball.Position.x = filtout[0][0];
                 m_state->ball.Position.y = filtout[1][0];
                 m_state->ball.velocity.x = filtout[0][1];
                 m_state->ball.velocity.y = filtout[1][1];
 
-                ball_not_seen           = 0;
+                m_ball_not_seen           = 0;
                 m_state->ball.seenState = Common::Seen;
             }
             else
@@ -139,8 +139,8 @@ void Vision::filterBalls()
 
                 m_state->ball.Position /= 10.0f;
 
-                lastRawBall.set_x(0.0f);
-                lastRawBall.set_y(0.0f);
+                m_last_raw_ball.set_x(0.0f);
+                m_last_raw_ball.set_y(0.0f);
 
                 m_state->ball.seenState = Common::CompletelyOut;
             }
@@ -155,7 +155,7 @@ void Vision::filterBalls()
     }
 }
 
-void Vision::predictBallForward()
+void Vision::predictBall()
 {
     m_state->ball.Position /= 100.0f;
     m_state->ball.velocity /= 100.0f;
