@@ -1,8 +1,5 @@
 #pragma once
 
-#define COLOR_BLUE false
-#define COLOR_YELLOW true
-
 #define RIGHT_SIDE true
 #define LEFT_SIDE false
 

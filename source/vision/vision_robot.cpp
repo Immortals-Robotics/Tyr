@@ -4,6 +4,9 @@ namespace Tyr::Vision
 {
 void Vision::processRobots()
 {
+    const Common::TeamColor our_color = Common::setting().our_color;
+    const Common::TeamColor opp_color = (Common::TeamColor)(1 - (int) our_color);
+
     int robots_num = 0;
 
     // Blue Robots
@@ -14,7 +17,7 @@ void Vision::processRobots()
     robots_num = mergeRobots(robots_num);
 
     // The most important part, The Kalman Filter!
-    filterRobots(robots_num, this->our_color);
+    filterRobots(robots_num, our_color);
 
     // Yellow Robots
     // First we have to extract the robots!
@@ -24,7 +27,7 @@ void Vision::processRobots()
     robots_num = mergeRobots(robots_num);
 
     // The most important part, The Kalman Filter!
-    filterRobots(robots_num, !(this->our_color));
+    filterRobots(robots_num, !our_color);
 
     // We're almost done, only Prediction remains undone!
     predictRobots();
@@ -93,8 +96,10 @@ int Vision::mergeRobots(int num)
     return robots_num;
 }
 
-void Vision::filterRobots(int num, bool own)
+void Vision::filterRobots(int num, Common::TeamColor t_color)
 {
+    const int color_id = (int) t_color;
+
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         Common::Vec2 filt_pos{};
@@ -109,70 +114,71 @@ void Vision::filterRobots(int num, bool own)
 
                 Common::Vec2 filtpos{m_d_robot[j].x(), m_d_robot[j].y()};
 
-                if (m_robot_not_seen[own][i] > 0)
+                if (m_robot_not_seen[color_id][i] > 0)
                 {
-                    m_robot_kalman[own][i].initializePos(filtpos);
-                    m_angle_filter[own][i].reset();
+                    m_robot_kalman[color_id][i].initializePos(filtpos);
+                    m_angle_filter[color_id][i].reset();
                 }
 
-                m_robot_not_seen[own][i] = 0;
+                m_robot_not_seen[color_id][i] = 0;
 
-                m_robot_kalman[own][i].updatePosition(filtpos);
-                filt_pos = m_robot_kalman[own][i].getPosition();
-                filt_vel = m_robot_kalman[own][i].getVelocity();
+                m_robot_kalman[color_id][i].updatePosition(filtpos);
+                filt_pos = m_robot_kalman[color_id][i].getPosition();
+                filt_vel = m_robot_kalman[color_id][i].getVelocity();
 
-                m_angle_filter[own][i].AddData((m_d_robot[j].orientation() - m_raw_angles[own][i]) * 61.0f);
-                m_raw_angles[own][i]                  = m_d_robot[j].orientation();
-                m_robot_state[own][i].AngularVelocity = Common::Angle::fromRad(m_angle_filter[own][i].GetCurrent());
-                m_robot_state[own][i].angle           = Common::Angle::fromRad(m_d_robot[j].orientation());
+                m_angle_filter[color_id][i].AddData((m_d_robot[j].orientation() - m_raw_angles[color_id][i]) * 61.0f);
+                m_raw_angles[color_id][i] = m_d_robot[j].orientation();
+                m_robot_state[color_id][i].AngularVelocity =
+                    Common::Angle::fromRad(m_angle_filter[color_id][i].GetCurrent());
+                m_robot_state[color_id][i].angle = Common::Angle::fromRad(m_d_robot[j].orientation());
 
                 // Make sure our filtered velocities are reasonable
-                if (std::fabs(m_robot_state[own][i].AngularVelocity.deg()) < 20.0f)
-                    m_robot_state[own][i].AngularVelocity.setDeg(0.0f);
+                if (std::fabs(m_robot_state[color_id][i].AngularVelocity.deg()) < 20.0f)
+                    m_robot_state[color_id][i].AngularVelocity.setDeg(0.0f);
             }
         }
 
         if (!found)
         {
-            m_robot_not_seen[own][i]++;
-            if (m_robot_not_seen[own][i] >= Common::setting().max_robot_frame_not_seen + 1)
-                m_robot_not_seen[own][i] = Common::setting().max_robot_frame_not_seen + 1;
+            m_robot_not_seen[color_id][i]++;
+            if (m_robot_not_seen[color_id][i] >= Common::setting().max_robot_frame_not_seen + 1)
+                m_robot_not_seen[color_id][i] = Common::setting().max_robot_frame_not_seen + 1;
 
-            m_robot_state[own][i].AngularVelocity.setDeg(0.0f);
+            m_robot_state[color_id][i].AngularVelocity.setDeg(0.0f);
         }
 
         else
         {
-            m_robot_state[own][i].Position = filt_pos;
-            m_robot_state[own][i].velocity = filt_vel;
+            m_robot_state[color_id][i].Position = filt_pos;
+            m_robot_state[color_id][i].velocity = filt_vel;
 
             // Make sure our filtered velocities are reasonable
-            if ((m_robot_state[own][i].velocity.length()) > kRobotErrorVelocity)
+            if ((m_robot_state[color_id][i].velocity.length()) > kRobotErrorVelocity)
             {
-                m_robot_state[own][i].velocity.x = 0.0f;
-                m_robot_state[own][i].velocity.y = 0.0f;
+                m_robot_state[color_id][i].velocity.x = 0.0f;
+                m_robot_state[color_id][i].velocity.y = 0.0f;
             }
 
-            if (std::fabs(m_robot_state[own][i].velocity.x) < kIgnorePrediction * 2.0f)
-                m_robot_state[own][i].velocity.x = 0.0f;
-            if (std::fabs(m_robot_state[own][i].velocity.y) < kIgnorePrediction * 2.0f)
-                m_robot_state[own][i].velocity.y = 0.0f;
+            if (std::fabs(m_robot_state[color_id][i].velocity.x) < kIgnorePrediction * 2.0f)
+                m_robot_state[color_id][i].velocity.x = 0.0f;
+            if (std::fabs(m_robot_state[color_id][i].velocity.y) < kIgnorePrediction * 2.0f)
+                m_robot_state[color_id][i].velocity.y = 0.0f;
         }
     }
 }
 
 void Vision::predictRobots()
 {
-    for (int own = 1; own < 2; own++)
+    for (int color_id = 1; color_id < 2; color_id++)
     {
         for (int i = 0; i < Common::Setting::kMaxRobots; i++)
         {
-            m_robot_state[own][i].Position =
-                m_robot_state[own][i].Position + m_robot_state[own][i].velocity / (kPredictSteps * 2.0f);
+            m_robot_state[color_id][i].Position =
+                m_robot_state[color_id][i].Position + m_robot_state[color_id][i].velocity / (kPredictSteps * 2.0f);
 
             // Predict the m_d_robot to go forward
-            m_robot_state[own][i].angle =
-                m_robot_state[own][i].angle + m_robot_state[own][i].AngularVelocity / (kPredictSteps * 4.0f);
+            m_robot_state[color_id][i].angle =
+                m_robot_state[color_id][i].angle + m_robot_state[color_id][i].AngularVelocity / (kPredictSteps * 4.0f);
         }
     }
 

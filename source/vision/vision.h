@@ -29,7 +29,7 @@ private:
     int  extractBlueRobots();
     int  extractYellowRobots();
     int  mergeRobots(int num);
-    void filterRobots(int num, bool own);
+    void filterRobots(int num, Common::TeamColor t_color);
     void predictRobots();
     void sendStates();
 
@@ -52,8 +52,6 @@ private:
     // If the filtering process yields velocities above these values, reset the filter state
     // All these are in metres/sec
     static constexpr float kRobotErrorVelocity = 450.0f;
-
-    bool our_color;
 
     std::unique_ptr<Common::UdpClient> m_udp;
 

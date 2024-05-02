@@ -6,9 +6,6 @@ Vision::Vision(Common::WorldState *t_state)
 {
     m_state = t_state;
 
-    // Initializing the settings:
-    our_color = Common::setting().our_color == Common::TeamColor::Yellow ? COLOR_YELLOW : COLOR_BLUE;
-
     for (int i = 0; i < Common::Setting::kCamCount; i++)
         m_packet_received[i] = false;
 
