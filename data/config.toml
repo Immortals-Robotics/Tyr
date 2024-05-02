@@ -1,3 +1,5 @@
+#:schema config_schema.json
+
 [common]
 # blue = 0, yellow = 1
 our_color = 1 # TODO #0 Set the team's color
@@ -57,128 +59,109 @@ gamma_simulation     = 900
 # Angular Gamma
 ang_gamma_reality    = 1
 ang_gamma_simulation = 1
-command_opp_robots = false
-enable_simulation = false
-field_length = 9000
-field_width = 12000
-gamma_reality = 19
-gamma_simulation = 900
-goal_length = 1200
-init_gk_id = 3
-our_side = 0
-robot_behavior_tree_config_filename = 'bt_default.xml'
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 0
-    is_3D_printed = false
+# The filename of the robot's behavior-tree implementation (The file modified by Groot)
+robot_behavior_tree_config_filename = "bt_default.xml"
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 1
-    is_3D_printed = false
+init_gk_id  = 3 # TODO #8 Check the robot IDs
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = true
-    has_dribbler = false
-    id = 2
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 3
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 4
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 5
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 6
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 7
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = true
-    has_dribbler = false
-    id = 8
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = true
-    has_dribbler = false
-    id = 9
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = true
-    has_dribbler = false
-    id = 10
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = true
-    has_dribbler = false
-    id = 11
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 12
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 13
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 14
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 15
-    is_3D_printed = true
+#TODO #9 Make sure the robots are configured correctly (This part is crucial to better role assignment)
+[[soccer.robot_physical_status]]
+	id = 0
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = true
+	is_3D_printed = false
+[[soccer.robot_physical_status]]
+	id = 1
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = true
+	is_3D_printed = false
+[[soccer.robot_physical_status]]
+	id = 2
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = false
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 3
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = true
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 4
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = true
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 5
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = true
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 6
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = true
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 7
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = true
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 8
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = false
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 9
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = false
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 10
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = false
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 11
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = false
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 12
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = true
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 13
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = true
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 14
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = true
+	is_3D_printed = true
+[[soccer.robot_physical_status]]
+	id = 15
+	has_dribbler = false
+	has_direct_kick = true
+	has_chip_kick = true
+	is_3D_printed = true
 
 [network]
 
