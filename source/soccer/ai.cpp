@@ -39,7 +39,7 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
         oneTouchDetector[i].field_w = field_width;
         oneTouchDetector[i].field_h = field_height;
 
-        planner[i].set_field_params(field_width, field_height);
+        planner[i].setFieldParams(field_width, field_height);
 
         OwnRobot[i].field_w = field_width;
         OwnRobot[i].field_h = field_height;

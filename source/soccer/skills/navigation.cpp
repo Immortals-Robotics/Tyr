@@ -39,21 +39,21 @@ void Ai::ERRTNavigate2Point(int robot_num, Common::Vec2 dest, bool accurate, int
     else
     {
         planner[robot_num].init(OwnRobot[robot_num].State.position, dest, 90.0f);
-        Common::Vec2 wayp = planner[robot_num].Plan();
+        Common::Vec2 wayp = planner[robot_num].plan();
 
         // if ( robot_num == 0 )
         {
-            /*for ( int i = 0 ; i < planner[robot_num].GetWayPointNum() - 1 ; i ++ )
+            /*for ( int i = 0 ; i < planner[robot_num].getWayPointNum() - 1 ; i ++ )
             {
                 Debug_Line * newDbgLine = AIDebug.add_line();
-                newDbgLine -> set_x1(planner[robot_num].GetWayPoint(i).x);
-                newDbgLine -> set_y1(planner[robot_num].GetWayPoint(i).y);
-                newDbgLine -> set_x2(planner[robot_num].GetWayPoint(i+1).x);
-                newDbgLine -> set_y2(planner[robot_num].GetWayPoint(i+1).y);
+                newDbgLine -> set_x1(planner[robot_num].getWayPoint(i).x);
+                newDbgLine -> set_y1(planner[robot_num].getWayPoint(i).y);
+                newDbgLine -> set_x2(planner[robot_num].getWayPoint(i+1).x);
+                newDbgLine -> set_y2(planner[robot_num].getWayPoint(i+1).y);
             }*/
         }
 
-        // if ( planner[robot_num].GetWayPointNum ( ) <= 2 )
+        // if ( planner[robot_num].getWayPointNum ( ) <= 2 )
         Navigate2Point(robot_num, wayp, accurate, speed, velocityProfile, true);
         // else
         //	Navigate2Point ( robot_num , wayp , false , speed , velocityProfile );

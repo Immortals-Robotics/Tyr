@@ -212,7 +212,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     {
         ERRTSetObstacles(robot_num, 0, 0);
         planner[robot_num].init(ball.position, Common::Vec2(-0, 0), 9);
-        Common::Vec2 wayp = planner[robot_num].Plan();
+        Common::Vec2 wayp = planner[robot_num].plan();
 
         // wayp = Common::Vec2 ( -3025 , 0 );
 
