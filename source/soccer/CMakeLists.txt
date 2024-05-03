@@ -15,7 +15,10 @@ set(HEADER_FILES
 	helpers/one_touch_detector.h
 
 	robot/robot.h
-	robot/velocity_profile.h)
+	robot/velocity_profile.h
+	
+	skills/skill.h
+	skills/navigation.h)
 
 set(SOURCE_FILES
 	ai.cpp

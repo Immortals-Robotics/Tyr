@@ -1,7 +1,10 @@
+#include "stop.h"
+
 #include "../ai.h"
 
 namespace Tyr::Soccer
 {
+
 void Ai::Stop()
 {
 #if !mark_in_stop
@@ -136,4 +139,6 @@ void Ai::Stop()
         100, &VELOCITY_PROFILE_AROOM);
     OwnRobot[cmf].Shoot(0);
 }
+void Stop::execute()
+{}
 } // namespace Tyr::Soccer
