@@ -13,7 +13,7 @@ void Ai::MarkManager(bool restart)
         return;
     }
 
-    auto start_t = timer.time();
+    const float start_t = timer.time();
 
     // if ( ( !restart ) && ( markMap[&dmf] == -1 ) )
     //	markMap[&dmf] = findKickerOpp(-1);
@@ -31,10 +31,10 @@ void Ai::MarkManager(bool restart)
     sort(crunchingOpps.begin(), crunchingOpps.end(),
          [](const std::pair<int, float> &a, const std::pair<int, float> &b) -> bool { return a.second > b.second; });
 
-    std::cout << "	Opps: " << crunchingOpps.size() << std::endl;
+    Common::logDebug("Opps: {}", crunchingOpps.size());
     for (auto it = crunchingOpps.begin(); it != crunchingOpps.end(); ++it)
     {
-        std::cout << "-- " << it->first << " : " << it->second << std::endl;
+        Common::logDebug("-- {} : {}", it->first, it->second);
     }
 
     struct MarkPair
@@ -186,7 +186,7 @@ void Ai::MarkManager(bool restart)
         auto best_pair = valid_formations[0].pairs;
         for (auto it = best_pair.begin(); it != best_pair.end(); ++it)
         {
-            std::cout << " XXXXXX " << it->first << " : " << it->second << std::endl;
+            Common::logDebug(" XXXXXX {} : {}", it->first, it->second);
             for (auto it1 = markMap.begin(); it1 != markMap.end(); ++it1)
             {
                 if (*it1->first == it->first)
@@ -198,8 +198,8 @@ void Ai::MarkManager(bool restart)
         }
     }
 
-    auto end_t = timer.time();
+    const float end_t = timer.time();
 
-    std::cout << "MarkManager execution time: " << (end_t - start_t) * 1000.0 << std::endl;
+    Common::logDebug("MarkManager execution time: {}", (end_t - start_t) * 1000.0f);
 }
 } // namespace Tyr::Soccer

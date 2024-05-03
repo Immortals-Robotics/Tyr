@@ -22,11 +22,11 @@ void Ai::our_place_ball_shoot()
     static VelocityProfile TEMP_VEL_PRO = BALL_PLACE_KHEYLI_SOOSKI;
     static Common::Timer   temp_time;
 
-    std::cout << "BEFORE: " << dmf << "_" << mid2 << std::endl;
+    Common::logDebug("BEFORE: {}_{}", dmf, mid2);
     //    wantThisRobot(attack);
     //    wantThisRobot(dmf);
     positionRobots();
-    std::cout << "AFTER: " << dmf << "_" << mid2 << std::endl;
+    Common::logDebug("AFTER: {}_{}", dmf, mid2);
 
     /*ERRTSetObstacles ( mid1 , false , true );
     obs_map.addCircle({Common::worldState().ball.position, 1010.0f});
@@ -105,8 +105,9 @@ void Ai::our_place_ball_shoot()
 
         obs_map.resetMap();
         circle_ball_free(attack, move_angle, 0, 0, 0.0);
-        std::cout << ":::" << OwnRobot[attack].state().velocity.length() << std::endl
-                  << OwnRobot[dmf].state().velocity.length() << std::endl;
+        Common::logDebug(":::{}", OwnRobot[attack].state().velocity.length());
+        Common::logDebug("{}", OwnRobot[dmf].state().velocity.length());
+
         if (OwnRobot[attack].state().velocity.length() < 20 && OwnRobot[dmf].state().velocity.length() < 20)
         {
             FUNC_CNT++;
@@ -122,7 +123,6 @@ void Ai::our_place_ball_shoot()
 
         circle_ball_free(attack, move_angle, 18, 0, 0.0);
         WaitForPass(dmf, false, &OwnRobot[attack].state().position);
-        //        OwnRobot[dmf].target.angle = 90;
         if (OwnRobot[attack].state().position.distanceTo(Common::worldState().ball.position) > 400)
         {
             FUNC_CNT++;
@@ -312,22 +312,21 @@ void Ai::our_place_ball_shoot()
 
         bool success = Common::refereeState().place_ball_target.distanceTo(Common::worldState().ball.position) < 100.0;
 
-        std::cout << "______IN___STATE_DONE_____" << std::endl
-                  << Common::refereeState().place_ball_target.x - Common::worldState().ball.position.x << std::endl
-                  << Common::refereeState().place_ball_target.y - Common::worldState().ball.position.y << std::endl;
+        Common::logDebug("______IN___STATE_DONE_____");
+        Common::logDebug("{}", Common::refereeState().place_ball_target - Common::worldState().ball.position);
         if (success)
         {
-            std::cout << "MADE it!!!" << std::endl;
+            Common::logDebug("MADE it!!!");
         }
         else
         {
-            std::cout << "lost it!!!" << std::endl;
+            Common::logWarning("lost it!!!");
         }
     }
-    std::cout << "______IN___STATE_" << FUNC_state << "_____" << std::endl;
+    Common::logDebug("______IN___STATE_{}_____", FUNC_state);
 
-    std::cout << "___DIS___" << Common::refereeState().place_ball_target.distanceTo(Common::worldState().ball.position)
-              << std::endl;
+    Common::logDebug("___DIS___{}",
+                     Common::refereeState().place_ball_target.distanceTo(Common::worldState().ball.position));
 }
 
 void Ai::our_place_ball_shoot_V2()
@@ -351,11 +350,11 @@ void Ai::our_place_ball_shoot_V2()
     static Common::Angle outFieldAng;
     static Common::Vec2  last_state_ball_pos;
 
-    std::cout << "BEFORE: " << dmf << "_" << mid2 << std::endl;
+    Common::logDebug("BEFORE: {}_{}", dmf, mid2);
     // wantThisRobot(attack);
     // wantThisRobot(dmf);
     //    positionRobots();//For lordhippo (after the first match with MRL)
-    std::cout << "AFTER: " << dmf << "_" << mid2 << std::endl;
+    Common::logDebug("AFTER: {}_{}", dmf, mid2);
 
 #if mark_in_stop
     MarkManager(false);
@@ -514,8 +513,8 @@ void Ai::our_place_ball_shoot_V2()
             }
         }
         circle_ball_free(attack, outFieldAng, 0, 0, 0.0);
-        std::cout << "outFieldAng: " << outFieldAng.deg() << std::endl;
-        std::cout << "OwnRobot[dmf].state().velocity.magnitude__" << OwnRobot[dmf].state().velocity.length() << std::endl;
+        Common::logDebug("outFieldAng: {}", outFieldAng.deg());
+        Common::logDebug("OwnRobot[dmf].state().velocity.magnitude__{}", OwnRobot[dmf].state().velocity.length());
 
         if (OwnRobot[attack].state().velocity.length() < 20)
         {
@@ -563,8 +562,8 @@ void Ai::our_place_ball_shoot_V2()
 
         obs_map.resetMap();
         circle_ball_free(attack, move_angle, 0, 0, 0.0);
-        std::cout << ":::" << OwnRobot[attack].state().velocity.length() << std::endl
-                  << OwnRobot[dmf].state().velocity.length() << std::endl;
+        Common::logDebug(":::{}", OwnRobot[attack].state().velocity.length());
+        Common::logDebug("", OwnRobot[dmf].state().velocity.length());
         if (OwnRobot[attack].state().velocity.length() < 20 && OwnRobot[dmf].state().velocity.length() < 20)
         {
             FUNC_CNT++;
@@ -578,7 +577,6 @@ void Ai::our_place_ball_shoot_V2()
     }
     else if (FUNC_state == 1)
     {
-
         circle_ball_free(attack, move_angle, 18, 0, 0.0);
         WaitForPass(dmf, false, &OwnRobot[attack].state().position);
         //        OwnRobot[dmf].target.angle = 90;
@@ -599,7 +597,6 @@ void Ai::our_place_ball_shoot_V2()
     }
     else if (FUNC_state == 2)
     {
-
         WaitForPass(dmf, false, &OwnRobot[attack].state().position);
         //        OwnRobot[dmf].target.angle = 90;
 
@@ -616,7 +613,6 @@ void Ai::our_place_ball_shoot_V2()
     }
     else if (FUNC_state == 3)
     {
-
         if (std::fabs((OwnRobot[attack].target.angle - move_angle).deg()) > 90)
             std::swap(move_angle, temp_opp_ang);
         OwnRobot[attack].target.angle = move_angle;
@@ -720,7 +716,6 @@ void Ai::our_place_ball_shoot_V2()
     }
     else if (FUNC_state == 6)
     {
-
         OwnRobot[attack].target.angle = t_ang;
         OwnRobot[dmf].target.angle    = t_opp_ang;
         // OwnRobot[attack].face(Common::worldState().ball.position);
@@ -791,9 +786,8 @@ void Ai::our_place_ball_shoot_V2()
 
         bool success = Common::refereeState().place_ball_target.distanceTo(Common::worldState().ball.position) < 100.0;
 
-        std::cout << "______IN___STATE_DONE_____" << std::endl
-                  << Common::refereeState().place_ball_target.x - Common::worldState().ball.position.x << std::endl
-                  << Common::refereeState().place_ball_target.y - Common::worldState().ball.position.y << std::endl;
+        Common::logDebug("______IN___STATE_DONE_____");
+        Common::logDebug("{}", Common::refereeState().place_ball_target - Common::worldState().ball.position);
         if (success)
         {
             Common::logInfo("MADE it!!!");
@@ -832,11 +826,11 @@ void Ai::our_place_ball_shoot_taki()
     static VelocityProfile TEMP_VEL_PRO = BALL_PLACE_KHEYLI_SOOSKI;
     static Common::Timer   temp_time;
 
-    std::cout << "BEFORE: " << dmf << "_" << mid2 << std::endl;
+    Common::logDebug("BEFORE: {}_{}", dmf, mid2);
     wantThisRobot(attack);
     wantThisRobot(dmf);
     positionRobots();
-    std::cout << "AFTER: " << dmf << "_" << mid2 << std::endl;
+    Common::logDebug("AFTER: {}_{}", dmf, mid2);
 
     ERRTSetObstacles(dmf, false, true);
     obs_map.addCircle({Common::worldState().ball.position, 1010.0f});
@@ -916,8 +910,8 @@ void Ai::our_place_ball_shoot_taki()
 
         obs_map.resetMap();
         circle_ball_free(attack, move_angle, 0, 0, 0.0);
-        std::cout << ":::" << OwnRobot[attack].state().velocity.length() << std::endl
-                  << OwnRobot[dmf].state().velocity.length() << std::endl;
+        Common::logDebug(":::{}", OwnRobot[attack].state().velocity.length());
+        Common::logDebug("{}", OwnRobot[dmf].state().velocity.length());
         if (OwnRobot[attack].state().velocity.length() < 20 && OwnRobot[dmf].state().velocity.length() < 20)
         {
             FUNC_CNT++;
@@ -930,7 +924,6 @@ void Ai::our_place_ball_shoot_taki()
     }
     else if (FUNC_state == 1)
     {
-
         circle_ball_free(attack, move_angle, 60, 0, 0.0);
         WaitForPass(dmf, false, &OwnRobot[attack].state().position);
         //        OwnRobot[dmf].target.angle = 90;
@@ -947,7 +940,6 @@ void Ai::our_place_ball_shoot_taki()
     }
     else if (FUNC_state == 2)
     {
-
         WaitForPass(dmf, false, &OwnRobot[attack].state().position);
         //        OwnRobot[dmf].target.angle = 90;
 
@@ -964,7 +956,6 @@ void Ai::our_place_ball_shoot_taki()
     }
     else if (FUNC_state == 3)
     {
-
         //        OwnRobot[attack].target.angle = move_angle;
         //        ERRTSetObstacles(attack,0,0);
         //        obs_map.addCircle({Common::worldState().ball.position, 150.0f});
@@ -1024,21 +1015,20 @@ void Ai::our_place_ball_shoot_taki()
 
         bool success = Common::refereeState().place_ball_target.distanceTo(Common::worldState().ball.position) < 100.0;
 
-        std::cout << "______IN___STATE_DONE_____" << std::endl
-                  << Common::refereeState().place_ball_target.x - Common::worldState().ball.position.x << std::endl
-                  << Common::refereeState().place_ball_target.y - Common::worldState().ball.position.y << std::endl;
+        Common::logDebug("______IN___STATE_DONE_____");
+        Common::logDebug("{}", Common::refereeState().place_ball_target - Common::worldState().ball.position);
         if (success)
         {
-            std::cout << "MADE it!!!" << std::endl;
+            Common::logDebug("MADE it!!!");
         }
         else
         {
-            std::cout << "lost it!!!" << std::endl;
+            Common::logWarning("lost it!!!");
         }
     }
-    std::cout << "______IN___STATE_" << FUNC_state << "_____" << std::endl;
+    Common::logDebug("______IN___STATE_{}_____", FUNC_state);
 
-    std::cout << "___DIS___" << Common::refereeState().place_ball_target.distanceTo(Common::worldState().ball.position)
-              << std::endl;
+    Common::logDebug("___DIS___{}",
+                     Common::refereeState().place_ball_target.distanceTo(Common::worldState().ball.position));
 }
 } // namespace Tyr::Soccer

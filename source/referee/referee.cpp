@@ -59,8 +59,9 @@ bool Referee::isKicked()
         requiredDis = 150.0f;
     }
 
-    //	std::cout<<"the distance: "<<DIS ( Common::worldState().ball.position , m_last_placed_ball )<<std::endl;
-    if (Common::worldState().ball.position.distanceTo(m_last_placed_ball) > requiredDis)
+    const float ball_move_dis = Common::worldState().ball.position.distanceTo(m_last_placed_ball);
+    Common::logDebug("ball has moved {}", ball_move_dis);
+    if (ball_move_dis > requiredDis)
     {
         m_move_hys++;
     }

@@ -16,11 +16,12 @@ Common::Angle Ai::calculateOneTouchAngle(int robot_num, Common::Vec2 oneTouchPos
 
     float goaly = 0;
 
-    Common::Line targetLine =
-        Common::Line::fromTwoPoints(Common::Vec2(-side * Common::worldState().field.width, -100), Common::Vec2(-side * Common::worldState().field.width, 100));
+    Common::Line targetLine = Common::Line::fromTwoPoints(Common::Vec2(-side * Common::worldState().field.width, -100),
+                                                          Common::Vec2(-side * Common::worldState().field.width, 100));
+
     OpenAngle boz = calculateOpenAngleToGoal(oneTouchPosition, robot_num);
-    // boz.x = AngleWith(oneTouchPosition, Common::Vec2(-side*Common::worldState().field.width, 0));
-    std::cout << "	Open angle : " << boz.center.deg() << "	" << boz.magnitude.deg() << std::endl;
+    Common::logDebug("Open angle : {}    {}", boz.center.deg(), boz.magnitude.deg());
+
     Common::Line ball_line = Common::Line::fromPointAndAngle(oneTouchPosition, boz.center);
 
     Common::Vec2 ans;

@@ -2,8 +2,6 @@
 
 #define DEF_VEL_PROFILE (stop ? &VELOCITY_PROFILE_AROOM : &VELOCITY_PROFILE_MAMOOLI)
 
-#define DEBUG_DEF 0
-
 namespace Tyr::Soccer
 {
 void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarget, bool stop)
@@ -59,21 +57,18 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
 
     ballIsToGoal = ballIsGoaling();
 
-    /*std::cout << "interceptNear:	"<<interceptNear <<std::endl;
-    std::cout << "assholeHasBall: " << assholeHasBall<<std::endl;
-    std::cout << "ballMovingFast: " << ballMovingFast <<std::endl;
-    std::cout << "ownAttackHasBall: " << ownAttackHasBall<<std::endl;
-    std::cout << "ballMovingFast: " << ballMovingFast <<std::endl;
-    std::cout << "ballIsToGoal: " << ballIsToGoal << std::endl;
-    std::cout << "gkIntercepting: "<< gkIntercepting << std::endl;*/
+    Common::logDebug("interceptNear:{}", interceptNear);
+    Common::logDebug("assholeHasBall: {}", assholeHasBall);
+    Common::logDebug("ballMovingFast: {}", ballMovingFast);
+    Common::logDebug("ownAttackHasBall: {}", ownAttackHasBall);
+    Common::logDebug("ballIsToGoal: {}", ballIsToGoal);
+    Common::logDebug("gkIntercepting: {}", gkIntercepting);
 
     if ((interceptNear) && (!assholeHasBall) && (!ballMovingFast) && (!ownAttackHasBall) && (!ballIsToGoal) &&
         (!gkIntercepting) && (!stop))
     //    if(1)
     {
-#if DEBUG_DEF
         Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");
-#endif
         ERRTSetObstacles(robot_num, 0, 1);
         // tech_circle(robot_num,Common::sign(Common::worldState().ball.position.y)*side*60 ,0,15,false);
         tech_circle(robot_num,
@@ -91,14 +86,10 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
 
 void Ai::DefBy1(int thelastdef_num, Common::Vec2 *defendTarget, bool stop)
 {
-#if DEBUG_DEF
     Common::logDebug("__________IN_DEF_BY_1_____________________________________________");
-#endif
     if (thelastdef_num != -1)
     {
-#if DEBUG_DEF
         Common::logDebug("1111111111111111111111111111111111111111111111111111111111");
-#endif
         Common::Angle alpha =
             Common::Vec2(side * Common::worldState().field.width, 0).angleWith(Common::worldState().ball.position) +
             Common::Angle::fromDeg(90 + side * 90);
@@ -124,9 +115,7 @@ void Ai::DefBy1(int thelastdef_num, Common::Vec2 *defendTarget, bool stop)
                 {
                     TARGET_BALL_IN_GOAL.y = -200.0;
                 }
-#if DEBUG_DEF
                 Common::logDebug("TARGET_BALL_IN_GOAL.y: {}", TARGET_BALL_IN_GOAL.y);
-#endif
                 Common::Line ball_line =
                     Common::Line::fromTwoPoints(Common::worldState().ball.position, TARGET_BALL_IN_GOAL);
                 Common::Line Front_line = Common::Line::fromPointAndAngle(
@@ -248,38 +237,6 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
         }
         else if (alpha.deg() < -3.5)
         {
-            //            Common::Line ball_line = Common::Line::fromTwoPoints(Common::worldState().ball.position,
-            //                                                         Common::Vec2(side *
-            //                                                         Common::worldState().field.width, 0.0));
-            //            Common::Line Front_line = Common::Line::fromPointAndAngle(
-            //                    Common::Vec2(side * (Common::worldState().field.width -
-            //                    Common::worldState().field.penalty_area_depth - 100), 0), 90.0);
-            //            Common::Vec2 ans = ball_line.intersect(Front_line).value_or(Common::Vec2());
-            //            Common::Vec2 target = Common::Vec2(ans.x, ans.y);
-            //            Common::Line GOAL_LINE = Common::Line::fromTwoPoints(Common::Vec2(side *
-            //            Common::worldState().field.width, 100.0),
-            //                                                         Common::Vec2(side *
-            //                                                         Common::worldState().field.width, -100.0));
-            //
-            //            Common::Vec2 TARGET_BALL_IN_GOAL =
-            //            GOAL_LINE.closestPoint(Common::worldState().ball.position);
-            //
-            //            if(TARGET_BALL_IN_GOAL.y > 300){
-            //                TARGET_BALL_IN_GOAL.y = 300.0);
-            //            }
-            //            if(TARGET_BALL_IN_GOAL.y < -300){
-            //                TARGET_BALL_IN_GOAL.y = -300.0);
-            //            }
-            //            std::cout<<"TARGET_BALL_IN_GOAL.y: "<<TARGET_BALL_IN_GOAL.y<<std::endl;
-            //            Common::Line ball_line = Common::Line::fromTwoPoints(Common::worldState().ball.position,
-            //                                                         TARGET_BALL_IN_GOAL);
-            //            Common::Line Front_line = Common::Line::fromPointAndAngle(
-            //                    Common::Vec2(side * (Common::worldState().field.width -
-            //                    Common::worldState().field.penalty_area_depth - 100), 0), 90.0);
-            //            Common::Vec2 ans = ball_line.intersect(Front_line).value_or(Common::Vec2());
-            //            Common::Vec2 target = Common::Vec2(ans.x, ans.y);
-            //
-            //            runningDef(rightdef_num, target, defendTarget, stop);
             if (Common::worldState().ball.velocity.length() < 200)
             {
                 Common::Line GOAL_LINE =
@@ -297,9 +254,7 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
                     TARGET_BALL_IN_GOAL.y = -200.0;
                 }
 
-#if DEBUG_DEF
                 Common::logDebug("TARGET_BALL_IN_GOAL.y: {}", TARGET_BALL_IN_GOAL.y);
-#endif
                 Common::Line ball_line =
                     Common::Line::fromTwoPoints(Common::worldState().ball.position, TARGET_BALL_IN_GOAL);
                 Common::Line Front_line = Common::Line::fromPointAndAngle(
@@ -589,9 +544,7 @@ void Ai::DefMid(int &middef_num, int &rightdef_num, int &leftdef_num, Common::Ve
         Common::Vec2(side * Common::worldState().field.width, 0).angleWith(Common::worldState().ball.position);
     alpha.setDeg(std::clamp(alpha.deg(), -90.0f, 90.0f));
     float alphaSgn = Common::sign(alpha.deg());
-#if DEBUG_DEF
     Common::logDebug("ALPHA: {}", alpha);
-#endif
 
     if (!defendTarget)
         defendTarget = &(Common::worldState().ball.position);
@@ -635,7 +588,5 @@ void Ai::DefMid(int &middef_num, int &rightdef_num, int &leftdef_num, Common::Ve
     {
         DefBy3(middef_num, rightdef_num, leftdef_num, defendTarget, stop);
     }
-
-    //    std::cout<<"the alpha: "<<alpha<<std::endl;
 }
 } // namespace Tyr::Soccer

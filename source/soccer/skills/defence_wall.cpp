@@ -10,29 +10,33 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
     {
         tetta = 14.0f;
     }
+    Common::logDebug("wall limit: {}", tetta);
 
     Common::Vec2 target;
 
-    // std::cout << "	wall limit: " << tetta << std::endl;
     int index = findKickerOpp(-1);
     if (index == -1)
     {
-        target = Common::worldState().ball.position.circleAroundPoint(Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)), 730);
+        target = Common::worldState().ball.position.circleAroundPoint(
+            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)),
+            730);
     }
     else
     {
         target = Common::worldState().opp_robot[index].position.pointOnConnectingLine(
-            Common::worldState().ball.position, 590 + Common::worldState().ball.position.distanceTo(Common::worldState().opp_robot[index].position));
+            Common::worldState().ball.position,
+            590 + Common::worldState().ball.position.distanceTo(Common::worldState().opp_robot[index].position));
     }
 
-    // std::cout << index << std::endl;
+    Common::logDebug("{}", index);
 
     Common::Angle ballAngle = Common::worldState().ball.position.angleWith(target);
-    Common::Angle firstLeg =
-        Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, Common::sign(Common::worldState().ball.position.y) * (350.0f)));
-    Common::Angle secLeg = firstLeg - Common::Angle::fromDeg(tetta * Common::sign(Common::worldState().ball.position.y) * side);
+    Common::Angle firstLeg  = Common::worldState().ball.position.angleWith(Common::Vec2(
+        side * Common::worldState().field.width, Common::sign(Common::worldState().ball.position.y) * (350.0f)));
+    Common::Angle secLeg =
+        firstLeg - Common::Angle::fromDeg(tetta * Common::sign(Common::worldState().ball.position.y) * side);
 
-    // std::cout << "	ball: " << ballAngle << "	f: " << firstLeg << "	s: " << secLeg << std::endl;
+    Common::logDebug("ball: {}    f: {}    s: {}", ballAngle, firstLeg, secLeg);
 
     bool isOut =
         false; // std::fabs((std::fabs(NormalizeAngle(ballAngle-firstLeg))+std::fabs(NormalizeAngle(ballAngle-secLeg)))
@@ -40,7 +44,9 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
 
     if (isOut)
     {
-        target = Common::worldState().ball.position.circleAroundPoint(Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)), 730);
+        target = Common::worldState().ball.position.circleAroundPoint(
+            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)),
+            730);
     }
 
     OwnRobot[robot_num].face(Common::worldState().ball.position);

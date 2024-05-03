@@ -21,9 +21,9 @@ class Timer
     std::chrono::high_resolution_clock::time_point tv1, tv2;
 
 public:
-    void   start();
-    void   end();
-    double time();
-    double interval();
+    void  start();
+    void  end();
+    float time();
+    float interval();
 };
 } // namespace Tyr::Common

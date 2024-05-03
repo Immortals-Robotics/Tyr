@@ -56,8 +56,6 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     stm2AInum[5] = &attack;
     stm2AInum[6] = &rw;
     stm2AInum[7] = &lw;
-    //    std::cout<<"THE GK_pointer: "<<&gk <<std::endl;
-    //    std::cout<<"THE GK_pointer: "<<stm2AInum[0] <<std::endl;
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
@@ -134,34 +132,30 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     read_playBook(strategy_path.c_str());
     if (playBook)
     {
-#if 1
         Common::logInfo("Strategy loaded with size {}", playBook->strategy_size());
-#else
-        std::cout << playBook->strategy_size() << " ";
-        std::cout << playBook->strategy(0).name() << std::endl;
+        Common::logDebug("{} {}", playBook->strategy_size(), playBook->strategy(0).name());
 
-        std::cout << playBook->strategy_size() << std::endl;
+        Common::logDebug("{}", playBook->strategy_size());
         for (int i = 0; i < playBook->strategy_size(); i++)
         {
-            std::cout << "	" << playBook->strategy(i).role_size() << std::endl;
+            Common::logDebug("    {}", playBook->strategy(i).role_size());
             for (int j = 0; j < playBook->strategy(i).role_size(); j++)
             {
-                std::cout << "		" << playBook->strategy(i).role(j).path_size() << std::endl;
+                Common::logDebug("        {}", playBook->strategy(i).role(j).path_size());
                 for (int k = 0; k < playBook->strategy(i).role(j).path_size(); k++)
                 {
-                    std::cout << "			" << playBook->strategy(i).role(j).path(k).type() << std::endl;
-                    std::cout << "				" << playBook->strategy(i).role(j).path(k).x() << "		"
-                              << playBook->strategy(i).role(j).path(k).y() << std::endl;
+                    Common::logDebug("            {}", (int) playBook->strategy(i).role(j).path(k).type());
+                    Common::logDebug("                {}        {}", playBook->strategy(i).role(j).path(k).x(),
+                                     playBook->strategy(i).role(j).path(k).y());
                 }
             }
         }
 
-        std::cout << playBook->weight_size() << std::endl;
+        Common::logDebug("{}", playBook->weight_size());
         for (int i = 0; i < playBook->weight_size(); i++)
         {
-            std::cout << "	" << playBook->weight(i) << std::endl;
+            Common::logDebug("    {}", playBook->weight(i));
         }
-#endif
     }
     else
     {

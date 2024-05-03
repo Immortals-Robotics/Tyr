@@ -34,18 +34,15 @@ void Ai::kickoff_us_chip()
     ERRTNavigate2Point(mid1, Common::Vec2(Common::worldState().ball.position.x + side * 150,
                                           -(Common::worldState().field.height - 300)));
     Common::Vec2 chip_target = Common::Vec2(-side * 2000, 0);
+
+    Common::logDebug("can kick ball: {}", Common::refereeState().canKickBall());
     if (Common::refereeState().canKickBall())
     {
         tech_circle(attack, chip_target.angleWith(Common::worldState().ball.position), 0, 80, 0, 1, 0, 1);
-        // circle_ball(attack, Common::Vec2::angleWith ( chip_target , Common::worldState().ball.position ), 100,
-        // 0, 1.0f);
-        std::cout << "IN THE IFFFFFFFF!!!" << std::endl;
     }
     else
     {
-        // tech_circle(attack,Common::Vec2::angleWith ( chip_target , Common::worldState().ball.position ),0,0,0,1,0,1);
         circle_ball(attack, chip_target.angleWith(Common::worldState().ball.position), 0, 0, 1.0f);
-        std::cout << "IN THE ELSE!!!" << std::endl;
     }
 }
 } // namespace Tyr::Soccer

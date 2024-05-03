@@ -143,7 +143,8 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
         Common::worldState().ball.position , Common::circleAroundPoint ( Common::worldState().ball.position , angle ,
         200.0f ) ); d -= 100;
 
-        //float d = Common::Vec2::distance ( OwnRobot[robot_num].state().position , Common::worldState().ball.position );
+        //float d = Common::Vec2::distance ( OwnRobot[robot_num].state().position , Common::worldState().ball.position
+        );
 
         d /= 2000.0f;
         //d = 0.0f;
@@ -204,7 +205,8 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     if (robotToBallDot > 0.3)
         passedBall = true;
     //}
-    // else if ( Common::Vec2::distance(Common::worldState().ball.position, OwnRobot[robot_num].state().position) > 750 )
+    // else if ( Common::Vec2::distance(Common::worldState().ball.position, OwnRobot[robot_num].state().position) > 750
+    // )
     else if ((robotToBallDot < -0.2) ||
              (Common::worldState().ball.position.distanceTo(OwnRobot[robot_num].state().position) > 1050))
         passedBall = false;
@@ -230,7 +232,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
         angle = wayp.angleWith(Common::worldState().ball.position);
     }
 
-    // std::cout << "circle dadam";
+    Common::logDebug("circle dadam");
 
     float r = 150.0f;
 
@@ -291,7 +293,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
 
             if (circleReachedBehindBall)
             {
-                // std::cout << "								reached	";
+                Common::logDebug("reached");
                 Common::Vec2 targetPoint;
                 if (!gameRestart)
                 {
@@ -305,11 +307,12 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
                 // Common::Line newLine = Common::Line::fromTwoPoints ( Common::Vec2 ( targetPoint.x , targetPoint.y ) ,
                 // Common::Vec2 ( OwnRobot[robot_num].state().position.x , OwnRobot[robot_num].state().position.y ) );
                 // Circle newCircle ( Common::Vec2 ( OwnRobot[robot_num].state().position.x ,
-                // OwnRobot[robot_num].state().position.y ) , Common::Vec2::distance(targetPoint, OwnRobot.state().position)
+                // OwnRobot[robot_num].state().position.y ) , Common::Vec2::distance(targetPoint,
+                // OwnRobot.state().position)
                 // * 2 );
                 if (1) //! gameRestart )
                 {
-                    // std::cout << "elendil: " << elendil;
+                    Common::logDebug("elendil: {}", elendil);
                     Common::Angle hehe2 = PredictedBall.angleWith(OwnRobot[robot_num].state().position);
                     hehe2               = angle - hehe2;
                     bool el =
@@ -374,7 +377,8 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
 
         hehe = PredictedBall.angleWith(OwnRobot[robot_num].state().position) +
                Common::Angle::fromDeg(Common::sign(hehe.deg()) * tetta);
-        // if ( Common::Vec2::distance ( OwnRobot[robot_num].state().position , Common::worldState().ball.position ) < 200
+        // if ( Common::Vec2::distance ( OwnRobot[robot_num].state().position , Common::worldState().ball.position ) <
+        // 200
         // )
         //	ERRTNavigate2Point ( robot_num , Common::circleAroundPoint ( PredictedBall , hehe , r ) , 0 , 20 );
         // else

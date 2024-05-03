@@ -102,14 +102,12 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
     ballIsToGoal = ballIsGoaling();
     ballIsToGoal = false;
 
-    //	std::cout << "interceptNear:	"<<interceptNear <<std::endl;
-    //    std::cout << "assholeHasBall: " << assholeHasBall<<std::endl;
-    //    std::cout << "ballMovingFast: " << ballMovingFast <<std::endl;
-    //    std::cout<<"ownAttackHasBall: " << ownAttackHasBall<<std::endl;
-    //    std::cout<< "ballMovingFast: " << ballMovingFast <<std::endl;
-    //    std::cout<< "ownAttackHasBall: " << ownAttackHasBall <<std::endl;
-    //    std::cout<< "ballIsToGoal: " << ballIsToGoal << std::endl;
-    //    std::cout<<"gkIntercepting: "<< gkIntercepting << std::endl;
+    Common::logDebug("interceptNear:{}", interceptNear);
+    Common::logDebug("assholeHasBall: {}", assholeHasBall);
+    Common::logDebug("ballMovingFast: {}", ballMovingFast);
+    Common::logDebug("ownAttackHasBall: {}", ownAttackHasBall);
+    Common::logDebug("ballIsToGoal: {}", ballIsToGoal);
+    Common::logDebug("gkIntercepting: {}", gkIntercepting);
 
     if ((false) && (ballAriving) && (oneTouchNear) && (!assholeNear) && (!assholeHasBall) && (!ballMovingFast) &&
         (!ownAttackHasBall) && (!ballIsToGoal))

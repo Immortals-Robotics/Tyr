@@ -33,7 +33,7 @@ void Ai::kickoff_their_one_wall()
         }
     }
 
-    std::cout << indexN << "	" << indexP << std::endl;
+    Common::logDebug("{}    {}", indexN, indexP);
 
     if (indexN != -1)
     {

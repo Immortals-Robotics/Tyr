@@ -11,7 +11,7 @@ Common::Vec2 Ai::CalculatePassPos(int robot_num, const Common::Vec2 &target, con
     if (chip_head.deg() < 180)
     {
         ball_line = Common::Line::fromPointAndAngle(Common::worldState().ball.position, chip_head);
-        std::cout << "	calcing with static head: " << chip_head.deg() << std::endl;
+        Common::logDebug("calcing with static head: {}", chip_head);
     }
 
     Common::Angle angleWithTarget = statPos.angleWith(target);
@@ -118,7 +118,7 @@ void Ai::WaitForPass(int robot_num, bool chip, const Common::Vec2 *target, Commo
             //                vel_delta = 44;
             //            }
             //            vel_delta = getCalibratedShootPowCPY(robot_num,60);
-            std::cout << "ball vel: " << vel_delta << std::endl;
+            Common::logDebug("ball vel: {}", vel_delta);
             OwnRobot[robot_num].Shoot(40);
         }
     }
