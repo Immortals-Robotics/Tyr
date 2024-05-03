@@ -26,7 +26,7 @@ Vision::Vision()
 
     if (!connect())
     {
-        std::cout << "Failed to connect to Vision UDP" << std::endl;
+        Common::logCritical("Failed to connect to Vision UDP");
     }
 }
 
@@ -34,7 +34,7 @@ void Vision::receive()
 {
     if (!isConnected())
     {
-        std::cout << "	Hey you! Put the LAN cable back in its socket, or ..." << std::endl;
+        Common::logCritical("Hey you! Put the LAN cable back in its socket, or ...");
         return;
     }
 
