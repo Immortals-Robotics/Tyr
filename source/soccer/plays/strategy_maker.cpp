@@ -12,7 +12,7 @@ bool Ai::read_playBook(const char *fileName)
     // get length of file:
     file.seekg(0, std::ios::end);
     size_t length = file.tellg();
-    std::cout << length << " ";
+    Common::logInfo("reading strategy file \"{}\" with size {}", fileName, length);
     file.seekg(0, std::ios::beg);
 
     // allocate memory:
@@ -79,7 +79,7 @@ void Ai::strategy_maker()
     int xSgn = side;
     int ySgn = Common::sign(-Common::worldState().ball.position.y);
 
-    // std::cout << timer.time() << std::endl;
+    Common::logDebug("timer: {}", timer.time());
     if (timer.time() < 0.5)
     {
         for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
@@ -87,7 +87,7 @@ void Ai::strategy_maker()
             // FOR NOW: advance to the last step
             step[i]    = std::max(0, strategy.role(i).path_size() - 2);
             lastAdv[i] = timer.time();
-            // std::cout << "zeroed: " << i << std::endl;
+            Common::logDebug("zeroed: {}", i);
         }
         Common::Angle passAngle = Common::Angle::fromDeg(90.0f - side * 90.0f);
         circle_ball(attack, passAngle, 0, 0, 1.0f);
@@ -104,7 +104,7 @@ void Ai::strategy_maker()
             {
                 step[i]    = strategy.role(i).path_size() - 1;
                 lastAdv[i] = timer.time();
-                // std::cout << "zeroed: " << i << std::endl;
+                Common::logDebug("zeroed: {}", i);
                 continue;
             }
 
@@ -114,7 +114,7 @@ void Ai::strategy_maker()
                 {
                     step[i]    = std::min(strategy.role(i).path_size() - 1, step[i] + 1);
                     lastAdv[i] = timer.time();
-                    // std::cout << "stepped: " << i << "	" << step[i] << std::endl;
+                    Common::logDebug("stepped: {}    {}", i, step[i]);
                 }
             }
             else
@@ -125,7 +125,7 @@ void Ai::strategy_maker()
                 {
                     step[i]    = std::min(strategy.role(i).path_size() - 1, step[i] + 1);
                     lastAdv[i] = timer.time();
-                    // std::cout << "stepped: " << i << "	" << step[i] << std::endl;
+                    Common::logDebug("stepped: {}    {}", i, step[i]);
                 }
             }
         }
@@ -166,19 +166,17 @@ void Ai::strategy_maker()
         {
             int shoot = 0;
             int chip  = 0;
-            std::cout << "ATTACK: ";
+
             if (strategy.role(i).path(step[i]).type() == 0)
             {
                 shoot = strategy.role(i).path(step[i]).tolerance();
-                std::cout << shoot << std::endl;
+                Common::logDebug("ATTACK: shoot: {}", shoot);
             }
             else
             {
                 chip = strategy.role(i).path(step[i]).tolerance();
-                std::cout << chip << std::endl;
+                Common::logDebug("ATTACK: chip:{}", chip);
             }
-
-            // std::cout << "	daram mirinam: " << shoot << "	" << chip << std::endl;
 
             if (step[i] == strategy.role(i).path_size() - 1 && recievers_reached && timer.time() > 3)
             {

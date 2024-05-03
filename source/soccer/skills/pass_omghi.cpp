@@ -9,7 +9,7 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
     if (chip_head.deg() < 180)
     {
         ball_line = Common::Line::fromPointAndAngle(Common::worldState().ball.position, chip_head);
-        std::cout << "	calcing with static head: " << chip_head.deg() << std::endl;
+        Common::logDebug("calcing with static head: {}", chip_head);
     }
     Common::Line to_goal_line = Common::Line::fromTwoPoints(
         Common::Vec2(OwnRobot[robot_num].state().position.x, OwnRobot[robot_num].state().position.y),
@@ -25,7 +25,7 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
     // sBAR /= 10.0;
     // sBAR /= 1500000;
 
-    std::cout << "old sBAR:	" << sBAR << "	";
+    Common::logDebug("old sBAR:    {}", sBAR);
     if (sBAR < 5)
         sBAR = 5;
     if (sBAR > 70)
@@ -42,7 +42,7 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
     target = CalculatePassPos(robot_num, Common::Vec2(-side * Common::worldState().field.width, 0),
                               OwnRobot[robot_num].state().position, -200);
 
-    std::cout << "sBAR:	" << sBAR << std::endl;
+    Common::logDebug("sBAR:    {}", sBAR);
     ERRTNavigate2Point(robot_num, target, sBAR, &VELOCITY_PROFILE_KHARAKI);
 
     OwnRobot[robot_num].Shoot(100);

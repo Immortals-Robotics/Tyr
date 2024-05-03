@@ -38,7 +38,7 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
 
     if (state == kVeryFar)
     {
-        std::cout << "STEPPPPP1" << std::endl;
+        Common::logDebug("STEPPPPP1");
         OwnRobot[robot_num].face(Common::worldState().ball.position);
         ERRTSetObstacles(robot_num, 0, 1);
         ERRTNavigate2Point(robot_num, Common::worldState().ball.position, 30, &VELOCITY_PROFILE_MAMOOLI);
@@ -53,7 +53,7 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
     }
     else if (state == kFar)
     {
-        std::cout << "STEPPPPP2" << std::endl;
+        Common::logDebug("STEPPPPP2");
         OwnRobot[robot_num].face(Common::worldState().ball.position);
         ERRTSetObstacles(robot_num, 0, 1);
         Common::Vec2 target_point = Common::worldState().ball.position.circleAroundPoint(
@@ -84,7 +84,7 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
     }
     else if (state == kNear)
     {
-        std::cout << "STEPPPPP3" << std::endl;
+        Common::logDebug("STEPPPPP3");
         Common::Angle toRobot    = Common::worldState().ball.position.angleWith(OwnRobot[robot_num].state().position);
         Common::Angle newToRobot = toRobot - tagret_angle;
         Common::Angle deltaAngle = Common::Angle::fromDeg(std::min(std::fabs(newToRobot.deg()), 30.0f));
@@ -129,7 +129,7 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
 
     else if (state == kKick)
     {
-        std::cout << "STEPPPPP4" << std::endl;
+        Common::logDebug("STEPPPPP4");
         if (chip_pow > 0)
         {
             chip_head = OwnRobot[robot_num].state().angle;

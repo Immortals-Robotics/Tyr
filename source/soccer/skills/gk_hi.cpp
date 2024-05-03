@@ -97,14 +97,6 @@ void Ai::GKHi(int robot_num, bool stop)
             OwnRobot[robot_num].face(Common::worldState().ball.position);
             ERRTSetObstacles(robot_num, stop, false);
             ERRTNavigate2Point(robot_num, target, 80, stop ? &VELOCITY_PROFILE_AROOM : &VELOCITY_PROFILE_MAMOOLI);
-
-            //			float R_robot = DIS(Common::Vec2(-Common::worldState().field.width,
-            // 0),OwnRobot[robot_num].state().position); 			float alpha_robot =
-            // AngleWith(Common::Vec2(-Common::worldState().field.width, 0),OwnRobot[robot_num].state().position);
-            //			alpha_robot = std::min(90, std::max(-90, alpha_robot));
-            //			std::cout<<"GOALIE teta: "<<alpha_robot<<std::endl;
-            //			std::cout<<"GOALIE R: "<<R_robot<<std::endl;
-            //			std::cout<<"______________________"<<std::endl;
         }
     }
     // side = -side;

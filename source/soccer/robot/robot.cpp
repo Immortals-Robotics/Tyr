@@ -232,15 +232,13 @@ Common::Vec3 Robot::ComputeMotionCommand(float speed, const VelocityProfile &vel
 
         if (std::fabs(motion.y) > std::fabs(oldAns[state().vision_id].y))
             if (std::fabs(motion.y - oldAns[state().vision_id].y) > max_acc.y * 1.1)
-                std::cout << "	gaz nade	" << max_acc.y << "		<	"
-                          << std::fabs(motion.y - oldAns[state().vision_id].y);
+                Common::logDebug("    gaz nade    {}        <    {}", max_acc.y,
+                                 std::fabs(motion.y - oldAns[state().vision_id].y));
 
         if (std::fabs(motion.y) < std::fabs(oldAns[state().vision_id].y))
             if (std::fabs(motion.y - oldAns[state().vision_id].y) > max_dec.y * 1.1)
-                std::cout << "	tormoz nakon	" << max_dec.y << "		<	"
-                          << std::fabs(motion.y - oldAns[state().vision_id].y);
-
-        std::cout << std::endl;
+                Common::logDebug("    tormoz nakon    {}        <    ", max_dec.y,
+                                 std::fabs(motion.y - oldAns[state().vision_id].y));
     }
 
     oldAns[state().vision_id] = motion;
