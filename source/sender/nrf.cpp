@@ -67,29 +67,24 @@ void Nrf::appendData(unsigned char *data, int length)
 
 bool Nrf::flush()
 {
-    append_demo_data();
-
     if (startup > 0)
     {
         startup--;
         return false;
     }
 
-    if (commUDP->send(buff_idx, Common::NetworkAddress{Common::setting().sender_address.ip,
-                                                       Common::setting().sender_address.port}))
+    append_demo_data();
+
+    const bool result = commUDP->send(
+        buff_idx, Common::NetworkAddress{Common::setting().sender_address.ip, Common::setting().sender_address.port});
+
+    if (!result)
     {
-        buff_idx = 0;
-        return true;
-    }
-    else
-    {
-        std::cout << "ERROR: failed to send robot packets." << std::endl;
-        buff_idx = 0;
-        return false;
+        Common::logError("ERROR: failed to send robot packets.");
     }
 
     buff_idx = 0;
-    return true;
+    return result;
 }
 
 Nrf::Nrf()
