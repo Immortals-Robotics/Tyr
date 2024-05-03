@@ -55,11 +55,12 @@ void Application::init(const int width, const int height)
     ssl_field.set_penalty_area_depth(1800);
     ssl_field.set_penalty_area_width(3600);
 
-    udp_client = std::make_unique<Common::UdpClient>(Common::NetworkAddress{"224.5.23.2", 10006});
-
+    udp_client          = std::make_unique<Common::UdpClient>(Common::setting().vision_address);
+    udp_client_drawings = std::make_unique<Common::UdpClient>(Common::NetworkAddress{"127.0.0.1", 10066});
     renderer->init();
 
-    vision_thread = std::thread(&Application::receiveVision, this);
+    vision_thread  = std::thread(&Application::receiveVision, this);
+    drawing_thread = std::thread(&Application::receiveDrawings, this);
 }
 
 int Application::shutdown()
@@ -68,6 +69,7 @@ int Application::shutdown()
 
     running = false;
     vision_thread.join();
+    drawing_thread.join();
 
     rlImGuiShutdown();
 
@@ -111,6 +113,12 @@ void Application::update()
             udp_client->Update(updated_address);
         }
         vision_mutex.unlock();
+        drawing_mutex.lock();
+        renderer->drawCirclesUdp(debug_packet.dbg_draw().circle());
+        renderer->drawRectsUdp(debug_packet.dbg_draw().rect());
+        renderer->drawPointsUdp(debug_packet.dbg_draw().point());
+        renderer->drawLinesUdp(debug_packet.dbg_draw().line());
+        drawing_mutex.unlock();
 
         renderer->applyShader();
         rlImGuiImageRenderTextureFit(&renderer->shaderVisualizationTexture, true);
@@ -153,6 +161,25 @@ void Application::receiveVision()
         vision_mutex.lock();
         std::swap(ssl_packet, ssl_packet_off);
         vision_mutex.unlock();
+    }
+};
+
+void Application::receiveDrawings()
+{
+    Protos::Immortals::Imm_DBG_wrapper tmp_drawing_packet;
+    while (running)
+    {
+        udp_client_drawings->receive(&tmp_drawing_packet);
+        if (tmp_drawing_packet.has_dbg_draw())
+        {
+            auto draw = tmp_drawing_packet.dbg_draw();
+            // Common::logDebug("draw darim");
+            debug_packet_off.clear_dbg_draw();
+            debug_packet_off.mutable_dbg_draw()->CopyFrom(draw);
+        }
+        drawing_mutex.lock();
+        std::swap(debug_packet, debug_packet_off);
+        drawing_mutex.unlock();
     }
 };
 

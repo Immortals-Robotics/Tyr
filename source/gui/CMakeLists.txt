@@ -18,6 +18,7 @@ set(SOURCE_FILES
 	renderer/renderer_ball.cpp
 	renderer/renderer_robot.cpp
 	renderer/renderer.cpp
+	renderer/renderer_drawudp.cpp
 )
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})

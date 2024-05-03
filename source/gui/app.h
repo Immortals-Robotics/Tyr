@@ -15,22 +15,27 @@ public:
     bool shouldClose() const;
 
 private:
-    Protos::SSL_GeometryFieldSize ssl_field;
-    Protos::SSL_WrapperPacket     ssl_packet;
-    Protos::SSL_WrapperPacket     ssl_packet_off;
-    Protos::Immortals::Debug_Draw world_state;
-    Protos::Immortals::Debug_Draw world_state_off;
+    Protos::SSL_GeometryFieldSize      ssl_field;
+    Protos::SSL_WrapperPacket          ssl_packet;
+    Protos::SSL_WrapperPacket          ssl_packet_off;
+    Protos::Immortals::Imm_DBG_wrapper debug_packet;
+    Protos::Immortals::Imm_DBG_wrapper debug_packet_off;
 
     std::unique_ptr<Renderer>   renderer;
     std::unique_ptr<ConfigMenu> config_menu;
 
     std::unique_ptr<Common::UdpClient> udp_client;
-    Common::NetworkAddress             updated_address;
+    std::unique_ptr<Common::UdpClient> udp_client_drawings;
+
+    Common::NetworkAddress updated_address;
 
     std::mutex        vision_mutex;
     std::thread       vision_thread;
+    std::mutex        drawing_mutex;
+    std::thread       drawing_thread;
     std::atomic<bool> running = true;
 
     void receiveVision();
+    void receiveDrawings();
 };
 } // namespace Tyr::Gui
