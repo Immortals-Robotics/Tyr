@@ -144,8 +144,8 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
                 Common::logDebug("        {}", playBook->strategy(i).role(j).path_size());
                 for (int k = 0; k < playBook->strategy(i).role(j).path_size(); k++)
                 {
-                    Common::logDebug("............{}", (int) playBook->strategy(i).role(j).path(k).type());
-                    Common::logDebug("................{}........{}", playBook->strategy(i).role(j).path(k).x(),
+                    Common::logDebug("            {}", (int) playBook->strategy(i).role(j).path(k).type());
+                    Common::logDebug("                {}        {}", playBook->strategy(i).role(j).path(k).x(),
                                      playBook->strategy(i).role(j).path(k).y());
                 }
             }
@@ -154,7 +154,7 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
         Common::logDebug("{}", playBook->weight_size());
         for (int i = 0; i < playBook->weight_size(); i++)
         {
-            Common::logDebug("....{}", playBook->weight(i));
+            Common::logDebug("    {}", playBook->weight(i));
         }
     }
     else

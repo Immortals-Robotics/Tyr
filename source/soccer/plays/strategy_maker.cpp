@@ -44,11 +44,11 @@ bool Ai::read_playBook_str(std::span<char> buffer)
         return false;
     }
 
-    for (const auto strategy : playBook->strategy())
-        Common::logInfo("STRATEGY: {}", strategy.name());
-
-    for (const auto weight : playBook->weight())
-        Common::logInfo("Weight: {}", weight);
+    for (int strategy_idx = 0; strategy_idx < playBook->strategy_size(); ++strategy_idx)
+    {
+        Common::logInfo("STRATEGY: {}, weight: {}", playBook->strategy(strategy_idx).name(),
+                        playBook->weight(strategy_idx));
+    }
 
     return true;
 }
