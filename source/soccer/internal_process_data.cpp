@@ -8,7 +8,6 @@ void Ai::internalProcessData()
         ballHist.push_back(Common::worldState().ball);
     if (ballHist.size() > maxBallHist)
         ballHist.pop_front();
-    // debugDraw = true;
     calculateBallTrajectory();
     debugDraw = false;
 
@@ -44,7 +43,6 @@ void Ai::internalProcessData()
                 }
             }
         }
-        // std::cout << OwnRobot[i].vision_id << "	";
 
         OwnRobot[i].shoot    = 0;
         OwnRobot[i].dribbler = 0;
@@ -52,7 +50,6 @@ void Ai::internalProcessData()
         OwnRobot[i].chip     = 0;
         navigated[i]         = false;
     }
-    // std::cout << std::endl;
 
     if (Common::setting().our_side == Common::TeamSide::Right)
         side = 1;

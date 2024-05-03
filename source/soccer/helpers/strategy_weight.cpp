@@ -6,35 +6,37 @@ int Ai::strategy_weight()
 {
     if (!playBook)
     {
-        std::cout << "strategy_weight__+:  444" << std::endl;
+        Common::logError("strategy_weight__+:  444");
         return -1;
     }
 
     if (playBook->strategy_size() == 0)
     {
-        std::cout << "strategy_weight__+:  555" << std::endl;
+        Common::logWarning("strategy_weight__+:  555");
         return -1;
     }
-    std::cout << "strategy_weight__+:  333" << std::endl;
+
+    Common::logDebug("strategy_weight__+:  333");
 
     std::map<int, float> good_strs;
 
     float sigma_w = 0;
 
-    std::cout << "	strategy:	";
+    Common::logDebug("strategy:");
     for (int i = 0; i < playBook->strategy_size(); i++)
     {
         if ((side * Common::worldState().ball.position.x > playBook->strategy(i).minx()) &&
             (side * Common::worldState().ball.position.x < playBook->strategy(i).maxx()) &&
             (std::fabs(Common::worldState().ball.position.y) > playBook->strategy(i).miny()) &&
-            (std::fabs(Common::worldState().ball.position.y) < playBook->strategy(i).maxy()) && (playBook->weight(i) > 0))
+            (std::fabs(Common::worldState().ball.position.y) < playBook->strategy(i).maxy()) &&
+            (playBook->weight(i) > 0))
         {
-            std::cout << i << "|" << playBook->weight(i) << "	";
+            Common::logDebug("{}|{}    ", i, playBook->weight(i));
+
             good_strs[i] = sigma_w + playBook->weight(i);
             sigma_w += playBook->weight(i);
         }
     }
-    std::cout << std::endl;
 
     if (sigma_w == 0)
     {

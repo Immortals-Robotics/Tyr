@@ -12,7 +12,8 @@ void Ai::Process()
 
     debugDraw = true;
     Common::debug().drawCircle(Common::worldState().ball.position, 40, "", Common::Red);
-    //	Common::debug().drawLineSegment(Common::worldState().ball.position,Common::Vec2(Common::worldState().ball.velocity.x,Common::worldState().ball.velocity.y) + Common::worldState().ball.position,
+    //	Common::debug().drawLineSegment(Common::worldState().ball.position,Common::Vec2(Common::worldState().ball.velocity.x,Common::worldState().ball.velocity.y)
+    //+ Common::worldState().ball.position,
     // Black);
 
     debugDraw = false;
@@ -59,7 +60,7 @@ void Ai::Process()
         {
             currentPlay = "throwin_chip_shoot";
         }
-        std::cout << currentPlay << std::endl;
+        Common::logDebug("free-kick play: {}", currentPlay);
     }
     else if (Common::refereeState().ourPenaltyKick())
     {
@@ -103,15 +104,12 @@ void Ai::Process()
         oppRestarted = true;
     }
 
-    //	currentPlay = "penalty_our_Shoot_Out";
-    //	currentPlay = "NewNormalPlay";
-
     if (AIPlayBook.find(currentPlay) != AIPlayBook.end())
         (this->*AIPlayBook[currentPlay])();
     else
     {
         HaltAll();
-        // std::cout<<"Oh NO!!!"<<std::endl;
+        Common::logWarning("Oh NO!!!");
     }
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)

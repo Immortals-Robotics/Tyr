@@ -26,16 +26,16 @@ void Timer::end()
     tv2 = std::chrono::high_resolution_clock::now();
 }
 
-double Timer::time()
+float Timer::time()
 {
     end();
-    const auto time_span = std::chrono::duration_cast<std::chrono::duration<double>>(tv2 - tv1);
+    const auto time_span = std::chrono::duration_cast<std::chrono::duration<float>>(tv2 - tv1);
     return time_span.count();
 }
 
-double Timer::interval()
+float Timer::interval()
 {
-    double t;
+    float t;
     //	tv2 = high_resolution_clock::now();
     t   = time();
     tv1 = tv2;

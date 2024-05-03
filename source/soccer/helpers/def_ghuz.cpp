@@ -108,8 +108,6 @@ Common::Vec2 Ai::DefGhuz(Common::Vec2 *defendTarget)
 
     target += tetta.toUnitVec() * R;
 
-    // std::cout << "	alpha: " << alpha << "	tetta: " << tetta << "		d: " << d << "	R: " << R << std::endl;
-
     if (side == 1)
     {
         Common::worldState().ball.position *= -1.0f;
