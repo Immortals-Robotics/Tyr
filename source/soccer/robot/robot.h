@@ -15,10 +15,10 @@ public:
     int                vision_id;
     bool               halted;
 
-    Sender::Command lastCMDs[11];
-    int             last_cmd_idx = 0;
+    Common::Vec3 last_motions[11];
 
-    int CMDindex;
+    int last_motion_idx = 0;
+    int motion_idx;
 
     Robot();
 
@@ -41,8 +41,9 @@ public:
 
     Common::Vec3 ComputeMotionCommand(float speed, const VelocityProfile &velocityProfile);
 
+    Common::Vec3    GetCurrentMotion() const;
     Sender::Command GetCurrentCommand() const;
 
-    void makeSendingDataReady();
+    void makeSendingDataReady(const Sender::Command &command);
 };
 } // namespace Tyr::Soccer

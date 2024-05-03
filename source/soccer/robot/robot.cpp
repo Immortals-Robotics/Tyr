@@ -53,16 +53,17 @@ float getCalibratedShootPow(int vision_id, float raw_shoot, float coeffs[Common:
 
 Robot::Robot()
 {
-    CMDindex = 0;
+    motion_idx = 0;
     for (int i = 0; i < 10; i++)
-        lastCMDs[i] = Sender::Command();
+        last_motions[i] = Common::Vec3();
 
     shoot    = 0;
     chip     = 0;
     dribbler = 0;
     halted   = false;
-    data[0]  = 1;
-    data[9]  = 200;
+
+    data[0] = 1;
+    data[9] = 200;
 }
 
 void Robot::setVisionId(unsigned short v_id)
@@ -255,33 +256,27 @@ Common::Vec3 Robot::ComputeMotionCommand(float speed, const VelocityProfile &vel
 
 void Robot::MoveByMotion(Common::Vec3 motion)
 {
-    motion.x = std::min(100.0f, std::max(-100.0f, motion.x));
-    motion.y = std::min(100.0f, std::max(-100.0f, motion.y));
-    // motion.x=0;
+    motion.x = std::clamp(motion.x, -100.0f, 100.0f);
+    motion.y = std::clamp(motion.y, -100.0f, 100.0f);
 
-    Sender::Command &command = lastCMDs[CMDindex];
-    command.vision_id        = vision_id;
-    command.motion           = motion;
-    command.current_angle    = state().angle;
-    command.target_angle     = target.angle;
+    last_motions[motion_idx] = motion;
 
-    last_cmd_idx = CMDindex;
+    last_motion_idx = motion_idx;
+    motion_idx++;
+    if (motion_idx > PREDICT_CMDS - 1)
+        motion_idx = 0;
+}
 
-    CMDindex++;
-    if (CMDindex > PREDICT_CMDS - 1)
-        CMDindex = 0;
-
+void Robot::makeSendingDataReady(const Sender::Command &command)
+{
+    Common::Vec3 motion = command.motion;
     motion.x *= 2.55;
     motion.y *= 2.55;
     convert_float_to_2x_buff(data + 3, motion.x);
     convert_float_to_2x_buff(data + 5, motion.y);
-    convert_float_to_2x_buff(data + 7, target.angle.deg());
-}
+    convert_float_to_2x_buff(data + 7, command.target_angle.deg());
 
-void Robot::makeSendingDataReady()
-{
-
-    data[0] = this->vision_id;
+    data[0] = command.vision_id;
     if (halted)
     {
         data[1] = 0x0A; // length=10
@@ -299,16 +294,16 @@ void Robot::makeSendingDataReady()
         data[1] = 15; // length=10
         data[2] = 12; // Command to move with new protocol
 
-        convert_float_to_2x_buff(data + 9, state().angle.deg());
-        if (shoot > 0)
+        convert_float_to_2x_buff(data + 9, command.current_angle.deg());
+        if (command.shoot > 0)
         {
-            data[11] = shoot;
+            data[11] = command.shoot;
             data[12] = 0x00;
         }
-        else if (chip > 0)
+        else if (command.chip > 0)
         {
             data[11] = 0x00;
-            data[12] = chip;
+            data[12] = command.chip;
         }
         else
         {
@@ -318,8 +313,19 @@ void Robot::makeSendingDataReady()
     }
 }
 
+Common::Vec3 Robot::GetCurrentMotion() const
+{
+    return last_motions[last_motion_idx];
+}
+
 Sender::Command Robot::GetCurrentCommand() const
 {
-    return lastCMDs[last_cmd_idx];
+    return {.vision_id     = vision_id,
+            .motion        = GetCurrentMotion(),
+            .current_angle = state().angle,
+            .target_angle  = target.angle,
+            .shoot         = shoot,
+            .chip          = chip,
+            .dribbler      = dribbler};
 }
 } // namespace Tyr::Soccer
