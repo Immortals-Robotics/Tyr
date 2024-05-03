@@ -59,7 +59,8 @@ void Ai::recievePass(int robot_num, Common::Vec2 staticPos, bool chip)
     OwnRobot[robot_num].State.position)<450)&&(timer.time()<4.0))
     {
         int targetRobotNum = (robot_num==lmf)?rmf:lmf;
-        float passAngle = AngleWith ( Common::Vec2 ( -side*2500 , -sgn ( Common::worldState().ball.position.y ) * 1700 ) , Common::worldState().ball.position );
+        float passAngle = AngleWith ( Common::Vec2 ( -side*2500 , -sgn ( Common::worldState().ball.position.y ) * 1700 )
+    , Common::worldState().ball.position );
         //float passAngle = AngleWith ( OwnRobot[targetRobotNum].State.position , Common::worldState().ball.position );
         //tech_circle(robot_num, passAngle, 0, 120, 1, 1, 0, 1);
         circle_ball(robot_num, passAngle, 0, 80, 1.0f);
@@ -89,7 +90,7 @@ void Ai::recievePass(int robot_num, Common::Vec2 staticPos, bool chip)
             ERRTSetObstacles(robot_num, false, true);
             OwnRobot[robot_num].face(Common::Vec2(-side * Common::worldState().field.width, 0));
             // OwnRobot[robot_num].target.angle=-90;
-            ERRTNavigate2Point(robot_num, staticPos, 0, 100, &VELOCITY_PROFILE_MAMOOLI);
+            ERRTNavigate2Point(robot_num, staticPos, 100, &VELOCITY_PROFILE_MAMOOLI);
         }
     }
     else
@@ -102,7 +103,7 @@ void Ai::recievePass(int robot_num, Common::Vec2 staticPos, bool chip)
         ERRTSetObstacles(robot_num, true, true);
         OwnRobot[robot_num].face(Common::Vec2(-side * Common::worldState().field.width, 0));
         // OwnRobot[robot_num].target.angle=-90;
-        ERRTNavigate2Point(robot_num, staticPos, 0, 100, &VELOCITY_PROFILE_MAMOOLI);
+        ERRTNavigate2Point(robot_num, staticPos, 100, &VELOCITY_PROFILE_MAMOOLI);
     }
 }
 } // namespace Tyr::Soccer

@@ -2,8 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, bool accurate, int speed, VelocityProfile *velocityProfile,
-                        bool use_dss)
+void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, int speed, VelocityProfile *velocityProfile, bool use_dss)
 {
     OwnRobot[robot_num].target.position.x = dest.x;
     OwnRobot[robot_num].target.position.y = dest.y;
@@ -11,7 +10,7 @@ void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, bool accurate, int spe
     if (velocityProfile == nullptr)
         velocityProfile = &this->VELOCITY_PROFILE_MAMOOLI;
 
-    Common::Vec3 motion_cmd = OwnRobot[robot_num].ComputeMotionCommand(accurate, speed, velocityProfile);
+    Common::Vec3 motion_cmd = OwnRobot[robot_num].ComputeMotionCommand(speed, *velocityProfile);
 
     if (use_dss)
     {
@@ -29,8 +28,7 @@ void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, bool accurate, int spe
     navigated[robot_num] = true;
 }
 
-void Ai::ERRTNavigate2Point(int robot_num, Common::Vec2 dest, bool accurate, int speed,
-                            VelocityProfile *velocityProfile)
+void Ai::ERRTNavigate2Point(int robot_num, Common::Vec2 dest, int speed, VelocityProfile *velocityProfile)
 {
     // Navigate2Point(robot_num, dest,accurate,speed,velocityProfile);
     // return;
@@ -54,7 +52,7 @@ void Ai::ERRTNavigate2Point(int robot_num, Common::Vec2 dest, bool accurate, int
         }
 
         // if ( planner[robot_num].getWayPointNum ( ) <= 2 )
-        Navigate2Point(robot_num, wayp, accurate, speed, velocityProfile, true);
+        Navigate2Point(robot_num, wayp, speed, velocityProfile, true);
         // else
         //	Navigate2Point ( robot_num , wayp , false , speed , velocityProfile );
         // Navigate2Point ( robot_num , dest , accurate , speed );

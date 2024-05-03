@@ -30,8 +30,8 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
 
     ballAriving = oneTouchDetector[robot_num].IsArriving(40, 80);
 
-    Common::Vec2 oneTouchPos =
-        CalculatePassPos(robot_num, Common::Vec2(-side * Common::worldState().field.width, 0), OwnRobot[robot_num].State.position);
+    Common::Vec2 oneTouchPos = CalculatePassPos(robot_num, Common::Vec2(-side * Common::worldState().field.width, 0),
+                                                OwnRobot[robot_num].State.position);
 
     if (oneTouchPos.distanceTo(target) < max_def_move_to_intercept)
     {
@@ -44,19 +44,21 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
     }
 
     int nearestAsshole = findNearestAsshole(target, -1, true);
-    assholeNear        = Common::worldState().opp_robot[nearestAsshole].position.distanceTo(target) < max_near_asshole_dis;
+    assholeNear = Common::worldState().opp_robot[nearestAsshole].position.distanceTo(target) < max_near_asshole_dis;
 
     int ballHandlerAsshole = findNearestAsshole(Common::worldState().ball.position, -1, true);
-    assholeHasBall = Common::worldState().opp_robot[ballHandlerAsshole].position.distanceTo(Common::worldState().ball.position) < max_ball_handler_asshole_dis;
+    assholeHasBall         = Common::worldState().opp_robot[ballHandlerAsshole].position.distanceTo(
+                         Common::worldState().ball.position) < max_ball_handler_asshole_dis;
 
-    oppGoalOpen = true;
-    Common::Line ballGoalLine =
-        Common::Line::fromTwoPoints(Common::Vec2(-Common::worldState().field.width * side, 0), Common::Vec2(target.x, target.y));
+    oppGoalOpen               = true;
+    Common::Line ballGoalLine = Common::Line::fromTwoPoints(Common::Vec2(-Common::worldState().field.width * side, 0),
+                                                            Common::Vec2(target.x, target.y));
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (Common::worldState().opp_robot[i].seen_state == Common::SeenState::CompletelyOut)
             continue;
-        if ((std::fabs(Common::worldState().opp_robot[i].position.x) > Common::worldState().field.width) || (std::fabs(Common::worldState().opp_robot[i].position.y) > Common::worldState().field.height))
+        if ((std::fabs(Common::worldState().opp_robot[i].position.x) > Common::worldState().field.width) ||
+            (std::fabs(Common::worldState().opp_robot[i].position.y) > Common::worldState().field.height))
             continue;
         if (Common::worldState().opp_robot[i].position.distanceTo(target) > max_shoot_blocker_dis)
             continue;
@@ -90,7 +92,8 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
 
     ballMovingFast = Common::worldState().ball.velocity.length() > max_fast_ball_spd;
 
-    ownAttackHasBall = OwnRobot[attack].State.position.distanceTo(Common::worldState().ball.position) < max_own_attacker_dis;
+    ownAttackHasBall =
+        OwnRobot[attack].State.position.distanceTo(Common::worldState().ball.position) < max_own_attacker_dis;
     if (OwnRobot[attack].State.seen_state == Common::SeenState::CompletelyOut)
     {
         ownAttackHasBall = false;
@@ -118,14 +121,16 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
     {
         ERRTSetObstacles(robot_num, 0, 1);
         // tech_circle(robot_num,Common::sign(Common::worldState().ball.position.y)*side*60 ,0,15,false);
-        tech_circle(robot_num, Common::worldState().ball.position.angleWith(Common::Vec2(side * (Common::worldState().field.width + 110), 0)), 0, 500, true, 0, 0,
-                    0);
+        tech_circle(robot_num,
+                    Common::worldState().ball.position.angleWith(
+                        Common::Vec2(side * (Common::worldState().field.width + 110), 0)),
+                    0, 500, true, 0, 0, 0);
     }
     else
     {
         ERRTSetObstacles(robot_num, stop, true);
         OwnRobot[robot_num].face(Common::Vec2((*defendTarget).x, (*defendTarget).y));
-        ERRTNavigate2Point(robot_num, target, 0, 100, stop ? &VELOCITY_PROFILE_AROOM : &VELOCITY_PROFILE_MAMOOLI);
+        ERRTNavigate2Point(robot_num, target, 100, stop ? &VELOCITY_PROFILE_AROOM : &VELOCITY_PROFILE_MAMOOLI);
     }
     // side = -side;
 }

@@ -243,7 +243,7 @@ void Ai::strategy_maker()
                 ERRTNavigate2Point(
                     *stm2AInum[i],
                     Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn),
-                    0, strategy.role(i).path(step[i]).speed(), profile);
+                    strategy.role(i).path(step[i]).speed(), profile);
             }
             else
             {

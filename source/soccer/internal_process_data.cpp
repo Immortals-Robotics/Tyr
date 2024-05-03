@@ -48,9 +48,6 @@ void Ai::internalProcessData()
         // std::cout << OwnRobot[i].vision_id << "	";
 
         OwnRobot[i].set_serial_id(OwnRobot[i].vision_id);
-        // OwnRobot[i].oldRobot = true;
-        // if ( ( i != gk ) && ( i != def1 ) )
-        // OwnRobot[i].oldRobot = false;
 
         OwnRobot[i].shoot    = 0;
         OwnRobot[i].dribbler = 0;
@@ -58,16 +55,6 @@ void Ai::internalProcessData()
         OwnRobot[i].chip     = 0;
         OwnRobot[i].Break    = 0;
         navigated[i]         = false;
-
-        // if ((OwnRobot[i].vision_id==7)||(OwnRobot[i].vision_id==4)||(OwnRobot[i].vision_id==0)) {
-        //	OwnRobot[i].oldRobot = true;
-        // }
-        // if (OwnRobot[i].vision_id==10) {
-        //	OwnRobot[i].oldRobot = true;
-        // }
-        // OwnRobot[def].oldRobot = true;
-        // if(i==passgir)
-        //	OwnRobot[i].oldRobot = true;
     }
     // std::cout << std::endl;
 

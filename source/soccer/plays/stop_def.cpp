@@ -36,21 +36,23 @@ void Ai::Stop_def()
 
     ERRTSetObstacles(dmf, true, true);
     OwnRobot[dmf].face(Common::worldState().ball.position);
-    ERRTNavigate2Point(dmf, static_pos[dmf], 0, 40, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(dmf, static_pos[dmf], 40, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(mid1, true, true);
     OwnRobot[mid1].face(Common::worldState().ball.position);
-    ERRTNavigate2Point(mid1, static_pos[mid1], 0, 40, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(mid1, static_pos[mid1], 40, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(mid2, true, true);
     OwnRobot[mid2].face(Common::worldState().ball.position);
-    ERRTNavigate2Point(mid2, static_pos[mid2], 0, 40, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(mid2, static_pos[mid2], 40, &VELOCITY_PROFILE_AROOM);
 
     ERRTSetObstacles(attack, true, true);
     OwnRobot[attack].face(Common::worldState().ball.position);
-    ERRTNavigate2Point(attack,
-                       Common::worldState().ball.position
-                           .circleAroundPoint(Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)), 580),
-                       0, 40, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(
+        attack,
+        Common::worldState().ball.position.circleAroundPoint(
+            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)),
+            580),
+        40, &VELOCITY_PROFILE_AROOM);
 }
 } // namespace Tyr::Soccer

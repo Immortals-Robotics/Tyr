@@ -134,9 +134,9 @@ private:
     bool requiredRobots[Common::Setting::kMaxOnFieldTeamRobots];
 
     // Skills
-    void Navigate2Point(int robot_num, Common::Vec2 dest, bool accurate = false, int speed = 80,
+    void Navigate2Point(int robot_num, Common::Vec2 dest, int speed = 80,
                         VelocityProfile *velocityProfile = nullptr, bool use_dss = false);
-    void ERRTNavigate2Point(int robot_num, Common::Vec2 dest, bool accurate = false, int speed = 80,
+    void ERRTNavigate2Point(int robot_num, Common::Vec2 dest, int speed = 80,
                             VelocityProfile *velocityProfile = nullptr);
     void ERRTSetObstacles(int robot_num, bool bll = false, bool field = true);
     void ERRTSetGkClearObstacles(int robot_num);

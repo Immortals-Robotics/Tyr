@@ -30,22 +30,24 @@ void Ai::NormalPlayDef()
                 if (own == dmf)
                 {
                     ERRTNavigate2Point(dmf,
-                                       Common::worldState().ball.position.pointOnConnectingLine(Common::Vec2(side * Common::worldState().field.width, 0), 1800),
-                                       0, 100, &VELOCITY_PROFILE_MAMOOLI);
+                                       Common::worldState().ball.position.pointOnConnectingLine(
+                                           Common::Vec2(side * Common::worldState().field.width, 0), 1800),
+                                       100, &VELOCITY_PROFILE_MAMOOLI);
                 }
                 else if (own == mid1)
                 {
                     if (oppAttacker != -1)
                         Mark2Goal(own, oppAttacker, 500);
                     else
-                        ERRTNavigate2Point(own, Common::Vec2(Common::worldState().ball.position.x, 1000), 0, 100, &VELOCITY_PROFILE_MAMOOLI);
+                        ERRTNavigate2Point(own, Common::Vec2(Common::worldState().ball.position.x, 1000), 100,
+                                           &VELOCITY_PROFILE_MAMOOLI);
                 }
                 else if (own == mid2)
                 {
                     if (oppAttacker != -1)
                         Mark2Goal(own, oppAttacker, 500);
                     else
-                        ERRTNavigate2Point(own, Common::Vec2(Common::worldState().ball.position.x, -1000), 0, 100,
+                        ERRTNavigate2Point(own, Common::Vec2(Common::worldState().ball.position.x, -1000), 100,
                                            &VELOCITY_PROFILE_MAMOOLI);
                 }
             }
@@ -86,9 +88,10 @@ void Ai::NormalPlayDef()
 #if 1
     if (attackFuckingAngle() && kicker_opp != -1)
     {
-        shootAngle = Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0));
-        shoot_pow  = 1;
-        chip_pow   = 0;
+        shootAngle =
+            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0));
+        shoot_pow = 1;
+        chip_pow  = 0;
     }
 #endif
 

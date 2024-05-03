@@ -17,7 +17,7 @@ void Ai::NormalPlayAtt()
         ERRTSetObstacles(attack, false, true);
         OwnRobot[attack].face(Common::Vec2(-side * Common::worldState().field.width, 0));
         // OwnRobot[robot_num].target.angle=-90;
-        ERRTNavigate2Point(attack, allafPos[attack], 0, 100, &VELOCITY_PROFILE_MAMOOLI);
+        ERRTNavigate2Point(attack, allafPos[attack], 100, &VELOCITY_PROFILE_MAMOOLI);
         if (timer.time() > 2.5)
         {
             oneTouchType[attack] = oneTouch;

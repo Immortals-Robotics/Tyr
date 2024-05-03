@@ -8,12 +8,7 @@ namespace Tyr::Soccer
 {
 class Robot
 {
-    Common::Timer angleSendTimer;
-
 public:
-    float shootMult = 1.0f;
-
-    bool               oldRobot;
     Common::RobotState State;
     Common::RobotState target;
     int                shoot, chip, Break, dribbler;
@@ -27,9 +22,9 @@ public:
     bool               new_comm_ready;
 
     Sender::Command lastCMDs[11];
-	int last_cmd_idx = 0;
+    int             last_cmd_idx = 0;
 
-    int             CMDindex;
+    int CMDindex;
 
     int   remainingPIDParams;
     float p, i, iMax, torque;
@@ -54,14 +49,14 @@ public:
 
     void face(Common::Vec2 _target);
 
-    Common::Vec3 MotionPlan(Common::RobotState state, Common::RobotState target, float speed, bool accurate,
-                            VelocityProfile *velocityProfile);
+    Common::Vec3 MotionPlan(const Common::RobotState &state, const Common::RobotState &target, float speed,
+                            const VelocityProfile& velocityProfile);
 
-    void Move(bool accurate, float speed, VelocityProfile *velocityProfile);
+    void Move(float speed, const VelocityProfile& velocityProfile);
 
     void MoveByMotion(Common::Vec3 motion);
 
-    Common::Vec3 ComputeMotionCommand(bool accurate, float speed, VelocityProfile *velocityProfile);
+    Common::Vec3 ComputeMotionCommand(float speed, const VelocityProfile& velocityProfile);
 
     Sender::Command GetCurrentCommand() const;
 

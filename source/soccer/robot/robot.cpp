@@ -53,7 +53,6 @@ float getCalibratedShootPow(int vision_id, float raw_shoot, float coeffs[Common:
 
 Robot::Robot()
 {
-    oldRobot       = false;
     new_comm_ready = false;
 
     CMDindex = 0;
@@ -70,8 +69,6 @@ Robot::Robot()
     halted           = false;
     data[0]          = 1;
     data[9]          = 200;
-
-    angleSendTimer.start();
 }
 
 void Robot::sendPID(float _p, float _i, float _iMax, float _torque)
@@ -122,7 +119,7 @@ void Robot::face(Common::Vec2 _target)
     target.angle = State.position.angleWith(_target);
 }
 
-Common::Vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityProfile *velocityProfile)
+Common::Vec3 Robot::ComputeMotionCommand(float speed, const VelocityProfile& velocityProfile)
 {
     const float field_extra_area = 200.f;
 
@@ -137,7 +134,7 @@ Common::Vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityPro
     if (speed > 100)
         speed = 100;
 
-    Common::Vec3 motion = MotionPlan(State, target, speed, accurate, velocityProfile);
+    Common::Vec3 motion = MotionPlan(State, target, speed, velocityProfile);
 
     target.velocity.x = 0;
     target.velocity.y = 0;
