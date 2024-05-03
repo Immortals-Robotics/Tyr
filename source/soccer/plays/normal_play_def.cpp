@@ -63,7 +63,7 @@ void Ai::NormalPlayDef()
 
     float shoot_pow = 1;
     float chip_pow  = 1;
-    if (OwnRobot[attack].State.position.distanceTo(Common::worldState().ball.position) > 400)
+    if (OwnRobot[attack].state().position.distanceTo(Common::worldState().ball.position) > 400)
     {
         chip_pow = 1;
     }
@@ -73,7 +73,7 @@ void Ai::NormalPlayDef()
     }
     else if (!goalBlocked(Common::worldState().ball.position, 3000, 130))
     {
-        shoot_pow = 50 - OwnRobot[attack].State.velocity.length() * 0.005f;
+        shoot_pow = 50 - OwnRobot[attack].state().velocity.length() * 0.005f;
         chip_pow  = 0;
     }
     else

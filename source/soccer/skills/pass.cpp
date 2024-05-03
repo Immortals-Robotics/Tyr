@@ -15,7 +15,7 @@ Common::Vec2 Ai::CalculatePassPos(int robot_num, const Common::Vec2 &target, con
     }
 
     Common::Angle angleWithTarget = statPos.angleWith(target);
-    // angleWithTarget = OwnRobot[robot_num].State.angle;
+    // angleWithTarget = OwnRobot[robot_num].state().angle;
     Common::Vec2 ans  = ball_line.closestPoint(statPos + angleWithTarget.toUnitVec() * bar);
     Common::Vec2 fans = ans - angleWithTarget.toUnitVec() * bar;
     Common::debug().drawCircle(fans, 90, "", Common::Cornflower_Blue);
@@ -62,11 +62,11 @@ float getCalibratedShootPowCPY(int vision_id, float raw_shoot)
     return calib_shoot;
 }
 
-void Ai::WaitForPass(int robot_num, bool chip, Common::Vec2 *target, Common::Vec2 *statPos)
+void Ai::WaitForPass(int robot_num, bool chip, const Common::Vec2 *target, Common::Vec2 *statPos)
 {
     Common::Vec2 pos = CalculatePassPos(
         robot_num, target == nullptr ? Common::Vec2(-side * Common::worldState().field.width, 0) : *target,
-        statPos == nullptr ? OwnRobot[robot_num].State.position : *statPos, 78);
+        statPos == nullptr ? OwnRobot[robot_num].state().position : *statPos, 78);
 
     /*if (target==nullptr) {
         target = new Common::Vec2(Common::Vec2(-side*3025, 0));
@@ -78,7 +78,7 @@ void Ai::WaitForPass(int robot_num, bool chip, Common::Vec2 *target, Common::Vec
     }
     else
     {
-        OwnRobot[robot_num].target.angle = OwnRobot[robot_num].State.position.angleWith(*target);
+        OwnRobot[robot_num].target.angle = OwnRobot[robot_num].state().position.angleWith(*target);
     }
 
     Common::Line shoot_line =

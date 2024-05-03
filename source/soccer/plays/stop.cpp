@@ -13,18 +13,18 @@ void Ai::Stop()
 
     // Common::debug().drawCircle(Common::worldState().ball.position,500,Red);
 
-    if (OwnRobot[attack].State.out_for_substitute)
+    if (OwnRobot[attack].state().out_for_substitute)
     {
-        if (!OwnRobot[mid1].State.out_for_substitute)
+        if (!OwnRobot[mid1].state().out_for_substitute)
         {
             std::swap(attack, mid1);
         }
-        else if (!OwnRobot[mid2].State.out_for_substitute)
+        else if (!OwnRobot[mid2].state().out_for_substitute)
         {
             std::swap(attack, mid2);
         }
     }
-    if (side * OwnRobot[mid1].State.position.y < side * OwnRobot[mid2].State.position.y) // Nice :D
+    if (side * OwnRobot[mid1].state().position.y < side * OwnRobot[mid2].state().position.y) // Nice :D
     {
         std::swap(mid1, mid2);
     }

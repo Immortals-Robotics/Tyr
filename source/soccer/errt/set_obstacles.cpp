@@ -24,18 +24,18 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
 
     const bool oppPenaltyBig = Common::refereeState().freeKick() || Common::refereeState().stop();
 
-    const float current_robot_radius = calculateRobotRadius(OwnRobot[robot_num].State);
+    const float current_robot_radius = calculateRobotRadius(OwnRobot[robot_num].state());
 
     obs_map.resetMap();
 
     // own
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        if ((OwnRobot[i].State.seen_state != Common::SeenState::CompletelyOut) && (i != robot_num) &&
-            (OwnRobot[i].State.vision_id != OwnRobot[robot_num].State.vision_id))
+        if ((OwnRobot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != robot_num) &&
+            (OwnRobot[i].state().vision_id != OwnRobot[robot_num].state().vision_id))
         {
-            obs_map.addCircle({OwnRobot[i].State.position, current_robot_radius + robotRadius});
-            // Common::debug().drawCircle(OwnRobot[i].State.position,ownRobotRadius + (!dribble)*ownRobotRadius,Cyan);
+            obs_map.addCircle({OwnRobot[i].state().position, current_robot_radius + robotRadius});
+            // Common::debug().drawCircle(OwnRobot[i].state().position,ownRobotRadius + (!dribble)*ownRobotRadius,Cyan);
         }
     }
 

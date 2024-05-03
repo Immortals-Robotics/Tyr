@@ -21,10 +21,6 @@ void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, int speed, VelocityPro
     }
     OwnRobot[robot_num].MoveByMotion(motion_cmd);
 
-    //	OwnRobot[robot_num].target.velocity.x = motion_cmd.x;//TODO #4 erase these three lines (It is used for plotting)
-    //	OwnRobot[robot_num].target.velocity.y = motion_cmd.y;//
-    //	OwnRobot[robot_num].target.velocity.length = sqrt(motion_cmd.x * motion_cmd.x + motion_cmd.y * motion_cmd.y);//
-
     navigated[robot_num] = true;
 }
 
@@ -32,11 +28,11 @@ void Ai::ERRTNavigate2Point(int robot_num, Common::Vec2 dest, int speed, Velocit
 {
     // Navigate2Point(robot_num, dest,accurate,speed,velocityProfile);
     // return;
-    if (OwnRobot[robot_num].State.seen_state == Common::SeenState::CompletelyOut)
+    if (OwnRobot[robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         Halt(robot_num);
     else
     {
-        planner[robot_num].init(OwnRobot[robot_num].State.position, dest, 90.0f);
+        planner[robot_num].init(OwnRobot[robot_num].state().position, dest, 90.0f);
         Common::Vec2 wayp = planner[robot_num].plan();
 
         // if ( robot_num == 0 )

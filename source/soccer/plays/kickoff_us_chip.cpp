@@ -19,7 +19,7 @@ void Ai::kickoff_us_chip()
 
     if (timer.time() < 0.5)
     {
-        if (OwnRobot[mid1].State.position.y > OwnRobot[mid2].State.position.y)
+        if (OwnRobot[mid1].state().position.y > OwnRobot[mid2].state().position.y)
         {
             std::swap(mid1, mid2);
         }

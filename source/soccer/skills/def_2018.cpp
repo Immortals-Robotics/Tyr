@@ -29,7 +29,7 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     ballAriving = oneTouchDetector[robot_num].IsArriving(40, 80);
 
     Common::Vec2 oneTouchPos = CalculatePassPos(robot_num, Common::Vec2(-side * Common::worldState().field.width, 0),
-                                                OwnRobot[robot_num].State.position);
+                                                OwnRobot[robot_num].state().position);
 
     if (oneTouchPos.distanceTo(target) < max_def_move_to_intercept)
     {
@@ -51,8 +51,8 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     //    ballMovingFast = Common::worldState().ball.velocity.length() > max_fast_ball_spd;
 
     ownAttackHasBall =
-        OwnRobot[attack].State.position.distanceTo(Common::worldState().ball.position) < max_own_attacker_dis;
-    if (OwnRobot[attack].State.seen_state == Common::SeenState::CompletelyOut)
+        OwnRobot[attack].state().position.distanceTo(Common::worldState().ball.position) < max_own_attacker_dis;
+    if (OwnRobot[attack].state().seen_state == Common::SeenState::CompletelyOut)
     {
         ownAttackHasBall = false;
     }
@@ -597,13 +597,13 @@ void Ai::DefMid(int &middef_num, int &rightdef_num, int &leftdef_num, Common::Ve
         defendTarget = &(Common::worldState().ball.position);
 
     // make sure the def is present:
-    if (OwnRobot[middef_num].State.seen_state == Common::SeenState::CompletelyOut && replace)
+    if (OwnRobot[middef_num].state().seen_state == Common::SeenState::CompletelyOut && replace)
     {
-        if (OwnRobot[rightdef_num].State.seen_state != Common::SeenState::CompletelyOut)
+        if (OwnRobot[rightdef_num].state().seen_state != Common::SeenState::CompletelyOut)
         {
             std::swap(middef_num, rightdef_num);
         }
-        else if (OwnRobot[leftdef_num].State.seen_state != Common::SeenState::CompletelyOut)
+        else if (OwnRobot[leftdef_num].state().seen_state != Common::SeenState::CompletelyOut)
         {
             std::swap(middef_num, leftdef_num);
         }
@@ -613,9 +613,9 @@ void Ai::DefMid(int &middef_num, int &rightdef_num, int &leftdef_num, Common::Ve
     }
 
     bool leftdef_available =
-        OwnRobot[leftdef_num].State.seen_state != Common::SeenState::CompletelyOut && markMap[&leftdef_num] == -1;
+        OwnRobot[leftdef_num].state().seen_state != Common::SeenState::CompletelyOut && markMap[&leftdef_num] == -1;
     bool rightdef_available =
-        OwnRobot[rightdef_num].State.seen_state != Common::SeenState::CompletelyOut && markMap[&leftdef_num] == -1;
+        OwnRobot[rightdef_num].state().seen_state != Common::SeenState::CompletelyOut && markMap[&leftdef_num] == -1;
 
     DefHi(middef_num, defendTarget, stop);
 

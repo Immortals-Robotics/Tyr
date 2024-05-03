@@ -31,7 +31,7 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
     ballAriving = oneTouchDetector[robot_num].IsArriving(40, 80);
 
     Common::Vec2 oneTouchPos = CalculatePassPos(robot_num, Common::Vec2(-side * Common::worldState().field.width, 0),
-                                                OwnRobot[robot_num].State.position);
+                                                OwnRobot[robot_num].state().position);
 
     if (oneTouchPos.distanceTo(target) < max_def_move_to_intercept)
     {
@@ -73,15 +73,15 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
     {
         for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
         {
-            if (OwnRobot[i].State.seen_state == Common::SeenState::CompletelyOut)
+            if (OwnRobot[i].state().seen_state == Common::SeenState::CompletelyOut)
                 continue;
-            if ((std::fabs(OwnRobot[i].State.position.x) > Common::worldState().field.width) ||
-                (std::fabs(OwnRobot[i].State.position.y) > Common::worldState().field.height))
+            if ((std::fabs(OwnRobot[i].state().position.x) > Common::worldState().field.width) ||
+                (std::fabs(OwnRobot[i].state().position.y) > Common::worldState().field.height))
                 continue;
-            if (OwnRobot[i].State.position.distanceTo(target) > max_shoot_blocker_dis)
+            if (OwnRobot[i].state().position.distanceTo(target) > max_shoot_blocker_dis)
                 continue;
 
-            if (ballGoalLine.distanceTo(Common::Vec2(OwnRobot[i].State.position.x, OwnRobot[i].State.position.y)) <
+            if (ballGoalLine.distanceTo(Common::Vec2(OwnRobot[i].state().position.x, OwnRobot[i].state().position.y)) <
                 shoot_blocker_r)
             {
                 oppGoalOpen = false;
@@ -93,8 +93,8 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
     ballMovingFast = Common::worldState().ball.velocity.length() > max_fast_ball_spd;
 
     ownAttackHasBall =
-        OwnRobot[attack].State.position.distanceTo(Common::worldState().ball.position) < max_own_attacker_dis;
-    if (OwnRobot[attack].State.seen_state == Common::SeenState::CompletelyOut)
+        OwnRobot[attack].state().position.distanceTo(Common::worldState().ball.position) < max_own_attacker_dis;
+    if (OwnRobot[attack].state().seen_state == Common::SeenState::CompletelyOut)
     {
         ownAttackHasBall = false;
     }

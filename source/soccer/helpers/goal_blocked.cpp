@@ -24,16 +24,16 @@ bool Ai::goalBlocked(Common::Vec2 init_pos, float max_shoot_blocker_dis, float s
     }
     /*if (oppGoalOpen) {
         for (int i = 0; i < 6; i ++) {
-            if ( OwnRobot[i].State.seen_state == Common::SeenState::CompletelyOut )
+            if ( OwnRobot[i].state().seen_state == Common::SeenState::CompletelyOut )
                 continue;
-            if ( ( std::fabs ( OwnRobot[i].State.position.x ) > 3025 ) ||
-                ( std::fabs ( OwnRobot[i].State.position.y ) > 2025 ) )
+            if ( ( std::fabs ( OwnRobot[i].state().position.x ) > 3025 ) ||
+                ( std::fabs ( OwnRobot[i].state().position.y ) > 2025 ) )
                 continue;
-            if (DIS(OwnRobot[i].State.position, init_pos)>max_shoot_blocker_dis)
+            if (DIS(OwnRobot[i].state().position, init_pos)>max_shoot_blocker_dis)
                 continue;
 
             if
-    (ballGoalLine.distanceTo(Common::Vec2(OwnRobot[i].State.position.x,OwnRobot[i].State.position.y))<shoot_blocker_r)
+    (ballGoalLine.distanceTo(Common::Vec2(OwnRobot[i].state().position.x,OwnRobot[i].state().position.y))<shoot_blocker_r)
     { oppGoalOpen = false; break;
             }
         }

@@ -26,11 +26,11 @@ void Ai::internalFinalize()
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        if (OwnRobot[i].State.seen_state == Common::SeenState::CompletelyOut)
+        if (OwnRobot[i].state().seen_state == Common::SeenState::CompletelyOut)
             continue;
         for (int j = 0; j < 11; j++) // kheyli tof malie...
         {
-            Common::worldState().last_cmds[OwnRobot[i].State.vision_id][j] = OwnRobot[i].lastCMDs[j].motion;
+            Common::worldState().last_cmds[OwnRobot[i].state().vision_id][j] = OwnRobot[i].lastCMDs[j].motion;
         }
     }
 }

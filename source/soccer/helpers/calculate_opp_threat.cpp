@@ -10,7 +10,7 @@ float Ai::calculateOppThreat(int opp, bool restart)
         return -1;
 
     if ((Common::worldState().opp_robot[opp].position.distanceTo(Common::worldState().ball.position) < 400) &&
-        ((OwnRobot[attack].State.position.distanceTo(Common::worldState().ball.position) < 400) || restart))
+        ((OwnRobot[attack].state().position.distanceTo(Common::worldState().ball.position) < 400) || restart))
         return -1;
 
     if (Common::worldState().opp_robot[opp].position.x * side < 1000 && std::fabs(Common::worldState().opp_robot[opp].position.x - Common::worldState().ball.position.x) > 3000)

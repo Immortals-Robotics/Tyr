@@ -15,11 +15,10 @@ void Ai::internalProcessData()
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
         bool halt_this_robot_for_now = false;
-        OwnRobot[i].State            = Common::worldState().own_robot[OwnRobot[i].vision_id];
 
         if (Common::refereeState().stop())
         {
-            if (OwnRobot[i].State.out_for_substitute)
+            if (OwnRobot[i].state().out_for_substitute)
             {
                 for (int j = 0; j < Common::Setting::kMaxRobots; j++)
                 {
@@ -38,7 +37,7 @@ void Ai::internalProcessData()
                         }
                         if (suitable)
                         {
-                            OwnRobot[i].set_vision_id(j);
+                            OwnRobot[i].setVisionId(j);
                             break;
                         }
                     }
@@ -47,13 +46,10 @@ void Ai::internalProcessData()
         }
         // std::cout << OwnRobot[i].vision_id << "	";
 
-        OwnRobot[i].set_serial_id(OwnRobot[i].vision_id);
-
         OwnRobot[i].shoot    = 0;
         OwnRobot[i].dribbler = 0;
         OwnRobot[i].shoot    = 0;
         OwnRobot[i].chip     = 0;
-        OwnRobot[i].Break    = 0;
         navigated[i]         = false;
     }
     // std::cout << std::endl;

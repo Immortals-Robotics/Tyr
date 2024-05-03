@@ -116,7 +116,7 @@ void Ai::Process()
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        if ((OwnRobot[i].State.seen_state == Common::SeenState::CompletelyOut) || (!navigated[i]))
+        if ((OwnRobot[i].state().seen_state == Common::SeenState::CompletelyOut) || (!navigated[i]))
         {
             Halt(i);
         }

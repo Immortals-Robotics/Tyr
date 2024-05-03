@@ -9,33 +9,31 @@ void Ai::GKHi(int robot_num, bool stop)
     gkIntercepting = false;
 
     Common::logDebug("GKhi: {} _ {}", ballIsGoaling(),
-                     Common::worldState().ball.position.distanceTo(OwnRobot[robot_num].State.position) /
+                     Common::worldState().ball.position.distanceTo(OwnRobot[robot_num].state().position) /
                          Common::worldState().ball.velocity.length());
     // side = -side;
     debugDraw = true; // TODO #10 Comment this in the game
     if (ballIsGoaling())
     {
-        Common::debug().drawCircle(OwnRobot[robot_num].State.position, 200, "", Common::Red);
+        Common::debug().drawCircle(OwnRobot[robot_num].state().position, 200, "", Common::Red);
     }
     else
     {
-        Common::debug().drawCircle(OwnRobot[robot_num].State.position, 20, "", Common::Yellow);
+        Common::debug().drawCircle(OwnRobot[robot_num].state().position, 20, "", Common::Yellow);
     }
     debugDraw = false;
 
     if ((ballIsGoaling()) &&
-        (Common::worldState().ball.position.distanceTo(OwnRobot[robot_num].State.position) /
+        (Common::worldState().ball.position.distanceTo(OwnRobot[robot_num].state().position) /
              Common::worldState().ball.velocity.length() <
          3) &&
         (!stop))
     {
-        // WaitForPass ( robot_num , true );
         GK_shirje(robot_num);
         my_hys = 10;
     }
     else if ((my_hys > 0) && (!stop))
     {
-        // WaitForPass ( robot_num , true );
         GK_shirje(robot_num);
         my_hys--;
     }
@@ -101,8 +99,8 @@ void Ai::GKHi(int robot_num, bool stop)
             ERRTNavigate2Point(robot_num, target, 80, stop ? &VELOCITY_PROFILE_AROOM : &VELOCITY_PROFILE_MAMOOLI);
 
             //			float R_robot = DIS(Common::Vec2(-Common::worldState().field.width,
-            // 0),OwnRobot[robot_num].State.position); 			float alpha_robot =
-            // AngleWith(Common::Vec2(-Common::worldState().field.width, 0),OwnRobot[robot_num].State.position);
+            // 0),OwnRobot[robot_num].state().position); 			float alpha_robot =
+            // AngleWith(Common::Vec2(-Common::worldState().field.width, 0),OwnRobot[robot_num].state().position);
             //			alpha_robot = std::min(90, std::max(-90, alpha_robot));
             //			std::cout<<"GOALIE teta: "<<alpha_robot<<std::endl;
             //			std::cout<<"GOALIE R: "<<R_robot<<std::endl;
@@ -119,9 +117,9 @@ void Ai::GK_shirje(int robot_num)
     Common::Line ball_line = Common::Line::fromPointAndAngle(Common::worldState().ball.position,
                                                              Common::worldState().ball.velocity.toAngle());
     Common::Vec2 ans       = ball_line.closestPoint(
-        Common::Vec2(OwnRobot[robot_num].State.position.x, OwnRobot[robot_num].State.position.y));
+        Common::Vec2(OwnRobot[robot_num].state().position.x, OwnRobot[robot_num].state().position.y));
     OwnRobot[robot_num].face(Common::worldState().ball.position);
-    ans = ((ans - OwnRobot[robot_num].State.position) * 2.0f) + OwnRobot[robot_num].State.position;
+    ans = ((ans - OwnRobot[robot_num].state().position) * 2.0f) + OwnRobot[robot_num].state().position;
     ERRTSetObstacles(robot_num, 0, 0);
     ERRTNavigate2Point(robot_num, ans, 100, &VELOCITY_PROFILE_KHARAKI);
     OwnRobot[robot_num].Chip(150);

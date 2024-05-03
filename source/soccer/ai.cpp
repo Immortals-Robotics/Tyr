@@ -58,7 +58,7 @@ Ai::Ai(Sender::Sender *sender) : m_sender(sender)
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        oneTouchDetector[i].rState = &OwnRobot[i].State;
+        oneTouchDetector[i].rState = &OwnRobot[i];
         oneTouchDetector[i].side   = &side;
 
         oneTouchType[i]     = oneTouch;
@@ -69,28 +69,28 @@ Ai::Ai(Sender::Sender *sender) : m_sender(sender)
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        OwnRobot[i].set_vision_id(i + 1);
+        OwnRobot[i].setVisionId(i + 1);
     }
 
 #if 0
-    OwnRobot[gk].set_vision_id(4);
-    OwnRobot[def].set_vision_id(10);
-    OwnRobot[dmf].set_vision_id(1);
-    OwnRobot[lmf].set_vision_id(6);
-    OwnRobot[rmf].set_vision_id(0);
-    OwnRobot[cmf].set_vision_id(2);
-    OwnRobot[rw].set_vision_id(7);
-    OwnRobot[lw].set_vision_id(8);
+    OwnRobot[gk].setVisionId(4);
+    OwnRobot[def].setVisionId(10);
+    OwnRobot[dmf].setVisionId(1);
+    OwnRobot[lmf].setVisionId(6);
+    OwnRobot[rmf].setVisionId(0);
+    OwnRobot[cmf].setVisionId(2);
+    OwnRobot[rw].setVisionId(7);
+    OwnRobot[lw].setVisionId(8);
 #else
     // TODO comment this (used fogrSim)
-    OwnRobot[gk].set_vision_id(0);
-    OwnRobot[def].set_vision_id(1);
-    OwnRobot[dmf].set_vision_id(2);
-    OwnRobot[lmf].set_vision_id(3);
-    OwnRobot[rmf].set_vision_id(4);
-    OwnRobot[cmf].set_vision_id(5);
-    OwnRobot[rw].set_vision_id(6);
-    OwnRobot[lw].set_vision_id(7);
+    OwnRobot[gk].setVisionId(0);
+    OwnRobot[def].setVisionId(1);
+    OwnRobot[dmf].setVisionId(2);
+    OwnRobot[lmf].setVisionId(3);
+    OwnRobot[rmf].setVisionId(4);
+    OwnRobot[cmf].setVisionId(5);
+    OwnRobot[rw].setVisionId(6);
+    OwnRobot[lw].setVisionId(7);
 #endif
 
     chip_head = Common::Angle::fromDeg(200);

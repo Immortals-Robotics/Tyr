@@ -41,31 +41,31 @@ void Ai::NormalPlayAtt()
         {
             OpenAngle openAngle = calculateOpenAngleToGoal(Common::worldState().ball.position, attack);
 
-            bool mid1Reached = OwnRobot[mid1].State.velocity.length() < 500;
-            bool mid2Reached = OwnRobot[mid2].State.velocity.length() < 500;
+            bool mid1Reached = OwnRobot[mid1].state().velocity.length() < 500;
+            bool mid2Reached = OwnRobot[mid2].state().velocity.length() < 500;
 
-            bool mid1DisOk = OwnRobot[mid1].State.position.distanceTo(Common::worldState().ball.position) > 2000;
-            bool mid2DisOk = OwnRobot[mid2].State.position.distanceTo(Common::worldState().ball.position) > 2000;
+            bool mid1DisOk = OwnRobot[mid1].state().position.distanceTo(Common::worldState().ball.position) > 2000;
+            bool mid2DisOk = OwnRobot[mid2].state().position.distanceTo(Common::worldState().ball.position) > 2000;
 
-            bool mid1PassAngleOk = (OwnRobot[mid1].State.position - Common::worldState().ball.position)
+            bool mid1PassAngleOk = (OwnRobot[mid1].state().position - Common::worldState().ball.position)
                                        .normalized()
                                        .dot((Common::Vec2(side * Common::worldState().field.width, 0) - Common::worldState().ball.position).normalized()) < 0.75f;
 
-            bool mid2PassAngleOk = (OwnRobot[mid2].State.position - Common::worldState().ball.position)
+            bool mid2PassAngleOk = (OwnRobot[mid2].state().position - Common::worldState().ball.position)
                                        .normalized()
                                        .dot((Common::Vec2(side * Common::worldState().field.width, 0) - Common::worldState().ball.position).normalized()) < 0.75f;
 
             Common::logDebug("pass angle ok mid1 : {}, mid2: {}", mid1PassAngleOk, mid2PassAngleOk);
 
-            bool mid1Seen = OwnRobot[mid1].State.seen_state != Common::SeenState::CompletelyOut;
-            bool mid2Seen = OwnRobot[mid2].State.seen_state != Common::SeenState::CompletelyOut;
+            bool mid1Seen = OwnRobot[mid1].state().seen_state != Common::SeenState::CompletelyOut;
+            bool mid2Seen = OwnRobot[mid2].state().seen_state != Common::SeenState::CompletelyOut;
 
             bool mid1Suitable = mid1Seen && mid1Reached && mid1DisOk && mid1PassAngleOk;
             bool mid2Suitable = mid2Seen && mid2Reached && mid2DisOk && mid2PassAngleOk;
 
             if (mid1Suitable && mid2Suitable)
             {
-                if (-side * OwnRobot[mid1].State.position.x > -side * OwnRobot[mid2].State.position.x)
+                if (-side * OwnRobot[mid1].state().position.x > -side * OwnRobot[mid2].state().position.x)
                     mid2Suitable = false;
                 else
                     mid1Suitable = false;
@@ -78,21 +78,21 @@ void Ai::NormalPlayAtt()
             {
 
                 // float passAngle = Common::Vec2::angleWith (
-                // OwnRobot[randomParam<0.3?dmf:(randomParam<0.6?rmf:lmf)].State.position , Common::worldState().ball.position );
+                // OwnRobot[randomParam<0.3?dmf:(randomParam<0.6?rmf:lmf)].state().position , Common::worldState().ball.position );
                 Common::Angle passAngle =
                     Common::Vec2(-side * 1700, Common::sign(-Common::worldState().ball.position.y) * 1700.0f).angleWith(Common::worldState().ball.position);
                 float chip_pow = 40;
 
                 if (mid1Suitable)
                 {
-                    passAngle = OwnRobot[mid1].State.position.angleWith(Common::worldState().ball.position);
-                    chip_pow  = 50.f * OwnRobot[mid1].State.position.distanceTo(Common::worldState().ball.position) / 4000.0f;
+                    passAngle = OwnRobot[mid1].state().position.angleWith(Common::worldState().ball.position);
+                    chip_pow  = 50.f * OwnRobot[mid1].state().position.distanceTo(Common::worldState().ball.position) / 4000.0f;
                     chip_pow  = std::min(50.f, chip_pow);
                 }
                 else if (mid2Suitable)
                 {
-                    passAngle = OwnRobot[mid2].State.position.angleWith(Common::worldState().ball.position);
-                    chip_pow  = 50.f * OwnRobot[mid2].State.position.distanceTo(Common::worldState().ball.position) / 4000.0f;
+                    passAngle = OwnRobot[mid2].state().position.angleWith(Common::worldState().ball.position);
+                    chip_pow  = 50.f * OwnRobot[mid2].state().position.distanceTo(Common::worldState().ball.position) / 4000.0f;
                     chip_pow  = std::min(50.f, chip_pow);
                 }
                 else
@@ -113,17 +113,17 @@ void Ai::NormalPlayAtt()
                 //                float shoot_pow;
                 //                if(Common::Vec2::distance(Common::worldState().ball.position,Common::Vec2 ( -side*Common::worldState().field.width , 0 )) <
                 //                2000) {
-                //                    shoot_pow = 70 - OwnRobot[attack].State.velocity.length * 0.01;
+                //                    shoot_pow = 70 - OwnRobot[attack].state().velocity.length * 0.01;
                 //                } else {
-                //                    shoot_pow = 50 - OwnRobot[attack].State.velocity.length * 0.01;
+                //                    shoot_pow = 50 - OwnRobot[attack].state().velocity.length * 0.01;
                 //                }
 
-                //                float shoot_pow = 80 - OwnRobot[attack].State.velocity.length * 0.01;
-                float shoot_pow = 50 - OwnRobot[attack].State.velocity.length() * 0.005;
+                //                float shoot_pow = 80 - OwnRobot[attack].state().velocity.length * 0.01;
+                float shoot_pow = 50 - OwnRobot[attack].state().velocity.length() * 0.005;
 
                 // if ( openAngle.y < 2 )
                 //     shoot_pow = 0;
-                if (OwnRobot[attack].State.position.distanceTo(Common::worldState().ball.position) > 400)
+                if (OwnRobot[attack].state().position.distanceTo(Common::worldState().ball.position) > 400)
                 {
                     shoot_pow = 1;
                     activeShootTimer.start();
