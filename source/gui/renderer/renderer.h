@@ -14,7 +14,8 @@ public:
                     unsigned char _transparency = 255);
     void drawCircleSector(Common::Circle circle, Color _color, float _startAngle, float _endAngle, bool _isFilled,
                           unsigned char _transparency = 255);
-    void drawLineSegment(Common::LineSegment line_segment, Color _color, float _thickness = 1, unsigned char _transparency = 255);
+    void drawLineSegment(Common::LineSegment line_segment, Color _color, float _thickness = 1,
+                         unsigned char _transparency = 255);
     void drawText(Common::Vec2 _pos, std::string _str, int _fontSize = 12, Color _color = WHITE,
                   unsigned char _transparency = 255);
 
@@ -25,6 +26,11 @@ public:
 
     void drawRobot(const Protos::SSL_DetectionRobot &robot, Common::TeamColor color);
     void drawBall(const Protos::SSL_DetectionBall &ball);
+
+    void drawCirclesUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug_Circle> &circles);
+    void drawRectsUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug_Rect> &rects);
+    void drawPointsUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug_Point> &points);
+    void drawLinesUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug_Line> &lines);
 
     void applyShader();
 
