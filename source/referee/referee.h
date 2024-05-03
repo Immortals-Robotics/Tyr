@@ -7,9 +7,6 @@ class Referee
 private:
     std::unique_ptr<Common::UdpClient> m_udp;
 
-    Common::RefereeState *m_state;
-    Common::WorldState   *m_world_state;
-
     Common::Vec2 m_last_placed_ball;
     int          m_move_hys; // For isKicked
 
@@ -25,7 +22,7 @@ private:
     void transition(Protos::SSL_Referee_Command ref_command);
 
 public:
-    Referee(Common::WorldState *world_state, Common::RefereeState *referee_state);
+    Referee() = default;
     bool connect();
     bool isConnected();
     bool receive();

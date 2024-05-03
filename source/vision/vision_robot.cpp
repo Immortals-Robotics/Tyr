@@ -185,16 +185,16 @@ void Vision::predictRobots()
         if (m_robot_state[0][i].seen_state != Common::SeenState::Seen)
         {
             m_robot_state[0][i].position.x =
-                m_robot_state[0][i].position.x + m_state->last_cmds[i][(int) m_state->last_cmds[i][10].x].x / 1.2f;
+                m_robot_state[0][i].position.x + Common::worldState().last_cmds[i][(int) Common::worldState().last_cmds[i][10].x].x / 1.2f;
             m_robot_state[0][i].position.y =
-                m_robot_state[0][i].position.y + m_state->last_cmds[i][(int) m_state->last_cmds[i][10].x].y / 1.2f;
+                m_robot_state[0][i].position.y + Common::worldState().last_cmds[i][(int) Common::worldState().last_cmds[i][10].x].y / 1.2f;
         }
         else
         {
             for (int j = 0; j < Common::Setting::kMaxRobots; j++)
             {
-                m_robot_state[0][i].position.x = m_robot_state[0][i].position.x + m_state->last_cmds[i][j].x / 1.4f;
-                m_robot_state[0][i].position.y = m_robot_state[0][i].position.y + m_state->last_cmds[i][j].y / 1.4f;
+                m_robot_state[0][i].position.x = m_robot_state[0][i].position.x + Common::worldState().last_cmds[i][j].x / 1.4f;
+                m_robot_state[0][i].position.y = m_robot_state[0][i].position.y + Common::worldState().last_cmds[i][j].y / 1.4f;
             }
         }
     }
@@ -228,7 +228,7 @@ void Vision::sendStates()
             m_robot_state[0][i].out_for_substitute = true;
         }
 
-        m_state->own_robot[i] = m_robot_state[0][i];
+        Common::worldState().own_robot[i] = m_robot_state[0][i];
     }
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
@@ -248,7 +248,7 @@ void Vision::sendStates()
             m_robot_state[1][i].seen_state = Common::SeenState::CompletelyOut;
         }
 
-        m_state->opp_robot[i] = m_robot_state[1][i];
+        Common::worldState().opp_robot[i] = m_robot_state[1][i];
     }
 }
 } // namespace Tyr::Vision

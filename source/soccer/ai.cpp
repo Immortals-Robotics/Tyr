@@ -11,52 +11,23 @@ struct RobotProperty
     bool hasDribble;
 };
 
-Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sender::Sender *sender)
-    : maxBallHist(240), worldState(worldState), refereeState(refereeState), senderBase(sender), cmf(0), rmf(1), lmf(2),
-      gk(3), dmf(4), def(5), rw(6), lw(7)
+Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
 {
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");
 
-#ifndef NEW_FIELD_2018
-    field_width  = 4500.0f;
-    field_height = 3000.0f;
-    goal_width   = 1000.0f;
+    for (auto &sender : senders)
+        m_senders.push_back(sender.get());
 
-    penalty_area_r     = 1000.0f;
-    penalty_area_width = 500.0f;
-#else
-    field_width  = 6000.0f; // The new field is here:
-    field_height = 4500.0f;
-    goal_width   = 1800.0f; // TODO #6 this was 1000 (!!!) Changed it back
-
-    penalty_area_r     = 1850.0f;
-    penalty_area_width = 3650.0f;
-#endif
-
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
-    {
-        oneTouchDetector[i].field_w = field_width;
-        oneTouchDetector[i].field_h = field_height;
-
-        planner[i].set_field_params(field_width, field_height);
-
-        OwnRobot[i].field_w = field_width;
-        OwnRobot[i].field_h = field_height;
-    }
-
-    dss = new Dss(OwnRobot, OppRobot, 92.f, 1.f / 61.57f, 7000.f, 3000.f);
+    dss = new Dss(OwnRobot, Common::worldState().opp_robot, 92.f, 1.f / 61.57f, 7000.f, 3000.f);
 
     InitAIPlayBook();
-    currentPlay      = "HaltAll";
-    currentPlayParam = 0;
+    currentPlay = "HaltAll";
 
     gkIntercepting = false;
 
     randomParam = 0.0f;
     target_str  = -1;
-
-    reached = false;
 
     isDefending  = false;
     oppRestarted = false;
@@ -90,8 +61,7 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        oneTouchDetector[i].bState = &ball;
-        oneTouchDetector[i].rState = &OwnRobot[i].State;
+        oneTouchDetector[i].rState = &OwnRobot[i];
         oneTouchDetector[i].side   = &side;
 
         oneTouchType[i]     = oneTouch;
@@ -102,33 +72,31 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        OwnRobot[i].set_vision_id(i + 1);
+        OwnRobot[i].setVisionId(i + 1);
     }
 
 #if 0
-    OwnRobot[gk].set_vision_id(4);
-    OwnRobot[def].set_vision_id(10);
-    OwnRobot[dmf].set_vision_id(1);
-    OwnRobot[lmf].set_vision_id(6);
-    OwnRobot[rmf].set_vision_id(0);
-    OwnRobot[cmf].set_vision_id(2);
-    OwnRobot[rw].set_vision_id(7);
-    OwnRobot[lw].set_vision_id(8);
+    OwnRobot[gk].setVisionId(4);
+    OwnRobot[def].setVisionId(10);
+    OwnRobot[dmf].setVisionId(1);
+    OwnRobot[lmf].setVisionId(6);
+    OwnRobot[rmf].setVisionId(0);
+    OwnRobot[cmf].setVisionId(2);
+    OwnRobot[rw].setVisionId(7);
+    OwnRobot[lw].setVisionId(8);
 #else
     // TODO comment this (used fogrSim)
-    OwnRobot[gk].set_vision_id(0);
-    OwnRobot[def].set_vision_id(1);
-    OwnRobot[dmf].set_vision_id(2);
-    OwnRobot[lmf].set_vision_id(3);
-    OwnRobot[rmf].set_vision_id(4);
-    OwnRobot[cmf].set_vision_id(5);
-    OwnRobot[rw].set_vision_id(6);
-    OwnRobot[lw].set_vision_id(7);
+    OwnRobot[gk].setVisionId(0);
+    OwnRobot[def].setVisionId(1);
+    OwnRobot[dmf].setVisionId(2);
+    OwnRobot[lmf].setVisionId(3);
+    OwnRobot[rmf].setVisionId(4);
+    OwnRobot[cmf].setVisionId(5);
+    OwnRobot[rw].setVisionId(6);
+    OwnRobot[lw].setVisionId(7);
 #endif
 
     chip_head = Common::Angle::fromDeg(200);
-
-    lastBallVelocity = Common::Vec2();
 
     circleReachedBehindBall = false;
     PredictedBall           = Common::Vec2();
@@ -160,7 +128,7 @@ Ai::Ai(Common::WorldState *worldState, Common::RefereeState *refereeState, Sende
     VELOCITY_PROFILE_KHARAKI.max_w_acc = 40.0f;
     VELOCITY_PROFILE_KHARAKI.max_w_dec = 140.0f;
 
-    playBook = NULL;
+    playBook = nullptr;
     std::string strategy_path(DATA_DIR);
     strategy_path.append("/strategy.ims");
     read_playBook(strategy_path.c_str());

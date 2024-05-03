@@ -2,62 +2,64 @@
 
 namespace Tyr::Soccer
 {
-Tree::Tree()
+Tree::Tree(const size_t t_max_nodes)
 {
-    reset();
+    m_nodes.reserve(t_max_nodes);
 }
 
 void Tree::reset()
 {
-    nodes_num = 0;
+    m_nodes.clear();
 }
 
-Node *Tree::AddNode(Common::Vec2 &s, Node *p)
+Node *Tree::AddNode(const Common::Vec2 s, Node *const parent)
 {
-    if (nodes_num < MAX_NODES)
+    if (m_nodes.size() < m_nodes.capacity())
     {
-        node[nodes_num].state      = s;
-        node[nodes_num].parent     = p;
-        node[nodes_num].childs_num = 0;
-        if (p)
-            p->childs_num++;
-        nodes_num++;
+        m_nodes.push_back({
+            .parent = parent,
+            .state  = s,
+        });
+
+        if (parent)
+            parent->child_count++;
+
+        return &m_nodes.back();
     }
     else
     {
-        Common::logWarning("Tree node limit of {} reached", MAX_NODES);
+        Common::logWarning("Tree node limit of {} reached", m_nodes.capacity());
+        return nullptr;
     }
-    return &(node[nodes_num - 1]);
 }
 
-Node *Tree::NearestNeighbour(Common::Vec2 &s)
+Node *Tree::NearestNeighbour(const Common::Vec2 s)
 {
-    if (nodes_num == 0)
-        return NULL;
-    if (nodes_num == 1)
-        return &node[0];
-    float d     = s.distanceTo(node[0].state);
-    float tmp_d = d;
-    int   ans   = 0;
-    for (int i = 0; i < nodes_num; i++)
+    if (m_nodes.empty())
+        return nullptr;
+
+    float d   = std::numeric_limits<float>::max();
+    int   ans = 0;
+    for (int i = 0; i < m_nodes.size(); i++)
     {
-        tmp_d = s.distanceTo(node[i].state);
+        float tmp_d = s.distanceTo(m_nodes[i].state);
         if (tmp_d < d)
         {
             ans = i;
             d   = tmp_d;
         }
     }
-    return &node[ans];
+
+    return &m_nodes[ans];
 }
 
-unsigned int Tree::tree_size()
+int Tree::tree_size()
 {
-    return nodes_num;
+    return m_nodes.size();
 }
 
-Node *Tree::GetNode(unsigned int num)
+Node *Tree::GetNode(const int idx)
 {
-    return &node[num];
+    return &m_nodes[idx];
 }
 } // namespace Tyr::Soccer

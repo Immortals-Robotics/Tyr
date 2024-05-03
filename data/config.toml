@@ -45,11 +45,6 @@ our_side = 1 # TODO #5 Disable the simulation for a higher performance
 enable_simulation = false #false # TODO #6 Disable the simulation for a higher performance
 command_opp_robots = false # TODO #7 Turn to false, in real games
 
-# Field dimensions since 2018
-field_width  = 12000
-field_length = 9000
-goal_length  = 1200
-
 # Gamma represents the relation between the robots velocity parameter and the velocity in mm/s
 # Gamma is 48 in the GR Simulation
 # and 19 in reality

@@ -24,10 +24,10 @@ int Ai::strategy_weight()
     std::cout << "	strategy:	";
     for (int i = 0; i < playBook->strategy_size(); i++)
     {
-        if ((side * ball.position.x > playBook->strategy(i).minx()) &&
-            (side * ball.position.x < playBook->strategy(i).maxx()) &&
-            (std::fabs(ball.position.y) > playBook->strategy(i).miny()) &&
-            (std::fabs(ball.position.y) < playBook->strategy(i).maxy()) && (playBook->weight(i) > 0))
+        if ((side * Common::worldState().ball.position.x > playBook->strategy(i).minx()) &&
+            (side * Common::worldState().ball.position.x < playBook->strategy(i).maxx()) &&
+            (std::fabs(Common::worldState().ball.position.y) > playBook->strategy(i).miny()) &&
+            (std::fabs(Common::worldState().ball.position.y) < playBook->strategy(i).maxy()) && (playBook->weight(i) > 0))
         {
             std::cout << i << "|" << playBook->weight(i) << "	";
             good_strs[i] = sigma_w + playBook->weight(i);

@@ -53,65 +53,19 @@ float getCalibratedShootPow(int vision_id, float raw_shoot, float coeffs[Common:
 
 Robot::Robot()
 {
-    oldRobot       = false;
-    new_comm_ready = false;
-
-    CMDindex = 0;
+    motion_idx = 0;
     for (int i = 0; i < 10; i++)
-        lastCMDs[i] = Sender::Command();
+        last_motions[i] = Common::Vec3();
 
-    State.velocity.x = 0.0f;
-    State.velocity.y = 0.0f;
-    State.position   = Common::Vec2(0.0f);
-    shoot            = 0;
-    chip             = 0;
-    dribbler         = 0;
-    Break            = false;
-    halted           = false;
-    data[0]          = 1;
-    data[9]          = 200;
-
-    angleSendTimer.start();
+    shoot    = 0;
+    chip     = 0;
+    dribbler = 0;
+    halted   = false;
 }
 
-void Robot::sendPID(float _p, float _i, float _iMax, float _torque)
-{
-    p                  = (_p - 5) * 10;
-    i                  = _i * 500;
-    iMax               = _iMax / 4;
-    torque             = (_torque - 1000) / 4;
-    remainingPIDParams = 15;
-}
-
-void Robot::set_serial_id(unsigned short s_id)
-{
-    serial_id = s_id;
-}
-
-void Robot::set_vision_id(unsigned short v_id)
+void Robot::setVisionId(unsigned short v_id)
 {
     vision_id = v_id;
-    switch (vision_id)
-    {
-    case 2:
-    case 4:
-    case 6:
-        shootMult = 1.3f;
-        break;
-    default:
-        shootMult = 0.9f;
-        break;
-    }
-}
-
-void Robot::set_control_mode(bool c_mode)
-{
-    control_mode = c_mode;
-}
-
-float Robot::dis(float x1, float y1, float x2, float y2)
-{
-    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 }
 
 void Robot::Shoot(int pow)
@@ -130,25 +84,166 @@ void Robot::Dribble(int pow)
 
 void Robot::face(Common::Vec2 _target)
 {
-    target.angle = State.position.angleWith(_target);
+    target.angle = state().position.angleWith(_target);
 }
 
-Common::Vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityProfile *velocityProfile)
+Common::Vec3 Robot::ComputeMotionCommand(float speed, const VelocityProfile &velocityProfile)
 {
     const float field_extra_area = 200.f;
 
-    if (std::fabs(target.position.x) > field_w + field_extra_area)
-        target.position.x = Common::sign(target.position.x) * (field_w + field_extra_area);
+    if (std::fabs(target.position.x) > Common::worldState().field.width + field_extra_area)
+        target.position.x = Common::sign(target.position.x) * (Common::worldState().field.width + field_extra_area);
 
-    if (std::fabs(target.position.y) > field_h + field_extra_area)
-        target.position.y = Common::sign(target.position.y) * (field_h + field_extra_area);
+    if (std::fabs(target.position.y) > Common::worldState().field.height + field_extra_area)
+        target.position.y = Common::sign(target.position.y) * (Common::worldState().field.height + field_extra_area);
 
-    if (speed < 0)
-        speed = 0;
-    if (speed > 100)
-        speed = 100;
+    speed = std::clamp(speed, 0.0f, 100.0f);
 
-    Common::Vec3 motion = MotionPlan(State, target, speed, accurate, velocityProfile);
+    Common::Vec2 max_spd   = velocityProfile.max_spd;
+    Common::Vec2 max_dec   = velocityProfile.max_dec;
+    Common::Vec2 max_acc   = velocityProfile.max_acc;
+    float        max_w_acc = velocityProfile.max_w_acc;
+    float        max_w_dec = velocityProfile.max_w_dec;
+
+    static Common::Vec3 oldAns[12] = {};
+
+    Common::Vec3 motion; // The output of this function
+    motion.z = target.angle.deg();
+    motion.z /= 5.0f;
+
+    Common::Vec2 diff = target.position - state().position;
+
+    Common::Vec2 tmp_max_speed;
+
+    float target_dis = Common::Vec2(0.0f).distanceTo(diff);
+    tmp_max_speed.x  = max_spd.x * std::fabs(diff.x) / target_dis;
+
+    tmp_max_speed.y = max_spd.y * std::fabs(diff.y) / target_dis;
+
+    float tmp_vel_mag = Common::Vec2(0.0f).distanceTo(tmp_max_speed);
+
+    if (tmp_vel_mag > speed)
+    {
+        tmp_max_speed.x *= speed / tmp_vel_mag;
+        tmp_max_speed.y *= speed / tmp_vel_mag;
+    }
+
+    float KP   = 0.10;
+    float Pdis = 0;
+
+    motion.x = speed;
+    if (std::fabs(diff.x) < Pdis) // always FALSE (?)
+    {
+        motion.x = KP * max_dec.x * std::fabs(diff.x);
+    }
+    else
+    {
+        motion.x = pow(0.6f * max_dec.x * std::fabs(diff.x), 0.6f);
+    }
+    motion.x *= Common::sign(diff.x);
+    if (std::fabs(diff.x) < 5)
+        motion.x = 0.0f;
+
+    if (motion.x * oldAns[state().vision_id].x <= 0)
+    {
+        float tmp = oldAns[state().vision_id].x + max_dec.x * Common::sign(motion.x);
+        if (motion.x == 0)
+            tmp = oldAns[state().vision_id].x - max_dec.x * Common::sign(oldAns[state().vision_id].x);
+
+        if (tmp * motion.x > 0)
+        {
+            tmp = std::min(max_acc.x, std::fabs(tmp)) * Common::sign(motion.x);
+            if (std::fabs(tmp) > std::fabs(motion.x))
+                tmp = motion.x;
+        }
+
+        motion.x = tmp;
+    }
+    else
+    {
+        if (std::fabs(motion.x) > std::fabs(oldAns[state().vision_id].x) + max_acc.x)
+        {
+            motion.x = (std::fabs(oldAns[state().vision_id].x) + max_acc.x) * Common::sign(motion.x);
+        }
+        else if (std::fabs(motion.x) < std::fabs(oldAns[state().vision_id].x) - max_dec.x)
+        {
+            motion.x = (std::fabs(oldAns[state().vision_id].x) - max_dec.x) * Common::sign(motion.x);
+        }
+        if (std::fabs(motion.x) > tmp_max_speed.x)
+        {
+            if (Common::sign(motion.x) == 0)
+            { // NOT ENTERING HERE!!!!
+                motion.x = std::max(std::fabs(oldAns[state().vision_id].x) - max_dec.x, std::fabs(tmp_max_speed.x)) *
+                           Common::sign(oldAns[state().vision_id].x);
+            }
+            else
+                motion.x = std::max(std::fabs(oldAns[state().vision_id].x) - max_dec.x, std::fabs(tmp_max_speed.x)) *
+                           Common::sign(motion.x);
+        }
+    }
+
+    motion.y = speed;
+    if (std::fabs(diff.y) < Pdis)
+    {
+        motion.y = KP * max_dec.y * std::fabs(diff.y);
+    }
+    else
+    {
+        motion.y = pow(0.6f * max_dec.y * std::fabs(diff.y), 0.6f);
+    }
+    motion.y *= Common::sign(diff.y);
+    if (std::fabs(diff.y) < 5)
+    {
+        motion.y = 0; // std::max(0,std::fabs(oldAns[state().vision_id].y)-max_dec.y)*Common::sign(motion.y);
+    }
+    if (motion.y * oldAns[state().vision_id].y <= 0)
+    {
+        float tmp = oldAns[state().vision_id].y + max_dec.y * Common::sign(motion.y);
+        if (motion.y == 0)
+            tmp = oldAns[state().vision_id].y - max_dec.y * Common::sign(oldAns[state().vision_id].y);
+        if (tmp * motion.y > 0)
+        {
+            tmp = std::min(max_acc.y, std::fabs(tmp)) * Common::sign(motion.y);
+            if (std::fabs(tmp) > std::fabs(motion.y))
+                tmp = motion.y;
+        }
+
+        motion.y = tmp;
+    }
+    else
+    {
+        if (std::fabs(motion.y) > std::fabs(oldAns[state().vision_id].y) + max_acc.y)
+        {
+            motion.y = (std::fabs(oldAns[state().vision_id].y) + max_acc.y) * Common::sign(motion.y);
+        }
+        else if (std::fabs(motion.y) < std::fabs(oldAns[state().vision_id].y) - max_dec.y)
+        {
+            motion.y = (std::fabs(oldAns[state().vision_id].y) - max_dec.y) * Common::sign(motion.y);
+        }
+        if (std::fabs(motion.y) > tmp_max_speed.y)
+        {
+            if (Common::sign(motion.y) == 0)
+                motion.y = std::max(std::fabs(oldAns[state().vision_id].y) - max_dec.y, std::fabs(tmp_max_speed.y)) *
+                           Common::sign(oldAns[state().vision_id].y);
+            else
+                motion.y = std::max(std::fabs(oldAns[state().vision_id].y) - max_dec.y, std::fabs(tmp_max_speed.y)) *
+                           Common::sign(motion.y);
+        }
+
+        if (std::fabs(motion.y) > std::fabs(oldAns[state().vision_id].y))
+            if (std::fabs(motion.y - oldAns[state().vision_id].y) > max_acc.y * 1.1)
+                std::cout << "	gaz nade	" << max_acc.y << "		<	"
+                          << std::fabs(motion.y - oldAns[state().vision_id].y);
+
+        if (std::fabs(motion.y) < std::fabs(oldAns[state().vision_id].y))
+            if (std::fabs(motion.y - oldAns[state().vision_id].y) > max_dec.y * 1.1)
+                std::cout << "	tormoz nakon	" << max_dec.y << "		<	"
+                          << std::fabs(motion.y - oldAns[state().vision_id].y);
+
+        std::cout << std::endl;
+    }
+
+    oldAns[state().vision_id] = motion;
 
     target.velocity.x = 0;
     target.velocity.y = 0;
@@ -158,143 +253,31 @@ Common::Vec3 Robot::ComputeMotionCommand(bool accurate, float speed, VelocityPro
 
 void Robot::MoveByMotion(Common::Vec3 motion)
 {
-    motion.x = std::min(100.0f, std::max(-100.0f, motion.x));
-    motion.y = std::min(100.0f, std::max(-100.0f, motion.y));
-    // motion.x=0;
+    motion.x = std::clamp(motion.x, -100.0f, 100.0f);
+    motion.y = std::clamp(motion.y, -100.0f, 100.0f);
 
-    Sender::Command &command = lastCMDs[CMDindex];
-    command.vision_id        = vision_id;
-    command.motion           = motion;
-    command.current_angle    = State.angle;
-    command.target_angle     = target.angle;
+    last_motions[motion_idx] = motion;
 
-    last_cmd_idx = CMDindex;
-
-    CMDindex++;
-    if (CMDindex > PREDICT_CMDS - 1)
-        CMDindex = 0;
-
-    motion.x *= 2.55;
-    motion.y *= 2.55;
-    // motion.Z /= 3.0;
-    if (true)
-    { // new protocol
-
-        //        velocity.x.f32 = motion.x;
-        //        velocity.y.f32 = motion.y;
-        //        target_orientation.f32 = target.angle;
-        convert_float_to_2x_buff(data + 3, motion.x);
-        convert_float_to_2x_buff(data + 5, motion.y);
-        convert_float_to_2x_buff(data + 7, target.angle.deg());
-    }
-    else
-    {
-
-        int VelX      = motion.x;
-        int VelY      = motion.y;
-        int targetAng = target.angle.deg();
-
-        data[3] = abs(VelX); // VelX
-        data[4] = abs(VelY); // VelY
-
-        if (vision_id == 7)
-        {
-            std::cout << "speed in X axis: " << (int) data[3] << '-' << motion.x << std::endl;
-            std::cout << "speed in Y axis: " << (int) data[4] << '-' << motion.x << std::endl;
-        }
-
-        data[6] = abs(targetAng);
-
-        data[7] = 0x00; // the signes
-
-        if (target.angle.deg() < 0)
-            data[7] |= 0x80;
-        if (motion.y < 0)
-            data[7] |= 0x20;
-        if (motion.x < 0)
-            data[7] |= 0x10;
-    }
+    last_motion_idx = motion_idx;
+    motion_idx++;
+    if (motion_idx > PREDICT_CMDS - 1)
+        motion_idx = 0;
 }
 
-void Robot::makeSendingDataReady()
+Common::Vec3 Robot::GetCurrentMotion() const
 {
-
-    data[0] = this->vision_id;
-    if (halted)
-    {
-        data[1] = 0x0A; // length=10
-        data[2] = 0x06; // Command to HALT
-        data[3] = 0x00;
-        data[4] = 0x00;
-        data[5] = 0x00;
-        data[6] = 0x00;
-        data[7] = 0x00;
-        data[8] = 0x00;
-        data[9] = 0x00;
-    }
-    else
-    {
-        if (true)
-        {                 // new protocol
-            data[1] = 15; // length=10
-            data[2] = 12; // Command to move with new protocol
-
-            convert_float_to_2x_buff(data + 9, State.angle.deg());
-            if (shoot > 0)
-            {
-                data[11] = shoot;
-                data[12] = 0x00;
-            }
-            else if (chip > 0)
-            {
-                data[11] = 0x00;
-                data[12] = chip;
-            }
-            else
-            {
-                data[11] = 0x00;
-                data[12] = 0x00;
-            }
-            //            data[11] = 0x00;
-            //            data[12] = 0x30;
-        }
-        else
-        {
-
-            int currAng = State.angle.deg();
-
-            // Robots ID
-            data[1] = 0x0A; // length=10
-            data[2] = 0x04; // Command to move by Vel
-
-            data[5] = abs(currAng); // Current angle
-
-            if (State.angle.deg() < 0)
-                data[7] |= 0x40;
-
-            if (shoot > 0)
-            {
-                data[8] = shoot;
-                data[9] = 0x00;
-            }
-            else if (chip > 0)
-            {
-                data[8] = 0x00;
-                data[9] = chip;
-            }
-            else
-            {
-                data[8] = 0x00;
-                data[9] = 0x00;
-            }
-        }
-    }
-
-    new_comm_ready = true;
+    return last_motions[last_motion_idx];
 }
 
 Sender::Command Robot::GetCurrentCommand() const
 {
-    return lastCMDs[last_cmd_idx];
+    return {.vision_id     = vision_id,
+            .halted        = halted,
+            .motion        = GetCurrentMotion(),
+            .current_angle = state().angle,
+            .target_angle  = target.angle,
+            .shoot         = shoot,
+            .chip          = chip,
+            .dribbler      = dribbler};
 }
 } // namespace Tyr::Soccer

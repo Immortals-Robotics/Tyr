@@ -46,39 +46,24 @@ void Ai::recievePass(int robot_num, Common::Vec2 staticPos, bool chip)
         maxBallAngle = 0;
     }
 
-    float distCoeff = ball.position.distanceTo(OwnRobot[robot_num].State.position) / 1500.0f;
+    float distCoeff = Common::worldState().ball.position.distanceTo(OwnRobot[robot_num].state().position) / 1500.0f;
     distCoeff       = std::max(0.8f, distCoeff);
     distCoeff       = std::min(1.2f, distCoeff);
-    // angleTol *= distCoeff;
-    if (0) //(oneTouchType[robot_num] ==
-           // shirje)&&(oneTouchDetector[robot_num].IsArriving(OwnRobot[dmf].State.position,angleTol, maxBallAngle)))
-    {
-        WaitForPass(robot_num, 0, &OwnRobot[attack].State.position);
-    }
-    /*else if ((oneTouchType[robot_num] == shirje)&&(DIS(ball.position,
-    OwnRobot[robot_num].State.position)<450)&&(timer.time()<4.0))
-    {
-        int targetRobotNum = (robot_num==lmf)?rmf:lmf;
-        float passAngle = AngleWith ( Common::Vec2 ( -side*2500 , -sgn ( ball.position.y ) * 1700 ) , ball.position );
-        //float passAngle = AngleWith ( OwnRobot[targetRobotNum].State.position , ball.position );
-        //tech_circle(robot_num, passAngle, 0, 120, 1, 1, 0, 1);
-        circle_ball(robot_num, passAngle, 0, 80, 1.0f);
-    }*/
 
-    else if ((oneTouchDetector[robot_num].IsArriving(angleTol, maxBallAngle)) && (oneTouchType[robot_num] != allaf))
+    if ((oneTouchDetector[robot_num].IsArriving(angleTol, maxBallAngle)) && (oneTouchType[robot_num] != allaf))
     {
         oneTouchTypeUsed[robot_num] = true;
         if (oneTouchType[robot_num] == oneTouch)
         {
             if (timer.time() < contStrStaticTime)
-                WaitForPass(robot_num, chip, NULL, &staticPos);
+                WaitForPass(robot_num, chip, nullptr, &staticPos);
             else
                 WaitForPass(robot_num, chip);
         }
         else if (oneTouchType[robot_num] == shirje)
         {
             WaitForOmghi(robot_num, chip);
-            // WaitForPass(robot_num, 0, &OwnRobot[dmf].State.position);
+            // WaitForPass(robot_num, 0, &OwnRobot[dmf].state().position);
         }
         else if (oneTouchType[robot_num] == gool)
         {
@@ -87,9 +72,9 @@ void Ai::recievePass(int robot_num, Common::Vec2 staticPos, bool chip)
         else
         { // probably allaf!!!
             ERRTSetObstacles(robot_num, false, true);
-            OwnRobot[robot_num].face(Common::Vec2(-side * field_width, 0));
+            OwnRobot[robot_num].face(Common::Vec2(-side * Common::worldState().field.width, 0));
             // OwnRobot[robot_num].target.angle=-90;
-            ERRTNavigate2Point(robot_num, staticPos, 0, 100, &VELOCITY_PROFILE_MAMOOLI);
+            ERRTNavigate2Point(robot_num, staticPos, 100, &VELOCITY_PROFILE_MAMOOLI);
         }
     }
     else
@@ -100,9 +85,9 @@ void Ai::recievePass(int robot_num, Common::Vec2 staticPos, bool chip)
             oneTouchType[robot_num]     = oneTouch;
         }
         ERRTSetObstacles(robot_num, true, true);
-        OwnRobot[robot_num].face(Common::Vec2(-side * field_width, 0));
+        OwnRobot[robot_num].face(Common::Vec2(-side * Common::worldState().field.width, 0));
         // OwnRobot[robot_num].target.angle=-90;
-        ERRTNavigate2Point(robot_num, staticPos, 0, 100, &VELOCITY_PROFILE_MAMOOLI);
+        ERRTNavigate2Point(robot_num, staticPos, 100, &VELOCITY_PROFILE_MAMOOLI);
     }
 }
 } // namespace Tyr::Soccer

@@ -85,7 +85,6 @@ set(SOURCE_FILES
 	skills/recieve_pass.cpp
 	skills/tech_circle.cpp
 
-	robot/motion_plan.cpp
 	robot/robot.cpp)
 
 add_library(${PROJECT_NAME}

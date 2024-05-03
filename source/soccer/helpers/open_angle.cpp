@@ -19,9 +19,9 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
     bool         oops     = 0;
     int          obsCount = 0;
     int          obs[50][2];
-    Common::Vec2 t2      = Common::Vec2(-field_width * side, goal_width / 2.0);
-    Common::Vec2 t1      = Common::Vec2(-field_width * side, -goal_width / 2.0);
-    Common::Vec2 MidGoal = Common::Vec2(-field_width * side, 0);
+    Common::Vec2 t2      = Common::Vec2(-Common::worldState().field.width * side, Common::worldState().field.goal_width / 2.0);
+    Common::Vec2 t1      = Common::Vec2(-Common::worldState().field.width * side, -Common::worldState().field.goal_width / 2.0);
+    Common::Vec2 MidGoal = Common::Vec2(-Common::worldState().field.width * side, 0);
     float        midGoalAngel;
     float        t1Angel;
     float        t2Angel;
@@ -52,19 +52,19 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        if ((OwnRobot[i].State.seen_state != Common::SeenState::CompletelyOut) && (i != robot_num))
+        if ((OwnRobot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != robot_num))
         {
-            obs[obsCount][0] = OwnRobot[i].State.position.x;
-            obs[obsCount][1] = OwnRobot[i].State.position.y;
+            obs[obsCount][0] = OwnRobot[i].state().position.x;
+            obs[obsCount][1] = OwnRobot[i].state().position.y;
             obsCount++;
         }
     }
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if (OppRobot[i].seen_state != Common::SeenState::CompletelyOut)
+        if (Common::worldState().opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            obs[obsCount][0] = OppRobot[i].position.x;
-            obs[obsCount][1] = OppRobot[i].position.y;
+            obs[obsCount][0] = Common::worldState().opp_robot[i].position.x;
+            obs[obsCount][1] = Common::worldState().opp_robot[i].position.y;
             obsCount++;
         }
     }

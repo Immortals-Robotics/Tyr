@@ -1,19 +1,22 @@
 #pragma once
 
-#include "command.h"
+#include "sender.h"
 
 namespace Tyr::Sender
 {
-class Grsim
+class Grsim final : public ISender
 {
 private:
     std::unique_ptr<Common::UdpServer> socket;
     Common::NetworkAddress             address;
 
+    Protos::grSim_Packet packet;
+
 public:
     Grsim(Common::NetworkAddress address);
     ~Grsim() = default;
 
-    void sendData(const std::vector<Command>& commands);
+    void queueCommand(const Command &command) override;
+    bool flush() override;
 };
 } // namespace Tyr::Sender

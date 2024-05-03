@@ -4,17 +4,18 @@ namespace Tyr::Soccer
 {
 Common::Vec2 Ai::CalculatePassPos(int robot_num, const Common::Vec2 &target, const Common::Vec2 &statPos, float bar)
 {
-    Common::Line ball_line = Common::Line::fromPointAndAngle(ball.position, ball.velocity.toAngle());
+    Common::Line ball_line = Common::Line::fromPointAndAngle(Common::worldState().ball.position,
+                                                             Common::worldState().ball.velocity.toAngle());
     // Common::Line ball_line ( 1.0 , -ballLine.getSlope() , -ballLine.getIntercept() );
 
     if (chip_head.deg() < 180)
     {
-        ball_line = Common::Line::fromPointAndAngle(ball.position, chip_head);
+        ball_line = Common::Line::fromPointAndAngle(Common::worldState().ball.position, chip_head);
         std::cout << "	calcing with static head: " << chip_head.deg() << std::endl;
     }
 
     Common::Angle angleWithTarget = statPos.angleWith(target);
-    // angleWithTarget = OwnRobot[robot_num].State.angle;
+    // angleWithTarget = OwnRobot[robot_num].state().angle;
     Common::Vec2 ans  = ball_line.closestPoint(statPos + angleWithTarget.toUnitVec() * bar);
     Common::Vec2 fans = ans - angleWithTarget.toUnitVec() * bar;
     Common::debug().drawCircle(fans, 90, "", Common::Cornflower_Blue);
@@ -61,22 +62,23 @@ float getCalibratedShootPowCPY(int vision_id, float raw_shoot)
     return calib_shoot;
 }
 
-void Ai::WaitForPass(int robot_num, bool chip, Common::Vec2 *target, Common::Vec2 *statPos)
+void Ai::WaitForPass(int robot_num, bool chip, const Common::Vec2 *target, Common::Vec2 *statPos)
 {
-    Common::Vec2 pos = CalculatePassPos(robot_num, target == NULL ? Common::Vec2(-side * field_width, 0) : *target,
-                                        statPos == NULL ? OwnRobot[robot_num].State.position : *statPos, 78);
+    Common::Vec2 pos = CalculatePassPos(
+        robot_num, target == nullptr ? Common::Vec2(-side * Common::worldState().field.width, 0) : *target,
+        statPos == nullptr ? OwnRobot[robot_num].state().position : *statPos, 78);
 
-    /*if (target==NULL) {
+    /*if (target==nullptr) {
         target = new Common::Vec2(Common::Vec2(-side*3025, 0));
     }*/
 
-    if (target == NULL)
+    if (target == nullptr)
     {
         OwnRobot[robot_num].target.angle = calculateOneTouchAngle(robot_num, pos);
     }
     else
     {
-        OwnRobot[robot_num].target.angle = OwnRobot[robot_num].State.position.angleWith(*target);
+        OwnRobot[robot_num].target.angle = OwnRobot[robot_num].state().position.angleWith(*target);
     }
 
     Common::Line shoot_line =
@@ -84,18 +86,22 @@ void Ai::WaitForPass(int robot_num, bool chip, Common::Vec2 *target, Common::Vec
     Common::Line open_line =
         Common::Line::fromPointAndAngle(Common::Vec2(pos.x, pos.y), calculateOpenAngleToGoal(pos, robot_num).center);
     debugDraw = true;
-    Common::debug().drawLineSegment(pos, Common::Vec2(-side * field_width, shoot_line.y(-side * field_width)), "",
-                                    Common::Brown);
-    Common::debug().drawLineSegment(pos, Common::Vec2(-side * field_width, open_line.y(-side * field_width)), "",
-                                    Common::Pink);
+    Common::debug().drawLineSegment(
+        pos,
+        Common::Vec2(-side * Common::worldState().field.width, shoot_line.y(-side * Common::worldState().field.width)),
+        "", Common::Brown);
+    Common::debug().drawLineSegment(
+        pos,
+        Common::Vec2(-side * Common::worldState().field.width, open_line.y(-side * Common::worldState().field.width)),
+        "", Common::Pink);
     debugDraw = false;
 
     // OwnRobot[robot_num].target.angle=-90;
 
     ERRTSetObstacles(robot_num, 0, 1);
-    ERRTNavigate2Point(robot_num, pos, 0, 100, &VELOCITY_PROFILE_KHARAKI);
+    ERRTNavigate2Point(robot_num, pos, 100, &VELOCITY_PROFILE_KHARAKI);
 
-    if (target == NULL)
+    if (target == nullptr)
     {
         if (chip)
         {
@@ -103,7 +109,7 @@ void Ai::WaitForPass(int robot_num, bool chip, Common::Vec2 *target, Common::Vec
         }
         else
         {
-            float vel_delta = ball.velocity.length() / 100.0f;
+            float vel_delta = Common::worldState().ball.velocity.length() / 100.0f;
             // vel_delta = std::min(60,vel_delta);
             vel_delta *= 0.7;
             vel_delta = 60 - vel_delta;

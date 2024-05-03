@@ -8,46 +8,25 @@ namespace Tyr::Soccer
 {
 class Robot
 {
-    Common::Timer angleSendTimer;
-
 public:
-    float field_w;
-    float field_h;
-
-    float shootMult = 1.0f;
-
-    bool               oldRobot;
-    Common::RobotState State;
     Common::RobotState target;
-    int                shoot, chip, Break, dribbler;
-    int                Motor[4];
-    unsigned char      data[32];
-    struct Vector2f_V2 velocity;
-    union FLOAT_32     target_orientation;
-    int                serial_id, vision_id;
-    bool               control_mode;
+    int                shoot, chip, dribbler;
+    int                vision_id;
     bool               halted;
-    bool               new_comm_ready;
 
-    Sender::Command lastCMDs[11];
-	int last_cmd_idx = 0;
+    Common::Vec3 last_motions[11];
 
-    int             CMDindex;
-
-    int   remainingPIDParams;
-    float p, i, iMax, torque;
+    int last_motion_idx = 0;
+    int motion_idx;
 
     Robot();
 
-    void sendPID(float _p, float _i, float _iMax, float _torque);
+    inline const Common::RobotState &state() const
+    {
+        return Common::worldState().own_robot[vision_id];
+    }
 
-    void set_serial_id(unsigned short s_id);
-
-    void set_vision_id(unsigned short v_id);
-
-    void set_control_mode(bool c_mode);
-
-    float dis(float x1, float y1, float x2, float y2);
+    void setVisionId(unsigned short v_id);
 
     void Shoot(int pow);
 
@@ -57,17 +36,11 @@ public:
 
     void face(Common::Vec2 _target);
 
-    Common::Vec3 MotionPlan(Common::RobotState state, Common::RobotState target, float speed, bool accurate,
-                            VelocityProfile *velocityProfile);
-
-    void Move(bool accurate, float speed, VelocityProfile *velocityProfile);
-
     void MoveByMotion(Common::Vec3 motion);
 
-    Common::Vec3 ComputeMotionCommand(bool accurate, float speed, VelocityProfile *velocityProfile);
+    Common::Vec3 ComputeMotionCommand(float speed, const VelocityProfile &velocityProfile);
 
+    Common::Vec3    GetCurrentMotion() const;
     Sender::Command GetCurrentCommand() const;
-
-    void makeSendingDataReady();
 };
 } // namespace Tyr::Soccer

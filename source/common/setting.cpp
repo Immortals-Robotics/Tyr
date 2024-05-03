@@ -74,10 +74,6 @@ void Setting::load(const toml::table t_table)
 
     nrf_frq = soccer["nrf_frq"].value_or(nrf_frq);
 
-    field_width  = soccer["field_width"].value_or(field_width);
-    field_length = soccer["field_length"].value_or(field_length);
-    goal_length  = soccer["goal_length"].value_or(goal_length);
-
     // Gamma represents the relation between the robots velocity parameter and the velocity in mm/s
     // Gamma is 48 in the GR Simulation
     // and 19 in reality

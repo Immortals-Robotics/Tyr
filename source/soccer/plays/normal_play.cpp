@@ -8,14 +8,13 @@ void Ai::NewNormalPlay()
 {
     //	GKHi(gk, 0);
     // side = -side;
-    //	GKHi_Simple(gk,0);
     GKHi(gk, 0);
     // side = -side;//TODO #8 comment this ...
 
-    //	DefHi(def,NULL, 0);
+    //	DefHi(def,nullptr, 0);
     //	side = -side;
-    //    DefHi(def,NULL, 0);
-    DefMid(def, rw, lw, NULL, false);
+    //    DefHi(def,nullptr, 0);
+    DefMid(def, rw, lw, nullptr, false);
     //	side = -side;
 
     CalcIsDefending();

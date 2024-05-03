@@ -1,5 +1,7 @@
 #pragma once
 
+#include "logging.h"
+
 namespace Tyr::Common
 {
 

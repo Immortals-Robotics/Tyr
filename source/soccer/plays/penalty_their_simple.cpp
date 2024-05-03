@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 void Ai::penalty_their_simple()
 {
-    float penalty_x = field_width - 85.0;
+    float penalty_x = Common::worldState().field.width - 85.0;
 
     static VelocityProfile VELOCITY_PROFILE_KILLER = VELOCITY_PROFILE_KHARAKI;
     VELOCITY_PROFILE_KILLER.max_spd                = Common::Vec2(40.0f);
@@ -15,43 +15,43 @@ void Ai::penalty_their_simple()
     if (index == -1)
     {
         OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
-        Navigate2Point(gk, Common::Vec2(side * penalty_x, 0));
+        Navigate2Point(gk, Common::Vec2(side * penalty_x));
     }
     else
     {
-        //		float gkp_y = Common::Line::fromTwoPoints ( Common::Vec2 ( OppRobot[index].position.x ,
-        // OppRobot[index].position.y ) , ball.position).intersect (
+        //		float gkp_y = Common::Line::fromTwoPoints ( Common::Vec2 ( Common::worldState().opp_robot[index].position.x ,
+        // Common::worldState().opp_robot[index].position.y ) , Common::worldState().ball.position).intersect (
         // Common::Line::fromTwoPoints ( Common::Vec2 ( side * penalty_x , 100 ) , Common::Vec2 ( side * penalty_x ,
         // -100 ) ) ).getY ( );
         // TODO #7 check this!!!!
-        float gkp_y = Common::Line::fromPointAndAngle(ball.position, OppRobot[index].angle)
+        float gkp_y = Common::Line::fromPointAndAngle(Common::worldState().ball.position, Common::worldState().opp_robot[index].angle)
                           .intersect(Common::Line::fromTwoPoints(Common::Vec2(side * penalty_x, 100),
                                                                  Common::Vec2(side * penalty_x, -100)))
                           .value_or(Common::Vec2())
                           .y;
-        float max_reach_y = (goal_width / 2.0) - 50.0;
+        float max_reach_y = (Common::worldState().field.goal_width / 2.0) - 50.0;
         if (max_reach_y < gkp_y)
             gkp_y = max_reach_y;
         if (-max_reach_y > gkp_y)
             gkp_y = -max_reach_y;
 
-        OwnRobot[gk].face(ball.position);
+        OwnRobot[gk].face(Common::worldState().ball.position);
 
-        Navigate2Point(gk, Common::Vec2(side * penalty_x, gkp_y), false, 100, &VELOCITY_PROFILE_KILLER);
+        Navigate2Point(gk, Common::Vec2(side * penalty_x, gkp_y), 100, &VELOCITY_PROFILE_KILLER);
     }
     ERRTSetObstacles(lw, true, true);
-    ERRTNavigate2Point(lw, Common::Vec2(-side * 4300, 500), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(lw, Common::Vec2(-side * 4300, 500), 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(rw, true, true);
-    ERRTNavigate2Point(rw, Common::Vec2(-side * 4300, -500), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(rw, Common::Vec2(-side * 4300, -500), 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(def, true, true);
-    ERRTNavigate2Point(def, Common::Vec2(-side * 4300, 800), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(def, Common::Vec2(-side * 4300, 800), 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(dmf, true, true);
-    ERRTNavigate2Point(dmf, Common::Vec2(-side * 4300, -800), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(dmf, Common::Vec2(-side * 4300, -800), 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(mid1, true, true);
-    ERRTNavigate2Point(mid1, Common::Vec2(-side * 4300, -1500), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(mid1, Common::Vec2(-side * 4300, -1500), 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(mid2, true, true);
-    ERRTNavigate2Point(mid2, Common::Vec2(-side * 4300, 1500), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(mid2, Common::Vec2(-side * 4300, 1500), 80, &VELOCITY_PROFILE_AROOM);
     ERRTSetObstacles(attack, true, true);
-    ERRTNavigate2Point(attack, Common::Vec2(-side * 4300, 0), false, 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(attack, Common::Vec2(-side * 4300, 0), 80, &VELOCITY_PROFILE_AROOM);
 }
 } // namespace Tyr::Soccer

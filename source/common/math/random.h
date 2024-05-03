@@ -5,18 +5,11 @@ namespace Tyr::Common
 class Random
 {
 private:
-    std::random_device                    *rnd_device;
-    std::mt19937                          *rnd_engine;
-    std::uniform_real_distribution<float> *rnd_dist;
-
-    float min;
-    float max;
+    std::default_random_engine m_rnd_engine;
 
 public:
     Random();
-    Random(float _min, float _max);
-    ~Random();
 
-    float get() const;
+    float get(float t_min = 0.0f, float t_max = 1.0f);
 };
 } // namespace Tyr::Common

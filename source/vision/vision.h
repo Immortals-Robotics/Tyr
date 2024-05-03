@@ -15,7 +15,7 @@ namespace Tyr::Vision
 class Vision
 {
 public:
-    Vision(Common::WorldState *t_state);
+    Vision();
 
     void receive();
     void process();
@@ -52,8 +52,6 @@ private:
     static constexpr float kRobotErrorVelocity = 450.0f;
 
     std::unique_ptr<Common::UdpClient> m_udp;
-
-    Common::WorldState *m_state;
 
     bool m_packet_received[Common::Setting::kCamCount];
 
