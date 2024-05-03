@@ -2,15 +2,6 @@
 
 namespace Tyr::Soccer
 {
-struct RobotProperty
-{
-    int  serialID;
-    bool oldRobot;
-    bool hasKick;
-    bool hasChip;
-    bool hasDribble;
-};
-
 Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
 {
     Common::logInfo("Running Immortals SSL AI module");
@@ -83,7 +74,7 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     OwnRobot[rw].setVisionId(7);
     OwnRobot[lw].setVisionId(8);
 #else
-    // TODO comment this (used fogrSim)
+    // TODO comment this (used for grSim)
     OwnRobot[gk].setVisionId(0);
     OwnRobot[def].setVisionId(1);
     OwnRobot[dmf].setVisionId(2);
@@ -127,9 +118,9 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     VELOCITY_PROFILE_KHARAKI.max_w_dec = 140.0f;
 
     playBook = nullptr;
-    std::string strategy_path(DATA_DIR);
-    strategy_path.append("/strategy.ims");
-    read_playBook(strategy_path.c_str());
+
+    const std::filesystem::path strategy_path = std::filesystem::path{DATA_DIR} / std::filesystem::path{"strategy.ims"};
+    read_playBook(strategy_path);
     if (playBook)
     {
         Common::logInfo("Strategy loaded with size {}", playBook->strategy_size());

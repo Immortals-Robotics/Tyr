@@ -195,7 +195,7 @@ public:
     Robot OwnRobot[Common::Setting::kMaxOnFieldTeamRobots];
     Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders);
     void Process();
-    bool read_playBook(const char *fileName);
+    bool read_playBook(std::filesystem::path path);
     bool read_playBook_str(std::span<char> buffer);
 
 protected:
