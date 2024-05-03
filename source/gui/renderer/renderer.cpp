@@ -35,6 +35,18 @@ int Renderer::ConvertRealityUnitToPixels(float _value)
     return _value * zoomScale;
 }
 
+void Renderer::sortPointsClockwise(Common::Vec2 &_p1, Common::Vec2 &_p2, Common::Vec2 &_p3)
+{
+    float area = (_p2.x - _p1.x) * (_p3.y - _p1.y) - (_p3.x - _p1.x) * (_p2.y - _p1.y);
+    Common::Vec2 temp;
+    if (area < 0)
+    {
+        temp              = _p3;
+        _p3               = _p2;
+        _p2               = temp;
+    }
+}
+
 void Renderer::drawRect(Common::Rect rect, Color _color, bool _isFilled, float _thickness, unsigned char _transparency)
 {
     Vector2 v1   = ConvertSignedVecToPixelVec(rect.min);
@@ -109,6 +121,28 @@ void Renderer::drawCircleSector(Common::Circle circle, Color _color, float _star
     {
         DrawCircleSectorLines(center, _rad, _startAngle, _endAngle, 500, _color);
         DrawTriangleLines(center, p1, p2, _color);
+    }
+    EndTextureMode();
+}
+
+void Renderer::drawTriangle(Common::Vec2 _p1, Common::Vec2 _p2, Common::Vec2 _p3, Color _color, bool _isFilled,
+                            unsigned char _transparency)
+{
+    sortPointsClockwise(_p1, _p2, _p3);
+    Vector2 v1 = ConvertSignedVecToPixelVec(_p1);
+    Vector2 v2 = ConvertSignedVecToPixelVec(_p2);
+    Vector2 v3 = ConvertSignedVecToPixelVec(_p3);
+    _color.a   = _transparency;
+    Common::logDebug("trsp {}", _color.a );
+
+    BeginTextureMode(visualizaionTexture);
+    if (_isFilled)
+    {
+        DrawTriangle(v1, v2, v3, _color);
+    }
+    else
+    {
+        DrawTriangleLines(v1, v2, v3, _color);
     }
     EndTextureMode();
 }

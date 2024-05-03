@@ -15,6 +15,7 @@ set(SOURCE_FILES
 	main.cpp
 	app.cpp
 	menu/config_menu.cpp
+	menu/widget_menu.cpp
 	renderer/renderer_ball.cpp
 	renderer/renderer_robot.cpp
 	renderer/renderer.cpp

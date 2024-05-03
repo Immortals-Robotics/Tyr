@@ -6,9 +6,9 @@ static const std::regex ipRegex(
     "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
 static const std::regex portRegex("^[1-9][0-9]*$");
 
-ConfigMenu::ConfigMenu() : m_width(300.), m_network_needs_update(InputCallbackType::None)
+ConfigMenu::ConfigMenu() : m_network_needs_update(InputCallbackType::None)
 {
-    m_window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
+    m_window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
     strcpy(m_vision_ip_text, Tyr::Common::setting().vision_address.ip.c_str());
     strcpy(m_vision_port_text, std::to_string(Tyr::Common::setting().vision_address.port).c_str());
 
@@ -138,7 +138,8 @@ void ConfigMenu::drawTabBar()
 void ConfigMenu::draw()
 {
     ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::SetNextWindowSize(ImVec2(m_width, 700), ImGuiCond_FirstUseEver);
+    auto main_window_height = GetScreenHeight();
+    ImGui::SetNextWindowSize(ImVec2(250., main_window_height));
     if (ImGui::Begin("Config", nullptr, m_window_flags))
     {
         drawTabBar();

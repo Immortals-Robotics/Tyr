@@ -18,14 +18,16 @@ public:
                          unsigned char _transparency = 255);
     void drawText(Common::Vec2 _pos, std::string _str, int _fontSize = 12, Color _color = WHITE,
                   unsigned char _transparency = 255);
+    void drawTriangle(Common::Vec2 _p1, Common::Vec2 _p2, Common::Vec2 _p3, Color _color, bool _isFilled = true,
+                      unsigned char _transparency = 255);
 
     void drawField(const Protos::SSL_GeometryFieldSize &data);
     void drawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data,
                     Common::TeamColor                                                     color);
-    void drawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall> &data);
+    void drawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall> &data, bool draw_goal_lines);
 
     void drawRobot(const Protos::SSL_DetectionRobot &robot, Common::TeamColor color);
-    void drawBall(const Protos::SSL_DetectionBall &ball);
+    void drawBall(const Protos::SSL_DetectionBall &ball, bool draw_goal_lines);
 
     void drawCirclesUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug_Circle> &circles);
     void drawRectsUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug_Rect> &rects);
@@ -51,5 +53,6 @@ private:
     void    CalculateZoom();
     Vector2 ConvertSignedVecToPixelVec(Common::Vec2 _signedVec);
     int     ConvertRealityUnitToPixels(float _value);
+    void    sortPointsClockwise(Common::Vec2 &_p1, Common::Vec2 &_p2, Common::Vec2 &_p3);
 };
 } // namespace Tyr::Gui
