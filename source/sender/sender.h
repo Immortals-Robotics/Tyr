@@ -4,20 +4,12 @@
 
 namespace Tyr::Sender
 {
-class Sender
+class ISender
 {
-private:
-    std::shared_ptr<Common::UdpServer> commUDP;
-
 public:
-    int buff_idx;
-    int startup;
+    virtual ~ISender() = default;
 
-    void getCommand(const Command& command);
-    bool appendData(unsigned char *data, int length);
-    bool sendAll();
-    void append_demo_data();
-
-    Sender();
+    virtual void queueCommand(const Command &command) = 0;
+    virtual bool flush()                              = 0;
 };
 } // namespace Tyr::Sender

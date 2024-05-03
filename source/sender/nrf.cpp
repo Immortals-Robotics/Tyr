@@ -1,14 +1,12 @@
-#include "sender.h"
+#include "nrf.h"
 
 #include "protocol/writer.h"
 
 namespace Tyr::Sender
 {
-void Sender::getCommand(const Command &command)
+void Nrf::queueCommand(const Command &command)
 {
-    auto buffer = commUDP->getBuffer();
-
-    unsigned char *const data = (unsigned char *) &buffer[buff_idx];
+    unsigned char data[32] = {};
 
     Common::Vec3 motion = command.motion;
     motion.x *= 2.55;
@@ -53,10 +51,10 @@ void Sender::getCommand(const Command &command)
         }
     }
 
-    buff_idx += data[1];
+    appendData(data, data[1]);
 }
 
-bool Sender::appendData(unsigned char *data, int length)
+void Nrf::appendData(unsigned char *data, int length)
 {
     auto buffer = commUDP->getBuffer();
 
@@ -65,11 +63,12 @@ bool Sender::appendData(unsigned char *data, int length)
         buffer[i + buff_idx] = data[i];
     }
     buff_idx += length;
-    return true;
 }
 
-bool Sender::sendAll()
+bool Nrf::flush()
 {
+    append_demo_data();
+
     if (startup > 0)
     {
         startup--;
@@ -93,7 +92,7 @@ bool Sender::sendAll()
     return true;
 }
 
-Sender::Sender()
+Nrf::Nrf()
 {
     commUDP = std::make_shared<Common::UdpServer>();
 
@@ -106,19 +105,20 @@ Sender::Sender()
     startup = 5;
 }
 
-void Sender::append_demo_data()
+void Nrf::append_demo_data()
 {
-    auto buffer          = commUDP->getBuffer();
-    buffer[0 + buff_idx] = 25;
-    buffer[1 + buff_idx] = 0x0A;
-    buffer[2 + buff_idx] = 0x00;
-    buffer[3 + buff_idx] = 0x00;
-    buffer[4 + buff_idx] = 0x00;
-    buffer[5 + buff_idx] = 0x00;
-    buffer[6 + buff_idx] = 0x00;
-    buffer[7 + buff_idx] = 0x00;
-    buffer[8 + buff_idx] = 0x00;
-    buffer[9 + buff_idx] = 0x00;
-    buff_idx += 10;
+    unsigned char data[10];
+    data[0] = 25;
+    data[1] = 0x0A;
+    data[2] = 0x00;
+    data[3] = 0x00;
+    data[4] = 0x00;
+    data[5] = 0x00;
+    data[6] = 0x00;
+    data[7] = 0x00;
+    data[8] = 0x00;
+    data[9] = 0x00;
+
+    appendData(data, 10);
 }
 } // namespace Tyr::Sender

@@ -6,10 +6,11 @@ void Ai::internalFinalize()
 {
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        m_sender->getCommand(OwnRobot[i].GetCurrentCommand());
+        for (auto &sender : m_senders)
+            sender->queueCommand(OwnRobot[i].GetCurrentCommand());
+
         OwnRobot[i].halted = false;
     }
-    m_sender->append_demo_data();
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {

@@ -42,11 +42,10 @@ bool Application::initialize()
 
     m_strategy_udp = std::make_unique<Common::UdpClient>(Common::setting().strategy_address);
 
-    m_sender = std::make_unique<Sender::Sender>();
+    m_senders.push_back(std::make_unique<Sender::Nrf>());
+    m_senders.push_back(std::make_unique<Sender::Grsim>(Common::setting().grsim_address));
 
-    m_ai = std::make_unique<Soccer::Ai>(m_sender.get());
-
-    m_grsim = std::make_unique<Sender::Grsim>(Common::setting().grsim_address);
+    m_ai = std::make_unique<Soccer::Ai>(m_senders);
 
     Common::logInfo(" Now it is time, lets rock...");
     return true;
@@ -83,17 +82,8 @@ void Application::aiThreadEentry()
         m_vision->process();
         m_ai->Process();
 
-        std::vector<Sender::Command> commands;
-        commands.reserve(Common::Setting::kMaxOnFieldTeamRobots);
-
-        for (int robot_idx = 0; robot_idx < Common::Setting::kMaxOnFieldTeamRobots; ++robot_idx)
-        {
-            commands.emplace_back(m_ai->OwnRobot[robot_idx].GetCurrentCommand());
-        }
-
-        m_grsim->sendData(commands);
-
-        m_sender->sendAll();
+        for (auto &sender : m_senders)
+            sender->flush();
 
         Common::debug().broadcast();
 

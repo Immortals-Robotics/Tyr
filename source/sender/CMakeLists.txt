@@ -3,8 +3,9 @@ project(${CMAKE_PROJECT_NAME}-sender)
 set(HEADER_FILES
 	pch.h
 	command.h
-	grsim.h
 	sender.h
+	grsim.h
+	nrf.h
 	protocol/data_lite.h
 	protocol/defines.h
 	protocol/half.h
@@ -18,7 +19,7 @@ set(C_SOURCE_FILES
 
 set(SOURCE_FILES
 	grsim.cpp
-	sender.cpp
+	nrf.cpp
 	${C_SOURCE_FILES})
 
 add_library(${PROJECT_NAME}

@@ -11,10 +11,13 @@ struct RobotProperty
     bool hasDribble;
 };
 
-Ai::Ai(Sender::Sender *sender) : m_sender(sender)
+Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
 {
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");
+
+    for (auto &sender : senders)
+        m_senders.push_back(sender.get());
 
     dss = new Dss(OwnRobot, Common::worldState().opp_robot, 92.f, 1.f / 61.57f, 7000.f, 3000.f);
 

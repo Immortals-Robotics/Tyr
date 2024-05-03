@@ -11,7 +11,7 @@ namespace Tyr::Soccer
 class Ai
 {
 private:
-    Sender::Sender *m_sender;
+    std::vector<Sender::ISender *> m_senders;
 
     Common::Random m_random;
 
@@ -130,12 +130,12 @@ private:
     // These functions make sure the required robots are present (in case if any of the robots got out):
     void wantThisRobot(int robot_num); // First we tell which robot we need
     bool positionRobots(bool avoid_GK  = true,
-                         bool avoid_DEF = true); // now we swap the apsent robots (TRUE if it succeeds)
+                        bool avoid_DEF = true); // now we swap the apsent robots (TRUE if it succeeds)
     bool requiredRobots[Common::Setting::kMaxOnFieldTeamRobots];
 
     // Skills
-    void Navigate2Point(int robot_num, Common::Vec2 dest, int speed = 80,
-                        VelocityProfile *velocityProfile = nullptr, bool use_dss = false);
+    void Navigate2Point(int robot_num, Common::Vec2 dest, int speed = 80, VelocityProfile *velocityProfile = nullptr,
+                        bool use_dss = false);
     void ERRTNavigate2Point(int robot_num, Common::Vec2 dest, int speed = 80,
                             VelocityProfile *velocityProfile = nullptr);
     void ERRTSetObstacles(int robot_num, bool bll = false, bool field = true);
@@ -151,7 +151,8 @@ private:
     void DefenceWall(int robot_num, bool kickOff = false);
     void tech_circle(int robot_num, Common::Angle angle, int kick = 0, int chip = 0, bool needRRT = true,
                      bool gameRestart = false, bool kiss = false, bool dribbler = false, bool needOppRRT = false);
-    void WaitForPass(int robot_num, bool chip = false, const Common::Vec2 *target = nullptr, Common::Vec2 *statPos = nullptr);
+    void WaitForPass(int robot_num, bool chip = false, const Common::Vec2 *target = nullptr,
+                     Common::Vec2 *statPos = nullptr);
     void WaitForOmghi(int robot_num, bool chip = false);
     void WaitForGool(int robot_num, bool chip = false);
     void recievePass(int robot_num, Common::Vec2 staticPos, bool chip = false);
@@ -192,7 +193,7 @@ private:
 
 public:
     Robot OwnRobot[Common::Setting::kMaxOnFieldTeamRobots];
-    Ai(Sender::Sender *sender);
+    Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders);
     void Process();
     bool read_playBook(const char *fileName);
     bool read_playBook_str(std::span<char> buffer);
