@@ -4,32 +4,32 @@ namespace Tyr::Soccer
 {
 float Ai::calculateOppThreat(int opp, bool restart)
 {
-    if (OppRobot[opp].seen_state == Common::SeenState::CompletelyOut)
+    if (Common::worldState().opp_robot[opp].seen_state == Common::SeenState::CompletelyOut)
         return -1;
     if (opp == Common::refereeState().opp_gk)
         return -1;
 
-    if ((OppRobot[opp].position.distanceTo(ball.position) < 400) &&
-        ((OwnRobot[attack].State.position.distanceTo(ball.position) < 400) || restart))
+    if ((Common::worldState().opp_robot[opp].position.distanceTo(Common::worldState().ball.position) < 400) &&
+        ((OwnRobot[attack].State.position.distanceTo(Common::worldState().ball.position) < 400) || restart))
         return -1;
 
-    if (OppRobot[opp].position.x * side < 1000 && std::fabs(OppRobot[opp].position.x - ball.position.x) > 3000)
+    if (Common::worldState().opp_robot[opp].position.x * side < 1000 && std::fabs(Common::worldState().opp_robot[opp].position.x - Common::worldState().ball.position.x) > 3000)
         return -1;
 
-    float oppDisToGoal = OppRobot[opp].position.distanceTo(Common::Vec2(side * Common::worldState().field.width, 0));
+    float oppDisToGoal = Common::worldState().opp_robot[opp].position.distanceTo(Common::Vec2(side * Common::worldState().field.width, 0));
 
     Common::Vec2  t2                 = Common::Vec2(Common::worldState().field.width * side, Common::worldState().field.goal_width / 2.0f);
     Common::Vec2  t1                 = Common::Vec2(Common::worldState().field.width * side, -Common::worldState().field.goal_width / 2.0f);
-    Common::Angle t1Angel            = OppRobot[opp].position.angleWith(t1);
-    Common::Angle t2Angel            = OppRobot[opp].position.angleWith(t2);
+    Common::Angle t1Angel            = Common::worldState().opp_robot[opp].position.angleWith(t1);
+    Common::Angle t2Angel            = Common::worldState().opp_robot[opp].position.angleWith(t2);
     float         oppOpenAngleToGoal = std::fabs((t2Angel - t1Angel).deg());
 
-    Common::Vec2 oppToBall = (ball.position - OppRobot[opp].position).normalized();
-    Common::Vec2 oppToGoal = (Common::Vec2(side * Common::worldState().field.width, 0) - OppRobot[opp].position).normalized();
+    Common::Vec2 oppToBall = (Common::worldState().ball.position - Common::worldState().opp_robot[opp].position).normalized();
+    Common::Vec2 oppToGoal = (Common::Vec2(side * Common::worldState().field.width, 0) - Common::worldState().opp_robot[opp].position).normalized();
 
     float oneTouchDot = oppToBall.dot(oppToGoal);
 
-    float ballToOppDis = ball.position.distanceTo(OppRobot[opp].position);
+    float ballToOppDis = Common::worldState().ball.position.distanceTo(Common::worldState().opp_robot[opp].position);
 
     float score_goal_dis;
     if (oppDisToGoal < 3000)

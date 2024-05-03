@@ -4,12 +4,12 @@ namespace Tyr::Soccer
 {
 Common::Vec2 Ai::CalculatePassPos(int robot_num, const Common::Vec2 &target, const Common::Vec2 &statPos, float bar)
 {
-    Common::Line ball_line = Common::Line::fromPointAndAngle(ball.position, ball.velocity.toAngle());
+    Common::Line ball_line = Common::Line::fromPointAndAngle(Common::worldState().ball.position, Common::worldState().ball.velocity.toAngle());
     // Common::Line ball_line ( 1.0 , -ballLine.getSlope() , -ballLine.getIntercept() );
 
     if (chip_head.deg() < 180)
     {
-        ball_line = Common::Line::fromPointAndAngle(ball.position, chip_head);
+        ball_line = Common::Line::fromPointAndAngle(Common::worldState().ball.position, chip_head);
         std::cout << "	calcing with static head: " << chip_head.deg() << std::endl;
     }
 
@@ -103,7 +103,7 @@ void Ai::WaitForPass(int robot_num, bool chip, Common::Vec2 *target, Common::Vec
         }
         else
         {
-            float vel_delta = ball.velocity.length() / 100.0f;
+            float vel_delta = Common::worldState().ball.velocity.length() / 100.0f;
             // vel_delta = std::min(60,vel_delta);
             vel_delta *= 0.7;
             vel_delta = 60 - vel_delta;

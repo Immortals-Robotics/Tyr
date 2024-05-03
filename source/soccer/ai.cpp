@@ -11,24 +11,20 @@ struct RobotProperty
     bool hasDribble;
 };
 
-Ai::Ai(Sender::Sender *sender)
-    : m_sender(sender), maxBallHist(240), cmf(0), rmf(1), lmf(2), gk(3), dmf(4), def(5), rw(6), lw(7)
+Ai::Ai(Sender::Sender *sender) : m_sender(sender)
 {
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");
 
-    dss = new Dss(OwnRobot, OppRobot, 92.f, 1.f / 61.57f, 7000.f, 3000.f);
+    dss = new Dss(OwnRobot, Common::worldState().opp_robot, 92.f, 1.f / 61.57f, 7000.f, 3000.f);
 
     InitAIPlayBook();
-    currentPlay      = "HaltAll";
-    currentPlayParam = 0;
+    currentPlay = "HaltAll";
 
     gkIntercepting = false;
 
     randomParam = 0.0f;
     target_str  = -1;
-
-    reached = false;
 
     isDefending  = false;
     oppRestarted = false;
@@ -62,7 +58,6 @@ Ai::Ai(Sender::Sender *sender)
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        oneTouchDetector[i].bState = &ball;
         oneTouchDetector[i].rState = &OwnRobot[i].State;
         oneTouchDetector[i].side   = &side;
 
@@ -99,8 +94,6 @@ Ai::Ai(Sender::Sender *sender)
 #endif
 
     chip_head = Common::Angle::fromDeg(200);
-
-    lastBallVelocity = Common::Vec2();
 
     circleReachedBehindBall = false;
     PredictedBall           = Common::Vec2();

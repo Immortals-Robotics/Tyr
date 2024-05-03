@@ -61,10 +61,9 @@ bool recievers_reached = false;
 
 void Ai::strategy_maker()
 {
-    int str_id = int(currentPlayParam);
     if (timer.time() < 0.5)
     {
-        curr_str_id       = str_id;
+        curr_str_id       = target_str;
         recievers_reached = false;
     }
 
@@ -78,7 +77,7 @@ void Ai::strategy_maker()
     Common::logInfo("STRATEGY: {}", strategy.name());
 
     int xSgn = side;
-    int ySgn = Common::sign(-ball.position.y);
+    int ySgn = Common::sign(-Common::worldState().ball.position.y);
 
     // std::cout << timer.time() << std::endl;
     if (timer.time() < 0.5)
@@ -185,7 +184,7 @@ void Ai::strategy_maker()
             {
                 Common::Angle passAngle =
                     Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(ball.position);
+                        .angleWith(Common::worldState().ball.position);
                 float tmp_mult = 1; // TODO #11 remove this multiplier and fix that strategy maker
                 circle_ball(*stm2AInum[i], passAngle, shoot * tmp_mult, chip, 1.0f);
             }
@@ -193,14 +192,14 @@ void Ai::strategy_maker()
             {
                 Common::Angle passAngle =
                     Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(ball.position);
+                        .angleWith(Common::worldState().ball.position);
                 circle_ball(*stm2AInum[i], passAngle, 0, 0, 1.0f, 140.0f);
             }
             else
             {
                 Common::Angle passAngle =
                     Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(ball.position);
+                        .angleWith(Common::worldState().ball.position);
                 circle_ball(*stm2AInum[i], passAngle, 0, 0, 1.0f);
             }
         }
@@ -282,7 +281,7 @@ void Ai::strategy_maker()
             oneTouchType[*stm2AInum[i]] = allaf;
             if (*stm2AInum[i] == attack)
             {
-                allafPos[*stm2AInum[i]] = ball.position;
+                allafPos[*stm2AInum[i]] = Common::worldState().ball.position;
             }
             else
             {

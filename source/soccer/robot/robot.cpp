@@ -91,17 +91,6 @@ void Robot::set_serial_id(unsigned short s_id)
 void Robot::set_vision_id(unsigned short v_id)
 {
     vision_id = v_id;
-    switch (vision_id)
-    {
-    case 2:
-    case 4:
-    case 6:
-        shootMult = 1.3f;
-        break;
-    default:
-        shootMult = 0.9f;
-        break;
-    }
 }
 
 void Robot::set_control_mode(bool c_mode)

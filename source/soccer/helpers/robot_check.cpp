@@ -2,12 +2,12 @@
 
 namespace Tyr::Soccer
 {
-void Ai::want_this_robot(int robot_num)
+void Ai::wantThisRobot(int robot_num)
 {
     requiredRobots[robot_num] = true;
 }
 
-bool Ai::position_robots(bool avoid_GK, bool avoid_DEF)
+bool Ai::positionRobots(bool avoid_GK, bool avoid_DEF)
 {
     //    if(avoid_GK)
     //        requiredRobots[avoid_GK] = true;

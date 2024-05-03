@@ -61,10 +61,10 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
     }
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if (OppRobot[i].seen_state != Common::SeenState::CompletelyOut)
+        if (Common::worldState().opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            obs[obsCount][0] = OppRobot[i].position.x;
-            obs[obsCount][1] = OppRobot[i].position.y;
+            obs[obsCount][0] = Common::worldState().opp_robot[i].position.x;
+            obs[obsCount][1] = Common::worldState().opp_robot[i].position.y;
             obsCount++;
         }
     }

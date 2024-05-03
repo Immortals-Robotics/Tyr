@@ -8,7 +8,6 @@ void Ai::NewNormalPlay()
 {
     //	GKHi(gk, 0);
     // side = -side;
-    //	GKHi_Simple(gk,0);
     GKHi(gk, 0);
     // side = -side;//TODO #8 comment this ...
 

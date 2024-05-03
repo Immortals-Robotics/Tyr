@@ -7,7 +7,6 @@ class OneTouchDetector
 public:
     int                 hys;
     Common::RobotState *rState;
-    Common::BallState  *bState;
     int                *side;
 
     float BAR;
@@ -23,27 +22,27 @@ public:
     }
     bool IsArriving(const Common::Vec2 &target, float angleTol, float passAngleLimit)
     {
-        const float ballDistBeforeStop = (bState->velocity.lengthSquared()) / 500.0f;
+        const float ballDistBeforeStop = (Common::worldState().ball.velocity.lengthSquared()) / 500.0f;
         // ballDistBeforeStop += 100.0f;
         const Common::Angle angleWithTarget = rState->position.angleWith(target);
-        if ((std::fabs((bState->velocity.toAngle() -
-                   bState->position.angleWith(Common::Vec2(rState->position.x + BAR * angleWithTarget.cos(),
+        if ((std::fabs((Common::worldState().ball.velocity.toAngle() -
+                   Common::worldState().ball.position.angleWith(Common::Vec2(rState->position.x + BAR * angleWithTarget.cos(),
                                                            rState->position.y + BAR * angleWithTarget.sin())))
                       .deg()) < angleTol) &&
-            (std::fabs((Common::Angle::fromDeg(180) + bState->velocity.toAngle() - rState->position.angleWith(target))
+            (std::fabs((Common::Angle::fromDeg(180) + Common::worldState().ball.velocity.toAngle() - rState->position.angleWith(target))
                       .deg()) < passAngleLimit) &&
-            //( bState->velocity.length > 50 ) )
-            (rState->position.distanceTo(bState->position) < ballDistBeforeStop))
-        //&&(abs(ball.vel_angle-90)>0.01)&&
-        //(abs(ball.vel_angle+90)>0.01)&&
-        //(abs(ball.vel_angle-180)>0.01)&&
-        //(abs(ball.vel_angle+180)>0.01))
+            //( Common::worldState().ball.velocity.length > 50 ) )
+            (rState->position.distanceTo(Common::worldState().ball.position) < ballDistBeforeStop))
+        //&&(abs(Common::worldState().ball.vel_angle-90)>0.01)&&
+        //(abs(Common::worldState().ball.vel_angle+90)>0.01)&&
+        //(abs(Common::worldState().ball.vel_angle-180)>0.01)&&
+        //(abs(Common::worldState().ball.vel_angle+180)>0.01))
         {
             hys = 10;
             return true;
         }
-        else if ((hys > 0) && (bState->velocity.length() > 50))
-        // &&(abs(ball.vel_angle-90)>0.01)&&(abs(ball.vel_angle+90)>0.01)&&(abs(ball.vel_angle-180)>0.01)&&(abs(ball.vel_angle+180)>0.01))
+        else if ((hys > 0) && (Common::worldState().ball.velocity.length() > 50))
+        // &&(abs(Common::worldState().ball.vel_angle-90)>0.01)&&(abs(Common::worldState().ball.vel_angle+90)>0.01)&&(abs(Common::worldState().ball.vel_angle-180)>0.01)&&(abs(Common::worldState().ball.vel_angle+180)>0.01))
         {
             hys--;
             return true;

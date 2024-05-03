@@ -11,8 +11,8 @@ void Ai::Process()
     internalProcessData();
 
     debugDraw = true;
-    Common::debug().drawCircle(ball.position, 40, "", Common::Red);
-    //	Common::debug().drawLineSegment(ball.position,Common::Vec2(ball.velocity.x,ball.velocity.y) + ball.position,
+    Common::debug().drawCircle(Common::worldState().ball.position, 40, "", Common::Red);
+    //	Common::debug().drawLineSegment(Common::worldState().ball.position,Common::Vec2(Common::worldState().ball.velocity.x,Common::worldState().ball.velocity.y) + Common::worldState().ball.position,
     // Black);
 
     debugDraw = false;
@@ -32,7 +32,7 @@ void Ai::Process()
         FUNC_state = 0;
 
         oppRestarted = false;
-        if (side * ball.position.x > Common::worldState().field.width * 0.7f)
+        if (side * Common::worldState().ball.position.x > Common::worldState().field.width * 0.7f)
         {
             currentPlay = "Stop_def";
         }
@@ -48,15 +48,12 @@ void Ai::Process()
     else if (Common::refereeState().ourKickoff())
     {
         currentPlay = "kickoff_us_chip";
-
-        currentPlayParam = static_cast<uint32_t>(Common::refereeState().canKickBall());
     }
     else if ((Common::refereeState().ourDirectKick()) || (Common::refereeState().ourIndirectKick()))
     {
         if (target_str != -1)
         {
-            currentPlay      = "strategy_maker";
-            currentPlayParam = static_cast<uint32_t>(target_str);
+            currentPlay = "strategy_maker";
         }
         else
         {
@@ -66,8 +63,7 @@ void Ai::Process()
     }
     else if (Common::refereeState().ourPenaltyKick())
     {
-        currentPlay      = "penalty_us_shootout";
-        currentPlayParam = static_cast<uint32_t>(Common::refereeState().canKickBall());
+        currentPlay = "penalty_us_shootout";
     }
     else if (Common::refereeState().ourPlaceBall())
     {
@@ -107,7 +103,6 @@ void Ai::Process()
         oppRestarted = true;
     }
 
-    //	currentPlay = "my_test"; // TODO comment this in the game
     //	currentPlay = "penalty_our_Shoot_Out";
     //	currentPlay = "NewNormalPlay";
 

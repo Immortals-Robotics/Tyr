@@ -46,7 +46,7 @@ void Ai::recievePass(int robot_num, Common::Vec2 staticPos, bool chip)
         maxBallAngle = 0;
     }
 
-    float distCoeff = ball.position.distanceTo(OwnRobot[robot_num].State.position) / 1500.0f;
+    float distCoeff = Common::worldState().ball.position.distanceTo(OwnRobot[robot_num].State.position) / 1500.0f;
     distCoeff       = std::max(0.8f, distCoeff);
     distCoeff       = std::min(1.2f, distCoeff);
     // angleTol *= distCoeff;
@@ -55,12 +55,12 @@ void Ai::recievePass(int robot_num, Common::Vec2 staticPos, bool chip)
     {
         WaitForPass(robot_num, 0, &OwnRobot[attack].State.position);
     }
-    /*else if ((oneTouchType[robot_num] == shirje)&&(DIS(ball.position,
+    /*else if ((oneTouchType[robot_num] == shirje)&&(DIS(Common::worldState().ball.position,
     OwnRobot[robot_num].State.position)<450)&&(timer.time()<4.0))
     {
         int targetRobotNum = (robot_num==lmf)?rmf:lmf;
-        float passAngle = AngleWith ( Common::Vec2 ( -side*2500 , -sgn ( ball.position.y ) * 1700 ) , ball.position );
-        //float passAngle = AngleWith ( OwnRobot[targetRobotNum].State.position , ball.position );
+        float passAngle = AngleWith ( Common::Vec2 ( -side*2500 , -sgn ( Common::worldState().ball.position.y ) * 1700 ) , Common::worldState().ball.position );
+        //float passAngle = AngleWith ( OwnRobot[targetRobotNum].State.position , Common::worldState().ball.position );
         //tech_circle(robot_num, passAngle, 0, 120, 1, 1, 0, 1);
         circle_ball(robot_num, passAngle, 0, 80, 1.0f);
     }*/
