@@ -1,5 +1,7 @@
 #pragma once
 
+#include "command.h"
+
 namespace Tyr::Sender
 {
 class Sender
@@ -11,7 +13,7 @@ public:
     int buff_idx;
     int startup;
 
-    void getCommand(std::span<unsigned char> data);
+    void getCommand(const Command& command);
     bool appendData(unsigned char *data, int length);
     bool sendAll();
     void append_demo_data();

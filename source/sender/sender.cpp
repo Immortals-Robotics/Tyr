@@ -1,15 +1,58 @@
 #include "sender.h"
 
+#include "protocol/writer.h"
+
 namespace Tyr::Sender
 {
-void Sender::getCommand(std::span<unsigned char> data)
+void Sender::getCommand(const Command &command)
 {
     auto buffer = commUDP->getBuffer();
 
-    for (int i = 0; i < data[1]; i++)
+    unsigned char *const data = (unsigned char *) &buffer[buff_idx];
+
+    Common::Vec3 motion = command.motion;
+    motion.x *= 2.55;
+    motion.y *= 2.55;
+    convert_float_to_2x_buff(data + 3, motion.x);
+    convert_float_to_2x_buff(data + 5, motion.y);
+    convert_float_to_2x_buff(data + 7, command.target_angle.deg());
+
+    data[0] = command.vision_id;
+    if (command.halted)
     {
-        buffer[i + buff_idx] = data[i];
+        data[1] = 0x0A; // length=10
+        data[2] = 0x06; // Command to HALT
+        data[3] = 0x00;
+        data[4] = 0x00;
+        data[5] = 0x00;
+        data[6] = 0x00;
+        data[7] = 0x00;
+        data[8] = 0x00;
+        data[9] = 0x00;
     }
+    else
+    {
+        data[1] = 15; // length=10
+        data[2] = 12; // Command to move with new protocol
+
+        convert_float_to_2x_buff(data + 9, command.current_angle.deg());
+        if (command.shoot > 0)
+        {
+            data[11] = command.shoot;
+            data[12] = 0x00;
+        }
+        else if (command.chip > 0)
+        {
+            data[11] = 0x00;
+            data[12] = command.chip;
+        }
+        else
+        {
+            data[11] = 0x00;
+            data[12] = 0x00;
+        }
+    }
+
     buff_idx += data[1];
 }
 

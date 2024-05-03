@@ -11,7 +11,6 @@ class Robot
 public:
     Common::RobotState target;
     int                shoot, chip, dribbler;
-    unsigned char      data[32];
     int                vision_id;
     bool               halted;
 
@@ -43,7 +42,5 @@ public:
 
     Common::Vec3    GetCurrentMotion() const;
     Sender::Command GetCurrentCommand() const;
-
-    void makeSendingDataReady(const Sender::Command &command);
 };
 } // namespace Tyr::Soccer

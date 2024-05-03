@@ -61,9 +61,6 @@ Robot::Robot()
     chip     = 0;
     dribbler = 0;
     halted   = false;
-
-    data[0] = 1;
-    data[9] = 200;
 }
 
 void Robot::setVisionId(unsigned short v_id)
@@ -267,52 +264,6 @@ void Robot::MoveByMotion(Common::Vec3 motion)
         motion_idx = 0;
 }
 
-void Robot::makeSendingDataReady(const Sender::Command &command)
-{
-    Common::Vec3 motion = command.motion;
-    motion.x *= 2.55;
-    motion.y *= 2.55;
-    convert_float_to_2x_buff(data + 3, motion.x);
-    convert_float_to_2x_buff(data + 5, motion.y);
-    convert_float_to_2x_buff(data + 7, command.target_angle.deg());
-
-    data[0] = command.vision_id;
-    if (halted)
-    {
-        data[1] = 0x0A; // length=10
-        data[2] = 0x06; // Command to HALT
-        data[3] = 0x00;
-        data[4] = 0x00;
-        data[5] = 0x00;
-        data[6] = 0x00;
-        data[7] = 0x00;
-        data[8] = 0x00;
-        data[9] = 0x00;
-    }
-    else
-    {
-        data[1] = 15; // length=10
-        data[2] = 12; // Command to move with new protocol
-
-        convert_float_to_2x_buff(data + 9, command.current_angle.deg());
-        if (command.shoot > 0)
-        {
-            data[11] = command.shoot;
-            data[12] = 0x00;
-        }
-        else if (command.chip > 0)
-        {
-            data[11] = 0x00;
-            data[12] = command.chip;
-        }
-        else
-        {
-            data[11] = 0x00;
-            data[12] = 0x00;
-        }
-    }
-}
-
 Common::Vec3 Robot::GetCurrentMotion() const
 {
     return last_motions[last_motion_idx];
@@ -321,6 +272,7 @@ Common::Vec3 Robot::GetCurrentMotion() const
 Sender::Command Robot::GetCurrentCommand() const
 {
     return {.vision_id     = vision_id,
+            .halted        = halted,
             .motion        = GetCurrentMotion(),
             .current_angle = state().angle,
             .target_angle  = target.angle,

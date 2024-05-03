@@ -4,14 +4,9 @@ namespace Tyr::Soccer
 {
 void Ai::internalFinalize()
 {
-    // bool saveKinoData = !OwnRobot[cmf].halted;
-
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
-        OwnRobot[i].makeSendingDataReady(OwnRobot[i].GetCurrentCommand());
-
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        m_sender->getCommand(OwnRobot[i].data);
+        m_sender->getCommand(OwnRobot[i].GetCurrentCommand());
         OwnRobot[i].halted = false;
     }
     m_sender->append_demo_data();
