@@ -37,8 +37,8 @@ struct BallState
 
 struct FieldState
 {
-    float width  = 6000.0f;
-    float height = 4500.0f;
+    float width  = 12000.0f;
+    float height = 9000.0f;
 
     float goal_width = 1800.0f;
 
