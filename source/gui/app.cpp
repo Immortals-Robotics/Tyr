@@ -42,7 +42,7 @@ void Application::init(const int width, const int height)
     SetTraceLogLevel(LOG_WARNING);
     rlImGuiSetup(true);
 
-    renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 700.f), 4.0f);
+    renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 4.0f);
     config_menu = std::make_unique<ConfigMenu>();
     widget_menu = std::make_unique<WidgetMenu>();
 
@@ -93,11 +93,11 @@ void Application::update()
     Common::Vec2 wSize  = Common::Vec2(900.f, 700.f) + margin;
     // TODO: draw gui
     ImGuiWindowFlags renderer_window_flags =
-        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
+        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration;
     auto main_window_height = GetScreenHeight();
     auto main_window_width  = GetScreenWidth();
     ImGui::SetNextWindowPos(ImVec2(250., 0.));
-    ImGui::SetNextWindowSize(ImVec2(main_window_width - 650., main_window_height * 0.8));
+    ImGui::SetNextWindowSize(ImVec2(main_window_width - 650., (main_window_width - 650.) * 0.77));
 
     if (!ImGui::Begin("Field", &opened, renderer_window_flags))
     {
@@ -126,14 +126,14 @@ void Application::update()
         renderer->drawPointsUdp(debug_packet.dbg_draw().point());
         renderer->drawLinesUdp(debug_packet.dbg_draw().line());
         drawing_mutex.unlock();
-
         renderer->applyShader();
-        rlImGuiImageRenderTextureFit(&renderer->shaderVisualizationTexture, true);
+        // Common::logDebug("AV {}  {} pos {} {}", ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y, main_window_width - 650., main_window_height * 0.8);
+        ImGui::Image(&renderer->shaderVisualizationTexture.texture, ImGui::GetContentRegionAvail());
         ImGui::End();
     }
     // end ImGui Content
     config_menu->draw();
-    widget_menu->draw();
+    widget_menu->draw(renderer->getMousePosition());
     rlImGuiEnd();
 
     EndDrawing();

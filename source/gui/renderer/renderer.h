@@ -36,17 +36,21 @@ public:
 
     void applyShader();
 
+    Common::Vec2  getMousePosition();
     RenderTexture visualizaionTexture, shaderVisualizationTexture;
 
 private:
     const float  ballRadius;
     const float  robotRadius;
     const float  robotArcAngle;
-    Common::Vec2 wSize;
+    const float  m_window_border;
+    Common::Vec2 m_w_size;
     Common::Vec2 overallFieldSize;
-    float        zoomScale;
-    float        upScalingFactor;
+    float        m_zoom_scale;
+    float        m_upscaling_factor;
+    Common::Vec2 m_avil_size;
     Font         visualizationFont;
+    Common::Vec2 m_mouse_pos;
 
     Shader fxaaShader;
 
@@ -54,5 +58,6 @@ private:
     Vector2 ConvertSignedVecToPixelVec(Common::Vec2 _signedVec);
     int     ConvertRealityUnitToPixels(float _value);
     void    sortPointsClockwise(Common::Vec2 &_p1, Common::Vec2 &_p2, Common::Vec2 &_p3);
+    void    calculateMousePos();
 };
 } // namespace Tyr::Gui
