@@ -14,4 +14,3 @@
 
 #include <imgui.h>
 #include <rlimgui/rlImGui.h>
-#include <GLFW/glfw3.h>

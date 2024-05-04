@@ -97,7 +97,7 @@ void Application::update()
     auto main_window_height = GetScreenHeight();
     auto main_window_width  = GetScreenWidth();
     ImGui::SetNextWindowPos(ImVec2(250., 0.));
-    ImGui::SetNextWindowSize(ImVec2(main_window_width - 650., main_window_height* 0.8));
+    ImGui::SetNextWindowSize(ImVec2(main_window_width - 650., main_window_height * 0.8));
 
     if (!ImGui::Begin("Field", &opened, renderer_window_flags))
     {

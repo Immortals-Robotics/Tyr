@@ -7,7 +7,6 @@
 		"spdlog",
 		"imgui",
 		"raylib",
-		"rlimgui",
-		"glfw3"
+		"rlimgui"
 	]
 }
