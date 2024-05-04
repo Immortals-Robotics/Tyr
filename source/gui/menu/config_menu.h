@@ -40,7 +40,6 @@ const std::map<InputCallbackType, std::string> config_input_map{
 class ConfigMenu
 {
 private:
-    const float       m_width;
     ImGuiWindowFlags  m_window_flags;
     InputCallbackType m_network_needs_update;
 

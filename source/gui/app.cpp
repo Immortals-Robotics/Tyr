@@ -42,8 +42,9 @@ void Application::init(const int width, const int height)
     SetTraceLogLevel(LOG_WARNING);
     rlImGuiSetup(true);
 
-    renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 700.f), 4.0f);
+    renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 4.0f);
     config_menu = std::make_unique<ConfigMenu>();
+    widget_menu = std::make_unique<WidgetMenu>();
 
     ssl_field.set_field_length(12000);
     ssl_field.set_field_width(9000);
@@ -91,8 +92,14 @@ void Application::update()
     Common::Vec2 margin = Common::Vec2(30, 30) * 2;
     Common::Vec2 wSize  = Common::Vec2(900.f, 700.f) + margin;
     // TODO: draw gui
-    ImGui::SetNextWindowSize(ImVec2(wSize.x, wSize.y), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Field", &opened))
+    ImGuiWindowFlags renderer_window_flags =
+        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration;
+    auto main_window_height = GetScreenHeight();
+    auto main_window_width  = GetScreenWidth();
+    ImGui::SetNextWindowPos(ImVec2(250., 0.));
+    ImGui::SetNextWindowSize(ImVec2(main_window_width - 650., (main_window_width - 650.) * 0.77));
+
+    if (!ImGui::Begin("Field", &opened, renderer_window_flags))
     {
         ImGui::End();
     }
@@ -102,7 +109,7 @@ void Application::update()
         vision_mutex.lock();
         renderer->drawRobots(ssl_packet.detection().robots_blue(), Common::TeamColor::Blue);
         renderer->drawRobots(ssl_packet.detection().robots_yellow(), Common::TeamColor::Yellow);
-        renderer->drawBalls(ssl_packet.detection().balls());
+        renderer->drawBalls(ssl_packet.detection().balls(), true);
         if (config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
             config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_IP)
         {
@@ -119,14 +126,14 @@ void Application::update()
         renderer->drawPointsUdp(debug_packet.dbg_draw().point());
         renderer->drawLinesUdp(debug_packet.dbg_draw().line());
         drawing_mutex.unlock();
-
         renderer->applyShader();
-        rlImGuiImageRenderTextureFit(&renderer->shaderVisualizationTexture, true);
+        // Common::logDebug("AV {}  {} pos {} {}", ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y, main_window_width - 650., main_window_height * 0.8);
+        ImGui::Image(&renderer->shaderVisualizationTexture.texture, ImGui::GetContentRegionAvail());
         ImGui::End();
     }
     // end ImGui Content
     config_menu->draw();
-
+    widget_menu->draw(renderer->getMousePosition());
     rlImGuiEnd();
 
     EndDrawing();
@@ -173,7 +180,6 @@ void Application::receiveDrawings()
         if (tmp_drawing_packet.has_dbg_draw())
         {
             auto draw = tmp_drawing_packet.dbg_draw();
-            // Common::logDebug("draw darim");
             debug_packet_off.clear_dbg_draw();
             debug_packet_off.mutable_dbg_draw()->CopyFrom(draw);
         }

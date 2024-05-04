@@ -15,6 +15,7 @@ set(SOURCE_FILES
 	main.cpp
 	app.cpp
 	menu/config_menu.cpp
+	menu/widget_menu.cpp
 	renderer/renderer_ball.cpp
 	renderer/renderer_robot.cpp
 	renderer/renderer.cpp
@@ -38,6 +39,3 @@ target_precompile_headers(${PROJECT_NAME}
 	PRIVATE pch.h)
 
 install(TARGETS ${PROJECT_NAME})
-
-file(COPY ${CMAKE_SOURCE_DIR}/source/gui/shaders DESTINATION ${CMAKE_BINARY_DIR}/source/gui)
-file(COPY ${CMAKE_SOURCE_DIR}/source/gui/fonts DESTINATION ${CMAKE_BINARY_DIR}/source/gui)
