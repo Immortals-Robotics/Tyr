@@ -46,10 +46,10 @@ Common::Angle Ai::calculateOneTouchAngle(int robot_num, Common::Vec2 oneTouchPos
     while (aa < 180 - 90 * Common::sign(goalx))
     {
         float a = (aa / 180.0) * 3.14;
-        v1x     = beta * (-sin(a) * v0x + cos(a) * v0y) * (-sin(a)) + shootK * cos(a) +
-              gamma * (v0x - 2 * (v0x * cos(a) + v0y * sin(a)) * cos(a));
-        v1y = beta * (-sin(a) * v0x + cos(a) * v0y) * (cos(a)) + shootK * sin(a) +
-              gamma * (v0y - 2 * (v0x * cos(a) + v0y * sin(a)) * sin(a));
+        v1x     = Common::setting().one_touch_beta * (-sin(a) * v0x + cos(a) * v0y) * (-sin(a)) + Common::setting().one_touch_shoot_k * cos(a) +
+              Common::setting().one_touch_gamma * (v0x - 2 * (v0x * cos(a) + v0y * sin(a)) * cos(a));
+        v1y = Common::setting().one_touch_beta * (-sin(a) * v0x + cos(a) * v0y) * (cos(a)) + Common::setting().one_touch_shoot_k * sin(a) +
+              Common::setting().one_touch_gamma * (v0y - 2 * (v0x * cos(a) + v0y * sin(a)) * sin(a));
         e = v1x * (-OwnRobot[robot_num].state().position.y + goaly) +
             v1y * (OwnRobot[robot_num].state().position.x - goalx);
         if (std::fabs(e) < max)

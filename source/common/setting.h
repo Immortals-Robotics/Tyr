@@ -58,18 +58,18 @@ private:
     Setting()  = default;
     ~Setting() = default;
 
-    void load(toml::table t_table) override;
+    void        load(toml::table t_table) override;
     toml::table m_config_table;
     friend struct Services;
 
 public:
     Setting(const Setting &)            = delete;
     Setting &operator=(const Setting &) = delete;
-    
-    template<typename T>
-    void updateSetting(const std::string& _settings_key,const T& _new_value);
 
-    toml::table getConfigTable(void);
+    template <typename T>
+    void updateSetting(const std::string &_settings_key, const T &_new_value);
+
+    toml::table             getConfigTable(void);
     static constexpr size_t kMaxUdpPacketSize = 1024 * 16; // TODO what should the size be really?
 
     // The variety of standard patterns that we can have is 16
@@ -115,7 +115,6 @@ public:
     NetworkAddress referee_address = {"224.5.23.1", 10003};
 
     NetworkAddress sender_address     = {"224.5.92.5", 60005};
-    NetworkAddress sender_rec_address = {"", 0}; // TODO: unused?
 
     NetworkAddress commands_address = {"224.5.92.6", 60007};
 
@@ -143,6 +142,8 @@ public:
     double ang_gamma_reality    = 1;
     double ang_gamma_simulation = 1;
 
-    std::string robot_behavior_tree_config_filename = "bt_default.xml";
+    float one_touch_beta   = 0.4;  // Damping factor
+    float one_touch_gamma  = 0.14; // Reflect factor
+    float one_touch_shoot_k = 4000.0f;
 };
 } // namespace Tyr::Common

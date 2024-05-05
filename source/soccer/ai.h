@@ -56,16 +56,14 @@ private:
     bool isDefending;
     bool oppRestarted;
 
-    float beta;
-    float gamma;
-    float shootK;
-
     const int                     maxBallHist = 240;
     std::deque<Common::BallState> ballHist;
     Common::Linear                ballLine;
 
     Planner planner[Common::Setting::kMaxOnFieldTeamRobots];
     Dss    *dss;
+
+    bool navigated[Common::Setting::kMaxOnFieldTeamRobots];
 
     OneTouchDetector oneTouchDetector[Common::Setting::kMaxOnFieldTeamRobots];
     enum OneTouchType
@@ -78,8 +76,7 @@ private:
     OneTouchType oneTouchType[Common::Setting::kMaxOnFieldTeamRobots];
     bool         oneTouchTypeUsed[Common::Setting::kMaxOnFieldTeamRobots];
 
-    bool navigated[Common::Setting::kMaxOnFieldTeamRobots];
-    int  side;
+    int side;
 
     VelocityProfile BALL_PLACE_KHEYLI_SOOSKI;
     VelocityProfile VELOCITY_PROFILE_AROOM;
@@ -138,8 +135,10 @@ private:
                         bool use_dss = false);
     void ERRTNavigate2Point(int robot_num, Common::Vec2 dest, int speed = 80,
                             VelocityProfile *velocityProfile = nullptr);
+
     void ERRTSetObstacles(int robot_num, bool bll = false, bool field = true);
     void ERRTSetGkClearObstacles(int robot_num);
+
     void Mark(int robot_num, int opp, float dist = 220.0f);
     void Mark2Goal(int robot_num, int opp, float dist = 220.0f);
     void Mark2Ball(int robot_num, int opp, float dist = 220.0f);
