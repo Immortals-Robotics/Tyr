@@ -1,31 +1,48 @@
 # Tyr: God of valor and justice
-
 [![Build](https://github.com/Immortals-Robotics/Tyr/actions/workflows/build.yml/badge.svg)](https://github.com/Immortals-Robotics/Tyr/actions/workflows/build.yml)
 [![C++ format check](https://github.com/Immortals-Robotics/Tyr/actions/workflows/cpp-checks.yml/badge.svg)](https://github.com/Immortals-Robotics/Tyr/actions/workflows/cpp-checks.yml)
 [![File name check](https://github.com/Immortals-Robotics/Tyr/actions/workflows/file-name-check.yml/badge.svg)](https://github.com/Immortals-Robotics/Tyr/actions/workflows/file-name-check.yml)
 [![Typo check](https://github.com/Immortals-Robotics/Tyr/actions/workflows/typo-check.yml/badge.svg)](https://github.com/Immortals-Robotics/Tyr/actions/workflows/typo-check.yml)
 
 ## Building
-We actively test on Windows and macOS, but other systems that meet the requirements should in theory work fine.
+### Prerequisites
+* **CMake** (>3.25)
+* **C++ compiler** (supporting C++20). We use *MSVC* on windows, *GCC* on Linux, and *CLang* on macOS
+* **vcpkg**
+  1. Clone the [repository](https://github.com/microsoft/vcpkg).
+  2. Run the bootstrap script (**bootstrap-vcpkg.bat** on windows or **bootstrap-vcpkg.sh** on unix)
+  3. Set the **VCPKG_ROOT** environment variable to vcpkg root folder.
+* **Python** (>3.7)
+* **Ninja** build system
+* **git**. It is highly recommended that you use a visual git client, as we have had many problems with people using the cmd line interface.
+* Linux-specific **System packages**:
+  ```
+  zip ninja-build libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config libgl1-mesa-dev libx11-dev libxrandr-dev
+  ```
 
-To build the project you need:
-* CMake (>3.25)
-* A recent C++ compiler supporting C++20
-* Python (>3.7)
-* (*optional*) Ninja build system
-* git
+We are actively testing on *Windows* and *macOS*, but other systems that meet the requirements should theoretically work fine.
 
-On Ubuntu, you need to install the following system packages:
-```shell
-sudo apt install zip ninja-build libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config libgl1-mesa-dev libx11-dev libxrandr-dev
+### Build
+You should be able to generate build scripts and build the project using one of the CMake presets in CMakePresets.json. But as we primarily use Visual Studio Code as our IDEs. The rest of this readme focuses on them.
+
+#### VS Code
+#### Extensions
+We have a set of [recommended VS Code extensions](https://code.visualstudio.com/docs/editor/extension-marketplace#_workspace-recommended-extensions) in .vscode/extensions.json. You should get a popup to install them when you open the project. If not, be sure to do it manually.
+
+1. Clone this repo, including its submodules.
+2. Open **tyr.code-workspace** in VS Code.
+3. Select the desired CMake preset using the **CMake: Select Configure Preset** command.
+    - Use *[platform-name]-debug* during development
+    - Use *[platform-name]-release* for testing on real robots
+4. Build the project using **CMake: Build**.
+
+If everything goes well, you should then see the following line in the *CMake/Build* output:
+```
+[build] Build finished with exit code 0
 ```
 
-Also make sure to get submodules in the repo.
-
-Then you should be able to generate build scripts and build the project using one of the CMake presets in CMakePresets.json.
-
 ## Usage
-**TBD**
+In the *CMake* tab, select the desired launch target and run it using the play button at the bottom of the screen.
 
 ## Coding standard
 We use [cppbestpractices by Jason Turner](https://lefticus.gitbooks.io/cpp-best-practices/content/) as the basis for our standard.
