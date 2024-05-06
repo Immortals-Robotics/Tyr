@@ -18,9 +18,6 @@ struct Triangle
         }
     }
 
-    Triangle(const std::array<Vec2, 3> &t_corner) : Triangle(t_corner[0], t_corner[1], t_corner[2])
-    {}
-
     Triangle(const Protos::Immortals::Triangle &t_triangle)
         : Triangle({t_triangle.corner(0), t_triangle.corner(1), t_triangle.corner(2)})
     {}
