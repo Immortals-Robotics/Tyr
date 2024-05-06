@@ -8,9 +8,9 @@ namespace Tyr::Common
 {
 enum class SeenState
 {
-    Seen,
-    CompletelyOut,
-    TemprolilyOut,
+    CompletelyOut = 0,
+    TemprolilyOut = 1,
+    Seen          = 2,
 };
 
 struct RobotState
