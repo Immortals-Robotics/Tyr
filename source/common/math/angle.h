@@ -8,6 +8,14 @@ struct Angle
 {
     Angle() = default;
 
+    Angle(const Protos::Immortals::Angle &t_angle) : Angle(fromDeg(t_angle.deg()))
+    {}
+
+    void fillProto(Protos::Immortals::Angle *const t_angle) const
+    {
+        t_angle->set_deg(deg());
+    }
+
     static Angle fromDeg(float deg);
     static Angle fromRad(float rad);
 

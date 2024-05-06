@@ -14,6 +14,16 @@ public:
     // ay + bx + c = 0
     Line(float t_a, float t_b, float t_c);
 
+    Line(const Protos::Immortals::Line &t_line) : Line(t_line.a(), t_line.b(), t_line.c())
+    {}
+
+    void fillProto(Protos::Immortals::Line *const t_line) const
+    {
+        t_line->set_a(a);
+        t_line->set_b(b);
+        t_line->set_c(c);
+    }
+
     static Line fromTwoPoints(Vec2 t_pos_a, Vec2 t_pos_b);
     static Line fromPointAndAngle(Vec2 t_pos, Angle t_ang);
     static Line fromSegment(LineSegment segment);

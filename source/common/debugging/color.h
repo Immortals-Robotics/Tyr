@@ -8,6 +8,17 @@ struct Color
         : r(t_r), g(t_g), b(t_b), a(t_a)
     {}
 
+    Color(const Protos::Immortals::Color &t_color) : Color(t_color.r(), t_color.g(), t_color.b(), t_color.a())
+    {}
+
+    void fillProto(Protos::Immortals::Color *const t_color) const
+    {
+        t_color->set_r(r);
+        t_color->set_g(g);
+        t_color->set_b(b);
+        t_color->set_a(a);
+    }
+
     float r = 0.0f;
     float g = 0.0f;
     float b = 0.0f;

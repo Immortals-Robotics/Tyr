@@ -15,7 +15,8 @@ enum class SeenState
 
 struct RobotState
 {
-    int vision_id;
+    int       vision_id;
+    TeamColor color;
 
     Vec2 position;
     Vec2 velocity;
@@ -25,6 +26,36 @@ struct RobotState
 
     SeenState seen_state         = SeenState::CompletelyOut;
     bool      out_for_substitute = true;
+
+    RobotState() = default;
+
+    RobotState(const Protos::Immortals::RobotState &t_robot)
+    {
+        vision_id = t_robot.id();
+        color     = (TeamColor) t_robot.color();
+
+        position = t_robot.position();
+        velocity = t_robot.velocity();
+
+        angle            = t_robot.angle();
+        angular_velocity = t_robot.angular_velocity();
+
+        seen_state = (SeenState) t_robot.seen_state();
+    }
+
+    void fillProto(Protos::Immortals::RobotState *const t_robot) const
+    {
+        t_robot->set_id(vision_id);
+        t_robot->set_color((Protos::Immortals::TeamColor) color);
+
+        position.fillProto(t_robot->mutable_position());
+        velocity.fillProto(t_robot->mutable_velocity());
+
+        angle.fillProto(t_robot->mutable_angle());
+        angular_velocity.fillProto(t_robot->mutable_angular_velocity());
+
+        t_robot->set_seen_state((Protos::Immortals::SeenState) seen_state);
+    }
 };
 
 struct BallState
@@ -33,6 +64,24 @@ struct BallState
     Vec2 velocity;
 
     SeenState seen_state = SeenState::CompletelyOut;
+
+    BallState() = default;
+
+    BallState(const Protos::Immortals::BallState &t_ball)
+    {
+        position = t_ball.position();
+        velocity = t_ball.velocity();
+
+        seen_state = (SeenState) t_ball.seen_state();
+    }
+
+    void fillProto(Protos::Immortals::BallState *const t_ball) const
+    {
+        position.fillProto(t_ball->mutable_position());
+        velocity.fillProto(t_ball->mutable_velocity());
+
+        t_ball->set_seen_state((Protos::Immortals::SeenState) seen_state);
+    }
 };
 
 struct FieldState

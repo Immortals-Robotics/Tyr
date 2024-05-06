@@ -2,10 +2,6 @@
 
 namespace Tyr::Common
 {
-Color::Color(CommonColor commonColor)
-    : Color(CommonColorVal[commonColor][0], CommonColorVal[commonColor][1], CommonColorVal[commonColor][2])
-{}
-
 Debug::Debug(NetworkAddress t_address, const bool t_enabled) : m_address(std::move(t_address))
 {
     m_enabled = t_enabled;

@@ -10,8 +10,17 @@ struct Vec2
     float y = 0.0f;
 
     Vec2() = default;
-    Vec2(float t_f);
-    Vec2(float t_x, float t_y);
+    constexpr Vec2(float t_f);
+    constexpr Vec2(float t_x, float t_y);
+
+    Vec2(const Protos::Immortals::Vec2 &t_v) : Vec2(t_v.x(), t_v.y())
+    {}
+
+    void fillProto(Protos::Immortals::Vec2 *const t_v) const
+    {
+        t_v->set_x(x);
+        t_v->set_y(y);
+    }
 
     [[nodiscard]] Vec2  normalized() const;
     [[nodiscard]] float length() const;
@@ -62,8 +71,18 @@ struct Vec3
     float z = 0.0f;
 
     Vec3() = default;
-    Vec3(float t_f);
-    Vec3(float t_x, float t_y, float t_z);
+    constexpr Vec3(float t_f);
+    constexpr Vec3(float t_x, float t_y, float t_z);
+
+    Vec3(const Protos::Immortals::Vec3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
+    {}
+
+    void fillProto(Protos::Immortals::Vec3 *const t_v) const
+    {
+        t_v->set_x(x);
+        t_v->set_y(y);
+        t_v->set_z(z);
+    }
 
     [[nodiscard]] Vec3  normalized() const;
     [[nodiscard]] float length() const;
