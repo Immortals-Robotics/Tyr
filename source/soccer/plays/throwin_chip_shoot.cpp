@@ -24,7 +24,7 @@ void Ai::throwin_chip_shoot()
         // tech_circle(dmf,Common::Vec2::angleWith ( Common::Vec2 ( -side*2995 , 0 ) ,
         // Common::worldState().ball.position ) ,0,30,0,1);
         circle_ball(dmf,
-                    Common::Vec2(-side * Common::worldState().field.width,
+                    Common::Vec2(-side * Common::field().width,
                                  Common::sign(Common::worldState().ball.position.y) * 200.0f)
                         .angleWith(Common::worldState().ball.position),
                     0, 15, 1.0f);
@@ -35,24 +35,24 @@ void Ai::throwin_chip_shoot()
         // Common::worldState().ball.position ) ,0,0,0,1);
         circle_ball(
             dmf,
-            Common::Vec2(-side * Common::worldState().field.width, 0).angleWith(Common::worldState().ball.position), 0,
+            Common::Vec2(-side * Common::field().width, 0).angleWith(Common::worldState().ball.position), 0,
             0, 1.0f);
     }
 
-    OwnRobot[attack].face(Common::Vec2(-side * Common::worldState().field.width, 0));
+    OwnRobot[attack].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(attack, 0, 1); // TODO the Obstacle avoidance for Opp was disabled (just added it)
     obs_map.addCircle({Common::worldState().ball.position, 320.0f});
     if (randomParam < 0.0)
         ERRTNavigate2Point(attack, Common::worldState().ball.position.pointOnConnectingLine(
-                                       Common::Vec2(-side * Common::worldState().field.width, 0), 350));
+                                       Common::Vec2(-side * Common::field().width, 0), 350));
     else if (randomParam < 0.5)
         ERRTNavigate2Point(attack, Common::worldState().ball.position.pointOnConnectingLine(
-                                       Common::Vec2(-side * Common::worldState().field.width,
+                                       Common::Vec2(-side * Common::field().width,
                                                     Common::sign(-Common::worldState().ball.position.x) * 2000.0f),
                                        350));
     else
         ERRTNavigate2Point(attack, Common::worldState().ball.position.pointOnConnectingLine(
-                                       Common::Vec2(-side * Common::worldState().field.width,
+                                       Common::Vec2(-side * Common::field().width,
                                                     Common::sign(Common::worldState().ball.position.x) * 2000.0f),
                                        350));
 }

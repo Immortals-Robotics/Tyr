@@ -91,11 +91,11 @@ Common::Vec3 Robot::ComputeMotionCommand(float speed, const VelocityProfile &vel
 {
     const float field_extra_area = 200.f;
 
-    if (std::fabs(target.position.x) > Common::worldState().field.width + field_extra_area)
-        target.position.x = Common::sign(target.position.x) * (Common::worldState().field.width + field_extra_area);
+    if (std::fabs(target.position.x) > Common::field().width + field_extra_area)
+        target.position.x = Common::sign(target.position.x) * (Common::field().width + field_extra_area);
 
-    if (std::fabs(target.position.y) > Common::worldState().field.height + field_extra_area)
-        target.position.y = Common::sign(target.position.y) * (Common::worldState().field.height + field_extra_area);
+    if (std::fabs(target.position.y) > Common::field().height + field_extra_area)
+        target.position.y = Common::sign(target.position.y) * (Common::field().height + field_extra_area);
 
     speed = std::clamp(speed, 0.0f, 100.0f);
 

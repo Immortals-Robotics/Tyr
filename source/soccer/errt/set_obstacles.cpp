@@ -12,7 +12,7 @@ static constexpr float bigPenaltyAddition             = 300.0f;
 static float calculateRobotRadius(const Common::RobotState &state)
 {
     const float extension_factor = std::min(1.0f, state.velocity.length() / 10000.0f);
-    return Common::worldState().field.ball_radius * (1.0f + extension_factor);
+    return Common::field().ball_radius * (1.0f + extension_factor);
 }
 
 void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
@@ -33,7 +33,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
             (OwnRobot[i].state().vision_id != OwnRobot[robot_num].state().vision_id))
         {
             obs_map.addCircle(
-                {OwnRobot[i].state().position, current_robot_radius + Common::worldState().field.robot_radius});
+                {OwnRobot[i].state().position, current_robot_radius + Common::field().robot_radius});
             // Common::debug().draw({OwnRobot[i].state().position,ownRobotRadius + (!dribble)*ownRobotRadius},Cyan);
         }
     }
@@ -56,39 +56,39 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
         obs_map.addCircle({Common::worldState().ball.position, ballAreaRadius + current_robot_radius});
     }
 
-    const float penalty_area_half_width = Common::worldState().field.penalty_area_width / 2.0f;
+    const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
     if (ourPenalty)
     {
-        const Common::Vec2 start{side * (Common::worldState().field.width + penaltyAreaExtensionBehindGoal),
+        const Common::Vec2 start{side * (Common::field().width + penaltyAreaExtensionBehindGoal),
                                  -(penalty_area_half_width + current_robot_radius)};
 
         const float w = -side * (penaltyAreaExtensionBehindGoal + current_robot_radius +
-                                 Common::worldState().field.penalty_area_depth);
-        const float h = Common::worldState().field.penalty_area_width + 2 * current_robot_radius;
+                                 Common::field().penalty_area_depth);
+        const float h = Common::field().penalty_area_width + 2 * current_robot_radius;
 
         obs_map.addRectangle({start, w, h});
     }
 
     if (oppPenalty)
     {
-        const Common::Vec2 start{-side * (Common::worldState().field.width + penaltyAreaExtensionBehindGoal),
+        const Common::Vec2 start{-side * (Common::field().width + penaltyAreaExtensionBehindGoal),
                                  -(penalty_area_half_width + current_robot_radius)};
 
         const float w = side * (penaltyAreaExtensionBehindGoal + current_robot_radius +
-                                Common::worldState().field.penalty_area_depth);
-        const float h = Common::worldState().field.penalty_area_width + 2 * current_robot_radius;
+                                Common::field().penalty_area_depth);
+        const float h = Common::field().penalty_area_width + 2 * current_robot_radius;
 
         obs_map.addRectangle({start, w, h});
     }
 
     if (oppPenaltyBig)
     {
-        const float big_penalty_area_r      = Common::worldState().field.penalty_area_depth + bigPenaltyAddition;
-        const float big_penalty_area_w      = Common::worldState().field.penalty_area_width + bigPenaltyAddition;
+        const float big_penalty_area_r      = Common::field().penalty_area_depth + bigPenaltyAddition;
+        const float big_penalty_area_w      = Common::field().penalty_area_width + bigPenaltyAddition;
         const float penalty_area_half_width = big_penalty_area_w / 2.0f;
 
-        const Common::Vec2 start{-side * (Common::worldState().field.width + penaltyAreaExtensionBehindGoal),
+        const Common::Vec2 start{-side * (Common::field().width + penaltyAreaExtensionBehindGoal),
                                  -(penalty_area_half_width + current_robot_radius)};
 
         const float w = side * (penaltyAreaExtensionBehindGoal + current_robot_radius + big_penalty_area_r);
@@ -118,12 +118,12 @@ void Ai::ERRTSetGkClearObstacles(int robot_num)
 
     // our penalty area
     static constexpr float area_extension_size     = 200.0f;
-    const float            penalty_area_half_width = Common::worldState().field.penalty_area_width / 2.0f;
+    const float            penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
-    const Common::Vec2 start{side * Common::worldState().field.width, -(penalty_area_half_width + area_extension_size)};
+    const Common::Vec2 start{side * Common::field().width, -(penalty_area_half_width + area_extension_size)};
 
-    const float w = -side * (area_extension_size + Common::worldState().field.penalty_area_depth);
-    const float h = Common::worldState().field.penalty_area_width + 2 * area_extension_size;
+    const float w = -side * (area_extension_size + Common::field().penalty_area_depth);
+    const float h = Common::field().penalty_area_width + 2 * area_extension_size;
 
     obs_map.addRectangle({start, w, h});
 }

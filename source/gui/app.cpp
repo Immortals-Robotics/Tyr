@@ -95,20 +95,11 @@ void Application::update()
     }
     else
     {
-        renderer->draw(Common::worldState().field);
+        renderer->draw(Common::field());
 
         vision_mutex.lock();
-
-        for (const auto &robot : ssl_packet.detection().robots_blue())
-            renderer->draw(Common::RobotState{robot, Common::TeamColor::Blue});
-
-        for (const auto &robot : ssl_packet.detection().robots_yellow())
-            renderer->draw(Common::RobotState{robot, Common::TeamColor::Yellow});
-
-        for (const auto &ball : ssl_packet.detection().balls())
-        {
-            renderer->draw(ball, true);
-        }
+        renderer->draw(Common::rawWorldState());
+        vision_mutex.unlock();
 
         if (config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
             config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_IP)
@@ -119,7 +110,7 @@ void Application::update()
             config_menu->updateNetworkData();
             udp_client->Update(updated_address);
         }
-        vision_mutex.unlock();
+
         drawing_mutex.lock();
         renderer->drawShapesUdp(debug_packet.draw());
         drawing_mutex.unlock();
@@ -145,26 +136,25 @@ bool Application::shouldClose() const
 void Application::receiveVision()
 {
     std::map<uint32_t, Protos::SSL_DetectionFrame> frame_map;
-    Protos::SSL_WrapperPacket                      tmp_ssl_packet;
 
     while (running)
     {
-        udp_client->receive(&tmp_ssl_packet);
+        Protos::SSL_WrapperPacket tmp_ssl_packet;
+        if (!udp_client->receive(&tmp_ssl_packet) || !tmp_ssl_packet.has_detection())
+            continue;
 
-        if (tmp_ssl_packet.has_detection())
-        {
-            auto detection                   = tmp_ssl_packet.detection();
-            frame_map[detection.camera_id()] = detection;
-        }
+        auto detection                   = tmp_ssl_packet.detection();
+        frame_map[detection.camera_id()] = tmp_ssl_packet.detection();
 
-        ssl_packet_off.clear_detection();
-        for (auto detection : frame_map)
+        Protos::SSL_DetectionFrame merged_frame;
+        for (const auto &detection : frame_map)
         {
-            ssl_packet_off.mutable_detection()->MergeFrom(detection.second);
+            merged_frame.MergeFrom(detection.second);
         }
 
         vision_mutex.lock();
-        std::swap(ssl_packet, ssl_packet_off);
+        // TODO: this will be moved to vision
+        Common::rawWorldState() = Common::RawWorldState(merged_frame);
         vision_mutex.unlock();
     }
 };

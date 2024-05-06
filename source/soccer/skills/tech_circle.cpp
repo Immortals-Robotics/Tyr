@@ -175,7 +175,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     }
 
     Common::Vec2 ballToGoal =
-        Common::Vec2(-side * Common::worldState().field.width, 0) - Common::worldState().ball.position;
+        Common::Vec2(-side * Common::field().width, 0) - Common::worldState().ball.position;
     ballToGoal = ballToGoal.normalized();
     float ballVelToGoalDot =
         (Common::worldState().ball.velocity.x * ballToGoal.x + Common::worldState().ball.velocity.y * ballToGoal.y);

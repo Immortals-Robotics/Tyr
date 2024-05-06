@@ -50,9 +50,9 @@ void Ai::Stop()
                 ERRTNavigate2Point(
                     dmf,
                     pointOnConnectingLine(
-                        Common::worldState().ball.position, Common::Vec2(side * Common::worldState().field.width, 0),
+                        Common::worldState().ball.position, Common::Vec2(side * Common::field().width, 0),
                         Common::Vec2::distance(Common::worldState().ball.position,
-                                               Common::Vec2(side * Common::worldState().field.width, 0)) /
+                                               Common::Vec2(side * Common::field().width, 0)) /
                             3.0f),
                     100, &VELOCITY_PROFILE_AROOM);
                 OwnRobot[dmf].Shoot(0);
@@ -67,7 +67,7 @@ void Ai::Stop()
                         Common::worldState().ball.position,
                         NormalizeAngle(
                             -20 + Common::Vec2::angleWith(Common::worldState().ball.position,
-                                                          Common::Vec2(side * Common::worldState().field.width, 0))),
+                                                          Common::Vec2(side * Common::field().width, 0))),
                         650),
                     100, &VELOCITY_PROFILE_AROOM);
                 OwnRobot[lmf].Shoot(0);
@@ -82,7 +82,7 @@ void Ai::Stop()
                         Common::worldState().ball.position,
                         NormalizeAngle(
                             20 + Common::Vec2::angleWith(Common::worldState().ball.position,
-                                                         Common::Vec2(side * Common::worldState().field.width, 0))),
+                                                         Common::Vec2(side * Common::field().width, 0))),
                         650),
                     100, &VELOCITY_PROFILE_AROOM);
                 OwnRobot[rmf].Shoot(0);
@@ -99,8 +99,8 @@ void Ai::Stop()
     ERRTNavigate2Point(
         dmf,
         Common::worldState().ball.position.pointOnConnectingLine(
-            Common::Vec2(side * Common::worldState().field.width, 0),
-            Common::worldState().ball.position.distanceTo(Common::Vec2(side * Common::worldState().field.width, 0)) /
+            Common::Vec2(side * Common::field().width, 0),
+            Common::worldState().ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) /
                 3.0f),
         100, &VELOCITY_PROFILE_AROOM);
     OwnRobot[dmf].Shoot(0);
@@ -110,7 +110,7 @@ void Ai::Stop()
     ERRTNavigate2Point(lmf,
                        Common::worldState().ball.position.circleAroundPoint(
                            Common::Angle::fromDeg(-20.0f) + Common::worldState().ball.position.angleWith(Common::Vec2(
-                                                                side * Common::worldState().field.width, 0)),
+                                                                side * Common::field().width, 0)),
                            650),
                        100, &VELOCITY_PROFILE_AROOM);
     OwnRobot[lmf].Shoot(0);
@@ -120,7 +120,7 @@ void Ai::Stop()
     ERRTNavigate2Point(rmf,
                        Common::worldState().ball.position.circleAroundPoint(
                            Common::Angle::fromDeg(20.0f) + Common::worldState().ball.position.angleWith(Common::Vec2(
-                                                               side * Common::worldState().field.width, 0)),
+                                                               side * Common::field().width, 0)),
                            650),
                        100, &VELOCITY_PROFILE_AROOM);
     OwnRobot[rmf].Shoot(0);
@@ -131,7 +131,7 @@ void Ai::Stop()
     ERRTNavigate2Point(
         cmf,
         Common::worldState().ball.position.circleAroundPoint(
-            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)),
+            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
             650),
         100, &VELOCITY_PROFILE_AROOM);
     OwnRobot[cmf].Shoot(0);

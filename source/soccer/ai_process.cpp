@@ -33,7 +33,7 @@ void Ai::Process()
         FUNC_state = 0;
 
         oppRestarted = false;
-        if (side * Common::worldState().ball.position.x > Common::worldState().field.width * 0.7f)
+        if (side * Common::worldState().ball.position.x > Common::field().width * 0.7f)
         {
             currentPlay = "Stop_def";
         }

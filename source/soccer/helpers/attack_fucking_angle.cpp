@@ -11,8 +11,8 @@ bool Ai::attackFuckingAngle()
     int oppAttack = findKickerOpp(-1);
     if (oppAttack != -1)
     {
-        Common::Angle ownGoalAngle = Common::Vec2(side * Common::worldState().field.width, 0).angleWith(Common::worldState().ball.position);
-        Common::Angle oppGoalAngle = Common::worldState().ball.position.angleWith(Common::Vec2(-side * Common::worldState().field.height, 0));
+        Common::Angle ownGoalAngle = Common::Vec2(side * Common::field().width, 0).angleWith(Common::worldState().ball.position);
+        Common::Angle oppGoalAngle = Common::worldState().ball.position.angleWith(Common::Vec2(-side * Common::field().height, 0));
 
         if (std::fabs((ownGoalAngle - oppGoalAngle).deg()) > 80.0f)
         {

@@ -23,9 +23,9 @@ void Ai::their_place_ball()
                 OwnRobot[dmf].face(Common::worldState().ball.position);
                 ERRTNavigate2Point(dmf,
                                    PointOnConnectingLine(Common::worldState().ball.position,
-                                                         Common::Vec2(side * Common::worldState().field.width, 0),
+                                                         Common::Vec2(side * Common::field().width, 0),
                                                          DIS(Common::worldState().ball.position,
-                                                             Common::Vec2(side * Common::worldState().field.width, 0)) /
+                                                             Common::Vec2(side * Common::field().width, 0)) /
                                                              3.0f),
                                    100, &VELOCITY_PROFILE_AROOM);
                 OwnRobot[dmf].Shoot(0);
@@ -39,7 +39,7 @@ void Ai::their_place_ball()
                     CircleAroundPoint(
                         Common::worldState().ball.position,
                         NormalizeAngle(-20 + AngleWith(Common::worldState().ball.position,
-                                                       Common::Vec2(side * Common::worldState().field.width, 0))),
+                                                       Common::Vec2(side * Common::field().width, 0))),
                         650),
                     100, &VELOCITY_PROFILE_AROOM);
                 OwnRobot[lmf].Shoot(0);
@@ -53,7 +53,7 @@ void Ai::their_place_ball()
                     CircleAroundPoint(
                         Common::worldState().ball.position,
                         NormalizeAngle(20 + AngleWith(Common::worldState().ball.position,
-                                                      Common::Vec2(side * Common::worldState().field.width, 0))),
+                                                      Common::Vec2(side * Common::field().width, 0))),
                         650),
                     100, &VELOCITY_PROFILE_AROOM);
                 OwnRobot[rmf].Shoot(0);
@@ -66,7 +66,7 @@ void Ai::their_place_ball()
                                    CircleAroundPoint(Common::worldState().ball.position,
                                                      NormalizeAngle(AngleWith(
                                                          Common::worldState().ball.position,
-                                                         Common::Vec2(side * Common::worldState().field.width, 0))),
+                                                         Common::Vec2(side * Common::field().width, 0))),
                                                      650),
                                    100, &VELOCITY_PROFILE_AROOM);
                 OwnRobot[cmf].Shoot(0);
@@ -92,8 +92,8 @@ void Ai::their_place_ball()
     ERRTNavigate2Point(
         dmf,
         Common::worldState().ball.position.pointOnConnectingLine(
-            Common::Vec2(side * Common::worldState().field.width, 0),
-            Common::worldState().ball.position.distanceTo(Common::Vec2(side * Common::worldState().field.width, 0)) /
+            Common::Vec2(side * Common::field().width, 0),
+            Common::worldState().ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) /
                 3.0f),
         100, &VELOCITY_PROFILE_AROOM);
 
@@ -110,9 +110,9 @@ void Ai::their_place_ball()
     OwnRobot[rw].face(Common::worldState().ball.position);
     ERRTNavigate2Point(rw,
                        Common::Vec2(0, -100) + Common::worldState().ball.position.pointOnConnectingLine(
-                                                   Common::Vec2(side * Common::worldState().field.width, 0),
+                                                   Common::Vec2(side * Common::field().width, 0),
                                                    Common::worldState().ball.position.distanceTo(
-                                                       Common::Vec2(side * Common::worldState().field.width, 0)) /
+                                                       Common::Vec2(side * Common::field().width, 0)) /
                                                        3.0f),
                        100, &VELOCITY_PROFILE_AROOM);
 
@@ -129,9 +129,9 @@ void Ai::their_place_ball()
     OwnRobot[lw].face(Common::worldState().ball.position);
     ERRTNavigate2Point(lw,
                        Common::Vec2(0, 100) + Common::worldState().ball.position.pointOnConnectingLine(
-                                                  Common::Vec2(side * Common::worldState().field.width, 0),
+                                                  Common::Vec2(side * Common::field().width, 0),
                                                   Common::worldState().ball.position.distanceTo(
-                                                      Common::Vec2(side * Common::worldState().field.width, 0)) /
+                                                      Common::Vec2(side * Common::field().width, 0)) /
                                                       3.0f),
                        100, &VELOCITY_PROFILE_AROOM);
 
@@ -149,7 +149,7 @@ void Ai::their_place_ball()
     ERRTNavigate2Point(lmf,
                        Common::worldState().ball.position.circleAroundPoint(
                            Common::Angle::fromDeg(-20) + Common::worldState().ball.position.angleWith(
-                                                             Common::Vec2(side * Common::worldState().field.width, 0)),
+                                                             Common::Vec2(side * Common::field().width, 0)),
                            1090),
                        100, &VELOCITY_PROFILE_AROOM);
 
@@ -167,7 +167,7 @@ void Ai::their_place_ball()
     ERRTNavigate2Point(rmf,
                        Common::worldState().ball.position.circleAroundPoint(
                            Common::Angle::fromDeg(20) + Common::worldState().ball.position.angleWith(
-                                                            Common::Vec2(side * Common::worldState().field.width, 0)),
+                                                            Common::Vec2(side * Common::field().width, 0)),
                            1090),
                        100, &VELOCITY_PROFILE_AROOM);
 
@@ -185,7 +185,7 @@ void Ai::their_place_ball()
     ERRTNavigate2Point(
         cmf,
         Common::worldState().ball.position.circleAroundPoint(
-            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)),
+            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
             1090),
         100, &VELOCITY_PROFILE_AROOM);
     // side=-side;

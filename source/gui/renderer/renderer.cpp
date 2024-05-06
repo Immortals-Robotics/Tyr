@@ -207,6 +207,16 @@ void Renderer::applyShader()
     EndTextureMode();
 }
 
+void Renderer::draw(const Common::RawWorldState &t_world)
+{
+    for (const auto &ball : t_world.balls)
+        draw(ball, true);
+    for (const auto &robot : t_world.yellow_robots)
+        draw(robot);
+    for (const auto &robot : t_world.blue_robots)
+        draw(robot);
+}
+
 void Renderer::draw(const Common::FieldState &t_field)
 {
     BeginTextureMode(this->visualizationTexture);

@@ -7,7 +7,7 @@ void Ai::WaitForGool(int robot_num, bool chip)
     Common::Vec2 pos =
         CalculatePassPos(robot_num, Common::Vec2(-side * 3025, 0), OwnRobot[robot_num].state().position, -1600);
 
-    OwnRobot[robot_num].face(Common::Vec2(-side * Common::worldState().field.width, 0));
+    OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width, 0));
 
     ERRTSetObstacles(robot_num, 0, 1);
     ERRTNavigate2Point(robot_num, pos, 100, &VELOCITY_PROFILE_MAMOOLI);

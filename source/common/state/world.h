@@ -148,8 +148,6 @@ struct WorldState
     RobotState own_robot[Setting::kMaxRobots];
     RobotState opp_robot[Setting::kMaxRobots];
 
-    FieldState field;
-
     Vec3 last_cmds[Setting::kMaxRobots][11] = {};
 
     WorldState()
@@ -161,6 +159,34 @@ struct WorldState
         for (int i = 0; i < Setting::kMaxRobots; i++)
         {
             opp_robot[i].vision_id = i;
+        }
+    }
+};
+
+struct RawWorldState
+{
+    std::vector<BallState> balls;
+
+    std::vector<RobotState> yellow_robots;
+    std::vector<RobotState> blue_robots;
+
+    RawWorldState() = default;
+
+    RawWorldState(const Protos::SSL_DetectionFrame &t_frame)
+    {
+        for (const auto &ball : t_frame.balls())
+        {
+            balls.emplace_back(ball);
+        }
+
+        for (const auto &robot : t_frame.robots_yellow())
+        {
+            yellow_robots.emplace_back(robot, TeamColor::Yellow);
+        }
+
+        for (const auto &robot : t_frame.robots_blue())
+        {
+            blue_robots.emplace_back(robot, TeamColor::Blue);
         }
     }
 };

@@ -22,8 +22,8 @@ void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
 
 Common::Vec2 Planner::randomState()
 {
-    return Common::Vec2((m_random.get(-1.0f, 1.0f) * (Common::worldState().field.width + 250.0f)),
-                        (m_random.get(-1.0f, 1.0f) * (Common::worldState().field.height + 250.0f)));
+    return Common::Vec2((m_random.get(-1.0f, 1.0f) * (Common::field().width + 250.0f)),
+                        (m_random.get(-1.0f, 1.0f) * (Common::field().height + 250.0f)));
 }
 
 Common::Vec2 Planner::nearestFree(Common::Vec2 state)
