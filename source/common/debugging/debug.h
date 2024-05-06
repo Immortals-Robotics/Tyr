@@ -26,6 +26,7 @@ public:
     void draw(const LineSegment &t_line, Color t_color = Color::white(), std::string_view t_layer = "");
     void draw(const Rect &t_rect, Color t_color = Color::white(), std::string_view t_layer = "");
     void draw(const Circle &t_circle, Color t_color = Color::white(), std::string_view t_layer = "");
+    void draw(const Triangle &t_triangle, Color t_color = Color::white(), std::string_view t_layer = "");
 
     void draw(const RobotState &t_robot, Color t_color = Color::white(), std::string_view t_layer = "");
     void draw(const BallState &t_ball, Color t_color = Color::white(), std::string_view t_layer = "");

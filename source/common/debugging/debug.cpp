@@ -91,6 +91,18 @@ void Debug::draw(const Circle &t_circle, const Color t_color, const std::string_
     t_circle.fillProto(circle);
 }
 
+void Debug::draw(const Triangle &t_triangle, const Color t_color, const std::string_view t_layer)
+{
+    Protos::Immortals::Debug::Draw *const draw = m_wrapper.add_draw();
+
+    draw->set_layer(t_layer.data(), t_layer.size());
+    // TODO: fill source location
+    t_color.fillProto(draw->mutable_color());
+
+    Protos::Immortals::Triangle *const triangle = draw->mutable_triangle();
+    t_triangle.fillProto(triangle);
+}
+
 void Debug::draw(const RobotState &t_robot, const Color t_color, const std::string_view t_layer)
 {
     // TODO:

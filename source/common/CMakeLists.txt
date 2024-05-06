@@ -25,6 +25,7 @@ set(HEADER_FILES
 	math/geom/line_segment.h
 	math/geom/line.h
 	math/geom/rect.h
+	math/geom/triangle.h
 	network/udp_client.h
 	network/udp_server.h
 	state/referee.h
