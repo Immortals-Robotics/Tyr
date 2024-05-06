@@ -107,9 +107,18 @@ void Application::update()
     {
         renderer->drawField(ssl_field);
         vision_mutex.lock();
-        renderer->drawRobots(ssl_packet.detection().robots_blue(), Common::TeamColor::Blue);
-        renderer->drawRobots(ssl_packet.detection().robots_yellow(), Common::TeamColor::Yellow);
-        renderer->drawBalls(ssl_packet.detection().balls(), true);
+
+        for (const auto &robot : ssl_packet.detection().robots_blue())
+            renderer->draw(Common::RobotState{robot, Common::TeamColor::Blue});
+
+        for (const auto &robot : ssl_packet.detection().robots_yellow())
+            renderer->draw(Common::RobotState{robot, Common::TeamColor::Yellow});
+
+        for (const auto &ball : ssl_packet.detection().balls())
+        {
+            renderer->draw(ball, true);
+        }
+
         if (config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
             config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_IP)
         {

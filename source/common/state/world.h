@@ -43,6 +43,17 @@ struct RobotState
         seen_state = (SeenState) t_robot.seen_state();
     }
 
+    RobotState(const Protos::SSL_DetectionRobot &t_robot, const TeamColor t_color)
+    {
+        vision_id = t_robot.robot_id();
+        color     = t_color;
+
+        position = Common::Vec2(t_robot.x(), t_robot.y());
+        angle    = Common::Angle::fromRad(t_robot.orientation());
+
+        seen_state = SeenState::Seen;
+    }
+
     void fillProto(Protos::Immortals::RobotState *const t_robot) const
     {
         t_robot->set_id(vision_id);
@@ -73,6 +84,12 @@ struct BallState
         velocity = t_ball.velocity();
 
         seen_state = (SeenState) t_ball.seen_state();
+    }
+
+    BallState(const Protos::SSL_DetectionBall &t_ball)
+    {
+        position   = Common::Vec2(t_ball.x(), t_ball.y());
+        seen_state = SeenState::Seen;
     }
 
     void fillProto(Protos::Immortals::BallState *const t_ball) const

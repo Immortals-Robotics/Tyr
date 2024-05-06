@@ -16,16 +16,14 @@ public:
     void draw(Common::Line t_line, Common::Color t_color, float t_thickness = 1);
     void draw(Common::LineSegment t_line_segment, Common::Color t_color, float t_thickness = 1);
     void draw(Common::Triangle t_triangle, Common::Color t_color, bool t_is_filled = true, float t_thickness = 1);
+
+    void draw(const Common::RobotState &t_robot);
+    void draw(const Common::BallState &t_ball, bool draw_goal_lines);
+
     void drawText(Common::Vec2 t_pos, const std::string &t_str, int t_font_size = 12,
                   Common::Color t_color = Common::Color::white());
 
     void drawField(const Protos::SSL_GeometryFieldSize &data);
-    void drawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data,
-                    Common::TeamColor                                                     color);
-    void drawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall> &data, bool draw_goal_lines);
-
-    void drawRobot(const Protos::SSL_DetectionRobot &robot, Common::TeamColor color);
-    void drawBall(const Protos::SSL_DetectionBall &ball, bool draw_goal_lines);
 
     void drawShapesUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug::Draw> &draws);
 
