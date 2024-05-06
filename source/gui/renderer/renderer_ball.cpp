@@ -3,8 +3,9 @@ namespace Tyr::Gui
 {
 void Renderer::draw(const Common::BallState &t_ball, bool t_draw_goal_lines)
 {
-    draw(Common::Circle{t_ball.position, ballRadius}, Common::Color::orange(), true);
-    draw(Common::Circle{t_ball.position, ballRadius + 10.0f}, Common::Color::black(), false, 1.0f);
+    draw(Common::Circle{t_ball.position, Common::worldState().field.ball_radius}, Common::Color::orange(), true);
+    draw(Common::Circle{t_ball.position, Common::worldState().field.ball_radius + 10.0f}, Common::Color::black(), false,
+         1.0f);
 
     // TODO: move this to soccer
     if (t_draw_goal_lines)

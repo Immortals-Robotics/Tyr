@@ -32,8 +32,6 @@ public:
     RenderTexture visualizationTexture, shaderVisualizationTexture;
 
 private:
-    const float         ballRadius;
-    const float         robotRadius;
     const Common::Angle robotArcAngle;
     const float         m_window_border;
     Common::Vec2        m_w_size;

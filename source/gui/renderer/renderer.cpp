@@ -3,7 +3,7 @@
 namespace Tyr::Gui
 {
 Renderer::Renderer(Common::Vec2 _wSize, float _upScalingFactor)
-    : ballRadius(21.5f), robotRadius(90.f), robotArcAngle(Common::Angle::fromDeg(50.f)), m_window_border(8.f)
+    : robotArcAngle(Common::Angle::fromDeg(50.f)), m_window_border(8.f)
 {
     m_w_size                   = _wSize * _upScalingFactor;
     m_upscaling_factor         = _upScalingFactor;

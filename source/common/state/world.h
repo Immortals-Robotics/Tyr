@@ -116,8 +116,8 @@ struct FieldState
 
     float center_circle_radius = 500.0f;
 
-    float ball_radius;
-    float max_robot_radius;
+    float ball_radius  = 21.5f;
+    float robot_radius = 90.0f;
 
     FieldState() = default;
 
@@ -136,8 +136,8 @@ struct FieldState
 
         center_circle_radius = t_field.center_circle_radius();
 
-        ball_radius      = t_field.ball_radius();
-        max_robot_radius = t_field.max_robot_radius();
+        ball_radius  = t_field.ball_radius();
+        robot_radius = t_field.max_robot_radius();
     }
 };
 
