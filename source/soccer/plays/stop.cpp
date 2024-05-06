@@ -11,7 +11,7 @@ void Ai::Stop()
     }
 #endif
 
-    // Common::debug().drawCircle(Common::worldState().ball.position,500,Red);
+    // Common::debug().draw({Common::worldState().ball.position,500},Red);
 
     if (OwnRobot[attack].state().out_for_substitute)
     {

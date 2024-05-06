@@ -215,7 +215,7 @@ void Ai::strategy_maker()
             }
 
             VelocityProfile *profile;
-            switch (strategy.role(i).path(step[i]).profile())
+            switch (strategy.role(i).path(step[i]).velocity_profile())
             {
             case 0:
                 profile = &VELOCITY_PROFILE_AROOM;

@@ -11,8 +11,8 @@ void Ai::Process()
     internalProcessData();
 
     debugDraw = true;
-    Common::debug().drawCircle(Common::worldState().ball.position, 40, "", Common::Red);
-    //	Common::debug().drawLineSegment(Common::worldState().ball.position,Common::Vec2(Common::worldState().ball.velocity.x,Common::worldState().ball.velocity.y)
+    Common::debug().draw(Common::worldState().ball.position, Common::Color::red());
+    //	Common::debug().draw(Common::worldState().ball.position,Common::Vec2(Common::worldState().ball.velocity.x,Common::worldState().ball.velocity.y)
     //+ Common::worldState().ball.position,
     // Black);
 

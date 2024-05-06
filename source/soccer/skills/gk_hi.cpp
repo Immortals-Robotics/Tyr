@@ -15,11 +15,11 @@ void Ai::GKHi(int robot_num, bool stop)
     debugDraw = true; // TODO #10 Comment this in the game
     if (ballIsGoaling())
     {
-        Common::debug().drawCircle(OwnRobot[robot_num].state().position, 200, "", Common::Red);
+        Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 200}, Common::Color::red());
     }
     else
     {
-        Common::debug().drawCircle(OwnRobot[robot_num].state().position, 20, "", Common::Yellow);
+        Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 20}, Common::Color::yellow());
     }
     debugDraw = false;
 

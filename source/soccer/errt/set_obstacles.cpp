@@ -35,7 +35,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
             (OwnRobot[i].state().vision_id != OwnRobot[robot_num].state().vision_id))
         {
             obs_map.addCircle({OwnRobot[i].state().position, current_robot_radius + robotRadius});
-            // Common::debug().drawCircle(OwnRobot[i].state().position,ownRobotRadius + (!dribble)*ownRobotRadius,Cyan);
+            // Common::debug().draw({OwnRobot[i].state().position,ownRobotRadius + (!dribble)*ownRobotRadius},Cyan);
         }
     }
 
@@ -47,7 +47,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
             const float radius = calculateRobotRadius(Common::worldState().opp_robot[i]);
 
             obs_map.addCircle({Common::worldState().opp_robot[i].position, radius + current_robot_radius});
-            // Common::debug().drawCircle(Common::worldState().opp_robot[i].position,ownRobotRadius + (!dribble)*ownRobotRadius,Cyan);
+            // Common::debug().draw({Common::worldState().opp_robot[i].position,ownRobotRadius + (!dribble)*ownRobotRadius},Cyan);
         }
     }
 
