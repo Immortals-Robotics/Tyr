@@ -6,7 +6,19 @@ namespace Tyr::Common
 {
 struct Triangle
 {
-    Triangle(const std::array<Vec2, 3> &t_corner) : corner{t_corner}
+    Triangle(const Vec2 t_corner_1, const Vec2 t_corner_2, const Vec2 t_corner_3)
+        : corner({t_corner_1, t_corner_2, t_corner_3})
+    {
+        // sort corners clockwise
+        const float area = (corner[1].x - corner[0].x) * (corner[2].y - corner[0].y) -
+                           (corner[2].x - corner[0].x) * (corner[1].y - corner[0].y);
+        if (area < 0)
+        {
+            std::swap(corner[1], corner[2]);
+        }
+    }
+
+    Triangle(const std::array<Vec2, 3> &t_corner) : Triangle(t_corner[0], t_corner[1], t_corner[2])
     {}
 
     Triangle(const Protos::Immortals::Triangle &t_triangle)

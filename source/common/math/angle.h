@@ -24,6 +24,7 @@ struct Angle
 
     [[nodiscard]] float rad() const;
     [[nodiscard]] float deg() const;
+    [[nodiscard]] float deg360() const;
 
     [[nodiscard]] float sin() const;
     [[nodiscard]] float cos() const;
@@ -41,6 +42,8 @@ struct Angle
     void  operator-=(Angle ang);
     bool  operator<(Angle ang) const;
     bool  operator>(Angle ang) const;
+
+    Angle operator-() const;
 
     Angle operator*(float f) const;
     Angle operator/(float f) const;

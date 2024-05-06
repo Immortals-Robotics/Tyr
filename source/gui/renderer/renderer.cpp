@@ -3,13 +3,13 @@
 namespace Tyr::Gui
 {
 Renderer::Renderer(Common::Vec2 _wSize, float _upScalingFactor)
-    : ballRadius(21.5f), robotRadius(90.f), robotArcAngle(50.f), m_window_border(8.f)
+    : ballRadius(21.5f), robotRadius(90.f), robotArcAngle(Common::Angle::fromDeg(50.f)), m_window_border(8.f)
 {
     m_w_size                   = _wSize * _upScalingFactor;
     m_upscaling_factor         = _upScalingFactor;
-    visualizaionTexture        = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
+    visualizationTexture        = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
     shaderVisualizationTexture = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
-    SetTextureFilter(visualizaionTexture.texture, TEXTURE_FILTER_BILINEAR);
+    SetTextureFilter(visualizationTexture.texture, TEXTURE_FILTER_BILINEAR);
     SetTextureFilter(shaderVisualizationTexture.texture, TEXTURE_FILTER_BILINEAR);
 }
 
@@ -67,110 +67,127 @@ void Renderer::calculateMousePos()
                           overallFieldSize.y / 2);
 }
 
-void Renderer::drawRect(Common::Rect rect, Color _color, bool _isFilled, float _thickness, unsigned char _transparency)
+static Color raylibColor(const Common::Color &t_color)
+{
+    return Color{
+        .r = (unsigned char) t_color.r,
+        .g = (unsigned char) t_color.g,
+        .b = (unsigned char) t_color.b,
+        .a = (unsigned char) t_color.a,
+    };
+}
+
+void Renderer::draw(Common::Vec2 point, Common::Color t_color, bool t_is_filled, float t_thickness)
+{
+    // TODO: do sth better
+    draw(Common::Circle(point, 50.0f), t_color, t_is_filled, t_thickness);
+}
+
+void Renderer::draw(Common::Rect rect, Common::Color t_color, bool t_is_filled, float t_thickness)
 {
     Vector2 v1   = ConvertSignedVecToPixelVec(rect.min);
     Vector2 v2   = ConvertSignedVecToPixelVec(rect.max);
-    _thickness   = _thickness * m_upscaling_factor;
+    t_thickness  = t_thickness * m_upscaling_factor;
     float posX   = (v1.x < v2.x) ? v1.x : v2.x;
     float posY   = (v1.y < v2.y) ? v1.y : v2.y;
     float length = (v1.x < v2.x) ? v2.x - v1.x : v1.x - v2.x;
     float width  = (v1.y < v2.y) ? v2.y - v1.y : v1.y - v2.y;
-    _color.a     = _transparency;
 
     Rectangle ray_rect = {.x = posX, .y = posY, .width = length, .height = width};
 
-    BeginTextureMode(visualizaionTexture);
-    if (_isFilled)
+    BeginTextureMode(visualizationTexture);
+    if (t_is_filled)
     {
-        DrawRectangleRec(ray_rect, _color);
+        DrawRectangleRec(ray_rect, raylibColor(t_color));
     }
     else
     {
-        DrawRectangleLinesEx(ray_rect, _thickness, _color);
+        DrawRectangleLinesEx(ray_rect, t_thickness, raylibColor(t_color));
     }
     EndTextureMode();
 }
 
-void Renderer::drawLineSegment(Common::LineSegment line_segment, Color _color, float _thickness,
-                               unsigned char _transparency)
+void Renderer::draw(Common::Line t_line, Common::Color t_color, float t_thickness)
 {
-    _thickness = _thickness * m_upscaling_factor;
-    Vector2 v1 = ConvertSignedVecToPixelVec(line_segment.start);
-    Vector2 v2 = ConvertSignedVecToPixelVec(line_segment.end);
-    _color.a   = _transparency;
-    BeginTextureMode(visualizaionTexture);
-    DrawLineEx(v1, v2, _thickness, _color);
-    BeginTextureMode(visualizaionTexture);
+    // TODO
 }
 
-void Renderer::drawCircle(Common::Circle circle, Color _color, bool _isFilled, float _thickness,
-                          unsigned char _transparency)
+void Renderer::draw(Common::LineSegment line_segment, Common::Color t_color, float t_thickness)
 {
-    Vector2 center = ConvertSignedVecToPixelVec(circle.center);
-    float   _rad   = ConvertRealityUnitToPixels(circle.r);
-    _thickness     = _thickness * m_upscaling_factor;
-    _color.a       = _transparency;
-    BeginTextureMode(visualizaionTexture);
-    if (_isFilled)
-    {
-        DrawCircleV(center, _rad, _color);
-    }
-    else
-    {
-        DrawRing(center, _rad - _thickness, _rad, 0., 360., 100, _color);
-    }
-    EndTextureMode();
+    t_thickness = t_thickness * m_upscaling_factor;
+    Vector2 v1  = ConvertSignedVecToPixelVec(line_segment.start);
+    Vector2 v2  = ConvertSignedVecToPixelVec(line_segment.end);
+
+    BeginTextureMode(visualizationTexture);
+    DrawLineEx(v1, v2, t_thickness, raylibColor(t_color));
+    BeginTextureMode(visualizationTexture);
 }
 
-void Renderer::drawCircleSector(Common::Circle circle, Color _color, float _startAngle, float _endAngle, bool _isFilled,
-                                unsigned char _transparency)
+void Renderer::draw(Common::Circle circle, Common::Color t_color, bool t_is_filled, float t_thickness)
 {
     Vector2 center = ConvertSignedVecToPixelVec(circle.center);
     float   _rad   = ConvertRealityUnitToPixels(circle.r);
-    Vector2 p1 = {.x = center.x + _rad * cos(_startAngle * DEG2RAD), .y = center.y + _rad * sin(_startAngle * DEG2RAD)};
-    Vector2 p2 = {.x = center.x + _rad * cos(_endAngle * DEG2RAD), .y = center.y + _rad * sin(_endAngle * DEG2RAD)};
-    _color.a   = _transparency;
-    BeginTextureMode(visualizaionTexture);
-    if (_isFilled)
+    t_thickness    = t_thickness * m_upscaling_factor;
+
+    BeginTextureMode(visualizationTexture);
+    if (t_is_filled)
     {
-        DrawCircleSector(center, _rad, _startAngle, _endAngle, 200, _color);
-        DrawTriangle(center, p1, p2, _color);
+        DrawCircleV(center, _rad, raylibColor(t_color));
     }
     else
     {
-        DrawCircleSectorLines(center, _rad, _startAngle, _endAngle, 500, _color);
-        DrawTriangleLines(center, p1, p2, _color);
+        DrawRing(center, _rad - t_thickness, _rad, 0., 360., 100, raylibColor(t_color));
     }
     EndTextureMode();
 }
 
-void Renderer::drawTriangle(Common::Vec2 _p1, Common::Vec2 _p2, Common::Vec2 _p3, Color _color, bool _isFilled,
-                            unsigned char _transparency)
+void Renderer::drawCircleSector(Common::Circle circle, Common::Color t_color, Common::Angle _startAngle,
+                                Common::Angle _endAngle, bool t_is_filled)
 {
-    sortPointsClockwise(_p1, _p2, _p3);
-    Vector2 v1 = ConvertSignedVecToPixelVec(_p1);
-    Vector2 v2 = ConvertSignedVecToPixelVec(_p2);
-    Vector2 v3 = ConvertSignedVecToPixelVec(_p3);
-    _color.a   = _transparency;
+    Vector2 center = ConvertSignedVecToPixelVec(circle.center);
+    float   _rad   = ConvertRealityUnitToPixels(circle.r);
 
-    BeginTextureMode(visualizaionTexture);
-    if (_isFilled)
+    const Vector2 p1 = ConvertSignedVecToPixelVec(circle.center + _startAngle.toUnitVec() * circle.r);
+    const Vector2 p2 = ConvertSignedVecToPixelVec(circle.center + _endAngle.toUnitVec() * circle.r);
+
+    BeginTextureMode(visualizationTexture);
+    if (t_is_filled)
     {
-        DrawTriangle(v1, v2, v3, _color);
+        DrawCircleSector(center, _rad, _startAngle.deg(), _endAngle.deg360(), 200, raylibColor(t_color));
+        DrawTriangle(center, p2, p1, raylibColor(t_color));
     }
     else
     {
-        DrawTriangleLines(v1, v2, v3, _color);
+        DrawCircleSectorLines(center, _rad, _startAngle.deg(), _endAngle.deg360(), 500, raylibColor(t_color));
+        DrawTriangleLines(center, p2, p1, raylibColor(t_color));
     }
     EndTextureMode();
 }
 
-void Renderer::drawText(Common::Vec2 _pos, std::string _str, int _fontSize, Color _color, unsigned char _transparency)
+void Renderer::draw(Common::Triangle triangle, Common::Color t_color, bool t_is_filled, float t_thickness)
+{
+    Vector2 v1 = ConvertSignedVecToPixelVec(triangle.corner[0]);
+    Vector2 v2 = ConvertSignedVecToPixelVec(triangle.corner[1]);
+    Vector2 v3 = ConvertSignedVecToPixelVec(triangle.corner[2]);
+
+    BeginTextureMode(visualizationTexture);
+    if (t_is_filled)
+    {
+        DrawTriangle(v1, v2, v3, raylibColor(t_color));
+    }
+    else
+    {
+        // TODO: thickness
+        DrawTriangleLines(v1, v2, v3, raylibColor(t_color));
+    }
+    EndTextureMode();
+}
+
+void Renderer::drawText(Common::Vec2 _pos, const std::string &_str, int _fontSize, Common::Color t_color)
 {
     Vector2 pos = ConvertSignedVecToPixelVec(_pos);
-    BeginTextureMode(visualizaionTexture);
-    DrawTextEx(visualizationFont, _str.c_str(), pos, _fontSize * m_upscaling_factor, 0., _color);
+    BeginTextureMode(visualizationTexture);
+    DrawTextEx(visualizationFont, _str.c_str(), pos, _fontSize * m_upscaling_factor, 0., raylibColor(t_color));
     EndTextureMode();
 }
 
@@ -185,14 +202,14 @@ void Renderer::applyShader()
 {
     BeginTextureMode(shaderVisualizationTexture);
     BeginShaderMode(fxaaShader);
-    DrawTexture(visualizaionTexture.texture, 0, 0, WHITE);
+    DrawTexture(visualizationTexture.texture, 0, 0, WHITE);
     EndShaderMode();
     EndTextureMode();
 }
 
 void Renderer::drawField(const Protos::SSL_GeometryFieldSize &data)
 {
-    BeginTextureMode(this->visualizaionTexture);
+    BeginTextureMode(this->visualizationTexture);
     ClearBackground(GREEN);
     EndTextureMode();
 
@@ -227,31 +244,34 @@ void Renderer::drawField(const Protos::SSL_GeometryFieldSize &data)
 
     float centerCircleRad = data.center_circle_radius();
 
-    drawRect({fieldWallStartPoint, fieldWallEndPoint}, BROWN, false, 3);
-    drawRect({fieldEndPoint, fieldStartPoint}, WHITE, false);
-    drawRect({ourGoalEndPoint, ourGoalStartPoint}, WHITE, false);
-    drawRect({oppGoalStartPoint, oppGoalEndPoint}, WHITE, false);
-    drawRect({ourPenaltyStartPoint, ourPenaltyEndPoint}, WHITE, false);
-    drawRect({oppenaltyStartPoint, oppPenaltyEndPoint}, WHITE, false);
-    drawLineSegment({centerLineStartPoint, centerLineEndPoint}, WHITE);
-    drawCircle({fieldCenter, centerCircleRad}, WHITE, false);
-    drawText(fieldWallEndPoint + Common::Vec2(-800., 300.), "GUI FPS: " + std::to_string(GetFPS()), 14, BLACK);
+    draw(Common::Rect{fieldWallStartPoint, fieldWallEndPoint}, Common::Color::brown(), false, 3);
+    draw(Common::Rect{fieldEndPoint, fieldStartPoint}, Common::Color::white(), false);
+    draw(Common::Rect{ourGoalEndPoint, ourGoalStartPoint}, Common::Color::white(), false);
+    draw(Common::Rect{oppGoalStartPoint, oppGoalEndPoint}, Common::Color::white(), false);
+    draw(Common::Rect{ourPenaltyStartPoint, ourPenaltyEndPoint}, Common::Color::white(), false);
+    draw(Common::Rect{oppenaltyStartPoint, oppPenaltyEndPoint}, Common::Color::white(), false);
+    draw(Common::LineSegment{centerLineStartPoint, centerLineEndPoint}, Common::Color::white());
+    draw(Common::Circle{fieldCenter, centerCircleRad}, Common::Color::white(), false);
 
-    static bool clicked = false;
-    static Common::Vec2 clicked_pos(0,0);
+    drawText(fieldWallEndPoint + Common::Vec2(-800., 300.), "GUI FPS: " + std::to_string(GetFPS()), 14,
+             Common::Color::black());
+
+    static bool         clicked = false;
+    static Common::Vec2 clicked_pos(0, 0);
 
     if (ImGui::IsMouseClicked(0))
     {
-        clicked = true;
+        clicked     = true;
         clicked_pos = m_mouse_pos;
-    } else if (ImGui::IsMouseClicked(1))
+    }
+    else if (ImGui::IsMouseClicked(1))
     {
         clicked = false;
     }
-    
+
     if (clicked)
     {
-        drawCircle({clicked_pos, 50}, RED, true, 170);
+        draw(Common::Circle{clicked_pos, 50}, Common::Color::red(), true, 170);
     }
 }
 

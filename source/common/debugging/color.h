@@ -21,7 +21,7 @@ struct Color
 
     constexpr [[nodiscard]] Color transparent() const
     {
-        return Color{r, g, b, a / 2.0f};
+        return Color{r, g, b, a / 4.0f};
     }
 
     float r = 0.0f;

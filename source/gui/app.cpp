@@ -92,8 +92,8 @@ void Application::update()
     Common::Vec2 margin = Common::Vec2(30, 30) * 2;
     Common::Vec2 wSize  = Common::Vec2(900.f, 700.f) + margin;
     // TODO: draw gui
-    ImGuiWindowFlags renderer_window_flags =
-        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration;
+    ImGuiWindowFlags renderer_window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
+                                             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration;
     auto main_window_height = GetScreenHeight();
     auto main_window_width  = GetScreenWidth();
     ImGui::SetNextWindowPos(ImVec2(250., 0.));
@@ -121,13 +121,11 @@ void Application::update()
         }
         vision_mutex.unlock();
         drawing_mutex.lock();
-        renderer->drawCirclesUdp(debug_packet.dbg_draw().circle());
-        renderer->drawRectsUdp(debug_packet.dbg_draw().rect());
-        renderer->drawPointsUdp(debug_packet.dbg_draw().point());
-        renderer->drawLinesUdp(debug_packet.dbg_draw().line());
+        renderer->drawShapesUdp(debug_packet.draw());
         drawing_mutex.unlock();
         renderer->applyShader();
-        // Common::logDebug("AV {}  {} pos {} {}", ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y, main_window_width - 650., main_window_height * 0.8);
+        // Common::logDebug("AV {}  {} pos {} {}", ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y,
+        // main_window_width - 650., main_window_height * 0.8);
         ImGui::Image(&renderer->shaderVisualizationTexture.texture, ImGui::GetContentRegionAvail());
         ImGui::End();
     }
@@ -173,19 +171,15 @@ void Application::receiveVision()
 
 void Application::receiveDrawings()
 {
-    Protos::Immortals::Imm_DBG_wrapper tmp_drawing_packet;
     while (running)
     {
-        udp_client_drawings->receive(&tmp_drawing_packet);
-        if (tmp_drawing_packet.has_dbg_draw())
+        Protos::Immortals::Debug::Wrapper tmp_debug_packet{};
+        if (udp_client_drawings->receive(&tmp_debug_packet))
         {
-            auto draw = tmp_drawing_packet.dbg_draw();
-            debug_packet_off.clear_dbg_draw();
-            debug_packet_off.mutable_dbg_draw()->CopyFrom(draw);
+            drawing_mutex.lock();
+            std::swap(debug_packet, tmp_debug_packet);
+            drawing_mutex.unlock();
         }
-        drawing_mutex.lock();
-        std::swap(debug_packet, debug_packet_off);
-        drawing_mutex.unlock();
     }
 };
 

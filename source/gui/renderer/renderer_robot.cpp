@@ -16,12 +16,13 @@ void Renderer::drawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_D
 
 void Renderer::drawRobot(const Protos::SSL_DetectionRobot &robot, Common::TeamColor color)
 {
-    auto lTextColor = color == Common::TeamColor::Yellow ? BLACK : WHITE;
-    auto lBaseColor = color == Common::TeamColor::Yellow ? YELLOW : BLUE;
+    auto lTextColor = color == Common::TeamColor::Yellow ? Common::Color::black() : Common::Color::white();
+    auto lBaseColor = color == Common::TeamColor::Yellow ? Common::Color::yellow() : Common::Color::blue();
 
     auto position = Common::Vec2(robot.x(), robot.y());
-    drawCircleSector({position, this->robotRadius}, lBaseColor, this->robotArcAngle - robot.orientation() * RAD2DEG,
-                     360. - this->robotArcAngle - robot.orientation() * RAD2DEG, true);
+    drawCircleSector(Common::Circle{position, robotRadius}, lBaseColor,
+                     robotArcAngle - Common::Angle::fromRad(robot.orientation()),
+                     -robotArcAngle - Common::Angle::fromRad(robot.orientation()), true);
     drawText(position + Common::Vec2(kTextOffsetX, kTextOffsetY), std::to_string(robot.robot_id()), 14, lTextColor);
 }
 } // namespace Tyr::Gui

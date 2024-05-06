@@ -15,6 +15,11 @@ float Angle::deg() const
     return m_deg;
 }
 
+float Angle::deg360() const
+{
+    return std::fmod(m_deg + 360.0f, 360.0f);
+}
+
 float Angle::sin() const
 {
     return std::sin(rad());
@@ -83,6 +88,11 @@ Angle Angle::operator*(float f) const
 Angle Angle::operator/(float f) const
 {
     return fromDeg(m_deg / f);
+}
+
+Angle Angle::operator-() const
+{
+    return fromDeg(-m_deg);
 }
 
 Vec2 Angle::toUnitVec() const
