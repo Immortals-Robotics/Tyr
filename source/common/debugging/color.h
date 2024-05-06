@@ -19,6 +19,11 @@ struct Color
         t_color->set_a(a);
     }
 
+    constexpr [[nodiscard]] Color transparent() const
+    {
+        return Color{r, g, b, a / 2.0f};
+    }
+
     float r = 0.0f;
     float g = 0.0f;
     float b = 0.0f;
