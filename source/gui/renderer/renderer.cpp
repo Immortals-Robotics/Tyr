@@ -5,12 +5,12 @@ namespace Tyr::Gui
 Renderer::Renderer(Common::Vec2 _wSize, float _upScalingFactor)
     : robotArcAngle(Common::Angle::fromDeg(50.f)), m_window_border(8.f)
 {
-    m_w_size                   = _wSize * _upScalingFactor;
-    m_upscaling_factor         = _upScalingFactor;
-    visualizationTexture       = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
-    shaderVisualizationTexture = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
-    SetTextureFilter(visualizationTexture.texture, TEXTURE_FILTER_BILINEAR);
-    SetTextureFilter(shaderVisualizationTexture.texture, TEXTURE_FILTER_BILINEAR);
+    m_w_size           = _wSize * _upScalingFactor;
+    m_upscaling_factor = _upScalingFactor;
+    main_rt            = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
+    shader_rt          = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
+    SetTextureFilter(main_rt.texture, TEXTURE_FILTER_BILINEAR);
+    SetTextureFilter(shader_rt.texture, TEXTURE_FILTER_BILINEAR);
 }
 
 void Renderer::init()
@@ -22,8 +22,8 @@ void Renderer::init()
     const std::filesystem::path fragment_path = data_dir / "shaders/fxaa.fs";
     const std::filesystem::path font_path     = data_dir / "fonts/OpenSans-Bold.ttf";
 
-    fxaaShader        = LoadShader(vertex_path.string().c_str(), fragment_path.string().c_str());
-    visualizationFont = LoadFont(font_path.string().c_str());
+    fxaaShader = LoadShader(vertex_path.string().c_str(), fragment_path.string().c_str());
+    m_font     = LoadFont(font_path.string().c_str());
     SetShaderValue(fxaaShader, GetShaderLocation(fxaaShader, "resolution"), resolution.data(), SHADER_UNIFORM_VEC2);
 }
 
@@ -95,7 +95,7 @@ void Renderer::draw(Common::Rect rect, Common::Color t_color, bool t_is_filled, 
 
     Rectangle ray_rect = {.x = posX, .y = posY, .width = length, .height = width};
 
-    BeginTextureMode(visualizationTexture);
+    BeginTextureMode(main_rt);
     if (t_is_filled)
     {
         DrawRectangleRec(ray_rect, raylibColor(t_color));
@@ -118,9 +118,9 @@ void Renderer::draw(Common::LineSegment line_segment, Common::Color t_color, flo
     Vector2 v1  = ConvertSignedVecToPixelVec(line_segment.start);
     Vector2 v2  = ConvertSignedVecToPixelVec(line_segment.end);
 
-    BeginTextureMode(visualizationTexture);
+    BeginTextureMode(main_rt);
     DrawLineEx(v1, v2, t_thickness, raylibColor(t_color));
-    BeginTextureMode(visualizationTexture);
+    BeginTextureMode(main_rt);
 }
 
 void Renderer::draw(Common::Circle circle, Common::Color t_color, bool t_is_filled, float t_thickness)
@@ -129,7 +129,7 @@ void Renderer::draw(Common::Circle circle, Common::Color t_color, bool t_is_fill
     float   _rad   = ConvertRealityUnitToPixels(circle.r);
     t_thickness    = t_thickness * m_upscaling_factor;
 
-    BeginTextureMode(visualizationTexture);
+    BeginTextureMode(main_rt);
     if (t_is_filled)
     {
         DrawCircleV(center, _rad, raylibColor(t_color));
@@ -150,7 +150,7 @@ void Renderer::drawCircleSector(Common::Circle circle, Common::Color t_color, Co
     const Vector2 p1 = ConvertSignedVecToPixelVec(circle.center + _startAngle.toUnitVec() * circle.r);
     const Vector2 p2 = ConvertSignedVecToPixelVec(circle.center + _endAngle.toUnitVec() * circle.r);
 
-    BeginTextureMode(visualizationTexture);
+    BeginTextureMode(main_rt);
     if (t_is_filled)
     {
         DrawCircleSector(center, _rad, _startAngle.deg(), _endAngle.deg360(), 200, raylibColor(t_color));
@@ -170,7 +170,7 @@ void Renderer::draw(Common::Triangle triangle, Common::Color t_color, bool t_is_
     Vector2 v2 = ConvertSignedVecToPixelVec(triangle.corner[1]);
     Vector2 v3 = ConvertSignedVecToPixelVec(triangle.corner[2]);
 
-    BeginTextureMode(visualizationTexture);
+    BeginTextureMode(main_rt);
     if (t_is_filled)
     {
         DrawTriangle(v1, v2, v3, raylibColor(t_color));
@@ -186,8 +186,8 @@ void Renderer::draw(Common::Triangle triangle, Common::Color t_color, bool t_is_
 void Renderer::drawText(Common::Vec2 _pos, const std::string &_str, int _fontSize, Common::Color t_color)
 {
     Vector2 pos = ConvertSignedVecToPixelVec(_pos);
-    BeginTextureMode(visualizationTexture);
-    DrawTextEx(visualizationFont, _str.c_str(), pos, _fontSize * m_upscaling_factor, 0., raylibColor(t_color));
+    BeginTextureMode(main_rt);
+    DrawTextEx(m_font, _str.c_str(), pos, _fontSize * m_upscaling_factor, 0., raylibColor(t_color));
     EndTextureMode();
 }
 
@@ -200,9 +200,9 @@ void Renderer::CalculateZoom()
 
 void Renderer::applyShader()
 {
-    BeginTextureMode(shaderVisualizationTexture);
+    BeginTextureMode(shader_rt);
     BeginShaderMode(fxaaShader);
-    DrawTexture(visualizationTexture.texture, 0, 0, WHITE);
+    DrawTexture(main_rt.texture, 0, 0, WHITE);
     EndShaderMode();
     EndTextureMode();
 }
@@ -219,7 +219,7 @@ void Renderer::draw(const Common::RawWorldState &t_world)
 
 void Renderer::draw(const Common::FieldState &t_field)
 {
-    BeginTextureMode(this->visualizationTexture);
+    BeginTextureMode(this->main_rt);
     ClearBackground(GREEN);
     EndTextureMode();
 

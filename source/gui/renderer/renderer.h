@@ -30,7 +30,7 @@ public:
     void applyShader();
 
     Common::Vec2  getMousePosition();
-    RenderTexture visualizationTexture, shaderVisualizationTexture;
+    RenderTexture main_rt, shader_rt;
 
 private:
     const Common::Angle robotArcAngle;
@@ -40,7 +40,7 @@ private:
     float               m_zoom_scale;
     float               m_upscaling_factor;
     Common::Vec2        m_avil_size;
-    Font                visualizationFont;
+    Font                m_font;
     Common::Vec2        m_mouse_pos;
 
     Shader fxaaShader;

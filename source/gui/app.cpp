@@ -117,7 +117,7 @@ void Application::update()
         renderer->applyShader();
         // Common::logDebug("AV {}  {} pos {} {}", ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y,
         // main_window_width - 650., main_window_height * 0.8);
-        ImGui::Image(&renderer->shaderVisualizationTexture.texture, ImGui::GetContentRegionAvail());
+        ImGui::Image(&renderer->shader_rt.texture, ImGui::GetContentRegionAvail());
         ImGui::End();
     }
     // end ImGui Content
