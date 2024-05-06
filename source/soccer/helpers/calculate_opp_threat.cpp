@@ -16,16 +16,16 @@ float Ai::calculateOppThreat(int opp, bool restart)
     if (Common::worldState().opp_robot[opp].position.x * side < 1000 && std::fabs(Common::worldState().opp_robot[opp].position.x - Common::worldState().ball.position.x) > 3000)
         return -1;
 
-    float oppDisToGoal = Common::worldState().opp_robot[opp].position.distanceTo(Common::Vec2(side * Common::worldState().field.width, 0));
+    float oppDisToGoal = Common::worldState().opp_robot[opp].position.distanceTo(Common::Vec2(side * Common::field().width, 0));
 
-    Common::Vec2  t2                 = Common::Vec2(Common::worldState().field.width * side, Common::worldState().field.goal_width / 2.0f);
-    Common::Vec2  t1                 = Common::Vec2(Common::worldState().field.width * side, -Common::worldState().field.goal_width / 2.0f);
+    Common::Vec2  t2                 = Common::Vec2(Common::field().width * side, Common::field().goal_width / 2.0f);
+    Common::Vec2  t1                 = Common::Vec2(Common::field().width * side, -Common::field().goal_width / 2.0f);
     Common::Angle t1Angel            = Common::worldState().opp_robot[opp].position.angleWith(t1);
     Common::Angle t2Angel            = Common::worldState().opp_robot[opp].position.angleWith(t2);
     float         oppOpenAngleToGoal = std::fabs((t2Angel - t1Angel).deg());
 
     Common::Vec2 oppToBall = (Common::worldState().ball.position - Common::worldState().opp_robot[opp].position).normalized();
-    Common::Vec2 oppToGoal = (Common::Vec2(side * Common::worldState().field.width, 0) - Common::worldState().opp_robot[opp].position).normalized();
+    Common::Vec2 oppToGoal = (Common::Vec2(side * Common::field().width, 0) - Common::worldState().opp_robot[opp].position).normalized();
 
     float oneTouchDot = oppToBall.dot(oppToGoal);
 

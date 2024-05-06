@@ -18,7 +18,7 @@ public:
     }
     bool IsArriving(float angleTol = 40, float passAngleLimit = 80)
     {
-        return IsArriving(Common::Vec2(-(*side) * Common::worldState().field.width, 0), angleTol, passAngleLimit);
+        return IsArriving(Common::Vec2(-(*side) * Common::field().width, 0), angleTol, passAngleLimit);
     }
     bool IsArriving(const Common::Vec2 &target, float angleTol, float passAngleLimit)
     {

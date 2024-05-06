@@ -25,10 +25,10 @@ int Ai::strategy_weight()
     Common::logDebug("strategy:");
     for (int i = 0; i < playBook->strategy_size(); i++)
     {
-        if ((side * Common::worldState().ball.position.x > playBook->strategy(i).minx()) &&
-            (side * Common::worldState().ball.position.x < playBook->strategy(i).maxx()) &&
-            (std::fabs(Common::worldState().ball.position.y) > playBook->strategy(i).miny()) &&
-            (std::fabs(Common::worldState().ball.position.y) < playBook->strategy(i).maxy()) &&
+        if ((side * Common::worldState().ball.position.x > playBook->strategy(i).min_x()) &&
+            (side * Common::worldState().ball.position.x < playBook->strategy(i).max_x()) &&
+            (std::fabs(Common::worldState().ball.position.y) > playBook->strategy(i).min_y()) &&
+            (std::fabs(Common::worldState().ball.position.y) < playBook->strategy(i).max_y()) &&
             (playBook->weight(i) > 0))
         {
             Common::logDebug("{}|{}    ", i, playBook->weight(i));

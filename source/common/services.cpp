@@ -22,8 +22,10 @@ void Services::initialize()
     s_global_timer = new Timer();
     s_global_timer->start();
 
-    s_world_state   = new WorldState();
-    s_referee_state = new RefereeState();
+    s_world_state     = new WorldState();
+    s_raw_world_state = new RawWorldState();
+    s_field_state     = new FieldState();
+    s_referee_state   = new RefereeState();
 }
 
 void Services::saveConfig()
@@ -34,6 +36,8 @@ void Services::saveConfig()
 void Services::shutdown()
 {
     delete s_world_state;
+    delete s_raw_world_state;
+    delete s_field_state;
     delete s_referee_state;
 
     delete s_setting;

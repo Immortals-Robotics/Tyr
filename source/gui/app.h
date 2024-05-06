@@ -15,11 +15,7 @@ public:
     bool shouldClose() const;
 
 private:
-    Protos::SSL_GeometryFieldSize      ssl_field;
-    Protos::SSL_WrapperPacket          ssl_packet;
-    Protos::SSL_WrapperPacket          ssl_packet_off;
-    Protos::Immortals::Imm_DBG_wrapper debug_packet;
-    Protos::Immortals::Imm_DBG_wrapper debug_packet_off;
+    Protos::Immortals::Debug::Wrapper debug_packet;
 
     std::unique_ptr<Renderer>   renderer;
     std::unique_ptr<ConfigMenu> config_menu;

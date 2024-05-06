@@ -5,23 +5,14 @@ namespace Tyr::Gui
 static constexpr float kTextOffsetX = 50.0f;
 static constexpr float kTextOffsetY = 300.0f;
 
-void Renderer::drawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data,
-                          Common::TeamColor                                                     color)
+void Renderer::draw(const Common::RobotState &t_robot)
 {
-    for (const auto &robot : data)
-    {
-        drawRobot(robot, color);
-    }
-}
+    auto lTextColor = t_robot.color == Common::TeamColor::Yellow ? Common::Color::black() : Common::Color::white();
+    auto lBaseColor = t_robot.color == Common::TeamColor::Yellow ? Common::Color::yellow() : Common::Color::blue();
 
-void Renderer::drawRobot(const Protos::SSL_DetectionRobot &robot, Common::TeamColor color)
-{
-    auto lTextColor = color == Common::TeamColor::Yellow ? BLACK : WHITE;
-    auto lBaseColor = color == Common::TeamColor::Yellow ? YELLOW : BLUE;
-
-    auto position = Common::Vec2(robot.x(), robot.y());
-    drawCircleSector({position, this->robotRadius}, lBaseColor, this->robotArcAngle - robot.orientation() * RAD2DEG,
-                     360. - this->robotArcAngle - robot.orientation() * RAD2DEG, true);
-    drawText(position + Common::Vec2(kTextOffsetX, kTextOffsetY), std::to_string(robot.robot_id()), 14, lTextColor);
+    drawCircleSector(Common::Circle{t_robot.position, Common::field().robot_radius}, lBaseColor,
+                     robotArcAngle - t_robot.angle, -robotArcAngle - t_robot.angle, true);
+    drawText(t_robot.position + Common::Vec2(kTextOffsetX, kTextOffsetY), std::to_string(t_robot.vision_id), 14,
+             lTextColor);
 }
 } // namespace Tyr::Gui

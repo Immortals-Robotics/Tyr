@@ -12,8 +12,8 @@ void Ai::kickoff_us_chip()
     ERRTNavigate2Point(
         dmf,
         Common::worldState().ball.position.pointOnConnectingLine(
-            Common::Vec2(side * Common::worldState().field.width, 0),
-            Common::worldState().ball.position.distanceTo(Common::Vec2(side * Common::worldState().field.width, 0)) /
+            Common::Vec2(side * Common::field().width, 0),
+            Common::worldState().ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) /
                 3.0f),
         40, &VELOCITY_PROFILE_MAMOOLI);
 
@@ -25,14 +25,14 @@ void Ai::kickoff_us_chip()
         }
     }
 
-    OwnRobot[mid2].face(Common::Vec2(-side * Common::worldState().field.width, 0));
+    OwnRobot[mid2].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(mid2, true, true);
     ERRTNavigate2Point(mid2, Common::Vec2(Common::worldState().ball.position.x + side * 150,
-                                          (Common::worldState().field.height - 300)));
-    OwnRobot[mid1].face(Common::Vec2(-side * Common::worldState().field.width, 0));
+                                          (Common::field().height - 300)));
+    OwnRobot[mid1].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(mid1, true, true);
     ERRTNavigate2Point(mid1, Common::Vec2(Common::worldState().ball.position.x + side * 150,
-                                          -(Common::worldState().field.height - 300)));
+                                          -(Common::field().height - 300)));
     Common::Vec2 chip_target = Common::Vec2(-side * 2000, 0);
 
     Common::logDebug("can kick ball: {}", Common::refereeState().canKickBall());

@@ -10,6 +10,15 @@ public:
     Circle(const Vec2 t_center, const float t_r) : center(t_center), r(t_r)
     {}
 
+    Circle(const Protos::Immortals::Circle &t_circle) : Circle(t_circle.center(), t_circle.r())
+    {}
+
+    void fillProto(Protos::Immortals::Circle *const t_circle) const
+    {
+        center.fillProto(t_circle->mutable_center());
+        t_circle->set_r(r);
+    }
+
     float circumference() const
     {
         return 2.0 * std::numbers::pi * r;

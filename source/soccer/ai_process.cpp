@@ -11,8 +11,8 @@ void Ai::Process()
     internalProcessData();
 
     debugDraw = true;
-    Common::debug().drawCircle(Common::worldState().ball.position, 40, "", Common::Red);
-    //	Common::debug().drawLineSegment(Common::worldState().ball.position,Common::Vec2(Common::worldState().ball.velocity.x,Common::worldState().ball.velocity.y)
+    Common::debug().draw(Common::worldState().ball.position, Common::Color::red());
+    //	Common::debug().draw(Common::worldState().ball.position,Common::Vec2(Common::worldState().ball.velocity.x,Common::worldState().ball.velocity.y)
     //+ Common::worldState().ball.position,
     // Black);
 
@@ -33,7 +33,7 @@ void Ai::Process()
         FUNC_state = 0;
 
         oppRestarted = false;
-        if (side * Common::worldState().ball.position.x > Common::worldState().field.width * 0.7f)
+        if (side * Common::worldState().ball.position.x > Common::field().width * 0.7f)
         {
             currentPlay = "Stop_def";
         }

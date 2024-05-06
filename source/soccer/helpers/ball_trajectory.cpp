@@ -60,11 +60,13 @@ void Ai::calculateBallTrajectory()
     // ball_line.calculate(ball_x.size(), &ball_x[0], &ball_y[0]);
     if (ballLine.isAmoodi())
     {
-        Common::debug().drawLineSegment(Common::Vec2(ballLine.getXIntercept(), -2000),
-                                        Common::Vec2(ballLine.getXIntercept(), 2000), "", Common::Purple);
+        Common::debug().draw(Common::LineSegment{Common::Vec2(ballLine.getXIntercept(), -2000),
+                                                 Common::Vec2(ballLine.getXIntercept(), 2000)},
+                             Common::Color::purple());
     }
-    Common::debug().drawLineSegment(Common::Vec2(Common::worldState().ball.position.x, ballLine.getValue(Common::worldState().ball.position.x)),
-                                    Common::Vec2(ballHist[i].position.x, ballLine.getValue(ballHist[i].position.x)));
+    Common::debug().draw(Common::LineSegment{
+        Common::Vec2(Common::worldState().ball.position.x, ballLine.getValue(Common::worldState().ball.position.x)),
+        Common::Vec2(ballHist[i].position.x, ballLine.getValue(ballHist[i].position.x))});
 
     if (!ballLine.isAmoodi())
     {
@@ -72,16 +74,15 @@ void Ai::calculateBallTrajectory()
         Common::Vec2 ballN, lastN;
         ballN = new_line.closestPoint(Common::worldState().ball.position);
         lastN = new_line.closestPoint(ballHist[i].position);
-        Common::debug().drawLineSegment(ballN, lastN, "", isVertical ? Common::Yellow : Common::Red);
+        Common::debug().draw(Common::LineSegment{ballN, lastN},
+                             isVertical ? Common::Color::yellow() : Common::Color::red());
     }
 
     for (i = std::max((int) ballHist.size() - 60, 0); i < ballHist.size(); i += 10)
     {
-        // Common::debug().drawCircle(ballHist[i].position,10+10.0*(float(i)/float(ballHist.size())),Red);
+        // Common::debug().draw({ballHist[i].position,10+10.0*(float(i)/float(ballHist.size()))},Red);
     }
 
-    // Common::debug().drawCircle(Common::Vec2(0, 0),1000,Blue);
-
-    // Common::debug().drawLineSegment(ballHist.front().position,ballHist.back().position,Blue);
+    // Common::debug().draw(ballHist.front().position,ballHist.back().position,Blue);
 }
 } // namespace Tyr::Soccer

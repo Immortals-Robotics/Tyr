@@ -8,49 +8,40 @@ public:
     Renderer(Common::Vec2 _wSize, float _upScalingFactor);
     void init();
 
-    void drawRect(Common::Rect rect, Color _color, bool _isFilled, float _thickness = 1,
-                  unsigned char transparency = 255);
-    void drawCircle(Common::Circle circle, Color _color, bool _isFilled, float _thickness = 1,
-                    unsigned char _transparency = 255);
-    void drawCircleSector(Common::Circle circle, Color _color, float _startAngle, float _endAngle, bool _isFilled,
-                          unsigned char _transparency = 255);
-    void drawLineSegment(Common::LineSegment line_segment, Color _color, float _thickness = 1,
-                         unsigned char _transparency = 255);
-    void drawText(Common::Vec2 _pos, std::string _str, int _fontSize = 12, Color _color = WHITE,
-                  unsigned char _transparency = 255);
-    void drawTriangle(Common::Vec2 _p1, Common::Vec2 _p2, Common::Vec2 _p3, Color _color, bool _isFilled = true,
-                      unsigned char _transparency = 255);
+    void draw(Common::Vec2 t_point, Common::Color t_color, bool t_is_filled, float t_thickness = 1);
+    void draw(Common::Rect t_rect, Common::Color t_color, bool t_is_filled, float t_thickness = 1);
+    void draw(Common::Circle t_circle, Common::Color t_color, bool t_is_filled, float t_thickness = 1);
+    void drawCircleSector(Common::Circle t_circle, Common::Color t_color, Common::Angle t_start_angle,
+                          Common::Angle t_end_angle, bool t_is_filled);
+    void draw(Common::Line t_line, Common::Color t_color, float t_thickness = 1);
+    void draw(Common::LineSegment t_line_segment, Common::Color t_color, float t_thickness = 1);
+    void draw(Common::Triangle t_triangle, Common::Color t_color, bool t_is_filled = true, float t_thickness = 1);
 
-    void drawField(const Protos::SSL_GeometryFieldSize &data);
-    void drawRobots(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionRobot> &data,
-                    Common::TeamColor                                                     color);
-    void drawBalls(const google::protobuf::RepeatedPtrField<Protos::SSL_DetectionBall> &data, bool draw_goal_lines);
+    void draw(const Common::RobotState &t_robot);
+    void draw(const Common::BallState &t_ball, bool draw_goal_lines);
+    void draw(const Common::RawWorldState &t_world);
+    void draw(const Common::FieldState &t_field);
 
-    void drawRobot(const Protos::SSL_DetectionRobot &robot, Common::TeamColor color);
-    void drawBall(const Protos::SSL_DetectionBall &ball, bool draw_goal_lines);
+    void drawText(Common::Vec2 t_pos, const std::string &t_str, int t_font_size = 12,
+                  Common::Color t_color = Common::Color::white());
 
-    void drawCirclesUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug_Circle> &circles);
-    void drawRectsUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug_Rect> &rects);
-    void drawPointsUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug_Point> &points);
-    void drawLinesUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug_Line> &lines);
+    void drawShapesUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug::Draw> &draws);
 
     void applyShader();
 
     Common::Vec2  getMousePosition();
-    RenderTexture visualizaionTexture, shaderVisualizationTexture;
+    RenderTexture main_rt, shader_rt;
 
 private:
-    const float  ballRadius;
-    const float  robotRadius;
-    const float  robotArcAngle;
-    const float  m_window_border;
-    Common::Vec2 m_w_size;
-    Common::Vec2 overallFieldSize;
-    float        m_zoom_scale;
-    float        m_upscaling_factor;
-    Common::Vec2 m_avil_size;
-    Font         visualizationFont;
-    Common::Vec2 m_mouse_pos;
+    const Common::Angle robotArcAngle;
+    const float         m_window_border;
+    Common::Vec2        m_w_size;
+    Common::Vec2        overallFieldSize;
+    float               m_zoom_scale;
+    float               m_upscaling_factor;
+    Common::Vec2        m_avil_size;
+    Font                m_font;
+    Common::Vec2        m_mouse_pos;
 
     Shader fxaaShader;
 

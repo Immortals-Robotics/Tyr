@@ -51,7 +51,7 @@ void Ai::Stop_def()
     ERRTNavigate2Point(
         attack,
         Common::worldState().ball.position.circleAroundPoint(
-            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)),
+            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
             580),
         40, &VELOCITY_PROFILE_AROOM);
 }

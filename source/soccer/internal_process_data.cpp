@@ -22,8 +22,8 @@ void Ai::internalProcessData()
                 for (int j = 0; j < Common::Setting::kMaxRobots; j++)
                 {
                     if ((Common::worldState().own_robot[j].seen_state == Common::SeenState::Seen) &&
-                        (std::fabs(Common::worldState().own_robot[j].position.x) < Common::worldState().field.width) &&
-                        (std::fabs(Common::worldState().own_robot[j].position.y) < Common::worldState().field.height))
+                        (std::fabs(Common::worldState().own_robot[j].position.x) < Common::field().width) &&
+                        (std::fabs(Common::worldState().own_robot[j].position.y) < Common::field().height))
                     {
                         bool suitable = true;
                         for (int k = 0; k < Common::Setting::kMaxOnFieldTeamRobots; k++)

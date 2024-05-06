@@ -215,7 +215,7 @@ void Ai::strategy_maker()
             }
 
             VelocityProfile *profile;
-            switch (strategy.role(i).path(step[i]).profile())
+            switch (strategy.role(i).path(step[i]).velocity_profile())
             {
             case 0:
                 profile = &VELOCITY_PROFILE_AROOM;
@@ -235,7 +235,7 @@ void Ai::strategy_maker()
                 // float dis_to_reach = Common::Vec2::distance(OwnRobot[*stm2AInum[i]].state().position,
                 // Common::Vec2(strategy.role(i).path(step[i]).x(),strategy.role(i).path(step[i]).y())); if
                 // ((step[i]>=strategy.role(i).path_size()-2) || (dis_to_reach < 500))
-                OwnRobot[*stm2AInum[i]].face(Common::Vec2(-side * Common::worldState().field.width, 0));
+                OwnRobot[*stm2AInum[i]].face(Common::Vec2(-side * Common::field().width, 0));
                 // else
                 //     OwnRobot[*stm2AInum[i]].face(Common::Vec2(strategy.role(i).path(step[i]).x(),strategy.role(i).path(step[i]).y()));
                 ERRTNavigate2Point(

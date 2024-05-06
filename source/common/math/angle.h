@@ -8,6 +8,14 @@ struct Angle
 {
     Angle() = default;
 
+    Angle(const Protos::Immortals::Angle &t_angle) : Angle(fromDeg(t_angle.deg()))
+    {}
+
+    void fillProto(Protos::Immortals::Angle *const t_angle) const
+    {
+        t_angle->set_deg(deg());
+    }
+
     static Angle fromDeg(float deg);
     static Angle fromRad(float rad);
 
@@ -16,6 +24,7 @@ struct Angle
 
     [[nodiscard]] float rad() const;
     [[nodiscard]] float deg() const;
+    [[nodiscard]] float deg360() const;
 
     [[nodiscard]] float sin() const;
     [[nodiscard]] float cos() const;
@@ -33,6 +42,8 @@ struct Angle
     void  operator-=(Angle ang);
     bool  operator<(Angle ang) const;
     bool  operator>(Angle ang) const;
+
+    Angle operator-() const;
 
     Angle operator*(float f) const;
     Angle operator/(float f) const;

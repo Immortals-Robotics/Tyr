@@ -43,7 +43,8 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         ERRTSetObstacles(robot_num, 0, 1);
         ERRTNavigate2Point(robot_num, Common::worldState().ball.position, 30, &VELOCITY_PROFILE_MAMOOLI);
 
-        Common::debug().drawCircle(Common::worldState().ball.position, very_far_ball_dis - 90.0f, "", Common::Red);
+        Common::debug().draw(Common::Circle{Common::worldState().ball.position, very_far_ball_dis - 90.0f},
+                             Common::Color::red());
 
         if (OwnRobot[robot_num].state().position.distanceTo(Common::worldState().ball.position) < very_far_ball_dis)
         {
@@ -60,7 +61,8 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
             Common::worldState().ball.position.angleWith(OwnRobot[robot_num].state().position), near_ball_dis);
         ERRTNavigate2Point(robot_num, target_point, 20, &VELOCITY_PROFILE_AROOM);
 
-        Common::debug().drawCircle(Common::worldState().ball.position, far_ball_dis - 90.0f, "", Common::Pink);
+        Common::debug().draw(Common::Circle{Common::worldState().ball.position, far_ball_dis - 90.0f},
+                             Common::Color::pink());
 
         if (OwnRobot[robot_num].state().position.distanceTo(Common::worldState().ball.position) < far_ball_dis)
         {
@@ -142,7 +144,8 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
             OwnRobot[robot_num].Shoot(shoot_pow);
         if (chip_pow > 0)
             OwnRobot[robot_num].Chip(chip_pow);
-        Common::debug().drawCircle(Common::worldState().ball.position, very_far_ball_dis - 90.0f, "", Common::Red);
+        Common::debug().draw(Common::Circle{Common::worldState().ball.position, very_far_ball_dis - 90.0f},
+                             Common::Color::red());
         // tech_circle(robot_num, tagret_angle, shoot_pow, chip_pow, 1, 1, 0, 0);
 
         if (OwnRobot[robot_num].state().position.distanceTo(Common::worldState().ball.position) >
@@ -153,8 +156,8 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         }
     }
 
-    Common::debug().drawLineSegment(OwnRobot[robot_num].state().position, OwnRobot[robot_num].target.position, "",
-                                    Common::Black);
+    Common::debug().draw(Common::LineSegment{OwnRobot[robot_num].state().position, OwnRobot[robot_num].target.position},
+                         Common::Color::black());
 }
 
 void Ai::circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_pow, int chip_pow, float precision,
@@ -189,7 +192,8 @@ void Ai::circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_p
         ERRTSetObstacles(robot_num, 0, 0);
         ERRTNavigate2Point(robot_num, Common::worldState().ball.position, 30, &VELOCITY_PROFILE_AROOM);
 
-        Common::debug().drawCircle(Common::worldState().ball.position, very_far_ball_dis - 90.0f, "", Common::Red);
+        Common::debug().draw(Common::Circle{Common::worldState().ball.position, very_far_ball_dis - 90.0f},
+                             Common::Color::red());
 
         if (OwnRobot[robot_num].state().position.distanceTo(Common::worldState().ball.position) < very_far_ball_dis)
         {
@@ -205,7 +209,8 @@ void Ai::circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_p
             Common::worldState().ball.position.angleWith(OwnRobot[robot_num].state().position), near_ball_dis);
         ERRTNavigate2Point(robot_num, target_point, 20, &VELOCITY_PROFILE_AROOM);
 
-        Common::debug().drawCircle(Common::worldState().ball.position, far_ball_dis - 90.0f, "", Common::Pink);
+        Common::debug().draw(Common::Circle{Common::worldState().ball.position, far_ball_dis - 90.0f},
+                             Common::Color::pink());
 
         if (OwnRobot[robot_num].state().position.distanceTo(Common::worldState().ball.position) < far_ball_dis)
         {
@@ -285,7 +290,8 @@ void Ai::circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_p
             OwnRobot[robot_num].Shoot(shoot_pow);
         if (chip_pow > 0)
             OwnRobot[robot_num].Chip(chip_pow);
-        Common::debug().drawCircle(Common::worldState().ball.position, very_far_ball_dis - 90.0f, "", Common::Red);
+        Common::debug().draw(Common::Circle{Common::worldState().ball.position, very_far_ball_dis - 90.0f},
+                             Common::Color::red());
         // tech_circle(robot_num, tagret_angle, shoot_pow, chip_pow, 1, 1, 0, 0);
 
         if (OwnRobot[robot_num].state().position.distanceTo(Common::worldState().ball.position) >
@@ -296,7 +302,7 @@ void Ai::circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_p
         }
     }
 
-    Common::debug().drawLineSegment(OwnRobot[robot_num].state().position, OwnRobot[robot_num].target.position, "",
-                                    Common::Black);
+    Common::debug().draw(Common::LineSegment{OwnRobot[robot_num].state().position, OwnRobot[robot_num].target.position},
+                         Common::Color::black());
 }
 } // namespace Tyr::Soccer

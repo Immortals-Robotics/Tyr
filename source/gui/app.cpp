@@ -46,16 +46,6 @@ void Application::init(const int width, const int height)
     config_menu = std::make_unique<ConfigMenu>();
     widget_menu = std::make_unique<WidgetMenu>();
 
-    ssl_field.set_field_length(12000);
-    ssl_field.set_field_width(9000);
-    ssl_field.set_goal_width(1800);
-    ssl_field.set_goal_depth(180);
-
-    ssl_field.set_boundary_width(300);
-    ssl_field.set_center_circle_radius(500);
-    ssl_field.set_penalty_area_depth(1800);
-    ssl_field.set_penalty_area_width(3600);
-
     udp_client          = std::make_unique<Common::UdpClient>(Common::setting().vision_address);
     udp_client_drawings = std::make_unique<Common::UdpClient>(Common::NetworkAddress{"127.0.0.1", 10066});
     renderer->init();
@@ -92,8 +82,8 @@ void Application::update()
     Common::Vec2 margin = Common::Vec2(30, 30) * 2;
     Common::Vec2 wSize  = Common::Vec2(900.f, 700.f) + margin;
     // TODO: draw gui
-    ImGuiWindowFlags renderer_window_flags =
-        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration;
+    ImGuiWindowFlags renderer_window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
+                                             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration;
     auto main_window_height = GetScreenHeight();
     auto main_window_width  = GetScreenWidth();
     ImGui::SetNextWindowPos(ImVec2(250., 0.));
@@ -105,11 +95,12 @@ void Application::update()
     }
     else
     {
-        renderer->drawField(ssl_field);
+        renderer->draw(Common::field());
+
         vision_mutex.lock();
-        renderer->drawRobots(ssl_packet.detection().robots_blue(), Common::TeamColor::Blue);
-        renderer->drawRobots(ssl_packet.detection().robots_yellow(), Common::TeamColor::Yellow);
-        renderer->drawBalls(ssl_packet.detection().balls(), true);
+        renderer->draw(Common::rawWorldState());
+        vision_mutex.unlock();
+
         if (config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
             config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_IP)
         {
@@ -119,16 +110,14 @@ void Application::update()
             config_menu->updateNetworkData();
             udp_client->Update(updated_address);
         }
-        vision_mutex.unlock();
+
         drawing_mutex.lock();
-        renderer->drawCirclesUdp(debug_packet.dbg_draw().circle());
-        renderer->drawRectsUdp(debug_packet.dbg_draw().rect());
-        renderer->drawPointsUdp(debug_packet.dbg_draw().point());
-        renderer->drawLinesUdp(debug_packet.dbg_draw().line());
+        renderer->drawShapesUdp(debug_packet.draw());
         drawing_mutex.unlock();
         renderer->applyShader();
-        // Common::logDebug("AV {}  {} pos {} {}", ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y, main_window_width - 650., main_window_height * 0.8);
-        ImGui::Image(&renderer->shaderVisualizationTexture.texture, ImGui::GetContentRegionAvail());
+        // Common::logDebug("AV {}  {} pos {} {}", ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y,
+        // main_window_width - 650., main_window_height * 0.8);
+        ImGui::Image(&renderer->shader_rt.texture, ImGui::GetContentRegionAvail());
         ImGui::End();
     }
     // end ImGui Content
@@ -147,45 +136,40 @@ bool Application::shouldClose() const
 void Application::receiveVision()
 {
     std::map<uint32_t, Protos::SSL_DetectionFrame> frame_map;
-    Protos::SSL_WrapperPacket                      tmp_ssl_packet;
 
     while (running)
     {
-        udp_client->receive(&tmp_ssl_packet);
+        Protos::SSL_WrapperPacket tmp_ssl_packet;
+        if (!udp_client->receive(&tmp_ssl_packet) || !tmp_ssl_packet.has_detection())
+            continue;
 
-        if (tmp_ssl_packet.has_detection())
-        {
-            auto detection                   = tmp_ssl_packet.detection();
-            frame_map[detection.camera_id()] = detection;
-        }
+        auto detection                   = tmp_ssl_packet.detection();
+        frame_map[detection.camera_id()] = tmp_ssl_packet.detection();
 
-        ssl_packet_off.clear_detection();
-        for (auto detection : frame_map)
+        Protos::SSL_DetectionFrame merged_frame;
+        for (const auto &detection : frame_map)
         {
-            ssl_packet_off.mutable_detection()->MergeFrom(detection.second);
+            merged_frame.MergeFrom(detection.second);
         }
 
         vision_mutex.lock();
-        std::swap(ssl_packet, ssl_packet_off);
+        // TODO: this will be moved to vision
+        Common::rawWorldState() = Common::RawWorldState(merged_frame);
         vision_mutex.unlock();
     }
 };
 
 void Application::receiveDrawings()
 {
-    Protos::Immortals::Imm_DBG_wrapper tmp_drawing_packet;
     while (running)
     {
-        udp_client_drawings->receive(&tmp_drawing_packet);
-        if (tmp_drawing_packet.has_dbg_draw())
+        Protos::Immortals::Debug::Wrapper tmp_debug_packet{};
+        if (udp_client_drawings->receive(&tmp_debug_packet))
         {
-            auto draw = tmp_drawing_packet.dbg_draw();
-            debug_packet_off.clear_dbg_draw();
-            debug_packet_off.mutable_dbg_draw()->CopyFrom(draw);
+            drawing_mutex.lock();
+            std::swap(debug_packet, tmp_debug_packet);
+            drawing_mutex.unlock();
         }
-        drawing_mutex.lock();
-        std::swap(debug_packet, debug_packet_off);
-        drawing_mutex.unlock();
     }
 };
 

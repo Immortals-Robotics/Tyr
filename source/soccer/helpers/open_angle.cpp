@@ -20,10 +20,10 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
     int          obsCount = 0;
     int          obs[50][2];
     Common::Vec2 t2 =
-        Common::Vec2(-Common::worldState().field.width * side, Common::worldState().field.goal_width / 2.0);
+        Common::Vec2(-Common::field().width * side, Common::field().goal_width / 2.0);
     Common::Vec2 t1 =
-        Common::Vec2(-Common::worldState().field.width * side, -Common::worldState().field.goal_width / 2.0);
-    Common::Vec2 MidGoal = Common::Vec2(-Common::worldState().field.width * side, 0);
+        Common::Vec2(-Common::field().width * side, -Common::field().goal_width / 2.0);
+    Common::Vec2 MidGoal = Common::Vec2(-Common::field().width * side, 0);
     float        midGoalAngel;
     float        t1Angel;
     float        t2Angel;

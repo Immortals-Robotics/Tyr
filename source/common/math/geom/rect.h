@@ -15,6 +15,15 @@ public:
     Rect(const Vec2 t_p, const float t_w, const float t_h) : Rect(t_p, t_p + Vec2(t_w, t_h))
     {}
 
+    Rect(const Protos::Immortals::Rect &t_rect) : Rect(t_rect.min(), t_rect.max())
+    {}
+
+    void fillProto(Protos::Immortals::Rect *const t_rect) const
+    {
+        min.fillProto(t_rect->mutable_min());
+        max.fillProto(t_rect->mutable_max());
+    }
+
     bool inside(Vec2 t_point) const;
 
     bool insideOffset(const Vec2 t_point, float offset) const;

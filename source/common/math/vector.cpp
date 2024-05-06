@@ -2,18 +2,6 @@
 
 namespace Tyr::Common
 {
-Vec2::Vec2(const float t_x, const float t_y) : x(t_x), y(t_y)
-{}
-
-Vec2::Vec2(const float t_f) : Vec2(t_f, t_f)
-{}
-
-Vec3::Vec3(const float t_f) : Vec3(t_f, t_f, t_f)
-{}
-
-Vec3::Vec3(const float t_x, const float t_y, const float t_z) : x(t_x), y(t_y), z(t_z)
-{}
-
 Vec2 Vec2::operator+(const Vec2 t_v) const
 {
     return Vec2{x + t_v.x, y + t_v.y};

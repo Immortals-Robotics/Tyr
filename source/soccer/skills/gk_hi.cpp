@@ -15,11 +15,11 @@ void Ai::GKHi(int robot_num, bool stop)
     debugDraw = true; // TODO #10 Comment this in the game
     if (ballIsGoaling())
     {
-        Common::debug().drawCircle(OwnRobot[robot_num].state().position, 200, "", Common::Red);
+        Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 200}, Common::Color::red());
     }
     else
     {
-        Common::debug().drawCircle(OwnRobot[robot_num].state().position, 20, "", Common::Yellow);
+        Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 20}, Common::Color::yellow());
     }
     debugDraw = false;
 
@@ -56,7 +56,7 @@ void Ai::GKHi(int robot_num, bool stop)
             // tech_circle(robot_num,Common::sign(Common::worldState().ball.position.y)*side*60 ,0,15,false);
             tech_circle(robot_num,
                         Common::worldState().ball.position.angleWith(
-                            Common::Vec2(side * (Common::worldState().field.width + 110), 0)),
+                            Common::Vec2(side * (Common::field().width + 110), 0)),
                         0, 80, false, 0, 0, 0);
         }
         else
@@ -66,13 +66,13 @@ void Ai::GKHi(int robot_num, bool stop)
             float cornerStartMul = pow(std::max(0,1.2-timer.time()),1.1);
 
 			//Added by Dot_blue:
-			float penalty_x = Common::worldState().field.width - 85.0;
-			float max_reach_y = (Common::worldState().field.goal_width/2.0) + 20.0;
+			float penalty_x = Common::field().width - 85.0;
+			float max_reach_y = (Common::field().goal_width/2.0) + 20.0;
 			float tmp_x,tmp_y;
 			Common::Line GK_Rail = Common::Line::fromTwoPoints(Common::Vec2(side * penalty_x, 100),
 													   Common::Vec2(side * penalty_x, -100));
 			Common::Vec2 ans;
-			if(DIS(Common::worldState().ball.position,Common::Vec2(side*Common::worldState().field.width,0))<2500 && Common::worldState().ball.position.x > side*(Common::worldState().field.width -1200) ){
+			if(DIS(Common::worldState().ball.position,Common::Vec2(side*Common::field().width,0))<2500 && Common::worldState().ball.position.x > side*(Common::field().width -1200) ){
 				ans = GK_Rail.closestPoint(Common::worldState().ball.position);
 				tmp_x = ans.getX();
 				tmp_y = ans.getY();
@@ -90,9 +90,9 @@ void Ai::GKHi(int robot_num, bool stop)
 			Common::Vec2 target = Common::Vec2(tmp_x, tmp_y);
 			//Done by Dot_Blue TODO #9 test this...
 #else
-            Common::Vec2 target = Common::Vec2(side * Common::worldState().field.width, 0)
+            Common::Vec2 target = Common::Vec2(side * Common::field().width, 0)
                                       .pointOnConnectingLine(Common::worldState().ball.position, 1500);
-            target.x = Common::sign(target.x) * std::min(Common::worldState().field.width - 90, std::fabs(target.x));
+            target.x = Common::sign(target.x) * std::min(Common::field().width - 90, std::fabs(target.x));
 #endif
             OwnRobot[robot_num].face(Common::worldState().ball.position);
             ERRTSetObstacles(robot_num, stop, false);

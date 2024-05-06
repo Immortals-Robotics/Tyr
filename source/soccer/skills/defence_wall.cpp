@@ -18,7 +18,7 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
     if (index == -1)
     {
         target = Common::worldState().ball.position.circleAroundPoint(
-            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)),
+            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
             730);
     }
     else
@@ -32,7 +32,7 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
 
     Common::Angle ballAngle = Common::worldState().ball.position.angleWith(target);
     Common::Angle firstLeg  = Common::worldState().ball.position.angleWith(Common::Vec2(
-        side * Common::worldState().field.width, Common::sign(Common::worldState().ball.position.y) * (350.0f)));
+        side * Common::field().width, Common::sign(Common::worldState().ball.position.y) * (350.0f)));
     Common::Angle secLeg =
         firstLeg - Common::Angle::fromDeg(tetta * Common::sign(Common::worldState().ball.position.y) * side);
 
@@ -45,7 +45,7 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
     if (isOut)
     {
         target = Common::worldState().ball.position.circleAroundPoint(
-            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::worldState().field.width, 0)),
+            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
             730);
     }
 
