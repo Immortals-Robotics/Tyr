@@ -15,7 +15,6 @@ public:
     bool shouldClose() const;
 
 private:
-    Protos::SSL_GeometryFieldSize     ssl_field;
     Protos::SSL_WrapperPacket         ssl_packet;
     Protos::SSL_WrapperPacket         ssl_packet_off;
     Protos::Immortals::Debug::Wrapper debug_packet;

@@ -19,11 +19,10 @@ public:
 
     void draw(const Common::RobotState &t_robot);
     void draw(const Common::BallState &t_ball, bool draw_goal_lines);
+    void draw(const Common::FieldState &t_field);
 
     void drawText(Common::Vec2 t_pos, const std::string &t_str, int t_font_size = 12,
                   Common::Color t_color = Common::Color::white());
-
-    void drawField(const Protos::SSL_GeometryFieldSize &data);
 
     void drawShapesUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug::Draw> &draws);
 

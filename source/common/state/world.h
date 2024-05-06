@@ -107,14 +107,38 @@ struct FieldState
     float height = 4500.0f;
 
     float goal_width = 1800.0f;
+    float goal_depth = 180.0f;
 
-    float boundary_width;
+    float boundary_width = 300.0f;
 
     float penalty_area_depth = 1800.0f;
     float penalty_area_width = 3600.0f;
 
+    float center_circle_radius = 500.0f;
+
     float ball_radius;
     float max_robot_radius;
+
+    FieldState() = default;
+
+    FieldState(const Protos::SSL_GeometryFieldSize &t_field)
+    {
+        width  = t_field.field_length() / 2.0f;
+        height = t_field.field_width() / 2.0f;
+
+        goal_width = t_field.goal_width();
+        goal_depth = t_field.goal_depth();
+
+        boundary_width = t_field.boundary_width();
+
+        penalty_area_depth = t_field.penalty_area_depth();
+        penalty_area_width = t_field.penalty_area_width();
+
+        center_circle_radius = t_field.center_circle_radius();
+
+        ball_radius      = t_field.ball_radius();
+        max_robot_radius = t_field.max_robot_radius();
+    }
 };
 
 struct WorldState

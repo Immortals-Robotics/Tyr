@@ -46,16 +46,6 @@ void Application::init(const int width, const int height)
     config_menu = std::make_unique<ConfigMenu>();
     widget_menu = std::make_unique<WidgetMenu>();
 
-    ssl_field.set_field_length(12000);
-    ssl_field.set_field_width(9000);
-    ssl_field.set_goal_width(1800);
-    ssl_field.set_goal_depth(180);
-
-    ssl_field.set_boundary_width(300);
-    ssl_field.set_center_circle_radius(500);
-    ssl_field.set_penalty_area_depth(1800);
-    ssl_field.set_penalty_area_width(3600);
-
     udp_client          = std::make_unique<Common::UdpClient>(Common::setting().vision_address);
     udp_client_drawings = std::make_unique<Common::UdpClient>(Common::NetworkAddress{"127.0.0.1", 10066});
     renderer->init();
@@ -105,7 +95,8 @@ void Application::update()
     }
     else
     {
-        renderer->drawField(ssl_field);
+        renderer->draw(Common::worldState().field);
+
         vision_mutex.lock();
 
         for (const auto &robot : ssl_packet.detection().robots_blue())

@@ -7,7 +7,7 @@ Renderer::Renderer(Common::Vec2 _wSize, float _upScalingFactor)
 {
     m_w_size                   = _wSize * _upScalingFactor;
     m_upscaling_factor         = _upScalingFactor;
-    visualizationTexture        = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
+    visualizationTexture       = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
     shaderVisualizationTexture = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
     SetTextureFilter(visualizationTexture.texture, TEXTURE_FILTER_BILINEAR);
     SetTextureFilter(shaderVisualizationTexture.texture, TEXTURE_FILTER_BILINEAR);
@@ -207,42 +207,43 @@ void Renderer::applyShader()
     EndTextureMode();
 }
 
-void Renderer::drawField(const Protos::SSL_GeometryFieldSize &data)
+void Renderer::draw(const Common::FieldState &t_field)
 {
     BeginTextureMode(this->visualizationTexture);
     ClearBackground(GREEN);
     EndTextureMode();
 
-    this->overallFieldSize.x = data.field_length() + 4 * (data.boundary_width());
-    this->overallFieldSize.y = data.field_width() + 4 * (data.boundary_width());
+    this->overallFieldSize.x = t_field.width * 2.0f + 4.0f * t_field.boundary_width;
+    this->overallFieldSize.y = t_field.height * 2.0f + 4 * t_field.boundary_width;
 
     CalculateZoom();
     calculateMousePos();
 
-    Common::Vec2 fieldWallStartPoint =
-        Common::Vec2(data.field_length() / -2 - data.boundary_width(), data.field_width() / -2 - data.boundary_width());
-    Common::Vec2 fieldWallEndPoint =
-        Common::Vec2(data.field_length() / 2 + data.boundary_width(), data.field_width() / 2 + data.boundary_width());
-    Common::Vec2 fieldStartPoint = Common::Vec2(data.field_length() / -2, data.field_width() / -2);
-    Common::Vec2 fieldEndPoint   = Common::Vec2(data.field_length() / 2, data.field_width() / 2);
-    Common::Vec2 fieldCenter     = Common::Vec2(0, 0);
+    Common::Vec2 fieldWallStartPoint = Common::Vec2(t_field.width * 2.0f / -2 - t_field.boundary_width,
+                                                    t_field.height * 2.0f / -2 - t_field.boundary_width);
+    Common::Vec2 fieldWallEndPoint   = Common::Vec2(t_field.width * 2.0f / 2 + t_field.boundary_width,
+                                                    t_field.height * 2.0f / 2 + t_field.boundary_width);
+    Common::Vec2 fieldStartPoint     = Common::Vec2(t_field.width * 2.0f / -2, t_field.height * 2.0f / -2);
+    Common::Vec2 fieldEndPoint       = Common::Vec2(t_field.width * 2.0f / 2, t_field.height * 2.0f / 2);
+    Common::Vec2 fieldCenter         = Common::Vec2(0, 0);
 
-    Common::Vec2 ourGoalStartPoint = Common::Vec2(data.field_length() / -2 - data.goal_depth(), data.goal_width() / 2);
-    Common::Vec2 ourGoalEndPoint   = Common::Vec2(data.field_length() / -2, data.goal_width() / -2);
+    Common::Vec2 ourGoalStartPoint =
+        Common::Vec2(t_field.width * 2.0f / -2 - t_field.goal_depth, t_field.goal_width / 2);
+    Common::Vec2 ourGoalEndPoint   = Common::Vec2(t_field.width * 2.0f / -2, t_field.goal_width / -2);
     Common::Vec2 oppGoalStartPoint = ourGoalStartPoint * -1;
     Common::Vec2 oppGoalEndPoint   = ourGoalEndPoint * -1;
 
-    Common::Vec2 ourPenaltyStartPoint = Common::Vec2(data.field_length() / -2, data.penalty_area_width() / 2);
+    Common::Vec2 ourPenaltyStartPoint = Common::Vec2(t_field.width * 2.0f / -2, t_field.penalty_area_width / 2);
     Common::Vec2 ourPenaltyEndPoint =
-        Common::Vec2(data.field_length() / -2 + data.penalty_area_depth(), data.penalty_area_width() / -2);
+        Common::Vec2(t_field.width * 2.0f / -2 + t_field.penalty_area_depth, t_field.penalty_area_width / -2);
 
     Common::Vec2 oppenaltyStartPoint = ourPenaltyStartPoint * -1;
     Common::Vec2 oppPenaltyEndPoint  = ourPenaltyEndPoint * -1;
 
-    Common::Vec2 centerLineStartPoint = Common::Vec2(0, data.field_width() / -2);
+    Common::Vec2 centerLineStartPoint = Common::Vec2(0, t_field.height * 2.0f / -2);
     Common::Vec2 centerLineEndPoint   = centerLineStartPoint * -1;
 
-    float centerCircleRad = data.center_circle_radius();
+    float centerCircleRad = t_field.center_circle_radius;
 
     draw(Common::Rect{fieldWallStartPoint, fieldWallEndPoint}, Common::Color::brown(), false, 3);
     draw(Common::Rect{fieldEndPoint, fieldStartPoint}, Common::Color::white(), false);
