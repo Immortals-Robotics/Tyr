@@ -126,6 +126,9 @@ Debug::Debug(const bool t_enabled)
 
 void Debug::flip()
 {
+    const auto now          = std::chrono::system_clock::now();
+    m_wrapper_off.timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+
     std::swap(m_wrapper, m_wrapper_off);
 
     m_wrapper_off.draws.clear();
