@@ -20,6 +20,6 @@ protected:
     friend struct Services;
 
 private:
-    std::unique_ptr<spdlog::logger> m_logger;
+    std::shared_ptr<spdlog::logger> m_logger;
 };
 } // namespace Tyr::Common
