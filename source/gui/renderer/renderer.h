@@ -17,10 +17,14 @@ public:
     void draw(Common::LineSegment t_line_segment, Common::Color t_color, float t_thickness = 1);
     void draw(Common::Triangle t_triangle, Common::Color t_color, bool t_is_filled = true, float t_thickness = 1);
 
+    void draw(const Common::RawRobotState &t_robot);
+    void draw(const Common::RawBallState &t_ball);
+    void draw(const Common::RawWorldState &t_world);
+
     void draw(const Common::RobotState &t_robot);
     void draw(const Common::BallState &t_ball, bool draw_goal_lines);
-    void draw(const Common::RawWorldState &t_world);
     void draw(const Common::WorldState &t_world);
+
     void draw(const Common::FieldState &t_field);
 
     void drawText(Common::Vec2 t_pos, const std::string &t_str, int t_font_size = 12,

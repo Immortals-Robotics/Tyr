@@ -209,7 +209,7 @@ void Renderer::applyShader()
 void Renderer::draw(const Common::RawWorldState &t_world)
 {
     for (const auto &ball : t_world.balls)
-        draw(ball, false);
+        draw(ball);
     for (const auto &robot : t_world.yellow_robots)
         draw(robot);
     for (const auto &robot : t_world.blue_robots)
