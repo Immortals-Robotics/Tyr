@@ -2,8 +2,7 @@
 
 namespace Tyr::Gui
 {
-Renderer::Renderer(Common::Vec2 _wSize, float _upScalingFactor)
-    : robotArcAngle(50.f), m_window_border(8.f)
+Renderer::Renderer(Common::Vec2 _wSize, float _upScalingFactor) : robotArcAngle(50.f), m_window_border(8.f)
 {
     m_w_size           = _wSize * _upScalingFactor;
     m_upscaling_factor = _upScalingFactor;
@@ -141,8 +140,8 @@ void Renderer::draw(Common::Circle circle, Common::Color t_color, bool t_is_fill
     EndTextureMode();
 }
 
-void Renderer::drawCircleSector(Common::Circle circle, Common::Color t_color, float _startAngle,
-                                float _endAngle, bool t_is_filled)
+void Renderer::drawCircleSector(Common::Circle circle, Common::Color t_color, float _startAngle, float _endAngle,
+                                bool t_is_filled)
 {
     Vector2 center = ConvertSignedVecToPixelVec(circle.center);
     float   _rad   = ConvertRealityUnitToPixels(circle.r);
@@ -210,10 +209,19 @@ void Renderer::applyShader()
 void Renderer::draw(const Common::RawWorldState &t_world)
 {
     for (const auto &ball : t_world.balls)
-        draw(ball, true);
+        draw(ball, false);
     for (const auto &robot : t_world.yellow_robots)
         draw(robot);
     for (const auto &robot : t_world.blue_robots)
+        draw(robot);
+}
+
+void Renderer::draw(const Common::WorldState &t_world)
+{
+    draw(t_world.ball, true);
+    for (const auto &robot : t_world.own_robot)
+        draw(robot);
+    for (const auto &robot : t_world.opp_robot)
         draw(robot);
 }
 
