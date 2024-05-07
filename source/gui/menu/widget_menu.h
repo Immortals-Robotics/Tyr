@@ -20,7 +20,7 @@ private:
     void drawJoystick();
     
     int  m_controller_mode = static_cast<int>(ControllerMode::DISABLED);
-    RenderTexture m_lstick_texture, m_rstick_texture, m_buttons_texture;
+    RenderTexture m_joystick_texture;
      // UDP_connection for ref commands
     Common::NetworkAddress             m_address;
     std::unique_ptr<Common::UdpServer> m_udp;
@@ -32,6 +32,7 @@ private:
     Protos::Referee_TeamInfo m_team_info;
     Common::Vec2 m_mouse_pos;
     Common::Vec2 m_clicked_mouse_pos = {0.,0.};
+    Texture2D m_xbox_texture;
 public:
     WidgetMenu();
     ~WidgetMenu() = default;
