@@ -19,7 +19,7 @@ void Renderer::initialize()
     const std::filesystem::path data_dir(DATA_DIR);
     const std::filesystem::path vertex_path   = data_dir / "shaders/raylib_vertex.vs";
     const std::filesystem::path fragment_path = data_dir / "shaders/fxaa.fs";
-    const std::filesystem::path font_path     = data_dir / "fonts/OpenSans-Bold.ttf";
+    const std::filesystem::path font_path     = data_dir / "fonts/OpenSans-Regular.ttf";
 
     fxaaShader = LoadShader(vertex_path.string().c_str(), fragment_path.string().c_str());
     m_font     = LoadFont(font_path.string().c_str());
@@ -152,12 +152,12 @@ void Renderer::drawCircleSector(Common::Circle circle, Common::Color t_color, fl
     BeginTextureMode(main_rt);
     if (t_is_filled)
     {
-        DrawCircleSector(center, _rad, _startAngle, _endAngle, 200, raylibColor(t_color));
+        DrawCircleSector(center, _rad, _startAngle, _endAngle, 20, raylibColor(t_color));
         DrawTriangle(center, p1, p2, raylibColor(t_color));
     }
     else
     {
-        DrawCircleSectorLines(center, _rad, _startAngle, _endAngle, 500, raylibColor(t_color));
+        DrawCircleSectorLines(center, _rad, _startAngle, _endAngle, 20, raylibColor(t_color));
         DrawTriangleLines(center, p1, p2, raylibColor(t_color));
     }
     EndTextureMode();
