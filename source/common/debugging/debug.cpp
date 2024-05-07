@@ -197,20 +197,6 @@ void Debug::draw(const Triangle &t_triangle, const Color t_color, const bool t_f
     m_wrapper_off.draws.push_back(draw);
 }
 
-void Debug::draw(const RobotState &t_robot, const Color t_color)
-{
-    // TODO:
-    Protos::Immortals::RobotState *const robot = nullptr;
-    t_robot.fillProto(robot);
-}
-
-void Debug::draw(const BallState &t_ball, const Color t_color)
-{
-    // TODO:
-    Protos::Immortals::BallState *const ball = nullptr;
-    t_ball.fillProto(ball);
-}
-
 void Debug::log(const std::string_view t_text)
 {
     Log log{};

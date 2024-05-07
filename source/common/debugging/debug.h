@@ -93,9 +93,6 @@ public:
     void draw(const Triangle &t_triangle, Color t_color = Color::white(), bool t_filled = true,
               float t_thickness = 1.0f);
 
-    void draw(const RobotState &t_robot, Color t_color = Color::white());
-    void draw(const BallState &t_ball, Color t_color = Color::white());
-
     // Text Logging
     void log(std::string_view t_text);
 
