@@ -5,10 +5,9 @@
 
 namespace Tyr::Soccer
 {
-Dss::Dss(const Robot *const own_robots, const Common::RobotState *const opp_robots, const float robot_r,
-         const float cmd_dt, const float max_dec, const float max_dec_opp)
-    : own_robots(own_robots), opp_robots(opp_robots), robot_r(robot_r), cmd_dt(cmd_dt), max_dec(max_dec),
-      max_dec_opp(max_dec_opp)
+Dss::Dss(const Robot *const own_robots, const Common::RobotState *const opp_robots, const float cmd_dt,
+         const float max_dec, const float max_dec_opp)
+    : own_robots(own_robots), opp_robots(opp_robots), cmd_dt(cmd_dt), max_dec(max_dec), max_dec_opp(max_dec_opp)
 {}
 
 Common::Vec2 Dss::GetAccFromMotion(const int robot_num, const Common::Vec2 &motion)
@@ -35,10 +34,10 @@ bool Dss::OwnRobotsHaveCollision(const Common::RobotState &state_a, const Common
     const Trajectory traj_a = Trajectory::MakeTrajectory(state_a, cmd_a, max_dec, cmd_dt);
     const Trajectory traj_b = Trajectory::MakeTrajectory(state_b, cmd_b, max_dec, cmd_dt);
 
-    return Parabolic::HaveOverlap(traj_a.acc, traj_b.acc, robot_r * 2.f) ||
-           Parabolic::HaveOverlap(traj_a.dec, traj_b.dec, robot_r * 2.f) ||
-           Parabolic::HaveOverlap(traj_a.dec, traj_b.stopped, robot_r * 2.f) ||
-           Parabolic::HaveOverlap(traj_a.stopped, traj_b.dec, robot_r * 2.f);
+    return Parabolic::HaveOverlap(traj_a.acc, traj_b.acc, Common::field().robot_radius * 2.f) ||
+           Parabolic::HaveOverlap(traj_a.dec, traj_b.dec, Common::field().robot_radius * 2.f) ||
+           Parabolic::HaveOverlap(traj_a.dec, traj_b.stopped, Common::field().robot_radius * 2.f) ||
+           Parabolic::HaveOverlap(traj_a.stopped, traj_b.dec, Common::field().robot_radius * 2.f);
 }
 
 bool Dss::OppRobotsHaveCollision(const Common::RobotState &state_own, const Common::Vec2 &cmd_own,
@@ -47,10 +46,10 @@ bool Dss::OppRobotsHaveCollision(const Common::RobotState &state_own, const Comm
     const Trajectory traj_own = Trajectory::MakeTrajectory(state_own, cmd_own, max_dec, cmd_dt);
     const Trajectory traj_opp = Trajectory::MakeOpponentTrajectory(state_opp, max_dec);
 
-    return Parabolic::HaveOverlap(traj_own.acc, traj_opp.dec, robot_r * 2.f) ||
-           Parabolic::HaveOverlap(traj_own.dec, traj_opp.dec, robot_r * 2.f) ||
-           Parabolic::HaveOverlap(traj_own.dec, traj_opp.stopped, robot_r * 2.f) ||
-           Parabolic::HaveOverlap(traj_own.stopped, traj_opp.dec, robot_r * 2.f);
+    return Parabolic::HaveOverlap(traj_own.acc, traj_opp.dec, Common::field().robot_radius * 2.f) ||
+           Parabolic::HaveOverlap(traj_own.dec, traj_opp.dec, Common::field().robot_radius * 2.f) ||
+           Parabolic::HaveOverlap(traj_own.dec, traj_opp.stopped, Common::field().robot_radius * 2.f) ||
+           Parabolic::HaveOverlap(traj_own.stopped, traj_opp.dec, Common::field().robot_radius * 2.f);
 }
 
 bool Dss::RobotHasStaticCollision(const Common::RobotState &state, const Common::Vec2 &cmd) const
