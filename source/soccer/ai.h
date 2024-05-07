@@ -155,7 +155,7 @@ private:
                      Common::Vec2 *statPos = nullptr);
     void WaitForOmghi(int robot_num, bool chip = false);
     void WaitForGool(int robot_num, bool chip = false);
-    void recievePass(int robot_num, Common::Vec2 staticPos, bool chip = false);
+    void receivePass(int robot_num, Common::Vec2 staticPos, bool chip = false);
     void circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, int chip_pow, float precision,
                      float near_dis_override = -1.0f);
     void circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_pow, int chip_pow, float precision,

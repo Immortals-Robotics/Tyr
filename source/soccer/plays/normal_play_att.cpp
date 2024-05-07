@@ -8,7 +8,7 @@ void Ai::NormalPlayAtt()
 {
     ManageAttRoles(); // sets the mid1, mid2, attack
 
-    recievePass(dmf, Common::worldState().ball.position.pointOnConnectingLine(Common::Vec2(side * Common::field().width, 0), 2500));
+    receivePass(dmf, Common::worldState().ball.position.pointOnConnectingLine(Common::Vec2(side * Common::field().width, 0), 2500));
 
     if (oneTouchType[attack] == allaf)
     {
@@ -151,20 +151,20 @@ void Ai::NormalPlayAtt()
 
     if (Common::worldState().ball.position.y > 600)
     {
-        recievePass(mid1, Common::Vec2(-side * 250, 0));
+        receivePass(mid1, Common::Vec2(-side * 250, 0));
     }
     else
     {
-        recievePass(mid1, Common::Vec2(-side * (Common::field().width - 800), Common::field().height - 800));
+        receivePass(mid1, Common::Vec2(-side * (Common::field().width - 800), Common::field().height - 800));
     }
 
     if (Common::worldState().ball.position.y < -600)
     {
-        recievePass(mid2, Common::Vec2(-side * 250, 0));
+        receivePass(mid2, Common::Vec2(-side * 250, 0));
     }
     else
     {
-        recievePass(mid2, Common::Vec2(-side * (Common::field().width - 800), -Common::field().height + 800));
+        receivePass(mid2, Common::Vec2(-side * (Common::field().width - 800), -Common::field().height + 800));
     }
 }
 } // namespace Tyr::Soccer

@@ -41,7 +41,7 @@ set(SOURCE_FILES
 	helpers/calc_is_defending.cpp
 	helpers/calculate_mark_cost.cpp
 	helpers/calculate_opp_threat.cpp
-	helpers/calculate_swicth_to_attacker_score.cpp
+	helpers/calculate_switch_to_attacker_score.cpp
 	helpers/def_ghuz.cpp
 	helpers/find_kicker_opp.cpp
 	helpers/goal_blocked.cpp
@@ -82,7 +82,7 @@ set(SOURCE_FILES
 	skills/pass_gool.cpp
 	skills/pass_omghi.cpp
 	skills/pass.cpp
-	skills/recieve_pass.cpp
+	skills/receive_pass.cpp
 	skills/tech_circle.cpp
 
 	robot/robot.cpp)

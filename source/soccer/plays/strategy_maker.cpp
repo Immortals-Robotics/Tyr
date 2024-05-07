@@ -57,14 +57,14 @@ int        step[Common::Setting::kMaxOnFieldTeamRobots]    = {0, 0, 0, 0, 0, 0, 
 float      lastAdv[Common::Setting::kMaxOnFieldTeamRobots] = {0, 0, 0, 0, 0, 0, 0, 0};
 static int curr_str_id                                     = -1;
 
-bool recievers_reached = false;
+bool receivers_reached = false;
 
 void Ai::strategy_maker()
 {
     if (timer.time() < 0.5)
     {
         curr_str_id       = target_str;
-        recievers_reached = false;
+        receivers_reached = false;
     }
 
     if (curr_str_id == -1)
@@ -131,7 +131,7 @@ void Ai::strategy_maker()
         }
     }
 
-    bool new_recievers_reached = true;
+    bool new_receivers_reached = true;
     DefMid(def, rw, lw, nullptr, false, false);
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
@@ -178,7 +178,7 @@ void Ai::strategy_maker()
                 Common::logDebug("ATTACK: chip:{}", chip);
             }
 
-            if (step[i] == strategy.role(i).path_size() - 1 && recievers_reached && timer.time() > 3)
+            if (step[i] == strategy.role(i).path_size() - 1 && receivers_reached && timer.time() > 3)
             {
                 Common::Angle passAngle =
                     Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
@@ -245,7 +245,7 @@ void Ai::strategy_maker()
             }
             else
             {
-                recievePass(*stm2AInum[i], Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn,
+                receivePass(*stm2AInum[i], Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn,
                                                         strategy.role(i).path(step[i]).y() * ySgn));
             }
         }
@@ -270,7 +270,7 @@ void Ai::strategy_maker()
 
             if (step[i] != strategy.role(i).path_size() - 1)
                 // if (i == dmf && remainingDis > 150)
-                new_recievers_reached = false;
+                new_receivers_reached = false;
             break;
         case 2:
             oneTouchType[*stm2AInum[i]] = shirje;
@@ -297,6 +297,6 @@ void Ai::strategy_maker()
         }
     }
 
-    recievers_reached = new_recievers_reached || timer.time() > 4.5;
+    receivers_reached = new_receivers_reached || timer.time() > 4.5;
 }
 } // namespace Tyr::Soccer
