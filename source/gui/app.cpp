@@ -167,6 +167,7 @@ void Application::update()
         m_drawing_mutex.lock();
         m_renderer->drawShapesUdp(debug_packet.draw());
         m_drawing_mutex.unlock();
+        
         m_renderer->applyShader();
         // Common::logDebug("AV {}  {} pos {} {}", ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y,
         // main_window_width - 650., main_window_height * 0.8);
@@ -193,6 +194,10 @@ void Application::receiveDrawings()
         Protos::Immortals::Debug::Wrapper tmp_debug_packet{};
         if (udp_client_drawings->receive(&tmp_debug_packet))
         {
+            Common::logInfo("received {} debug draws from {}:{}", tmp_debug_packet.draw_size(),
+                            udp_client_drawings->getLastReceiveEndpoint().address().to_string(),
+                            udp_client_drawings->getLastReceiveEndpoint().port());
+
             m_drawing_mutex.lock();
             std::swap(debug_packet, tmp_debug_packet);
             m_drawing_mutex.unlock();

@@ -9,7 +9,7 @@ void Renderer::drawShapesUdp(const google::protobuf::RepeatedPtrField<Protos::Im
         switch (draw.shape_case())
         {
         case Protos::Immortals::Debug::Draw::kPoint:
-            this->draw(draw.point().pos(), draw.color(), draw.is_filled(), draw.thickness());
+            this->draw(draw.point().pos(), draw.color(), draw.filled(), draw.thickness());
             break;
         case Protos::Immortals::Debug::Draw::kLine:
             this->draw(draw.line(), draw.color(), draw.thickness());
@@ -18,13 +18,13 @@ void Renderer::drawShapesUdp(const google::protobuf::RepeatedPtrField<Protos::Im
             this->draw(draw.line_segment(), draw.color(), draw.thickness());
             break;
         case Protos::Immortals::Debug::Draw::kRect:
-            this->draw(draw.rect(), draw.color(), draw.is_filled(), draw.thickness());
+            this->draw(draw.rect(), draw.color(), draw.filled(), draw.thickness());
             break;
         case Protos::Immortals::Debug::Draw::kCircle:
-            this->draw(draw.circle(), draw.color(), draw.is_filled(), draw.thickness());
+            this->draw(draw.circle(), draw.color(), draw.filled(), draw.thickness());
             break;
         case Protos::Immortals::Debug::Draw::kTriangle:
-            this->draw(draw.triangle(), draw.color(), draw.is_filled(), draw.thickness());
+            this->draw(draw.triangle(), draw.color(), draw.filled(), draw.thickness());
             break;
 
         default:
