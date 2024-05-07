@@ -13,9 +13,9 @@ public:
     void start();
 
 private:
-    void aiThreadEentry();
-    void refereeThreadEentry();
-    void strategyThreadEentry();
+    void aiThreadEntry();
+    void refereeThreadEntry();
+    void strategyThreadEntry();
 
     std::mutex        m_lock;
     std::atomic<bool> m_exited = false;
