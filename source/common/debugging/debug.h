@@ -85,16 +85,18 @@ public:
 
     void flip();
 
-    void draw(Vec2 t_pos, Color t_color = Color::white());
-    void draw(const Line &t_line, Color t_color = Color::white(), float t_thickness = 1.0f);
-    void draw(const LineSegment &t_line, Color t_color = Color::white(), float t_thickness = 1.0f);
-    void draw(const Rect &t_rect, Color t_color = Color::white(), bool t_filled = true, float t_thickness = 1.0f);
-    void draw(const Circle &t_circle, Color t_color = Color::white(), bool t_filled = true, float t_thickness = 1.0f);
+    void draw(Vec2 t_pos, Color t_color = Color::white(),
+              std::source_location source = std::source_location::current());
+    void draw(const Line &t_line, Color t_color = Color::white(), float t_thickness = 1.0f,
+              std::source_location source = std::source_location::current());
+    void draw(const LineSegment &t_line, Color t_color = Color::white(), float t_thickness = 1.0f,
+              std::source_location source = std::source_location::current());
+    void draw(const Rect &t_rect, Color t_color = Color::white(), bool t_filled = true, float t_thickness = 1.0f,
+              std::source_location source = std::source_location::current());
+    void draw(const Circle &t_circle, Color t_color = Color::white(), bool t_filled = true, float t_thickness = 1.0f,
+              std::source_location source = std::source_location::current());
     void draw(const Triangle &t_triangle, Color t_color = Color::white(), bool t_filled = true,
-              float t_thickness = 1.0f);
-
-    // Text Logging
-    void log(std::string_view t_text);
+              float t_thickness = 1.0f, std::source_location source = std::source_location::current());
 
     const Wrapper &wrapper() const
     {
