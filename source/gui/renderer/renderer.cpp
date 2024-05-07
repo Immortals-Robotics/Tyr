@@ -3,7 +3,7 @@
 namespace Tyr::Gui
 {
 Renderer::Renderer(Common::Vec2 _wSize, float _upScalingFactor)
-    : robotArcAngle(Common::Angle::fromDeg(50.f)), m_window_border(8.f)
+    : robotArcAngle(50.f), m_window_border(8.f)
 {
     m_w_size           = _wSize * _upScalingFactor;
     m_upscaling_factor = _upScalingFactor;
@@ -13,7 +13,7 @@ Renderer::Renderer(Common::Vec2 _wSize, float _upScalingFactor)
     SetTextureFilter(shader_rt.texture, TEXTURE_FILTER_BILINEAR);
 }
 
-void Renderer::init()
+void Renderer::initialize()
 {
     std::array<float, 2> resolution = {static_cast<float>(m_w_size.x), static_cast<float>(m_w_size.y)};
 
@@ -141,25 +141,25 @@ void Renderer::draw(Common::Circle circle, Common::Color t_color, bool t_is_fill
     EndTextureMode();
 }
 
-void Renderer::drawCircleSector(Common::Circle circle, Common::Color t_color, Common::Angle _startAngle,
-                                Common::Angle _endAngle, bool t_is_filled)
+void Renderer::drawCircleSector(Common::Circle circle, Common::Color t_color, float _startAngle,
+                                float _endAngle, bool t_is_filled)
 {
     Vector2 center = ConvertSignedVecToPixelVec(circle.center);
     float   _rad   = ConvertRealityUnitToPixels(circle.r);
 
-    const Vector2 p1 = ConvertSignedVecToPixelVec(circle.center + _startAngle.toUnitVec() * circle.r);
-    const Vector2 p2 = ConvertSignedVecToPixelVec(circle.center + _endAngle.toUnitVec() * circle.r);
+    Vector2 p1 = {.x = center.x + _rad * cos(_startAngle * DEG2RAD), .y = center.y + _rad * sin(_startAngle * DEG2RAD)};
+    Vector2 p2 = {.x = center.x + _rad * cos(_endAngle * DEG2RAD), .y = center.y + _rad * sin(_endAngle * DEG2RAD)};
 
     BeginTextureMode(main_rt);
     if (t_is_filled)
     {
-        DrawCircleSector(center, _rad, _startAngle.deg(), _endAngle.deg360(), 200, raylibColor(t_color));
-        DrawTriangle(center, p2, p1, raylibColor(t_color));
+        DrawCircleSector(center, _rad, _startAngle, _endAngle, 200, raylibColor(t_color));
+        DrawTriangle(center, p1, p2, raylibColor(t_color));
     }
     else
     {
-        DrawCircleSectorLines(center, _rad, _startAngle.deg(), _endAngle.deg360(), 500, raylibColor(t_color));
-        DrawTriangleLines(center, p2, p1, raylibColor(t_color));
+        DrawCircleSectorLines(center, _rad, _startAngle, _endAngle, 500, raylibColor(t_color));
+        DrawTriangleLines(center, p1, p2, raylibColor(t_color));
     }
     EndTextureMode();
 }

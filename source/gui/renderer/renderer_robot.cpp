@@ -11,7 +11,8 @@ void Renderer::draw(const Common::RobotState &t_robot)
     auto lBaseColor = t_robot.color == Common::TeamColor::Yellow ? Common::Color::yellow() : Common::Color::blue();
 
     drawCircleSector(Common::Circle{t_robot.position, Common::field().robot_radius}, lBaseColor,
-                     robotArcAngle - t_robot.angle, -robotArcAngle - t_robot.angle, true);
+                     this->robotArcAngle - t_robot.angle.deg(), 360. - this->robotArcAngle - t_robot.angle.deg(), true);
+
     drawText(t_robot.position + Common::Vec2(kTextOffsetX, kTextOffsetY), std::to_string(t_robot.vision_id), 14,
              lTextColor);
 }

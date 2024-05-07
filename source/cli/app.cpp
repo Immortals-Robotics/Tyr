@@ -88,7 +88,7 @@ void Application::aiThreadEentry()
         Common::debug().broadcast();
 
         m_lock.unlock();
-        Common::logDebug("FPS: {}", 1.0 / timer.interval());
+        Common::logInfo("FPS: {}", 1.0 / timer.interval());
     }
     m_exited = true;
 }
