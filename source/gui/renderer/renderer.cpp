@@ -19,7 +19,7 @@ void Renderer::initialize()
     const std::filesystem::path data_dir(DATA_DIR);
     const std::filesystem::path vertex_path   = data_dir / "shaders/raylib_vertex.vs";
     const std::filesystem::path fragment_path = data_dir / "shaders/fxaa.fs";
-    const std::filesystem::path font_path     = data_dir / "fonts/OpenSans-Regular.ttf";
+    const std::filesystem::path font_path     = data_dir / "fonts/open-sans-regular.ttf";
 
     fxaaShader = LoadShader(vertex_path.string().c_str(), fragment_path.string().c_str());
     m_font     = LoadFont(font_path.string().c_str());
@@ -37,18 +37,6 @@ Vector2 Renderer::ConvertSignedVecToPixelVec(Common::Vec2 _signedVec)
 int Renderer::ConvertRealityUnitToPixels(float _value)
 {
     return _value * m_zoom_scale;
-}
-
-void Renderer::sortPointsClockwise(Common::Vec2 &_p1, Common::Vec2 &_p2, Common::Vec2 &_p3)
-{
-    float        area = (_p2.x - _p1.x) * (_p3.y - _p1.y) - (_p3.x - _p1.x) * (_p2.y - _p1.y);
-    Common::Vec2 temp;
-    if (area < 0)
-    {
-        temp = _p3;
-        _p3  = _p2;
-        _p2  = temp;
-    }
 }
 
 void Renderer::calculateMousePos()

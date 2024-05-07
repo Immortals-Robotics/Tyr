@@ -53,7 +53,6 @@ private:
     void    CalculateZoom();
     Vector2 ConvertSignedVecToPixelVec(Common::Vec2 _signedVec);
     int     ConvertRealityUnitToPixels(float _value);
-    void    sortPointsClockwise(Common::Vec2 &_p1, Common::Vec2 &_p2, Common::Vec2 &_p3);
     void    calculateMousePos();
 };
 } // namespace Tyr::Gui
