@@ -48,7 +48,7 @@ private:
 
     // If the filtering process yields velocities above these values, reset the filter state
     // All these are in metres/sec
-    static constexpr float kRobotErrorVelocity = 450.0f;
+    static constexpr float kRobotErrorVelocity = 4500.0f;
 
     std::unique_ptr<Common::UdpClient> m_udp;
 

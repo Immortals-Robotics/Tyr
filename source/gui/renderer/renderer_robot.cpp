@@ -40,7 +40,7 @@ void Renderer::draw(const Common::RobotState &t_robot)
     drawCircleSector(Common::Circle{t_robot.position, Common::field().robot_radius}, base_color,
                      this->robotArcAngle - t_robot.angle.deg(), 360. - this->robotArcAngle - t_robot.angle.deg(), true);
 
-    draw(Common::LineSegment{t_robot.position, t_robot.position + t_robot.velocity / 5.0f}, outline_color, 1.0f);
+    draw(Common::LineSegment{t_robot.position, t_robot.position + t_robot.velocity / 2.0f}, outline_color.transparent(), 1.0f);
 
     drawText(t_robot.position + Common::Vec2(-Common::field().robot_radius / 2.0f, Common::field().robot_radius),
              std::to_string(t_robot.vision_id), 12, text_color);
