@@ -23,5 +23,7 @@ public:
     Node *NearestNeighbour(Common::Vec2 s);
     int   tree_size();
     Node *GetNode(int idx);
+
+    void draw(Common::Color t_color = Common::Color::black().transparent()) const;
 };
 } // namespace Tyr::Soccer

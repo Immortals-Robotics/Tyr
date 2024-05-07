@@ -48,5 +48,7 @@ public:
     void init(Common::Vec2 init, Common::Vec2 final, float step);
 
     Common::Vec2 plan();
+
+    void draw(Common::Color t_color = Common::Color::white()) const;
 };
 } // namespace Tyr::Soccer
