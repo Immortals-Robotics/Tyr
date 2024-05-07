@@ -18,7 +18,6 @@ void Setting::load(const toml::table t_table)
     const auto network = t_table["network"];
 
     tracker_address.load(network["tracker"]);
-    debug_address.load(network["debug"]);
     vision_interface_address.load(network["vision_interface"]);
 
     vision_address.load(network["vision"]);

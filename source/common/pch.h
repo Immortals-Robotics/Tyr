@@ -14,6 +14,7 @@
 #include <source_location>
 #include <span>
 #include <string_view>
+#include <variant>
 #include <vector>
 
 #include <fmt/format.h>

@@ -86,7 +86,6 @@ public:
     bool side_wall = false;
 
     NetworkAddress tracker_address          = {"224.5.23.2", 10010};
-    NetworkAddress debug_address            = {"127.0.0.1", 10066};
     NetworkAddress vision_interface_address = {"127.0.0.1", 10067};
 
     // vision

@@ -30,7 +30,7 @@ public:
     void drawText(Common::Vec2 t_pos, const std::string &t_str, int t_font_size = 12,
                   Common::Color t_color = Common::Color::white());
 
-    void drawShapesUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug::Draw> &draws);
+    void draw(const Common::Debug::Wrapper &t_wrapper);
 
     void applyShader();
 

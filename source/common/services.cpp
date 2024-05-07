@@ -17,7 +17,7 @@ void Services::initialize()
     s_setting = new Setting();
     s_setting->load(s_configReader->getRoot());
 
-    s_debug = new Debug(s_setting->debug_address, s_setting->enable_debug);
+    s_debug = new Debug(s_setting->enable_debug);
 
     s_global_timer = new Timer();
     s_global_timer->start();

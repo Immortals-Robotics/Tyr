@@ -4,6 +4,8 @@ namespace Tyr::Common
 {
 struct Color
 {
+    Color() = default;
+
     constexpr Color(const float t_r, const float t_g, const float t_b, const float t_a = 255.0f)
         : r(t_r), g(t_g), b(t_b), a(t_a)
     {}
