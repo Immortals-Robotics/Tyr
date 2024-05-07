@@ -61,7 +61,7 @@ void WidgetMenu::drawJoystick()
 
     DrawCircle(530, 360, 10., buttons[11] ? RED : BLACK);
     DrawCircle(230, 360, 10., buttons[9] ? RED : BLACK);
-    DrawRectangle(610, 300, 30, axis[5] * 40 + 42, {static_cast<unsigned char>(axis[4] * 127 + 127), 0, 255, 255});
+    DrawRectangle(610, 300, 30, axis[5] * 40 + 42, {static_cast<unsigned char>(axis[5] * 127 + 127), 0, 255, 255});
     DrawRectangle(120, 300, 30, axis[4] * 40 + 42, {static_cast<unsigned char>(axis[4] * 127 + 127), 0, 255, 255});
 
     DrawCircle(422, 275, 10., buttons[15] ? RED : BLACK);
