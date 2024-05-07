@@ -9,8 +9,20 @@ void Renderer::draw(const Common::RawBallState &t_ball)
 
 void Renderer::draw(const Common::BallState &t_ball, bool t_draw_goal_lines)
 {
-    draw(Common::Circle{t_ball.position, Common::field().ball_radius}, Common::Color::orange(), true);
-    draw(Common::Circle{t_ball.position, Common::field().ball_radius + 10.0f}, Common::Color::black(), false, 1.0f);
+    if (t_ball.seen_state == Common::SeenState::CompletelyOut)
+        return;
+
+    auto outline_color = Common::Color::black();
+    auto base_color    = Common::Color::orange();
+
+    if (t_ball.seen_state == Common::SeenState::TemprolilyOut)
+    {
+        base_color    = base_color.transparent();
+        outline_color = outline_color.transparent();
+    }
+
+    draw(Common::Circle{t_ball.position, Common::field().ball_radius}, base_color, true);
+    draw(Common::Circle{t_ball.position, Common::field().ball_radius + 10.0f}, outline_color, false, 1.0f);
 
     // TODO: move this to soccer
     if (t_draw_goal_lines)
