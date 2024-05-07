@@ -83,7 +83,7 @@ bool Application::initialize(const int width, const int height)
     SetTraceLogLevel(LOG_WARNING);
     rlImGuiSetup(true);
 
-    m_renderer  = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 4.0f);
+    m_renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 4.0f);
     m_config_menu = std::make_unique<ConfigMenu>();
     m_widget_menu = std::make_unique<WidgetMenu>();
 
@@ -148,7 +148,11 @@ void Application::update()
         m_renderer->draw(Common::field());
 
         m_ai_mutex.lock();
-        m_renderer->draw(Common::rawWorldState());
+        // TODO(mhmd): add an option for this
+        if (1)
+            m_renderer->draw(Common::worldState());
+        else
+            m_renderer->draw(Common::rawWorldState());
         m_ai_mutex.unlock();
 
         if (m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
@@ -158,7 +162,6 @@ void Application::update()
             updated_address.port =
                 static_cast<unsigned short>(std::stoi(m_config_menu->getNetworkParam(InputCallbackType::VISION_PORT)));
             m_config_menu->updateNetworkData();
-            //udp_client->Update(updated_address);
         }
 
         m_drawing_mutex.lock();

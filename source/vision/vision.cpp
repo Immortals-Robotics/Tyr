@@ -12,10 +12,13 @@ Vision::Vision()
 
     m_ball_kalman = FilteredObject{fast_filter_path, slow_filter_path};
 
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int color_idx = 0; color_idx < 2; ++color_idx)
     {
-        m_robot_kalman[0][i] = FilteredObject{fast_filter_path, slow_filter_path};
-        m_robot_kalman[1][i] = FilteredObject{fast_filter_path, slow_filter_path};
+        for (int robot_idx = 0; robot_idx < Common::Setting::kMaxRobots; robot_idx++)
+        {
+            m_robot_not_seen[color_idx][robot_idx] = std::numeric_limits<int>::max() - 1;
+            m_robot_kalman[color_idx][robot_idx]   = FilteredObject{fast_filter_path, slow_filter_path};
+        }
     }
 
     if (!connect())

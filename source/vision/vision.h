@@ -21,6 +21,8 @@ public:
     void process();
     bool isConnected();
 
+    void updateAddress(const Common::NetworkAddress& t_address);
+
 private:
     bool connect();
     bool receivePacket();
@@ -54,7 +56,7 @@ private:
 
     Common::RawBallState m_last_raw_ball; // The last position of the locked ball
     FilteredObject       m_ball_kalman;
-    int                  m_ball_not_seen = Common::setting().max_ball_frame_not_seen + 1;
+    int                  m_ball_not_seen = std::numeric_limits<int>::max() - 1;
 
     FilteredObject m_robot_kalman[2][Common::Setting::kMaxRobots];
     int            m_robot_not_seen[2][Common::Setting::kMaxRobots];
