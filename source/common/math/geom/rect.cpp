@@ -15,7 +15,8 @@ bool Rect::insideOffset(const Vec2 t_point, float offset) const
 
 Vec2 Rect::nearestOutside(const Vec2 t_point) const
 {
-    float thr       = 5;
+    const float extension = 5.0f;
+
     float deltaXmin = abs(t_point.x - min.x);
     float deltaXmax = abs(t_point.x - max.x);
     float deltaYmin = abs(t_point.y - min.y);
@@ -25,20 +26,20 @@ Vec2 Rect::nearestOutside(const Vec2 t_point) const
 
     if (deltaXmin == min_xy)
     {
-        return Vec2(min.x - thr, t_point.y);
+        return Vec2(min.x - extension, t_point.y);
     }
     else if (deltaXmax == min_xy)
     {
-        return Vec2(max.x + thr, t_point.y);
+        return Vec2(max.x + extension, t_point.y);
     }
     else if (deltaYmin == min_xy)
     {
-        return Vec2(t_point.x, min.y - thr);
+        return Vec2(t_point.x, min.y - extension);
     }
     else
     {
         //(deltaYmax == min_xy)
-        return Vec2(t_point.x, max.y + thr);
+        return Vec2(t_point.x, max.y + extension);
     }
 }
 
