@@ -62,4 +62,19 @@ Node *Tree::GetNode(const int idx)
 {
     return &m_nodes[idx];
 }
+
+void Tree::draw(Common::Color t_color) const
+{
+    for (int i = 0; i < m_nodes.size(); i++)
+    {
+        if (m_nodes[i].parent == nullptr)
+        {
+            // TODO: draw sth to mark the root
+        }
+        else
+        {
+            Common::debug().draw(Common::LineSegment{m_nodes[i].state, m_nodes[i].parent->state}, t_color, 0.5f);
+        }
+    }
+}
 } // namespace Tyr::Soccer

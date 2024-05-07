@@ -5,6 +5,7 @@
 #include <chrono>
 #include <deque>
 #include <filesystem>
+#include <fstream>
 #include <memory>
 #include <numbers>
 #include <optional>
@@ -14,9 +15,9 @@
 #include <span>
 #include <string_view>
 #include <vector>
-#include <fstream>
 
 #include <fmt/format.h>
+#include <spdlog/async.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
@@ -38,10 +39,10 @@
 
 #include "math/angle.h"
 #include "math/geom/circle.h"
-#include "math/geom/triangle.h"
 #include "math/geom/line.h"
 #include "math/geom/line_segment.h"
 #include "math/geom/rect.h"
+#include "math/geom/triangle.h"
 #include "math/helpers.h"
 #include "math/vector.h"
 #include "services.h"

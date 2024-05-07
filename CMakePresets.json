@@ -35,7 +35,7 @@
 			"name": "ubuntu-release",
 			"inherits": "ubuntu-base",
 			"cacheVariables": {
-				"CMAKE_BUILD_TYPE": "Release"
+				"CMAKE_BUILD_TYPE": "RelWithDebInfo"
 			}
 		},
 		{
@@ -60,7 +60,7 @@
 			"name": "macos-release",
 			"inherits": "macos-base",
 			"cacheVariables": {
-				"CMAKE_BUILD_TYPE": "Release"
+				"CMAKE_BUILD_TYPE": "RelWithDebInfo"
 			}
 		},
 		{
@@ -113,7 +113,7 @@
 			"name": "windows-release",
 			"inherits": "windows-ninja-base",
 			"cacheVariables": {
-				"CMAKE_BUILD_TYPE": "Release"
+				"CMAKE_BUILD_TYPE": "RelWithDebInfo"
 			}
 		}
 	],

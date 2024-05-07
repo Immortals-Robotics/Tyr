@@ -10,7 +10,10 @@ Logger::Logger()
     auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/multisink.txt", true);
     file_sink->set_level(spdlog::level::trace);
 
-    m_logger = std::make_unique<spdlog::logger>("default", spdlog::sinks_init_list{console_sink, file_sink});
+    spdlog::init_thread_pool(8192, 1);
+    m_logger = std::make_shared<spdlog::async_logger>("default", spdlog::sinks_init_list{console_sink, file_sink},
+                                                      spdlog::thread_pool(), spdlog::async_overflow_policy::block);
     m_logger->set_level(spdlog::level::debug);
+    spdlog::register_logger(m_logger);
 }
 } // namespace Tyr::Common
