@@ -197,8 +197,5 @@ public:
     void Process();
     bool read_playBook(const char *fileName);
     bool read_playBook_str(std::span<char> buffer);
-
-protected:
-    bool debugDraw;
 };
 } // namespace Tyr::Soccer

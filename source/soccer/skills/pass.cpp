@@ -85,14 +85,12 @@ void Ai::WaitForPass(int robot_num, bool chip, const Common::Vec2 *target, Commo
         Common::Line::fromPointAndAngle(Common::Vec2(pos.x, pos.y), OwnRobot[robot_num].target.angle);
     Common::Line open_line =
         Common::Line::fromPointAndAngle(Common::Vec2(pos.x, pos.y), calculateOpenAngleToGoal(pos, robot_num).center);
-    debugDraw = true;
     Common::debug().draw(Common::LineSegment{pos, Common::Vec2(-side * Common::field().width,
                                                                shoot_line.y(-side * Common::field().width))},
                          Common::Color::brown());
     Common::debug().draw(Common::LineSegment{pos, Common::Vec2(-side * Common::field().width,
                                                                open_line.y(-side * Common::field().width))},
                          Common::Color::pink());
-    debugDraw = false;
 
     // OwnRobot[robot_num].target.angle=-90;
 
