@@ -33,4 +33,9 @@ bool Vision::isConnected()
 {
     return m_udp != nullptr && m_udp->isConnected();
 }
+
+void Vision::updateAddress(const Common::NetworkAddress& t_address)
+{
+    m_udp->updateAddress(t_address);
+}
 } // namespace Tyr::Vision

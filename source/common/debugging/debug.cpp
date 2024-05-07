@@ -22,6 +22,8 @@ void Debug::broadcast()
         return;
     }
 
+    Common::logInfo("sending {} debug draws to {}:{}", m_wrapper.draw_size(), m_address.ip, m_address.port);
+
     // TODO: set proper timestamp
     m_wrapper.set_timestamp(m_last_sent_frame_id++);
 
@@ -31,11 +33,10 @@ void Debug::broadcast()
     m_wrapper.Clear();
 }
 
-void Debug::draw(const Vec2 t_pos, const Color t_color, const std::string_view t_layer)
+void Debug::draw(const Vec2 t_pos, const Color t_color)
 {
     Protos::Immortals::Debug::Draw *const draw = m_wrapper.add_draw();
 
-    draw->set_layer(t_layer.data(), t_layer.size());
     // TODO: fill source location
     t_color.fillProto(draw->mutable_color());
 
@@ -43,74 +44,82 @@ void Debug::draw(const Vec2 t_pos, const Color t_color, const std::string_view t
     t_pos.fillProto(point->mutable_pos());
 }
 
-void Debug::draw(const Line &t_line, const Color t_color, const std::string_view t_layer)
+void Debug::draw(const Line &t_line, const Color t_color, const float t_thickness)
 {
     Protos::Immortals::Debug::Draw *const draw = m_wrapper.add_draw();
 
-    draw->set_layer(t_layer.data(), t_layer.size());
     // TODO: fill source location
     t_color.fillProto(draw->mutable_color());
+
+    draw->set_thickness(t_thickness);
 
     Protos::Immortals::Line *const line = draw->mutable_line();
     t_line.fillProto(line);
 }
 
-void Debug::draw(const LineSegment &t_line, const Color t_color, const std::string_view t_layer)
+void Debug::draw(const LineSegment &t_line, const Color t_color, const float t_thickness)
 {
     Protos::Immortals::Debug::Draw *const draw = m_wrapper.add_draw();
 
-    draw->set_layer(t_layer.data(), t_layer.size());
     // TODO: fill source location
     t_color.fillProto(draw->mutable_color());
+
+    draw->set_thickness(t_thickness);
 
     Protos::Immortals::LineSegment *const line = draw->mutable_line_segment();
     t_line.fillProto(line);
 }
 
-void Debug::draw(const Rect &t_rect, const Color t_color, const std::string_view t_layer)
+void Debug::draw(const Rect &t_rect, const Color t_color, const bool t_filled, const float t_thickness)
 {
     Protos::Immortals::Debug::Draw *const draw = m_wrapper.add_draw();
 
-    draw->set_layer(t_layer.data(), t_layer.size());
     // TODO: fill source location
     t_color.fillProto(draw->mutable_color());
+
+    draw->set_filled(t_filled);
+    draw->set_thickness(t_thickness);
 
     Protos::Immortals::Rect *const rect = draw->mutable_rect();
     t_rect.fillProto(rect);
 }
 
-void Debug::draw(const Circle &t_circle, const Color t_color, const std::string_view t_layer)
+void Debug::draw(const Circle &t_circle, const Color t_color, const bool t_filled, const float t_thickness)
 {
     Protos::Immortals::Debug::Draw *const draw = m_wrapper.add_draw();
 
-    draw->set_layer(t_layer.data(), t_layer.size());
     // TODO: fill source location
     t_color.fillProto(draw->mutable_color());
+
+    draw->set_filled(t_filled);
+    draw->set_thickness(t_thickness);
 
     Protos::Immortals::Circle *const circle = draw->mutable_circle();
     t_circle.fillProto(circle);
 }
 
-void Debug::draw(const Triangle &t_triangle, const Color t_color, const std::string_view t_layer)
+void Debug::draw(const Triangle &t_triangle, const Color t_color, const bool t_filled, const float t_thickness)
 {
     Protos::Immortals::Debug::Draw *const draw = m_wrapper.add_draw();
 
-    draw->set_layer(t_layer.data(), t_layer.size());
     // TODO: fill source location
     t_color.fillProto(draw->mutable_color());
+
+    draw->set_filled(t_filled);
+    draw->set_thickness(t_thickness);
 
     Protos::Immortals::Triangle *const triangle = draw->mutable_triangle();
     t_triangle.fillProto(triangle);
 }
 
-void Debug::draw(const RobotState &t_robot, const Color t_color, const std::string_view t_layer)
+void Debug::draw(const RobotState &t_robot, const Color t_color)
 {
     // TODO:
     Protos::Immortals::RobotState *const robot = nullptr;
     t_robot.fillProto(robot);
 }
 
-void Debug::draw(const BallState &t_ball, const Color t_color, const std::string_view t_layer)
+void Debug::draw(const BallState &t_ball, const Color t_color)
 {
     // TODO:
     Protos::Immortals::BallState *const ball = nullptr;

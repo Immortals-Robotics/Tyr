@@ -21,15 +21,16 @@ public:
 
     void broadcast();
 
-    void draw(Vec2 t_pos, Color t_color = Color::white(), std::string_view t_layer = "");
-    void draw(const Line &t_line, Color t_color = Color::white(), std::string_view t_layer = "");
-    void draw(const LineSegment &t_line, Color t_color = Color::white(), std::string_view t_layer = "");
-    void draw(const Rect &t_rect, Color t_color = Color::white(), std::string_view t_layer = "");
-    void draw(const Circle &t_circle, Color t_color = Color::white(), std::string_view t_layer = "");
-    void draw(const Triangle &t_triangle, Color t_color = Color::white(), std::string_view t_layer = "");
+    void draw(Vec2 t_pos, Color t_color = Color::white());
+    void draw(const Line &t_line, Color t_color = Color::white(), float t_thickness = 1.0f);
+    void draw(const LineSegment &t_line, Color t_color = Color::white(), float t_thickness = 1.0f);
+    void draw(const Rect &t_rect, Color t_color = Color::white(), bool t_filled = true, float t_thickness = 1.0f);
+    void draw(const Circle &t_circle, Color t_color = Color::white(), bool t_filled = true, float t_thickness = 1.0f);
+    void draw(const Triangle &t_triangle, Color t_color = Color::white(), bool t_filled = true,
+              float t_thickness = 1.0f);
 
-    void draw(const RobotState &t_robot, Color t_color = Color::white(), std::string_view t_layer = "");
-    void draw(const BallState &t_ball, Color t_color = Color::white(), std::string_view t_layer = "");
+    void draw(const RobotState &t_robot, Color t_color = Color::white());
+    void draw(const BallState &t_ball, Color t_color = Color::white());
 
     // Text Logging
     void log(std::string_view t_text);

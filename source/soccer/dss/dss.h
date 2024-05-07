@@ -9,7 +9,6 @@ class Dss
 private:
     Common::Random m_random;
 
-    const float robot_r;
     const float cmd_dt;
     const float max_dec;
     const float max_dec_opp;
@@ -33,8 +32,8 @@ private:
     static float ComputeError(const Common::Vec2 &target, const Common::Vec2 &current);
 
 public:
-    Dss(const Robot *const own_robots, const Common::RobotState *const opp_robots, const float robot_r,
-        const float cmd_dt, const float max_dec, const float max_dec_opp);
+    Dss(const Robot *const own_robots, const Common::RobotState *const opp_robots, const float cmd_dt,
+        const float max_dec, const float max_dec_opp);
 
     void Reset();
 

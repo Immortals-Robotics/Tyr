@@ -12,7 +12,6 @@ void Ai::GKHi(int robot_num, bool stop)
                      Common::worldState().ball.position.distanceTo(OwnRobot[robot_num].state().position) /
                          Common::worldState().ball.velocity.length());
     // side = -side;
-    debugDraw = true; // TODO #10 Comment this in the game
     if (ballIsGoaling())
     {
         Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 200}, Common::Color::red());
@@ -21,7 +20,6 @@ void Ai::GKHi(int robot_num, bool stop)
     {
         Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 20}, Common::Color::yellow());
     }
-    debugDraw = false;
 
     if ((ballIsGoaling()) &&
         (Common::worldState().ball.position.distanceTo(OwnRobot[robot_num].state().position) /

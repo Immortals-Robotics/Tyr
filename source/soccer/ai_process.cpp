@@ -6,17 +6,13 @@ void Ai::Process()
 {
     static int PRCS_CNT = 0;
 
-    debugDraw = false;
-
     internalProcessData();
 
-    debugDraw = true;
     Common::debug().draw(Common::worldState().ball.position, Common::Color::red());
     //	Common::debug().draw(Common::worldState().ball.position,Common::Vec2(Common::worldState().ball.velocity.x,Common::worldState().ball.velocity.y)
     //+ Common::worldState().ball.position,
     // Black);
 
-    debugDraw = false;
 
     if (lastReferee != Common::refereeState().get())
     {

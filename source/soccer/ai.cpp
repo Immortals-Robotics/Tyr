@@ -19,7 +19,7 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     for (auto &sender : senders)
         m_senders.push_back(sender.get());
 
-    dss = new Dss(OwnRobot, Common::worldState().opp_robot, 92.f, 1.f / 61.57f, 7000.f, 3000.f);
+    dss = new Dss(OwnRobot, Common::worldState().opp_robot, 1.f / 61.57f, 7000.f, 3000.f);
 
     InitAIPlayBook();
     currentPlay = "HaltAll";

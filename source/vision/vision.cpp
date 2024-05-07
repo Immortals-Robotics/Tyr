@@ -7,21 +7,18 @@ Vision::Vision()
     for (int i = 0; i < Common::Setting::kCamCount; i++)
         m_packet_received[i] = false;
 
-    m_last_raw_ball.set_x(0.0f);
-    m_last_raw_ball.set_y(0.0f);
-
     const std::filesystem::path fast_filter_path = std::filesystem::path{DATA_DIR} / "ball_filter_fast.txt";
     const std::filesystem::path slow_filter_path = std::filesystem::path{DATA_DIR} / "ball_filter_slow.txt";
 
     m_ball_kalman = FilteredObject{fast_filter_path, slow_filter_path};
 
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int color_idx = 0; color_idx < 2; ++color_idx)
     {
-        m_robot_kalman[0][i] = FilteredObject{fast_filter_path, slow_filter_path};
-        m_robot_kalman[1][i] = FilteredObject{fast_filter_path, slow_filter_path};
-
-        m_raw_angles[0][i] = 0.0f;
-        m_raw_angles[1][i] = 0.0f;
+        for (int robot_idx = 0; robot_idx < Common::Setting::kMaxRobots; robot_idx++)
+        {
+            m_robot_not_seen[color_idx][robot_idx] = std::numeric_limits<int>::max() - 1;
+            m_robot_kalman[color_idx][robot_idx]   = FilteredObject{fast_filter_path, slow_filter_path};
+        }
     }
 
     if (!connect())
@@ -53,12 +50,24 @@ void Vision::receive()
         }
         if (cams_ready)
             break;
+
         receivePacket();
     }
 }
 
 void Vision::process()
 {
+    Protos::SSL_DetectionFrame merged_frame;
+    for (int i = 0; i < Common::Setting::kCamCount; i++)
+    {
+        if (Common::setting().use_camera[i])
+        {
+            merged_frame.MergeFrom(m_d_frame[i]);
+        }
+    }
+
+    Common::rawWorldState() = Common::RawWorldState(merged_frame);
+
     processBalls();
     processRobots();
 

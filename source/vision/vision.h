@@ -21,20 +21,19 @@ public:
     void process();
     bool isConnected();
 
+    void updateAddress(const Common::NetworkAddress& t_address);
+
 private:
     bool connect();
     bool receivePacket();
 
     void processRobots();
-    void extractBlueRobots();
-    void extractYellowRobots();
-    void mergeRobots();
+    void mergeRobots(Common::TeamColor t_color);
     void filterRobots(Common::TeamColor t_color);
     void predictRobots();
     void sendStates();
 
     void processBalls();
-    void extractBalls();
     void mergeBalls();
     void filterBalls();
     void predictBall();
@@ -55,19 +54,16 @@ private:
 
     bool m_packet_received[Common::Setting::kCamCount];
 
-    Protos::SSL_DetectionBall m_last_raw_ball; // The last position of the locked ball
-    FilteredObject            m_ball_kalman;
-    int                       m_ball_not_seen = Common::setting().max_ball_frame_not_seen + 1;
+    Common::RawBallState m_last_raw_ball; // The last position of the locked ball
+    FilteredObject       m_ball_kalman;
+    int                  m_ball_not_seen = std::numeric_limits<int>::max() - 1;
 
-    Common::RobotState m_robot_state[2][Common::Setting::kMaxRobots];
-    FilteredObject     m_robot_kalman[2][Common::Setting::kMaxRobots];
-    int                m_robot_not_seen[2][Common::Setting::kMaxRobots];
+    FilteredObject m_robot_kalman[2][Common::Setting::kMaxRobots];
+    int            m_robot_not_seen[2][Common::Setting::kMaxRobots];
 
-    Common::MedianFilter<float> m_angle_filter[2][Common::Setting::kMaxRobots];
-    float                       m_raw_angles[2][Common::Setting::kMaxRobots];
+    Common::MedianFilter<Common::Angle> m_angle_filter[2][Common::Setting::kMaxRobots];
+    Common::Angle                       m_raw_angles[2][Common::Setting::kMaxRobots];
 
-    Protos::SSL_DetectionFrame              m_d_frame[Common::Setting::kCamCount];
-    std::vector<Protos::SSL_DetectionBall>  m_d_ball;
-    std::vector<Protos::SSL_DetectionRobot> m_d_robot;
+    Protos::SSL_DetectionFrame m_d_frame[Common::Setting::kCamCount];
 };
 } // namespace Tyr::Vision

@@ -8,9 +8,7 @@ void Ai::NormalPlayAtt()
 {
     ManageAttRoles(); // sets the mid1, mid2, attack
 
-    debugDraw = true;
     recievePass(dmf, Common::worldState().ball.position.pointOnConnectingLine(Common::Vec2(side * Common::field().width, 0), 2500));
-    debugDraw = false;
 
     if (oneTouchType[attack] == allaf)
     {
@@ -145,10 +143,8 @@ void Ai::NormalPlayAtt()
                 //	shoot_pow = 1;
                 // }
 
-                debugDraw = true;
                 tech_circle(attack, shootAngle, shoot_pow, 0, 1, 0, 0, 0);
                 // circle_ball(attack, 90, 80, 0, 1.0f);
-                debugDraw = false;
             }
         }
     }

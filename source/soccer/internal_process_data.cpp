@@ -9,7 +9,6 @@ void Ai::internalProcessData()
     if (ballHist.size() > maxBallHist)
         ballHist.pop_front();
     calculateBallTrajectory();
-    debugDraw = false;
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {

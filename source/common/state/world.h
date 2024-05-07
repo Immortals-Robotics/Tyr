@@ -13,6 +13,66 @@ enum class SeenState
     Seen          = 2,
 };
 
+struct RawRobotState
+{
+    int       vision_id;
+    TeamColor color;
+
+    Vec2  position;
+    Angle angle;
+
+    RawRobotState() = default;
+
+    RawRobotState(const Protos::SSL_DetectionRobot &t_robot, const TeamColor t_color)
+    {
+        vision_id = t_robot.robot_id();
+        color     = t_color;
+
+        position = Common::Vec2(t_robot.x(), t_robot.y());
+        angle    = Common::Angle::fromRad(t_robot.orientation());
+    }
+};
+
+struct RawBallState
+{
+    Vec2 position;
+
+    RawBallState() = default;
+
+    RawBallState(const Protos::SSL_DetectionBall &t_ball)
+    {
+        position = Common::Vec2(t_ball.x(), t_ball.y());
+    }
+};
+
+struct RawWorldState
+{
+    std::vector<RawBallState> balls;
+
+    std::vector<RawRobotState> yellow_robots;
+    std::vector<RawRobotState> blue_robots;
+
+    RawWorldState() = default;
+
+    RawWorldState(const Protos::SSL_DetectionFrame &t_frame)
+    {
+        for (const auto &ball : t_frame.balls())
+        {
+            balls.emplace_back(ball);
+        }
+
+        for (const auto &robot : t_frame.robots_yellow())
+        {
+            yellow_robots.emplace_back(robot, TeamColor::Yellow);
+        }
+
+        for (const auto &robot : t_frame.robots_blue())
+        {
+            blue_robots.emplace_back(robot, TeamColor::Blue);
+        }
+    }
+};
+
 struct RobotState
 {
     int       vision_id;
@@ -41,17 +101,6 @@ struct RobotState
         angular_velocity = t_robot.angular_velocity();
 
         seen_state = (SeenState) t_robot.seen_state();
-    }
-
-    RobotState(const Protos::SSL_DetectionRobot &t_robot, const TeamColor t_color)
-    {
-        vision_id = t_robot.robot_id();
-        color     = t_color;
-
-        position = Common::Vec2(t_robot.x(), t_robot.y());
-        angle    = Common::Angle::fromRad(t_robot.orientation());
-
-        seen_state = SeenState::Seen;
     }
 
     void fillProto(Protos::Immortals::RobotState *const t_robot) const
@@ -159,34 +208,6 @@ struct WorldState
         for (int i = 0; i < Setting::kMaxRobots; i++)
         {
             opp_robot[i].vision_id = i;
-        }
-    }
-};
-
-struct RawWorldState
-{
-    std::vector<BallState> balls;
-
-    std::vector<RobotState> yellow_robots;
-    std::vector<RobotState> blue_robots;
-
-    RawWorldState() = default;
-
-    RawWorldState(const Protos::SSL_DetectionFrame &t_frame)
-    {
-        for (const auto &ball : t_frame.balls())
-        {
-            balls.emplace_back(ball);
-        }
-
-        for (const auto &robot : t_frame.robots_yellow())
-        {
-            yellow_robots.emplace_back(robot, TeamColor::Yellow);
-        }
-
-        for (const auto &robot : t_frame.robots_blue())
-        {
-            blue_robots.emplace_back(robot, TeamColor::Blue);
         }
     }
 };

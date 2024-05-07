@@ -104,9 +104,7 @@ void Ai::NormalPlayDef()
         chip_pow   = 0;
     }
 
-    debugDraw = true;
     tech_circle(attack, shootAngle, shoot_pow, chip_pow, 1, 0, 0, 1);
     // circle_ball(attack, 90, 80, 0, 1.0f);
-    debugDraw = false;
 }
 } // namespace Tyr::Soccer
