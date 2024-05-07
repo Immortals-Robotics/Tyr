@@ -85,8 +85,6 @@ void Application::aiThreadEntry()
         for (auto &sender : m_senders)
             sender->flush();
 
-        Common::debug().broadcast();
-
         m_lock.unlock();
         Common::logInfo("FPS: {}", 1.0 / timer.interval());
     }

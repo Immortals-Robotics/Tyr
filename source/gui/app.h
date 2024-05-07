@@ -21,13 +21,10 @@ public:
     bool shouldClose() const;
 
 private:
-    Protos::Immortals::Debug::Wrapper debug_packet;
-
     std::unique_ptr<Renderer>   m_renderer;
     std::unique_ptr<ConfigMenu> m_config_menu;
     std::unique_ptr<WidgetMenu> m_widget_menu;
 
-    std::unique_ptr<Common::UdpClient> udp_client_drawings;
     std::unique_ptr<Common::UdpClient> m_strategy_udp;
 
     Common::NetworkAddress updated_address;
@@ -40,15 +37,12 @@ private:
     std::thread m_ai_thread;
     std::thread m_ref_thread;
     std::thread m_str_thread;
-    std::thread m_drawing_thread;
 
     std::unique_ptr<Referee::Referee> m_referee;
 
     std::unique_ptr<Vision::Vision>               m_vision;
     std::vector<std::unique_ptr<Sender::ISender>> m_senders;
     std::unique_ptr<Soccer::Ai>                   m_ai;
-
-    void receiveDrawings();
 
     void aiThreadEntry();
     void refereeThreadEntry();

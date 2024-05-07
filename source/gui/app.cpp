@@ -87,7 +87,6 @@ bool Application::initialize(const int width, const int height)
     m_config_menu = std::make_unique<ConfigMenu>();
     m_widget_menu = std::make_unique<WidgetMenu>();
 
-    udp_client_drawings = std::make_unique<Common::UdpClient>(Common::NetworkAddress{"127.0.0.1", 10066});
     m_renderer->initialize();
 
     Common::logInfo(" Now it is time, lets rock...");
@@ -98,7 +97,6 @@ int Application::shutdown()
 {
     m_running = false;
 
-    m_drawing_thread.join();
     m_ai_thread.join();
     m_ref_thread.join();
     m_str_thread.join();
@@ -115,10 +113,9 @@ int Application::shutdown()
 
 void Application::start()
 {
-    m_drawing_thread = std::thread(&Application::receiveDrawings, this);
-    m_ai_thread      = std::thread(&Application::aiThreadEntry, this);
-    m_ref_thread     = std::thread(&Application::refereeThreadEntry, this);
-    m_str_thread     = std::thread(&Application::strategyThreadEntry, this);
+    m_ai_thread  = std::thread(&Application::aiThreadEntry, this);
+    m_ref_thread = std::thread(&Application::refereeThreadEntry, this);
+    m_str_thread = std::thread(&Application::strategyThreadEntry, this);
 }
 
 void Application::update()
@@ -165,9 +162,9 @@ void Application::update()
         }
 
         m_drawing_mutex.lock();
-        m_renderer->drawShapesUdp(debug_packet.draw());
+        m_renderer->draw(Common::debug().wrapper());
         m_drawing_mutex.unlock();
-        
+
         m_renderer->applyShader();
         // Common::logDebug("AV {}  {} pos {} {}", ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y,
         // main_window_width - 650., main_window_height * 0.8);
@@ -187,24 +184,6 @@ bool Application::shouldClose() const
     return WindowShouldClose();
 }
 
-void Application::receiveDrawings()
-{
-    while (m_running)
-    {
-        Protos::Immortals::Debug::Wrapper tmp_debug_packet{};
-        if (udp_client_drawings->receive(&tmp_debug_packet))
-        {
-            Common::logInfo("received {} debug draws from {}:{}", tmp_debug_packet.draw_size(),
-                            udp_client_drawings->getLastReceiveEndpoint().address().to_string(),
-                            udp_client_drawings->getLastReceiveEndpoint().port());
-
-            m_drawing_mutex.lock();
-            std::swap(debug_packet, tmp_debug_packet);
-            m_drawing_mutex.unlock();
-        }
-    }
-};
-
 void Application::aiThreadEntry()
 {
     Common::Timer timer;
@@ -220,12 +199,15 @@ void Application::aiThreadEntry()
         m_vision->process();
         m_ai->Process();
 
+        m_ai_mutex.unlock();
+
         for (auto &sender : m_senders)
             sender->flush();
 
-        Common::debug().broadcast();
+        m_drawing_mutex.lock();
+        Common::debug().flip();
+        m_drawing_mutex.unlock();
 
-        m_ai_mutex.unlock();
         Common::logInfo("FPS: {}", 1.0 / timer.interval());
     }
 }

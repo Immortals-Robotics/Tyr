@@ -2,35 +2,24 @@
 
 namespace Tyr::Gui
 {
-void Renderer::drawShapesUdp(const google::protobuf::RepeatedPtrField<Protos::Immortals::Debug::Draw> &draws)
+void Renderer::draw(const Common::Debug::Wrapper &t_wrapper)
 {
-    for (const auto &draw : draws)
+    for (const auto &draw : t_wrapper.draws)
     {
-        switch (draw.shape_case())
-        {
-        case Protos::Immortals::Debug::Draw::kPoint:
-            this->draw(draw.point().pos(), draw.color(), draw.filled(), draw.thickness());
-            break;
-        case Protos::Immortals::Debug::Draw::kLine:
-            this->draw(draw.line(), draw.color(), draw.thickness());
-            break;
-        case Protos::Immortals::Debug::Draw::kLineSegment:
-            this->draw(draw.line_segment(), draw.color(), draw.thickness());
-            break;
-        case Protos::Immortals::Debug::Draw::kRect:
-            this->draw(draw.rect(), draw.color(), draw.filled(), draw.thickness());
-            break;
-        case Protos::Immortals::Debug::Draw::kCircle:
-            this->draw(draw.circle(), draw.color(), draw.filled(), draw.thickness());
-            break;
-        case Protos::Immortals::Debug::Draw::kTriangle:
-            this->draw(draw.triangle(), draw.color(), draw.filled(), draw.thickness());
-            break;
-
-        default:
-            Common::logWarning("Unsupported shape: {}", (int) draw.shape_case());
-            break;
-        }
+        if (auto point = std::get_if<Common::Vec2>(&draw.shape); point)
+            this->draw(*point, draw.color, draw.filled, draw.thickness);
+        else if (auto line = std::get_if<Common::Line>(&draw.shape); line)
+            this->draw(*line, draw.color, draw.thickness);
+        else if (auto line = std::get_if<Common::LineSegment>(&draw.shape); line)
+            this->draw(*line, draw.color, draw.thickness);
+        else if (auto rect = std::get_if<Common::Rect>(&draw.shape); rect)
+            this->draw(*rect, draw.color, draw.filled, draw.thickness);
+        else if (auto circle = std::get_if<Common::Circle>(&draw.shape); circle)
+            this->draw(*circle, draw.color, draw.filled, draw.thickness);
+        else if (auto triangle = std::get_if<Common::Triangle>(&draw.shape); triangle)
+            this->draw(*triangle, draw.color, draw.filled, draw.thickness);
+        else
+            Common::logWarning("Unsupported draw.shape type: {}", draw.shape.index());
     }
 }
 
