@@ -188,7 +188,7 @@ void WidgetMenu::draw(Common::Vec2 _mouse_pos)
     }
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
     ImGui::SetNextWindowPos(ImVec2(main_window_width - 400., 0));
-    ImGui::SetNextWindowSize(ImVec2(400., main_window_height * 0.7));
+    ImGui::SetNextWindowSize(ImVec2(400., 400.));
     if (ImGui::Begin("Widgets", nullptr, window_flags))
     {
         drawTabBar();
