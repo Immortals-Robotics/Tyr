@@ -5,6 +5,7 @@
 #include "setting.h"
 #include "state/referee.h"
 #include "state/world.h"
+#include "storage/storage.h"
 #include "timer/timer.h"
 
 namespace Tyr::Common
@@ -13,6 +14,8 @@ void Services::initialize()
 {
     s_logger       = new Logger();
     s_configReader = new ConfigReader("config.toml");
+
+    Storage::init(std::filesystem::path(LOG_DIR) / "db");
 
     s_setting = new Setting();
     s_setting->load(s_configReader->getRoot());
@@ -39,6 +42,8 @@ void Services::shutdown()
     delete s_raw_world_state;
     delete s_field_state;
     delete s_referee_state;
+
+    Storage::shutdown();
 
     delete s_setting;
     delete s_debug;
