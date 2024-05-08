@@ -12,7 +12,7 @@ WidgetMenu::WidgetMenu()
 #endif
     const std::filesystem::path data_dir(DATA_DIR);
     const std::filesystem::path xbox_texture_dir = data_dir / "xbox.png";
-    const std::filesystem::path ps5_texture_dir = data_dir / "ps5.png";
+    const std::filesystem::path ps5_texture_dir  = data_dir / "ps5.png";
 
     m_joystick_texture = LoadRenderTexture(770., 400.);
 
@@ -28,7 +28,7 @@ WidgetMenu::WidgetMenu()
     m_team_info.set_goalkeeper(Common::setting().init_gk_id);
 
     m_xbox_texture = LoadTexture(xbox_texture_dir.string().c_str());
-    m_ps5_texture = LoadTexture(ps5_texture_dir.string().c_str());
+    m_ps5_texture  = LoadTexture(ps5_texture_dir.string().c_str());
 }
 
 void WidgetMenu::drawJoystick()
@@ -50,27 +50,31 @@ void WidgetMenu::drawJoystick()
 
     BeginTextureMode(m_joystick_texture);
     ClearBackground(BLACK);
-    DrawTexturePro(m_xbox_texture, {0, 0, 800, 450}, {385, 200, 800, 450}, {400, 225}, 180., LIGHTGRAY);
-    DrawCircle(486, 275, 15., buttons[8] ? RED : BLACK);
-    DrawCircle(522, 310, 15., buttons[5] ? RED : BLACK);
-    DrawCircle(558, 275, 15., buttons[6] ? RED : BLACK);
-    DrawCircle(522, 239, 15., buttons[7] ? RED : BLACK);
+    if (std::string(GetGamepadName(0)).find("Xbox") != std::string::npos)
+    {
+        DrawTexturePro(m_xbox_texture, {0, 0, 800, 450}, {385, 200, 800, 450}, {400, 225}, 180., LIGHTGRAY);
+        DrawCircle(486, 275, 15., buttons[8] ? RED : BLACK);
+        DrawCircle(522, 310, 15., buttons[5] ? RED : BLACK);
+        DrawCircle(558, 275, 15., buttons[6] ? RED : BLACK);
+        DrawCircle(522, 239, 15., buttons[7] ? RED : BLACK);
 
-    DrawRectangle(301, 150, 22, 30, buttons[3] ? RED : BLACK);
-    DrawRectangle(272, 177, 30, 22, buttons[4] ? RED : BLACK);
-    DrawRectangle(301, 197, 22, 30, buttons[1] ? RED : BLACK);
-    DrawRectangle(321, 177, 30, 22, buttons[2] ? RED : BLACK);
+        DrawRectangle(301, 150, 22, 30, buttons[3] ? RED : BLACK);
+        DrawRectangle(272, 177, 30, 22, buttons[4] ? RED : BLACK);
+        DrawRectangle(301, 197, 22, 30, buttons[1] ? RED : BLACK);
+        DrawRectangle(321, 177, 30, 22, buttons[2] ? RED : BLACK);
 
-    DrawCircle(530, 360, 10., buttons[11] ? RED : BLACK);
-    DrawCircle(230, 360, 10., buttons[9] ? RED : BLACK);
-    DrawRectangle(610, 300, 30, axis[5] * 40 + 42, {static_cast<unsigned char>(axis[5] * 127 + 127), 0, 255, 255});
-    DrawRectangle(120, 300, 30, axis[4] * 40 + 42, {static_cast<unsigned char>(axis[4] * 127 + 127), 0, 255, 255});
+        DrawCircle(530, 360, 10., buttons[11] ? RED : BLACK);
+        DrawCircle(230, 360, 10., buttons[9] ? RED : BLACK);
+        DrawRectangle(610, 300, 30, axis[5] * 40 + 42, {static_cast<unsigned char>(axis[5] * 127 + 127), 0, 255, 255});
+        DrawRectangle(120, 300, 30, axis[4] * 40 + 42, {static_cast<unsigned char>(axis[4] * 127 + 127), 0, 255, 255});
 
-    DrawCircle(422, 275, 10., buttons[15] ? RED : BLACK);
-    DrawCircle(337, 275, 10., buttons[13] ? RED : BLACK);
-    DrawCircle(245 + axis[0] * 40, 273 - axis[1] * 40, 27., buttons[16] ? RED : GREEN);
-    DrawCircle(446 + axis[2] * 40, 188 - axis[3] * 40, 27., buttons[17] ? RED : GREEN);
-
+        DrawCircle(422, 275, 10., buttons[15] ? RED : BLACK);
+        DrawCircle(337, 275, 10., buttons[13] ? RED : BLACK);
+        DrawCircle(245 + axis[0] * 40, 273 - axis[1] * 40, 27., buttons[16] ? RED : GREEN);
+        DrawCircle(446 + axis[2] * 40, 188 - axis[3] * 40, 27., buttons[17] ? RED : GREEN);
+    } else {
+                DrawTexturePro(m_ps5_texture, {0, 0, 954, 674}, {385, 200, 800, 450}, {400, 225}, 180., WHITE);
+    }
     EndTextureMode();
     ImGui::Spacing();
     ImGui::Spacing();
