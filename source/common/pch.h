@@ -18,12 +18,12 @@
 #include <vector>
 
 #include <fmt/format.h>
+#include <lmdb.h>
 #include <spdlog/async.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 #include <toml++/toml.hpp>
-#include <lmdb.h>
 
 #if defined(_WIN32)
 #define NOGDI  // All GDI defines and routines
@@ -46,3 +46,11 @@
 #include "math/helpers.h"
 #include "math/vector.h"
 #include "services.h"
+
+#if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
+#define FORCEINLINE __attribute__((always_inline))
+#elif defined(_MSC_VER)
+#define FORCEINLINE __forceinline
+#else
+#define FORCEINLINE
+#endif

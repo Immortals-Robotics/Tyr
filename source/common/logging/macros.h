@@ -9,8 +9,8 @@ namespace Tyr::Common
     template <typename... Args>                                                                                        \
     struct fn                                                                                                          \
     {                                                                                                                  \
-        fn(spdlog::format_string_t<Args...> format, Args &&...args,                                                    \
-           std::source_location             source = std::source_location::current())                                  \
+        FORCEINLINE fn(spdlog::format_string_t<Args...> format, Args &&...args,                                        \
+                       std::source_location             source = std::source_location::current())                      \
         {                                                                                                              \
             logger().log(source, spdlog::level::lvl, format, std::forward<Args>(args)...);                             \
         }                                                                                                              \
