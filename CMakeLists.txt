@@ -30,7 +30,7 @@ endif()
 
 # enable multithreaded build in VS
 if(MSVC)
-	add_compile_options(/MP)
+	add_compile_options(/MP /utf-8)
 endif()
 
 add_subdirectory(source/protos)

@@ -25,11 +25,11 @@ void DemoMenu::draw()
         font->Scale       = 2;
         ImGui::PushFont(font);
         ImGui::Button("\uf07c", {100, 40});
-        ImGui::SameLine();
+        ImGui::SameLine(); 
         font->Scale = 1;
         ImGui::PushFont(font);
         ImGui::Text("Demo name");
-                ImGui::Spacing();
+        ImGui::Spacing();
         ImGui::Spacing();
 
         font->Scale = 1.8;
@@ -88,9 +88,13 @@ void DemoMenu::draw()
 
         ImGui::SetNextItemWidth(390.);
         ImGui::DragFloat("##timescrol", &m_playback_time, 0.01f, 0.0f, m_playback_size, "Fine Control");
-        ImGui::PopStyleColor(5);
+        ImGui::PopStyleColor(3);
 
         ImGui::PopFont();
+        ImGui::PopFont();
+        ImGui::PopFont();
+        ImGui::PopFont();
+
         ImGui::End();
     }
 }
