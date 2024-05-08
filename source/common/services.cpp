@@ -10,7 +10,7 @@
 
 namespace Tyr::Common
 {
-void Services::initialize()
+bool Services::initialize()
 {
     s_debug = new Debug();
 
@@ -21,7 +21,10 @@ void Services::initialize()
     s_setting = new Setting();
     s_setting->load(s_configReader->getRoot());
 
-    Storage::init(std::filesystem::path(LOG_DIR) / "db");
+    if (!Storage::init(std::filesystem::path(LOG_DIR) / "db"))
+    {
+        return false;
+    }
 
     s_debug->initStorage("debug");
 
@@ -32,6 +35,8 @@ void Services::initialize()
     s_raw_world_state = new RawWorldState();
     s_field_state     = new FieldState();
     s_referee_state   = new RefereeState();
+
+    return true;
 }
 
 void Services::saveConfig()

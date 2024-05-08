@@ -17,9 +17,10 @@ class Vision
 public:
     Vision();
 
-    void receive();
+    bool receive();
     void process();
     bool isConnected();
+    bool camsReady() const;
 
     void updateAddress(const Common::NetworkAddress& t_address);
 

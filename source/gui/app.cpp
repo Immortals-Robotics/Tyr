@@ -33,7 +33,10 @@ static void logCallback(const int msg_type, const char *const text, va_list args
 
 bool Application::initialize(const int width, const int height)
 {
-    Common::Services::initialize();
+    if (!Common::Services::initialize())
+    {
+        return false;
+    }
 
     if (!ImmortalsIsTheBest)
     {
@@ -79,11 +82,12 @@ bool Application::initialize(const int width, const int height)
     SetTraceLogCallback(logCallback);
 
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
+    SetTargetFPS(60);
     InitWindow(width, height, "Tyr");
-    SetTraceLogLevel(LOG_WARNING);
+    SetTraceLogLevel(LOG_ALL);
     rlImGuiSetup(true);
 
-    m_renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 4.0f);
+    m_renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 1.0f);
     m_config_menu = std::make_unique<ConfigMenu>();
     m_widget_menu = std::make_unique<WidgetMenu>();
     m_demo_menu   = std::make_unique<DemoMenu>();
@@ -103,12 +107,12 @@ int Application::shutdown()
     m_ref_thread.join();
     m_str_thread.join();
 
-    Common::Services::shutdown();
-
     rlImGuiShutdown();
 
     // Close window and OpenGL context
     CloseWindow();
+
+    Common::Services::shutdown();
 
     return 0;
 }
@@ -198,7 +202,11 @@ void Application::aiThreadEntry()
     {
         timer.start();
 
-        m_vision->receive();
+        while (m_running && !m_vision->camsReady())
+            m_vision->receive();
+
+        if (!m_vision->camsReady())
+            continue;
 
         m_ai_mutex.lock();
 
@@ -235,29 +243,31 @@ void Application::strategyThreadEntry()
 {
     while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
-        auto received_strategy = m_strategy_udp->receiveRaw();
-
-        if (received_strategy.size() > 11)
+        std::span<char> received_strategy;
+        if (m_strategy_udp->receiveRaw(&received_strategy))
         {
-            const auto receive_endpoint = m_strategy_udp->getLastReceiveEndpoint();
-            Common::logInfo("Received \"strategy.ims\" with size: {} KB, from {} on port {}",
-                            float(received_strategy.size()) / 1000.0f, receive_endpoint.address().to_string(),
-                            receive_endpoint.port());
+            if (received_strategy.size() > 11)
+            {
+                const auto receive_endpoint = m_strategy_udp->getLastReceiveEndpoint();
+                Common::logInfo("Received \"strategy.ims\" with size: {} KB, from {} on port {}",
+                                float(received_strategy.size()) / 1000.0f, receive_endpoint.address().to_string(),
+                                receive_endpoint.port());
 
-            m_ai_mutex.lock();
-            m_ai->read_playBook_str(received_strategy);
-            m_ai_mutex.unlock();
+                m_ai_mutex.lock();
+                m_ai->read_playBook_str(received_strategy);
+                m_ai_mutex.unlock();
 
-            const std::filesystem::path strategy_path =
-                std::filesystem::path{DATA_DIR} / std::filesystem::path{"strategy.ims"};
+                const std::filesystem::path strategy_path =
+                    std::filesystem::path{DATA_DIR} / std::filesystem::path{"strategy.ims"};
 
-            std::ofstream strategyFile(strategy_path, std::ios::out | std::ios::binary);
-            strategyFile.write(received_strategy.data(), received_strategy.size());
-            strategyFile.close();
-        }
-        else
-        {
-            Common::logWarning("Invalid \"strategy.ims\" received with size: {}", received_strategy.size());
+                std::ofstream strategyFile(strategy_path, std::ios::out | std::ios::binary);
+                strategyFile.write(received_strategy.data(), received_strategy.size());
+                strategyFile.close();
+            }
+            else
+            {
+                Common::logWarning("Invalid \"strategy.ims\" received with size: {}", received_strategy.size());
+            }
         }
     }
 }

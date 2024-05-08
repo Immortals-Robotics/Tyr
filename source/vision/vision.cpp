@@ -27,32 +27,29 @@ Vision::Vision()
     }
 }
 
-void Vision::receive()
+bool Vision::receive()
 {
     if (!isConnected())
     {
         Common::logCritical("Hey you! Put the LAN cable back in its socket, or ...");
-        return;
+        return false;
     }
 
-    bool cams_ready = false;
-    while (!cams_ready)
+    return receivePacket();
+}
+
+bool Vision::camsReady() const
+{
+    for (int i = 0; i < Common::Setting::kCamCount; i++)
     {
-        cams_ready = true;
-        for (int i = 0; i < Common::Setting::kCamCount; i++)
+        bool new_cam_ready = m_packet_received[i] || (!Common::setting().use_camera[i]);
+        if (!new_cam_ready)
         {
-            bool new_cam_ready = m_packet_received[i] || (!Common::setting().use_camera[i]);
-            if (!new_cam_ready)
-            {
-                cams_ready = false;
-                break;
-            }
+            return false;
         }
-        if (cams_ready)
-            break;
-
-        receivePacket();
     }
+
+    return true;
 }
 
 void Vision::process()

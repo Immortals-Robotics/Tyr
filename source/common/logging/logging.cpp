@@ -21,6 +21,7 @@ Logger::Logger()
     m_logger = std::make_shared<spdlog::async_logger>("default", spdlog::sinks_init_list{console_sink, debug_sink},
                                                       spdlog::thread_pool(), spdlog::async_overflow_policy::block);
     m_logger->set_level(spdlog::level::debug);
+    m_logger->flush_on(spdlog::level::err);
     spdlog::register_logger(m_logger);
 }
 } // namespace Tyr::Common
