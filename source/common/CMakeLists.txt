@@ -14,6 +14,7 @@ set(HEADER_FILES
 	config/config.h
 	debugging/color.h
 	debugging/debug.h
+	logging/debug_sink.h
 	logging/logging.h
 	logging/macros.h
 	math/angle.h

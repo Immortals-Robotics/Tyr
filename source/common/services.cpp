@@ -12,15 +12,18 @@ namespace Tyr::Common
 {
 void Services::initialize()
 {
-    s_logger       = new Logger();
-    s_configReader = new ConfigReader("config.toml");
+    s_debug = new Debug();
 
-    Storage::init(std::filesystem::path(LOG_DIR) / "db");
+    s_logger = new Logger();
+
+    s_configReader = new ConfigReader("config.toml");
 
     s_setting = new Setting();
     s_setting->load(s_configReader->getRoot());
 
-    s_debug = new Debug(s_setting->enable_debug);
+    Storage::init(std::filesystem::path(LOG_DIR) / "db");
+
+    s_debug->initStorage("debug");
 
     s_global_timer = new Timer();
     s_global_timer->start();
@@ -45,9 +48,9 @@ void Services::shutdown()
 
     Storage::shutdown();
 
-    delete s_setting;
-    delete s_debug;
     delete s_global_timer;
+    delete s_setting;
     delete s_logger;
+    delete s_debug;
 }
 } // namespace Tyr::Common

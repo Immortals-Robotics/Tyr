@@ -19,6 +19,7 @@ public:
         SourceLocation() = default;
 
         SourceLocation(const std::source_location &t_source);
+        SourceLocation(const spdlog::source_loc &t_source);
         SourceLocation(const Protos::Immortals::Debug::SourceLocation &t_source);
 
         void fillProto(Protos::Immortals::Debug::SourceLocation *t_source) const;
@@ -56,15 +57,17 @@ public:
         Level            level;
         SourceLocation   source;
         std::string_view logger_name;
-        Color            color;
 
-        std::string payload;
+        std::string text;
 
         Log() = default;
 
         Log(const Protos::Immortals::Debug::Log &t_log);
+        Log(const spdlog::details::log_msg &t_msg);
 
         void fillProto(Protos::Immortals::Debug::Log *t_log) const;
+
+        Color color() const;
     };
 
     struct Wrapper
@@ -99,17 +102,19 @@ public:
     void draw(const Triangle &t_triangle, Color t_color = Color::white(), bool t_filled = true,
               float t_thickness = 1.0f, std::source_location source = std::source_location::current());
 
+    void log(const Log& t_log);
+
     const Wrapper &wrapper() const
     {
         return m_wrapper;
     }
 
-protected:
-    bool m_enabled;
 
 private:
-    Debug(bool t_enabled);
+    Debug() = default;
     ~Debug();
+
+    void initStorage(std::string_view t_name);
 
     friend struct Services;
 
