@@ -122,6 +122,13 @@ Debug::Debug(const bool t_enabled)
     {
         logWarning("Debugger is enabled");
     }
+
+    m_storage.open("debug");
+}
+
+Debug::~Debug()
+{
+    m_storage.close();
 }
 
 void Debug::flip()
@@ -130,6 +137,10 @@ void Debug::flip()
     m_wrapper_off.timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
 
     std::swap(m_wrapper, m_wrapper_off);
+
+    Protos::Immortals::Debug::Wrapper pb_wrapper;
+    m_wrapper.fillProto(&pb_wrapper);
+    m_storage.store(m_wrapper.timestamp, pb_wrapper);
 
     m_wrapper_off.draws.clear();
     m_wrapper_off.logs.clear();

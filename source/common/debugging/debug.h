@@ -2,6 +2,7 @@
 
 #include "../math/vector.h"
 #include "../state/world.h"
+#include "../storage/storage.h"
 #include "color.h"
 
 namespace Tyr::Common
@@ -108,11 +109,13 @@ protected:
 
 private:
     Debug(bool t_enabled);
-    ~Debug() = default;
+    ~Debug();
 
     friend struct Services;
 
     Wrapper m_wrapper;
     Wrapper m_wrapper_off;
+
+    Storage m_storage;
 };
 } // namespace Tyr::Common
