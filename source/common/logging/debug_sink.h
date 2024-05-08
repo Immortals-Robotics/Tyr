@@ -17,7 +17,7 @@ protected:
         Debug::Log log{msg};
         log.text = fmt::to_string(formatted);
 
-        debug().log(log);
+        debug().log(std::move(log));
     }
     void flush_() override
     {}

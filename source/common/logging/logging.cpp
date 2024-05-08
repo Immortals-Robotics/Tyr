@@ -4,6 +4,11 @@
 
 namespace Tyr::Common
 {
+void Logger::flush()
+{
+    m_logger->flush();
+}
+
 Logger::Logger()
 {
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();

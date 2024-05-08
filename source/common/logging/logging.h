@@ -13,6 +13,8 @@ public:
         m_logger->log(source_loc, level, format, std::forward<Args>(args)...);
     }
 
+    void flush();
+
 protected:
     Logger();
     ~Logger() = default;
