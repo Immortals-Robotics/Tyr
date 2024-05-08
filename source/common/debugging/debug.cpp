@@ -9,6 +9,13 @@ Debug::SourceLocation::SourceLocation(const std::source_location &t_source)
     line     = t_source.line();
 }
 
+Debug::SourceLocation::SourceLocation(const spdlog::source_loc &t_source)
+{
+    file     = t_source.filename;
+    function = t_source.funcname;
+    line     = t_source.line;
+}
+
 Debug::SourceLocation::SourceLocation(const Protos::Immortals::Debug::SourceLocation &t_source)
 {
     file     = t_source.file();
@@ -84,8 +91,14 @@ Debug::Log::Log(const Protos::Immortals::Debug::Log &t_log)
     level       = (Level) t_log.level();
     source      = t_log.source();
     logger_name = t_log.logger();
-    color       = t_log.color();
-    payload     = t_log.payload();
+    text        = t_log.text();
+}
+
+Debug::Log::Log(const spdlog::details::log_msg &t_msg)
+{
+    level       = (Level) t_msg.level;
+    source      = t_msg.source;
+    logger_name = {t_msg.logger_name.data(), t_msg.logger_name.size()};
 }
 
 void Debug::Log::fillProto(Protos::Immortals::Debug::Log *t_log) const
@@ -93,8 +106,28 @@ void Debug::Log::fillProto(Protos::Immortals::Debug::Log *t_log) const
     t_log->set_level((Protos::Immortals::Debug::Log_Level) level);
     source.fillProto(t_log->mutable_source());
     t_log->set_logger(logger_name.data(), logger_name.size());
-    color.fillProto(t_log->mutable_color());
-    t_log->set_payload(payload);
+    t_log->set_text(text);
+}
+
+Color Debug::Log::color() const
+{
+    switch (level)
+    {
+    case Level::Trace:
+        return Color::gray();
+    case Level::Debug:
+        return Color::blue();
+    case Level::Info:
+        return Color::green();
+    case Level::Warning:
+        return Color::yellow();
+    case Level::Error:
+        return Color::orange();
+    case Level::Critical:
+        return Color::red();
+    default:
+        return Color::white();
+    }
 }
 
 Debug::Wrapper::Wrapper(const Protos::Immortals::Debug::Wrapper &t_wrapper)
@@ -115,20 +148,14 @@ void Debug::Wrapper::fillProto(Protos::Immortals::Debug::Wrapper *t_wrapper) con
         log.fillProto(t_wrapper->add_log());
 }
 
-Debug::Debug(const bool t_enabled)
-{
-    m_enabled = t_enabled;
-    if (m_enabled)
-    {
-        logWarning("Debugger is enabled");
-    }
-
-    m_storage.open("debug");
-}
-
 Debug::~Debug()
 {
     m_storage.close();
+}
+
+void Debug::initStorage(const std::string_view t_name)
+{
+    m_storage.open(t_name);
 }
 
 void Debug::flip()
@@ -216,5 +243,9 @@ void Debug::draw(const Triangle &t_triangle, const Color t_color, const bool t_f
     draw.thickness = t_thickness;
 
     m_wrapper_off.draws.push_back(draw);
+}
+void Debug::log(const Log &t_log)
+{
+    m_wrapper.logs.push_back(t_log);
 }
 } // namespace Tyr::Common
