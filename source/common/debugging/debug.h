@@ -54,9 +54,9 @@ public:
             Critical = SPDLOG_LEVEL_CRITICAL,
         };
 
-        Level            level;
-        SourceLocation   source;
-        std::string_view logger_name;
+        Level          level;
+        SourceLocation source;
+        std::string    logger_name;
 
         std::string text;
 
@@ -102,13 +102,12 @@ public:
     void draw(const Triangle &t_triangle, Color t_color = Color::white(), bool t_filled = true,
               float t_thickness = 1.0f, std::source_location source = std::source_location::current());
 
-    void log(const Log& t_log);
+    void log(const Log &t_log);
 
     const Wrapper &wrapper() const
     {
         return m_wrapper;
     }
-
 
 private:
     Debug() = default;
@@ -122,5 +121,7 @@ private:
     Wrapper m_wrapper_off;
 
     Storage m_storage;
+
+    std::mutex m_log_mutex;
 };
 } // namespace Tyr::Common

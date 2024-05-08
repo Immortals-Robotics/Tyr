@@ -105,7 +105,7 @@ void Debug::Log::fillProto(Protos::Immortals::Debug::Log *t_log) const
 {
     t_log->set_level((Protos::Immortals::Debug::Log_Level) level);
     source.fillProto(t_log->mutable_source());
-    t_log->set_logger(logger_name.data(), logger_name.size());
+    t_log->set_logger(logger_name);
     t_log->set_text(text);
 }
 
@@ -160,6 +160,10 @@ void Debug::initStorage(const std::string_view t_name)
 
 void Debug::flip()
 {
+    logger().flush();
+
+    m_log_mutex.lock();
+
     const auto now          = std::chrono::system_clock::now();
     m_wrapper_off.timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
 
@@ -171,6 +175,8 @@ void Debug::flip()
 
     m_wrapper_off.draws.clear();
     m_wrapper_off.logs.clear();
+
+    m_log_mutex.unlock();
 }
 
 void Debug::draw(const Vec2 t_pos, const Color t_color, const std::source_location source)
@@ -246,6 +252,8 @@ void Debug::draw(const Triangle &t_triangle, const Color t_color, const bool t_f
 }
 void Debug::log(const Log &t_log)
 {
-    m_wrapper.logs.push_back(t_log);
+    m_log_mutex.lock();
+    m_wrapper_off.logs.push_back(t_log);
+    m_log_mutex.unlock();
 }
 } // namespace Tyr::Common
