@@ -82,12 +82,11 @@ bool Application::initialize(const int width, const int height)
     SetTraceLogCallback(logCallback);
 
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
-    SetTargetFPS(60);
     InitWindow(width, height, "Tyr");
     SetTraceLogLevel(LOG_ALL);
     rlImGuiSetup(true);
 
-    m_renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 1.0f);
+    m_renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 4.0f);
     m_config_menu = std::make_unique<ConfigMenu>();
     m_widget_menu = std::make_unique<WidgetMenu>();
     m_demo_menu   = std::make_unique<DemoMenu>();

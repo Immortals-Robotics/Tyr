@@ -24,4 +24,8 @@ Logger::Logger()
     m_logger->flush_on(spdlog::level::err);
     spdlog::register_logger(m_logger);
 }
+Logger::~Logger()
+{
+    flush();
+}
 } // namespace Tyr::Common

@@ -17,7 +17,7 @@ public:
 
 protected:
     Logger();
-    ~Logger() = default;
+    ~Logger();
 
     friend struct Services;
 
