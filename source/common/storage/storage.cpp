@@ -4,6 +4,57 @@
 
 namespace Tyr::Common
 {
+static constexpr std::string_view getErrorString(const int t_error)
+{
+    switch (t_error)
+    {
+    case MDB_SUCCESS:
+        return "MDB_SUCCESS";
+    case MDB_KEYEXIST:
+        return "MDB_KEYEXIST";
+    case MDB_NOTFOUND:
+        return "MDB_NOTFOUND";
+    case MDB_PAGE_NOTFOUND:
+        return "MDB_PAGE_NOTFOUND";
+    case MDB_CORRUPTED:
+        return "MDB_CORRUPTED";
+    case MDB_PANIC:
+        return "MDB_PANIC";
+    case MDB_VERSION_MISMATCH:
+        return "MDB_VERSION_MISMATCH";
+    case MDB_INVALID:
+        return "MDB_INVALID";
+    case MDB_MAP_FULL:
+        return "MDB_MAP_FULL";
+    case MDB_DBS_FULL:
+        return "MDB_DBS_FULL";
+    case MDB_READERS_FULL:
+        return "MDB_READERS_FULL";
+    case MDB_TLS_FULL:
+        return "MDB_TLS_FULL";
+    case MDB_TXN_FULL:
+        return "MDB_TXN_FULL";
+    case MDB_CURSOR_FULL:
+        return "MDB_CURSOR_FULL";
+    case MDB_PAGE_FULL:
+        return "MDB_PAGE_FULL";
+    case MDB_MAP_RESIZED:
+        return "MDB_MAP_RESIZED";
+    case MDB_INCOMPATIBLE:
+        return "MDB_INCOMPATIBLE";
+    case MDB_BAD_RSLOT:
+        return "MDB_BAD_RSLOT";
+    case MDB_BAD_TXN:
+        return "MDB_BAD_TXN";
+    case MDB_BAD_VALSIZE:
+        return "MDB_BAD_VALSIZE";
+    case MDB_BAD_DBI:
+        return "MDB_BAD_DBI";
+    default:
+        return std::strerror(t_error);
+    }
+}
+
 bool Storage::init(const std::filesystem::path &t_path)
 {
     // create output directory if not exists
@@ -22,28 +73,28 @@ bool Storage::init(const std::filesystem::path &t_path)
     result = mdb_env_create(&s_env);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb env creation failed with: {}", result);
+        Common::logCritical("lmdb env creation failed with: {}", getErrorString(result));
         return false;
     }
 
     result = mdb_env_set_maxdbs(s_env, kMaxDbCount);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb env maxdb setter failed with: {}", result);
+        Common::logCritical("lmdb env maxdb setter failed with: {}", getErrorString(result));
         return false;
     }
 
     result = mdb_env_set_mapsize(s_env, kMapSize);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb env map size setter failed with: {}", result);
+        Common::logCritical("lmdb env map size setter failed with: {}", getErrorString(result));
         return false;
     }
 
     result = mdb_env_open(s_env, t_path.string().c_str(), 0, 0664);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb env open in \"{}\" failed with: {}", t_path.string(), result);
+        Common::logCritical("lmdb env open in \"{}\" failed with: {}", t_path.string(), getErrorString(result));
         return false;
     }
 
@@ -66,7 +117,7 @@ bool Storage::open(std::string_view t_name)
     result = mdb_txn_begin(s_env, nullptr, 0, &transaction);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb transaction begin failed with: {}", result);
+        Common::logCritical("lmdb transaction begin failed with: {}", getErrorString(result));
         return false;
     }
 
@@ -76,7 +127,7 @@ bool Storage::open(std::string_view t_name)
     result = mdb_dbi_open(transaction, name_str.c_str(), MDB_INTEGERKEY | MDB_CREATE, &m_dbi);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb db \"{}\" open failed with: {}", t_name, result);
+        Common::logCritical("lmdb db \"{}\" open failed with: {}", t_name, getErrorString(result));
         return false;
     }
 
@@ -84,7 +135,7 @@ bool Storage::open(std::string_view t_name)
     result = mdb_txn_commit(transaction);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb transaction commit failed with: {}", result);
+        Common::logCritical("lmdb transaction commit failed with: {}", getErrorString(result));
         return false;
     }
 
@@ -104,7 +155,7 @@ bool Storage::get(Key t_key, google::protobuf::MessageLite *t_message) const
     result = mdb_txn_begin(s_env, nullptr, MDB_RDONLY, &transaction);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb readonly transaction begin failed with: {}", result);
+        Common::logError("lmdb readonly transaction begin failed with: {}", getErrorString(result));
         return false;
     }
 
@@ -116,7 +167,7 @@ bool Storage::get(Key t_key, google::protobuf::MessageLite *t_message) const
     result = mdb_get(transaction, m_dbi, &mdb_key, &mdb_data);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb get [{}] failed with: {}", t_key, result);
+        Common::logError("lmdb get [{}] failed with: {}", t_key, getErrorString(result));
         return false;
     }
 
@@ -140,7 +191,7 @@ bool Storage::store(Key t_key, const google::protobuf::MessageLite &t_message)
     result = mdb_txn_begin(s_env, nullptr, 0, &transaction);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb read/write transaction begin failed with: {}", result);
+        Common::logError("lmdb read/write transaction begin failed with: {}", getErrorString(result));
         return false;
     }
 
@@ -159,7 +210,8 @@ bool Storage::store(Key t_key, const google::protobuf::MessageLite &t_message)
     result = mdb_put(transaction, m_dbi, &mdb_key, &mdb_data, MDB_RESERVE);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb dry put for key [{}] with size {} failed with: {}", t_key, message_size, result);
+        Common::logError("lmdb dry put for key [{}] with size {} failed with: {}", t_key, message_size,
+                         getErrorString(result));
         return false;
     }
 
@@ -173,14 +225,15 @@ bool Storage::store(Key t_key, const google::protobuf::MessageLite &t_message)
     result = mdb_put(transaction, m_dbi, &mdb_key, &mdb_data, 0);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb put for key [{}] with size {} failed with: {}", t_key, message_size, result);
+        Common::logError("lmdb put for key [{}] with size {} failed with: {}", t_key, message_size,
+                         getErrorString(result));
         return false;
     }
 
     result = mdb_txn_commit(transaction);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb transaction commit failed with: {}", result);
+        Common::logError("lmdb transaction commit failed with: {}", getErrorString(result));
         return false;
     }
 
