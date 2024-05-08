@@ -10,10 +10,10 @@ WidgetMenu::WidgetMenu()
                        "leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,rightshoulder:b7,rightstick:b14,"
                        "righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Mac OS X,");
 #endif
+    const std::filesystem::path data_dir(DATA_DIR);
+    const std::filesystem::path xbox_texture_dir = data_dir / "xbox.png";
 
-    m_lstick_texture  = LoadRenderTexture(150., 150.);
-    m_rstick_texture  = LoadRenderTexture(150., 150.);
-    m_buttons_texture = LoadRenderTexture(385., 200.);
+    m_joystick_texture = LoadRenderTexture(770., 400.);
 
     m_udp        = std::make_unique<Common::UdpServer>();
     m_ref_packet = std::make_unique<Protos::Referee>();
@@ -25,19 +25,16 @@ WidgetMenu::WidgetMenu()
     m_team_info.set_timeouts(0);
     m_team_info.set_timeout_time(0);
     m_team_info.set_goalkeeper(Common::setting().init_gk_id);
+
+    m_xbox_texture = LoadTexture(xbox_texture_dir.string().c_str());
 }
 
 void WidgetMenu::drawJoystick()
 {
-    ImGui::Spacing();
-    ImGui::Spacing();
-    ImGui::Separator();
-    const char *controller_choices[] = {"Disable", "Referee", "Robot Control"};
-    ImGui::Combo("Mode", &m_controller_mode, controller_choices, IM_ARRAYSIZE(controller_choices));
-
-    int                      axis_count = GetGamepadAxisCount(0);
-    std::unique_ptr<float[]> axis       = std::make_unique<float[]>(axis_count);
-    std::unique_ptr<float[]> buttons    = std::make_unique<float[]>(18);
+    const char              *controller_choices[] = {"Disable", "Referee", "Robot Control"};
+    int                      axis_count           = GetGamepadAxisCount(0);
+    std::unique_ptr<float[]> axis                 = std::make_unique<float[]>(axis_count);
+    std::unique_ptr<float[]> buttons              = std::make_unique<float[]>(18);
 
     for (auto i = 0; i < axis_count; i++)
     {
@@ -49,60 +46,38 @@ void WidgetMenu::drawJoystick()
         buttons[i] = IsGamepadButtonDown(0, i);
     }
 
-    BeginTextureMode(m_lstick_texture);
+    BeginTextureMode(m_joystick_texture);
     ClearBackground(BLACK);
-    DrawCircle(75, 75, 75., LIGHTGRAY);
-    DrawCircle(axis[0] * 50 + 75, axis[1] * -50 + 75, 15., BLUE);
-    EndTextureMode();
+    DrawTexturePro(m_xbox_texture, {0, 0, 800, 450}, {385, 200, 800, 450}, {400, 225}, 180., LIGHTGRAY);
+    DrawCircle(486, 275, 15., buttons[8] ? RED : BLACK);
+    DrawCircle(522, 310, 15., buttons[5] ? RED : BLACK);
+    DrawCircle(558, 275, 15., buttons[6] ? RED : BLACK);
+    DrawCircle(522, 239, 15., buttons[7] ? RED : BLACK);
 
-    BeginTextureMode(m_rstick_texture);
-    ClearBackground(BLACK);
-    DrawCircle(75, 75, 75., LIGHTGRAY);
-    DrawCircle(axis[2] * 50 + 75, axis[3] * -50 + 75, 15., RED);
-    EndTextureMode();
+    DrawRectangle(301, 150, 22, 30, buttons[3] ? RED : BLACK);
+    DrawRectangle(272, 177, 30, 22, buttons[4] ? RED : BLACK);
+    DrawRectangle(301, 197, 22, 30, buttons[1] ? RED : BLACK);
+    DrawRectangle(321, 177, 30, 22, buttons[2] ? RED : BLACK);
 
-    ImGui::BeginGroup();
-    ImGui::Image(&m_lstick_texture.texture, {75, 75});
-    ImGui::Text("Left stick");
-    ImGui::EndGroup();
-    ImGui::SameLine();
-    ImGui::Spacing();
-    ImGui::SameLine();
-    ImGui::BeginGroup();
-    ImGui::Image(&m_rstick_texture.texture, {75, 75});
-    ImGui::Text("Right stick");
-    ImGui::EndGroup();
-    ImGui::ProgressBar(axis[4] / 2. + 0.5, ImVec2(0.0f, 0.0f), "L2");
-    ImGui::ProgressBar(axis[5] / 2. + 0.5, ImVec2(0.0f, 0.0f), "R2");
+    DrawCircle(530, 360, 10., buttons[11] ? RED : BLACK);
+    DrawCircle(230, 360, 10., buttons[9] ? RED : BLACK);
+    DrawRectangle(610, 300, 30, axis[5] * 40 + 42, {static_cast<unsigned char>(axis[5] * 127 + 127), 0, 255, 255});
+    DrawRectangle(120, 300, 30, axis[4] * 40 + 42, {static_cast<unsigned char>(axis[4] * 127 + 127), 0, 255, 255});
 
-    BeginTextureMode(m_buttons_texture);
-    ClearBackground(LIGHTGRAY);
-    DrawCircle(270, 70, 14., buttons[8] ? RED : DARKGRAY);
-    DrawCircle(310, 110, 14., buttons[5] ? RED : DARKGRAY);
-    DrawCircle(350, 70, 14., buttons[6] ? RED : DARKGRAY);
-    DrawCircle(310, 30, 14., buttons[7] ? RED : DARKGRAY);
-
-    DrawRectangle(80, 20, 20, 40, buttons[3] ? RED : DARKGRAY);
-    DrawRectangle(40, 60, 40, 20, buttons[4] ? RED : DARKGRAY);
-    DrawRectangle(80, 80, 20, 40, buttons[1] ? RED : DARKGRAY);
-    DrawRectangle(100, 60, 40, 20, buttons[2] ? RED : DARKGRAY);
-
-    DrawRectangle(70, 160, 40, 30, {static_cast<unsigned char>(axis[4] * 127 + 127), 0, 40, 255});
-    DrawRectangle(70, 130, 40, 20, buttons[9] ? RED : DARKGRAY);
-    DrawRectangle(290, 160, 40, 30, {static_cast<unsigned char>(axis[5] * 127 + 127), 0, 40, 255});
-    DrawRectangle(290, 130, 40, 20, buttons[11] ? RED : DARKGRAY);
-
-    DrawRectangle(140, 110, 20, 10, buttons[13] ? RED : DARKGRAY);
-    DrawRectangle(170, 110, 20, 10, buttons[15] ? RED : DARKGRAY);
-
-    DrawCircle(35, 130, 27., buttons[16] ? RED : DARKGRAY);
-    DrawCircle(230, 30, 27., buttons[17] ? RED : DARKGRAY);
+    DrawCircle(422, 275, 10., buttons[15] ? RED : BLACK);
+    DrawCircle(337, 275, 10., buttons[13] ? RED : BLACK);
+    DrawCircle(245 + axis[0] * 40, 273 - axis[1] * 40, 27., buttons[16] ? RED : GREEN);
+    DrawCircle(446 + axis[2] * 40, 188 - axis[3] * 40, 27., buttons[17] ? RED : GREEN);
 
     EndTextureMode();
     ImGui::Spacing();
     ImGui::Spacing();
     ImGui::Separator();
-    ImGui::Image(&m_buttons_texture.texture, {385, 200});
+    ImGui::Image(&m_joystick_texture.texture, {385, 220});
+    ImGui::Spacing();
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Combo("Mode", &m_controller_mode, controller_choices, IM_ARRAYSIZE(controller_choices));
 }
 
 void WidgetMenu::drawControllerTab()
@@ -213,7 +188,7 @@ void WidgetMenu::draw(Common::Vec2 _mouse_pos)
     }
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
     ImGui::SetNextWindowPos(ImVec2(main_window_width - 400., 0));
-    ImGui::SetNextWindowSize(ImVec2(400., main_window_height * 0.7));
+    ImGui::SetNextWindowSize(ImVec2(400., 400.));
     if (ImGui::Begin("Widgets", nullptr, window_flags))
     {
         drawTabBar();

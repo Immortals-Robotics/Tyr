@@ -9,6 +9,9 @@ set(HEADER_FILES
 	app.h
 	renderer/renderer.h
 	menu/config_menu.h
+	menu/widget_menu.h
+	menu/demo_menu.h
+	menu/log_menu.h
 )
 
 set(SOURCE_FILES
@@ -16,6 +19,8 @@ set(SOURCE_FILES
 	app.cpp
 	menu/config_menu.cpp
 	menu/widget_menu.cpp
+	menu/demo_menu.cpp
+	menu/log_menu.cpp
 	renderer/renderer_ball.cpp
 	renderer/renderer_robot.cpp
 	renderer/renderer.cpp

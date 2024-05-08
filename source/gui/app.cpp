@@ -86,6 +86,8 @@ bool Application::initialize(const int width, const int height)
     m_renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 4.0f);
     m_config_menu = std::make_unique<ConfigMenu>();
     m_widget_menu = std::make_unique<WidgetMenu>();
+    m_demo_menu   = std::make_unique<DemoMenu>();
+    m_log_menu    = std::make_unique<LogMenu>();
 
     m_renderer->initialize();
 
@@ -134,6 +136,10 @@ void Application::update()
     auto main_window_height = GetScreenHeight();
     auto main_window_width  = GetScreenWidth();
     ImGui::SetNextWindowPos(ImVec2(250., 0.));
+    if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
+    {
+        main_window_width = (main_window_height - 200.) / 0.77 + 650.;
+    }
     ImGui::SetNextWindowSize(ImVec2(main_window_width - 650., (main_window_width - 650.) * 0.77));
 
     if (!ImGui::Begin("Field", &opened, renderer_window_flags))
@@ -163,17 +169,17 @@ void Application::update()
 
         m_drawing_mutex.lock();
         m_renderer->draw(Common::debug().wrapper());
+        m_log_menu->draw(Common::debug().wrapper());
         m_drawing_mutex.unlock();
 
         m_renderer->applyShader();
-        // Common::logDebug("AV {}  {} pos {} {}", ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y,
-        // main_window_width - 650., main_window_height * 0.8);
         ImGui::Image(&m_renderer->shader_rt.texture, ImGui::GetContentRegionAvail());
         ImGui::End();
     }
     // end ImGui Content
     m_config_menu->draw();
     m_widget_menu->draw(m_renderer->getMousePosition());
+    m_demo_menu->draw();
     rlImGuiEnd();
 
     EndDrawing();

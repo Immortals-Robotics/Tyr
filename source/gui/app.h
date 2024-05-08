@@ -4,8 +4,9 @@
 
 #include "menu/config_menu.h"
 #include "menu/widget_menu.h"
+#include "menu/demo_menu.h"
+#include "menu/log_menu.h"
 #include "renderer/renderer.h"
-
 namespace Tyr::Gui
 {
 class Application
@@ -24,6 +25,8 @@ private:
     std::unique_ptr<Renderer>   m_renderer;
     std::unique_ptr<ConfigMenu> m_config_menu;
     std::unique_ptr<WidgetMenu> m_widget_menu;
+    std::unique_ptr<DemoMenu>   m_demo_menu;
+    std::unique_ptr<LogMenu>    m_log_menu;
 
     std::unique_ptr<Common::UdpClient> m_strategy_udp;
 
