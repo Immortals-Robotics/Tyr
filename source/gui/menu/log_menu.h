@@ -12,7 +12,6 @@ private:
     int m_filter_level = 0;
 
     void drawTerminal(const Common::Debug::Wrapper &t_wrapper);
-    bool applyFilter(const Tyr::Common::Debug::Log::Level t_level);
 
 public:
     void draw(const Common::Debug::Wrapper &t_wrapper);

@@ -2,18 +2,6 @@
 namespace Tyr::Gui
 {
 
-bool LogMenu::applyFilter(const Tyr::Common::Debug::Log::Level t_level)
-{
-    if (static_cast<int>(t_level) >= m_filter_level)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
 void LogMenu::drawTerminal(const Common::Debug::Wrapper &t_wrapper)
 {
     const char *filter_choices[] = {"Trace - 0", "Debug - 1", "Info - 2", "Warning - 3", "Error - 4", "Critical - 5"};
@@ -25,7 +13,7 @@ void LogMenu::drawTerminal(const Common::Debug::Wrapper &t_wrapper)
     {
         for (const auto &line : t_wrapper.logs)
         {
-            if (applyFilter(line.level))
+            if (static_cast<int>(line.level) >= m_filter_level)
             {
                 Common::Color color = line.color();
                 ImVec4        line_color(color.r / 255., color.g / 255., color.b / 255., color.a / 255.);
