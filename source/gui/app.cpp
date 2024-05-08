@@ -86,6 +86,7 @@ bool Application::initialize(const int width, const int height)
     m_renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 4.0f);
     m_config_menu = std::make_unique<ConfigMenu>();
     m_widget_menu = std::make_unique<WidgetMenu>();
+    m_demo_menu   = std::make_unique<DemoMenu>();
 
     m_renderer->initialize();
 
@@ -134,6 +135,10 @@ void Application::update()
     auto main_window_height = GetScreenHeight();
     auto main_window_width  = GetScreenWidth();
     ImGui::SetNextWindowPos(ImVec2(250., 0.));
+    if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
+    {
+        main_window_width = (main_window_height - 200.) / 0.77 + 650.;
+    }
     ImGui::SetNextWindowSize(ImVec2(main_window_width - 650., (main_window_width - 650.) * 0.77));
 
     if (!ImGui::Begin("Field", &opened, renderer_window_flags))
@@ -174,6 +179,7 @@ void Application::update()
     // end ImGui Content
     m_config_menu->draw();
     m_widget_menu->draw(m_renderer->getMousePosition());
+    m_demo_menu->draw();
     rlImGuiEnd();
 
     EndDrawing();
