@@ -33,6 +33,7 @@ private:
     Common::Vec2 m_mouse_pos;
     Common::Vec2 m_clicked_mouse_pos = {0.,0.};
     Texture2D m_xbox_texture;
+    Texture2D m_ps5_texture;
 public:
     WidgetMenu();
     ~WidgetMenu() = default;
