@@ -50,6 +50,8 @@ void WidgetMenu::drawJoystick()
 
     BeginTextureMode(m_joystick_texture);
     ClearBackground(BLACK);
+    Color transparent = {.r = 0, .g = 0, .b = 0, .a = 0};
+
     if (std::string(GetGamepadName(0)).find("Xbox") != std::string::npos)
     {
         DrawTexturePro(m_xbox_texture, {0, 0, 800, 450}, {385, 200, 800, 450}, {400, 225}, 180., LIGHTGRAY);
@@ -72,8 +74,31 @@ void WidgetMenu::drawJoystick()
         DrawCircle(337, 275, 10., buttons[13] ? RED : BLACK);
         DrawCircle(245 + axis[0] * 40, 273 - axis[1] * 40, 27., buttons[16] ? RED : GREEN);
         DrawCircle(446 + axis[2] * 40, 188 - axis[3] * 40, 27., buttons[17] ? RED : GREEN);
-    } else {
-                DrawTexturePro(m_ps5_texture, {0, 0, 954, 674}, {385, 200, 800, 450}, {400, 225}, 180., WHITE);
+    }
+    else
+    {
+        DrawTexturePro(m_ps5_texture, {0, 0, 954, 674}, {385, 200, 800, 450}, {400, 225}, 180., WHITE);
+        DrawCircle(547, 270, 15., buttons[8] ? RED : transparent);
+        DrawCircle(597, 310, 15., buttons[5] ? RED : transparent);
+        DrawCircle(647, 270, 15., buttons[6] ? RED : transparent);
+        DrawCircle(597, 230, 15., buttons[7] ? RED : transparent);
+
+        DrawRectangle(162, 290, 20, 20, buttons[1] ? RED : transparent);
+        DrawRectangle(122, 260, 20, 20, buttons[4] ? RED : transparent);
+        DrawRectangle(162, 230, 20, 20, buttons[3] ? RED : transparent);
+        DrawRectangle(202, 260, 20, 20, buttons[2] ? RED : transparent);
+
+        DrawCircle(590, 365, 10., buttons[11] ? RED : transparent);
+        DrawCircle(180, 365, 10., buttons[9] ? RED : transparent);
+
+        DrawRectangle(695, 300, 30, axis[5] * 40 + 42, {static_cast<unsigned char>(axis[5] * 127 + 127), 0, 255, 255});
+        DrawRectangle(40, 300, 30, axis[4] * 40 + 42, {static_cast<unsigned char>(axis[4] * 127 + 127), 0, 255, 255});
+
+        DrawCircle(545, 330, 10., buttons[15] ? RED : transparent);
+        DrawCircle(225, 330, 10., buttons[13] ? RED : transparent);
+
+        DrawCircle(275 + axis[0] * 40, 195 - axis[1] * 40, 27., buttons[16] ? RED : GREEN);
+        DrawCircle(495 + axis[2] * 40, 195 - axis[3] * 40, 27., buttons[17] ? RED : GREEN);
     }
     EndTextureMode();
     ImGui::Spacing();
