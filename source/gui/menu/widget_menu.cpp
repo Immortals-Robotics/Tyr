@@ -12,6 +12,7 @@ WidgetMenu::WidgetMenu()
 #endif
     const std::filesystem::path data_dir(DATA_DIR);
     const std::filesystem::path xbox_texture_dir = data_dir / "xbox.png";
+    const std::filesystem::path ps5_texture_dir = data_dir / "ps5.png";
 
     m_joystick_texture = LoadRenderTexture(770., 400.);
 
@@ -27,6 +28,7 @@ WidgetMenu::WidgetMenu()
     m_team_info.set_goalkeeper(Common::setting().init_gk_id);
 
     m_xbox_texture = LoadTexture(xbox_texture_dir.string().c_str());
+    m_ps5_texture = LoadTexture(ps5_texture_dir.string().c_str());
 }
 
 void WidgetMenu::drawJoystick()
