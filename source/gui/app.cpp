@@ -169,11 +169,10 @@ void Application::update()
 
         m_drawing_mutex.lock();
         m_renderer->draw(Common::debug().wrapper());
+        m_log_menu->draw(Common::debug().wrapper());
         m_drawing_mutex.unlock();
 
         m_renderer->applyShader();
-        // Common::logDebug("AV {}  {} pos {} {}", ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y,
-        // main_window_width - 650., main_window_height * 0.8);
         ImGui::Image(&m_renderer->shader_rt.texture, ImGui::GetContentRegionAvail());
         ImGui::End();
     }
