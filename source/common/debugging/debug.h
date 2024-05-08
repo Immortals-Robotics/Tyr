@@ -102,7 +102,7 @@ public:
     void draw(const Triangle &t_triangle, Color t_color = Color::white(), bool t_filled = true,
               float t_thickness = 1.0f, std::source_location source = std::source_location::current());
 
-    void log(const Log &t_log);
+    void log(Log &&t_log);
 
     const Wrapper &wrapper() const
     {
