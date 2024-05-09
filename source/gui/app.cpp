@@ -84,6 +84,10 @@ bool Application::initialize(const int width, const int height)
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
     InitWindow(width, height, "Tyr");
     SetTraceLogLevel(LOG_ALL);
+
+    const std::filesystem::path icon_path = std::filesystem::path(DATA_DIR) / "immortals.png";
+    SetWindowIcon(LoadImage(icon_path.string().c_str()));
+
     rlImGuiSetup(true);
 
     m_renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 4.0f);
