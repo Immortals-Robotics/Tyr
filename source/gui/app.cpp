@@ -153,13 +153,13 @@ void Application::update()
     {
         m_renderer->draw(Common::field());
 
-        m_ai_mutex.lock();
+        m_ai_mutex.lock_shared();
         // TODO(mhmd): add an option for this
         if (1)
             m_renderer->draw(Common::worldState());
         else
             m_renderer->draw(Common::rawWorldState());
-        m_ai_mutex.unlock();
+        m_ai_mutex.unlock_shared();
 
         if (m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
             m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_IP)
@@ -208,11 +208,12 @@ void Application::aiThreadEntry()
             continue;
 
         m_ai_mutex.lock();
-
         m_vision->process();
-        m_ai->Process();
-
         m_ai_mutex.unlock();
+
+        m_ai_mutex.lock_shared();
+        m_ai->Process();
+        m_ai_mutex.unlock_shared();
 
         for (auto &sender : m_senders)
             sender->flush();

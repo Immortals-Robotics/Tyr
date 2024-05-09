@@ -3,9 +3,9 @@
 #define ImmortalsIsTheBest true
 
 #include "menu/config_menu.h"
-#include "menu/widget_menu.h"
 #include "menu/demo_menu.h"
 #include "menu/log_menu.h"
+#include "menu/widget_menu.h"
 #include "renderer/renderer.h"
 namespace Tyr::Gui
 {
@@ -34,8 +34,8 @@ private:
 
     std::atomic<bool> m_running = true;
 
-    std::mutex m_ai_mutex;
-    std::mutex m_drawing_mutex;
+    std::shared_mutex m_ai_mutex;
+    std::mutex        m_drawing_mutex;
 
     std::thread m_ai_thread;
     std::thread m_ref_thread;
