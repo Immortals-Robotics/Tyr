@@ -13,7 +13,7 @@ public:
 
     bool receive(google::protobuf::MessageLite *t_message);
 
-    std::span<char> receiveRaw();
+    bool receiveRaw(std::span<char> *t_data);
 
     [[nodiscard]] asio::ip::udp::endpoint getListenEndpoint() const
     {

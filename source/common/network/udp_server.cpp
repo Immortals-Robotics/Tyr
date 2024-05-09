@@ -27,8 +27,16 @@ bool UdpServer::send(const size_t t_size, const NetworkAddress &t_address)
     const asio::ip::address_v4    address = asio::ip::make_address_v4(t_address.ip);
     const asio::ip::udp::endpoint endpoint{address, t_address.port};
 
-    const size_t m_sent_size = m_socket->send_to(asio::buffer(m_buffer, t_size), endpoint);
+    asio::error_code error;
 
-    return m_sent_size == t_size;
+    const size_t m_sent_size = m_socket->send_to(asio::buffer(m_buffer, t_size), endpoint, 0, error);
+
+    if (error)
+    {
+        Common::logError("Udp receive failed with [{}]: {}", error.value(), error.message());
+        return false;
+    }
+
+    return true;
 }
 } // namespace Tyr::Common

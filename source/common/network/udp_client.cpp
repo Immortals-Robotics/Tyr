@@ -27,36 +27,33 @@ void UdpClient::updateAddress(const NetworkAddress &t_address)
     {
         m_socket->set_option(asio::ip::multicast::join_group(m_address));
     }
+    m_socket->non_blocking(true);
 }
 
 bool UdpClient::receive(google::protobuf::MessageLite *const t_message)
 {
+    std::span<char> data;
+    if (!receiveRaw(&data))
+        return false;
 
-    m_socket->non_blocking(true);
-    size_t           received_size = 0;
-    asio::error_code er            = asio::error::would_block;
-    while (er == asio::error::would_block)
-    {
-        received_size = m_socket->receive_from(asio::buffer(m_buffer), m_last_receive_endpoint, 0, er);
-    }
-    if (received_size > 0)
-    {
-        return t_message->ParseFromArray(m_buffer.data(), received_size);
-    }
-
-    return false;
+    return t_message->ParseFromArray(data.data(), data.size());
 }
 
-std::span<char> UdpClient::receiveRaw()
+bool UdpClient::receiveRaw(std::span<char> *const t_data)
 {
-    const size_t received_size = m_socket->receive_from(asio::buffer(m_buffer), m_last_receive_endpoint);
+    asio::error_code error;
 
-    if (received_size > 0)
+    const size_t received_size = m_socket->receive_from(asio::buffer(m_buffer), m_last_receive_endpoint, 0, error);
+
+    if (error)
     {
-        return std::span<char>(m_buffer.data(), received_size);
+        if (error != asio::error::would_block)
+            Common::logError("Udp receive failed with [{}]: {}", error.value(), error.message());
+        return false;
     }
 
-    return {};
+    *t_data = std::span<char>(m_buffer.data(), received_size);
+    return true;
 }
 
 } // namespace Tyr::Common

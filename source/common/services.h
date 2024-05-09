@@ -15,7 +15,7 @@ struct RefereeState;
 
 struct Services
 {
-    static void initialize();
+    static bool initialize();
     static void saveConfig();
     static void shutdown();
 

@@ -8,6 +8,7 @@
 #include <span>
 #include <string>
 #include <thread>
+#include <shared_mutex>
 
 #include <raylib.h>
 #include <raymath.h>

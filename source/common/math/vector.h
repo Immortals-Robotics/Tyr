@@ -32,7 +32,9 @@ struct Vec2
     [[nodiscard]] Angle toAngle() const;
 
     [[nodiscard]] float dot(Vec2 t_v) const;
+
     [[nodiscard]] float distanceTo(Vec2 t_v) const;
+    [[nodiscard]] float distanceSquaredTo(Vec2 t_v) const;
 
     [[nodiscard]] Angle angleWith(Vec2 t_v) const;
     [[nodiscard]] Angle angleDiff(Vec2 t_v) const;

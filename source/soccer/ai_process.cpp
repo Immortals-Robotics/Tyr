@@ -105,7 +105,7 @@ void Ai::Process()
     else
     {
         HaltAll();
-        Common::logWarning("Oh NO!!!");
+        Common::logWarning("Can't find play \"{}\" in playbook", currentPlay);
     }
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)

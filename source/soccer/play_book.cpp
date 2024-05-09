@@ -10,6 +10,7 @@ void Ai::InitAIPlayBook()
     AIPlayBook["NormalPlayDef"]          = &Ai::NormalPlayDef;
     AIPlayBook["NormalPlayAtt"]          = &Ai::NormalPlayAtt;
     AIPlayBook["Stop"]                   = &Ai::Stop;
+    AIPlayBook["HaltAll"]                = &Ai::HaltAll;
     AIPlayBook["kickoff_us_chip"]        = &Ai::kickoff_us_chip;
     AIPlayBook["throwin_chip_shoot"]     = &Ai::throwin_chip_shoot;
     AIPlayBook["kickoff_their_one_wall"] = &Ai::kickoff_their_one_wall;
