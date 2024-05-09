@@ -42,7 +42,7 @@ Node *Tree::NearestNeighbour(const Common::Vec2 s)
     int   ans = 0;
     for (int i = 0; i < m_nodes.size(); i++)
     {
-        float tmp_d = s.distanceTo(m_nodes[i].state);
+        float tmp_d = s.distanceSquaredTo(m_nodes[i].state);
         if (tmp_d < d)
         {
             ans = i;

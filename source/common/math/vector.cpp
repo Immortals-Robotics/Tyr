@@ -223,6 +223,11 @@ float Vec2::distanceTo(Vec2 t_v) const
     return (t_v - *this).length();
 }
 
+float Vec2::distanceSquaredTo(Vec2 t_v) const
+{
+    return (t_v - *this).lengthSquared();
+}
+
 Angle Vec2::angleWith(const Vec2 t_v) const
 {
     return (t_v - *this).toAngle();

@@ -39,10 +39,11 @@ Common::Vec2 Planner::nearestFree(Common::Vec2 state)
     for (int i = 0; i < 1000; i++)
     {
         Common::Vec2 newRndPoint = randomState();
-        if ((!obs_map.isInObstacle(newRndPoint)) && state.distanceTo(newRndPoint) < minDis)
+        const float  tmp_d       = state.distanceSquaredTo(newRndPoint);
+        if ((!obs_map.isInObstacle(newRndPoint)) && tmp_d < minDis)
         {
             ans    = newRndPoint;
-            minDis = state.distanceTo(newRndPoint);
+            minDis = tmp_d;
             if (minDis < acceptable_free_dis)
                 break;
         }
@@ -173,7 +174,7 @@ void Planner::optimize_tree()
 void Planner::draw(Common::Color t_color) const
 {
     m_tree.draw(Common::Color::black().transparent());
-    
+
     for (int i = 0; i < m_waypoints.size() - 1; i++)
     {
         Common::debug().draw(Common::LineSegment{m_waypoints[i], m_waypoints[i + 1]}, t_color, 0.5f);
