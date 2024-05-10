@@ -25,6 +25,15 @@ Vision::Vision()
     {
         Common::logCritical("Failed to connect to Vision UDP");
     }
+
+    m_raw_storage.open("raw-state");
+    m_filtered_storage.open("filtered-state");
+}
+
+Vision::~Vision()
+{
+    m_raw_storage.close();
+    m_filtered_storage.close();
 }
 
 bool Vision::receive()
@@ -68,7 +77,23 @@ void Vision::process()
     processBalls();
     processRobots();
 
+    Common::worldState().time = Common::TimePoint::now();
+
     for (int i = 0; i < Common::Setting::kCamCount; i++)
         m_packet_received[i] = false;
+
+    // TODO: move this to a separate thread
+    storeStates();
+}
+
+void Vision::storeStates()
+{
+    Protos::Immortals::RawWorldState pb_raw_state{};
+    Common::rawWorldState().fillProto(&pb_raw_state);
+    m_raw_storage.store(Common::rawWorldState().time.timestamp(), pb_raw_state);
+
+    Protos::Immortals::WorldState pb_state{};
+    Common::worldState().fillProto(&pb_state);
+    m_filtered_storage.store(Common::worldState().time.timestamp(), pb_state);
 }
 } // namespace Tyr::Vision

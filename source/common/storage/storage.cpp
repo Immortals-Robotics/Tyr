@@ -63,7 +63,7 @@ bool Storage::init(const std::filesystem::path &t_path)
         const bool fs_result = std::filesystem::create_directories(t_path);
         if (!fs_result)
         {
-            Common::logCritical("Failed to create db directory at {}", t_path.string());
+            Common::logCritical("Failed to create db directory at {}", t_path);
             return false;
         }
     }

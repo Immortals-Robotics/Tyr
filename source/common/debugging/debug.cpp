@@ -132,7 +132,7 @@ Color Debug::Log::color() const
 
 Debug::Wrapper::Wrapper(const Protos::Immortals::Debug::Wrapper &t_wrapper)
 {
-    timestamp = t_wrapper.timestamp();
+    time = t_wrapper.time();
 
     draws = std::vector<Draw>{t_wrapper.draw().begin(), t_wrapper.draw().end()};
     logs  = std::vector<Log>{t_wrapper.log().begin(), t_wrapper.log().end()};
@@ -140,7 +140,7 @@ Debug::Wrapper::Wrapper(const Protos::Immortals::Debug::Wrapper &t_wrapper)
 
 void Debug::Wrapper::fillProto(Protos::Immortals::Debug::Wrapper *t_wrapper) const
 {
-    t_wrapper->set_timestamp(timestamp);
+    t_wrapper->set_time(time.timestamp());
 
     for (const auto &draw : draws)
         draw.fillProto(t_wrapper->add_draw());
@@ -164,14 +164,13 @@ void Debug::flip()
 
     m_log_mutex.lock();
 
-    const auto now          = std::chrono::system_clock::now();
-    m_wrapper_off.timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    m_wrapper_off.time = TimePoint::now();
 
     std::swap(m_wrapper, m_wrapper_off);
 
     Protos::Immortals::Debug::Wrapper pb_wrapper;
     m_wrapper.fillProto(&pb_wrapper);
-    m_storage.store(m_wrapper.timestamp, pb_wrapper);
+    m_storage.store(m_wrapper.time.timestamp(), pb_wrapper);
 
     m_wrapper_off.draws.clear();
     m_wrapper_off.logs.clear();
