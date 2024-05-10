@@ -19,6 +19,8 @@ protected:
     Logger();
     ~Logger();
 
+    void addDebugSink();
+
     friend struct Services;
 
 private:

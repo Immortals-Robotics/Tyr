@@ -12,8 +12,6 @@ namespace Tyr::Common
 {
 bool Services::initialize()
 {
-    s_debug = new Debug();
-
     s_logger = new Logger();
 
     s_configReader = new ConfigReader("config.toml");
@@ -21,10 +19,14 @@ bool Services::initialize()
     s_setting = new Setting();
     s_setting->load(s_configReader->getRoot());
 
+    s_debug = new Debug();
+
     if (!Storage::init(std::filesystem::path(LOG_DIR) / "db"))
     {
         return false;
     }
+
+    s_logger->addDebugSink();
 
     s_debug->initStorage("debug");
 
