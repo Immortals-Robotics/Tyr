@@ -16,6 +16,7 @@ class Vision
 {
 public:
     Vision();
+    ~Vision();
 
     bool receive();
     void process();
@@ -23,6 +24,8 @@ public:
     bool camsReady() const;
 
     void updateAddress(const Common::NetworkAddress& t_address);
+
+    void storeStates();
 
 private:
     bool connect();
@@ -66,5 +69,8 @@ private:
     Common::Angle                       m_raw_angles[2][Common::Setting::kMaxRobots];
 
     Protos::SSL_DetectionFrame m_d_frame[Common::Setting::kCamCount];
+
+    Common::Storage m_raw_storage;
+    Common::Storage m_filtered_storage;
 };
 } // namespace Tyr::Vision

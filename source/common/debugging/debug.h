@@ -3,6 +3,7 @@
 #include "../math/vector.h"
 #include "../state/world.h"
 #include "../storage/storage.h"
+#include "../time/time_point.h"
 #include "color.h"
 
 namespace Tyr::Common
@@ -72,7 +73,7 @@ public:
 
     struct Wrapper
     {
-        uint64_t timestamp;
+        TimePoint time;
 
         std::vector<Draw> draws;
         std::vector<Log>  logs;

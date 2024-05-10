@@ -3,6 +3,7 @@
 #include "../math/angle.h"
 #include "../math/vector.h"
 #include "../setting.h"
+#include "../time/time_point.h"
 
 namespace Tyr::Common
 {
@@ -31,6 +32,24 @@ struct RawRobotState
         position = Common::Vec2(t_robot.x(), t_robot.y());
         angle    = Common::Angle::fromRad(t_robot.orientation());
     }
+
+    RawRobotState(const Protos::Immortals::RawRobotState &t_robot)
+    {
+        vision_id = t_robot.id();
+        color     = (TeamColor) t_robot.color();
+
+        position = t_robot.position();
+        angle    = t_robot.angle();
+    }
+
+    void fillProto(Protos::Immortals::RawRobotState *const t_state) const
+    {
+        t_state->set_id(vision_id);
+        t_state->set_color((Protos::Immortals::TeamColor) color);
+
+        position.fillProto(t_state->mutable_position());
+        angle.fillProto(t_state->mutable_angle());
+    }
 };
 
 struct RawBallState
@@ -43,10 +62,22 @@ struct RawBallState
     {
         position = Common::Vec2(t_ball.x(), t_ball.y());
     }
+
+    RawBallState(const Protos::Immortals::RawBallState &t_ball)
+    {
+        position = t_ball.position();
+    }
+
+    void fillProto(Protos::Immortals::RawBallState *const t_state) const
+    {
+        position.fillProto(t_state->mutable_position());
+    }
 };
 
 struct RawWorldState
 {
+    TimePoint time;
+
     std::vector<RawBallState> balls;
 
     std::vector<RawRobotState> yellow_robots;
@@ -56,6 +87,8 @@ struct RawWorldState
 
     RawWorldState(const Protos::SSL_DetectionFrame &t_frame)
     {
+        time = TimePoint::now();
+
         for (const auto &ball : t_frame.balls())
         {
             balls.emplace_back(ball);
@@ -69,6 +102,46 @@ struct RawWorldState
         for (const auto &robot : t_frame.robots_blue())
         {
             blue_robots.emplace_back(robot, TeamColor::Blue);
+        }
+    }
+
+    RawWorldState(const Protos::Immortals::RawWorldState &t_state)
+    {
+        time = t_state.time();
+
+        for (const auto &ball : t_state.balls())
+        {
+            balls.emplace_back(ball);
+        }
+
+        for (const auto &robot : t_state.yellow_robots())
+        {
+            yellow_robots.emplace_back(robot);
+        }
+
+        for (const auto &robot : t_state.blue_robots())
+        {
+            blue_robots.emplace_back(robot);
+        }
+    }
+
+    void fillProto(Protos::Immortals::RawWorldState *const t_state)
+    {
+        t_state->set_time(time.timestamp());
+
+        for (const auto &ball : balls)
+        {
+            ball.fillProto(t_state->add_balls());
+        }
+
+        for (const auto &robot : yellow_robots)
+        {
+            robot.fillProto(t_state->add_yellow_robots());
+        }
+
+        for (const auto &robot : blue_robots)
+        {
+            robot.fillProto(t_state->add_blue_robots());
         }
     }
 };
@@ -192,6 +265,8 @@ struct FieldState
 
 struct WorldState
 {
+    TimePoint time;
+
     BallState ball;
 
     RobotState own_robot[Setting::kMaxRobots];
@@ -208,6 +283,40 @@ struct WorldState
         for (int i = 0; i < Setting::kMaxRobots; i++)
         {
             opp_robot[i].vision_id = i;
+        }
+    }
+
+    WorldState(const Protos::Immortals::WorldState &t_state)
+    {
+        time = t_state.time();
+
+        ball = t_state.ball();
+
+        for (const auto &robot : t_state.own_robot())
+        {
+            own_robot[robot.id()] = robot;
+        }
+
+        for (const auto &robot : t_state.opp_robot())
+        {
+            opp_robot[robot.id()] = robot;
+        }
+    }
+
+    void fillProto(Protos::Immortals::WorldState *const t_state)
+    {
+        t_state->set_time(time.timestamp());
+
+        ball.fillProto(t_state->mutable_ball());
+
+        for (const auto &robot : own_robot)
+        {
+            robot.fillProto(t_state->add_own_robot());
+        }
+
+        for (const auto &robot : opp_robot)
+        {
+            robot.fillProto(t_state->add_opp_robot());
         }
     }
 };

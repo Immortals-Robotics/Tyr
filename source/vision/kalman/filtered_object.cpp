@@ -63,7 +63,7 @@ FilteredObject::FilteredObject(const std::filesystem::path t_filename1, const st
     }
     else
     {
-        Common::logError("Invalid initialization file 1 from {}", t_filename1.string());
+        Common::logError("Invalid initialization file 1 from {}", t_filename1);
     }
 
     // open the file 2
@@ -89,7 +89,7 @@ FilteredObject::FilteredObject(const std::filesystem::path t_filename1, const st
     }
     else
     {
-        Common::logError("Invalid initialization file 2 from {}", t_filename2.string());
+        Common::logError("Invalid initialization file 2 from {}", t_filename2);
     }
 }
 

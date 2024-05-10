@@ -19,6 +19,8 @@
 #include <vector>
 
 #include <fmt/format.h>
+#include <fmt/chrono.h>
+#include <fmt/std.h>
 #include <lmdb.h>
 #include <spdlog/async.h>
 #include <spdlog/details/null_mutex.h>

@@ -93,7 +93,8 @@
 			"xtree": "cpp",
 			"xutility": "cpp",
 			"*.inc": "cpp",
-			"*.ipp": "cpp"
+			"*.ipp": "cpp",
+			"shared_mutex": "cpp"
 		},
 		"editor.renderWhitespace": "boundary"
 	}

@@ -33,7 +33,8 @@ set(HEADER_FILES
 	state/referee.h
 	state/world.h
 	storage/storage.h
-	timer/timer.h)
+	time/time_point.h
+	time/timer.h)
 
 set(SOURCE_FILES
 	services.cpp
@@ -52,7 +53,7 @@ set(SOURCE_FILES
 	network/udp_client.cpp
 	network/udp_server.cpp
 	storage/storage.cpp
-	timer/timer.cpp)
+	time/timer.cpp)
 
 add_library(${PROJECT_NAME}
 	${SOURCE_FILES} ${HEADER_FILES})
