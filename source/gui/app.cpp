@@ -14,17 +14,23 @@ static void logCallback(const int msg_type, const char *const text, va_list args
 
     switch (msg_type)
     {
+    case LOG_TRACE:
+        Common::logTrace("{}", formatted);
+        break;
+    case LOG_DEBUG:
+        Common::logDebug("{}", formatted);
+        break;
     case LOG_INFO:
         Common::logInfo("{}", formatted);
-        break;
-    case LOG_ERROR:
-        Common::logError("{}", formatted);
         break;
     case LOG_WARNING:
         Common::logWarning("{}", formatted);
         break;
-    case LOG_DEBUG:
-        Common::logDebug("{}", formatted);
+    case LOG_ERROR:
+        Common::logError("{}", formatted);
+        break;
+    case LOG_FATAL:
+        Common::logCritical("{}", formatted);
         break;
     default:
         break;
