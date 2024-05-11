@@ -87,7 +87,7 @@ struct RawWorldState
 
     RawWorldState(const Protos::SSL_DetectionFrame &t_frame)
     {
-        time = TimePoint::now();
+        time = (Common::TimeStamp) t_frame.t_capture() * 1000;
 
         for (const auto &ball : t_frame.balls())
         {
