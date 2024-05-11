@@ -133,29 +133,6 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     if (playBook)
     {
         Common::logInfo("Strategy loaded with size {}", playBook->strategy_size());
-        Common::logDebug("{} {}", playBook->strategy_size(), playBook->strategy(0).name());
-
-        Common::logDebug("{}", playBook->strategy_size());
-        for (int i = 0; i < playBook->strategy_size(); i++)
-        {
-            Common::logDebug("    {}", playBook->strategy(i).role_size());
-            for (int j = 0; j < playBook->strategy(i).role_size(); j++)
-            {
-                Common::logDebug("        {}", playBook->strategy(i).role(j).path_size());
-                for (int k = 0; k < playBook->strategy(i).role(j).path_size(); k++)
-                {
-                    Common::logDebug("            {}", (int) playBook->strategy(i).role(j).path(k).type());
-                    Common::logDebug("                {}        {}", playBook->strategy(i).role(j).path(k).x(),
-                                     playBook->strategy(i).role(j).path(k).y());
-                }
-            }
-        }
-
-        Common::logDebug("{}", playBook->weight_size());
-        for (int i = 0; i < playBook->weight_size(); i++)
-        {
-            Common::logDebug("    {}", playBook->weight(i));
-        }
     }
     else
     {

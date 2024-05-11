@@ -2,9 +2,9 @@
 
 namespace Tyr::Soccer
 {
-bool Ai::read_playBook(const char *fileName)
+bool Ai::read_playBook(const std::filesystem::path &t_path)
 {
-    std::ifstream file(fileName, std::ios::in | std::ios::binary);
+    std::ifstream file(t_path, std::ios::in | std::ios::binary);
 
     if (!file.is_open())
         return false;
@@ -12,7 +12,7 @@ bool Ai::read_playBook(const char *fileName)
     // get length of file:
     file.seekg(0, std::ios::end);
     size_t length = file.tellg();
-    Common::logInfo("reading strategy file \"{}\" with size {}", fileName, length);
+    Common::logInfo("reading strategy file \"{}\" with size {}", t_path, length);
     file.seekg(0, std::ios::beg);
 
     // allocate memory:
