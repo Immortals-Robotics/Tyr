@@ -33,7 +33,7 @@ bool UdpServer::send(const size_t t_size, const NetworkAddress &t_address)
 
     if (error)
     {
-        Common::logError("Udp receive failed with [{}]: {}", error.value(), error.message());
+        logError("Udp send failed with [{}]: {}", error.value(), error.message());
         return false;
     }
 

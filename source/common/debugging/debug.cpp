@@ -58,7 +58,7 @@ Debug::Draw::Draw(const Protos::Immortals::Debug::Draw &t_draw)
         shape = Triangle{t_draw.triangle()};
         break;
     default:
-        Common::logWarning("Unsupported shape type: {}", (int) t_draw.shape_case());
+        logWarning("Unsupported shape type: {}", (int) t_draw.shape_case());
         break;
     }
 }
@@ -83,7 +83,7 @@ void Debug::Draw::fillProto(Protos::Immortals::Debug::Draw *t_draw) const
     else if (auto triangle = std::get_if<Triangle>(&shape); triangle)
         triangle->fillProto(t_draw->mutable_triangle());
     else
-        Common::logWarning("Unsupported shape type: {}", shape.index());
+        logWarning("Unsupported shape type: {}", shape.index());
 }
 
 Debug::Log::Log(const Protos::Immortals::Debug::Log &t_log)

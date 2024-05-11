@@ -3,6 +3,7 @@ project(${CMAKE_PROJECT_NAME}-common)
 find_package(asio CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(unofficial-lmdb CONFIG REQUIRED)
+find_package(nng CONFIG REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(tomlplusplus REQUIRED IMPORTED_TARGET tomlplusplus)
@@ -28,6 +29,8 @@ set(HEADER_FILES
 	math/geom/line.h
 	math/geom/rect.h
 	math/geom/triangle.h
+	network/nng_client.h
+	network/nng_server.h
 	network/udp_client.h
 	network/udp_server.h
 	state/referee.h
@@ -50,6 +53,8 @@ set(SOURCE_FILES
 	math/geom/circle.cpp
 	math/geom/line.cpp
 	math/geom/rect.cpp
+	network/nng_client.cpp
+	network/nng_server.cpp
 	network/udp_client.cpp
 	network/udp_server.cpp
 	storage/storage.cpp
@@ -67,7 +72,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 	asio::asio
 	PkgConfig::tomlplusplus
 	spdlog::spdlog
-	unofficial::lmdb::lmdb)
+	unofficial::lmdb::lmdb
+	nng::nng)
 
 if(WIN32)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC _WIN32_WINNT=_WIN32_WINNT_WIN10)

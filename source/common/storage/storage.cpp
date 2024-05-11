@@ -63,7 +63,7 @@ bool Storage::init(const std::filesystem::path &t_path)
         const bool fs_result = std::filesystem::create_directories(t_path);
         if (!fs_result)
         {
-            Common::logCritical("Failed to create db directory at {}", t_path);
+            logCritical("Failed to create db directory at {}", t_path);
             return false;
         }
     }
@@ -73,32 +73,32 @@ bool Storage::init(const std::filesystem::path &t_path)
     result = mdb_env_create(&s_env);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb env creation failed with: {}", getErrorString(result));
+        logCritical("lmdb env creation failed with: {}", getErrorString(result));
         return false;
     }
 
     result = mdb_env_set_maxdbs(s_env, kMaxDbCount);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb env maxdb setter failed with: {}", getErrorString(result));
+        logCritical("lmdb env maxdb setter failed with: {}", getErrorString(result));
         return false;
     }
 
     result = mdb_env_set_mapsize(s_env, kMapSize);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb env map size setter failed with: {}", getErrorString(result));
+        logCritical("lmdb env map size setter failed with: {}", getErrorString(result));
         return false;
     }
 
     result = mdb_env_open(s_env, t_path.string().c_str(), 0, 0664);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb env open in \"{}\" failed with: {}", t_path.string(), getErrorString(result));
+        logCritical("lmdb env open in \"{}\" failed with: {}", t_path.string(), getErrorString(result));
         return false;
     }
 
-    Common::logInfo("Initialized storage in \"{}\"", t_path.string());
+    logInfo("Initialized storage in \"{}\"", t_path.string());
 
     return true;
 }
@@ -117,7 +117,7 @@ bool Storage::open(std::string_view t_name)
     result = mdb_txn_begin(s_env, nullptr, 0, &transaction);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb transaction begin failed with: {}", getErrorString(result));
+        logCritical("lmdb transaction begin failed with: {}", getErrorString(result));
         return false;
     }
 
@@ -127,7 +127,7 @@ bool Storage::open(std::string_view t_name)
     result = mdb_dbi_open(transaction, name_str.c_str(), MDB_INTEGERKEY | MDB_CREATE, &m_dbi);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb db \"{}\" open failed with: {}", t_name, getErrorString(result));
+        logCritical("lmdb db \"{}\" open failed with: {}", t_name, getErrorString(result));
         return false;
     }
 
@@ -135,7 +135,7 @@ bool Storage::open(std::string_view t_name)
     result = mdb_txn_commit(transaction);
     if (result != MDB_SUCCESS)
     {
-        Common::logCritical("lmdb transaction commit failed with: {}", getErrorString(result));
+        logCritical("lmdb transaction commit failed with: {}", getErrorString(result));
         return false;
     }
 
@@ -155,7 +155,7 @@ bool Storage::get(Key t_key, google::protobuf::MessageLite *t_message) const
     result = mdb_txn_begin(s_env, nullptr, MDB_RDONLY, &transaction);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb readonly transaction begin failed with: {}", getErrorString(result));
+        logError("lmdb readonly transaction begin failed with: {}", getErrorString(result));
         return false;
     }
 
@@ -167,7 +167,7 @@ bool Storage::get(Key t_key, google::protobuf::MessageLite *t_message) const
     result = mdb_get(transaction, m_dbi, &mdb_key, &mdb_data);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb get [{}] failed with: {}", t_key, getErrorString(result));
+        logError("lmdb get [{}] failed with: {}", t_key, getErrorString(result));
         return false;
     }
 
@@ -176,7 +176,7 @@ bool Storage::get(Key t_key, google::protobuf::MessageLite *t_message) const
 
     if (!pb_result)
     {
-        Common::logError("Failed to parse protobuf message with size {} from db", mdb_data.mv_size);
+        logError("Failed to parse protobuf message with size {} from db", mdb_data.mv_size);
         return false;
     }
 
@@ -191,7 +191,7 @@ bool Storage::store(Key t_key, const google::protobuf::MessageLite &t_message)
     result = mdb_txn_begin(s_env, nullptr, 0, &transaction);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb read/write transaction begin failed with: {}", getErrorString(result));
+        logError("lmdb read/write transaction begin failed with: {}", getErrorString(result));
         return false;
     }
 
@@ -210,30 +210,28 @@ bool Storage::store(Key t_key, const google::protobuf::MessageLite &t_message)
     result = mdb_put(transaction, m_dbi, &mdb_key, &mdb_data, MDB_RESERVE);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb dry put for key [{}] with size {} failed with: {}", t_key, message_size,
-                         getErrorString(result));
+        logError("lmdb dry put for key [{}] with size {} failed with: {}", t_key, message_size, getErrorString(result));
         return false;
     }
 
     const bool pb_result = t_message.SerializeToArray(mdb_data.mv_data, mdb_data.mv_size);
     if (!pb_result)
     {
-        Common::logError("Failed to serialize protobuf message for db storage");
+        logError("Failed to serialize protobuf message for db storage");
         return false;
     }
 
     result = mdb_put(transaction, m_dbi, &mdb_key, &mdb_data, 0);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb put for key [{}] with size {} failed with: {}", t_key, message_size,
-                         getErrorString(result));
+        logError("lmdb put for key [{}] with size {} failed with: {}", t_key, message_size, getErrorString(result));
         return false;
     }
 
     result = mdb_txn_commit(transaction);
     if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb transaction commit failed with: {}", getErrorString(result));
+        logError("lmdb transaction commit failed with: {}", getErrorString(result));
         return false;
     }
 

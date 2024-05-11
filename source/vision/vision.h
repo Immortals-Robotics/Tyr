@@ -23,7 +23,7 @@ public:
     bool isConnected();
     bool camsReady() const;
 
-    void updateAddress(const Common::NetworkAddress& t_address);
+    void updateAddress(const Common::NetworkAddress &t_address);
 
     void storeStates();
 

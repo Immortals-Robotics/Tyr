@@ -48,7 +48,7 @@ bool UdpClient::receiveRaw(std::span<char> *const t_data)
     if (error)
     {
         if (error != asio::error::would_block)
-            Common::logError("Udp receive failed with [{}]: {}", error.value(), error.message());
+            logError("Udp receive failed with [{}]: {}", error.value(), error.message());
         return false;
     }
 
