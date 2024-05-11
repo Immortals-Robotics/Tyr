@@ -94,7 +94,7 @@ void Ai::GKHi(int robot_num, bool stop)
 #endif
             OwnRobot[robot_num].face(Common::worldState().ball.position);
             ERRTSetObstacles(robot_num, stop, false);
-            ERRTNavigate2Point(robot_num, target, 80, stop ? &VELOCITY_PROFILE_AROOM : &VELOCITY_PROFILE_MAMOOLI);
+            ERRTNavigate2Point(robot_num, target, 80, stop ? VelocityProfile::Type::Aroom : VelocityProfile::Type::Mamooli);
         }
     }
     // side = -side;
@@ -111,7 +111,7 @@ void Ai::GK_shirje(int robot_num)
     OwnRobot[robot_num].face(Common::worldState().ball.position);
     ans = ((ans - OwnRobot[robot_num].state().position) * 2.0f) + OwnRobot[robot_num].state().position;
     ERRTSetObstacles(robot_num, 0, 0);
-    ERRTNavigate2Point(robot_num, ans, 100, &VELOCITY_PROFILE_KHARAKI);
+    ERRTNavigate2Point(robot_num, ans, 100, VelocityProfile::Type::Kharaki);
     OwnRobot[robot_num].Chip(150);
 }
 } // namespace Tyr::Soccer

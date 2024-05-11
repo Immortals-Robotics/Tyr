@@ -81,18 +81,13 @@ private:
     bool navigated[Common::Setting::kMaxOnFieldTeamRobots];
     int  side;
 
-    VelocityProfile BALL_PLACE_KHEYLI_SOOSKI;
-    VelocityProfile VELOCITY_PROFILE_AROOM;
-    VelocityProfile VELOCITY_PROFILE_KHARAKI;
-    VelocityProfile VELOCITY_PROFILE_MAMOOLI;
-
     // Helpers
     Common::Vec2 DefGhuz(Common::Vec2 *defendTarget = nullptr);
     Common::Vec2 CalculatePassPos(int robot_num, const Common::Vec2 &target, const Common::Vec2 &statPos,
                                   float bar = 89.0f);
     void         calculateBallTrajectory();
-    float        calculateRobotReachTime(int robot_num, Common::Vec2 dest, VelocityProfile *vel_profile);
-    float        calculateBallRobotReachTime(int robot_num, VelocityProfile *vel_profile);
+    float        calculateRobotReachTime(int robot_num, Common::Vec2 dest, VelocityProfile::Type vel_profile);
+    float        calculateBallRobotReachTime(int robot_num, VelocityProfile::Type vel_profile);
 
     // boz ha
     void ManageAttRoles();
@@ -134,10 +129,10 @@ private:
     bool requiredRobots[Common::Setting::kMaxOnFieldTeamRobots];
 
     // Skills
-    void Navigate2Point(int robot_num, Common::Vec2 dest, int speed = 80, VelocityProfile *velocityProfile = nullptr,
-                        bool use_dss = false);
-    void ERRTNavigate2Point(int robot_num, Common::Vec2 dest, int speed = 80,
-                            VelocityProfile *velocityProfile = nullptr);
+    void Navigate2Point(int robot_num, Common::Vec2 dest, float speed = 80.0f,
+                        VelocityProfile::Type velocityProfile = VelocityProfile::Type::Mamooli, bool use_dss = false);
+    void ERRTNavigate2Point(int robot_num, Common::Vec2 dest, float speed = 80.0f,
+                            VelocityProfile::Type velocityProfile = VelocityProfile::Type::Mamooli);
     void ERRTSetObstacles(int robot_num, bool bll = false, bool field = true);
     void ERRTSetGkClearObstacles(int robot_num);
     void Mark(int robot_num, int opp, float dist = 220.0f);

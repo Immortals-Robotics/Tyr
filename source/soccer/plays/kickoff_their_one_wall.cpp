@@ -15,7 +15,7 @@ void Ai::kickoff_their_one_wall()
             Common::Vec2(side * Common::field().width, 0),
             Common::worldState().ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) /
                 2.0f),
-        40, &VELOCITY_PROFILE_MAMOOLI);
+        40, VelocityProfile::Type::Mamooli);
 
     int indexP = -1;
     int indexN = -1;

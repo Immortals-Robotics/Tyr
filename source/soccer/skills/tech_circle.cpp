@@ -62,12 +62,13 @@ Common::Vec2 Ai::predictBallForwardAI(float timeAhead)
     return _ball.position;
 }
 
-float Ai::calculateRobotReachTime(int robot_num, Common::Vec2 dest, VelocityProfile *vel_profile)
+float Ai::calculateRobotReachTime(int robot_num, Common::Vec2 dest, VelocityProfile::Type vel_profile_type)
 {
-    return OwnRobot[robot_num].state().position.distanceTo(dest) / (vel_profile->max_spd.length() * 42.5 * 0.5);
+    const VelocityProfile vel_profile(vel_profile_type);
+    return OwnRobot[robot_num].state().position.distanceTo(dest) / (vel_profile.max_spd.length() * 42.5 * 0.5);
 }
 
-float Ai::calculateBallRobotReachTime(int robot_num, VelocityProfile *vel_profile)
+float Ai::calculateBallRobotReachTime(int robot_num, VelocityProfile::Type vel_profile_type)
 {
     static Common::MedianFilter<float> predTFilt(5);
 
@@ -76,7 +77,7 @@ float Ai::calculateBallRobotReachTime(int robot_num, VelocityProfile *vel_profil
     for (float forwT = 0; forwT < tMax; forwT += 0.02f)
     {
         Common::Vec2 newBallPos  = predictBallForwardAI(forwT);
-        float        robotReachT = calculateRobotReachTime(robot_num, newBallPos, vel_profile);
+        float        robotReachT = calculateRobotReachTime(robot_num, newBallPos, vel_profile_type);
         if (robotReachT <= forwT)
         {
             predT = robotReachT;
@@ -104,7 +105,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     {
         PredictedBall = Common::worldState().ball.position;
 
-        // PredictedBall = predictBallForwardAI(calculateBallRobotReachTime(robot_num,&VELOCITY_PROFILE_MAMOOLI));
+        // PredictedBall = predictBallForwardAI(calculateBallRobotReachTime(robot_num,VelocityProfile::Type::Mamooli));
         if (1) // ( std::fabs(NormalizeAngle(lastBallDirection-Common::worldState().ball.velocity.direction) ) > 5 ) ||
                // ( std::fabs(lastBallMagnitude-Common::worldState().ball.velocity.length) > 80 ) || (
                // Common::worldState().ball.velocity.length < 100 ) || (
@@ -174,9 +175,8 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
         goalPredictMul = -0.15;
     }
 
-    Common::Vec2 ballToGoal =
-        Common::Vec2(-side * Common::field().width, 0) - Common::worldState().ball.position;
-    ballToGoal = ballToGoal.normalized();
+    Common::Vec2 ballToGoal = Common::Vec2(-side * Common::field().width, 0) - Common::worldState().ball.position;
+    ballToGoal              = ballToGoal.normalized();
     float ballVelToGoalDot =
         (Common::worldState().ball.velocity.x * ballToGoal.x + Common::worldState().ball.velocity.y * ballToGoal.y);
     Common::Vec2 ballVelToGoal     = Common::Vec2(ballToGoal.x * ballVelToGoalDot, ballToGoal.y * ballVelToGoalDot);
@@ -338,7 +338,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
                         {
                             elendil = 30;
                         }
-                        ERRTNavigate2Point(robot_num, Pelendil, 100, &VELOCITY_PROFILE_KHARAKI);
+                        ERRTNavigate2Point(robot_num, Pelendil, 100, VelocityProfile::Type::Kharaki);
                     }
                     else
                     {
@@ -348,14 +348,14 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
                                                    3 * targetPoint.y - OwnRobot[robot_num].state().position.y);
                         targetPoint.x /= 2;
                         targetPoint.y /= 2;
-                        ERRTNavigate2Point(robot_num, targetPoint, 100, &VELOCITY_PROFILE_KHARAKI);
+                        ERRTNavigate2Point(robot_num, targetPoint, 100, VelocityProfile::Type::Kharaki);
                     }
                     // Halt(robot_num);
                 }
 
                 else
                 {
-                    ERRTNavigate2Point(robot_num, targetPoint, 100, &VELOCITY_PROFILE_MAMOOLI);
+                    ERRTNavigate2Point(robot_num, targetPoint, 100, VelocityProfile::Type::Mamooli);
                 }
 
                 // targetPoint = Common::Vec2((targetPoint.x+OwnRobot[robot_num].state().position.x)/2,
@@ -365,7 +365,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
                 ERRTNavigate2Point(
                     robot_num,
                     PredictedBall.circleAroundPoint(angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / tetta)), 100,
-                    &VELOCITY_PROFILE_MAMOOLI);
+                    VelocityProfile::Type::Mamooli);
             // circleReachedBehindBall = true;
         }
         else
@@ -385,7 +385,8 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
         if (passedBall)
             ERRTNavigate2Point(robot_num, PredictedBall.circleAroundPoint(hehe, r), 100);
         else
-            ERRTNavigate2Point(robot_num, PredictedBall.circleAroundPoint(hehe, r), 100, &VELOCITY_PROFILE_KHARAKI);
+            ERRTNavigate2Point(robot_num, PredictedBall.circleAroundPoint(hehe, r), 100,
+                               VelocityProfile::Type::Kharaki);
     }
 
     Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 90}, Common::Color::violet());

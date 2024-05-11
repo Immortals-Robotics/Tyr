@@ -15,7 +15,7 @@ void Ai::NormalPlayAtt()
         ERRTSetObstacles(attack, false, true);
         OwnRobot[attack].face(Common::Vec2(-side * Common::field().width, 0));
         // OwnRobot[robot_num].target.angle=-90;
-        ERRTNavigate2Point(attack, allafPos[attack], 100, &VELOCITY_PROFILE_MAMOOLI);
+        ERRTNavigate2Point(attack, allafPos[attack], 100, VelocityProfile::Type::Mamooli);
         if (timer.time() > 2.5)
         {
             oneTouchType[attack] = oneTouch;
@@ -26,7 +26,7 @@ void Ai::NormalPlayAtt()
 
     else
     {
-        float        ballReachTimeTmp = calculateBallRobotReachTime(attack, &VELOCITY_PROFILE_MAMOOLI) * 1.5;
+        float        ballReachTimeTmp = calculateBallRobotReachTime(attack, VelocityProfile::Type::Mamooli) * 1.5;
         Common::Vec2 ballReachPlace   = predictBallForwardAI(ballReachTimeTmp);
         float        ballGoalDot =
             Common::worldState().ball.velocity.normalized().dot((Common::Vec2(-side * Common::field().width, 0) - ballReachPlace).normalized());

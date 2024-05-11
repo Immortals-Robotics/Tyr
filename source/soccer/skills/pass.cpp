@@ -95,7 +95,7 @@ void Ai::WaitForPass(int robot_num, bool chip, const Common::Vec2 *target, Commo
     // OwnRobot[robot_num].target.angle=-90;
 
     ERRTSetObstacles(robot_num, 0, 1);
-    ERRTNavigate2Point(robot_num, pos, 100, &VELOCITY_PROFILE_KHARAKI);
+    ERRTNavigate2Point(robot_num, pos, 100, VelocityProfile::Type::Kharaki);
 
     if (target == nullptr)
     {
