@@ -14,7 +14,11 @@ public:
     bool close();
 
     bool get(Key t_key, google::protobuf::MessageLite *t_message) const;
-    bool store(Key t_key, const google::protobuf::MessageLite &t_message);
+    bool getTwo(Key t_key, Key *t_first, Key *t_second, google::protobuf::MessageLite *t_message_first,
+                google::protobuf::MessageLite *t_message_second) const;
+
+    unsigned long getBoundary(Key *t_first, Key *t_last) const;
+    bool          store(Key t_key, const google::protobuf::MessageLite &t_message);
 
 protected:
     static bool init(const std::filesystem::path &t_path);

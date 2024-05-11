@@ -165,10 +165,13 @@ void Application::update()
 
         m_ai_mutex.lock_shared();
         // TODO(mhmd): add an option for this
-        if (1)
-            m_renderer->draw(Common::worldState());
-        else
-            m_renderer->draw(Common::rawWorldState());
+        if (m_demo_menu->getState() != LogState::PlaybackPlay)
+        {
+            if (1)
+                m_renderer->draw(Common::worldState());
+            else
+                m_renderer->draw(Common::rawWorldState());
+        }
         m_ai_mutex.unlock_shared();
 
         if (m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
@@ -181,8 +184,16 @@ void Application::update()
         }
 
         m_drawing_mutex.lock();
-        m_renderer->draw(Common::debug().wrapper());
-        m_log_menu->draw(Common::debug().wrapper());
+        if (m_demo_menu->getState() != LogState::PlaybackPlay)
+        {
+            m_renderer->draw(Common::debug().wrapper());
+            m_log_menu->draw(Common::debug().wrapper());
+        }
+        else
+        {
+            m_renderer->draw(m_demo_menu->debugWrapper());
+            m_log_menu->draw(m_demo_menu->debugWrapper());
+        }
         m_drawing_mutex.unlock();
 
         m_renderer->applyShader();
