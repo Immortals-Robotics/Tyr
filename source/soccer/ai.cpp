@@ -102,30 +102,6 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
         requiredRobots[i] = false;
 
-    BALL_PLACE_KHEYLI_SOOSKI.max_spd   = Common::Vec2(10.0f);
-    BALL_PLACE_KHEYLI_SOOSKI.max_dec   = Common::Vec2(1.0f);
-    BALL_PLACE_KHEYLI_SOOSKI.max_acc   = Common::Vec2(0.6f);
-    BALL_PLACE_KHEYLI_SOOSKI.max_w_acc = 40.0f;
-    BALL_PLACE_KHEYLI_SOOSKI.max_w_dec = 140.0f;
-
-    VELOCITY_PROFILE_AROOM.max_spd   = Common::Vec2(20.0f);
-    VELOCITY_PROFILE_AROOM.max_dec   = Common::Vec2(1.0f);
-    VELOCITY_PROFILE_AROOM.max_acc   = Common::Vec2(0.8f);
-    VELOCITY_PROFILE_AROOM.max_w_acc = 40.0f;
-    VELOCITY_PROFILE_AROOM.max_w_dec = 140.0f;
-
-    VELOCITY_PROFILE_MAMOOLI.max_spd   = Common::Vec2(40.0f);
-    VELOCITY_PROFILE_MAMOOLI.max_dec   = Common::Vec2(1.5f);
-    VELOCITY_PROFILE_MAMOOLI.max_acc   = Common::Vec2(1.0f);
-    VELOCITY_PROFILE_MAMOOLI.max_w_acc = 40.0f;
-    VELOCITY_PROFILE_MAMOOLI.max_w_dec = 140.0f;
-
-    VELOCITY_PROFILE_KHARAKI.max_spd   = Common::Vec2(40.0f);
-    VELOCITY_PROFILE_KHARAKI.max_dec   = Common::Vec2(1.8f);
-    VELOCITY_PROFILE_KHARAKI.max_acc   = Common::Vec2(1.3f);
-    VELOCITY_PROFILE_KHARAKI.max_w_acc = 40.0f;
-    VELOCITY_PROFILE_KHARAKI.max_w_dec = 140.0f;
-
     playBook = nullptr;
     std::string strategy_path(DATA_DIR);
     strategy_path.append("/strategy.ims");

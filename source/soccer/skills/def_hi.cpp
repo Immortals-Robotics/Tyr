@@ -128,7 +128,7 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
     {
         ERRTSetObstacles(robot_num, stop, true);
         OwnRobot[robot_num].face(Common::Vec2((*defendTarget).x, (*defendTarget).y));
-        ERRTNavigate2Point(robot_num, target, 100, stop ? &VELOCITY_PROFILE_AROOM : &VELOCITY_PROFILE_MAMOOLI);
+        ERRTNavigate2Point(robot_num, target, 100, stop ? VelocityProfile::Type::Aroom : VelocityProfile::Type::Mamooli);
     }
     // side = -side;
 }

@@ -1,6 +1,6 @@
 #include "../ai.h"
 
-#define DEF_VEL_PROFILE (stop ? &VELOCITY_PROFILE_AROOM : &VELOCITY_PROFILE_MAMOOLI)
+#define DEF_VEL_PROFILE (stop ? VelocityProfile::Type::Aroom : VelocityProfile::Type::Mamooli)
 
 namespace Tyr::Soccer
 {

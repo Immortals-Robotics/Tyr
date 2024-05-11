@@ -214,20 +214,17 @@ void Ai::strategy_maker()
                 ERRTSetObstacles(*stm2AInum[i], 1, 1);
             }
 
-            VelocityProfile *profile;
+            VelocityProfile::Type profile = VelocityProfile::Type::Mamooli;
             switch (strategy.role(i).path(step[i]).velocity_profile())
             {
-            case 0:
-                profile = &VELOCITY_PROFILE_AROOM;
+            case Protos::Immortals::Waypoint_VelocityProfile_Aroom:
+                profile = VelocityProfile::Type::Aroom;
                 break;
-            case 1:
-                profile = &VELOCITY_PROFILE_MAMOOLI;
+            case Protos::Immortals::Waypoint_VelocityProfile_Mamooli:
+                profile = VelocityProfile::Type::Mamooli;
                 break;
-            case 2:
-                profile = &VELOCITY_PROFILE_MAMOOLI;
-                break;
-            default:
-                profile = &VELOCITY_PROFILE_MAMOOLI;
+            case Protos::Immortals::Waypoint_VelocityProfile_Kharaki:
+                profile = VelocityProfile::Type::Kharaki;
                 break;
             }
             if (step[i] != strategy.role(i).path_size() - 1)

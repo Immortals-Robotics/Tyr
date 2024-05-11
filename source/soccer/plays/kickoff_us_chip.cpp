@@ -15,7 +15,7 @@ void Ai::kickoff_us_chip()
             Common::Vec2(side * Common::field().width, 0),
             Common::worldState().ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) /
                 3.0f),
-        40, &VELOCITY_PROFILE_MAMOOLI);
+        40, VelocityProfile::Type::Mamooli);
 
     if (timer.time() < 0.5)
     {

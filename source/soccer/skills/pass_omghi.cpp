@@ -43,7 +43,7 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
                               OwnRobot[robot_num].state().position, -200);
 
     Common::logDebug("sBAR:    {}", sBAR);
-    ERRTNavigate2Point(robot_num, target, sBAR, &VELOCITY_PROFILE_KHARAKI);
+    ERRTNavigate2Point(robot_num, target, sBAR, VelocityProfile::Type::Kharaki);
 
     OwnRobot[robot_num].Shoot(100);
     OwnRobot[robot_num].Dribble(15);

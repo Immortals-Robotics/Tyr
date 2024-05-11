@@ -32,7 +32,7 @@ void Ai::NormalPlayDef()
                     ERRTNavigate2Point(dmf,
                                        Common::worldState().ball.position.pointOnConnectingLine(
                                            Common::Vec2(side * Common::field().width, 0), 1800),
-                                       100, &VELOCITY_PROFILE_MAMOOLI);
+                                       100, VelocityProfile::Type::Mamooli);
                 }
                 else if (own == mid1)
                 {
@@ -40,7 +40,7 @@ void Ai::NormalPlayDef()
                         Mark2Goal(own, oppAttacker, 500);
                     else
                         ERRTNavigate2Point(own, Common::Vec2(Common::worldState().ball.position.x, 1000), 100,
-                                           &VELOCITY_PROFILE_MAMOOLI);
+                                           VelocityProfile::Type::Mamooli);
                 }
                 else if (own == mid2)
                 {
@@ -48,7 +48,7 @@ void Ai::NormalPlayDef()
                         Mark2Goal(own, oppAttacker, 500);
                     else
                         ERRTNavigate2Point(own, Common::Vec2(Common::worldState().ball.position.x, -1000), 100,
-                                           &VELOCITY_PROFILE_MAMOOLI);
+                                           VelocityProfile::Type::Mamooli);
                 }
             }
             else

@@ -27,7 +27,7 @@ void Ai::their_place_ball()
                                                          DIS(Common::worldState().ball.position,
                                                              Common::Vec2(side * Common::field().width, 0)) /
                                                              3.0f),
-                                   100, &VELOCITY_PROFILE_AROOM);
+                                   100, VelocityProfile::Type::Aroom);
                 OwnRobot[dmf].Shoot(0);
             }
             else if (own == lmf)
@@ -41,7 +41,7 @@ void Ai::their_place_ball()
                         NormalizeAngle(-20 + AngleWith(Common::worldState().ball.position,
                                                        Common::Vec2(side * Common::field().width, 0))),
                         650),
-                    100, &VELOCITY_PROFILE_AROOM);
+                    100, VelocityProfile::Type::Aroom);
                 OwnRobot[lmf].Shoot(0);
             }
             else if (own == rmf)
@@ -55,7 +55,7 @@ void Ai::their_place_ball()
                         NormalizeAngle(20 + AngleWith(Common::worldState().ball.position,
                                                       Common::Vec2(side * Common::field().width, 0))),
                         650),
-                    100, &VELOCITY_PROFILE_AROOM);
+                    100, VelocityProfile::Type::Aroom);
                 OwnRobot[rmf].Shoot(0);
             }
             else if (own == cmf)
@@ -68,7 +68,7 @@ void Ai::their_place_ball()
                                                          Common::worldState().ball.position,
                                                          Common::Vec2(side * Common::field().width, 0))),
                                                      650),
-                                   100, &VELOCITY_PROFILE_AROOM);
+                                   100, VelocityProfile::Type::Aroom);
                 OwnRobot[cmf].Shoot(0);
             }
         }
@@ -95,7 +95,7 @@ void Ai::their_place_ball()
             Common::Vec2(side * Common::field().width, 0),
             Common::worldState().ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) /
                 3.0f),
-        100, &VELOCITY_PROFILE_AROOM);
+        100, VelocityProfile::Type::Aroom);
 
     ERRTSetObstacles(rw, true, true);
     obs_map.addCircle({Common::worldState().ball.position, 1010.0f});
@@ -114,7 +114,7 @@ void Ai::their_place_ball()
                                                    Common::worldState().ball.position.distanceTo(
                                                        Common::Vec2(side * Common::field().width, 0)) /
                                                        3.0f),
-                       100, &VELOCITY_PROFILE_AROOM);
+                       100, VelocityProfile::Type::Aroom);
 
     ERRTSetObstacles(lw, true, true);
     obs_map.addCircle({Common::worldState().ball.position, 1010.0f});
@@ -133,7 +133,7 @@ void Ai::their_place_ball()
                                                   Common::worldState().ball.position.distanceTo(
                                                       Common::Vec2(side * Common::field().width, 0)) /
                                                       3.0f),
-                       100, &VELOCITY_PROFILE_AROOM);
+                       100, VelocityProfile::Type::Aroom);
 
     ERRTSetObstacles(lmf, true, true);
     obs_map.addCircle({Common::worldState().ball.position, 1010.0f});
@@ -151,7 +151,7 @@ void Ai::their_place_ball()
                            Common::Angle::fromDeg(-20) + Common::worldState().ball.position.angleWith(
                                                              Common::Vec2(side * Common::field().width, 0)),
                            1090),
-                       100, &VELOCITY_PROFILE_AROOM);
+                       100, VelocityProfile::Type::Aroom);
 
     ERRTSetObstacles(rmf, true, true);
     obs_map.addCircle({Common::worldState().ball.position, 1010.0f});
@@ -169,7 +169,7 @@ void Ai::their_place_ball()
                            Common::Angle::fromDeg(20) + Common::worldState().ball.position.angleWith(
                                                             Common::Vec2(side * Common::field().width, 0)),
                            1090),
-                       100, &VELOCITY_PROFILE_AROOM);
+                       100, VelocityProfile::Type::Aroom);
 
     ERRTSetObstacles(cmf, true, true);
     obs_map.addCircle({Common::worldState().ball.position, 1010.0f});
@@ -187,7 +187,7 @@ void Ai::their_place_ball()
         Common::worldState().ball.position.circleAroundPoint(
             Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
             1090),
-        100, &VELOCITY_PROFILE_AROOM);
+        100, VelocityProfile::Type::Aroom);
     // side=-side;
 #endif
 }

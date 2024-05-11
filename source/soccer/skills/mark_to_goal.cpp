@@ -17,6 +17,6 @@ void Ai::Mark2Goal(int robot_num, int opp, float dist)
     OwnRobot[robot_num].face(Common::worldState().ball.position);
     ERRTSetObstacles(robot_num, 1, 1);
     ERRTNavigate2Point(robot_num, target, 100,
-                       Common::refereeState().stop() ? &VELOCITY_PROFILE_AROOM : &VELOCITY_PROFILE_MAMOOLI);
+                       Common::refereeState().stop() ? VelocityProfile::Type::Aroom : VelocityProfile::Type::Mamooli);
 }
 } // namespace Tyr::Soccer

@@ -38,7 +38,7 @@ public:
 
     void MoveByMotion(Common::Vec3 motion);
 
-    Common::Vec3 ComputeMotionCommand(float speed, const VelocityProfile &velocityProfile);
+    Common::Vec3 ComputeMotionCommand(float speed, VelocityProfile::Type velocityProfile);
 
     Common::Vec3    GetCurrentMotion() const;
     Sender::Command GetCurrentCommand() const;

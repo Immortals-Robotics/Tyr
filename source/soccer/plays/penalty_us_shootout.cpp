@@ -10,15 +10,15 @@ void Ai::penalty_us_shootout()
 
     OwnRobot[dmf].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(dmf, true, true);
-    ERRTNavigate2Point(dmf, Common::Vec2(side * 4000, 0), 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(dmf, Common::Vec2(side * 4000, 0), 80, VelocityProfile::Type::Aroom);
 
     OwnRobot[mid1].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(mid1, true, true);
-    ERRTNavigate2Point(mid1, Common::Vec2(side * 4000, -500), 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(mid1, Common::Vec2(side * 4000, -500), 80, VelocityProfile::Type::Aroom);
 
     OwnRobot[mid2].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(mid2, true, true);
-    ERRTNavigate2Point(mid2, Common::Vec2(side * 4000, 500), 80, &VELOCITY_PROFILE_AROOM);
+    ERRTNavigate2Point(mid2, Common::Vec2(side * 4000, 500), 80, VelocityProfile::Type::Aroom);
 
     if (!Common::refereeState().canKickBall())
     {
