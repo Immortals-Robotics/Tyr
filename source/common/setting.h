@@ -127,8 +127,9 @@ public:
     NetworkAddress yellow_robot_simulation_address = {"127.0.0.1", 10302};
 
     // NNG urls
-    std::string raw_world_state_url = "ipc:///tmp/raw_world_state.ipc";
-    std::string world_state_url     = "ipc:///tmp/world_state.ipc";
+    std::string raw_world_state_url = "ipc:///tyr/raw_world_state.ipc";
+    std::string world_state_url     = "ipc:///tyr/world_state.ipc";
+    std::string debug_url           = "ipc:///tyr/debug.ipc";
 
     TeamSide our_side = TeamSide::Left;
 

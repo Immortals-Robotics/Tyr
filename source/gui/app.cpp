@@ -89,6 +89,7 @@ bool Application::initialize(const int width, const int height)
 
     m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
     m_raw_client   = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
+    m_debug_client = std::make_unique<Common::NngClient>(Common::setting().debug_url);
 
     SetTraceLogCallback(logCallback);
 
@@ -146,7 +147,8 @@ void Application::start()
 void Application::update()
 {
     receiveWorldStates();
-    
+    receiveDebug();
+
     BeginDrawing();
     ClearBackground(DARKGRAY);
 
@@ -190,10 +192,8 @@ void Application::update()
             m_config_menu->updateNetworkData();
         }
 
-        m_drawing_mutex.lock();
-        m_renderer->draw(Common::debug().wrapper());
-        m_log_menu->draw(Common::debug().wrapper());
-        m_drawing_mutex.unlock();
+        m_renderer->draw(m_debug_wrapper);
+        m_log_menu->draw(m_debug_wrapper);
 
         m_renderer->applyShader();
         ImGui::Image(&m_renderer->shader_rt.texture, ImGui::GetContentRegionAvail());
@@ -222,6 +222,13 @@ void Application::receiveWorldStates()
     Protos::Immortals::WorldState pb_state;
     if (m_world_client->receive(&pb_state))
         m_world_state = Common::WorldState(pb_state);
+}
+
+void Application::receiveDebug()
+{
+    Protos::Immortals::Debug::Wrapper pb_wrapper;
+    if (m_debug_client->receive(&pb_wrapper))
+        m_debug_wrapper = Common::Debug::Wrapper(pb_wrapper);
 }
 
 void Application::visionRawEntry()
@@ -260,9 +267,7 @@ void Application::aiThreadEntry()
         for (auto &sender : m_senders)
             sender->flush();
 
-        m_drawing_mutex.lock();
-        Common::debug().flip();
-        m_drawing_mutex.unlock();
+        Common::debug().flush();
 
         Common::logInfo("FPS: {}", 1.0 / timer.interval());
     }

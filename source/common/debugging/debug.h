@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../math/vector.h"
+#include "../network/nng_server.h"
 #include "../state/world.h"
 #include "../storage/storage.h"
 #include "../time/time_point.h"
@@ -88,7 +89,7 @@ public:
     Debug(const Debug &)            = delete;
     Debug &operator=(const Debug &) = delete;
 
-    void flip();
+    void flush();
 
     void draw(Vec2 t_pos, Color t_color = Color::white(),
               std::source_location source = std::source_location::current());
@@ -105,21 +106,17 @@ public:
 
     void log(Log &&t_log);
 
-    const Wrapper &wrapper() const
-    {
-        return m_wrapper;
-    }
-
 private:
-    Debug() = default;
+    Debug();
     ~Debug();
 
     void initStorage(std::string_view t_name);
 
     friend struct Services;
 
+    std::unique_ptr<NngServer> m_server;
+
     Wrapper m_wrapper;
-    Wrapper m_wrapper_off;
 
     Storage m_storage;
 

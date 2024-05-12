@@ -8,8 +8,6 @@ class Logger;
 class Timer;
 class ConfigReader;
 
-struct WorldState;
-struct RawWorldState;
 struct FieldState;
 struct RefereeState;
 

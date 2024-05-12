@@ -35,7 +35,6 @@ private:
     std::atomic<bool> m_running = true;
 
     std::shared_mutex m_ai_mutex;
-    std::mutex        m_drawing_mutex;
 
     std::thread m_vision_raw_thread;
     std::thread m_vision_filtered_thread;
@@ -53,11 +52,15 @@ private:
 
     std::unique_ptr<Common::NngClient> m_world_client;
     std::unique_ptr<Common::NngClient> m_raw_client;
+    std::unique_ptr<Common::NngClient> m_debug_client;
 
     Common::WorldState    m_world_state;
     Common::RawWorldState m_raw_world_state;
 
+    Common::Debug::Wrapper m_debug_wrapper;
+
     void receiveWorldStates();
+    void receiveDebug();
 
     void visionRawEntry();
     void visionFilteredEntry();
