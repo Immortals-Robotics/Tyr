@@ -11,7 +11,7 @@ struct RobotProperty
     bool hasDribble;
 };
 
-Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
+Ai::Ai()
 {
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");
@@ -19,8 +19,7 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
     m_ref_client   = std::make_unique<Common::NngClient>(Common::setting().referee_state_url);
 
-    for (auto &sender : senders)
-        m_senders.push_back(sender.get());
+    m_cmd_server = std::make_unique<Common::NngServer>(Common::setting().commands_url);
 
     dss = new Dss(OwnRobot, m_world_state.opp_robot, 1.f / 61.57f, 7000.f, 3000.f);
 
@@ -142,5 +141,16 @@ bool Ai::receiveReferee()
 
     m_ref_state = Common::RefereeState(pb_state);
     return true;
+}
+
+bool Ai::publishCommands() const
+{
+    Protos::Immortals::CommandsWrapper pb_wrapper;
+    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    {
+        OwnRobot[i].GetCurrentCommand().fillProto(pb_wrapper.add_command());
+    }
+
+    return m_cmd_server->send(pb_wrapper);
 }
 } // namespace Tyr::Soccer

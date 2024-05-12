@@ -83,9 +83,9 @@ bool Application::initialize(const int width, const int height)
     m_strategy_udp = std::make_unique<Common::UdpClient>(Common::setting().strategy_address);
 
     m_senders.push_back(std::make_unique<Sender::Nrf>());
-    m_senders.push_back(std::make_unique<Sender::Grsim>(Common::setting().grsim_address));
+    m_senders.push_back(std::make_unique<Sender::Grsim>());
 
-    m_ai = std::make_unique<Soccer::Ai>(m_senders);
+    m_ai = std::make_unique<Soccer::Ai>();
 
     m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
     m_raw_client   = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
@@ -120,7 +120,9 @@ int Application::shutdown()
 
     m_vision_raw_thread.join();
     m_vision_filtered_thread.join();
+
     m_ai_thread.join();
+    m_sender_thread.join();
     m_ref_thread.join();
     m_str_thread.join();
 
@@ -139,9 +141,10 @@ void Application::start()
     m_vision_raw_thread      = std::thread(&Application::visionRawEntry, this);
     m_vision_filtered_thread = std::thread(&Application::visionFilteredEntry, this);
 
-    m_ai_thread  = std::thread(&Application::aiThreadEntry, this);
-    m_ref_thread = std::thread(&Application::refereeThreadEntry, this);
-    m_str_thread = std::thread(&Application::strategyThreadEntry, this);
+    m_ai_thread     = std::thread(&Application::aiEntry, this);
+    m_sender_thread = std::thread(&Application::senderEntry, this);
+    m_ref_thread    = std::thread(&Application::refereeEntry, this);
+    m_str_thread    = std::thread(&Application::strategyEntry, this);
 }
 
 void Application::update()
@@ -271,7 +274,7 @@ void Application::visionFilteredEntry()
     }
 }
 
-void Application::aiThreadEntry()
+void Application::aiEntry()
 {
     Common::Timer timer;
     timer.start();
@@ -286,8 +289,7 @@ void Application::aiThreadEntry()
 
         m_ai->process();
 
-        for (auto &sender : m_senders)
-            sender->flush();
+        m_ai->publishCommands();
 
         Common::debug().flush();
 
@@ -295,7 +297,29 @@ void Application::aiThreadEntry()
     }
 }
 
-void Application::refereeThreadEntry()
+void Application::senderEntry()
+{
+    Common::Timer timer;
+    timer.start();
+
+    while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
+    {
+        bool any = false;
+        for (const auto &sender : m_senders)
+        {
+            if (!sender->receive())
+                continue;
+
+            any = true;
+            sender->send();
+        }
+
+        if (any)
+            Common::logInfo("sender FPS: {}", 1.0 / timer.interval());
+    }
+}
+
+void Application::refereeEntry()
 {
     Common::Timer timer;
     timer.start();
@@ -314,7 +338,7 @@ void Application::refereeThreadEntry()
     }
 }
 
-void Application::strategyThreadEntry()
+void Application::strategyEntry()
 {
     while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {

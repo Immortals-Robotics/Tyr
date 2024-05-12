@@ -65,12 +65,12 @@ void Application::shutdown()
 
 void Application::start()
 {
-    m_ai_thread  = std::thread(&Application::aiThreadEntry, this);
-    m_ref_thread = std::thread(&Application::refereeThreadEntry, this);
-    m_str_thread = std::thread(&Application::strategyThreadEntry, this);
+    m_ai_thread  = std::thread(&Application::aiEntry, this);
+    m_ref_thread = std::thread(&Application::refereeEntry, this);
+    m_str_thread = std::thread(&Application::strategyEntry, this);
 }
 
-void Application::aiThreadEntry()
+void Application::aiEntry()
 {
     Common::Timer timer;
 
@@ -95,7 +95,7 @@ void Application::aiThreadEntry()
     m_exited = true;
 }
 
-void Application::refereeThreadEntry()
+void Application::refereeEntry()
 {
     while ((!m_exited) && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
@@ -108,7 +108,7 @@ void Application::refereeThreadEntry()
     }
 }
 
-void Application::strategyThreadEntry()
+void Application::strategyEntry()
 {
     while ((!m_exited) && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {

@@ -6,13 +6,13 @@ void Ai::process()
 {
     static int PRCS_CNT = 0;
 
+    internalPrepare();
     internalProcessData();
 
     Common::debug().draw(m_world_state.ball.position, Common::Color::red());
     //	Common::debug().draw(m_world_state.ball.position,Common::Vec2(m_world_state.ball.velocity.x,m_world_state.ball.velocity.y)
     //+ m_world_state.ball.position,
     // Black);
-
 
     if (lastReferee != m_ref_state.get())
     {
@@ -115,7 +115,5 @@ void Ai::process()
             Halt(i);
         }
     }
-
-    internalFinalize();
 }
 } // namespace Tyr::Soccer

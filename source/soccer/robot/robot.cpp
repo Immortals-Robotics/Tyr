@@ -266,13 +266,16 @@ Common::Vec3 Robot::GetCurrentMotion() const
 
 Sender::Command Robot::GetCurrentCommand() const
 {
-    return {.vision_id     = vision_id,
-            .halted        = halted,
-            .motion        = GetCurrentMotion(),
-            .current_angle = state().angle,
-            .target_angle  = target.angle,
-            .shoot         = shoot,
-            .chip          = chip,
-            .dribbler      = dribbler};
+    Sender::Command command;
+    command.vision_id     = vision_id;
+    command.halted        = halted;
+    command.motion        = GetCurrentMotion();
+    command.current_angle = state().angle;
+    command.target_angle  = target.angle;
+    command.shoot         = shoot;
+    command.chip          = chip;
+    command.dribbler      = dribbler;
+
+    return command;
 }
 } // namespace Tyr::Soccer

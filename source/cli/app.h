@@ -13,9 +13,9 @@ public:
     void start();
 
 private:
-    void aiThreadEntry();
-    void refereeThreadEntry();
-    void strategyThreadEntry();
+    void aiEntry();
+    void refereeEntry();
+    void strategyEntry();
 
     std::mutex        m_lock;
     std::atomic<bool> m_exited = false;
@@ -27,7 +27,7 @@ private:
     std::unique_ptr<Referee::Referee> m_referee;
 
     std::unique_ptr<Vision::Vision> m_vision;
-    std::vector<std::unique_ptr<Sender::ISender>> m_senders;
+    std::vector<std::unique_ptr<Sender::Base>> m_senders;
     std::unique_ptr<Soccer::Ai>     m_ai;
 
 	std::unique_ptr<Common::UdpClient> m_strategy_udp;

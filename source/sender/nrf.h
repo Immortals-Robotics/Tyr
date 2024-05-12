@@ -4,7 +4,7 @@
 
 namespace Tyr::Sender
 {
-class Nrf final : public ISender
+class Nrf final : public Base
 {
 private:
     std::shared_ptr<Common::UdpServer> commUDP;
@@ -12,13 +12,14 @@ private:
     void appendData(unsigned char *data, int length);
     void append_demo_data();
 
+    void queueCommand(const Command &command);
+
 public:
     int buff_idx;
     int startup;
 
     Nrf();
 
-    void queueCommand(const Command &command) override;
-    bool flush() override;
+    bool send() override;
 };
 } // namespace Tyr::Sender

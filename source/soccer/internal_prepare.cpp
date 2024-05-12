@@ -2,13 +2,10 @@
 
 namespace Tyr::Soccer
 {
-void Ai::internalFinalize()
+void Ai::internalPrepare()
 {
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        for (auto &sender : m_senders)
-            sender->queueCommand(OwnRobot[i].GetCurrentCommand());
-
         OwnRobot[i].halted = false;
     }
 

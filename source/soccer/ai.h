@@ -17,7 +17,7 @@ private:
     std::unique_ptr<Common::NngClient> m_world_client;
     std::unique_ptr<Common::NngClient> m_ref_client;
 
-    std::vector<Sender::ISender *> m_senders;
+    std::unique_ptr<Common::NngServer> m_cmd_server;
 
     Common::Random m_random;
 
@@ -189,15 +189,17 @@ private:
     void our_place_ball_shoot_taki();
     void their_place_ball();
 
+    void internalPrepare();
     void internalProcessData();
-    void internalFinalize();
 
 public:
     Robot OwnRobot[Common::Setting::kMaxOnFieldTeamRobots];
-    Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders);
+    Ai();
 
     bool receiveWorld();
     bool receiveReferee();
+
+    bool publishCommands() const;
 
     void process();
 

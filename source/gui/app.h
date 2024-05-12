@@ -39,6 +39,7 @@ private:
     std::thread m_vision_raw_thread;
     std::thread m_vision_filtered_thread;
     std::thread m_ai_thread;
+    std::thread m_sender_thread;
     std::thread m_ref_thread;
     std::thread m_str_thread;
 
@@ -47,8 +48,8 @@ private:
     std::unique_ptr<Vision::Raw>      m_vision_raw;
     std::unique_ptr<Vision::Filtered> m_vision_filtered;
 
-    std::vector<std::unique_ptr<Sender::ISender>> m_senders;
-    std::unique_ptr<Soccer::Ai>                   m_ai;
+    std::vector<std::unique_ptr<Sender::Base>> m_senders;
+    std::unique_ptr<Soccer::Ai>                m_ai;
 
     std::unique_ptr<Common::NngClient> m_world_client;
     std::unique_ptr<Common::NngClient> m_raw_client;
@@ -65,8 +66,9 @@ private:
     void visionRawEntry();
     void visionFilteredEntry();
 
-    void aiThreadEntry();
-    void refereeThreadEntry();
-    void strategyThreadEntry();
+    void aiEntry();
+    void senderEntry();
+    void refereeEntry();
+    void strategyEntry();
 };
 } // namespace Tyr::Gui

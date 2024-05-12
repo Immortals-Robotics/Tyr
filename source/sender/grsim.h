@@ -4,19 +4,19 @@
 
 namespace Tyr::Sender
 {
-class Grsim final : public ISender
+class Grsim final : public Base
 {
 private:
-    std::unique_ptr<Common::UdpServer> socket;
-    Common::NetworkAddress             address;
+    std::unique_ptr<Common::UdpServer> m_socket;
 
-    Protos::grSim_Packet packet;
+    Protos::grSim_Packet m_packet;
+
+    void queueCommand(const Command &t_command);
 
 public:
-    Grsim(Common::NetworkAddress address);
+    Grsim();
     ~Grsim() = default;
 
-    void queueCommand(const Command &command) override;
-    bool flush() override;
+    bool send() override;
 };
 } // namespace Tyr::Sender

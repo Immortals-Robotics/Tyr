@@ -2,14 +2,14 @@
 
 namespace Tyr::Sender
 {
-Grsim::Grsim(Common::NetworkAddress address) : address(address)
+Grsim::Grsim() : Base()
 {
-    socket = std::make_unique<Common::UdpServer>();
+    m_socket = std::make_unique<Common::UdpServer>();
 }
 
 void Grsim::queueCommand(const Command &command)
 {
-    Protos::grSim_Robot_Command *proto_command = packet.mutable_commands()->add_robot_commands();
+    Protos::grSim_Robot_Command *proto_command = m_packet.mutable_commands()->add_robot_commands();
     proto_command->set_id(command.vision_id);
 
     proto_command->set_wheelsspeed(false);
@@ -49,16 +49,17 @@ void Grsim::queueCommand(const Command &command)
     proto_command->set_spinner(command.dribbler);
 }
 
-bool Grsim::flush()
+bool Grsim::send()
 {
-    packet.mutable_commands()->set_isteamyellow(Common::setting().our_color == Common::TeamColor::Yellow);
-    packet.mutable_commands()->set_timestamp(0.0);
+    m_packet.Clear();
 
-    const bool result = socket->send(packet, address);
+    for (const auto &command : m_wrapper.command)
+        queueCommand(command);
 
-    packet.Clear();
+    m_packet.mutable_commands()->set_isteamyellow(Common::setting().our_color == Common::TeamColor::Yellow);
+    m_packet.mutable_commands()->set_timestamp(0.0);
 
-    return result;
+    return m_socket->send(m_packet, Common::setting().grsim_address);
 }
 
 } // namespace Tyr::Sender
