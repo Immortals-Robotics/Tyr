@@ -29,8 +29,8 @@ struct RawRobotState
         vision_id = t_robot.robot_id();
         color     = t_color;
 
-        position = Common::Vec2(t_robot.x(), t_robot.y());
-        angle    = Common::Angle::fromRad(t_robot.orientation());
+        position = Vec2(t_robot.x(), t_robot.y());
+        angle    = Angle::fromRad(t_robot.orientation());
     }
 
     RawRobotState(const Protos::Immortals::RawRobotState &t_robot)
@@ -60,7 +60,7 @@ struct RawBallState
 
     RawBallState(const Protos::SSL_DetectionBall &t_ball)
     {
-        position = Common::Vec2(t_ball.x(), t_ball.y());
+        position = Vec2(t_ball.x(), t_ball.y());
     }
 
     RawBallState(const Protos::Immortals::RawBallState &t_ball)
@@ -87,7 +87,7 @@ struct RawWorldState
 
     RawWorldState(const Protos::SSL_DetectionFrame &t_frame)
     {
-        time = (Common::TimeStamp) t_frame.t_capture() * 1000;
+        time = (TimeStamp) t_frame.t_capture() * 1000;
 
         for (const auto &ball : t_frame.balls())
         {
@@ -210,7 +210,7 @@ struct BallState
 
     BallState(const Protos::SSL_DetectionBall &t_ball)
     {
-        position   = Common::Vec2(t_ball.x(), t_ball.y());
+        position   = Vec2(t_ball.x(), t_ball.y());
         seen_state = SeenState::Seen;
     }
 
