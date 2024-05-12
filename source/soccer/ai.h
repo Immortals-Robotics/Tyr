@@ -23,10 +23,8 @@ private:
 
     Common::Random m_random;
 
-    std::map<std::string, void (Ai::*)()> AIPlayBook;
-    std::string                           currentPlay;
-
-    void InitAIPlayBook();
+    using Play = void (Ai::*)();
+    Play currentPlay;
 
     int FUNC_state = 0;
     int FUNC_CNT   = 0;
@@ -207,6 +205,6 @@ public:
 
     bool receivePlayBook();
     bool loadPlayBook(const std::filesystem::path &t_path);
-    bool setPlayBook(const Protos::Immortals::PlayBook& t_playbook);
+    bool setPlayBook(const Protos::Immortals::PlayBook &t_playbook);
 };
 } // namespace Tyr::Soccer

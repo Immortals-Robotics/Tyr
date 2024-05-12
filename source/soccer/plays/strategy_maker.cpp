@@ -57,6 +57,8 @@ bool Ai::receivePlayBook()
     std::ofstream strategyFile(strategy_path, std::ios::out | std::ios::binary);
     playbook.SerializePartialToOstream(&strategyFile);
     strategyFile.close();
+
+    return true;
 }
 
 bool Ai::setPlayBook(const Protos::Immortals::PlayBook &t_playbook)

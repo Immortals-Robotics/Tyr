@@ -22,7 +22,6 @@ set(SOURCE_FILES
 	ai_process.cpp
 	internal_prepare.cpp
 	internal_process_data.cpp
-	play_book.cpp
 
 	dss/dss.cpp
 	dss/parabolic.cpp

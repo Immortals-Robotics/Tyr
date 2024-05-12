@@ -31,68 +31,65 @@ void Ai::process()
         oppRestarted = false;
         if (side * m_world_state.ball.position.x > Common::field().width * 0.7f)
         {
-            currentPlay = "Stop_def";
+            currentPlay = &Ai::Stop_def;
         }
         else
         {
-            currentPlay = "Stop";
+            currentPlay = &Ai::Stop;
         }
     }
     else if (m_ref_state.gameOn())
     {
-        currentPlay = "NewNormalPlay";
+        currentPlay = &Ai::NewNormalPlay;
     }
     else if (m_ref_state.ourKickoff())
     {
-        currentPlay = "kickoff_us_chip";
+        currentPlay = &Ai::kickoff_us_chip;
     }
     else if ((m_ref_state.ourDirectKick()) || (m_ref_state.ourIndirectKick()))
     {
         if (target_str != -1)
         {
-            currentPlay = "strategy_maker";
+            currentPlay = &Ai::strategy_maker;
         }
         else
         {
-            currentPlay = "throwin_chip_shoot";
+            currentPlay = &Ai::throwin_chip_shoot;
         }
-        Common::logDebug("free-kick play: {}", currentPlay);
     }
     else if (m_ref_state.ourPenaltyKick())
     {
-        currentPlay = "penalty_us_shootout";
+        currentPlay = &Ai::penalty_us_shootout;
     }
     else if (m_ref_state.ourPlaceBall())
     {
-        //            m_ref_state.place_ball_target.X = -2500;
-        //            m_ref_state.place_ball_target.Y = -1500;
-        currentPlay = "our_place_ball_shoot";
-        currentPlay = "our_place_ball_shoot_V2"; // COMMENT this if it's not working...
-        //			currentPlay = "our_place_ball_shoot_taki";
+        currentPlay = &Ai::our_place_ball_shoot;
+        currentPlay = &Ai::our_place_ball_shoot_V2; // COMMENT this if it's not working...
+        // currentPlay = &Ai::our_place_ball_shoot_taki;
     }
     else if (m_ref_state.theirFreeKick())
     {
-        currentPlay = "corner_their_global";
+        currentPlay = &Ai::corner_their_global;
     }
     else if (m_ref_state.theirKickoff())
     {
-        currentPlay = "kickoff_their_one_wall";
+        currentPlay = &Ai::kickoff_their_one_wall;
     }
     else if (m_ref_state.theirPenaltyKick())
     {
-        currentPlay = "penalty_their_simple";
+        currentPlay = &Ai::penalty_their_simple;
     }
     else if (m_ref_state.theirPlaceBall())
     {
-        currentPlay = "their_place_ball";
+        currentPlay = &Ai::their_place_ball;
     }
     else if (m_ref_state.get() == Common::RefereeState::STATE_HALTED)
     {
-        currentPlay = "HaltAll";
+        currentPlay = &Ai::HaltAll;
     }
     else
     {
-        currentPlay = "Stop";
+        currentPlay = &Ai::Stop;
     }
 
     if (m_ref_state.theirRestart())
@@ -100,13 +97,7 @@ void Ai::process()
         oppRestarted = true;
     }
 
-    if (AIPlayBook.find(currentPlay) != AIPlayBook.end())
-        (this->*AIPlayBook[currentPlay])();
-    else
-    {
-        HaltAll();
-        Common::logWarning("Can't find play \"{}\" in playbook", currentPlay);
-    }
+    (this->*currentPlay)();
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {

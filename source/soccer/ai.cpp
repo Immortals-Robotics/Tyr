@@ -25,8 +25,7 @@ Ai::Ai()
 
     dss = new Dss(OwnRobot, m_world_state.opp_robot, 1.f / 61.57f, 7000.f, 3000.f);
 
-    InitAIPlayBook();
-    currentPlay = "HaltAll";
+    currentPlay = &Ai::HaltAll;
 
     gkIntercepting = false;
 
