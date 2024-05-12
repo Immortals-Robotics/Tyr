@@ -39,7 +39,7 @@ void Raw::process()
     processBalls();
     processRobots();
 
-    Common::worldState().time = Common::TimePoint::now();
+    m_state.time = Common::TimePoint::now();
 
     for (int i = 0; i < Common::Setting::kCamCount; i++)
         m_packet_received[i] = false;
