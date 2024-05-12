@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sender.h"
+#include "base.h"
 
 namespace Tyr::Sender
 {
@@ -20,6 +20,6 @@ public:
 
     Nrf();
 
-    bool send() override;
+    bool send(const CommandsWrapper &t_wrapper) override;
 };
 } // namespace Tyr::Sender

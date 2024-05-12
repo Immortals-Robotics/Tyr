@@ -82,8 +82,9 @@ bool Application::initialize(const int width, const int height)
 
     m_strategy_udp = std::make_unique<Common::UdpClient>(Common::setting().strategy_address);
 
-    m_senders.push_back(std::make_unique<Sender::Nrf>());
-    m_senders.push_back(std::make_unique<Sender::Grsim>());
+    m_sender_hub = std::make_unique<Sender::Hub>();
+    m_sender_hub->registerSender<Sender::Nrf>();
+    m_sender_hub->registerSender<Sender::Grsim>();
 
     m_ai = std::make_unique<Soccer::Ai>();
 
@@ -304,18 +305,12 @@ void Application::senderEntry()
 
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
-        bool any = false;
-        for (const auto &sender : m_senders)
-        {
-            if (!sender->receive())
-                continue;
+        if (!m_sender_hub->receive())
+            continue;
 
-            any = true;
-            sender->send();
-        }
+        m_sender_hub->send();
 
-        if (any)
-            Common::logInfo("sender FPS: {}", 1.0 / timer.interval());
+        Common::logInfo("sender FPS: {}", 1.0 / timer.interval());
     }
 }
 

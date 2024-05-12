@@ -48,8 +48,8 @@ private:
     std::unique_ptr<Vision::Raw>      m_vision_raw;
     std::unique_ptr<Vision::Filtered> m_vision_filtered;
 
-    std::vector<std::unique_ptr<Sender::Base>> m_senders;
-    std::unique_ptr<Soccer::Ai>                m_ai;
+    std::unique_ptr<Sender::Hub> m_sender_hub;
+    std::unique_ptr<Soccer::Ai>  m_ai;
 
     std::unique_ptr<Common::NngClient> m_world_client;
     std::unique_ptr<Common::NngClient> m_raw_client;

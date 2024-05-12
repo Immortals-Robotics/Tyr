@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sender.h"
+#include "base.h"
 
 namespace Tyr::Sender
 {
@@ -17,6 +17,6 @@ public:
     Grsim();
     ~Grsim() = default;
 
-    bool send() override;
+    bool send(const CommandsWrapper &t_wrapper) override;
 };
 } // namespace Tyr::Sender

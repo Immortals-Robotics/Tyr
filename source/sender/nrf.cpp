@@ -78,7 +78,7 @@ void Nrf::appendData(unsigned char *data, int length)
     buff_idx += length;
 }
 
-bool Nrf::send()
+bool Nrf::send(const CommandsWrapper &t_wrapper)
 {
     if (startup > 0)
     {
@@ -86,7 +86,7 @@ bool Nrf::send()
         return false;
     }
 
-    for (const auto &command : m_wrapper.command)
+    for (const auto &command : t_wrapper.command)
         queueCommand(command);
 
     append_demo_data();

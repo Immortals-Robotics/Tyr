@@ -49,11 +49,11 @@ void Grsim::queueCommand(const Command &command)
     proto_command->set_spinner(command.dribbler);
 }
 
-bool Grsim::send()
+bool Grsim::send(const CommandsWrapper &t_wrapper)
 {
     m_packet.Clear();
 
-    for (const auto &command : m_wrapper.command)
+    for (const auto &command : t_wrapper.command)
         queueCommand(command);
 
     m_packet.mutable_commands()->set_isteamyellow(Common::setting().our_color == Common::TeamColor::Yellow);
