@@ -16,14 +16,14 @@ private:
     void demoHandler();
     void initStorage();
     void analyzeDatabase();
-    void pushStartPoints(unsigned long t_ts);
+    void pushStartPoints(Common::Storage::Key t_ts);
 
     struct Info
     {
-        unsigned long start_ts;
-        unsigned long end_ts;
-        unsigned long current_ts;
-        unsigned long time_between_frames;
+        Common::Storage::Key start_ts;
+        Common::Storage::Key end_ts;
+        Common::Storage::Key current_ts;
+        Common::Storage::Key time_between_frames;
         Info() = default;
     };
 
@@ -44,10 +44,10 @@ private:
     float    m_playback_size    = 100.;
     LogState m_log_state        = LogState::None;
 
-    unsigned long              m_play_time = 0;
-    unsigned long              m_real_time = 0;
-    std::vector<unsigned long> m_start_times;
-    std::vector<unsigned long> m_end_times;
+    Common::Storage::Key              m_play_time = 0;
+    Common::Storage::Key              m_real_time = 0;
+    std::vector<Common::Storage::Key> m_start_times;
+    std::vector<Common::Storage::Key> m_end_times;
 
     int                       m_selected_demo = 0;
     std::vector<const char *> m_demo_names;

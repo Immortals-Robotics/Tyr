@@ -114,7 +114,7 @@ void DemoMenu::draw()
         if (ImGui::SliderFloat("##time", &m_playback_time, 0.0f, m_playback_size, "%.3fs") && m_start_times.size())
         {
             m_worldstate_filtered.info.current_ts =
-                static_cast<unsigned long>(m_playback_time * 1000) + m_start_times[m_selected_demo];
+                static_cast<Common::Storage::Key>(m_playback_time * 1000) + m_start_times[m_selected_demo];
         }
         ImGui::Spacing();
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.7f, 0.25f, 0.3f, 1.0f));        // Dark frame background
@@ -125,7 +125,7 @@ void DemoMenu::draw()
         if (ImGui::DragFloat("##timescrol", &m_playback_time, 0.01f, 0.0f, m_playback_size, "Fine Control"))
         {
             m_worldstate_filtered.info.current_ts =
-                static_cast<unsigned long>(m_playback_time * 1000) + m_start_times[m_selected_demo];
+                static_cast<Common::Storage::Key>(m_playback_time * 1000) + m_start_times[m_selected_demo];
         }
         ImGui::PopStyleColor(3);
 
@@ -148,8 +148,8 @@ void DemoMenu::demoHandler()
 {
     Protos::Immortals::Debug::Wrapper first_message, second_message;
     Protos::Immortals::WorldState     first_world_filtered, second_world_filtered;
-    unsigned long                     next_ts;
-    unsigned long                     d1, d2;
+    Common::Storage::Key              next_ts;
+    Common::Storage::Key              d1, d2;
     switch (m_log_state)
     {
     case LogState::PlaybackPlay:
@@ -213,7 +213,7 @@ void DemoMenu::analyzeDatabase()
 
     pushStartPoints(m_worldstate_filtered.info.current_ts);
 
-    unsigned long next_ts;
+    Common::Storage::Key next_ts;
     while (m_worldstate_filtered.info.current_ts < m_worldstate_filtered.info.end_ts)
     {
         m_storage.getTwo(m_worldstate_filtered.info.current_ts, &m_worldstate_filtered.info.current_ts, &next_ts,
@@ -231,7 +231,7 @@ void DemoMenu::analyzeDatabase()
     m_worldstate_filtered.info.current_ts = m_start_times[0];
 }
 
-void DemoMenu::pushStartPoints(unsigned long t_ts)
+void DemoMenu::pushStartPoints(Common::Storage::Key t_ts)
 {
     auto               tp         = std::chrono::system_clock::time_point(std::chrono::milliseconds(t_ts));
     auto               time       = std::chrono::system_clock::to_time_t(tp);
