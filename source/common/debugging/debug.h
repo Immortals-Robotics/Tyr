@@ -105,6 +105,7 @@ public:
               float t_thickness = 1.0f, std::source_location source = std::source_location::current());
 
     void log(Log &&t_log);
+    void draw(Draw &&t_draw);
 
 private:
     Debug();
@@ -121,5 +122,6 @@ private:
     Storage m_storage;
 
     std::mutex m_log_mutex;
+    std::mutex m_draw_mutex;
 };
 } // namespace Tyr::Common
