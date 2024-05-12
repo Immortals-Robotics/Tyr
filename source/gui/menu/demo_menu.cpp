@@ -237,7 +237,7 @@ void DemoMenu::pushStartPoints(Common::Storage::Key t_ts)
     auto               time       = std::chrono::system_clock::to_time_t(tp);
     auto              *local_time = std::localtime(&time);
     std::ostringstream oss;
-    oss << std::put_time(local_time, "%Y-%m-%d %H:%M:%S");
+    oss << std::put_time(local_time, "%Y/%m/%d-%H:%M:%S");
     m_start_times.push_back(t_ts);
 
     char *c_str = new char[oss.str().length() + 1];
