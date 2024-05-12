@@ -12,6 +12,8 @@ set(HEADER_FILES
 
 	obstacle/obstacle.h
 
+	plays/play_book.h
+
 	helpers/one_touch_detector.h
 
 	robot/robot.h
@@ -65,7 +67,7 @@ set(SOURCE_FILES
 	plays/place_ball.cpp
 	plays/stop_def.cpp
 	plays/stop.cpp
-	plays/strategy_maker.cpp
+	plays/strategy.cpp
 	plays/their_place_ball.cpp
 	plays/throwin_chip_shoot.cpp
 

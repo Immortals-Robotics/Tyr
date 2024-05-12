@@ -7,6 +7,8 @@ namespace Tyr::Common
 struct Rect
 {
 public:
+    Rect() = default;
+
     Rect(const Vec2 t_p1, const Vec2 t_p2)
         : min(std::min(t_p1.x, t_p2.x), std::min(t_p1.y, t_p2.y)),
           max(std::max(t_p1.x, t_p2.x), std::max(t_p1.y, t_p2.y))

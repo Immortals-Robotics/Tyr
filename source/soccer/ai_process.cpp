@@ -50,7 +50,7 @@ void Ai::process()
     {
         if (target_str != -1)
         {
-            currentPlay = &Ai::strategy_maker;
+            currentPlay = &Ai::strategy;
         }
         else
         {

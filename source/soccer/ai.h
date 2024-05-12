@@ -3,6 +3,7 @@
 #include "dss/dss.h"
 #include "errt/errt.h"
 #include "helpers/one_touch_detector.h"
+#include "plays/play_book.h"
 
 #define mark_in_stop 0
 
@@ -100,8 +101,8 @@ private:
     void CalcIsDefending();
     void MarkManager(bool restart = true);
 
-    Protos::Immortals::PlayBook m_playbook;
-    int                         strategy_weight();
+    PlayBook m_playbook;
+    int      strategy_weight();
 
     Common::Vec2  PredictedBall;
     bool          circleReachedBehindBall;
@@ -183,7 +184,7 @@ private:
     void kickoff_their_one_wall();
     void penalty_their_simple();
     void corner_their_global();
-    void strategy_maker();
+    void strategy();
     void our_place_ball_shoot();
     void our_place_ball_shoot_V2();
     void our_place_ball_shoot_taki();
