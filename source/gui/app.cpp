@@ -233,32 +233,45 @@ void Application::receiveDebug()
 
 void Application::visionRawEntry()
 {
+    Common::Timer timer;
+    timer.start();
+
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
         m_vision_raw->receive();
 
-        if (m_vision_raw->camsReady())
-            m_vision_raw->process();
+        if (!m_vision_raw->camsReady())
+            continue;
+
+        m_vision_raw->process();
+
+        Common::logInfo("vision raw FPS: {}", 1.0 / timer.interval());
     }
 }
 
 void Application::visionFilteredEntry()
 {
+    Common::Timer timer;
+    timer.start();
+
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
-        if (m_vision_filtered->receive())
-            m_vision_filtered->process();
+        if (!m_vision_filtered->receive())
+            continue;
+
+        m_vision_filtered->process();
+
+        Common::logInfo("vision filtered FPS: {}", 1.0 / timer.interval());
     }
 }
 
 void Application::aiThreadEntry()
 {
     Common::Timer timer;
+    timer.start();
 
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
-        timer.start();
-
         if (!m_ai->receive())
             continue;
 
@@ -269,12 +282,15 @@ void Application::aiThreadEntry()
 
         Common::debug().flush();
 
-        Common::logInfo("FPS: {}", 1.0 / timer.interval());
+        Common::logInfo("AI FPS: {}", 1.0 / timer.interval());
     }
 }
 
 void Application::refereeThreadEntry()
 {
+    Common::Timer timer;
+    timer.start();
+
     while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
         const bool ref_received   = m_referee->receiveRef();
@@ -284,6 +300,8 @@ void Application::refereeThreadEntry()
             m_ai_mutex.lock();
             m_referee->process();
             m_ai_mutex.unlock();
+
+            Common::logInfo("referee FPS: {}", 1.0 / timer.interval());
         }
     }
 }

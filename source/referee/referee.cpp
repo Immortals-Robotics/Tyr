@@ -167,6 +167,7 @@ bool Referee::receiveRef()
 {
     return m_ref_client->receive(&m_ssl_ref);
 }
+
 bool Referee::receiveWorld()
 {
     Protos::Immortals::WorldState pb_state;
