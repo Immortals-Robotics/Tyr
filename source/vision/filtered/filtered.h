@@ -1,46 +1,31 @@
 #pragma once
 
-////////////////////////////////////////////////////////////////////
-//  vision.h
-//
-//  This file contains all the functions necessary for processing
-//  raw vision data
-//
-////////////////////////////////////////////////////////////////////
-
-#include "kalman/filtered_object.h"
+#include "../kalman/filtered_object.h"
 
 namespace Tyr::Vision
 {
-class Vision
+class Filtered
 {
 public:
-    Vision();
-    ~Vision();
+    Filtered();
+    ~Filtered();
 
     bool receive();
     void process();
-    bool isConnected();
-    bool camsReady() const;
-
-    void updateAddress(const Common::NetworkAddress &t_address);
-
-    void storeStates();
 
 private:
-    bool connect();
-    bool receivePacket();
-
     void processRobots();
-    void mergeRobots(Common::TeamColor t_color);
     void filterRobots(Common::TeamColor t_color);
     void predictRobots();
     void sendStates();
 
     void processBalls();
-    void mergeBalls();
     void filterBalls();
     void predictBall();
+
+    void storeState();
+
+    bool publishState() const;
 
 private:
     // TODO: move to settings
@@ -54,9 +39,8 @@ private:
     // All these are in metres/sec
     static constexpr float kRobotErrorVelocity = 4500.0f;
 
-    std::unique_ptr<Common::UdpClient> m_udp;
-
-    bool m_packet_received[Common::Setting::kCamCount];
+    std::unique_ptr<Common::NngClient> m_client;
+    std::unique_ptr<Common::NngServer> m_server;
 
     Common::RawBallState m_last_raw_ball; // The last position of the locked ball
     FilteredObject       m_ball_kalman;
@@ -68,9 +52,9 @@ private:
     Common::MedianFilter<Common::Angle> m_angle_filter[2][Common::Setting::kMaxRobots];
     Common::Angle                       m_raw_angles[2][Common::Setting::kMaxRobots];
 
-    Protos::SSL_DetectionFrame m_d_frame[Common::Setting::kCamCount];
+    Common::RawWorldState m_raw_state;
+    Common::WorldState m_state;
 
-    Common::Storage m_raw_storage;
-    Common::Storage m_filtered_storage;
+    Common::Storage m_storage;
 };
 } // namespace Tyr::Vision

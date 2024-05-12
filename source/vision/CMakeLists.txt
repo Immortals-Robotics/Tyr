@@ -2,15 +2,19 @@ project(${CMAKE_PROJECT_NAME}-vision)
 
 set(HEADER_FILES
 	pch.h
-	vision.h
-	kalman/filtered_object.h)
+	filtered/filtered.h
+	kalman/filtered_object.h
+	raw/raw.h)
 
 set(SOURCE_FILES
-	vision_ball.cpp
-	vision_communication.cpp
-	vision_robot.cpp
-	vision.cpp
-	kalman/filtered_object.cpp)
+	filtered/ball.cpp
+	filtered/filtered.cpp
+	filtered/robot.cpp
+	kalman/filtered_object.cpp
+	raw/ball.cpp
+	raw/communication.cpp
+	raw/robot.cpp
+	raw/raw.cpp)
 
 add_library(${PROJECT_NAME}
 	${SOURCE_FILES} ${HEADER_FILES})

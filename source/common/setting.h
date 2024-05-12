@@ -58,18 +58,18 @@ private:
     Setting()  = default;
     ~Setting() = default;
 
-    void load(toml::table t_table) override;
+    void        load(toml::table t_table) override;
     toml::table m_config_table;
     friend struct Services;
 
 public:
     Setting(const Setting &)            = delete;
     Setting &operator=(const Setting &) = delete;
-    
-    template<typename T>
-    void updateSetting(const std::string& _settings_key,const T& _new_value);
 
-    toml::table getConfigTable(void);
+    template <typename T>
+    void updateSetting(const std::string &_settings_key, const T &_new_value);
+
+    toml::table             getConfigTable(void);
     static constexpr size_t kMaxUdpPacketSize = 1024 * 16; // TODO what should the size be really?
 
     // The variety of standard patterns that we can have is 16
@@ -125,6 +125,10 @@ public:
     NetworkAddress control_simulation_address      = {"127.0.0.1", 10300};
     NetworkAddress blue_robot_simulation_address   = {"127.0.0.1", 10301};
     NetworkAddress yellow_robot_simulation_address = {"127.0.0.1", 10302};
+
+    // NNG urls
+    std::string raw_world_state_url = "ipc:///tmp/raw_world_state.ipc";
+    std::string world_state_url     = "ipc:///tmp/world_state.ipc";
 
     TeamSide our_side = TeamSide::Left;
 

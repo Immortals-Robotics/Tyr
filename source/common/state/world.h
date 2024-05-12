@@ -125,7 +125,7 @@ struct RawWorldState
         }
     }
 
-    void fillProto(Protos::Immortals::RawWorldState *const t_state)
+    void fillProto(Protos::Immortals::RawWorldState *const t_state) const
     {
         t_state->set_time(time.timestamp());
 
@@ -303,7 +303,7 @@ struct WorldState
         }
     }
 
-    void fillProto(Protos::Immortals::WorldState *const t_state)
+    void fillProto(Protos::Immortals::WorldState *const t_state) const
     {
         t_state->set_time(time.timestamp());
 
