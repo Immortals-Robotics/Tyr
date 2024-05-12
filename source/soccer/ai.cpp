@@ -16,6 +16,8 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");
 
+    m_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
+
     for (auto &sender : senders)
         m_senders.push_back(sender.get());
 

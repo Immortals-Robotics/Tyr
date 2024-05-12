@@ -87,6 +87,9 @@ bool Application::initialize(const int width, const int height)
 
     m_ai = std::make_unique<Soccer::Ai>(m_senders);
 
+    m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
+    m_raw_client   = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
+
     SetTraceLogCallback(logCallback);
 
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
@@ -142,6 +145,8 @@ void Application::start()
 
 void Application::update()
 {
+    receiveWorldStates();
+    
     BeginDrawing();
     ClearBackground(DARKGRAY);
 
@@ -170,13 +175,11 @@ void Application::update()
     {
         m_renderer->draw(Common::field());
 
-        m_ai_mutex.lock_shared();
         // TODO(mhmd): add an option for this
         if (1)
-            m_renderer->draw(Common::worldState());
+            m_renderer->draw(m_world_state);
         else
-            m_renderer->draw(Common::rawWorldState());
-        m_ai_mutex.unlock_shared();
+            m_renderer->draw(m_raw_world_state);
 
         if (m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
             m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_IP)
@@ -208,6 +211,17 @@ void Application::update()
 bool Application::shouldClose() const
 {
     return WindowShouldClose();
+}
+
+void Application::receiveWorldStates()
+{
+    Protos::Immortals::RawWorldState pb_raw_state;
+    if (m_raw_client->receive(&pb_raw_state))
+        m_raw_world_state = Common::RawWorldState(pb_raw_state);
+
+    Protos::Immortals::WorldState pb_state;
+    if (m_world_client->receive(&pb_state))
+        m_world_state = Common::WorldState(pb_state);
 }
 
 void Application::visionRawEntry()

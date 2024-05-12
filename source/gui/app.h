@@ -51,6 +51,14 @@ private:
     std::vector<std::unique_ptr<Sender::ISender>> m_senders;
     std::unique_ptr<Soccer::Ai>                   m_ai;
 
+    std::unique_ptr<Common::NngClient> m_world_client;
+    std::unique_ptr<Common::NngClient> m_raw_client;
+
+    Common::WorldState    m_world_state;
+    Common::RawWorldState m_raw_world_state;
+
+    void receiveWorldStates();
+
     void visionRawEntry();
     void visionFilteredEntry();
 
