@@ -258,7 +258,9 @@ void Application::refereeThreadEntry()
 {
     while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
-        if (m_referee->receive())
+        const bool ref_received   = m_referee->receiveRef();
+        const bool world_received = m_referee->receiveWorld();
+        if (ref_received || world_received)
         {
             m_ai_mutex.lock();
             m_referee->process();

@@ -4,14 +4,15 @@ namespace Tyr::Referee
 {
 bool Referee::connect()
 {
-    m_udp = std::make_unique<Common::UdpClient>(Common::setting().referee_address);
+    m_ref_client   = std::make_unique<Common::UdpClient>(Common::setting().referee_address);
+    m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
 
     return isConnected();
 }
 
 bool Referee::isConnected()
 {
-    return m_udp != nullptr && m_udp->isConnected();
+    return m_ref_client != nullptr && m_ref_client->isConnected();
 }
 
 void Referee::process()
@@ -31,7 +32,7 @@ void Referee::process()
     { // Update only when there is a new command
         m_cmd_counter = m_ssl_ref.command_counter();
 
-        m_last_placed_ball = Common::worldState().ball.position;
+        m_last_placed_ball = m_world_state.ball.position;
 
         if (Common::setting().our_color == Common::TeamColor::Blue)
             Common::refereeState().opp_gk = m_ssl_ref.yellow().goalie();
@@ -59,7 +60,7 @@ bool Referee::isKicked()
         requiredDis = 150.0f;
     }
 
-    const float ball_move_dis = Common::worldState().ball.position.distanceTo(m_last_placed_ball);
+    const float ball_move_dis = m_world_state.ball.position.distanceTo(m_last_placed_ball);
     Common::logDebug("ball has moved {}", ball_move_dis);
     if (ball_move_dis > requiredDis)
     {
@@ -162,16 +163,17 @@ void Referee::transition(const Protos::SSL_Referee_Command ref_command)
     }
 }
 
-bool Referee::receive()
+bool Referee::receiveRef()
 {
-    if (!isConnected())
+    return m_ref_client->receive(&m_ssl_ref);
+}
+bool Referee::receiveWorld()
+{
+    Protos::Immortals::WorldState pb_state;
+    if (!m_world_client->receive(&pb_state))
         return false;
 
-    if (m_udp->receive(&m_ssl_ref))
-    {
-        return true;
-    }
-
-    return false;
+    m_world_state = Common::WorldState(pb_state);
+    return true;
 }
 } // namespace Tyr::Referee

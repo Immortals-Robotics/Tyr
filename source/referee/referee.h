@@ -5,7 +5,10 @@ namespace Tyr::Referee
 class Referee
 {
 private:
-    std::unique_ptr<Common::UdpClient> m_udp;
+    std::unique_ptr<Common::UdpClient> m_ref_client;
+    std::unique_ptr<Common::NngClient> m_world_client;
+
+    Common::WorldState m_world_state;
 
     Common::Vec2 m_last_placed_ball;
     int          m_move_hys; // For isKicked
@@ -23,9 +26,12 @@ private:
 
 public:
     Referee() = default;
+
     bool connect();
     bool isConnected();
-    bool receive();
+
+    bool receiveRef();
+    bool receiveWorld();
 
     void process();
 };
