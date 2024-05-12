@@ -32,6 +32,7 @@ set(HEADER_FILES
 	network/nng_client.h
 	network/nng_server.h
 	network/udp_client.h
+	network/nng_message.h
 	network/udp_server.h
 	state/referee.h
 	state/world.h

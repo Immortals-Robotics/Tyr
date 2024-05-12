@@ -29,28 +29,28 @@ NngClient::NngClient(const std::string_view t_url)
 
 bool NngClient::receive(google::protobuf::MessageLite *const t_message)
 {
-    std::span<char> data;
-    if (!receiveRaw(&data))
+    const NngMessage message = receiveRaw();
+
+    if (message.size() == 0)
         return false;
 
-    return t_message->ParseFromArray(data.data(), data.size());
+    return t_message->ParseFromArray(message.data(), message.size());
 }
 
-bool NngClient::receiveRaw(std::span<char> *const t_data)
+NngMessage NngClient::receiveRaw()
 {
-    asio::error_code error;
+    char  *buffer        = nullptr;
+    size_t received_size = 0;
 
-    size_t received_size = m_buffer.size();
-
-    const int result = nng_recv(m_socket, m_buffer.data(), &received_size, 0 /*NNG_FLAG_NONBLOCK*/);
+    const int result = nng_recv(m_socket, &buffer, &received_size, NNG_FLAG_ALLOC | NNG_FLAG_NONBLOCK);
     if (result != 0)
     {
-        logCritical("Failed to receive from nng sub socket: {}", result);
-        return false;
+        if (result != NNG_EAGAIN)
+            logCritical("Failed to receive from nng sub socket: {}", result);
+        return {};
     }
 
-    *t_data = std::span<char>(m_buffer.data(), received_size);
-    return true;
+    return {buffer, received_size};
 }
 
 } // namespace Tyr::Common

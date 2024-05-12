@@ -23,22 +23,23 @@ NngServer::NngServer(const std::string_view t_url)
 
 bool NngServer::send(const google::protobuf::MessageLite &t_message)
 {
-    if (!t_message.SerializeToArray(m_buffer.data(), m_buffer.size()))
+    const NngMessage message{t_message.ByteSizeLong()};
+
+    if (!t_message.SerializeToArray(message.data(), message.size()))
     {
         logError("Failed to serializeToArray (Maybe need to adjust Setting::kMaxUdpPacketSize)");
         return false;
     }
 
-    const size_t serialized_size = t_message.ByteSizeLong();
-    return send(serialized_size);
+    return send(message);
 }
 
-bool NngServer::send(const size_t t_size)
+bool NngServer::send(const NngMessage &t_message)
 {
-    const int result = nng_send(m_socket, m_buffer.data(), t_size, 0);
+    const int result = nng_send(m_socket, t_message.data(), t_message.size(), 0);
     if (result != 0)
     {
-        logError("Nng send of {} bytes failed: {}", t_size, result);
+        logError("Nng send of {} bytes failed: {}", t_message.size(), result);
         return false;
     }
 
