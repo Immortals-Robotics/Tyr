@@ -1,5 +1,6 @@
 #pragma once
 
+#include "base.h"
 #include "command.h"
 
 namespace Tyr::Sender
@@ -42,8 +43,8 @@ public:
     }
 
 private:
-    std::unique_ptr<Common::NngClient>         m_client;
-    std::vector<std::unique_ptr<Sender::Base>> m_senders;
+    std::unique_ptr<Common::NngClient> m_client;
+    std::vector<std::unique_ptr<Base>> m_senders;
 
     CommandsWrapper m_wrapper;
 };

@@ -80,8 +80,6 @@ bool Application::initialize(const int width, const int height)
 
     m_vision_filtered = std::make_unique<Vision::Filtered>();
 
-    m_strategy_udp = std::make_unique<Common::UdpClient>(Common::setting().strategy_address);
-
     m_sender_hub = std::make_unique<Sender::Hub>();
     m_sender_hub->registerSender<Sender::Nrf>();
     m_sender_hub->registerSender<Sender::Grsim>();
@@ -125,7 +123,6 @@ int Application::shutdown()
     m_ai_thread.join();
     m_sender_thread.join();
     m_ref_thread.join();
-    m_str_thread.join();
 
     rlImGuiShutdown();
 
@@ -145,7 +142,6 @@ void Application::start()
     m_ai_thread     = std::thread(&Application::aiEntry, this);
     m_sender_thread = std::thread(&Application::senderEntry, this);
     m_ref_thread    = std::thread(&Application::refereeEntry, this);
-    m_str_thread    = std::thread(&Application::strategyEntry, this);
 }
 
 void Application::update()
@@ -282,8 +278,9 @@ void Application::aiEntry()
 
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
-        const bool world_received   = m_ai->receiveWorld();
-        const bool referee_received = m_ai->receiveReferee();
+        const bool world_received    = m_ai->receiveWorld();
+        const bool referee_received  = m_ai->receiveReferee();
+        const bool playbook_received = m_ai->receivePlayBook();
 
         if (!world_received)
             continue;
@@ -332,38 +329,4 @@ void Application::refereeEntry()
         }
     }
 }
-
-void Application::strategyEntry()
-{
-    while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
-    {
-        std::span<char> received_strategy;
-        if (m_strategy_udp->receiveRaw(&received_strategy))
-        {
-            if (received_strategy.size() > 11)
-            {
-                const auto receive_endpoint = m_strategy_udp->getLastReceiveEndpoint();
-                Common::logInfo("Received \"strategy.ims\" with size: {} KB, from {} on port {}",
-                                float(received_strategy.size()) / 1000.0f, receive_endpoint.address().to_string(),
-                                receive_endpoint.port());
-
-                m_ai_mutex.lock();
-                m_ai->read_playBook_str(received_strategy);
-                m_ai_mutex.unlock();
-
-                const std::filesystem::path strategy_path =
-                    std::filesystem::path{DATA_DIR} / std::filesystem::path{"strategy.ims"};
-
-                std::ofstream strategyFile(strategy_path, std::ios::out | std::ios::binary);
-                strategyFile.write(received_strategy.data(), received_strategy.size());
-                strategyFile.close();
-            }
-            else
-            {
-                Common::logWarning("Invalid \"strategy.ims\" received with size: {}", received_strategy.size());
-            }
-        }
-    }
-}
-
 } // namespace Tyr::Gui

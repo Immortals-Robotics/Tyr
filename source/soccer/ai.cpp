@@ -19,6 +19,8 @@ Ai::Ai()
     m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
     m_ref_client   = std::make_unique<Common::NngClient>(Common::setting().referee_state_url);
 
+    m_strategy_client = std::make_unique<Common::UdpClient>(Common::setting().strategy_address);
+
     m_cmd_server = std::make_unique<Common::NngServer>(Common::setting().commands_url);
 
     dss = new Dss(OwnRobot, m_world_state.opp_robot, 1.f / 61.57f, 7000.f, 3000.f);
@@ -107,18 +109,8 @@ Ai::Ai()
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
         requiredRobots[i] = false;
 
-    playBook = nullptr;
-    std::string strategy_path(DATA_DIR);
-    strategy_path.append("/strategy.ims");
-    read_playBook(strategy_path.c_str());
-    if (playBook)
-    {
-        Common::logInfo("Strategy loaded with size {}", playBook->strategy_size());
-    }
-    else
-    {
-        Common::logCritical("Could not open \"strategy.ims\"");
-    }
+    const auto strategy_path = std::filesystem::path(DATA_DIR) / "strategy.ims";
+    loadPlayBook(strategy_path);
 
     timer.start();
 }

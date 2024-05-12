@@ -28,20 +28,15 @@ private:
     std::unique_ptr<DemoMenu>   m_demo_menu;
     std::unique_ptr<LogMenu>    m_log_menu;
 
-    std::unique_ptr<Common::UdpClient> m_strategy_udp;
-
     Common::NetworkAddress updated_address;
 
     std::atomic<bool> m_running = true;
-
-    std::shared_mutex m_ai_mutex;
 
     std::thread m_vision_raw_thread;
     std::thread m_vision_filtered_thread;
     std::thread m_ai_thread;
     std::thread m_sender_thread;
     std::thread m_ref_thread;
-    std::thread m_str_thread;
 
     std::unique_ptr<Referee::Referee> m_referee;
 
@@ -69,6 +64,5 @@ private:
     void aiEntry();
     void senderEntry();
     void refereeEntry();
-    void strategyEntry();
 };
 } // namespace Tyr::Gui

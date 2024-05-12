@@ -17,6 +17,8 @@ private:
     std::unique_ptr<Common::NngClient> m_world_client;
     std::unique_ptr<Common::NngClient> m_ref_client;
 
+    std::unique_ptr<Common::UdpClient> m_strategy_client;
+
     std::unique_ptr<Common::NngServer> m_cmd_server;
 
     Common::Random m_random;
@@ -100,8 +102,8 @@ private:
     void CalcIsDefending();
     void MarkManager(bool restart = true);
 
-    Protos::Immortals::PlayBook *playBook;
-    int                          strategy_weight();
+    Protos::Immortals::PlayBook m_playbook;
+    int                         strategy_weight();
 
     Common::Vec2  PredictedBall;
     bool          circleReachedBehindBall;
@@ -203,7 +205,8 @@ public:
 
     void process();
 
-    bool read_playBook(const std::filesystem::path &t_path);
-    bool read_playBook_str(std::span<char> buffer);
+    bool receivePlayBook();
+    bool loadPlayBook(const std::filesystem::path &t_path);
+    bool setPlayBook(const Protos::Immortals::PlayBook& t_playbook);
 };
 } // namespace Tyr::Soccer

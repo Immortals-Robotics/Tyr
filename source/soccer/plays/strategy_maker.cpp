@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-bool Ai::read_playBook(const std::filesystem::path &t_path)
+bool Ai::loadPlayBook(const std::filesystem::path &t_path)
 {
     std::ifstream file(t_path, std::ios::in | std::ios::binary);
 
@@ -22,32 +22,58 @@ bool Ai::read_playBook(const std::filesystem::path &t_path)
     file.read(buffer.get(), length);
     file.close();
 
-    return read_playBook_str({buffer.get(), length});
+    Protos::Immortals::PlayBook playbook;
+    if (!playbook.ParseFromArray(buffer.get(), length))
+    {
+        Common::logError("Failed to parse playbook file {} with size {}", t_path, length);
+        return false;
+    }
+
+    const bool result = setPlayBook(playbook);
+
+    if (result)
+        Common::logInfo("Strategy file {} loaded with size {}", t_path, m_playbook.strategy_size());
+    else
+        Common::logCritical("Could not open strategy file {}", t_path);
+    
+    return result;
 }
 
-bool Ai::read_playBook_str(std::span<char> buffer)
+bool Ai::receivePlayBook()
 {
-    if (!playBook)
-        playBook = new Protos::Immortals::PlayBook();
+    Protos::Immortals::PlayBook playbook;
+    if (!m_strategy_client->receive(&playbook))
+        return false;
 
-    if (!playBook->ParseFromArray(buffer.data(), buffer.size()))
+    const auto receive_endpoint = m_strategy_client->getLastReceiveEndpoint();
+    Common::logInfo("Received playbook from {} on port {}", receive_endpoint.address().to_string(),
+                    receive_endpoint.port());
+
+    if (!setPlayBook(playbook))
+        return false;
+
+    const std::filesystem::path strategy_path = std::filesystem::path{DATA_DIR} / "strategy.ims";
+
+    std::ofstream strategyFile(strategy_path, std::ios::out | std::ios::binary);
+    playbook.SerializePartialToOstream(&strategyFile);
+    strategyFile.close();
+}
+
+bool Ai::setPlayBook(const Protos::Immortals::PlayBook &t_playbook)
+{
+    if (t_playbook.strategy_size() != t_playbook.weight_size())
     {
-        delete playBook;
-        playBook = nullptr;
+        Common::logError("Parsed playbook  has {} strategies != {} weights", t_playbook.strategy_size(),
+                         t_playbook.weight_size());
         return false;
     }
 
-    if (playBook->strategy_size() != playBook->weight_size())
-    {
-        delete playBook;
-        playBook = nullptr;
-        return false;
-    }
+    m_playbook = t_playbook;
 
-    for (int strategy_idx = 0; strategy_idx < playBook->strategy_size(); ++strategy_idx)
+    for (int strategy_idx = 0; strategy_idx < m_playbook.strategy_size(); ++strategy_idx)
     {
-        Common::logInfo("STRATEGY: {}, weight: {}", playBook->strategy(strategy_idx).name(),
-                        playBook->weight(strategy_idx));
+        Common::logInfo("STRATEGY: {}, weight: {}", m_playbook.strategy(strategy_idx).name(),
+                        m_playbook.weight(strategy_idx));
     }
 
     return true;
@@ -73,7 +99,7 @@ void Ai::strategy_maker()
         return;
     }
 
-    Protos::Immortals::Strategy strategy = playBook->strategy(curr_str_id);
+    Protos::Immortals::Strategy strategy = m_playbook.strategy(curr_str_id);
     Common::logInfo("STRATEGY: {}", strategy.name());
 
     int xSgn = side;
