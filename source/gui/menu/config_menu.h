@@ -3,7 +3,7 @@
 namespace Tyr::Gui
 {
 class ConfigCallback;
-
+const int max_num_of_cameras = 8;
 enum class InputCallbackType
 {
     None = 0,
@@ -56,6 +56,18 @@ private:
     char m_grsim_ip_text[16]     = "127.0.0.1";
     char m_grsim_port_text[6]    = "20011";
 
+    char m_ball_merge_distance_text[10];
+    char m_max_ball_2_frame_dist[10];
+    char m_max_ball_frame_not_seen[10];
+    char m_max_ball_hist[10];
+    char m_max_robot_frame_not_seen[10];
+    char m_merge_distance[10];
+    char m_vision_frame_rate[10];
+
+    std::array<bool, max_num_of_cameras> m_use_camera     = {true, true, false};
+    bool                                 m_use_kalman_ang = false;
+    bool                                 m_use_kalman_pos = true;
+
     const std::map<InputCallbackType, char *> m_type_input_text_map{
         {InputCallbackType::VISION_IP, m_vision_ip_text},     {InputCallbackType::VISION_PORT, m_vision_port_text},
         {InputCallbackType::REF_IP, m_referee_ip_text},       {InputCallbackType::REF_PORT, m_referee_port_text},
@@ -67,6 +79,7 @@ private:
 
     void drawTabBar();
     void drawNetworkTab();
+    void drawConfigTab();
     void drawIpPortInput(const std::string _name, const int _id, char *_ip_text, char *_port_text,
                          ConfigCallback &_callback, const InputCallbackType _callback_type_ip,
                          const InputCallbackType _callback_type_port);
