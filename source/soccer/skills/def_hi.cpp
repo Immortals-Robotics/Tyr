@@ -6,7 +6,7 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
 {
     // side = -side;
     if (!defendTarget)
-        defendTarget = &(Common::worldState().ball.position);
+        defendTarget = &(m_state.ball.position);
 
     const float max_def_move_to_intercept    = 400.0f;
     const float max_near_asshole_dis         = 750.0f;
@@ -38,32 +38,32 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
         oneTouchNear = true;
     }
 
-    if (Common::worldState().ball.position.distanceTo(target) < max_def_move_to_intercept)
+    if (m_state.ball.position.distanceTo(target) < max_def_move_to_intercept)
     {
         interceptNear = true;
     }
 
     int nearestAsshole = findNearestAsshole(target, -1, true);
-    assholeNear = Common::worldState().opp_robot[nearestAsshole].position.distanceTo(target) < max_near_asshole_dis;
+    assholeNear = m_state.opp_robot[nearestAsshole].position.distanceTo(target) < max_near_asshole_dis;
 
-    int ballHandlerAsshole = findNearestAsshole(Common::worldState().ball.position, -1, true);
-    assholeHasBall         = Common::worldState().opp_robot[ballHandlerAsshole].position.distanceTo(
-                         Common::worldState().ball.position) < max_ball_handler_asshole_dis;
+    int ballHandlerAsshole = findNearestAsshole(m_state.ball.position, -1, true);
+    assholeHasBall         = m_state.opp_robot[ballHandlerAsshole].position.distanceTo(
+                         m_state.ball.position) < max_ball_handler_asshole_dis;
 
     oppGoalOpen               = true;
     Common::Line ballGoalLine = Common::Line::fromTwoPoints(Common::Vec2(-Common::field().width * side, 0),
                                                             Common::Vec2(target.x, target.y));
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if (Common::worldState().opp_robot[i].seen_state == Common::SeenState::CompletelyOut)
+        if (m_state.opp_robot[i].seen_state == Common::SeenState::CompletelyOut)
             continue;
-        if ((std::fabs(Common::worldState().opp_robot[i].position.x) > Common::field().width) ||
-            (std::fabs(Common::worldState().opp_robot[i].position.y) > Common::field().height))
+        if ((std::fabs(m_state.opp_robot[i].position.x) > Common::field().width) ||
+            (std::fabs(m_state.opp_robot[i].position.y) > Common::field().height))
             continue;
-        if (Common::worldState().opp_robot[i].position.distanceTo(target) > max_shoot_blocker_dis)
+        if (m_state.opp_robot[i].position.distanceTo(target) > max_shoot_blocker_dis)
             continue;
 
-        if (ballGoalLine.distanceTo(Common::worldState().opp_robot[i].position) < shoot_blocker_r)
+        if (ballGoalLine.distanceTo(m_state.opp_robot[i].position) < shoot_blocker_r)
         {
             oppGoalOpen = false;
             break;
@@ -90,10 +90,10 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
         }
     }
 
-    ballMovingFast = Common::worldState().ball.velocity.length() > max_fast_ball_spd;
+    ballMovingFast = m_state.ball.velocity.length() > max_fast_ball_spd;
 
     ownAttackHasBall =
-        OwnRobot[attack].state().position.distanceTo(Common::worldState().ball.position) < max_own_attacker_dis;
+        OwnRobot[attack].state().position.distanceTo(m_state.ball.position) < max_own_attacker_dis;
     if (OwnRobot[attack].state().seen_state == Common::SeenState::CompletelyOut)
     {
         ownAttackHasBall = false;
@@ -118,9 +118,9 @@ void Ai::DefHi(int robot_num, Common::Vec2 *defendTarget, bool stop)
              (!gkIntercepting) && (!stop))
     {
         ERRTSetObstacles(robot_num, 0, 1);
-        // tech_circle(robot_num,Common::sign(Common::worldState().ball.position.y)*side*60 ,0,15,false);
+        // tech_circle(robot_num,Common::sign(m_state.ball.position.y)*side*60 ,0,15,false);
         tech_circle(robot_num,
-                    Common::worldState().ball.position.angleWith(
+                    m_state.ball.position.angleWith(
                         Common::Vec2(side * (Common::field().width + 110), 0)),
                     0, 500, true, 0, 0, 0);
     }

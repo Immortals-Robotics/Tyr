@@ -4,12 +4,12 @@ namespace Tyr::Soccer
 {
 Common::Angle Ai::calculateOneTouchAngle(int robot_num, Common::Vec2 oneTouchPosition)
 {
-    // oneTouchPosition = Common::worldState().ball.position;
+    // oneTouchPosition = m_state.ball.position;
     float v0x, v0y;
     float v1x, v1y;
 
-    v0x = Common::worldState().ball.velocity.x;
-    v0y = Common::worldState().ball.velocity.y;
+    v0x = m_state.ball.velocity.x;
+    v0y = m_state.ball.velocity.y;
 
     float goalx = -side * Common::field().width;
     float e;

@@ -15,13 +15,13 @@ void Ai::penalty_their_simple()
     else
     {
         //		float gkp_y = Common::Line::fromTwoPoints ( Common::Vec2 (
-        //Common::worldState().opp_robot[index].position.x ,
-        // Common::worldState().opp_robot[index].position.y ) , Common::worldState().ball.position).intersect (
+        //m_state.opp_robot[index].position.x ,
+        // m_state.opp_robot[index].position.y ) , m_state.ball.position).intersect (
         // Common::Line::fromTwoPoints ( Common::Vec2 ( side * penalty_x , 100 ) , Common::Vec2 ( side * penalty_x ,
         // -100 ) ) ).getY ( );
         // TODO #7 check this!!!!
-        float gkp_y = Common::Line::fromPointAndAngle(Common::worldState().ball.position,
-                                                      Common::worldState().opp_robot[index].angle)
+        float gkp_y = Common::Line::fromPointAndAngle(m_state.ball.position,
+                                                      m_state.opp_robot[index].angle)
                           .intersect(Common::Line::fromTwoPoints(Common::Vec2(side * penalty_x, 100),
                                                                  Common::Vec2(side * penalty_x, -100)))
                           .value_or(Common::Vec2())
@@ -32,7 +32,7 @@ void Ai::penalty_their_simple()
         if (-max_reach_y > gkp_y)
             gkp_y = -max_reach_y;
 
-        OwnRobot[gk].face(Common::worldState().ball.position);
+        OwnRobot[gk].face(m_state.ball.position);
 
         Navigate2Point(gk, Common::Vec2(side * penalty_x, gkp_y), 100, VelocityProfile::Type::Killer);
     }

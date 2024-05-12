@@ -4,8 +4,8 @@ namespace Tyr::Soccer
 {
 void Ai::internalProcessData()
 {
-    if (Common::worldState().ball.seen_state != Common::SeenState::CompletelyOut)
-        ballHist.push_back(Common::worldState().ball);
+    if (m_state.ball.seen_state != Common::SeenState::CompletelyOut)
+        ballHist.push_back(m_state.ball);
     if (ballHist.size() > maxBallHist)
         ballHist.pop_front();
     calculateBallTrajectory();
@@ -20,9 +20,9 @@ void Ai::internalProcessData()
             {
                 for (int j = 0; j < Common::Setting::kMaxRobots; j++)
                 {
-                    if ((Common::worldState().own_robot[j].seen_state == Common::SeenState::Seen) &&
-                        (std::fabs(Common::worldState().own_robot[j].position.x) < Common::field().width) &&
-                        (std::fabs(Common::worldState().own_robot[j].position.y) < Common::field().height))
+                    if ((m_state.own_robot[j].seen_state == Common::SeenState::Seen) &&
+                        (std::fabs(m_state.own_robot[j].position.x) < Common::field().width) &&
+                        (std::fabs(m_state.own_robot[j].position.y) < Common::field().height))
                     {
                         bool suitable = true;
                         for (int k = 0; k < Common::Setting::kMaxOnFieldTeamRobots; k++)

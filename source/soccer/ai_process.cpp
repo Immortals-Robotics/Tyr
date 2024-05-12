@@ -2,15 +2,15 @@
 
 namespace Tyr::Soccer
 {
-void Ai::Process()
+void Ai::process()
 {
     static int PRCS_CNT = 0;
 
     internalProcessData();
 
-    Common::debug().draw(Common::worldState().ball.position, Common::Color::red());
-    //	Common::debug().draw(Common::worldState().ball.position,Common::Vec2(Common::worldState().ball.velocity.x,Common::worldState().ball.velocity.y)
-    //+ Common::worldState().ball.position,
+    Common::debug().draw(m_state.ball.position, Common::Color::red());
+    //	Common::debug().draw(m_state.ball.position,Common::Vec2(m_state.ball.velocity.x,m_state.ball.velocity.y)
+    //+ m_state.ball.position,
     // Black);
 
 
@@ -29,7 +29,7 @@ void Ai::Process()
         FUNC_state = 0;
 
         oppRestarted = false;
-        if (side * Common::worldState().ball.position.x > Common::field().width * 0.7f)
+        if (side * m_state.ball.position.x > Common::field().width * 0.7f)
         {
             currentPlay = "Stop_def";
         }

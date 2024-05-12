@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 void Ai::DefenceWall(int robot_num, bool kickOff)
 {
-    float x     = -side * Common::worldState().ball.position.x;
+    float x     = -side * m_state.ball.position.x;
     float tetta = -0.000003f * x * x + 0.0016f * x + 90.0f;
     if (kickOff)
     {
@@ -17,24 +17,24 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
     int index = findKickerOpp(-1);
     if (index == -1)
     {
-        target = Common::worldState().ball.position.circleAroundPoint(
-            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
+        target = m_state.ball.position.circleAroundPoint(
+            m_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
             730);
     }
     else
     {
-        target = Common::worldState().opp_robot[index].position.pointOnConnectingLine(
-            Common::worldState().ball.position,
-            590 + Common::worldState().ball.position.distanceTo(Common::worldState().opp_robot[index].position));
+        target = m_state.opp_robot[index].position.pointOnConnectingLine(
+            m_state.ball.position,
+            590 + m_state.ball.position.distanceTo(m_state.opp_robot[index].position));
     }
 
     Common::logDebug("{}", index);
 
-    Common::Angle ballAngle = Common::worldState().ball.position.angleWith(target);
-    Common::Angle firstLeg  = Common::worldState().ball.position.angleWith(Common::Vec2(
-        side * Common::field().width, Common::sign(Common::worldState().ball.position.y) * (350.0f)));
+    Common::Angle ballAngle = m_state.ball.position.angleWith(target);
+    Common::Angle firstLeg  = m_state.ball.position.angleWith(Common::Vec2(
+        side * Common::field().width, Common::sign(m_state.ball.position.y) * (350.0f)));
     Common::Angle secLeg =
-        firstLeg - Common::Angle::fromDeg(tetta * Common::sign(Common::worldState().ball.position.y) * side);
+        firstLeg - Common::Angle::fromDeg(tetta * Common::sign(m_state.ball.position.y) * side);
 
     Common::logDebug("ball: {}    f: {}    s: {}", ballAngle, firstLeg, secLeg);
 
@@ -44,12 +44,12 @@ void Ai::DefenceWall(int robot_num, bool kickOff)
 
     if (isOut)
     {
-        target = Common::worldState().ball.position.circleAroundPoint(
-            Common::worldState().ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
+        target = m_state.ball.position.circleAroundPoint(
+            m_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
             730);
     }
 
-    OwnRobot[robot_num].face(Common::worldState().ball.position);
+    OwnRobot[robot_num].face(m_state.ball.position);
     ERRTSetObstacles(robot_num, true, true);
     ERRTNavigate2Point(robot_num, target);
 }

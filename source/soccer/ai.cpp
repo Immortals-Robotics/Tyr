@@ -19,7 +19,7 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     for (auto &sender : senders)
         m_senders.push_back(sender.get());
 
-    dss = new Dss(OwnRobot, Common::worldState().opp_robot, 1.f / 61.57f, 7000.f, 3000.f);
+    dss = new Dss(OwnRobot, m_state.opp_robot, 1.f / 61.57f, 7000.f, 3000.f);
 
     InitAIPlayBook();
     currentPlay = "HaltAll";
@@ -59,7 +59,10 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
+        OwnRobot[i] = Robot(&m_state);
+
         oneTouchDetector[i].rState = &OwnRobot[i];
+        oneTouchDetector[i].ball   = &m_state.ball;
         oneTouchDetector[i].side   = &side;
 
         oneTouchType[i]     = oneTouch;
@@ -116,5 +119,14 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     }
 
     timer.start();
+}
+bool Ai::receive()
+{
+    Protos::Immortals::WorldState pb_state;
+    if (!m_client->receive(&pb_state))
+        return false;
+
+    m_state = Common::WorldState(pb_state);
+    return true;
 }
 } // namespace Tyr::Soccer

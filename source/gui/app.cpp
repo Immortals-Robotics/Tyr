@@ -238,9 +238,10 @@ void Application::aiThreadEntry()
     {
         timer.start();
 
-        m_ai_mutex.lock_shared();
-        m_ai->Process();
-        m_ai_mutex.unlock_shared();
+        if (!m_ai->receive())
+            continue;
+
+        m_ai->process();
 
         for (auto &sender : m_senders)
             sender->flush();

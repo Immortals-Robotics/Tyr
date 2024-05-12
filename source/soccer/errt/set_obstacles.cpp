@@ -40,19 +40,19 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
     // opp
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if (Common::worldState().opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
+        if (m_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            const float radius = calculateRobotRadius(Common::worldState().opp_robot[i]);
+            const float radius = calculateRobotRadius(m_state.opp_robot[i]);
 
-            obs_map.addCircle({Common::worldState().opp_robot[i].position, radius + current_robot_radius});
-            // Common::debug().draw({Common::worldState().opp_robot[i].position,ownRobotRadius +
+            obs_map.addCircle({m_state.opp_robot[i].position, radius + current_robot_radius});
+            // Common::debug().draw({m_state.opp_robot[i].position,ownRobotRadius +
             // (!dribble)*ownRobotRadius},Cyan);
         }
     }
 
     if (bll || !Common::refereeState().allowedNearBall())
     {
-        obs_map.addCircle({Common::worldState().ball.position, ballAreaRadius + current_robot_radius});
+        obs_map.addCircle({m_state.ball.position, ballAreaRadius + current_robot_radius});
     }
 
     const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
@@ -99,13 +99,13 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
     // avoid the line between the ball and the placement point
     if (Common::refereeState().theirPlaceBall())
     {
-        const Common::Vec2 ball_line = Common::refereeState().place_ball_target - Common::worldState().ball.position;
+        const Common::Vec2 ball_line = Common::refereeState().place_ball_target - m_state.ball.position;
         const int          ball_obs_count = std::ceil(ball_line.length() / (ballAreaRadius + current_robot_radius));
 
         for (int i = 0; i < ball_obs_count; i++)
         {
             const float        t        = (float) i / (float) ball_obs_count;
-            const Common::Vec2 ball_obs = Common::worldState().ball.position + ball_line * t;
+            const Common::Vec2 ball_obs = m_state.ball.position + ball_line * t;
             obs_map.addCircle({ball_obs, ballAreaRadius + current_robot_radius});
         }
     }

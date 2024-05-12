@@ -10,17 +10,17 @@ int Ai::findNearestAsshole(Common::Vec2 pos, int mask, bool acceptNearBall)
     {
         if (i == mask)
             continue;
-        if (Common::worldState().opp_robot[i].seen_state == Common::SeenState::CompletelyOut)
+        if (m_state.opp_robot[i].seen_state == Common::SeenState::CompletelyOut)
             continue;
-        if ((std::fabs(Common::worldState().opp_robot[i].position.x) > Common::field().width) || (std::fabs(Common::worldState().opp_robot[i].position.y) > Common::field().height))
+        if ((std::fabs(m_state.opp_robot[i].position.x) > Common::field().width) || (std::fabs(m_state.opp_robot[i].position.y) > Common::field().height))
             continue;
-        if ((!acceptNearBall) && ((Common::worldState().ball.position.distanceTo(Common::worldState().opp_robot[i].position) < 500)))
+        if ((!acceptNearBall) && ((m_state.ball.position.distanceTo(m_state.opp_robot[i].position) < 500)))
         {
             continue;
         }
-        if ((pos.distanceTo(Common::worldState().opp_robot[i].position) < mdis))
+        if ((pos.distanceTo(m_state.opp_robot[i].position) < mdis))
         {
-            mdis  = pos.distanceTo(Common::worldState().opp_robot[i].position);
+            mdis  = pos.distanceTo(m_state.opp_robot[i].position);
             index = i;
         }
     }

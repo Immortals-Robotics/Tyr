@@ -51,7 +51,7 @@ float getCalibratedShootPow(int vision_id, float raw_shoot, float coeffs[Common:
     return calib_shoot;
 }
 
-Robot::Robot()
+Robot::Robot(const Common::WorldState *const t_world_state) : m_world_state(t_world_state)
 {
     motion_idx = 0;
     for (int i = 0; i < 10; i++)

@@ -24,15 +24,15 @@ void Ai::penalty_us_shootout()
     {
         Common::logInfo("step0 - Waiting for permission");
     }
-    else if (Common::worldState().ball.position.distanceTo(Common::Vec2(-side * Common::field().width, 0)) > 3000)
+    else if (m_state.ball.position.distanceTo(Common::Vec2(-side * Common::field().width, 0)) > 3000)
     {
-        circle_ball(attack, Common::Vec2(-side * Common::field().width, 0).angleWith(Common::worldState().ball.position), 1, 0,
+        circle_ball(attack, Common::Vec2(-side * Common::field().width, 0).angleWith(m_state.ball.position), 1, 0,
                     0);
         Common::logInfo("step1 - Moving forward - waiting to get close to the opp goal");
     }
     else
     {
-        circle_ball(attack, Common::Vec2(-side * Common::field().width, 400).angleWith(Common::worldState().ball.position), 60, 0,
+        circle_ball(attack, Common::Vec2(-side * Common::field().width, 400).angleWith(m_state.ball.position), 60, 0,
                     0);
         Common::logInfo("step2 - Kick in the goal!!!!");
     }

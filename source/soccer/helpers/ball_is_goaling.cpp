@@ -6,18 +6,18 @@ bool Ai::ballIsGoaling()
 {
     bool towardGoal = false;
 
-    if ((side == -1) && (std::fabs(Common::worldState().ball.velocity.toAngle().deg()) > 90.0f))
+    if ((side == -1) && (std::fabs(m_state.ball.velocity.toAngle().deg()) > 90.0f))
         towardGoal = true;
-    if ((side == 1) && (std::fabs(Common::worldState().ball.velocity.toAngle().deg()) < 90.0f))
+    if ((side == 1) && (std::fabs(m_state.ball.velocity.toAngle().deg()) < 90.0f))
         towardGoal = true;
 
     if (!towardGoal)
         return false;
 
-    if (Common::worldState().ball.velocity.length() < 200.0f)
+    if (m_state.ball.velocity.length() < 200.0f)
         return false;
 
-    Common::Line ball_line = Common::Line::fromPointAndAngle(Common::worldState().ball.position, Common::worldState().ball.velocity.toAngle());
+    Common::Line ball_line = Common::Line::fromPointAndAngle(m_state.ball.position, m_state.ball.velocity.toAngle());
     Common::Line targetLine =
         Common::Line::fromTwoPoints(Common::Vec2(side * Common::field().width, -100), Common::Vec2(side * Common::field().width, 100));
     Common::Vec2 ballInter = ball_line.intersect(targetLine).value_or(Common::Vec2());
