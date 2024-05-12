@@ -45,20 +45,16 @@ void Filtered::process()
     processRobots();
 
     m_state.time = Common::TimePoint::now();
-
-    // TODO: move these to a separate thread
-    publishState();
-    storeState();
 }
 
-void Filtered::storeState()
+void Filtered::store()
 {
     Protos::Immortals::WorldState pb_state{};
     m_state.fillProto(&pb_state);
     m_storage.store(m_state.time.timestamp(), pb_state);
 }
 
-bool Filtered::publishState() const
+bool Filtered::publish() const
 {
     Protos::Immortals::WorldState pb_state{};
     m_state.fillProto(&pb_state);

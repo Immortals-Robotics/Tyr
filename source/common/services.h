@@ -9,7 +9,6 @@ class Timer;
 class ConfigReader;
 
 struct FieldState;
-struct RefereeState;
 
 struct Services
 {
@@ -47,11 +46,6 @@ struct Services
         return *s_field_state;
     }
 
-    static RefereeState &refereeState()
-    {
-        return *s_referee_state;
-    }
-
 private:
     static inline Setting      *s_setting;
     static inline Debug        *s_debug;
@@ -59,8 +53,7 @@ private:
     static inline Timer        *s_global_timer;
     static inline ConfigReader *s_configReader;
 
-    static inline FieldState   *s_field_state;
-    static inline RefereeState *s_referee_state;
+    static inline FieldState *s_field_state;
 };
 
 static ConfigReader &configReader()
@@ -91,11 +84,6 @@ static Timer &global_timer()
 static FieldState &field()
 {
     return Services::field();
-}
-
-static RefereeState &refereeState()
-{
-    return Services::refereeState();
 }
 } // namespace Tyr::Common
 

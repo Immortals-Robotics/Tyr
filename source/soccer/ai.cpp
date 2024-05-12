@@ -16,12 +16,13 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");
 
-    m_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
+    m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
+    m_ref_client   = std::make_unique<Common::NngClient>(Common::setting().referee_state_url);
 
     for (auto &sender : senders)
         m_senders.push_back(sender.get());
 
-    dss = new Dss(OwnRobot, m_state.opp_robot, 1.f / 61.57f, 7000.f, 3000.f);
+    dss = new Dss(OwnRobot, m_world_state.opp_robot, 1.f / 61.57f, 7000.f, 3000.f);
 
     InitAIPlayBook();
     currentPlay = "HaltAll";
@@ -61,10 +62,10 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        OwnRobot[i] = Robot(&m_state);
+        OwnRobot[i] = Robot(&m_world_state);
 
         oneTouchDetector[i].rState = &OwnRobot[i];
-        oneTouchDetector[i].ball   = &m_state.ball;
+        oneTouchDetector[i].ball   = &m_world_state.ball;
         oneTouchDetector[i].side   = &side;
 
         oneTouchType[i]     = oneTouch;
@@ -122,13 +123,24 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
 
     timer.start();
 }
-bool Ai::receive()
+
+bool Ai::receiveWorld()
 {
     Protos::Immortals::WorldState pb_state;
-    if (!m_client->receive(&pb_state))
+    if (!m_world_client->receive(&pb_state))
         return false;
 
-    m_state = Common::WorldState(pb_state);
+    m_world_state = Common::WorldState(pb_state);
+    return true;
+}
+
+bool Ai::receiveReferee()
+{
+    Protos::Immortals::RefereeState pb_state;
+    if (!m_ref_client->receive(&pb_state))
+        return false;
+
+    m_ref_state = Common::RefereeState(pb_state);
     return true;
 }
 } // namespace Tyr::Soccer

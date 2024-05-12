@@ -77,7 +77,7 @@ void Ai::strategy_maker()
     Common::logInfo("STRATEGY: {}", strategy.name());
 
     int xSgn = side;
-    int ySgn = Common::sign(-m_state.ball.position.y);
+    int ySgn = Common::sign(-m_world_state.ball.position.y);
 
     Common::logDebug("timer: {}", timer.time());
     if (timer.time() < 0.5)
@@ -182,7 +182,7 @@ void Ai::strategy_maker()
             {
                 Common::Angle passAngle =
                     Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(m_state.ball.position);
+                        .angleWith(m_world_state.ball.position);
                 float tmp_mult = 1; // TODO #11 remove this multiplier and fix that strategy maker
                 circle_ball(*stm2AInum[i], passAngle, shoot * tmp_mult, chip, 1.0f);
             }
@@ -190,14 +190,14 @@ void Ai::strategy_maker()
             {
                 Common::Angle passAngle =
                     Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(m_state.ball.position);
+                        .angleWith(m_world_state.ball.position);
                 circle_ball(*stm2AInum[i], passAngle, 0, 0, 1.0f, 140.0f);
             }
             else
             {
                 Common::Angle passAngle =
                     Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(m_state.ball.position);
+                        .angleWith(m_world_state.ball.position);
                 circle_ball(*stm2AInum[i], passAngle, 0, 0, 1.0f);
             }
         }
@@ -276,7 +276,7 @@ void Ai::strategy_maker()
             oneTouchType[*stm2AInum[i]] = allaf;
             if (*stm2AInum[i] == attack)
             {
-                allafPos[*stm2AInum[i]] = m_state.ball.position;
+                allafPos[*stm2AInum[i]] = m_world_state.ball.position;
             }
             else
             {

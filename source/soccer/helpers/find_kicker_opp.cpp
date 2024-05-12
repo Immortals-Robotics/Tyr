@@ -10,11 +10,11 @@ int Ai::findKickerOpp(int mask, float max_dis)
     {
         if (i == mask)
             continue;
-        if (m_state.opp_robot[i].seen_state == Common::SeenState::CompletelyOut)
+        if (m_world_state.opp_robot[i].seen_state == Common::SeenState::CompletelyOut)
             continue;
-        if (m_state.ball.position.distanceTo(m_state.opp_robot[i].position) < mdis)
+        if (m_world_state.ball.position.distanceTo(m_world_state.opp_robot[i].position) < mdis)
         {
-            mdis  = m_state.ball.position.distanceTo(m_state.opp_robot[i].position);
+            mdis  = m_world_state.ball.position.distanceTo(m_world_state.opp_robot[i].position);
             index = i;
         }
     }

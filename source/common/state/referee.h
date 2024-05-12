@@ -1,19 +1,6 @@
-// game_state.h
-//
-// This class implements the transition system that defines the rules
-// of the game.  The state changes based on the input from the referee
-// and whether the ball has been kicked since the last referee
-// command.  Calling the method transition() with these inputs will
-// have the class maintain the state of the game.
-//
-// In addition, their are query methods for determining the current
-// game state and what behavior is allowed in these game states.
-//
-// Created by:  Michael Bowling (mhb@cs.cmu.edu)
-//
-/* LICENSE: */
-
 #pragma once
+
+#include "../time/time_point.h"
 
 namespace Tyr::Referee
 {
@@ -40,17 +27,35 @@ public:
         STATE_PLACE_BALL = (1 << 12),
     };
 
-    Vec2 place_ball_target;
-    int  opp_gk = -1;
-
-protected:
-    friend class Referee::Referee;
+    TimePoint time;
 
     int       state = STATE_GAME_OFF;
     TeamColor color = TeamColor::Blue;
+    Vec2      place_ball_target;
+    int       opp_gk = -1;
 
 public:
     RefereeState() = default;
+
+    RefereeState(const Protos::Immortals::RefereeState &t_state)
+    {
+        time = t_state.time();
+
+        state             = t_state.state();
+        color             = (TeamColor) t_state.color();
+        place_ball_target = t_state.place_ball_target();
+        opp_gk            = t_state.opp_gk();
+    }
+
+    void fillProto(Protos::Immortals::RefereeState *const t_state) const
+    {
+        t_state->set_time(time.timestamp());
+
+        t_state->set_state(state);
+        t_state->set_color((Protos::Immortals::TeamColor) color);
+        place_ball_target.fillProto(t_state->mutable_place_ball_target());
+        t_state->set_opp_gk(opp_gk);
+    }
 
     State get() const
     {
@@ -64,17 +69,17 @@ public:
 
     bool stop() const
     {
-        return (state == STATE_GAME_OFF);
+        return state == STATE_GAME_OFF;
     }
 
     bool gameOn() const
     {
-        return (state == STATE_GAME_ON);
+        return state == STATE_GAME_ON;
     }
 
     bool restart() const
     {
-        return (state & STATE_RESTART);
+        return state & STATE_RESTART;
     }
     bool ourRestart() const
     {
@@ -87,7 +92,7 @@ public:
 
     bool kickoff() const
     {
-        return (state & STATE_KICKOFF);
+        return state & STATE_KICKOFF;
     }
     bool ourKickoff() const
     {
@@ -100,7 +105,7 @@ public:
 
     bool penaltyKick() const
     {
-        return (state & STATE_PENALTY);
+        return state & STATE_PENALTY;
     }
     bool ourPenaltyKick() const
     {
@@ -113,7 +118,7 @@ public:
 
     bool directKick() const
     {
-        return (state & STATE_DIRECT);
+        return state & STATE_DIRECT;
     }
     bool ourDirectKick() const
     {
@@ -126,7 +131,7 @@ public:
 
     bool indirectKick() const
     {
-        return (state & STATE_INDIRECT);
+        return state & STATE_INDIRECT;
     }
     bool ourIndirectKick() const
     {
@@ -139,7 +144,7 @@ public:
 
     bool placeBall() const
     {
-        return (state & STATE_PLACE_BALL);
+        return state & STATE_PLACE_BALL;
     }
     bool ourPlaceBall() const
     {
@@ -165,7 +170,7 @@ public:
 
     bool canMove() const
     {
-        return (state != STATE_HALTED);
+        return state != STATE_HALTED;
     }
 
     bool allowedNearBall() const

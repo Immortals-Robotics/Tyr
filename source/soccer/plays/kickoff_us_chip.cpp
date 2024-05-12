@@ -8,12 +8,12 @@ void Ai::kickoff_us_chip()
     DefMid(def, rw, lw, nullptr, false);
 
     ERRTSetObstacles(dmf, true, true);
-    OwnRobot[dmf].face(m_state.ball.position);
+    OwnRobot[dmf].face(m_world_state.ball.position);
     ERRTNavigate2Point(
         dmf,
-        m_state.ball.position.pointOnConnectingLine(
+        m_world_state.ball.position.pointOnConnectingLine(
             Common::Vec2(side * Common::field().width, 0),
-            m_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) /
+            m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) /
                 3.0f),
         40, VelocityProfile::Type::Mamooli);
 
@@ -27,22 +27,22 @@ void Ai::kickoff_us_chip()
 
     OwnRobot[mid2].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(mid2, true, true);
-    ERRTNavigate2Point(mid2, Common::Vec2(m_state.ball.position.x + side * 150,
+    ERRTNavigate2Point(mid2, Common::Vec2(m_world_state.ball.position.x + side * 150,
                                           (Common::field().height - 300)));
     OwnRobot[mid1].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(mid1, true, true);
-    ERRTNavigate2Point(mid1, Common::Vec2(m_state.ball.position.x + side * 150,
+    ERRTNavigate2Point(mid1, Common::Vec2(m_world_state.ball.position.x + side * 150,
                                           -(Common::field().height - 300)));
     Common::Vec2 chip_target = Common::Vec2(-side * 2000, 0);
 
-    Common::logDebug("can kick ball: {}", Common::refereeState().canKickBall());
-    if (Common::refereeState().canKickBall())
+    Common::logDebug("can kick ball: {}", m_ref_state.canKickBall());
+    if (m_ref_state.canKickBall())
     {
-        tech_circle(attack, chip_target.angleWith(m_state.ball.position), 0, 80, 0, 1, 0, 1);
+        tech_circle(attack, chip_target.angleWith(m_world_state.ball.position), 0, 80, 0, 1, 0, 1);
     }
     else
     {
-        circle_ball(attack, chip_target.angleWith(m_state.ball.position), 0, 0, 1.0f);
+        circle_ball(attack, chip_target.angleWith(m_world_state.ball.position), 0, 0, 1.0f);
     }
 }
 } // namespace Tyr::Soccer

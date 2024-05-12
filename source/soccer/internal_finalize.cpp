@@ -16,7 +16,7 @@ void Ai::internalFinalize()
     {
         for (int j = 0; j < 10; j++)
         {
-            m_state.last_cmds[i][j] = Common::Vec3(0.0f);
+            m_world_state.last_cmds[i][j] = Common::Vec3(0.0f);
         }
     }
 
@@ -26,7 +26,7 @@ void Ai::internalFinalize()
             continue;
         for (int j = 0; j < 11; j++) // kheyli tof malie...
         {
-            m_state.last_cmds[OwnRobot[i].state().vision_id][j] = OwnRobot[i].last_motions[j];
+            m_world_state.last_cmds[OwnRobot[i].state().vision_id][j] = OwnRobot[i].last_motions[j];
         }
     }
 }

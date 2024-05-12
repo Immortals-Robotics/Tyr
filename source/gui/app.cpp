@@ -245,6 +245,9 @@ void Application::visionRawEntry()
 
         m_vision_raw->process();
 
+        m_vision_raw->publish();
+        m_vision_raw->store();
+
         Common::logInfo("vision raw FPS: {}", 1.0 / timer.interval());
     }
 }
@@ -261,6 +264,9 @@ void Application::visionFilteredEntry()
 
         m_vision_filtered->process();
 
+        m_vision_filtered->publish();
+        m_vision_filtered->store();
+
         Common::logInfo("vision filtered FPS: {}", 1.0 / timer.interval());
     }
 }
@@ -272,7 +278,10 @@ void Application::aiThreadEntry()
 
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
-        if (!m_ai->receive())
+        const bool world_received   = m_ai->receiveWorld();
+        const bool referee_received = m_ai->receiveReferee();
+
+        if (!world_received)
             continue;
 
         m_ai->process();
@@ -297,9 +306,8 @@ void Application::refereeThreadEntry()
         const bool world_received = m_referee->receiveWorld();
         if (ref_received || world_received)
         {
-            m_ai_mutex.lock();
             m_referee->process();
-            m_ai_mutex.unlock();
+            m_referee->publish();
 
             Common::logInfo("referee FPS: {}", 1.0 / timer.interval());
         }

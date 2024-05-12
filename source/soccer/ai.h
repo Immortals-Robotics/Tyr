@@ -11,9 +11,11 @@ namespace Tyr::Soccer
 class Ai
 {
 private:
-    Common::WorldState m_state;
+    Common::WorldState   m_world_state;
+    Common::RefereeState m_ref_state;
 
-    std::unique_ptr<Common::NngClient> m_client;
+    std::unique_ptr<Common::NngClient> m_world_client;
+    std::unique_ptr<Common::NngClient> m_ref_client;
 
     std::vector<Sender::ISender *> m_senders;
 
@@ -194,7 +196,9 @@ public:
     Robot OwnRobot[Common::Setting::kMaxOnFieldTeamRobots];
     Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders);
 
-    bool receive();
+    bool receiveWorld();
+    bool receiveReferee();
+
     void process();
 
     bool read_playBook(const std::filesystem::path &t_path);

@@ -4,11 +4,11 @@ namespace Tyr::Soccer
 {
 void Ai::WaitForOmghi(int robot_num, bool chip)
 {
-    Common::Line ball_line = Common::Line::fromPointAndAngle(m_state.ball.position,
-                                                             m_state.ball.velocity.toAngle());
+    Common::Line ball_line = Common::Line::fromPointAndAngle(m_world_state.ball.position,
+                                                             m_world_state.ball.velocity.toAngle());
     if (chip_head.deg() < 180)
     {
-        ball_line = Common::Line::fromPointAndAngle(m_state.ball.position, chip_head);
+        ball_line = Common::Line::fromPointAndAngle(m_world_state.ball.position, chip_head);
         Common::logDebug("calcing with static head: {}", chip_head);
     }
     Common::Line to_goal_line = Common::Line::fromTwoPoints(
@@ -18,8 +18,8 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
     Common::Vec2 ans = ball_line.intersect(to_goal_line).value_or(Common::Vec2());
 
     float sBAR;
-    sBAR = ans.distanceTo(m_state.ball.position);
-    sBAR /= m_state.ball.velocity.length();
+    sBAR = ans.distanceTo(m_world_state.ball.position);
+    sBAR /= m_world_state.ball.velocity.length();
     sBAR = ans.distanceTo(OwnRobot[robot_num].state().position) / sBAR;
     sBAR /= 63.0;
     // sBAR /= 10.0;

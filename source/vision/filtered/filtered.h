@@ -13,6 +13,9 @@ public:
     bool receive();
     void process();
 
+    bool publish() const;
+    void store();
+
 private:
     void processRobots();
     void filterRobots(Common::TeamColor t_color);
@@ -22,10 +25,6 @@ private:
     void processBalls();
     void filterBalls();
     void predictBall();
-
-    void storeState();
-
-    bool publishState() const;
 
 private:
     // TODO: move to settings
@@ -53,7 +52,7 @@ private:
     Common::Angle                       m_raw_angles[2][Common::Setting::kMaxRobots];
 
     Common::RawWorldState m_raw_state;
-    Common::WorldState m_state;
+    Common::WorldState    m_state;
 
     Common::Storage m_storage;
 };

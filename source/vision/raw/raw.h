@@ -12,6 +12,9 @@ public:
     void process();
     bool camsReady() const;
 
+    bool publish() const;
+    void store();
+
     void updateAddress(const Common::NetworkAddress &t_address);
 
     bool isConnected() const
@@ -24,10 +27,6 @@ private:
     void mergeRobots(Common::TeamColor t_color);
 
     void processBalls();
-
-    bool publishState() const;
-
-    void storeState();
 
 private:
     std::unique_ptr<Common::UdpClient> m_client;

@@ -9,14 +9,14 @@ bool Ai::goalBlocked(Common::Vec2 init_pos, float max_shoot_blocker_dis, float s
     Common::Line ballGoalLine = Common::Line::fromTwoPoints(Common::Vec2(-side * Common::field().width, 0), init_pos);
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if (m_state.opp_robot[i].seen_state == Common::SeenState::CompletelyOut)
+        if (m_world_state.opp_robot[i].seen_state == Common::SeenState::CompletelyOut)
             continue;
-        if ((std::fabs(m_state.opp_robot[i].position.x) > Common::field().width) || (std::fabs(m_state.opp_robot[i].position.y) > Common::field().height))
+        if ((std::fabs(m_world_state.opp_robot[i].position.x) > Common::field().width) || (std::fabs(m_world_state.opp_robot[i].position.y) > Common::field().height))
             continue;
-        if (m_state.opp_robot[i].position.distanceTo(init_pos) > max_shoot_blocker_dis)
+        if (m_world_state.opp_robot[i].position.distanceTo(init_pos) > max_shoot_blocker_dis)
             continue;
 
-        if (ballGoalLine.distanceTo(m_state.opp_robot[i].position) < shoot_blocker_r)
+        if (ballGoalLine.distanceTo(m_world_state.opp_robot[i].position) < shoot_blocker_r)
         {
             oppGoalOpen = false;
             break;

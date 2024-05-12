@@ -43,20 +43,16 @@ void Raw::process()
 
     for (int i = 0; i < Common::Setting::kCamCount; i++)
         m_packet_received[i] = false;
-
-    // TODO: move these to a separate thread
-    publishState();
-    storeState();
 }
 
-void Raw::storeState()
+void Raw::store()
 {
     Protos::Immortals::RawWorldState pb_state{};
     m_state.fillProto(&pb_state);
     m_storage.store(m_state.time.timestamp(), pb_state);
 }
 
-bool Raw::publishState() const
+bool Raw::publish() const
 {
     Protos::Immortals::RawWorldState pb_state{};
     m_state.fillProto(&pb_state);

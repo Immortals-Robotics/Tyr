@@ -34,22 +34,22 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
         oneTouchNear = true;
     }
 
-    if (m_state.ball.position.distanceTo(target) < max_def_move_to_intercept)
+    if (m_world_state.ball.position.distanceTo(target) < max_def_move_to_intercept)
     {
         interceptNear = true;
     }
 
     int nearestAsshole = findNearestAsshole(target, -1, true);
-    assholeNear = m_state.opp_robot[nearestAsshole].position.distanceTo(target) < max_near_asshole_dis;
+    assholeNear = m_world_state.opp_robot[nearestAsshole].position.distanceTo(target) < max_near_asshole_dis;
 
-    int ballHandlerAsshole = findNearestAsshole(m_state.ball.position, -1, true);
-    assholeHasBall         = m_state.opp_robot[ballHandlerAsshole].position.distanceTo(
-                         m_state.ball.position) < max_ball_handler_asshole_dis;
+    int ballHandlerAsshole = findNearestAsshole(m_world_state.ball.position, -1, true);
+    assholeHasBall         = m_world_state.opp_robot[ballHandlerAsshole].position.distanceTo(
+                         m_world_state.ball.position) < max_ball_handler_asshole_dis;
 
-    //    ballMovingFast = m_state.ball.velocity.length() > max_fast_ball_spd;
+    //    ballMovingFast = m_world_state.ball.velocity.length() > max_fast_ball_spd;
 
     ownAttackHasBall =
-        OwnRobot[attack].state().position.distanceTo(m_state.ball.position) < max_own_attacker_dis;
+        OwnRobot[attack].state().position.distanceTo(m_world_state.ball.position) < max_own_attacker_dis;
     if (OwnRobot[attack].state().seen_state == Common::SeenState::CompletelyOut)
     {
         ownAttackHasBall = false;
@@ -70,9 +70,9 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     {
         Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");
         ERRTSetObstacles(robot_num, 0, 1);
-        // tech_circle(robot_num,Common::sign(m_state.ball.position.y)*side*60 ,0,15,false);
+        // tech_circle(robot_num,Common::sign(m_world_state.ball.position.y)*side*60 ,0,15,false);
         tech_circle(robot_num,
-                    m_state.ball.position.angleWith(
+                    m_world_state.ball.position.angleWith(
                         Common::Vec2(side * (Common::field().width + 110), 0)),
                     0, 80, true, 0, 0, 0);
     }
@@ -91,7 +91,7 @@ void Ai::DefBy1(int thelastdef_num, Common::Vec2 *defendTarget, bool stop)
     {
         Common::logDebug("1111111111111111111111111111111111111111111111111111111111");
         Common::Angle alpha =
-            Common::Vec2(side * Common::field().width, 0).angleWith(m_state.ball.position) +
+            Common::Vec2(side * Common::field().width, 0).angleWith(m_world_state.ball.position) +
             Common::Angle::fromDeg(90 + side * 90);
         alpha.setDeg(std::clamp(alpha.deg(), -90.0f, 90.0f));
         float alphaSgn = Common::sign(alpha.deg());
@@ -99,13 +99,13 @@ void Ai::DefBy1(int thelastdef_num, Common::Vec2 *defendTarget, bool stop)
         if (std::fabs(alpha.deg()) < 45.0)
         {
 
-            if (m_state.ball.velocity.length() < 200)
+            if (m_world_state.ball.velocity.length() < 200)
             {
                 Common::Line GOAL_LINE =
                     Common::Line::fromTwoPoints(Common::Vec2(side * Common::field().width, 100.0),
                                                 Common::Vec2(side * Common::field().width, -100.0));
 
-                Common::Vec2 TARGET_BALL_IN_GOAL = GOAL_LINE.closestPoint(m_state.ball.position);
+                Common::Vec2 TARGET_BALL_IN_GOAL = GOAL_LINE.closestPoint(m_world_state.ball.position);
 
                 if (TARGET_BALL_IN_GOAL.y > 200)
                 {
@@ -117,7 +117,7 @@ void Ai::DefBy1(int thelastdef_num, Common::Vec2 *defendTarget, bool stop)
                 }
                 Common::logDebug("TARGET_BALL_IN_GOAL.y: {}", TARGET_BALL_IN_GOAL.y);
                 Common::Line ball_line =
-                    Common::Line::fromTwoPoints(m_state.ball.position, TARGET_BALL_IN_GOAL);
+                    Common::Line::fromTwoPoints(m_world_state.ball.position, TARGET_BALL_IN_GOAL);
                 Common::Line Front_line = Common::Line::fromPointAndAngle(
                     Common::Vec2(
                         side * (Common::field().width - Common::field().penalty_area_depth - 100),
@@ -130,8 +130,8 @@ void Ai::DefBy1(int thelastdef_num, Common::Vec2 *defendTarget, bool stop)
             }
             else
             {
-                Common::Line ball_line  = Common::Line::fromPointAndAngle(m_state.ball.position,
-                                                                          m_state.ball.velocity.toAngle());
+                Common::Line ball_line  = Common::Line::fromPointAndAngle(m_world_state.ball.position,
+                                                                          m_world_state.ball.velocity.toAngle());
                 Common::Line Front_line = Common::Line::fromPointAndAngle(
                     Common::Vec2(
                         side * (Common::field().width - Common::field().penalty_area_depth - 100),
@@ -160,7 +160,7 @@ void Ai::DefBy1(int thelastdef_num, Common::Vec2 *defendTarget, bool stop)
         else if (alpha.deg() >= 45.0)
         {
             Common::Line ball_line = Common::Line::fromTwoPoints(
-                m_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
+                m_world_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
             Common::Line Front_line = Common::Line::fromPointAndAngle(
                 Common::Vec2(0, -side * (Common::field().penalty_area_depth + 100)),
                 Common::Angle::fromDeg(0.0));
@@ -186,7 +186,7 @@ void Ai::DefBy1(int thelastdef_num, Common::Vec2 *defendTarget, bool stop)
         else if (alpha.deg() <= -45.0)
         {
             Common::Line ball_line = Common::Line::fromTwoPoints(
-                m_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
+                m_world_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
             Common::Line Front_line = Common::Line::fromPointAndAngle(
                 Common::Vec2(0, side * (Common::field().penalty_area_depth + 100)),
                 Common::Angle::fromDeg(0.0));
@@ -201,7 +201,7 @@ void Ai::DefBy1(int thelastdef_num, Common::Vec2 *defendTarget, bool stop)
 void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, bool stop)
 {
     Common::Angle alpha =
-        Common::Vec2(side * Common::field().width, 0).angleWith(m_state.ball.position) +
+        Common::Vec2(side * Common::field().width, 0).angleWith(m_world_state.ball.position) +
         Common::Angle::fromDeg((90 + side * 90));
     alpha.setDeg(std::clamp(alpha.deg(), -90.0f, 90.0f));
     float alphaSgn = Common::sign(alpha.deg());
@@ -226,7 +226,7 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
         else if (alpha.deg() < -48.0)
         {
             Common::Line ball_line = Common::Line::fromTwoPoints(
-                m_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
+                m_world_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
             Common::Line Front_line = Common::Line::fromPointAndAngle(
                 Common::Vec2(0, side * (Common::field().penalty_area_depth + 100)),
                 Common::Angle::fromDeg(0.0));
@@ -237,13 +237,13 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
         }
         else if (alpha.deg() < -3.5)
         {
-            if (m_state.ball.velocity.length() < 200)
+            if (m_world_state.ball.velocity.length() < 200)
             {
                 Common::Line GOAL_LINE =
                     Common::Line::fromTwoPoints(Common::Vec2(side * Common::field().width, 100.0),
                                                 Common::Vec2(side * Common::field().width, -100.0));
 
-                Common::Vec2 TARGET_BALL_IN_GOAL = GOAL_LINE.closestPoint(m_state.ball.position);
+                Common::Vec2 TARGET_BALL_IN_GOAL = GOAL_LINE.closestPoint(m_world_state.ball.position);
 
                 if (TARGET_BALL_IN_GOAL.y > 200)
                 {
@@ -256,7 +256,7 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
 
                 Common::logDebug("TARGET_BALL_IN_GOAL.y: {}", TARGET_BALL_IN_GOAL.y);
                 Common::Line ball_line =
-                    Common::Line::fromTwoPoints(m_state.ball.position, TARGET_BALL_IN_GOAL);
+                    Common::Line::fromTwoPoints(m_world_state.ball.position, TARGET_BALL_IN_GOAL);
                 Common::Line Front_line = Common::Line::fromPointAndAngle(
                     Common::Vec2(
                         side * (Common::field().width - Common::field().penalty_area_depth - 100),
@@ -269,8 +269,8 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
             }
             else
             {
-                Common::Line ball_line  = Common::Line::fromPointAndAngle(m_state.ball.position,
-                                                                          m_state.ball.velocity.toAngle());
+                Common::Line ball_line  = Common::Line::fromPointAndAngle(m_world_state.ball.position,
+                                                                          m_world_state.ball.velocity.toAngle());
                 Common::Line Front_line = Common::Line::fromPointAndAngle(
                     Common::Vec2(
                         side * (Common::field().width - Common::field().penalty_area_depth - 100),
@@ -319,7 +319,7 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
         else if (alpha.deg() > 48.0)
         {
             Common::Line ball_line = Common::Line::fromTwoPoints(
-                m_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
+                m_world_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
             Common::Line Front_line = Common::Line::fromPointAndAngle(
                 Common::Vec2(0, -side * (Common::field().penalty_area_depth + 100)),
                 Common::Angle::fromDeg(0.0));
@@ -330,7 +330,7 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
         }
         else if (alpha.deg() > 3.5)
         {
-            //            Common::Line ball_line = Common::Line::fromTwoPoints(m_state.ball.position,
+            //            Common::Line ball_line = Common::Line::fromTwoPoints(m_world_state.ball.position,
             //                                                         Common::Vec2(side *
             //                                                         Common::field().width, 0.0));
             //            Common::Line Front_line = Common::Line::fromPointAndAngle(
@@ -342,7 +342,7 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
                 Common::Line::fromTwoPoints(Common::Vec2(side * Common::field().width, 100.0),
                                             Common::Vec2(side * Common::field().width, -100.0));
 
-            Common::Vec2 TARGET_BALL_IN_GOAL = GOAL_LINE.closestPoint(m_state.ball.position);
+            Common::Vec2 TARGET_BALL_IN_GOAL = GOAL_LINE.closestPoint(m_world_state.ball.position);
 
             if (TARGET_BALL_IN_GOAL.y > 300)
             {
@@ -354,7 +354,7 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
             }
 
             Common::Line ball_line =
-                Common::Line::fromTwoPoints(m_state.ball.position, TARGET_BALL_IN_GOAL);
+                Common::Line::fromTwoPoints(m_world_state.ball.position, TARGET_BALL_IN_GOAL);
             Common::Line Front_line = Common::Line::fromPointAndAngle(
                 Common::Vec2(
                     side * (Common::field().width - Common::field().penalty_area_depth - 100), 0),
@@ -385,7 +385,7 @@ void Ai::DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, b
 void Ai::DefBy3(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, bool stop)
 {
     Common::Angle alpha =
-        Common::Vec2(side * Common::field().width, 0).angleWith(m_state.ball.position) +
+        Common::Vec2(side * Common::field().width, 0).angleWith(m_world_state.ball.position) +
         Common::Angle::fromDeg(90 + side * 90);
     alpha.setDeg(std::clamp(alpha.deg(), -90.0f, 90.0f));
     float alphaSgn = Common::sign(alpha.deg());
@@ -397,7 +397,7 @@ void Ai::DefBy3(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 
             //            Common::Line Front_line = Common::Line::fromPointAndAngle(
             //                    Common::Vec2(side * (Common::field().width -
             //                    Common::field().penalty_area_depth - 100), 0), 90.0);
-            //            Common::Line ball_line = Common::Line::fromTwoPoints(m_state.ball.position,
+            //            Common::Line ball_line = Common::Line::fromTwoPoints(m_world_state.ball.position,
             //                                                         Common::Vec2(side *
             //                                                         Common::field().width, 0.0));
             //            Common::Vec2 ans = ball_line.intersect(Front_line).value_or(Common::Vec2());
@@ -406,7 +406,7 @@ void Ai::DefBy3(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 
                 Common::Line::fromTwoPoints(Common::Vec2(side * Common::field().width, 100.0),
                                             Common::Vec2(side * Common::field().width, -100.0));
 
-            Common::Vec2 TARGET_BALL_IN_GOAL = GOAL_LINE.closestPoint(m_state.ball.position);
+            Common::Vec2 TARGET_BALL_IN_GOAL = GOAL_LINE.closestPoint(m_world_state.ball.position);
 
             if (TARGET_BALL_IN_GOAL.y > 300)
             {
@@ -418,7 +418,7 @@ void Ai::DefBy3(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 
             }
 
             Common::Line ball_line =
-                Common::Line::fromTwoPoints(m_state.ball.position, TARGET_BALL_IN_GOAL);
+                Common::Line::fromTwoPoints(m_world_state.ball.position, TARGET_BALL_IN_GOAL);
             Common::Line Front_line = Common::Line::fromPointAndAngle(
                 Common::Vec2(
                     side * (Common::field().width - Common::field().penalty_area_depth - 100), 0),
@@ -465,7 +465,7 @@ void Ai::DefBy3(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 
         else if (alpha.deg() < -48.0)
         {
             Common::Line ball_line = Common::Line::fromTwoPoints(
-                m_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
+                m_world_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
             Common::Line Front_line = Common::Line::fromPointAndAngle(
                 Common::Vec2(0, side * (Common::field().penalty_area_depth + 100)),
                 Common::Angle::fromDeg(0.0));
@@ -510,7 +510,7 @@ void Ai::DefBy3(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 
         else if (alpha.deg() > 48.0)
         {
             Common::Line ball_line = Common::Line::fromTwoPoints(
-                m_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
+                m_world_state.ball.position, Common::Vec2(side * Common::field().width, 0.0));
             Common::Line Front_line = Common::Line::fromPointAndAngle(
                 Common::Vec2(0, -side * (Common::field().penalty_area_depth + 100)),
                 Common::Angle::fromDeg(0.0));
@@ -541,13 +541,13 @@ void Ai::DefMid(int &middef_num, int &rightdef_num, int &leftdef_num, Common::Ve
 {
 
     Common::Angle alpha =
-        Common::Vec2(side * Common::field().width, 0).angleWith(m_state.ball.position);
+        Common::Vec2(side * Common::field().width, 0).angleWith(m_world_state.ball.position);
     alpha.setDeg(std::clamp(alpha.deg(), -90.0f, 90.0f));
     float alphaSgn = Common::sign(alpha.deg());
     Common::logDebug("ALPHA: {}", alpha);
 
     if (!defendTarget)
-        defendTarget = &(m_state.ball.position);
+        defendTarget = &(m_world_state.ball.position);
 
     // make sure the def is present:
     if (OwnRobot[middef_num].state().seen_state == Common::SeenState::CompletelyOut && replace)
