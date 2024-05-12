@@ -16,5 +16,6 @@ public:
 
 private:
     nng_socket m_socket;
+    nng_dialer m_dialer;
 };
 } // namespace Tyr::Common
