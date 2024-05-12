@@ -67,8 +67,8 @@ bool Application::initialize(const int width, const int height)
 
     Common::logInfo("Connecting to Vision server at {} on port: {}", Common::setting().vision_address.ip,
                     Common::setting().vision_address.port);
-    m_vision = std::make_unique<Vision::Vision>();
-    if (m_vision->isConnected())
+    m_vision_raw = std::make_unique<Vision::Raw>();
+    if (m_vision_raw->isConnected())
     {
         Common::logInfo("Connected to Vision successfully :)");
     }
@@ -77,6 +77,8 @@ bool Application::initialize(const int width, const int height)
         Common::logError("Hey you! Put the LAN cable back in its socket, or ...");
         return false;
     }
+
+    m_vision_filtered = std::make_unique<Vision::Filtered>();
 
     m_strategy_udp = std::make_unique<Common::UdpClient>(Common::setting().strategy_address);
 
@@ -112,6 +114,8 @@ int Application::shutdown()
 {
     m_running = false;
 
+    m_vision_raw_thread.join();
+    m_vision_filtered_thread.join();
     m_ai_thread.join();
     m_ref_thread.join();
     m_str_thread.join();
@@ -128,6 +132,9 @@ int Application::shutdown()
 
 void Application::start()
 {
+    m_vision_raw_thread      = std::thread(&Application::visionRawEntry, this);
+    m_vision_filtered_thread = std::thread(&Application::visionFilteredEntry, this);
+
     m_ai_thread  = std::thread(&Application::aiThreadEntry, this);
     m_ref_thread = std::thread(&Application::refereeThreadEntry, this);
     m_str_thread = std::thread(&Application::strategyThreadEntry, this);
@@ -203,6 +210,26 @@ bool Application::shouldClose() const
     return WindowShouldClose();
 }
 
+void Application::visionRawEntry()
+{
+    while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
+    {
+        m_vision_raw->receive();
+
+        if (m_vision_raw->camsReady())
+            m_vision_raw->process();
+    }
+}
+
+void Application::visionFilteredEntry()
+{
+    while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
+    {
+        if (m_vision_filtered->receive())
+            m_vision_filtered->process();
+    }
+}
+
 void Application::aiThreadEntry()
 {
     Common::Timer timer;
@@ -210,16 +237,6 @@ void Application::aiThreadEntry()
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
         timer.start();
-
-        while (m_running && !m_vision->camsReady())
-            m_vision->receive();
-
-        if (!m_vision->camsReady())
-            continue;
-
-        m_ai_mutex.lock();
-        m_vision->process();
-        m_ai_mutex.unlock();
 
         m_ai_mutex.lock_shared();
         m_ai->Process();

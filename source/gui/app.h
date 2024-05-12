@@ -37,15 +37,22 @@ private:
     std::shared_mutex m_ai_mutex;
     std::mutex        m_drawing_mutex;
 
+    std::thread m_vision_raw_thread;
+    std::thread m_vision_filtered_thread;
     std::thread m_ai_thread;
     std::thread m_ref_thread;
     std::thread m_str_thread;
 
     std::unique_ptr<Referee::Referee> m_referee;
 
-    std::unique_ptr<Vision::Vision>               m_vision;
+    std::unique_ptr<Vision::Raw>      m_vision_raw;
+    std::unique_ptr<Vision::Filtered> m_vision_filtered;
+
     std::vector<std::unique_ptr<Sender::ISender>> m_senders;
     std::unique_ptr<Soccer::Ai>                   m_ai;
+
+    void visionRawEntry();
+    void visionFilteredEntry();
 
     void aiThreadEntry();
     void refereeThreadEntry();

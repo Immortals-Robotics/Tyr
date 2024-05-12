@@ -14,6 +14,11 @@ public:
 
     void updateAddress(const Common::NetworkAddress &t_address);
 
+    bool isConnected() const
+    {
+        return m_client && m_client->isConnected();
+    }
+
 private:
     void processRobots();
     void mergeRobots(Common::TeamColor t_color);
