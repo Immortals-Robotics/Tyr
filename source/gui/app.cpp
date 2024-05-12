@@ -165,12 +165,18 @@ void Application::update()
 
         m_ai_mutex.lock_shared();
         // TODO(mhmd): add an option for this
-        if (m_demo_menu->getState() != LogState::PlaybackPlay)
+        if (m_demo_menu->getState() == LogState::None)
         {
             if (1)
                 m_renderer->draw(Common::worldState());
             else
                 m_renderer->draw(Common::rawWorldState());
+        }
+        else
+        {
+            m_drawing_mutex.lock();
+            m_renderer->draw(m_demo_menu->worldStateFiltered());
+            m_drawing_mutex.unlock();
         }
         m_ai_mutex.unlock_shared();
 
@@ -184,7 +190,7 @@ void Application::update()
         }
 
         m_drawing_mutex.lock();
-        if (m_demo_menu->getState() != LogState::PlaybackPlay)
+        if (m_demo_menu->getState() == LogState::None)
         {
             m_renderer->draw(Common::debug().wrapper());
             m_log_menu->draw(Common::debug().wrapper());
