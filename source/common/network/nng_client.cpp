@@ -27,9 +27,9 @@ NngClient::NngClient(const std::string_view t_url)
     }
 }
 
-bool NngClient::receive(TimePoint *t_time, google::protobuf::MessageLite *const t_message)
+bool NngClient::receive(google::protobuf::MessageLite *const t_message, TimePoint *const t_time, const bool t_drain)
 {
-    const NngMessage message = receiveRaw();
+    const NngMessage message = receiveRaw(t_drain);
 
     if (message.size() == 0)
         return false;
@@ -40,20 +40,32 @@ bool NngClient::receive(TimePoint *t_time, google::protobuf::MessageLite *const 
     return t_message->ParseFromArray(message.data(), message.size());
 }
 
-NngMessage NngClient::receiveRaw()
+NngMessage NngClient::receiveRaw(const bool t_drain)
 {
-    char  *buffer        = nullptr;
-    size_t received_size = 0;
+    char  *buffer = nullptr;
+    size_t size   = 0;
 
-    const int result = nng_recv(m_socket, &buffer, &received_size, NNG_FLAG_ALLOC | NNG_FLAG_NONBLOCK);
-    if (result != 0)
+    do
     {
-        if (result != NNG_EAGAIN)
-            logCritical("Failed to receive from nng sub socket: {}", nng_strerror(result));
-        return {};
-    }
+        char  *new_buffer = nullptr;
+        size_t new_size   = 0;
 
-    return {buffer, received_size};
+        const int result = nng_recv(m_socket, &new_buffer, &new_size, NNG_FLAG_ALLOC | NNG_FLAG_NONBLOCK);
+        if (result != 0)
+        {
+            if (result != NNG_EAGAIN)
+                logCritical("Failed to receive from nng sub socket: {}", nng_strerror(result));
+            break;
+        }
+        else
+        {
+            buffer = new_buffer;
+            size   = new_size;
+        }
+    }
+    while (t_drain);
+
+    return {buffer, size};
 }
 
 } // namespace Tyr::Common

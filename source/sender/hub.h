@@ -35,7 +35,7 @@ public:
     bool receive()
     {
         Protos::Immortals::CommandsWrapper pb_wrapper;
-        if (!m_client->receive(nullptr, &pb_wrapper))
+        if (!m_client->receive(&pb_wrapper))
             return false;
 
         m_wrapper = CommandsWrapper(pb_wrapper);

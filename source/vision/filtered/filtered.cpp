@@ -25,7 +25,7 @@ Filtered::Filtered()
 bool Filtered::receive()
 {
     Protos::Immortals::RawWorldState pb_state;
-    if (!m_client->receive(nullptr, &pb_state))
+    if (!m_client->receive(&pb_state))
         return false;
 
     m_raw_state = Common::RawWorldState(pb_state);

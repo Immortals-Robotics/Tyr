@@ -240,18 +240,18 @@ bool Application::shouldClose() const
 void Application::receiveWorldStates()
 {
     Protos::Immortals::RawWorldState pb_raw_state;
-    if (m_raw_client->receive(nullptr, &pb_raw_state))
+    if (m_raw_client->receive(&pb_raw_state, nullptr, true))
         m_raw_world_state = Common::RawWorldState(pb_raw_state);
 
     Protos::Immortals::WorldState pb_state;
-    if (m_world_client->receive(nullptr, &pb_state))
+    if (m_world_client->receive(&pb_state, nullptr, true))
         m_world_state = Common::WorldState(pb_state);
 }
 
 void Application::receiveDebug()
 {
     Protos::Immortals::Debug::Wrapper pb_wrapper;
-    if (m_debug_client->receive(nullptr, &pb_wrapper))
+    if (m_debug_client->receive(&pb_wrapper, nullptr, true))
         m_debug_wrapper = Common::Debug::Wrapper(pb_wrapper);
 }
 
@@ -274,7 +274,7 @@ void Application::visionRawEntry()
 
         m_vision_raw->publish();
 
-        Common::logInfo("vision raw FPS: {}", 1.0 / timer.intervalSmooth());
+        Common::logInfo("vision raw FPS: {:.2f}", 1.0 / timer.intervalSmooth());
     }
 }
 
@@ -295,7 +295,7 @@ void Application::visionFilteredEntry()
 
         m_vision_filtered->publish();
 
-        Common::logInfo("vision filtered FPS: {}", 1.0 / timer.intervalSmooth());
+        Common::logInfo("vision filtered FPS: {:.2f}", 1.0 / timer.intervalSmooth());
     }
 }
 
@@ -322,7 +322,7 @@ void Application::aiEntry()
 
         Common::debug().flush();
 
-        Common::logInfo("AI FPS: {}", 1.0 / timer.intervalSmooth());
+        Common::logInfo("AI FPS: {:.2f}", 1.0 / timer.intervalSmooth());
     }
 }
 
@@ -341,7 +341,7 @@ void Application::senderEntry()
 
         m_sender_hub->send();
 
-        Common::logInfo("sender FPS: {}", 1.0 / timer.intervalSmooth());
+        Common::logInfo("sender FPS: {:.2f}", 1.0 / timer.intervalSmooth());
     }
 }
 
@@ -355,7 +355,7 @@ void Application::refereeEntry()
         const bool ref_received   = m_referee->receiveRef();
         const bool world_received = m_referee->receiveWorld();
 
-        if (!ref_received)
+        if (!ref_received && !world_received)
         {
             std::this_thread::sleep_for(std::chrono::microseconds(100));
             continue;
@@ -363,8 +363,6 @@ void Application::refereeEntry()
 
         m_referee->process();
         m_referee->publish();
-
-        Common::logInfo("referee FPS: {}", 1.0 / timer.intervalSmooth());
     }
 }
 

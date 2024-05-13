@@ -27,8 +27,6 @@ void Referee::process()
         m_state.place_ball_target =
             Common::Vec2(m_ssl_ref.designated_position().x(), m_ssl_ref.designated_position().y());
     }
-    else
-        Common::logDebug("no new packet received");
 
     if (m_cmd_counter != m_ssl_ref.command_counter())
     { // Update only when there is a new command
@@ -179,7 +177,7 @@ bool Referee::receiveRef()
 bool Referee::receiveWorld()
 {
     Protos::Immortals::WorldState pb_state;
-    if (!m_world_client->receive(nullptr, &pb_state))
+    if (!m_world_client->receive(&pb_state))
         return false;
 
     m_world_state = Common::WorldState(pb_state);

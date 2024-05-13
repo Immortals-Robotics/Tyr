@@ -11,9 +11,9 @@ class NngClient
 public:
     NngClient(std::string_view t_url);
 
-    bool receive(TimePoint *t_time, google::protobuf::MessageLite *t_message);
+    bool receive(google::protobuf::MessageLite *t_message, TimePoint *t_time = nullptr, bool t_drain = false);
 
-    NngMessage receiveRaw();
+    NngMessage receiveRaw(bool t_drain = false);
 
 private:
     nng_socket m_socket;
