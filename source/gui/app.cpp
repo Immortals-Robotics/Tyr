@@ -86,14 +86,14 @@ bool Application::initialize(const int width, const int height)
 
     m_ai = std::make_unique<Soccer::Ai>();
 
-    m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
-    m_raw_client   = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
-    m_debug_client = std::make_unique<Common::NngClient>(Common::setting().debug_url);
-
     m_dumper = std::make_unique<Common::Dumper>();
     m_dumper->addEntry(Common::setting().raw_world_state_url, Common::setting().raw_world_state_db);
     m_dumper->addEntry(Common::setting().world_state_url, Common::setting().world_state_db);
     m_dumper->addEntry(Common::setting().debug_url, Common::setting().debug_db);
+
+    m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
+    m_raw_client   = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
+    m_debug_client = std::make_unique<Common::NngClient>(Common::setting().debug_url);
 
     SetTraceLogCallback(logCallback);
 
@@ -351,6 +351,7 @@ void Application::refereeEntry()
         }
     }
 }
+
 void Application::dumpEntry()
 {
     while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...

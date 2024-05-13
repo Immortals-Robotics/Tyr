@@ -32,8 +32,8 @@ bool Application::initialize()
 
     Common::logInfo("Connecting to Vision server at {} on port: {}", Common::setting().vision_address.ip,
                     Common::setting().vision_address.port);
-    m_vision = std::make_unique<Vision::Vision>();
-    if (m_vision->isConnected())
+    m_vision_raw = std::make_unique<Vision::Raw>();
+    if (m_vision_raw->isConnected())
     {
         Common::logInfo("Connected to Vision successfully :)");
     }
@@ -43,12 +43,18 @@ bool Application::initialize()
         return false;
     }
 
-    m_strategy_udp = std::make_unique<Common::UdpClient>(Common::setting().strategy_address);
+    m_vision_filtered = std::make_unique<Vision::Filtered>();
 
-    m_senders.push_back(std::make_unique<Sender::Nrf>());
-    m_senders.push_back(std::make_unique<Sender::Grsim>(Common::setting().grsim_address));
+    m_sender_hub = std::make_unique<Sender::Hub>();
+    m_sender_hub->registerSender<Sender::Nrf>();
+    m_sender_hub->registerSender<Sender::Grsim>();
 
-    m_ai = std::make_unique<Soccer::Ai>(m_senders);
+    m_ai = std::make_unique<Soccer::Ai>();
+
+    m_dumper = std::make_unique<Common::Dumper>();
+    m_dumper->addEntry(Common::setting().raw_world_state_url, Common::setting().raw_world_state_db);
+    m_dumper->addEntry(Common::setting().world_state_url, Common::setting().world_state_db);
+    m_dumper->addEntry(Common::setting().debug_url, Common::setting().debug_db);
 
     Common::logInfo(" Now it is time, lets rock...");
     return true;
@@ -56,88 +62,134 @@ bool Application::initialize()
 
 void Application::shutdown()
 {
+    m_running = false;
+
+    m_vision_raw_thread.join();
+    m_vision_filtered_thread.join();
+
     m_ai_thread.join();
+    m_sender_thread.join();
     m_ref_thread.join();
-    m_str_thread.join();
+
+    m_dump_thread.join();
 
     Common::Services::shutdown();
 }
 
 void Application::start()
 {
-    m_ai_thread  = std::thread(&Application::aiEntry, this);
-    m_ref_thread = std::thread(&Application::refereeEntry, this);
-    m_str_thread = std::thread(&Application::strategyEntry, this);
+    m_vision_raw_thread      = std::thread(&Application::visionRawEntry, this);
+    m_vision_filtered_thread = std::thread(&Application::visionFilteredEntry, this);
+
+    m_ai_thread     = std::thread(&Application::aiEntry, this);
+    m_sender_thread = std::thread(&Application::senderEntry, this);
+    m_ref_thread    = std::thread(&Application::refereeEntry, this);
+
+    m_dump_thread = std::thread(&Application::dumpEntry, this);
+}
+
+void Application::visionRawEntry()
+{
+    Common::Timer timer;
+    timer.start();
+
+    while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
+    {
+        m_vision_raw->receive();
+
+        if (!m_vision_raw->camsReady())
+            continue;
+
+        m_vision_raw->process();
+
+        m_vision_raw->publish();
+
+        Common::logInfo("vision raw FPS: {}", 1.0 / timer.interval());
+    }
+}
+
+void Application::visionFilteredEntry()
+{
+    Common::Timer timer;
+    timer.start();
+
+    while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
+    {
+        if (!m_vision_filtered->receive())
+            continue;
+
+        m_vision_filtered->process();
+
+        m_vision_filtered->publish();
+
+        Common::logInfo("vision filtered FPS: {}", 1.0 / timer.interval());
+    }
 }
 
 void Application::aiEntry()
 {
     Common::Timer timer;
+    timer.start();
 
-    while (ImmortalsIsTheBest) // Hope it lasts Forever...
+    while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
-        timer.start();
+        const bool world_received    = m_ai->receiveWorld();
+        const bool referee_received  = m_ai->receiveReferee();
+        const bool playbook_received = m_ai->receivePlayBook();
 
-        while (!m_vision->camsReady())
-            m_vision->receive();
+        if (!world_received)
+            continue;
 
-        m_lock.lock();
+        m_ai->process();
 
-        m_vision->process();
-        m_ai->Process();
+        m_ai->publishCommands();
 
-        for (auto &sender : m_senders)
-            sender->flush();
+        Common::debug().flush();
 
-        m_lock.unlock();
-        Common::logInfo("FPS: {}", 1.0 / timer.interval());
+        Common::logInfo("AI FPS: {}", 1.0 / timer.interval());
     }
-    m_exited = true;
+}
+
+void Application::senderEntry()
+{
+    Common::Timer timer;
+    timer.start();
+
+    while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
+    {
+        if (!m_sender_hub->receive())
+            continue;
+
+        m_sender_hub->send();
+
+        Common::logInfo("sender FPS: {}", 1.0 / timer.interval());
+    }
 }
 
 void Application::refereeEntry()
 {
-    while ((!m_exited) && (ImmortalsIsTheBest)) // Hope it lasts Forever...
+    Common::Timer timer;
+    timer.start();
+
+    while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
-        if (m_referee->receive())
+        const bool ref_received   = m_referee->receiveRef();
+        const bool world_received = m_referee->receiveWorld();
+        if (ref_received || world_received)
         {
-            m_lock.lock();
             m_referee->process();
-            m_lock.unlock();
+            m_referee->publish();
+
+            Common::logInfo("referee FPS: {}", 1.0 / timer.interval());
         }
     }
 }
 
-void Application::strategyEntry()
+void Application::dumpEntry()
 {
-    while ((!m_exited) && (ImmortalsIsTheBest)) // Hope it lasts Forever...
+    while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
-        std::span<char> received_strategy;
-        if (m_strategy_udp->receiveRaw(&received_strategy))
-        {
-            if (received_strategy.size() > 11)
-            {
-                const auto receive_endpoint = m_strategy_udp->getLastReceiveEndpoint();
-                Common::logInfo("Received \"strategy.ims\" with size: {} KB, from {} on port {}",
-                                float(received_strategy.size()) / 1000.0f, receive_endpoint.address().to_string(),
-                                receive_endpoint.port());
-
-                m_lock.lock();
-                m_ai->read_playBook_str(received_strategy);
-                m_lock.unlock();
-
-                const std::filesystem::path strategy_path =
-                    std::filesystem::path{DATA_DIR} / std::filesystem::path{"strategy.ims"};
-
-                std::ofstream strategyFile(strategy_path, std::ios::out | std::ios::binary);
-                strategyFile.write(received_strategy.data(), received_strategy.size());
-                strategyFile.close();
-            }
-            else
-            {
-                Common::logWarning("Invalid \"strategy.ims\" received with size: {}", received_strategy.size());
-            }
-        }
+        m_dumper->process();
     }
 }
 } // namespace Tyr::Cli

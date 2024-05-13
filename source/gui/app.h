@@ -47,11 +47,11 @@ private:
     std::unique_ptr<Sender::Hub> m_sender_hub;
     std::unique_ptr<Soccer::Ai>  m_ai;
 
+    std::unique_ptr<Common::Dumper> m_dumper;
+
     std::unique_ptr<Common::NngClient> m_world_client;
     std::unique_ptr<Common::NngClient> m_raw_client;
     std::unique_ptr<Common::NngClient> m_debug_client;
-
-    std::unique_ptr<Common::Dumper> m_dumper;
 
     Common::WorldState    m_world_state;
     Common::RawWorldState m_raw_world_state;
