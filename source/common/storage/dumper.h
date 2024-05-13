@@ -16,7 +16,7 @@ public:
         m_entries.emplace_back(t_url, t_db);
     }
 
-    void process();
+    bool process();
 
 private:
     struct Entry

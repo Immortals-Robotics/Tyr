@@ -98,7 +98,10 @@ void Application::visionRawEntry()
         m_vision_raw->receive();
 
         if (!m_vision_raw->camsReady())
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
             continue;
+        }
 
         m_vision_raw->process();
 
@@ -116,7 +119,10 @@ void Application::visionFilteredEntry()
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
         if (!m_vision_filtered->receive())
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
             continue;
+        }
 
         m_vision_filtered->process();
 
@@ -138,7 +144,10 @@ void Application::aiEntry()
         const bool playbook_received = m_ai->receivePlayBook();
 
         if (!world_received)
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
             continue;
+        }
 
         m_ai->process();
 
@@ -158,7 +167,10 @@ void Application::senderEntry()
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
         if (!m_sender_hub->receive())
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
             continue;
+        }
 
         m_sender_hub->send();
 
@@ -175,21 +187,34 @@ void Application::refereeEntry()
     {
         const bool ref_received   = m_referee->receiveRef();
         const bool world_received = m_referee->receiveWorld();
-        if (ref_received || world_received)
-        {
-            m_referee->process();
-            m_referee->publish();
 
-            Common::logInfo("referee FPS: {}", 1.0 / timer.interval());
+        if (!ref_received && !world_received)
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
+            continue;
         }
+
+        m_referee->process();
+        m_referee->publish();
+
+        Common::logInfo("referee FPS: {}", 1.0 / timer.interval());
     }
 }
 
 void Application::dumpEntry()
 {
+    Common::Timer timer;
+    timer.start();
+
     while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
-        m_dumper->process();
+        if (!m_dumper->process())
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
+            continue;
+        }
+
+        Common::logInfo("dumper FPS: {}", 1.0 / timer.interval());
     }
 }
 } // namespace Tyr::Cli
