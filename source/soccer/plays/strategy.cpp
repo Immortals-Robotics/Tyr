@@ -112,7 +112,7 @@ void Ai::strategy()
         for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
         {
             // FOR NOW: advance to the last step
-            step[i]    = std::max(0llu, strategy.role[i].path.size() - 2);
+            step[i]    = std::max(0, (int) strategy.role[i].path.size() - 2);
             lastAdv[i] = timer.time();
             Common::logDebug("zeroed: {}", i);
         }
