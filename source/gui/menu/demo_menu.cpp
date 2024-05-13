@@ -161,10 +161,9 @@ void DemoMenu::demoHandler()
                                                 &m_worldstate_filtered.info.current_ts, &next_ts, &first_world_filtered,
                                                 &second_world_filtered))
             {
-                m_demo_mutex.lock();
                 m_worldstate_filtered.message = first_world_filtered;
                 m_debug.message               = first_message;
-                m_demo_mutex.unlock();
+
                 m_worldstate_filtered.info.time_between_frames = next_ts - m_worldstate_filtered.info.current_ts;
                 m_play_time += m_worldstate_filtered.info.time_between_frames;
                 m_worldstate_filtered.info.current_ts = next_ts;
@@ -179,10 +178,8 @@ void DemoMenu::demoHandler()
                                             &m_worldstate_filtered.info.current_ts, &next_ts, &first_world_filtered,
                                             &second_world_filtered))
         {
-            m_demo_mutex.lock();
             m_worldstate_filtered.message = first_world_filtered;
             m_debug.message               = first_message;
-            m_demo_mutex.unlock();
         }
         break;
     default:
@@ -192,8 +189,8 @@ void DemoMenu::demoHandler()
 
 void DemoMenu::initStorage()
 {
-    m_storage.open("debug");
-    m_world_filtered_storage.open("filtered-state");
+    m_storage.open(Common::setting().debug_db);
+    m_world_filtered_storage.open(Common::setting().world_state_db);
 }
 
 void DemoMenu::analyzeDatabase()

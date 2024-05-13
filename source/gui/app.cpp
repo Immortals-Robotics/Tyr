@@ -189,18 +189,15 @@ void Application::update()
         // TODO(mhmd): add an option for this
         if (m_demo_menu->getState() == LogState::None)
         {
-	        if (1)
-	            m_renderer->draw(m_world_state);
-	        else
-	            m_renderer->draw(m_raw_world_state);
+            if (1)
+                m_renderer->draw(m_world_state);
+            else
+                m_renderer->draw(m_raw_world_state);
         }
         else
         {
-            m_drawing_mutex.lock();
             m_renderer->draw(m_demo_menu->worldStateFiltered());
-            m_drawing_mutex.unlock();
         }
-        m_ai_mutex.unlock_shared();
 
         if (m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
             m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_IP)
@@ -211,18 +208,16 @@ void Application::update()
             m_config_menu->updateNetworkData();
         }
 
-        m_drawing_mutex.lock();
         if (m_demo_menu->getState() == LogState::None)
         {
-	        m_renderer->draw(m_debug_wrapper);
-	        m_log_menu->draw(m_debug_wrapper);
+            m_renderer->draw(m_debug_wrapper);
+            m_log_menu->draw(m_debug_wrapper);
         }
         else
         {
             m_renderer->draw(m_demo_menu->debugWrapper());
             m_log_menu->draw(m_demo_menu->debugWrapper());
         }
-        m_drawing_mutex.unlock();
 
         m_renderer->applyShader();
         ImGui::Image(&m_renderer->shader_rt.texture, ImGui::GetContentRegionAvail());
