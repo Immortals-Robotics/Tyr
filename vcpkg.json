@@ -9,6 +9,7 @@
 		"raylib",
 		"rlimgui",
 		"lmdb",
-		"nng"
+		"nng",
+		"xxhash"
 	]
 }

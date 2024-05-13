@@ -31,7 +31,7 @@ void DemoMenu::draw()
         ImGui::SameLine();
         font->Scale = 1;
         ImGui::PushFont(font);
-        if (ImGui::Combo("##DemoList", &m_selected_demo, &m_demo_names[0], m_demo_names.size()) && m_start_times.size())
+        if (ImGui::Combo("##DemoList", &m_selected_demo, m_demo_names.data(), m_demo_names.size()) && m_start_times.size())
         {
             m_playback_size = static_cast<float>(m_end_times[m_selected_demo] - m_start_times[m_selected_demo]) / 1000.;
             m_log_state     = LogState::None;

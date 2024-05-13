@@ -21,9 +21,11 @@ public:
 
         SourceLocation(const std::source_location &t_source);
         SourceLocation(const spdlog::source_loc &t_source);
-        SourceLocation(const Protos::Immortals::Debug::SourceLocation &t_source);
+        SourceLocation(const Protos::Immortals::Debug::SourceLocation    &t_source,
+                       const google::protobuf::Map<int32_t, std::string> &t_strings);
 
-        void fillProto(Protos::Immortals::Debug::SourceLocation *t_source) const;
+        void fillProto(Protos::Immortals::Debug::SourceLocation    *t_source,
+                       google::protobuf::Map<int32_t, std::string> *t_strings) const;
     };
 
     struct Draw
@@ -38,9 +40,11 @@ public:
 
         Draw() = default;
 
-        Draw(const Protos::Immortals::Debug::Draw &t_draw);
+        Draw(const Protos::Immortals::Debug::Draw              &t_draw,
+             const google::protobuf::Map<int32_t, std::string> &t_strings);
 
-        void fillProto(Protos::Immortals::Debug::Draw *t_draw) const;
+        void fillProto(Protos::Immortals::Debug::Draw              *t_draw,
+                       google::protobuf::Map<int32_t, std::string> *t_strings) const;
     };
 
     struct Log
@@ -57,16 +61,16 @@ public:
 
         Level          level;
         SourceLocation source;
-        std::string    logger_name;
 
         std::string text;
 
         Log() = default;
 
-        Log(const Protos::Immortals::Debug::Log &t_log);
+        Log(const Protos::Immortals::Debug::Log &t_log, const google::protobuf::Map<int32_t, std::string> &t_strings);
         Log(const spdlog::details::log_msg &t_msg);
 
-        void fillProto(Protos::Immortals::Debug::Log *t_log) const;
+        void fillProto(Protos::Immortals::Debug::Log               *t_log,
+                       google::protobuf::Map<int32_t, std::string> *t_strings) const;
 
         Color color() const;
     };

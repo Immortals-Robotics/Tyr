@@ -32,6 +32,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 #include <toml++/toml.hpp>
+#include <xxhash.h>
 
 #if defined(_WIN32)
 #define NOGDI  // All GDI defines and routines
