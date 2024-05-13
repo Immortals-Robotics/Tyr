@@ -19,11 +19,12 @@ public:
     int last_motion_idx = 0;
     int motion_idx;
 
-    Robot();
+    Robot() = default;
+    Robot(const Common::WorldState *t_world_state);
 
     inline const Common::RobotState &state() const
     {
-        return Common::worldState().own_robot[vision_id];
+        return m_world_state->own_robot[vision_id];
     }
 
     void setVisionId(unsigned short v_id);
@@ -42,5 +43,8 @@ public:
 
     Common::Vec3    GetCurrentMotion() const;
     Sender::Command GetCurrentCommand() const;
+
+private:
+    const Common::WorldState *m_world_state = nullptr;
 };
 } // namespace Tyr::Soccer

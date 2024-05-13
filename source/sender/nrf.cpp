@@ -4,6 +4,19 @@
 
 namespace Tyr::Sender
 {
+Nrf::Nrf() : Base()
+{
+    commUDP = std::make_shared<Common::UdpServer>();
+
+    buff_idx    = 0;
+    auto buffer = commUDP->getBuffer();
+    for (int i = 0; i < buffer.size(); i++)
+    {
+        buffer[i] = 0x00;
+    }
+    startup = 5;
+}
+
 void Nrf::queueCommand(const Command &command)
 {
     unsigned char data[32] = {};
@@ -65,13 +78,16 @@ void Nrf::appendData(unsigned char *data, int length)
     buff_idx += length;
 }
 
-bool Nrf::flush()
+bool Nrf::send(const CommandsWrapper &t_wrapper)
 {
     if (startup > 0)
     {
         startup--;
         return false;
     }
+
+    for (const auto &command : t_wrapper.command)
+        queueCommand(command);
 
     append_demo_data();
 
@@ -85,19 +101,6 @@ bool Nrf::flush()
 
     buff_idx = 0;
     return result;
-}
-
-Nrf::Nrf()
-{
-    commUDP = std::make_shared<Common::UdpServer>();
-
-    buff_idx    = 0;
-    auto buffer = commUDP->getBuffer();
-    for (int i = 0; i < buffer.size(); i++)
-    {
-        buffer[i] = 0x00;
-    }
-    startup = 5;
 }
 
 void Nrf::append_demo_data()

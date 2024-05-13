@@ -13,7 +13,7 @@ float Ai::calculateSwitchToAttackerScore(int robot_num)
     if (!isDefending && oneTouchDetector[robot_num].IsArriving(45, 150))
         return -1;
 
-    float currAttBallDis = OwnRobot[attack].state().position.distanceTo(Common::worldState().ball.position);
+    float currAttBallDis = OwnRobot[attack].state().position.distanceTo(m_world_state.ball.position);
 
     if (OwnRobot[attack].state().seen_state == Common::SeenState::CompletelyOut)
         currAttBallDis = 20000;
@@ -31,9 +31,9 @@ float Ai::calculateSwitchToAttackerScore(int robot_num)
     if (isDefending && marked_id != -1)
     {
         int opp = marked_id;
-        if ((Common::worldState().opp_robot[opp].position.distanceTo(Common::worldState().ball.position) < 400) &&
-            (OwnRobot[robot_num].state().position.distanceTo(Common::worldState().ball.position) < 400) && (currAttBallDis > 600) &&
-            (Common::worldState().ball.velocity.length() < 500))
+        if ((m_world_state.opp_robot[opp].position.distanceTo(m_world_state.ball.position) < 400) &&
+            (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) < 400) && (currAttBallDis > 600) &&
+            (m_world_state.ball.velocity.length() < 500))
         {
             return 0;
         }
@@ -41,7 +41,7 @@ float Ai::calculateSwitchToAttackerScore(int robot_num)
             return -1;
     }
 
-    float disToBall = OwnRobot[robot_num].state().position.distanceTo(Common::worldState().ball.position);
+    float disToBall = OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position);
     if (disToBall > currAttBallDis - 500)
         return 0;
 

@@ -28,27 +28,46 @@ private:
     std::unique_ptr<DemoMenu>   m_demo_menu;
     std::unique_ptr<LogMenu>    m_log_menu;
 
-    std::unique_ptr<Common::UdpClient> m_strategy_udp;
-
     Common::NetworkAddress updated_address;
 
     std::atomic<bool> m_running = true;
 
-    std::shared_mutex m_ai_mutex;
-    std::mutex        m_drawing_mutex;
-
+    std::thread m_vision_raw_thread;
+    std::thread m_vision_filtered_thread;
     std::thread m_ai_thread;
+    std::thread m_sender_thread;
     std::thread m_ref_thread;
-    std::thread m_str_thread;
+    std::thread m_dump_thread;
 
     std::unique_ptr<Referee::Referee> m_referee;
 
-    std::unique_ptr<Vision::Vision>               m_vision;
-    std::vector<std::unique_ptr<Sender::ISender>> m_senders;
-    std::unique_ptr<Soccer::Ai>                   m_ai;
+    std::unique_ptr<Vision::Raw>      m_vision_raw;
+    std::unique_ptr<Vision::Filtered> m_vision_filtered;
 
-    void aiThreadEntry();
-    void refereeThreadEntry();
-    void strategyThreadEntry();
+    std::unique_ptr<Sender::Hub> m_sender_hub;
+    std::unique_ptr<Soccer::Ai>  m_ai;
+
+    std::unique_ptr<Common::Dumper> m_dumper;
+
+    std::unique_ptr<Common::NngClient> m_world_client;
+    std::unique_ptr<Common::NngClient> m_raw_client;
+    std::unique_ptr<Common::NngClient> m_debug_client;
+
+    Common::WorldState    m_world_state;
+    Common::RawWorldState m_raw_world_state;
+
+    Common::Debug::Wrapper m_debug_wrapper;
+
+    void receiveWorldStates();
+    void receiveDebug();
+
+    void visionRawEntry();
+    void visionFilteredEntry();
+
+    void aiEntry();
+    void senderEntry();
+    void refereeEntry();
+
+    void dumpEntry();
 };
 } // namespace Tyr::Gui

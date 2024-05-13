@@ -5,19 +5,19 @@ namespace Tyr::Soccer
 Common::Vec2 Ai::DefGhuz(Common::Vec2 *defendTarget)
 {
     if (!defendTarget)
-        defendTarget = &(Common::worldState().ball.position);
+        defendTarget = &(m_world_state.ball.position);
 
     if (side == 1)
     {
-        Common::worldState().ball.position *= -1.0f;
+        m_world_state.ball.position *= -1.0f;
     }
 
-    Common::Angle alpha = Common::Vec2(-Common::field().width, 0).angleWith(Common::worldState().ball.position);
+    Common::Angle alpha = Common::Vec2(-Common::field().width, 0).angleWith(m_world_state.ball.position);
     alpha.setDeg(std::clamp(alpha.deg(), -90.0f, 90.0f));
     int alphaSgn = Common::sign(alpha.deg());
     alpha.setDeg(std::fabs(alpha.deg()));
 
-    float d = Common::Vec2(-Common::field().width, 0).distanceTo(Common::worldState().ball.position);
+    float d = Common::Vec2(-Common::field().width, 0).distanceTo(m_world_state.ball.position);
     d       = std::max(2000.0f, std::min(d, 5000.0f));
 
     float p00;
@@ -110,7 +110,7 @@ Common::Vec2 Ai::DefGhuz(Common::Vec2 *defendTarget)
 
     if (side == 1)
     {
-        Common::worldState().ball.position *= -1.0f;
+        m_world_state.ball.position *= -1.0f;
         target *= -1.0f;
     }
 

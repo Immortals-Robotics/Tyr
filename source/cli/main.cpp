@@ -1,17 +1,26 @@
 #include "app.h"
 
+Tyr::Cli::Application app{};
+
+void onExit()
+{
+    app.shutdown();
+    std::exit(EXIT_SUCCESS);
+}
+
 int main()
 {
-    Tyr::Cli::Application app{};
-
     if (!app.initialize())
     {
-        return 1;
+        return EXIT_FAILURE;
     }
 
     app.start();
 
-    app.shutdown();
+    std::set_terminate(onExit);
+    std::atexit(onExit);
 
-    return 0;
+    std::this_thread::sleep_for(std::chrono::hours::max());
+
+    return EXIT_SUCCESS;
 }

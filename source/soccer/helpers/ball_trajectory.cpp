@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 void Ai::calculateBallTrajectory()
 {
     // TODO: replace with epsilon check
-    if (Common::worldState().ball.velocity.length() == 0.0f)
+    if (m_world_state.ball.velocity.length() == 0.0f)
         return;
 
     if (ballHist.size() < 5)
@@ -14,10 +14,10 @@ void Ai::calculateBallTrajectory()
     }
 
     static Common::MedianFilter<float> visionM;
-    if (Common::worldState().ball.velocity.x == 0)
+    if (m_world_state.ball.velocity.x == 0)
         visionM.AddData(100.0f);
     else
-        visionM.AddData(std::fabs(Common::worldState().ball.velocity.y / Common::worldState().ball.velocity.x));
+        visionM.AddData(std::fabs(m_world_state.ball.velocity.y / m_world_state.ball.velocity.x));
 
     bool isVertical = visionM.GetCurrent() > 1.0f;
 
@@ -65,14 +65,14 @@ void Ai::calculateBallTrajectory()
                              Common::Color::purple());
     }
     Common::debug().draw(Common::LineSegment{
-        Common::Vec2(Common::worldState().ball.position.x, ballLine.getValue(Common::worldState().ball.position.x)),
+        Common::Vec2(m_world_state.ball.position.x, ballLine.getValue(m_world_state.ball.position.x)),
         Common::Vec2(ballHist[i].position.x, ballLine.getValue(ballHist[i].position.x))});
 
     if (!ballLine.isAmoodi())
     {
         Common::Line new_line(1.0, -ballLine.getSlope(), -ballLine.getIntercept());
         Common::Vec2 ballN, lastN;
-        ballN = new_line.closestPoint(Common::worldState().ball.position);
+        ballN = new_line.closestPoint(m_world_state.ball.position);
         lastN = new_line.closestPoint(ballHist[i].position);
         Common::debug().draw(Common::LineSegment{ballN, lastN},
                              isVertical ? Common::Color::yellow() : Common::Color::red());

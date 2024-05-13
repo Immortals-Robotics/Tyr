@@ -3,6 +3,7 @@
 #include "dss/dss.h"
 #include "errt/errt.h"
 #include "helpers/one_touch_detector.h"
+#include "plays/play_book.h"
 
 #define mark_in_stop 0
 
@@ -11,14 +12,20 @@ namespace Tyr::Soccer
 class Ai
 {
 private:
-    std::vector<Sender::ISender *> m_senders;
+    Common::WorldState   m_world_state;
+    Common::RefereeState m_ref_state;
+
+    std::unique_ptr<Common::NngClient> m_world_client;
+    std::unique_ptr<Common::NngClient> m_ref_client;
+
+    std::unique_ptr<Common::UdpClient> m_strategy_client;
+
+    std::unique_ptr<Common::NngServer> m_cmd_server;
 
     Common::Random m_random;
 
-    std::map<std::string, void (Ai::*)()> AIPlayBook;
-    std::string                           currentPlay;
-
-    void InitAIPlayBook();
+    using Play = void (Ai::*)();
+    Play currentPlay;
 
     int FUNC_state = 0;
     int FUNC_CNT   = 0;
@@ -94,8 +101,8 @@ private:
     void CalcIsDefending();
     void MarkManager(bool restart = true);
 
-    Protos::Immortals::PlayBook *playBook;
-    int                          strategy_weight();
+    PlayBook m_playbook;
+    int      strategy_weight();
 
     Common::Vec2  PredictedBall;
     bool          circleReachedBehindBall;
@@ -177,20 +184,28 @@ private:
     void kickoff_their_one_wall();
     void penalty_their_simple();
     void corner_their_global();
-    void strategy_maker();
+    void strategy();
     void our_place_ball_shoot();
     void our_place_ball_shoot_V2();
     void our_place_ball_shoot_taki();
     void their_place_ball();
 
+    void internalPrepare();
     void internalProcessData();
-    void internalFinalize();
 
 public:
     Robot OwnRobot[Common::Setting::kMaxOnFieldTeamRobots];
-    Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders);
-    void Process();
-    bool read_playBook(const std::filesystem::path &t_path);
-    bool read_playBook_str(std::span<char> buffer);
+    Ai();
+
+    bool receiveWorld();
+    bool receiveReferee();
+
+    bool publishCommands() const;
+
+    void process();
+
+    bool receivePlayBook();
+    bool loadPlayBook(const std::filesystem::path &t_path);
+    bool setPlayBook(const Protos::Immortals::PlayBook &t_playbook);
 };
 } // namespace Tyr::Soccer

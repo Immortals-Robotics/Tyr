@@ -3,7 +3,6 @@
 #include "debugging/debug.h"
 #include "logging/logging.h"
 #include "setting.h"
-#include "state/referee.h"
 #include "state/world.h"
 #include "storage/storage.h"
 #include "time/timer.h"
@@ -28,15 +27,10 @@ bool Services::initialize()
 
     s_logger->addDebugSink();
 
-    s_debug->initStorage("debug");
-
     s_global_timer = new Timer();
     s_global_timer->start();
 
-    s_world_state     = new WorldState();
-    s_raw_world_state = new RawWorldState();
-    s_field_state     = new FieldState();
-    s_referee_state   = new RefereeState();
+    s_field_state = new FieldState();
 
     return true;
 }
@@ -48,10 +42,7 @@ void Services::saveConfig()
 
 void Services::shutdown()
 {
-    delete s_world_state;
-    delete s_raw_world_state;
     delete s_field_state;
-    delete s_referee_state;
 
     Storage::shutdown();
 

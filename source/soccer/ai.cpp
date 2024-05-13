@@ -11,18 +11,21 @@ struct RobotProperty
     bool hasDribble;
 };
 
-Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
+Ai::Ai()
 {
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");
 
-    for (auto &sender : senders)
-        m_senders.push_back(sender.get());
+    m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
+    m_ref_client   = std::make_unique<Common::NngClient>(Common::setting().referee_state_url);
 
-    dss = new Dss(OwnRobot, Common::worldState().opp_robot, 1.f / 61.57f, 7000.f, 3000.f);
+    m_strategy_client = std::make_unique<Common::UdpClient>(Common::setting().strategy_address);
 
-    InitAIPlayBook();
-    currentPlay = "HaltAll";
+    m_cmd_server = std::make_unique<Common::NngServer>(Common::setting().commands_url);
+
+    dss = new Dss(OwnRobot, m_world_state.opp_robot, 1.f / 61.57f, 7000.f, 3000.f);
+
+    currentPlay = &Ai::HaltAll;
 
     gkIntercepting = false;
 
@@ -59,7 +62,10 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
+        OwnRobot[i] = Robot(&m_world_state);
+
         oneTouchDetector[i].rState = &OwnRobot[i];
+        oneTouchDetector[i].ball   = &m_world_state.ball;
         oneTouchDetector[i].side   = &side;
 
         oneTouchType[i]     = oneTouch;
@@ -102,19 +108,45 @@ Ai::Ai(std::vector<std::unique_ptr<Sender::ISender>> &senders)
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
         requiredRobots[i] = false;
 
-    playBook = nullptr;
-    std::string strategy_path(DATA_DIR);
-    strategy_path.append("/strategy.ims");
-    read_playBook(strategy_path.c_str());
-    if (playBook)
-    {
-        Common::logInfo("Strategy loaded with size {}", playBook->strategy_size());
-    }
-    else
-    {
-        Common::logCritical("Could not open \"strategy.ims\"");
-    }
+    const auto strategy_path = std::filesystem::path(DATA_DIR) / "strategy.ims";
+    loadPlayBook(strategy_path);
 
     timer.start();
+}
+
+bool Ai::receiveWorld()
+{
+    Protos::Immortals::WorldState pb_state;
+    if (!m_world_client->receive(nullptr, &pb_state))
+        return false;
+
+    m_world_state = Common::WorldState(pb_state);
+    return true;
+}
+
+bool Ai::receiveReferee()
+{
+    Protos::Immortals::RefereeState pb_state;
+    if (!m_ref_client->receive(nullptr, &pb_state))
+        return false;
+
+    m_ref_state = Common::RefereeState(pb_state);
+    return true;
+}
+
+bool Ai::publishCommands() const
+{
+    const Common::TimePoint time = Common::TimePoint::now();
+
+    Protos::Immortals::CommandsWrapper pb_wrapper;
+
+    pb_wrapper.set_time(time.timestamp());
+
+    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    {
+        OwnRobot[i].GetCurrentCommand().fillProto(pb_wrapper.add_command());
+    }
+
+    return m_cmd_server->send(time, pb_wrapper);
 }
 } // namespace Tyr::Soccer

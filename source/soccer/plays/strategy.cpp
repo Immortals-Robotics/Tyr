@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-bool Ai::read_playBook(const std::filesystem::path &t_path)
+bool Ai::loadPlayBook(const std::filesystem::path &t_path)
 {
     std::ifstream file(t_path, std::ios::in | std::ios::binary);
 
@@ -22,32 +22,60 @@ bool Ai::read_playBook(const std::filesystem::path &t_path)
     file.read(buffer.get(), length);
     file.close();
 
-    return read_playBook_str({buffer.get(), length});
+    Protos::Immortals::PlayBook playbook;
+    if (!playbook.ParseFromArray(buffer.get(), length))
+    {
+        Common::logError("Failed to parse playbook file {} with size {}", t_path, length);
+        return false;
+    }
+
+    const bool result = setPlayBook(playbook);
+
+    if (result)
+        Common::logInfo("Playbook file {} loaded with {} strategies", t_path, m_playbook.strategy.size());
+    else
+        Common::logCritical("Could not open strategy file {}", t_path);
+
+    return result;
 }
 
-bool Ai::read_playBook_str(std::span<char> buffer)
+bool Ai::receivePlayBook()
 {
-    if (!playBook)
-        playBook = new Protos::Immortals::PlayBook();
+    Protos::Immortals::PlayBook playbook;
+    if (!m_strategy_client->receive(&playbook))
+        return false;
 
-    if (!playBook->ParseFromArray(buffer.data(), buffer.size()))
+    const auto receive_endpoint = m_strategy_client->getLastReceiveEndpoint();
+    Common::logInfo("Received playbook from {} on port {}", receive_endpoint.address().to_string(),
+                    receive_endpoint.port());
+
+    if (!setPlayBook(playbook))
+        return false;
+
+    const std::filesystem::path strategy_path = std::filesystem::path{DATA_DIR} / "strategy.ims";
+
+    std::ofstream strategyFile(strategy_path, std::ios::out | std::ios::binary);
+    playbook.SerializePartialToOstream(&strategyFile);
+    strategyFile.close();
+
+    return true;
+}
+
+bool Ai::setPlayBook(const Protos::Immortals::PlayBook &t_playbook)
+{
+    if (t_playbook.strategy_size() != t_playbook.weight_size())
     {
-        delete playBook;
-        playBook = nullptr;
+        Common::logError("Parsed playbook  has {} strategies != {} weights", t_playbook.strategy_size(),
+                         t_playbook.weight_size());
         return false;
     }
 
-    if (playBook->strategy_size() != playBook->weight_size())
-    {
-        delete playBook;
-        playBook = nullptr;
-        return false;
-    }
+    m_playbook = t_playbook;
 
-    for (int strategy_idx = 0; strategy_idx < playBook->strategy_size(); ++strategy_idx)
+    for (int strategy_idx = 0; strategy_idx < m_playbook.strategy.size(); ++strategy_idx)
     {
-        Common::logInfo("STRATEGY: {}, weight: {}", playBook->strategy(strategy_idx).name(),
-                        playBook->weight(strategy_idx));
+        Common::logInfo("STRATEGY: {}, weight: {}", m_playbook.strategy[strategy_idx].name,
+                        m_playbook.weight[strategy_idx]);
     }
 
     return true;
@@ -59,7 +87,7 @@ static int curr_str_id                                     = -1;
 
 bool receivers_reached = false;
 
-void Ai::strategy_maker()
+void Ai::strategy()
 {
     if (timer.time() < 0.5)
     {
@@ -73,11 +101,10 @@ void Ai::strategy_maker()
         return;
     }
 
-    Protos::Immortals::Strategy strategy = playBook->strategy(curr_str_id);
-    Common::logInfo("STRATEGY: {}", strategy.name());
+    const Strategy &strategy = m_playbook.strategy[curr_str_id];
+    Common::logInfo("STRATEGY: {}", strategy.name);
 
-    int xSgn = side;
-    int ySgn = Common::sign(-Common::worldState().ball.position.y);
+    const Common::Vec2 sign_modifier{(float) side, Common::sign(-m_world_state.ball.position.y)};
 
     Common::logDebug("timer: {}", timer.time());
     if (timer.time() < 0.5)
@@ -85,7 +112,7 @@ void Ai::strategy_maker()
         for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
         {
             // FOR NOW: advance to the last step
-            step[i]    = std::max(0, strategy.role(i).path_size() - 2);
+            step[i]    = std::max(0, (int) strategy.role[i].path.size() - 2);
             lastAdv[i] = timer.time();
             Common::logDebug("zeroed: {}", i);
         }
@@ -95,35 +122,35 @@ void Ai::strategy_maker()
     }
     else
     {
-        for (int i = 0; i < strategy.role_size(); i++)
+        for (int i = 0; i < strategy.role.size(); i++)
         {
-            if (strategy.role(i).path_size() == 0)
+            if (strategy.role[i].path.size() == 0)
                 continue;
 
-            if (step[i] >= strategy.role(i).path_size() - 1)
+            if (step[i] >= strategy.role[i].path.size() - 1)
             {
-                step[i]    = strategy.role(i).path_size() - 1;
+                step[i]    = strategy.role[i].path.size() - 1;
                 lastAdv[i] = timer.time();
                 Common::logDebug("zeroed: {}", i);
                 continue;
             }
 
-            if ((strategy.role(i).path(step[i]).type() == 1) || (*stm2AInum[i] == attack))
+            if ((strategy.role[i].path[step[i]].type == Waypoint::Type::Time) || (*stm2AInum[i] == attack))
             {
-                if (timer.time() - lastAdv[i] > strategy.role(i).path(step[i]).time() * 0.1f)
+                if (timer.time() - lastAdv[i] > strategy.role[i].path[step[i]].time * 0.1f)
                 {
-                    step[i]    = std::min(strategy.role(i).path_size() - 1, step[i] + 1);
+                    step[i]    = std::min((int) strategy.role[i].path.size() - 1, step[i] + 1);
                     lastAdv[i] = timer.time();
                     Common::logDebug("stepped: {}    {}", i, step[i]);
                 }
             }
             else
             {
-                if (Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
+                if ((strategy.role[i].path[step[i]].position * sign_modifier)
                         .distanceTo(OwnRobot[*stm2AInum[i]].state().position) <
-                    strategy.role(i).path(step[i]).tolerance())
+                    strategy.role[i].path[step[i]].tolerance)
                 {
-                    step[i]    = std::min(strategy.role(i).path_size() - 1, step[i] + 1);
+                    step[i]    = std::min((int) strategy.role[i].path.size() - 1, step[i] + 1);
                     lastAdv[i] = timer.time();
                     Common::logDebug("stepped: {}    {}", i, step[i]);
                 }
@@ -139,7 +166,7 @@ void Ai::strategy_maker()
         //	continue;
         // }
 
-        if (strategy.role(i).path_size() == 0)
+        if (strategy.role[i].path.size() == 0)
         {
             if (*stm2AInum[i] == gk)
                 GKHi(gk, true);
@@ -167,37 +194,34 @@ void Ai::strategy_maker()
             int shoot = 0;
             int chip  = 0;
 
-            if (strategy.role(i).path(step[i]).type() == 0)
+            if (strategy.role[i].path[step[i]].type == Waypoint::Type::Position)
             {
-                shoot = strategy.role(i).path(step[i]).tolerance();
+                shoot = strategy.role[i].path[step[i]].tolerance;
                 Common::logDebug("ATTACK: shoot: {}", shoot);
             }
             else
             {
-                chip = strategy.role(i).path(step[i]).tolerance();
+                chip = strategy.role[i].path[step[i]].tolerance;
                 Common::logDebug("ATTACK: chip:{}", chip);
             }
 
-            if (step[i] == strategy.role(i).path_size() - 1 && receivers_reached && timer.time() > 3)
+            if (step[i] == strategy.role[i].path.size() - 1 && receivers_reached && timer.time() > 3)
             {
                 Common::Angle passAngle =
-                    Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(Common::worldState().ball.position);
+                    (strategy.role[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
                 float tmp_mult = 1; // TODO #11 remove this multiplier and fix that strategy maker
                 circle_ball(*stm2AInum[i], passAngle, shoot * tmp_mult, chip, 1.0f);
             }
-            else if (step[i] == strategy.role(i).path_size() - 2)
+            else if (step[i] == strategy.role[i].path.size() - 2)
             {
                 Common::Angle passAngle =
-                    Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(Common::worldState().ball.position);
+                    (strategy.role[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
                 circle_ball(*stm2AInum[i], passAngle, 0, 0, 1.0f, 140.0f);
             }
             else
             {
                 Common::Angle passAngle =
-                    Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                        .angleWith(Common::worldState().ball.position);
+                    (strategy.role[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
                 circle_ball(*stm2AInum[i], passAngle, 0, 0, 1.0f);
             }
         }
@@ -205,7 +229,7 @@ void Ai::strategy_maker()
         else
         {
             if (1)
-            { // strategy.role(i).path(step[i]).needrrt()==0) {
+            { // strategy.role[i].path[step[i]].needrrt()==0) {
                 ERRTSetObstacles(*stm2AInum[i], 1, 1);
                 // ERRTSetObstacles(*stm2AInum[i], 0, 0);
             }
@@ -214,78 +238,59 @@ void Ai::strategy_maker()
                 ERRTSetObstacles(*stm2AInum[i], 1, 1);
             }
 
-            VelocityProfile::Type profile = VelocityProfile::Type::Mamooli;
-            switch (strategy.role(i).path(step[i]).velocity_profile())
-            {
-            case Protos::Immortals::Waypoint_VelocityProfile_Aroom:
-                profile = VelocityProfile::Type::Aroom;
-                break;
-            case Protos::Immortals::Waypoint_VelocityProfile_Mamooli:
-                profile = VelocityProfile::Type::Mamooli;
-                break;
-            case Protos::Immortals::Waypoint_VelocityProfile_Kharaki:
-                profile = VelocityProfile::Type::Kharaki;
-                break;
-            }
-            if (step[i] != strategy.role(i).path_size() - 1)
+            const VelocityProfile::Type profile = strategy.role[i].path[step[i]].velocity_profile;
+
+            if (step[i] != strategy.role[i].path.size() - 1)
             {
                 // float dis_to_reach = Common::Vec2::distance(OwnRobot[*stm2AInum[i]].state().position,
-                // Common::Vec2(strategy.role(i).path(step[i]).x(),strategy.role(i).path(step[i]).y())); if
-                // ((step[i]>=strategy.role(i).path_size()-2) || (dis_to_reach < 500))
+                // Common::Vec2(strategy.role[i].path[step[i]].x(),strategy.role[i].path[step[i]].y())); if
+                // ((step[i]>=strategy.role[i].path.size()-2) || (dis_to_reach < 500))
                 OwnRobot[*stm2AInum[i]].face(Common::Vec2(-side * Common::field().width, 0));
                 // else
-                //     OwnRobot[*stm2AInum[i]].face(Common::Vec2(strategy.role(i).path(step[i]).x(),strategy.role(i).path(step[i]).y()));
-                ERRTNavigate2Point(
-                    *stm2AInum[i],
-                    Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn),
-                    strategy.role(i).path(step[i]).speed(), profile);
+                //     OwnRobot[*stm2AInum[i]].face(Common::Vec2(strategy.role[i].path[step[i]].x(),strategy.role[i].path[step[i]].y()));
+                ERRTNavigate2Point(*stm2AInum[i], strategy.role[i].path[step[i]].position * sign_modifier,
+                                   strategy.role[i].path[step[i]].speed, profile);
             }
             else
             {
-                receivePass(*stm2AInum[i], Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn,
-                                                        strategy.role(i).path(step[i]).y() * ySgn));
+                receivePass(*stm2AInum[i], strategy.role[i].path[step[i]].position * sign_modifier);
             }
         }
 
-        const float remainingDis =
-            Common::Vec2(strategy.role(i).path(step[i]).x() * xSgn, strategy.role(i).path(step[i]).y() * ySgn)
-                .distanceTo(OwnRobot[*stm2AInum[i]].state().position);
+        const float remainingDis = (strategy.role[i].path[step[i]].position * sign_modifier)
+                                       .distanceTo(OwnRobot[*stm2AInum[i]].state().position);
 
-        switch (strategy.role(i).afterlife())
+        switch (strategy.role[i].afterlife)
         {
-        case 0:
+        case Role::Afterlife::Gool:
             oneTouchType[*stm2AInum[i]] = gool;
             break;
-        case 1:
+        case Role::Afterlife::OneTouch:
             oneTouchType[*stm2AInum[i]] = oneTouch;
-            if (strategy.role(i).path_size() == 0)
+            if (strategy.role[i].path.size() == 0)
                 allafPos[*stm2AInum[i]] = Common::Vec2(0, 0);
             else
-                allafPos[*stm2AInum[i]] =
-                    Common::Vec2(strategy.role(i).path(strategy.role(i).path_size() - 1).x() * xSgn,
-                                 strategy.role(i).path(strategy.role(i).path_size() - 1).y() * ySgn);
+                allafPos[*stm2AInum[i]] = strategy.role[i].path.back().position * sign_modifier;
 
-            if (step[i] != strategy.role(i).path_size() - 1)
+            if (step[i] != strategy.role[i].path.size() - 1)
                 // if (i == dmf && remainingDis > 150)
                 new_receivers_reached = false;
             break;
-        case 2:
+        case Role::Afterlife::Shirje:
             oneTouchType[*stm2AInum[i]] = shirje;
             break;
-        case 3:
+        case Role::Afterlife::Allaf:
             oneTouchType[*stm2AInum[i]] = allaf;
             if (*stm2AInum[i] == attack)
             {
-                allafPos[*stm2AInum[i]] = Common::worldState().ball.position;
+                allafPos[*stm2AInum[i]] = m_world_state.ball.position;
             }
             else
             {
-                if (strategy.role(i).path_size() == 0)
+                if (strategy.role[i].path.size() == 0)
                     allafPos[*stm2AInum[i]] = Common::Vec2(0, 0);
                 else
-                    allafPos[*stm2AInum[i]] =
-                        Common::Vec2(strategy.role(i).path(strategy.role(i).path_size() - 1).x() * xSgn,
-                                     strategy.role(i).path(strategy.role(i).path_size() - 1).y() * ySgn);
+                    allafPos[*stm2AInum[i]] = strategy.role[i].path.back().position * sign_modifier;
             }
             break;
         default:

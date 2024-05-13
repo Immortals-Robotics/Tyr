@@ -8,10 +8,7 @@ class Logger;
 class Timer;
 class ConfigReader;
 
-struct WorldState;
-struct RawWorldState;
 struct FieldState;
-struct RefereeState;
 
 struct Services
 {
@@ -44,24 +41,9 @@ struct Services
         return *s_global_timer;
     }
 
-    static WorldState &worldState()
-    {
-        return *s_world_state;
-    }
-
-    static RawWorldState &rawWorldState()
-    {
-        return *s_raw_world_state;
-    }
-
     static FieldState &field()
     {
         return *s_field_state;
-    }
-
-    static RefereeState &refereeState()
-    {
-        return *s_referee_state;
     }
 
 private:
@@ -71,10 +53,7 @@ private:
     static inline Timer        *s_global_timer;
     static inline ConfigReader *s_configReader;
 
-    static inline WorldState    *s_world_state;
-    static inline RawWorldState *s_raw_world_state;
-    static inline FieldState    *s_field_state;
-    static inline RefereeState  *s_referee_state;
+    static inline FieldState *s_field_state;
 };
 
 static ConfigReader &configReader()
@@ -102,24 +81,9 @@ static Timer &global_timer()
     return Services::global_timer();
 }
 
-static WorldState &worldState()
-{
-    return Services::worldState();
-}
-
-static RawWorldState &rawWorldState()
-{
-    return Services::rawWorldState();
-}
-
 static FieldState &field()
 {
     return Services::field();
-}
-
-static RefereeState &refereeState()
-{
-    return Services::refereeState();
 }
 } // namespace Tyr::Common
 

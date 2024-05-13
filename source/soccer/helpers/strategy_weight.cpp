@@ -4,13 +4,7 @@ namespace Tyr::Soccer
 {
 int Ai::strategy_weight()
 {
-    if (!playBook)
-    {
-        Common::logError("strategy_weight__+:  444");
-        return -1;
-    }
-
-    if (playBook->strategy_size() == 0)
+    if (m_playbook.strategy.size() == 0)
     {
         Common::logWarning("strategy_weight__+:  555");
         return -1;
@@ -22,19 +16,22 @@ int Ai::strategy_weight()
 
     float sigma_w = 0;
 
-    Common::logDebug("strategy:");
-    for (int i = 0; i < playBook->strategy_size(); i++)
-    {
-        if ((side * Common::worldState().ball.position.x > playBook->strategy(i).min_x()) &&
-            (side * Common::worldState().ball.position.x < playBook->strategy(i).max_x()) &&
-            (std::fabs(Common::worldState().ball.position.y) > playBook->strategy(i).min_y()) &&
-            (std::fabs(Common::worldState().ball.position.y) < playBook->strategy(i).max_y()) &&
-            (playBook->weight(i) > 0))
-        {
-            Common::logDebug("{}|{}    ", i, playBook->weight(i));
+    const Common::Vec2 sign_modifier{(float) side, Common::sign(-m_world_state.ball.position.y)};
 
-            good_strs[i] = sigma_w + playBook->weight(i);
-            sigma_w += playBook->weight(i);
+    Common::logDebug("strategy:");
+
+    for (int i = 0; i < m_playbook.strategy.size(); i++)
+    {
+        if ((side * m_world_state.ball.position.x > m_playbook.strategy[i].area.min.x) &&
+            (side * m_world_state.ball.position.x < m_playbook.strategy[i].area.max.x) &&
+            (std::fabs(m_world_state.ball.position.y) > m_playbook.strategy[i].area.min.y) &&
+            (std::fabs(m_world_state.ball.position.y) < m_playbook.strategy[i].area.max.y) &&
+            (m_playbook.weight[i] > 0))
+        {
+            Common::logDebug("{}|{}    ", i, m_playbook.weight[i]);
+
+            good_strs[i] = sigma_w + m_playbook.weight[i];
+            sigma_w += m_playbook.weight[i];
         }
     }
 

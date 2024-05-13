@@ -36,6 +36,7 @@ set(HEADER_FILES
 	network/udp_server.h
 	state/referee.h
 	state/world.h
+	storage/dumper.h
 	storage/storage.h
 	time/time_point.h
 	time/timer.h)
@@ -58,6 +59,7 @@ set(SOURCE_FILES
 	network/nng_server.cpp
 	network/udp_client.cpp
 	network/udp_server.cpp
+	storage/dumper.cpp
 	storage/storage.cpp
 	time/timer.cpp)
 

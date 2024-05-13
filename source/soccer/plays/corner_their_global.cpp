@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 void Ai::corner_their_global()
 {
-    if (side * Common::worldState().ball.position.x > Common::field().width - 1000)
+    if (side * m_world_state.ball.position.x > Common::field().width - 1000)
     {
         ERRTSetObstacles(gk, 0, 0);
         OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
@@ -22,7 +22,7 @@ void Ai::corner_their_global()
     DefenceWall(attack, false);
 
     std::map<int, Common::Vec2> static_pos;
-    static_pos[dmf]  = Common::Vec2(side * 3500, Common::sign(-Common::worldState().ball.position.y) * 1100.0f);
+    static_pos[dmf]  = Common::Vec2(side * 3500, Common::sign(-m_world_state.ball.position.y) * 1100.0f);
     static_pos[mid1] = Common::Vec2(side * 3200, 600);
     static_pos[mid2] = Common::Vec2(side * 3200, 0);
 

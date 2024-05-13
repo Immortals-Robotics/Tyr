@@ -55,8 +55,6 @@ private:
     Common::Storage m_storage;
     Common::Storage m_world_filtered_storage;
 
-    std::mutex m_demo_mutex;
-
     DebugDemo             m_debug;
     WorldSateFilteredDemo m_worldstate_filtered;
 

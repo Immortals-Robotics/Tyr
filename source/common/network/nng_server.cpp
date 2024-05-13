@@ -9,21 +9,23 @@ NngServer::NngServer(const std::string_view t_url)
     result = nng_pub_open(&m_socket);
     if (result != 0)
     {
-        logCritical("Failed to open nng pub socket: {}", result);
+        logCritical("Failed to open nng pub socket: {}", nng_strerror(result));
     }
 
     const std::string url_null_terminated{t_url.data(), t_url.size()};
 
-    result = nng_listen(m_socket, url_null_terminated.c_str(), nullptr, 0);
+    result = nng_listen(m_socket, url_null_terminated.c_str(), &m_listener, 0);
     if (result != 0)
     {
-        logCritical("Failed to listen nng pub socket: {}", result);
+        logCritical("Failed to listen to \"{}\" with nng pub socket: {}", t_url, nng_strerror(result));
     }
 }
 
-bool NngServer::send(const google::protobuf::MessageLite &t_message)
+bool NngServer::send(const TimePoint &t_time, const google::protobuf::MessageLite &t_message)
 {
-    const NngMessage message{t_message.ByteSizeLong()};
+    NngMessage message{t_message.ByteSizeLong()};
+
+    *message.mutableTime() = t_time.timestamp();
 
     if (!t_message.SerializeToArray(message.data(), message.size()))
     {
@@ -31,15 +33,15 @@ bool NngServer::send(const google::protobuf::MessageLite &t_message)
         return false;
     }
 
-    return send(message);
+    return sendRaw(message);
 }
 
-bool NngServer::send(const NngMessage &t_message)
+bool NngServer::sendRaw(const NngMessage &t_message)
 {
-    const int result = nng_send(m_socket, t_message.data(), t_message.size(), 0);
+    const int result = nng_send(m_socket, t_message.m_data.data(), t_message.m_data.size(), 0);
     if (result != 0)
     {
-        logError("Nng send of {} bytes failed: {}", t_message.size(), result);
+        logError("Nng send of {} bytes failed: {}", t_message.m_data.size(), nng_strerror(result));
         return false;
     }
 

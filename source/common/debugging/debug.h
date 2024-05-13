@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../math/vector.h"
+#include "../network/nng_server.h"
 #include "../state/world.h"
-#include "../storage/storage.h"
 #include "../time/time_point.h"
 #include "color.h"
 
@@ -88,7 +88,7 @@ public:
     Debug(const Debug &)            = delete;
     Debug &operator=(const Debug &) = delete;
 
-    void flip();
+    void flush();
 
     void draw(Vec2 t_pos, Color t_color = Color::white(),
               std::source_location source = std::source_location::current());
@@ -104,25 +104,19 @@ public:
               float t_thickness = 1.0f, std::source_location source = std::source_location::current());
 
     void log(Log &&t_log);
-
-    const Wrapper &wrapper() const
-    {
-        return m_wrapper;
-    }
+    void draw(Draw &&t_draw);
 
 private:
-    Debug() = default;
-    ~Debug();
-
-    void initStorage(std::string_view t_name);
+    Debug();
+    ~Debug() = default;
 
     friend struct Services;
 
-    Wrapper m_wrapper;
-    Wrapper m_wrapper_off;
+    std::unique_ptr<NngServer> m_server;
 
-    Storage m_storage;
+    Wrapper m_wrapper;
 
     std::mutex m_log_mutex;
+    std::mutex m_draw_mutex;
 };
 } // namespace Tyr::Common

@@ -46,7 +46,7 @@ void Ai::receivePass(int robot_num, Common::Vec2 staticPos, bool chip)
         maxBallAngle = 0;
     }
 
-    float distCoeff = Common::worldState().ball.position.distanceTo(OwnRobot[robot_num].state().position) / 1500.0f;
+    float distCoeff = m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) / 1500.0f;
     distCoeff       = std::max(0.8f, distCoeff);
     distCoeff       = std::min(1.2f, distCoeff);
 
