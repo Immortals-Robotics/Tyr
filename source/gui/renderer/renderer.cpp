@@ -82,7 +82,6 @@ void Renderer::draw(Common::Rect rect, Common::Color t_color, bool t_is_filled, 
 
     Rectangle ray_rect = {.x = posX, .y = posY, .width = length, .height = width};
 
-    BeginTextureMode(main_rt);
     if (t_is_filled)
     {
         DrawRectangleRec(ray_rect, raylibColor(t_color));
@@ -91,7 +90,6 @@ void Renderer::draw(Common::Rect rect, Common::Color t_color, bool t_is_filled, 
     {
         DrawRectangleLinesEx(ray_rect, t_thickness, raylibColor(t_color));
     }
-    EndTextureMode();
 }
 
 void Renderer::draw(Common::Line t_line, Common::Color t_color, float t_thickness)
@@ -105,9 +103,7 @@ void Renderer::draw(Common::LineSegment line_segment, Common::Color t_color, flo
     Vector2 v1  = ConvertSignedVecToPixelVec(line_segment.start);
     Vector2 v2  = ConvertSignedVecToPixelVec(line_segment.end);
 
-    BeginTextureMode(main_rt);
     DrawLineEx(v1, v2, t_thickness, raylibColor(t_color));
-    BeginTextureMode(main_rt);
 }
 
 void Renderer::draw(Common::Circle circle, Common::Color t_color, bool t_is_filled, float t_thickness)
@@ -116,7 +112,6 @@ void Renderer::draw(Common::Circle circle, Common::Color t_color, bool t_is_fill
     float   _rad   = ConvertRealityUnitToPixels(circle.r);
     t_thickness    = t_thickness * m_upscaling_factor;
 
-    BeginTextureMode(main_rt);
     if (t_is_filled)
     {
         DrawCircleV(center, _rad, raylibColor(t_color));
@@ -125,7 +120,6 @@ void Renderer::draw(Common::Circle circle, Common::Color t_color, bool t_is_fill
     {
         DrawRing(center, _rad - t_thickness, _rad, 0., 360., 100, raylibColor(t_color));
     }
-    EndTextureMode();
 }
 
 void Renderer::drawCircleSector(Common::Circle circle, Common::Color t_color, float _startAngle, float _endAngle,
@@ -137,7 +131,6 @@ void Renderer::drawCircleSector(Common::Circle circle, Common::Color t_color, fl
     Vector2 p1 = {.x = center.x + _rad * cos(_startAngle * DEG2RAD), .y = center.y + _rad * sin(_startAngle * DEG2RAD)};
     Vector2 p2 = {.x = center.x + _rad * cos(_endAngle * DEG2RAD), .y = center.y + _rad * sin(_endAngle * DEG2RAD)};
 
-    BeginTextureMode(main_rt);
     if (t_is_filled)
     {
         DrawCircleSector(center, _rad, _startAngle, _endAngle, 20, raylibColor(t_color));
@@ -148,7 +141,6 @@ void Renderer::drawCircleSector(Common::Circle circle, Common::Color t_color, fl
         DrawCircleSectorLines(center, _rad, _startAngle, _endAngle, 20, raylibColor(t_color));
         DrawTriangleLines(center, p1, p2, raylibColor(t_color));
     }
-    EndTextureMode();
 }
 
 void Renderer::draw(Common::Triangle triangle, Common::Color t_color, bool t_is_filled, float t_thickness)
@@ -157,7 +149,6 @@ void Renderer::draw(Common::Triangle triangle, Common::Color t_color, bool t_is_
     Vector2 v2 = ConvertSignedVecToPixelVec(triangle.corner[1]);
     Vector2 v3 = ConvertSignedVecToPixelVec(triangle.corner[2]);
 
-    BeginTextureMode(main_rt);
     if (t_is_filled)
     {
         DrawTriangle(v1, v2, v3, raylibColor(t_color));
@@ -167,15 +158,12 @@ void Renderer::draw(Common::Triangle triangle, Common::Color t_color, bool t_is_
         // TODO: thickness
         DrawTriangleLines(v1, v2, v3, raylibColor(t_color));
     }
-    EndTextureMode();
 }
 
 void Renderer::drawText(Common::Vec2 _pos, const std::string &_str, int _fontSize, Common::Color t_color)
 {
     Vector2 pos = ConvertSignedVecToPixelVec(_pos);
-    BeginTextureMode(main_rt);
     DrawTextEx(m_font, _str.c_str(), pos, _fontSize * m_upscaling_factor, 0., raylibColor(t_color));
-    EndTextureMode();
 }
 
 void Renderer::CalculateZoom()
@@ -196,28 +184,36 @@ void Renderer::applyShader()
 
 void Renderer::draw(const Common::RawWorldState &t_world)
 {
+    BeginTextureMode(main_rt);
+
     for (const auto &ball : t_world.balls)
         draw(ball);
     for (const auto &robot : t_world.yellow_robots)
         draw(robot);
     for (const auto &robot : t_world.blue_robots)
         draw(robot);
+
+    EndTextureMode();
 }
 
 void Renderer::draw(const Common::WorldState &t_world)
 {
+    BeginTextureMode(main_rt);
+
     draw(t_world.ball, true);
     for (const auto &robot : t_world.own_robot)
         draw(robot);
     for (const auto &robot : t_world.opp_robot)
         draw(robot);
+
+    EndTextureMode();
 }
 
 void Renderer::draw(const Common::FieldState &t_field)
 {
-    BeginTextureMode(this->main_rt);
+    BeginTextureMode(main_rt);
+
     ClearBackground(GREEN);
-    EndTextureMode();
 
     this->overallFieldSize.x = t_field.width * 2.0f + 4.0f * t_field.boundary_width;
     this->overallFieldSize.y = t_field.height * 2.0f + 4 * t_field.boundary_width;
@@ -280,6 +276,8 @@ void Renderer::draw(const Common::FieldState &t_field)
     {
         draw(Common::Circle{clicked_pos, 50}, Common::Color::red(), true, 170);
     }
+
+    EndTextureMode();
 }
 
 Common::Vec2 Renderer::getMousePosition()
