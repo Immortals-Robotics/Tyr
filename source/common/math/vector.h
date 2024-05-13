@@ -1,5 +1,7 @@
 #pragma once
 
+#include "helpers.h"
+
 namespace Tyr::Common
 {
 struct Angle;
@@ -24,48 +26,183 @@ struct Vec2
         t_v->set_y(y);
     }
 
-    [[nodiscard]] Vec2  normalized() const;
-    [[nodiscard]] float length() const;
-    [[nodiscard]] float lengthSquared() const;
-    [[nodiscard]] Vec2  rotated(Angle t_ang) const;
+    [[nodiscard]] inline Vec2 normalized() const
+    {
+        const float length = this->length();
 
-    [[nodiscard]] Angle toAngle() const;
+        return length == 0.0 ? Vec2{0.0, 0.0} : *this / length;
+    }
 
-    [[nodiscard]] float dot(Vec2 t_v) const;
+    [[nodiscard]] inline float length() const
+    {
+        return sqrt(x * x + y * y);
+    }
+    [[nodiscard]] inline float lengthSquared() const
+    {
+        return x * x + y * y;
+    }
 
-    [[nodiscard]] float distanceTo(Vec2 t_v) const;
-    [[nodiscard]] float distanceSquaredTo(Vec2 t_v) const;
+    [[nodiscard]] inline Vec2 rotated(Angle t_ang) const
+    {
+        const Angle rotated_angle = toAngle() + t_ang;
+        return rotated_angle.toUnitVec() * length();
+    }
 
-    [[nodiscard]] Angle angleWith(Vec2 t_v) const;
-    [[nodiscard]] Angle angleDiff(Vec2 t_v) const;
+    [[nodiscard]] inline Angle toAngle() const
+    {
+        if (y == 0.0 && x == 0.0)
+        {
+            return Angle::fromDeg(0.0);
+        }
+
+        Angle ans = Angle::fromRad(std::atan(y / x));
+
+        if (x < 0)
+            ans += Angle::fromDeg(180);
+
+        return ans;
+    }
+
+    [[nodiscard]] inline float dot(Vec2 t_v) const
+    {
+        return x * t_v.x + y * t_v.y;
+    }
+
+    [[nodiscard]] inline float distanceTo(Vec2 t_v) const
+    {
+        return (t_v - *this).length();
+    }
+
+    [[nodiscard]] inline float distanceSquaredTo(Vec2 t_v) const
+    {
+        return (t_v - *this).lengthSquared();
+    }
+
+    [[nodiscard]] inline Angle angleWith(Vec2 t_v) const
+    {
+        return (t_v - *this).toAngle();
+    }
+
+    [[nodiscard]] inline Angle angleDiff(Vec2 t_v) const
+    {
+        return t_v.toAngle() - this->toAngle();
+    }
 
     // TODO: this should be replaced by line / circle usage
-    [[nodiscard]] Vec2 pointOnConnectingLine(Vec2 secondPoint, float distance) const;
-    [[nodiscard]] Vec2 circleAroundPoint(Angle angle, float radius) const;
+    [[nodiscard]] inline Vec2 pointOnConnectingLine(Vec2 secondPoint, float distance) const
+    {
+        float m = (secondPoint.y - y) / (secondPoint.x - x);
+        Vec2  ans;
+        if (secondPoint.x - x > 0)
+            ans.x = x + distance / std::sqrt(std::pow(m, 2.0f) + 1.0f);
+        else
+            ans.x = x - distance / std::sqrt(std::pow(m, 2.0f) + 1.0f);
+        ans.y = y + m * (ans.x - x);
+        return ans;
+    }
 
-    [[nodiscard]] Vec2 operator+(Vec2 t_v) const;
-    [[nodiscard]] Vec2 operator-(Vec2 t_v) const;
-    [[nodiscard]] Vec2 operator*(Vec2 t_v) const;
-    [[nodiscard]] Vec2 operator/(Vec2 t_v) const;
+    [[nodiscard]] inline Vec2 circleAroundPoint(Angle angle, float radius) const
+    {
+        return *this + angle.toUnitVec() * radius;
+    }
 
-    [[nodiscard]] Vec2 operator*(float t_d) const;
-    [[nodiscard]] Vec2 operator/(float t_d) const;
+    [[nodiscard]] inline Vec2 operator+(Vec2 t_v) const
+    {
+        return Vec2{x + t_v.x, y + t_v.y};
+    }
 
-    Vec2 &operator+=(Vec2 t_v);
-    Vec2 &operator-=(Vec2 t_v);
-    Vec2 &operator*=(Vec2 t_v);
-    Vec2 &operator/=(Vec2 t_v);
+    [[nodiscard]] inline Vec2 operator-(Vec2 t_v) const
+    {
+        return Vec2{x - t_v.x, y - t_v.y};
+    }
 
-    Vec2 &operator*=(float t_d);
-    Vec2 &operator/=(float t_d);
+    [[nodiscard]] inline Vec2 operator*(Vec2 t_v) const
+    {
+        return Vec2{x * t_v.x, y * t_v.y};
+    }
 
-    [[nodiscard]] Vec2 operator-() const;
-    [[nodiscard]] Vec2 operator+() const;
+    [[nodiscard]] inline Vec2 operator/(Vec2 t_v) const
+    {
+        return Vec2{x / t_v.x, y / t_v.y};
+    }
 
-    // TODO: floating-point numbers cannot be checked for equality
-    // either drop these or implement an approximation
-    [[nodiscard]] bool operator==(Vec2 t_v) const;
-    [[nodiscard]] bool operator!=(Vec2 t_v) const;
+    [[nodiscard]] inline Vec2 operator*(float t_d) const
+    {
+        return Vec2{x * t_d, y * t_d};
+    }
+
+    [[nodiscard]] inline Vec2 operator/(float t_d) const
+    {
+        return Vec2{x / t_d, y / t_d};
+    }
+
+    inline Vec2 &operator+=(Vec2 t_v)
+    {
+        x += t_v.x;
+        y += t_v.y;
+
+        return *this;
+    }
+
+    inline Vec2 &operator-=(Vec2 t_v)
+    {
+        x -= t_v.x;
+        y -= t_v.y;
+
+        return *this;
+    }
+
+    inline Vec2 &operator*=(Vec2 t_v)
+    {
+        x *= t_v.x;
+        y *= t_v.y;
+
+        return *this;
+    }
+
+    inline Vec2 &operator/=(Vec2 t_v)
+    {
+        x /= t_v.x;
+        y /= t_v.y;
+
+        return *this;
+    }
+
+    inline Vec2 &operator*=(float t_d)
+    {
+        x *= t_d;
+        y *= t_d;
+
+        return *this;
+    }
+
+    inline Vec2 &operator/=(float t_d)
+    {
+        x /= t_d;
+        y /= t_d;
+
+        return *this;
+    }
+
+    [[nodiscard]] inline Vec2 operator-() const
+    {
+        return Vec2{-x, -y};
+    }
+
+    [[nodiscard]] inline Vec2 operator+() const
+    {
+        return *this;
+    }
+
+    [[nodiscard]] inline bool operator==(Vec2 t_v) const
+    {
+        return almostEqual(x, t_v.x) && almostEqual(y, t_v.y);
+    }
+
+    [[nodiscard]] inline bool operator!=(Vec2 t_v) const
+    {
+        return !(*this == t_v);
+    }
 };
 
 struct Vec3

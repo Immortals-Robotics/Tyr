@@ -2,17 +2,6 @@
 
 namespace Tyr::Common
 {
-
-bool almostEqual(const float t_a, const float t_b)
-{
-    return std::abs(t_a - t_b) <= std::numeric_limits<float>::epsilon();
-}
-
-float sign(const float t_f)
-{
-    return std::copysign(1.0f, t_f);
-}
-
 float average_deque(std::deque<float> _q)
 {
     float tmp = 0.0;
