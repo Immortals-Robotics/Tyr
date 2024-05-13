@@ -16,16 +16,16 @@ Debug::SourceLocation::SourceLocation(const spdlog::source_loc &t_source)
     line     = t_source.line;
 }
 
-Debug::SourceLocation::SourceLocation(const Protos::Immortals::Debug::SourceLocation    &t_source,
-                                      const google::protobuf::Map<int32_t, std::string> &t_strings)
+Debug::SourceLocation::SourceLocation(const Protos::Immortals::Debug::SourceLocation &t_source,
+                                      const StringMap                                &t_strings)
 {
     file     = t_strings.at(t_source.file());
     function = t_strings.at(t_source.function());
     line     = t_source.line();
 }
 
-void Debug::SourceLocation::fillProto(Protos::Immortals::Debug::SourceLocation *const    t_source,
-                                      google::protobuf::Map<int32_t, std::string> *const t_strings) const
+void Debug::SourceLocation::fillProto(Protos::Immortals::Debug::SourceLocation *const t_source,
+                                      StringMap *const                                t_strings) const
 {
     const XXH32_hash_t file_hash     = XXH32(file.data(), file.size(), 0);
     const XXH32_hash_t function_hash = XXH32(function.data(), function.size(), 0);
@@ -40,8 +40,7 @@ void Debug::SourceLocation::fillProto(Protos::Immortals::Debug::SourceLocation *
         t_strings->emplace(function_hash, std::string{function.data(), function.size()});
 }
 
-Debug::Draw::Draw(const Protos::Immortals::Debug::Draw              &t_draw,
-                  const google::protobuf::Map<int32_t, std::string> &t_strings)
+Debug::Draw::Draw(const Protos::Immortals::Debug::Draw &t_draw, const StringMap &t_strings)
 {
     source    = SourceLocation{t_draw.source(), t_strings};
     color     = t_draw.color();
@@ -74,8 +73,7 @@ Debug::Draw::Draw(const Protos::Immortals::Debug::Draw              &t_draw,
     }
 }
 
-void Debug::Draw::fillProto(Protos::Immortals::Debug::Draw              *t_draw,
-                            google::protobuf::Map<int32_t, std::string> *t_strings) const
+void Debug::Draw::fillProto(Protos::Immortals::Debug::Draw *t_draw, StringMap *t_strings) const
 {
     source.fillProto(t_draw->mutable_source(), t_strings);
     color.fillProto(t_draw->mutable_color());
@@ -98,8 +96,7 @@ void Debug::Draw::fillProto(Protos::Immortals::Debug::Draw              *t_draw,
         logWarning("Unsupported shape type: {}", shape.index());
 }
 
-Debug::Log::Log(const Protos::Immortals::Debug::Log               &t_log,
-                const google::protobuf::Map<int32_t, std::string> &t_strings)
+Debug::Log::Log(const Protos::Immortals::Debug::Log &t_log, const StringMap &t_strings)
 {
     level  = (Level) t_log.level();
     source = SourceLocation{t_log.source(), t_strings};
@@ -110,10 +107,10 @@ Debug::Log::Log(const spdlog::details::log_msg &t_msg)
 {
     level  = (Level) t_msg.level;
     source = t_msg.source;
+    text   = {t_msg.payload.data(), t_msg.payload.size()};
 }
 
-void Debug::Log::fillProto(Protos::Immortals::Debug::Log               *t_log,
-                           google::protobuf::Map<int32_t, std::string> *t_strings) const
+void Debug::Log::fillProto(Protos::Immortals::Debug::Log *t_log, StringMap *t_strings) const
 {
     t_log->set_level((Protos::Immortals::Debug::Log_Level) level);
     source.fillProto(t_log->mutable_source(), t_strings);
@@ -145,24 +142,28 @@ Debug::Wrapper::Wrapper(const Protos::Immortals::Debug::Wrapper &t_wrapper)
 {
     time = t_wrapper.time();
 
+    strings.insert(t_wrapper.strings().begin(), t_wrapper.strings().end());
+
     draws.reserve(t_wrapper.draw_size());
     logs.reserve(t_wrapper.log_size());
 
     for (const auto &draw : t_wrapper.draw())
-        draws.emplace_back(draw, t_wrapper.strings());
+        draws.emplace_back(draw, strings);
 
     for (const auto &log : t_wrapper.log())
-        logs.emplace_back(log, t_wrapper.strings());
+        logs.emplace_back(log, strings);
 }
 
-void Debug::Wrapper::fillProto(Protos::Immortals::Debug::Wrapper *t_wrapper) const
+void Debug::Wrapper::fillProto(Protos::Immortals::Debug::Wrapper *t_wrapper)
 {
     t_wrapper->set_time(time.timestamp());
 
     for (const auto &draw : draws)
-        draw.fillProto(t_wrapper->add_draw(), t_wrapper->mutable_strings());
+        draw.fillProto(t_wrapper->add_draw(), &strings);
     for (const auto &log : logs)
-        log.fillProto(t_wrapper->add_log(), t_wrapper->mutable_strings());
+        log.fillProto(t_wrapper->add_log(), &strings);
+
+    t_wrapper->mutable_strings()->insert(strings.begin(), strings.end());
 }
 
 Debug::Debug()

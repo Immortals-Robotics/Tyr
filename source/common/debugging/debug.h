@@ -11,6 +11,8 @@ namespace Tyr::Common
 class Debug
 {
 public:
+    using StringMap = std::unordered_map<XXH32_hash_t, std::string>;
+
     struct SourceLocation
     {
         std::string_view file;
@@ -21,11 +23,9 @@ public:
 
         SourceLocation(const std::source_location &t_source);
         SourceLocation(const spdlog::source_loc &t_source);
-        SourceLocation(const Protos::Immortals::Debug::SourceLocation    &t_source,
-                       const google::protobuf::Map<int32_t, std::string> &t_strings);
+        SourceLocation(const Protos::Immortals::Debug::SourceLocation &t_source, const StringMap &t_strings);
 
-        void fillProto(Protos::Immortals::Debug::SourceLocation    *t_source,
-                       google::protobuf::Map<int32_t, std::string> *t_strings) const;
+        void fillProto(Protos::Immortals::Debug::SourceLocation *t_source, StringMap *t_strings) const;
     };
 
     struct Draw
@@ -40,11 +40,9 @@ public:
 
         Draw() = default;
 
-        Draw(const Protos::Immortals::Debug::Draw              &t_draw,
-             const google::protobuf::Map<int32_t, std::string> &t_strings);
+        Draw(const Protos::Immortals::Debug::Draw &t_draw, const StringMap &t_strings);
 
-        void fillProto(Protos::Immortals::Debug::Draw              *t_draw,
-                       google::protobuf::Map<int32_t, std::string> *t_strings) const;
+        void fillProto(Protos::Immortals::Debug::Draw *t_draw, StringMap *t_strings) const;
     };
 
     struct Log
@@ -66,13 +64,33 @@ public:
 
         Log() = default;
 
-        Log(const Protos::Immortals::Debug::Log &t_log, const google::protobuf::Map<int32_t, std::string> &t_strings);
+        Log(const Protos::Immortals::Debug::Log &t_log, const StringMap &t_strings);
         Log(const spdlog::details::log_msg &t_msg);
 
-        void fillProto(Protos::Immortals::Debug::Log               *t_log,
-                       google::protobuf::Map<int32_t, std::string> *t_strings) const;
+        void fillProto(Protos::Immortals::Debug::Log *t_log, StringMap *t_strings) const;
 
         Color color() const;
+
+        std::string_view levelName() const
+        {
+            switch (level)
+            {
+            case Level::Trace:
+                return "Trace";
+            case Level::Debug:
+                return "Debug";
+            case Level::Info:
+                return "Info";
+            case Level::Warning:
+                return "Warning";
+            case Level::Error:
+                return "Error";
+            case Level::Critical:
+                return "Critical";
+            default:
+                return "Unknown";
+            }
+        }
     };
 
     struct Wrapper
@@ -82,11 +100,13 @@ public:
         std::vector<Draw> draws;
         std::vector<Log>  logs;
 
+        StringMap strings;
+
         Wrapper() = default;
 
         Wrapper(const Protos::Immortals::Debug::Wrapper &t_wrapper);
 
-        void fillProto(Protos::Immortals::Debug::Wrapper *t_wrapper) const;
+        void fillProto(Protos::Immortals::Debug::Wrapper *t_wrapper);
     };
 
     Debug(const Debug &)            = delete;

@@ -11,13 +11,7 @@ class DebugSink final : public spdlog::sinks::base_sink<Mutex>
 protected:
     void sink_it_(const spdlog::details::log_msg &msg) override
     {
-        spdlog::memory_buf_t formatted;
-        spdlog::sinks::base_sink<Mutex>::formatter_->format(msg, formatted);
-
-        Debug::Log log{msg};
-        log.text = fmt::to_string(formatted);
-
-        debug().log(std::move(log));
+        debug().log(msg);
     }
     void flush_() override
     {}
