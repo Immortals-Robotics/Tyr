@@ -18,12 +18,17 @@ namespace Tyr::Common
 {
 class Timer
 {
-    std::chrono::high_resolution_clock::time_point tv1, tv2;
-
 public:
-    void  start();
-    void  end();
+    void start();
+    void end();
+
     float time();
     float interval();
+
+    float intervalSmooth();
+
+private:
+    std::chrono::high_resolution_clock::time_point tv1, tv2;
+    float m_interval = 0.0f;
 };
 } // namespace Tyr::Common

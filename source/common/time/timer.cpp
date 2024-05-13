@@ -41,4 +41,11 @@ float Timer::interval()
     tv1 = tv2;
     return (t);
 }
+float Timer::intervalSmooth()
+{
+    static constexpr float kAlpha = 0.1f;
+
+    m_interval = (kAlpha * interval()) + (1.0f - kAlpha) * m_interval;
+    return m_interval;
+}
 } // namespace Tyr::Common

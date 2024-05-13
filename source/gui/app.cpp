@@ -274,7 +274,7 @@ void Application::visionRawEntry()
 
         m_vision_raw->publish();
 
-        Common::logInfo("vision raw FPS: {}", 1.0 / timer.interval());
+        Common::logInfo("vision raw FPS: {}", 1.0 / timer.intervalSmooth());
     }
 }
 
@@ -295,7 +295,7 @@ void Application::visionFilteredEntry()
 
         m_vision_filtered->publish();
 
-        Common::logInfo("vision filtered FPS: {}", 1.0 / timer.interval());
+        Common::logInfo("vision filtered FPS: {}", 1.0 / timer.intervalSmooth());
     }
 }
 
@@ -322,7 +322,7 @@ void Application::aiEntry()
 
         Common::debug().flush();
 
-        Common::logInfo("AI FPS: {}", 1.0 / timer.interval());
+        Common::logInfo("AI FPS: {}", 1.0 / timer.intervalSmooth());
     }
 }
 
@@ -341,7 +341,7 @@ void Application::senderEntry()
 
         m_sender_hub->send();
 
-        Common::logInfo("sender FPS: {}", 1.0 / timer.interval());
+        Common::logInfo("sender FPS: {}", 1.0 / timer.intervalSmooth());
     }
 }
 
@@ -355,7 +355,7 @@ void Application::refereeEntry()
         const bool ref_received   = m_referee->receiveRef();
         const bool world_received = m_referee->receiveWorld();
 
-        if (!ref_received && !world_received)
+        if (!ref_received)
         {
             std::this_thread::sleep_for(std::chrono::microseconds(100));
             continue;
@@ -364,7 +364,7 @@ void Application::refereeEntry()
         m_referee->process();
         m_referee->publish();
 
-        Common::logInfo("referee FPS: {}", 1.0 / timer.interval());
+        Common::logInfo("referee FPS: {}", 1.0 / timer.intervalSmooth());
     }
 }
 
@@ -380,8 +380,6 @@ void Application::dumpEntry()
             std::this_thread::sleep_for(std::chrono::microseconds(100));
             continue;
         }
-
-        Common::logInfo("dumper FPS: {}", 1.0 / timer.interval());
     }
 }
 } // namespace Tyr::Gui
