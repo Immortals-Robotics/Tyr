@@ -27,12 +27,15 @@ NngClient::NngClient(const std::string_view t_url)
     }
 }
 
-bool NngClient::receive(google::protobuf::MessageLite *const t_message)
+bool NngClient::receive(TimePoint *t_time, google::protobuf::MessageLite *const t_message)
 {
     const NngMessage message = receiveRaw();
 
     if (message.size() == 0)
         return false;
+
+    if (t_time != nullptr)
+        *t_time = message.time();
 
     return t_message->ParseFromArray(message.data(), message.size());
 }

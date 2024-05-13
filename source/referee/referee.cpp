@@ -57,7 +57,7 @@ bool Referee::publish() const
     Protos::Immortals::RefereeState pb_state;
     m_state.fillProto(&pb_state);
 
-    return m_server->send(pb_state);
+    return m_server->send(m_state.time, pb_state);
 }
 
 bool Referee::isKicked()
@@ -179,7 +179,7 @@ bool Referee::receiveRef()
 bool Referee::receiveWorld()
 {
     Protos::Immortals::WorldState pb_state;
-    if (!m_world_client->receive(&pb_state))
+    if (!m_world_client->receive(nullptr, &pb_state))
         return false;
 
     m_world_state = Common::WorldState(pb_state);

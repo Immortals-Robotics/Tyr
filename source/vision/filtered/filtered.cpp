@@ -20,19 +20,12 @@ Filtered::Filtered()
 
     m_client = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
     m_server = std::make_unique<Common::NngServer>(Common::setting().world_state_url);
-
-    m_storage.open("filtered-state");
-}
-
-Filtered::~Filtered()
-{
-    m_storage.close();
 }
 
 bool Filtered::receive()
 {
     Protos::Immortals::RawWorldState pb_state;
-    if (!m_client->receive(&pb_state))
+    if (!m_client->receive(nullptr, &pb_state))
         return false;
 
     m_raw_state = Common::RawWorldState(pb_state);
@@ -47,18 +40,11 @@ void Filtered::process()
     m_state.time = Common::TimePoint::now();
 }
 
-void Filtered::store()
-{
-    Protos::Immortals::WorldState pb_state{};
-    m_state.fillProto(&pb_state);
-    m_storage.store(m_state.time.timestamp(), pb_state);
-}
-
 bool Filtered::publish() const
 {
     Protos::Immortals::WorldState pb_state{};
     m_state.fillProto(&pb_state);
 
-    return m_server->send(pb_state);
+    return m_server->send(m_state.time, pb_state);
 }
 } // namespace Tyr::Vision

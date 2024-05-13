@@ -117,7 +117,7 @@ Ai::Ai()
 bool Ai::receiveWorld()
 {
     Protos::Immortals::WorldState pb_state;
-    if (!m_world_client->receive(&pb_state))
+    if (!m_world_client->receive(nullptr, &pb_state))
         return false;
 
     m_world_state = Common::WorldState(pb_state);
@@ -127,7 +127,7 @@ bool Ai::receiveWorld()
 bool Ai::receiveReferee()
 {
     Protos::Immortals::RefereeState pb_state;
-    if (!m_ref_client->receive(&pb_state))
+    if (!m_ref_client->receive(nullptr, &pb_state))
         return false;
 
     m_ref_state = Common::RefereeState(pb_state);
@@ -136,12 +136,17 @@ bool Ai::receiveReferee()
 
 bool Ai::publishCommands() const
 {
+    const Common::TimePoint time = Common::TimePoint::now();
+
     Protos::Immortals::CommandsWrapper pb_wrapper;
+
+    pb_wrapper.set_time(time.timestamp());
+
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
         OwnRobot[i].GetCurrentCommand().fillProto(pb_wrapper.add_command());
     }
 
-    return m_cmd_server->send(pb_wrapper);
+    return m_cmd_server->send(time, pb_wrapper);
 }
 } // namespace Tyr::Soccer

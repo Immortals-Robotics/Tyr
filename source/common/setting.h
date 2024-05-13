@@ -133,6 +133,11 @@ public:
     std::string referee_state_url   = "inproc://referee_state";
     std::string commands_url        = "inproc://commands";
 
+    // DB names
+    std::string raw_world_state_db = "raw_world_state";
+    std::string world_state_db     = "world_state";
+    std::string debug_db           = "debug";
+
     TeamSide our_side = TeamSide::Left;
 
     bool command_opp_robots = false;

@@ -16,6 +16,8 @@ public:
     bool get(Key t_key, google::protobuf::MessageLite *t_message) const;
     bool store(Key t_key, const google::protobuf::MessageLite &t_message);
 
+    bool storeRaw(Key t_key, std::span<char> t_data);
+
 protected:
     static bool init(const std::filesystem::path &t_path);
     static void shutdown();

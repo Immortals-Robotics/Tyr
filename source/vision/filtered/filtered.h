@@ -8,13 +8,12 @@ class Filtered
 {
 public:
     Filtered();
-    ~Filtered();
+    ~Filtered() = default;
 
     bool receive();
     void process();
 
     bool publish() const;
-    void store();
 
 private:
     void processRobots();
@@ -53,7 +52,5 @@ private:
 
     Common::RawWorldState m_raw_state;
     Common::WorldState    m_state;
-
-    Common::Storage m_storage;
 };
 } // namespace Tyr::Vision

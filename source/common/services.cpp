@@ -27,8 +27,6 @@ bool Services::initialize()
 
     s_logger->addDebugSink();
 
-    s_debug->initStorage("debug");
-
     s_global_timer = new Timer();
     s_global_timer->start();
 

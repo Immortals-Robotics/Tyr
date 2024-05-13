@@ -224,7 +224,44 @@ bool Storage::store(Key t_key, const google::protobuf::MessageLite &t_message)
     result = mdb_put(transaction, m_dbi, &mdb_key, &mdb_data, 0);
     if (result != MDB_SUCCESS)
     {
-        logError("lmdb put for key [{}] with size {} failed with: {}", t_key, message_size, getErrorString(result));
+        logError("lmdb put for key [{}] with size {} failed with: {}", t_key, mdb_data.mv_size, getErrorString(result));
+        return false;
+    }
+
+    result = mdb_txn_commit(transaction);
+    if (result != MDB_SUCCESS)
+    {
+        logError("lmdb transaction commit failed with: {}", getErrorString(result));
+        return false;
+    }
+
+    return true;
+}
+bool Storage::storeRaw(Key t_key, std::span<char> t_data)
+{
+    int result;
+
+    MDB_txn *transaction;
+    result = mdb_txn_begin(s_env, nullptr, 0, &transaction);
+    if (result != MDB_SUCCESS)
+    {
+        logError("lmdb read/write transaction begin failed with: {}", getErrorString(result));
+        return false;
+    }
+
+    MDB_val mdb_key{
+        .mv_size = sizeof(Key),
+        .mv_data = &t_key,
+    };
+    MDB_val mdb_data{
+        .mv_size = t_data.size(),
+        .mv_data = t_data.data(),
+    };
+
+    result = mdb_put(transaction, m_dbi, &mdb_key, &mdb_data, 0);
+    if (result != MDB_SUCCESS)
+    {
+        logError("lmdb put for key [{}] with size {} failed with: {}", t_key, mdb_data.mv_size, getErrorString(result));
         return false;
     }
 

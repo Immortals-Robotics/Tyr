@@ -6,14 +6,13 @@ class Raw
 {
 public:
     Raw();
-    ~Raw();
+    ~Raw() = default;
 
     bool receive();
     void process();
     bool camsReady() const;
 
     bool publish() const;
-    void store();
 
     void updateAddress(const Common::NetworkAddress &t_address);
 
@@ -38,7 +37,5 @@ private:
     Protos::SSL_DetectionFrame m_d_frame[Common::Setting::kCamCount];
 
     Common::RawWorldState m_state;
-
-    Common::Storage m_storage;
 };
 } // namespace Tyr::Vision

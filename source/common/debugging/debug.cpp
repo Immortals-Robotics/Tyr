@@ -153,16 +153,6 @@ Debug::Debug()
     m_server = std::make_unique<NngServer>(setting().debug_url);
 }
 
-Debug::~Debug()
-{
-    m_storage.close();
-}
-
-void Debug::initStorage(const std::string_view t_name)
-{
-    m_storage.open(t_name);
-}
-
 void Debug::flush()
 {
     logger().flush();
@@ -181,8 +171,7 @@ void Debug::flush()
     m_log_mutex.unlock();
     m_draw_mutex.unlock();
 
-    m_storage.store(m_wrapper.time.timestamp(), pb_wrapper);
-    m_server->send(pb_wrapper);
+    m_server->send(m_wrapper.time, pb_wrapper);
 }
 
 void Debug::draw(const Vec2 t_pos, const Color t_color, const std::source_location source)

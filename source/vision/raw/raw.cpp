@@ -14,13 +14,6 @@ Raw::Raw()
     }
 
     m_server = std::make_unique<Common::NngServer>(Common::setting().raw_world_state_url);
-
-    m_storage.open("raw-state");
-}
-
-Raw::~Raw()
-{
-    m_storage.close();
 }
 
 void Raw::process()
@@ -45,18 +38,11 @@ void Raw::process()
         m_packet_received[i] = false;
 }
 
-void Raw::store()
-{
-    Protos::Immortals::RawWorldState pb_state{};
-    m_state.fillProto(&pb_state);
-    m_storage.store(m_state.time.timestamp(), pb_state);
-}
-
 bool Raw::publish() const
 {
     Protos::Immortals::RawWorldState pb_state{};
     m_state.fillProto(&pb_state);
 
-    return m_server->send(pb_state);
+    return m_server->send(m_state.time, pb_state);
 }
 } // namespace Tyr::Vision

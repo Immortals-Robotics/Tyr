@@ -90,6 +90,11 @@ bool Application::initialize(const int width, const int height)
     m_raw_client   = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
     m_debug_client = std::make_unique<Common::NngClient>(Common::setting().debug_url);
 
+    m_dumper = std::make_unique<Common::Dumper>();
+    m_dumper->addEntry(Common::setting().raw_world_state_url, Common::setting().raw_world_state_db);
+    m_dumper->addEntry(Common::setting().world_state_url, Common::setting().world_state_db);
+    m_dumper->addEntry(Common::setting().debug_url, Common::setting().debug_db);
+
     SetTraceLogCallback(logCallback);
 
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
@@ -124,6 +129,8 @@ int Application::shutdown()
     m_sender_thread.join();
     m_ref_thread.join();
 
+    m_dump_thread.join();
+
     rlImGuiShutdown();
 
     // Close window and OpenGL context
@@ -142,6 +149,8 @@ void Application::start()
     m_ai_thread     = std::thread(&Application::aiEntry, this);
     m_sender_thread = std::thread(&Application::senderEntry, this);
     m_ref_thread    = std::thread(&Application::refereeEntry, this);
+
+    m_dump_thread = std::thread(&Application::dumpEntry, this);
 }
 
 void Application::update()
@@ -216,18 +225,18 @@ bool Application::shouldClose() const
 void Application::receiveWorldStates()
 {
     Protos::Immortals::RawWorldState pb_raw_state;
-    if (m_raw_client->receive(&pb_raw_state))
+    if (m_raw_client->receive(nullptr, &pb_raw_state))
         m_raw_world_state = Common::RawWorldState(pb_raw_state);
 
     Protos::Immortals::WorldState pb_state;
-    if (m_world_client->receive(&pb_state))
+    if (m_world_client->receive(nullptr, &pb_state))
         m_world_state = Common::WorldState(pb_state);
 }
 
 void Application::receiveDebug()
 {
     Protos::Immortals::Debug::Wrapper pb_wrapper;
-    if (m_debug_client->receive(&pb_wrapper))
+    if (m_debug_client->receive(nullptr, &pb_wrapper))
         m_debug_wrapper = Common::Debug::Wrapper(pb_wrapper);
 }
 
@@ -246,7 +255,6 @@ void Application::visionRawEntry()
         m_vision_raw->process();
 
         m_vision_raw->publish();
-        m_vision_raw->store();
 
         Common::logInfo("vision raw FPS: {}", 1.0 / timer.interval());
     }
@@ -265,7 +273,6 @@ void Application::visionFilteredEntry()
         m_vision_filtered->process();
 
         m_vision_filtered->publish();
-        m_vision_filtered->store();
 
         Common::logInfo("vision filtered FPS: {}", 1.0 / timer.interval());
     }
@@ -327,6 +334,13 @@ void Application::refereeEntry()
 
             Common::logInfo("referee FPS: {}", 1.0 / timer.interval());
         }
+    }
+}
+void Application::dumpEntry()
+{
+    while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
+    {
+        m_dumper->process();
     }
 }
 } // namespace Tyr::Gui

@@ -3,7 +3,6 @@
 #include "../math/vector.h"
 #include "../network/nng_server.h"
 #include "../state/world.h"
-#include "../storage/storage.h"
 #include "../time/time_point.h"
 #include "color.h"
 
@@ -109,17 +108,13 @@ public:
 
 private:
     Debug();
-    ~Debug();
-
-    void initStorage(std::string_view t_name);
+    ~Debug() = default;
 
     friend struct Services;
 
     std::unique_ptr<NngServer> m_server;
 
     Wrapper m_wrapper;
-
-    Storage m_storage;
 
     std::mutex m_log_mutex;
     std::mutex m_draw_mutex;

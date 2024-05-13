@@ -37,6 +37,7 @@ private:
     std::thread m_ai_thread;
     std::thread m_sender_thread;
     std::thread m_ref_thread;
+    std::thread m_dump_thread;
 
     std::unique_ptr<Referee::Referee> m_referee;
 
@@ -49,6 +50,8 @@ private:
     std::unique_ptr<Common::NngClient> m_world_client;
     std::unique_ptr<Common::NngClient> m_raw_client;
     std::unique_ptr<Common::NngClient> m_debug_client;
+
+    std::unique_ptr<Common::Dumper> m_dumper;
 
     Common::WorldState    m_world_state;
     Common::RawWorldState m_raw_world_state;
@@ -64,5 +67,7 @@ private:
     void aiEntry();
     void senderEntry();
     void refereeEntry();
+
+    void dumpEntry();
 };
 } // namespace Tyr::Gui
