@@ -4,6 +4,7 @@ find_package(asio CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(unofficial-lmdb CONFIG REQUIRED)
 find_package(nng CONFIG REQUIRED)
+find_package(xxHash CONFIG REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(tomlplusplus REQUIRED IMPORTED_TARGET tomlplusplus)
@@ -76,7 +77,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 	PkgConfig::tomlplusplus
 	spdlog::spdlog
 	unofficial::lmdb::lmdb
-	nng::nng)
+	nng::nng
+	xxHash::xxhash)
 
 if(WIN32)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC _WIN32_WINNT=_WIN32_WINNT_WIN10)

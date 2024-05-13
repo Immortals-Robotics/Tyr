@@ -16,23 +16,33 @@ Debug::SourceLocation::SourceLocation(const spdlog::source_loc &t_source)
     line     = t_source.line;
 }
 
-Debug::SourceLocation::SourceLocation(const Protos::Immortals::Debug::SourceLocation &t_source)
+Debug::SourceLocation::SourceLocation(const Protos::Immortals::Debug::SourceLocation &t_source,
+                                      const StringMap                                &t_strings)
 {
-    file     = t_source.file();
-    function = t_source.function();
+    file     = t_strings.at(t_source.file());
+    function = t_strings.at(t_source.function());
     line     = t_source.line();
 }
 
-void Debug::SourceLocation::fillProto(Protos::Immortals::Debug::SourceLocation *t_source) const
+void Debug::SourceLocation::fillProto(Protos::Immortals::Debug::SourceLocation *const t_source,
+                                      StringMap *const                                t_strings) const
 {
-    t_source->set_file(file.data(), file.size());
-    t_source->set_function(function.data(), function.size());
+    const XXH32_hash_t file_hash     = XXH32(file.data(), file.size(), 0);
+    const XXH32_hash_t function_hash = XXH32(function.data(), function.size(), 0);
+
+    t_source->set_file(file_hash);
+    t_source->set_function(function_hash);
     t_source->set_line(line);
+
+    if (!t_strings->contains(file_hash))
+        t_strings->try_emplace(file_hash, std::string{file.data(), file.size()});
+    if (!t_strings->contains(function_hash))
+        t_strings->emplace(function_hash, std::string{function.data(), function.size()});
 }
 
-Debug::Draw::Draw(const Protos::Immortals::Debug::Draw &t_draw)
+Debug::Draw::Draw(const Protos::Immortals::Debug::Draw &t_draw, const StringMap &t_strings)
 {
-    source    = t_draw.source();
+    source    = SourceLocation{t_draw.source(), t_strings};
     color     = t_draw.color();
     filled    = t_draw.filled();
     thickness = t_draw.thickness();
@@ -63,9 +73,9 @@ Debug::Draw::Draw(const Protos::Immortals::Debug::Draw &t_draw)
     }
 }
 
-void Debug::Draw::fillProto(Protos::Immortals::Debug::Draw *t_draw) const
+void Debug::Draw::fillProto(Protos::Immortals::Debug::Draw *t_draw, StringMap *t_strings) const
 {
-    source.fillProto(t_draw->mutable_source());
+    source.fillProto(t_draw->mutable_source(), t_strings);
     color.fillProto(t_draw->mutable_color());
     t_draw->set_filled(filled);
     t_draw->set_thickness(thickness);
@@ -86,26 +96,24 @@ void Debug::Draw::fillProto(Protos::Immortals::Debug::Draw *t_draw) const
         logWarning("Unsupported shape type: {}", shape.index());
 }
 
-Debug::Log::Log(const Protos::Immortals::Debug::Log &t_log)
+Debug::Log::Log(const Protos::Immortals::Debug::Log &t_log, const StringMap &t_strings)
 {
-    level       = (Level) t_log.level();
-    source      = t_log.source();
-    logger_name = t_log.logger();
-    text        = t_log.text();
+    level  = (Level) t_log.level();
+    source = SourceLocation{t_log.source(), t_strings};
+    text   = t_log.text();
 }
 
 Debug::Log::Log(const spdlog::details::log_msg &t_msg)
 {
-    level       = (Level) t_msg.level;
-    source      = t_msg.source;
-    logger_name = {t_msg.logger_name.data(), t_msg.logger_name.size()};
+    level  = (Level) t_msg.level;
+    source = t_msg.source;
+    text   = {t_msg.payload.data(), t_msg.payload.size()};
 }
 
-void Debug::Log::fillProto(Protos::Immortals::Debug::Log *t_log) const
+void Debug::Log::fillProto(Protos::Immortals::Debug::Log *t_log, StringMap *t_strings) const
 {
     t_log->set_level((Protos::Immortals::Debug::Log_Level) level);
-    source.fillProto(t_log->mutable_source());
-    t_log->set_logger(logger_name);
+    source.fillProto(t_log->mutable_source(), t_strings);
     t_log->set_text(text);
 }
 
@@ -134,18 +142,30 @@ Debug::Wrapper::Wrapper(const Protos::Immortals::Debug::Wrapper &t_wrapper)
 {
     time = t_wrapper.time();
 
-    draws = std::vector<Draw>{t_wrapper.draw().begin(), t_wrapper.draw().end()};
-    logs  = std::vector<Log>{t_wrapper.log().begin(), t_wrapper.log().end()};
+    strings.reserve(t_wrapper.strings().size());
+    for (const auto &entry : t_wrapper.strings())
+        strings.emplace(entry.first, entry.second);
+
+    draws.reserve(t_wrapper.draw_size());
+    logs.reserve(t_wrapper.log_size());
+
+    for (const auto &draw : t_wrapper.draw())
+        draws.emplace_back(draw, strings);
+
+    for (const auto &log : t_wrapper.log())
+        logs.emplace_back(log, strings);
 }
 
-void Debug::Wrapper::fillProto(Protos::Immortals::Debug::Wrapper *t_wrapper) const
+void Debug::Wrapper::fillProto(Protos::Immortals::Debug::Wrapper *t_wrapper)
 {
     t_wrapper->set_time(time.timestamp());
 
     for (const auto &draw : draws)
-        draw.fillProto(t_wrapper->add_draw());
+        draw.fillProto(t_wrapper->add_draw(), &strings);
     for (const auto &log : logs)
-        log.fillProto(t_wrapper->add_log());
+        log.fillProto(t_wrapper->add_log(), &strings);
+    for (const auto &entry : strings)
+        t_wrapper->mutable_strings()->emplace(entry.first, entry.second);
 }
 
 Debug::Debug()

@@ -15,6 +15,7 @@
 #include <source_location>
 #include <span>
 #include <string_view>
+#include <unordered_map>
 #include <variant>
 #include <vector>
 
@@ -32,6 +33,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 #include <toml++/toml.hpp>
+#include <xxhash.h>
 
 #if defined(_WIN32)
 #define NOGDI  // All GDI defines and routines
