@@ -142,7 +142,9 @@ Debug::Wrapper::Wrapper(const Protos::Immortals::Debug::Wrapper &t_wrapper)
 {
     time = t_wrapper.time();
 
-    strings.insert(t_wrapper.strings().begin(), t_wrapper.strings().end());
+    strings.reserve(t_wrapper.strings().size());
+    for (const auto &entry : t_wrapper.strings())
+        strings.emplace(entry.first, entry.second);
 
     draws.reserve(t_wrapper.draw_size());
     logs.reserve(t_wrapper.log_size());
@@ -162,8 +164,8 @@ void Debug::Wrapper::fillProto(Protos::Immortals::Debug::Wrapper *t_wrapper)
         draw.fillProto(t_wrapper->add_draw(), &strings);
     for (const auto &log : logs)
         log.fillProto(t_wrapper->add_log(), &strings);
-
-    t_wrapper->mutable_strings()->insert(strings.begin(), strings.end());
+    for (const auto &entry : strings)
+        t_wrapper->mutable_strings()->emplace(entry.first, entry.second);
 }
 
 Debug::Debug()

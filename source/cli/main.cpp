@@ -20,7 +20,7 @@ int main()
     std::set_terminate(onExit);
     std::atexit(onExit);
 
-    std::this_thread::sleep_for(std::chrono::hours::max());
+    std::this_thread::sleep_for(std::chrono::seconds::max());
 
     return EXIT_SUCCESS;
 }
