@@ -24,7 +24,7 @@ private:
     Common::NetworkAddress             m_address;
     std::unique_ptr<Common::UdpServer> m_udp;
 
-    std::unique_ptr<Protos::Ssl::Gc::Referee> m_ref_packet;
+    Protos::Ssl::Gc::Referee m_ref_packet;
 
     uint32_t                          m_command_counter = 0;
     Protos::Ssl::Gc::Referee_Stage    m_stage           = Protos::Ssl::Gc::Referee_Stage_NORMAL_FIRST_HALF;

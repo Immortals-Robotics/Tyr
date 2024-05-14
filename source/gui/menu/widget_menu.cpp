@@ -16,9 +16,8 @@ WidgetMenu::WidgetMenu()
 
     m_joystick_texture = LoadRenderTexture(770., 400.);
 
-    m_udp        = std::make_unique<Common::UdpServer>();
-    m_ref_packet = std::make_unique<Protos::Ssl::Gc::Referee>();
-    m_address    = Common::setting().referee_address;
+    m_udp     = std::make_unique<Common::UdpServer>();
+    m_address = Common::setting().referee_address;
     m_team_info.set_name("Immortals");
     m_team_info.set_score(0);
     m_team_info.set_red_cards(0);
@@ -124,13 +123,13 @@ void WidgetMenu::drawControllerTab()
         if (m_controller_mode == static_cast<int>(ControllerMode::REF))
             switch (GetGamepadButtonPressed())
             {
-            case 7:
+            case GAMEPAD_BUTTON_RIGHT_FACE_DOWN:
                 refBroadcast(Protos::Ssl::Gc::Referee_Command_FORCE_START);
                 break;
-            case 6:
+            case GAMEPAD_BUTTON_RIGHT_FACE_RIGHT:
                 refBroadcast(Protos::Ssl::Gc::Referee_Command_STOP);
                 break;
-            case 8:
+            case GAMEPAD_BUTTON_RIGHT_FACE_LEFT:
                 if (Common::setting().our_color == Common::TeamColor::Blue)
                 {
                     refBroadcast(Protos::Ssl::Gc::Referee_Command_DIRECT_FREE_BLUE);
@@ -140,7 +139,7 @@ void WidgetMenu::drawControllerTab()
                     refBroadcast(Protos::Ssl::Gc::Referee_Command_DIRECT_FREE_YELLOW);
                 }
                 break;
-            case 5:
+            case GAMEPAD_BUTTON_RIGHT_FACE_UP:
                 if (Common::setting().our_color == Common::TeamColor::Blue)
                 {
                     refBroadcast(Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_BLUE);
@@ -150,10 +149,10 @@ void WidgetMenu::drawControllerTab()
                     refBroadcast(Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_YELLOW);
                 }
                 break;
-            case 15:
+            case GAMEPAD_BUTTON_MIDDLE_RIGHT:
                 refBroadcast(Protos::Ssl::Gc::Referee_Command_HALT);
                 break;
-            case 13:
+            case GAMEPAD_BUTTON_MIDDLE_LEFT:
                 if (Common::setting().our_color == Common::TeamColor::Blue)
                 {
                     refBroadcast(Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_BLUE);
@@ -163,10 +162,10 @@ void WidgetMenu::drawControllerTab()
                     refBroadcast(Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_YELLOW);
                 }
                 break;
-            case 11:
+            case GAMEPAD_BUTTON_RIGHT_TRIGGER_1:
                 refBroadcast(Protos::Ssl::Gc::Referee_Command_NORMAL_START);
                 break;
-            case 9:
+            case GAMEPAD_BUTTON_LEFT_TRIGGER_1:
                 if (Common::setting().our_color == Common::TeamColor::Blue)
                 {
                     refBroadcast(Protos::Ssl::Gc::Referee_Command_PREPARE_PENALTY_BLUE);
@@ -235,20 +234,20 @@ void WidgetMenu::refBroadcast(Protos::Ssl::Gc::Referee_Command _command)
         if (_command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_BLUE ||
             _command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_YELLOW)
         {
-            auto *designated_position = m_ref_packet->mutable_designated_position();
+            auto *designated_position = m_ref_packet.mutable_designated_position();
 
             designated_position->set_x(m_clicked_mouse_pos.x);
             designated_position->set_y(m_clicked_mouse_pos.y);
         }
-        m_ref_packet->set_command(_command);
-        m_ref_packet->set_command_timestamp(1);
-        m_ref_packet->set_packet_timestamp(1);
-        m_ref_packet->set_command_counter(m_command_counter);
-        m_ref_packet->set_stage(m_stage);
-        m_ref_packet->mutable_blue()->CopyFrom(m_team_info);
-        m_ref_packet->mutable_yellow()->CopyFrom(m_team_info);
-        m_udp->send(*m_ref_packet, m_address);
-        m_ref_packet->Clear();
+        m_ref_packet.set_command(_command);
+        m_ref_packet.set_command_timestamp(1);
+        m_ref_packet.set_packet_timestamp(1);
+        m_ref_packet.set_command_counter(m_command_counter);
+        m_ref_packet.set_stage(m_stage);
+        m_ref_packet.mutable_blue()->CopyFrom(m_team_info);
+        m_ref_packet.mutable_yellow()->CopyFrom(m_team_info);
+        m_udp->send(m_ref_packet, m_address);
+        m_ref_packet.Clear();
         m_command_counter++;
         last_command = _command;
     }
