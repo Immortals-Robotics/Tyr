@@ -18,14 +18,6 @@ WidgetMenu::WidgetMenu()
 
     m_udp = std::make_unique<Common::UdpServer>();
 
-    m_team_info.set_name("Immortals");
-    m_team_info.set_score(0);
-    m_team_info.set_red_cards(0);
-    m_team_info.set_yellow_cards(0);
-    m_team_info.set_timeouts(0);
-    m_team_info.set_timeout_time(0);
-    m_team_info.set_goalkeeper(Common::setting().init_gk_id);
-
     m_xbox_texture = LoadTexture(xbox_texture_dir.string().c_str());
     m_ps5_texture  = LoadTexture(ps5_texture_dir.string().c_str());
 }
@@ -210,18 +202,15 @@ void WidgetMenu::drawTabBar()
         ImGui::EndTabBar();
     }
 }
-void WidgetMenu::draw(Common::Vec2 _mouse_pos)
+void WidgetMenu::draw(const Common::Vec2 t_mouse_pos)
 {
-    auto main_window_height = GetScreenHeight();
-    auto main_window_width  = GetScreenWidth();
-
-    m_mouse_pos = _mouse_pos;
     if (ImGui::IsMouseClicked(0))
     {
-        m_clicked_mouse_pos = m_mouse_pos;
+        m_clicked_mouse_pos = t_mouse_pos;
     }
+
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
-    ImGui::SetNextWindowPos(ImVec2(main_window_width - 400., 0));
+    ImGui::SetNextWindowPos(ImVec2(GetScreenWidth() - 400., 0));
     ImGui::SetNextWindowSize(ImVec2(400., 400.));
     if (ImGui::Begin("Widgets", nullptr, window_flags))
     {
@@ -230,28 +219,44 @@ void WidgetMenu::draw(Common::Vec2 _mouse_pos)
     }
 }
 
-void WidgetMenu::refBroadcast(Protos::Ssl::Gc::Referee_Command _command)
+void WidgetMenu::refBroadcast(const Protos::Ssl::Gc::Referee_Command t_command)
 {
-    static Protos::Ssl::Gc::Referee_Command last_command = Protos::Ssl::Gc::Referee_Command_HALT;
-    if (_command != last_command)
+    if (t_command != m_last_command)
     {
-        if (_command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_BLUE ||
-            _command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_YELLOW)
+        Protos::Ssl::Gc::Referee ref_packet;
+
+        if (t_command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_BLUE ||
+            t_command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_YELLOW)
         {
-            m_clicked_mouse_pos.fillProto(m_ref_packet.mutable_designated_position());
+            m_clicked_mouse_pos.fillProto(ref_packet.mutable_designated_position());
         }
 
-        m_ref_packet.set_command(_command);
-        m_ref_packet.set_command_timestamp(1);
-        m_ref_packet.set_packet_timestamp(1);
-        m_ref_packet.set_command_counter(m_command_counter);
-        m_ref_packet.set_stage(m_stage);
-        m_ref_packet.mutable_blue()->CopyFrom(m_team_info);
-        m_ref_packet.mutable_yellow()->CopyFrom(m_team_info);
-        m_udp->send(m_ref_packet, Common::setting().referee_address);
-        m_ref_packet.Clear();
+        ref_packet.set_command(t_command);
+        ref_packet.set_command_timestamp(1);
+        ref_packet.set_packet_timestamp(1);
+        ref_packet.set_command_counter(m_command_counter);
+        ref_packet.set_stage(Protos::Ssl::Gc::Referee_Stage_NORMAL_FIRST_HALF);
+
+        ref_packet.mutable_blue()->set_name("Immortals");
+        ref_packet.mutable_blue()->set_score(0);
+        ref_packet.mutable_blue()->set_red_cards(0);
+        ref_packet.mutable_blue()->set_yellow_cards(0);
+        ref_packet.mutable_blue()->set_timeouts(0);
+        ref_packet.mutable_blue()->set_timeout_time(0);
+        ref_packet.mutable_blue()->set_goalkeeper(Common::setting().init_gk_id);
+
+        ref_packet.mutable_yellow()->set_name("Immortals");
+        ref_packet.mutable_yellow()->set_score(0);
+        ref_packet.mutable_yellow()->set_red_cards(0);
+        ref_packet.mutable_yellow()->set_yellow_cards(0);
+        ref_packet.mutable_yellow()->set_timeouts(0);
+        ref_packet.mutable_yellow()->set_timeout_time(0);
+        ref_packet.mutable_yellow()->set_goalkeeper(Common::setting().init_gk_id);
+
+        m_udp->send(ref_packet, Common::setting().referee_address);
+
         m_command_counter++;
-        last_command = _command;
+        m_last_command = t_command;
     }
 }
 } // namespace Tyr::Gui
