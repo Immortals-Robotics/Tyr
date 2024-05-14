@@ -13,33 +13,38 @@ public:
     Circle(const Protos::Immortals::Circle &t_circle) : Circle(t_circle.center(), t_circle.r())
     {}
 
-    void fillProto(Protos::Immortals::Circle *const t_circle) const
+    inline void fillProto(Protos::Immortals::Circle *const t_circle) const
     {
         center.fillProto(t_circle->mutable_center());
         t_circle->set_r(r);
     }
 
-    float circumference() const
+    inline float circumference() const
     {
         return 2.0 * std::numbers::pi * r;
     }
 
-    float area() const
+    inline float area() const
     {
         return std::numbers::pi * r * r;
     }
 
-    bool inside(const Vec2 t_point) const
+    inline bool inside(const Vec2 t_point) const
     {
         return (center - t_point).length() < r;
     }
 
-    bool insideOffset(const Vec2 t_point, float offset) const
+    inline bool insideOffset(const Vec2 t_point, float offset) const
     {
         return (center - t_point).length() < (r + offset);
     }
 
-    Vec2 nearestOutside(Vec2 t_point, float t_extra_r = 0.0) const;
+    inline Vec2 nearestOutside(Vec2 t_point, float t_extra_r = 0.0) const
+    {
+        Vec2 tmp_vec = t_point - center;
+        tmp_vec      = tmp_vec.normalized() * (r + t_extra_r);
+        return center + tmp_vec;
+    }
 
     // circle intersection
     std::vector<Vec2> intersect(const Circle &t_other) const;
