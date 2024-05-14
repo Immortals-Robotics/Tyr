@@ -38,7 +38,7 @@ void Filtered::filterRobots(Common::TeamColor t_color)
 
                 if (m_robot_not_seen[color_id][i] > 0)
                 {
-                    m_robot_kalman[color_id][i].initializePos(raw_robots[i].position);
+                    m_robot_kalman[color_id][i].initializePos(raw_robot.position);
                     m_angle_filter[color_id][i].reset();
                 }
 
