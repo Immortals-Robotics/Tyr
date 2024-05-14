@@ -20,7 +20,16 @@ struct Vec2
     Vec2(const Protos::Immortals::Vec2 &t_v) : Vec2(t_v.x(), t_v.y())
     {}
 
+    Vec2(const Protos::Ssl::Vector2 &t_v) : Vec2(t_v.x(), t_v.y())
+    {}
+
     void fillProto(Protos::Immortals::Vec2 *const t_v) const
+    {
+        t_v->set_x(x);
+        t_v->set_y(y);
+    }
+
+    void fillProto(Protos::Ssl::Vector2 *const t_v) const
     {
         t_v->set_x(x);
         t_v->set_y(y);
