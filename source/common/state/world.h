@@ -22,7 +22,7 @@ struct RawRobotState
 
     RawRobotState() = default;
 
-    RawRobotState(const Protos::SSL_DetectionRobot &t_robot, const TeamColor t_color)
+    RawRobotState(const Protos::Ssl::Vision::DetectionRobot &t_robot, const TeamColor t_color)
     {
         vision_id = t_robot.robot_id();
         color     = t_color;
@@ -56,7 +56,7 @@ struct RawBallState
 
     RawBallState() = default;
 
-    RawBallState(const Protos::SSL_DetectionBall &t_ball)
+    RawBallState(const Protos::Ssl::Vision::DetectionBall &t_ball)
     {
         position = Vec2(t_ball.x(), t_ball.y());
     }
@@ -83,7 +83,7 @@ struct RawWorldState
 
     RawWorldState() = default;
 
-    RawWorldState(const Protos::SSL_DetectionFrame &t_frame)
+    RawWorldState(const Protos::Ssl::Vision::DetectionFrame &t_frame)
     {
         time = (TimeStamp) t_frame.t_capture() * 1000;
 
@@ -206,7 +206,7 @@ struct BallState
         seen_state = (SeenState) t_ball.seen_state();
     }
 
-    BallState(const Protos::SSL_DetectionBall &t_ball)
+    BallState(const Protos::Ssl::Vision::DetectionBall &t_ball)
     {
         position   = Vec2(t_ball.x(), t_ball.y());
         seen_state = SeenState::Seen;
@@ -241,7 +241,7 @@ struct FieldState
 
     FieldState() = default;
 
-    FieldState(const Protos::SSL_GeometryFieldSize &t_field)
+    FieldState(const Protos::Ssl::Vision::GeometryFieldSize &t_field)
     {
         width  = t_field.field_length() / 2.0f;
         height = t_field.field_width() / 2.0f;

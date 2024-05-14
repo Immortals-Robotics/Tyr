@@ -17,7 +17,7 @@ Raw::Raw()
 
 void Raw::process()
 {
-    Protos::SSL_DetectionFrame merged_frame;
+    Protos::Ssl::Vision::DetectionFrame merged_frame;
     for (int i = 0; i < Common::Setting::kCamCount; i++)
     {
         if (Common::setting().use_camera[i])

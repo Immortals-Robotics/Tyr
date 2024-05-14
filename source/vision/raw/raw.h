@@ -34,7 +34,7 @@ private:
 
     std::array<bool, Common::Setting::kCamCount> m_packet_received;
 
-    Protos::SSL_DetectionFrame m_d_frame[Common::Setting::kCamCount];
+    Protos::Ssl::Vision::DetectionFrame m_d_frame[Common::Setting::kCamCount];
 
     Common::RawWorldState m_state;
 };
