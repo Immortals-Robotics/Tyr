@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../math/vector.h"
 #include "../network/nng_server.h"
 #include "../state/world.h"
 #include "../time/time_point.h"

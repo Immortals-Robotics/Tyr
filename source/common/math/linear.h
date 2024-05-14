@@ -13,8 +13,6 @@
 
 #pragma once
 
-#include "vector.h"
-
 namespace Tyr::Common
 {
 //! Given a set of points, this class calculates the linear regression parameters and evaluates the regression line at

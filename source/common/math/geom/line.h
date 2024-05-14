@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../angle.h"
-#include "../vector.h"
 #include "line_segment.h"
 
 namespace Tyr::Common

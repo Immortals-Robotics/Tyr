@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vector.h"
+#include "vec2.h"
 
 namespace Tyr::Common
 {

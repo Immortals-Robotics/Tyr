@@ -24,7 +24,8 @@ set(HEADER_FILES
 	math/linear.h
 	math/median_filter.h
 	math/random.h
-	math/vector.h
+	math/vec2.h
+	math/vec3.h
 	math/geom/circle.h
 	math/geom/line_segment.h
 	math/geom/line.h
@@ -50,7 +51,6 @@ set(SOURCE_FILES
 	logging/logging.cpp
 	math/linear.cpp
 	math/random.cpp
-	math/vector.cpp
 	math/geom/circle.cpp
 	math/geom/line.cpp
 	network/nng_client.cpp

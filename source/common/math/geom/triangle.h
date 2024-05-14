@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../vector.h"
-
 namespace Tyr::Common
 {
 struct Triangle
