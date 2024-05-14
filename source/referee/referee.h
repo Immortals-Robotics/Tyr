@@ -20,12 +20,12 @@ private:
 
     int m_cmd_counter = -1;
 
-    Protos::SSL_Referee m_ssl_ref;
+    Protos::Ssl::Gc::Referee m_ssl_ref;
 
     bool isKicked();
 
     // This is the state machine transition function
-    void transition(Protos::SSL_Referee_Command ref_command);
+    void transition(Protos::Ssl::Gc::Referee_Command ref_command);
 
 public:
     Referee() = default;

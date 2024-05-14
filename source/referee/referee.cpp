@@ -35,9 +35,9 @@ void Referee::process()
         m_last_placed_ball = m_world_state.ball.position;
 
         if (Common::setting().our_color == Common::TeamColor::Blue)
-            m_state.opp_gk = m_ssl_ref.yellow().goalie();
+            m_state.opp_gk = m_ssl_ref.yellow().goalkeeper();
         else
-            m_state.opp_gk = m_ssl_ref.blue().goalie();
+            m_state.opp_gk = m_ssl_ref.blue().goalkeeper();
 
         m_move_hys = 0; // TODO maybe it needs to be commented
 
@@ -82,23 +82,23 @@ bool Referee::isKicked()
     return false;
 }
 
-void Referee::transition(const Protos::SSL_Referee_Command ref_command)
+void Referee::transition(const Protos::Ssl::Gc::Referee_Command ref_command)
 {
     const bool ball_kicked = isKicked() || m_timer.time() > 5;
 
-    if (ref_command == Protos::SSL_Referee_Command_HALT)
+    if (ref_command == Protos::Ssl::Gc::Referee_Command_HALT)
     {
         m_state.state = Common::RefereeState::STATE_HALTED;
     }
-    else if (ref_command == Protos::SSL_Referee_Command_STOP)
+    else if (ref_command == Protos::Ssl::Gc::Referee_Command_STOP)
     {
         m_state.state = Common::RefereeState::STATE_GAME_OFF;
     }
-    else if (ref_command == Protos::SSL_Referee_Command_FORCE_START)
+    else if (ref_command == Protos::Ssl::Gc::Referee_Command_FORCE_START)
     {
         m_state.state = Common::RefereeState::STATE_GAME_ON;
     }
-    else if (ref_command == Protos::SSL_Referee_Command_NORMAL_START &&
+    else if (ref_command == Protos::Ssl::Gc::Referee_Command_NORMAL_START &&
              (m_state.state & Common::RefereeState::STATE_NOTREADY))
     {
         m_state.state &= ~Common::RefereeState::STATE_NOTREADY;
@@ -112,57 +112,57 @@ void Referee::transition(const Protos::SSL_Referee_Command ref_command)
     {
         switch (ref_command)
         {
-        case Protos::SSL_Referee_Command_PREPARE_KICKOFF_BLUE:
+        case Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_BLUE:
             m_state.state = Common::RefereeState::STATE_KICKOFF | Common::RefereeState::STATE_NOTREADY;
             break;
-        case Protos::SSL_Referee_Command_PREPARE_KICKOFF_YELLOW:
+        case Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_YELLOW:
             m_state.state = Common::RefereeState::STATE_KICKOFF | Common::RefereeState::STATE_NOTREADY;
             break;
 
-        case Protos::SSL_Referee_Command_PREPARE_PENALTY_BLUE:
+        case Protos::Ssl::Gc::Referee_Command_PREPARE_PENALTY_BLUE:
             m_state.state = Common::RefereeState::STATE_PENALTY | Common::RefereeState::STATE_NOTREADY;
             break;
-        case Protos::SSL_Referee_Command_PREPARE_PENALTY_YELLOW:
+        case Protos::Ssl::Gc::Referee_Command_PREPARE_PENALTY_YELLOW:
             m_state.state = Common::RefereeState::STATE_PENALTY | Common::RefereeState::STATE_NOTREADY;
             break;
 
-        case Protos::SSL_Referee_Command_DIRECT_FREE_BLUE:
+        case Protos::Ssl::Gc::Referee_Command_DIRECT_FREE_BLUE:
             m_state.state = Common::RefereeState::STATE_DIRECT | Common::RefereeState::STATE_READY;
             break;
-        case Protos::SSL_Referee_Command_DIRECT_FREE_YELLOW:
+        case Protos::Ssl::Gc::Referee_Command_DIRECT_FREE_YELLOW:
             m_state.state = Common::RefereeState::STATE_DIRECT | Common::RefereeState::STATE_READY;
             break;
 
-        case Protos::SSL_Referee_Command_INDIRECT_FREE_BLUE:
+        case Protos::Ssl::Gc::Referee_Command_INDIRECT_FREE_BLUE:
             m_state.state = Common::RefereeState::STATE_INDIRECT | Common::RefereeState::STATE_READY;
             break;
-        case Protos::SSL_Referee_Command_INDIRECT_FREE_YELLOW:
+        case Protos::Ssl::Gc::Referee_Command_INDIRECT_FREE_YELLOW:
             m_state.state = Common::RefereeState::STATE_INDIRECT | Common::RefereeState::STATE_READY;
             break;
 
-        case Protos::SSL_Referee_Command_BALL_PLACEMENT_BLUE:
+        case Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_BLUE:
             m_state.state = Common::RefereeState::STATE_PLACE_BALL | Common::RefereeState::STATE_NOTREADY;
             break;
-        case Protos::SSL_Referee_Command_BALL_PLACEMENT_YELLOW:
+        case Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_YELLOW:
             m_state.state = Common::RefereeState::STATE_PLACE_BALL | Common::RefereeState::STATE_NOTREADY;
             break;
         }
 
         switch (ref_command)
         {
-        case Protos::SSL_Referee_Command_PREPARE_KICKOFF_BLUE:
-        case Protos::SSL_Referee_Command_PREPARE_PENALTY_BLUE:
-        case Protos::SSL_Referee_Command_DIRECT_FREE_BLUE:
-        case Protos::SSL_Referee_Command_INDIRECT_FREE_BLUE:
-        case Protos::SSL_Referee_Command_BALL_PLACEMENT_BLUE:
+        case Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_BLUE:
+        case Protos::Ssl::Gc::Referee_Command_PREPARE_PENALTY_BLUE:
+        case Protos::Ssl::Gc::Referee_Command_DIRECT_FREE_BLUE:
+        case Protos::Ssl::Gc::Referee_Command_INDIRECT_FREE_BLUE:
+        case Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_BLUE:
             m_state.color = Common::TeamColor::Blue;
             break;
 
-        case Protos::SSL_Referee_Command_PREPARE_KICKOFF_YELLOW:
-        case Protos::SSL_Referee_Command_PREPARE_PENALTY_YELLOW:
-        case Protos::SSL_Referee_Command_DIRECT_FREE_YELLOW:
-        case Protos::SSL_Referee_Command_INDIRECT_FREE_YELLOW:
-        case Protos::SSL_Referee_Command_BALL_PLACEMENT_YELLOW:
+        case Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_YELLOW:
+        case Protos::Ssl::Gc::Referee_Command_PREPARE_PENALTY_YELLOW:
+        case Protos::Ssl::Gc::Referee_Command_DIRECT_FREE_YELLOW:
+        case Protos::Ssl::Gc::Referee_Command_INDIRECT_FREE_YELLOW:
+        case Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_YELLOW:
             m_state.color = Common::TeamColor::Yellow;
             break;
         }

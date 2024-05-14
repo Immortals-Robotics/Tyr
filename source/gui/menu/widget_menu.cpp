@@ -17,7 +17,7 @@ WidgetMenu::WidgetMenu()
     m_joystick_texture = LoadRenderTexture(770., 400.);
 
     m_udp        = std::make_unique<Common::UdpServer>();
-    m_ref_packet = std::make_unique<Protos::Referee>();
+    m_ref_packet = std::make_unique<Protos::Ssl::Gc::Referee>();
     m_address    = Common::setting().referee_address;
     m_team_info.set_name("Immortals");
     m_team_info.set_score(0);
@@ -125,55 +125,55 @@ void WidgetMenu::drawControllerTab()
             switch (GetGamepadButtonPressed())
             {
             case 7:
-                refBroadcast(Protos::Referee_Command::Referee_Command_FORCE_START);
+                refBroadcast(Protos::Ssl::Gc::Referee_Command_FORCE_START);
                 break;
             case 6:
-                refBroadcast(Protos::Referee_Command::Referee_Command_STOP);
+                refBroadcast(Protos::Ssl::Gc::Referee_Command_STOP);
                 break;
             case 8:
                 if (Common::setting().our_color == Common::TeamColor::Blue)
                 {
-                    refBroadcast(Protos::Referee_Command::Referee_Command_DIRECT_FREE_BLUE);
+                    refBroadcast(Protos::Ssl::Gc::Referee_Command_DIRECT_FREE_BLUE);
                 }
                 else
                 {
-                    refBroadcast(Protos::Referee_Command::Referee_Command_DIRECT_FREE_YELLOW);
+                    refBroadcast(Protos::Ssl::Gc::Referee_Command_DIRECT_FREE_YELLOW);
                 }
                 break;
             case 5:
                 if (Common::setting().our_color == Common::TeamColor::Blue)
                 {
-                    refBroadcast(Protos::Referee_Command::Referee_Command_PREPARE_KICKOFF_BLUE);
+                    refBroadcast(Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_BLUE);
                 }
                 else
                 {
-                    refBroadcast(Protos::Referee_Command::Referee_Command_PREPARE_KICKOFF_YELLOW);
+                    refBroadcast(Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_YELLOW);
                 }
                 break;
             case 15:
-                refBroadcast(Protos::Referee_Command::Referee_Command_HALT);
+                refBroadcast(Protos::Ssl::Gc::Referee_Command_HALT);
                 break;
             case 13:
                 if (Common::setting().our_color == Common::TeamColor::Blue)
                 {
-                    refBroadcast(Protos::Referee_Command::Referee_Command_BALL_PLACEMENT_BLUE);
+                    refBroadcast(Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_BLUE);
                 }
                 else
                 {
-                    refBroadcast(Protos::Referee_Command::Referee_Command_BALL_PLACEMENT_YELLOW);
+                    refBroadcast(Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_YELLOW);
                 }
                 break;
             case 11:
-                refBroadcast(Protos::Referee_Command::Referee_Command_NORMAL_START);
+                refBroadcast(Protos::Ssl::Gc::Referee_Command_NORMAL_START);
                 break;
             case 9:
                 if (Common::setting().our_color == Common::TeamColor::Blue)
                 {
-                    refBroadcast(Protos::Referee_Command::Referee_Command_PREPARE_PENALTY_BLUE);
+                    refBroadcast(Protos::Ssl::Gc::Referee_Command_PREPARE_PENALTY_BLUE);
                 }
                 else
                 {
-                    refBroadcast(Protos::Referee_Command::Referee_Command_PREPARE_PENALTY_YELLOW);
+                    refBroadcast(Protos::Ssl::Gc::Referee_Command_PREPARE_PENALTY_YELLOW);
                 }
                 break;
             default:
@@ -227,13 +227,13 @@ void WidgetMenu::draw(Common::Vec2 _mouse_pos)
     }
 }
 
-void WidgetMenu::refBroadcast(Protos::Referee_Command _command)
+void WidgetMenu::refBroadcast(Protos::Ssl::Gc::Referee_Command _command)
 {
-    static Protos::Referee_Command last_command = Protos::Referee_Command::Referee_Command_HALT;
+    static Protos::Ssl::Gc::Referee_Command last_command = Protos::Ssl::Gc::Referee_Command_HALT;
     if (_command != last_command)
     {
-        if (_command == Protos::Referee_Command::Referee_Command_BALL_PLACEMENT_BLUE ||
-            _command == Protos::Referee_Command::Referee_Command_BALL_PLACEMENT_YELLOW)
+        if (_command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_BLUE ||
+            _command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_YELLOW)
         {
             auto *designated_position = m_ref_packet->mutable_designated_position();
 

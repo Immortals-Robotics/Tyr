@@ -4,7 +4,7 @@ namespace Tyr::Vision
 {
 bool Raw::receive()
 {
-    Protos::SSL_WrapperPacket packet;
+    Protos::Ssl::Vision::WrapperPacket packet;
     if (m_client->receive(&packet))
     {
         if (packet.has_detection())

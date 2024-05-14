@@ -9,7 +9,7 @@ Grsim::Grsim() : Base()
 
 void Grsim::queueCommand(const Command &command)
 {
-    Protos::grSim_Robot_Command *proto_command = m_packet.mutable_commands()->add_robot_commands();
+    Protos::GrSim::RobotCommand *proto_command = m_packet.mutable_commands()->add_robot_commands();
     proto_command->set_id(command.vision_id);
 
     proto_command->set_wheelsspeed(false);
