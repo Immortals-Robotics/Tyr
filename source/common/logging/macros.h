@@ -24,7 +24,7 @@ namespace Tyr::Common
         }                                                                                                              \
     };                                                                                                                 \
     template <typename... Args>                                                                                        \
-    fn(spdlog::format_string_t<Args...> format, Args &&...args) -> fn<Args...>;
+    FORCEINLINE fn(spdlog::format_string_t<Args...> format, Args &&...args) -> fn<Args...>;
 
 LOG_MACRO(logTrace, trace);
 LOG_MACRO(logDebug, debug);
