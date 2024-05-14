@@ -2,8 +2,12 @@
 
 namespace Tyr::Common
 {
+namespace Debug
+{
+class Hub;
+}
+
 class Setting;
-class Debug;
 class Logger;
 class Timer;
 class ConfigReader;
@@ -26,7 +30,7 @@ struct Services
         return *s_setting;
     }
 
-    static Debug &debug()
+    static Debug::Hub &debug()
     {
         return *s_debug;
     }
@@ -48,7 +52,7 @@ struct Services
 
 private:
     static inline Setting      *s_setting;
-    static inline Debug        *s_debug;
+    static inline Debug::Hub   *s_debug;
     static inline Logger       *s_logger;
     static inline Timer        *s_global_timer;
     static inline ConfigReader *s_configReader;
@@ -66,7 +70,7 @@ static Setting &setting()
     return Services::setting();
 }
 
-static Debug &debug()
+static Debug::Hub &debug()
 {
     return Services::debug();
 }

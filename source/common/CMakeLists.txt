@@ -14,8 +14,14 @@ set(HEADER_FILES
 	services.h
 	setting.h
 	config/config.h
+
 	debugging/color.h
-	debugging/debug.h
+	debugging/draw.h
+	debugging/hub.h
+	debugging/log.h
+	debugging/source_location.h
+	debugging/wrapper.h
+
 	logging/debug_sink.h
 	logging/logging.h
 	logging/macros.h
@@ -47,7 +53,7 @@ set(SOURCE_FILES
 	services.cpp
 	setting.cpp
 	config/config.cpp
-	debugging/debug.cpp
+	debugging/hub.cpp
 	logging/logging.cpp
 	math/linear.cpp
 	math/geom/circle.cpp
