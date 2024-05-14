@@ -20,12 +20,6 @@ void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
     m_started_in_obs = obs_map.isInObstacle(init);
 }
 
-Common::Vec2 Planner::randomState()
-{
-    return Common::Vec2((m_random.get(-1.0f, 1.0f) * (Common::field().width + 250.0f)),
-                        (m_random.get(-1.0f, 1.0f) * (Common::field().height + 250.0f)));
-}
-
 Common::Vec2 Planner::nearestFree(Common::Vec2 state)
 {
     const float acceptable_free_dis = 50.0f;
@@ -50,26 +44,6 @@ Common::Vec2 Planner::nearestFree(Common::Vec2 state)
     }
 
     return ans;
-}
-
-Common::Vec2 Planner::chooseTarget()
-{
-    float r = m_random.get(0.0f, 1.0f);
-
-    if (r <= goal_target_prob)
-    {
-        return final_state;
-    }
-    else if ((r <= goal_target_prob + waypoint_target_prob) && (m_cached_waypoints.size() > 0))
-    {
-        const int idx = m_random.get(0, (int) m_cached_waypoints.size() - 1);
-        return m_cached_waypoints[idx];
-    }
-
-    else
-    {
-        return randomState();
-    }
 }
 
 Node *Planner::extend(Node *s, Common::Vec2 &target)
@@ -107,21 +81,6 @@ void Planner::setWayPoints()
     m_cached_waypoints.clear();
     if (isReached())
         m_cached_waypoints = m_waypoints;
-}
-
-Common::Vec2 Planner::getWayPoint(unsigned int i)
-{
-    return m_waypoints[i];
-}
-
-unsigned int Planner::getWayPointNum()
-{
-    return m_waypoints.size();
-}
-
-bool Planner::isReached()
-{
-    return final_state.distanceTo(m_tree.NearestNeighbour(final_state)->state) <= acceptable_dis;
 }
 
 Common::Vec2 Planner::plan()

@@ -32,7 +32,6 @@ set(SOURCE_FILES
 	dss/trajectory.cpp
 	errt/errt.cpp
 	errt/set_obstacles.cpp
-	errt/tree.cpp
 
 	obstacle/map.cpp
 
