@@ -55,7 +55,6 @@ set(SOURCE_FILES
 	math/vector.cpp
 	math/geom/circle.cpp
 	math/geom/line.cpp
-	math/geom/rect.cpp
 	network/nng_client.cpp
 	network/nng_server.cpp
 	network/udp_client.cpp
