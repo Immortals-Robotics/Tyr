@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../obstacle/obstacle.h"
+#include "../obstacle/map.h"
 #include "tree.h"
 
 namespace Tyr::Soccer

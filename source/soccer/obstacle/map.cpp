@@ -1,13 +1,16 @@
-#include "obstacle.h"
+#include "map.h"
+
+#include "circle.h"
+#include "rectangle.h"
 
 namespace Tyr::Soccer
 {
-ObsMap obs_map{};
+ObstacleMap obs_map{};
 
-ObsMap::ObsMap()
+ObstacleMap::ObstacleMap()
 {}
 
-void ObsMap::addCircle(const Common::Circle t_circle)
+void ObstacleMap::addCircle(const Common::Circle t_circle)
 {
     // TODO: verify if this check is needed
     if (t_circle.r > 0)
@@ -15,12 +18,12 @@ void ObsMap::addCircle(const Common::Circle t_circle)
         m_obstacles.emplace_back(std::make_unique<CircleObstacle>(t_circle));
     }
 }
-void ObsMap::addRectangle(const Common::Rect t_rect)
+void ObstacleMap::addRectangle(const Common::Rect t_rect)
 {
     m_obstacles.emplace_back(std::make_unique<RectangleObstacle>(t_rect));
 }
 
-bool ObsMap::isInObstacle(const Common::Vec2 t_p)
+bool ObstacleMap::isInObstacle(const Common::Vec2 t_p)
 {
     for (int i = 0; i < getObsNum(); i++)
     {
@@ -35,7 +38,7 @@ bool ObsMap::isInObstacle(const Common::Vec2 t_p)
     return false;
 }
 
-float ObsMap::nearestDistance(const Common::Vec2 t_p)
+float ObstacleMap::nearestDistance(const Common::Vec2 t_p)
 {
     float dis = std::numeric_limits<float>::max();
     float tmp_dis;
@@ -51,7 +54,7 @@ float ObsMap::nearestDistance(const Common::Vec2 t_p)
     return dis;
 }
 
-bool ObsMap::collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2)
+bool ObstacleMap::collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2)
 {
     float coss, sinn;
     coss = (p2.x - p1.x) / p1.distanceTo(p2);
@@ -71,12 +74,12 @@ bool ObsMap::collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2)
     return false;
 }
 
-void ObsMap::resetMap()
+void ObstacleMap::resetMap()
 {
     m_obstacles.clear();
 }
 
-int ObsMap::getObsNum()
+int ObstacleMap::getObsNum()
 {
     return m_obstacles.size();
 }

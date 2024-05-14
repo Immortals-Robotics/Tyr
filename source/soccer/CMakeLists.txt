@@ -10,7 +10,10 @@ set(HEADER_FILES
 	errt/errt.h
 	errt/tree.h
 
-	obstacle/obstacle.h
+	obstacle/base.h
+	obstacle/circle.h
+	obstacle/map.h
+	obstacle/rectangle.h
 
 	plays/play_book.h
 
@@ -32,9 +35,7 @@ set(SOURCE_FILES
 	errt/set_obstacles.cpp
 	errt/tree.cpp
 
-	obstacle/obstacle_circle.cpp
-	obstacle/obstacle_map.cpp
-	obstacle/obstacle_rect.cpp
+	obstacle/map.cpp
 
 	helpers/attack_fucking_angle.cpp
 	helpers/ball_is_goaling.cpp
