@@ -1,5 +1,5 @@
 #include "parabolic.h"
-#include "../obstacle/obstacle.h"
+#include "../obstacle/map.h"
 
 namespace Tyr::Soccer
 {
@@ -53,7 +53,7 @@ bool Parabolic::HasStaticOverlap(const Parabolic &a)
     {
         const float        t = check_t[t_idx];
         const Common::Vec2 p = a.Evaluate(t);
-        if (obs_map.isInObstacle(p))
+        if (g_obs_map.isInObstacle(p))
         {
             return true;
         }

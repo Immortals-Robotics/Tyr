@@ -14,8 +14,14 @@ set(HEADER_FILES
 	services.h
 	setting.h
 	config/config.h
+
 	debugging/color.h
-	debugging/debug.h
+	debugging/draw.h
+	debugging/hub.h
+	debugging/log.h
+	debugging/source_location.h
+	debugging/wrapper.h
+
 	logging/debug_sink.h
 	logging/logging.h
 	logging/macros.h
@@ -24,7 +30,8 @@ set(HEADER_FILES
 	math/linear.h
 	math/median_filter.h
 	math/random.h
-	math/vector.h
+	math/vec2.h
+	math/vec3.h
 	math/geom/circle.h
 	math/geom/line_segment.h
 	math/geom/line.h
@@ -46,23 +53,16 @@ set(SOURCE_FILES
 	services.cpp
 	setting.cpp
 	config/config.cpp
-	debugging/debug.cpp
 	logging/logging.cpp
-	math/angle.cpp
-	math/helpers.cpp
 	math/linear.cpp
-	math/random.cpp
-	math/vector.cpp
 	math/geom/circle.cpp
 	math/geom/line.cpp
-	math/geom/rect.cpp
 	network/nng_client.cpp
 	network/nng_server.cpp
 	network/udp_client.cpp
 	network/udp_server.cpp
 	storage/dumper.cpp
-	storage/storage.cpp
-	time/timer.cpp)
+	storage/storage.cpp)
 
 add_library(${PROJECT_NAME}
 	${SOURCE_FILES} ${HEADER_FILES})

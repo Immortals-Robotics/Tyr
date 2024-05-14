@@ -1,6 +1,6 @@
 #include "services.h"
 
-#include "debugging/debug.h"
+#include "debugging/hub.h"
 #include "logging/logging.h"
 #include "setting.h"
 #include "state/world.h"
@@ -18,7 +18,7 @@ bool Services::initialize()
     s_setting = new Setting();
     s_setting->load(s_configReader->getRoot());
 
-    s_debug = new Debug();
+    s_debug = new Debug::Hub();
 
     if (!Storage::init(std::filesystem::path(LOG_DIR) / "db"))
     {

@@ -12,18 +12,84 @@ struct Node
 
 class Tree
 {
+public:
+    inline Tree(const size_t t_max_nodes)
+    {
+        m_nodes.reserve(t_max_nodes);
+    }
+
+    inline void reset()
+    {
+        m_nodes.clear();
+    }
+
+    inline Node *AddNode(const Common::Vec2 s, Node *const parent)
+    {
+        if (m_nodes.size() < m_nodes.capacity())
+        {
+            m_nodes.push_back({
+                .parent = parent,
+                .state  = s,
+            });
+
+            if (parent)
+                parent->child_count++;
+
+            return &m_nodes.back();
+        }
+        else
+        {
+            Common::logWarning("Tree node limit of {} reached", m_nodes.capacity());
+            return nullptr;
+        }
+    }
+
+    inline Node *NearestNeighbour(const Common::Vec2 s)
+    {
+        if (m_nodes.empty())
+            return nullptr;
+
+        float d   = std::numeric_limits<float>::max();
+        int   ans = 0;
+        for (int i = 0; i < m_nodes.size(); i++)
+        {
+            float tmp_d = s.distanceSquaredTo(m_nodes[i].state);
+            if (tmp_d < d)
+            {
+                ans = i;
+                d   = tmp_d;
+            }
+        }
+
+        return GetNode(ans);
+    }
+
+    inline int tree_size()
+    {
+        return m_nodes.size();
+    }
+
+    inline Node *GetNode(int idx)
+    {
+        return &m_nodes[idx];
+    }
+
+    void draw(const Common::Color t_color = Common::Color::black().transparent()) const
+    {
+        for (int i = 0; i < m_nodes.size(); i++)
+        {
+            if (m_nodes[i].parent == nullptr)
+            {
+                // TODO: draw sth to mark the root
+            }
+            else
+            {
+                Common::debug().draw(Common::LineSegment{m_nodes[i].state, m_nodes[i].parent->state}, t_color, 0.5f);
+            }
+        }
+    }
+
 private:
     std::vector<Node> m_nodes;
-
-public:
-    Tree(size_t t_max_nodes);
-    void reset();
-
-    Node *AddNode(Common::Vec2 s, Node *parent);
-    Node *NearestNeighbour(Common::Vec2 s);
-    int   tree_size();
-    Node *GetNode(int idx);
-
-    void draw(Common::Color t_color = Common::Color::black().transparent()) const;
 };
 } // namespace Tyr::Soccer

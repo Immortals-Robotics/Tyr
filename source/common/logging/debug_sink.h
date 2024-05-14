@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../debugging/debug.h"
+#include "../debugging/hub.h"
 #include "../services.h"
 
 namespace Tyr::Common

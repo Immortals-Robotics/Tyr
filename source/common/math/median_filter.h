@@ -2,49 +2,43 @@
 
 namespace Tyr::Common
 {
-template <class T>
+template <class T, size_t size = 10>
 class MedianFilter
 {
-    std::vector<T> data;
-    std::vector<T> temp;
-    bool           index;
-    int            size;
-
 public:
-    MedianFilter(int _size = 10)
-    {
-        index = false;
-        size  = _size;
-    }
+    MedianFilter() = default;
 
-    void AddData(T in)
+    void add(const T t_data)
     {
-        if (index == 0)
+        if (empty)
         {
-            for (int i = 0; i < size; i++)
-                data.push_back(in);
-            index = true;
+            m_data.fill(t_data);
+            empty = false;
         }
         else
         {
-            data.push_back(in);
-            data.erase(data.begin());
+            std::shift_left(m_data.begin(), m_data.end(), 1);
+            m_data.back() = t_data;
         }
     }
 
-    T GetCurrent()
+    T current() const
     {
-        temp = data;
-        std::sort(temp.begin(), temp.end());
-        if (size % 2 == 0)
-            return (temp.at(temp.size() / 2) + temp.at(1 + temp.size() / 2)) / 2;
-        return temp.at(temp.size() / 2);
+        std::array<T, size> m_temp = m_data;
+
+        const size_t middle = m_temp.size() / 2;
+        std::nth_element(m_temp.begin(), m_temp.begin() + middle, m_temp.end());
+        return m_temp[middle];
     }
 
     void reset()
     {
-        data.clear();
-        index = false;
+        empty = true;
     }
+
+private:
+    std::array<T, size> m_data;
+
+    bool empty = true;
 };
 } // namespace Tyr::Common

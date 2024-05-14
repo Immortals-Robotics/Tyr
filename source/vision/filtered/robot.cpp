@@ -48,11 +48,11 @@ void Filtered::filterRobots(Common::TeamColor t_color)
                 filt_pos = m_robot_kalman[color_id][i].getPosition();
                 filt_vel = m_robot_kalman[color_id][i].getVelocity();
 
-                m_angle_filter[color_id][i].AddData((raw_robot.angle - m_raw_angles[color_id][i]) *
+                m_angle_filter[color_id][i].add((raw_robot.angle - m_raw_angles[color_id][i]) *
                                                     Common::setting().vision_frame_rate);
                 m_raw_angles[color_id][i] = raw_robot.angle;
 
-                robot.angular_velocity = m_angle_filter[color_id][i].GetCurrent();
+                robot.angular_velocity = m_angle_filter[color_id][i].current();
 
                 robot.angle = raw_robot.angle;
 

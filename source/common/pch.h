@@ -54,5 +54,6 @@
 #include "math/geom/rect.h"
 #include "math/geom/triangle.h"
 #include "math/helpers.h"
-#include "math/vector.h"
+#include "math/vec2.h"
+#include "math/vec3.h"
 #include "services.h"

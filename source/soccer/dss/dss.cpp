@@ -1,6 +1,6 @@
 #include "dss.h"
 
-#include "../obstacle/obstacle.h"
+#include "../obstacle/map.h"
 #include "trajectory.h"
 
 namespace Tyr::Soccer
@@ -111,8 +111,8 @@ Common::Vec2 Dss::GetRandomAcceleration(const Common::Vec2 &v, const float a_mag
 {
     const float max_acc = 3000.f;
 
-    const float rnd_angle     = m_random.get() * 2.f * 3.1415f;
-    const float rnd_magnitude = m_random.get() * a_mag;
+    const float rnd_angle     = m_random.get(0.0f, 2.f * 3.1415f);
+    const float rnd_magnitude = m_random.get(0.0f, a_mag);
 
     return Common::Vec2(cos(rnd_angle), sin(rnd_angle)) * rnd_magnitude;
 }
@@ -147,7 +147,7 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     Common::Vec2              a_cmd;
     const Common::RobotState &state = own_robots[robot_num].state();
 
-    if (state.seen_state == Common::SeenState::CompletelyOut || obs_map.isInObstacle(state.position))
+    if (state.seen_state == Common::SeenState::CompletelyOut || g_obs_map.isInObstacle(state.position))
     {
         a_cmd = target_a_cmd;
     }

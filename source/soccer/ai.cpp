@@ -117,7 +117,7 @@ Ai::Ai()
 bool Ai::receiveWorld()
 {
     Protos::Immortals::WorldState pb_state;
-    if (!m_world_client->receive(&pb_state))
+    if (!m_world_client->receive(&pb_state, nullptr, true))
         return false;
 
     m_world_state = Common::WorldState(pb_state);
@@ -127,7 +127,7 @@ bool Ai::receiveWorld()
 bool Ai::receiveReferee()
 {
     Protos::Immortals::RefereeState pb_state;
-    if (!m_ref_client->receive(&pb_state))
+    if (!m_ref_client->receive(&pb_state, nullptr, true))
         return false;
 
     m_ref_state = Common::RefereeState(pb_state);

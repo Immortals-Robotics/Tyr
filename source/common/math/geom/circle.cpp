@@ -2,13 +2,6 @@
 
 namespace Tyr::Common
 {
-Vec2 Circle::nearestOutside(const Vec2 t_point, const float t_extra_r) const
-{
-    Vec2 tmp_vec = t_point - center;
-    tmp_vec      = tmp_vec.normalized() * (r + t_extra_r);
-    return center + tmp_vec;
-}
-
 std::vector<Vec2> Circle::intersect(const Circle &t_other) const
 {
     // first calculate distance between two centers circles P0 and P1.

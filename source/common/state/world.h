@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../math/angle.h"
-#include "../math/vector.h"
 #include "../setting.h"
 #include "../time/time_point.h"
 

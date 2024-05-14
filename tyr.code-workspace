@@ -94,7 +94,8 @@
 			"xutility": "cpp",
 			"*.inc": "cpp",
 			"*.ipp": "cpp",
-			"shared_mutex": "cpp"
+			"shared_mutex": "cpp",
+			"*.rh": "cpp"
 		},
 		"editor.renderWhitespace": "boundary"
 	}

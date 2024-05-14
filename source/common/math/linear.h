@@ -13,8 +13,6 @@
 
 #pragma once
 
-#include "vector.h"
-
 namespace Tyr::Common
 {
 //! Given a set of points, this class calculates the linear regression parameters and evaluates the regression line at
@@ -25,31 +23,54 @@ public:
     void calculate(int n, float *x, float *y);
 
     //! Evaluates the linear regression function at the given abscissa.
-    float getValue(float x);
+    inline float getValue(float x)
+    {
+        return m_a + m_b * x;
+    }
 
     //! Returns the slope of the regression line
-    float getSlope();
+    inline float getSlope()
+    {
+        return m_b;
+    }
 
     //! Returns the intercept on the Y axis of the regression line
-    float getIntercept();
+    inline float getIntercept()
+    {
+        return m_a;
+    }
 
     //! Returns the linear regression coefficient
-    float getCoefficient();
+    inline float getCoefficient()
+    {
+        return m_coeff;
+    }
 
-    bool isAmoodi();
+    inline bool isAmoodi()
+    {
+        return amoodi;
+    }
 
-    float getXIntercept();
+    inline float getXIntercept()
+    {
+        return xinter;
+    }
 
-    float getDisToPoint(Vec2 p);
+    inline float getDisToPoint(Vec2 p)
+    {
+        if (amoodi)
+            return std::fabs(p.x - xinter);
+        return std::fabs(m_b * p.x - p.y + m_a) / sqrt(m_b * m_b + 1.0);
+    }
 
-    void chapeKon();
+    inline void chapeKon()
+    {
+        m_a = -m_a / m_b;
+        m_b = 1.0f / m_b;
+    }
 
 private:
     float m_a, m_b, m_coeff, xinter;
     bool  amoodi;
 };
-
-//! A static function implementing the Linear Class for one off calculations
-float Linear_once(int n, float *x, float *y, float a);
-
 } // namespace Tyr::Common

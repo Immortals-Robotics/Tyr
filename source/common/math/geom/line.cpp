@@ -2,62 +2,6 @@
 
 namespace Tyr::Common
 {
-Line::Line(const float t_a, const float t_b, const float t_c) : a(t_a), b(t_b), c(t_c)
-{}
-
-Line Line::fromTwoPoints(const Vec2 t_pos_a, const Vec2 t_pos_b)
-{
-    const Vec2 d_pos = t_pos_b - t_pos_a;
-
-    float a;
-    float b;
-
-    if (almostEqual(d_pos.x, 0.0))
-    {
-        a = 0.0;
-        b = 1.0;
-    }
-    else
-    {
-        a = 1.0;
-        b = -d_pos.y / d_pos.x;
-    }
-
-    const float c = -a * t_pos_b.y - b * t_pos_b.x;
-
-    return {a, b, c};
-}
-
-Line Line::fromPointAndAngle(const Vec2 t_pos, const Angle t_ang)
-{
-    return fromTwoPoints(t_pos, t_pos + t_ang.toUnitVec());
-}
-
-Line Line::fromSegment(LineSegment segment)
-{
-    return fromTwoPoints(segment.start, segment.end);
-}
-
-float Line::y(const float t_x) const
-{
-    if (almostEqual(a, 0.0))
-    {
-        return 0;
-    }
-
-    return -(b * t_x + c) / a;
-}
-
-float Line::x(const float t_y) const
-{
-    if (almostEqual(b, 0.0))
-    {
-        return 0;
-    }
-
-    return -(a * t_y + c) / b;
-}
-
 std::optional<Vec2> Line::intersect(const Line &t_line) const
 {
     if (almostEqual(slope(), t_line.slope()))
@@ -78,6 +22,29 @@ std::optional<Vec2> Line::intersect(const Line &t_line) const
     {
         const float x = (a * t_line.c - t_line.a * c) / (t_line.a * b - a * t_line.b);
         return {{x, y(x)}};
+    }
+}
+
+std::vector<float> Line::abcFormula(const float t_a, const float t_b, const float t_c)
+{
+    // discriminant is b^2 - 4*a*c
+    const float discr = t_b * t_b - 4 * t_a * t_c;
+
+    if (std::abs(discr) < std::numeric_limits<float>::epsilon())
+    {
+        // discriminant = 0: only one solution
+        return {-t_b / (2 * t_a)};
+    }
+    else if (discr < 0)
+    {
+        // discriminant < 0: no solutions
+        return {};
+    }
+    else
+    {
+        // discriminant > 0: two solutions
+        const float discr_sq = std::sqrt(discr);
+        return {(-t_b + discr_sq) / (2 * t_a), (-t_b - discr_sq) / (2 * t_a)};
     }
 }
 
@@ -120,21 +87,4 @@ std::vector<Vec2> Line::intersect(const Circle &t_circle) const
 
     return {{sol[0], da * sol[0] + db}, {sol[1], da * sol[1] + db}};
 }
-
-Line Line::tangentLine(const Vec2 t_pos) const
-{
-    return {b, -a, a * t_pos.x - b * t_pos.y};
-}
-
-Vec2 Line::closestPoint(const Vec2 t_pos) const
-{
-    const Line tangent = tangentLine(t_pos);
-    return intersect(tangent).value();
-}
-float Line::distanceTo(Vec2 t_pos) const
-{
-    Vec2 close_point = this->closestPoint(t_pos);
-    return close_point.distanceTo(t_pos);
-}
-
 } // namespace Tyr::Common
