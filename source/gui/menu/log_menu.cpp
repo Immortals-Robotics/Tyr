@@ -17,8 +17,9 @@ void LogMenu::drawTerminal(const Common::Debug::Wrapper &t_wrapper)
             {
                 const std::filesystem::path file_path{line.source.file};
 
-                const std::string text = fmt::format("[{:%a %H:%M:%S}] [{}] [{}:{}] {}", t_wrapper.time.point, line.levelName(),
-                                                     file_path.filename(), line.source.line, line.text);
+                const std::string text =
+                    fmt::format("[{:%a %H:%M:%S}] [{}] [{}:{}] {}", t_wrapper.time, line.levelName(),
+                                file_path.filename(), line.source.line, line.text);
 
                 Common::Color color = line.color();
                 ImVec4        line_color(color.r / 255., color.g / 255., color.b / 255., color.a / 255.);
