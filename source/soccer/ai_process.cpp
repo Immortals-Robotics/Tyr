@@ -18,7 +18,7 @@ void Ai::process()
     {
         timer.start();
         lastReferee = m_ref_state.get();
-        randomParam = m_random.get();
+        randomParam = m_random.get(0.0f, 1.0f);
         target_str  = strategy_weight();
         FUNC_state  = 0;
         FUNC_CNT    = 0;

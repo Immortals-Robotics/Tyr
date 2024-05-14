@@ -50,7 +50,6 @@ set(SOURCE_FILES
 	debugging/debug.cpp
 	logging/logging.cpp
 	math/linear.cpp
-	math/random.cpp
 	math/geom/circle.cpp
 	math/geom/line.cpp
 	network/nng_client.cpp

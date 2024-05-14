@@ -54,7 +54,7 @@ Common::Vec2 Planner::nearestFree(Common::Vec2 state)
 
 Common::Vec2 Planner::chooseTarget()
 {
-    float r = m_random.get();
+    float r = m_random.get(0.0f, 1.0f);
 
     if (r <= goal_target_prob)
     {
@@ -62,13 +62,14 @@ Common::Vec2 Planner::chooseTarget()
     }
     else if ((r <= goal_target_prob + waypoint_target_prob) && (m_cached_waypoints.size() > 0))
     {
-        r       = m_random.get();
-        int idx = (int) (r * (m_cached_waypoints.size()));
-        idx     = std::clamp(idx, 0, (int) m_cached_waypoints.size() - 1);
+        const int idx = m_random.get(0, (int) m_cached_waypoints.size() - 1);
         return m_cached_waypoints[idx];
     }
 
-    return randomState();
+    else
+    {
+        return randomState();
+    }
 }
 
 Node *Planner::extend(Node *s, Common::Vec2 &target)
