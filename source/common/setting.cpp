@@ -146,6 +146,17 @@ void Setting::updateSetting(const std::string &_settings_key, const T &_new_valu
     {
         node->ref<toml::value<std::string>>() = _new_value;
     }
+    else if constexpr (std::is_same_v<T, std::array<bool, std::tuple_size<T>::value>>)
+    {
+        if (auto arr = node->as_array())
+        {
+            arr->clear();  // Clear existing array
+            for (const auto& item : _new_value)
+            {
+                arr->push_back(item);
+            }
+        }
+    }
 
     load(m_config_table);
 }
@@ -154,6 +165,7 @@ template void Setting::updateSetting<int>(const std::string &key, const int &val
 template void Setting::updateSetting<double>(const std::string &key, const double &value);
 template void Setting::updateSetting<std::string>(const std::string &key, const std::string &value);
 template void Setting::updateSetting<bool>(const std::string &key, const bool &value);
+template void Setting::updateSetting<std::array<bool, Setting::kCamCount>>(const std::string &key, const std::array<bool, Setting::kCamCount> &value);  // Example for N = 10
 
 toml::table Setting::getConfigTable(void)
 {
