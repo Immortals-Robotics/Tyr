@@ -26,6 +26,8 @@ set(SOURCE_FILES
 	renderer/debug.cpp
 	renderer/field.cpp
 	renderer/renderer.cpp
+	renderer/renderer_debug.cpp
+		menu/filter_tab.cpp
 	renderer/robot.cpp
 )
 

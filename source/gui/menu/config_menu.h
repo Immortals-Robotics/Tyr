@@ -63,6 +63,7 @@ private:
     char m_max_robot_frame_not_seen[10];
     char m_merge_distance[10];
     char m_vision_frame_rate[10];
+    Common::Tree<std::string> filterTree;
 
     std::array<bool, max_num_of_cameras> m_use_camera     = {true, true, false};
     bool                                 m_use_kalman_ang = false;
@@ -80,6 +81,7 @@ private:
     void drawTabBar();
     void drawNetworkTab();
     void drawConfigTab();
+    void drawFilterTab();
     void drawIpPortInput(const std::string _name, const int _id, char *_ip_text, char *_port_text,
                          ConfigCallback &_callback, const InputCallbackType _callback_type_ip,
                          const InputCallbackType _callback_type_port);
@@ -89,6 +91,7 @@ private:
 public:
     ConfigMenu();
     ~ConfigMenu() = default;
+    void receiveDebug(const Common::Debug::Wrapper &t_wrapper);
     void setNetworkInput(std::string _data, InputCallbackType _inputType);
 
     std::string       getNetworkParam(InputCallbackType _inputType);
