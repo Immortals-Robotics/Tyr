@@ -70,7 +70,7 @@ float Ai::calculateRobotReachTime(int robot_num, Common::Vec2 dest, VelocityProf
 
 float Ai::calculateBallRobotReachTime(int robot_num, VelocityProfile::Type vel_profile_type)
 {
-    static Common::MedianFilter<float> predTFilt(5);
+    static Common::MedianFilter<float, 5> predTFilt{};
 
     const float tMax  = 5.0;
     float       predT = tMax;
@@ -84,9 +84,9 @@ float Ai::calculateBallRobotReachTime(int robot_num, VelocityProfile::Type vel_p
             break;
         }
     }
-    predTFilt.AddData(predT);
+    predTFilt.add(predT);
 
-    return predTFilt.GetCurrent();
+    return predTFilt.current();
 }
 
 void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, bool needRRT, bool gameRestart, bool kiss,
@@ -113,8 +113,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
         {
             float d = OwnRobot[robot_num].state().position.distanceTo(
                 m_world_state.ball.position.circleAroundPoint(angle, 200.0f));
-            d += m_world_state.ball.position.distanceTo(
-                m_world_state.ball.position.circleAroundPoint(angle, 200.0f));
+            d += m_world_state.ball.position.distanceTo(m_world_state.ball.position.circleAroundPoint(angle, 200.0f));
             d -= 100;
 
             // float d = Common::Vec2::distance ( OwnRobot[robot_num].state().position ,
@@ -179,9 +178,9 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     ballToGoal              = ballToGoal.normalized();
     float ballVelToGoalDot =
         (m_world_state.ball.velocity.x * ballToGoal.x + m_world_state.ball.velocity.y * ballToGoal.y);
-    Common::Vec2 ballVelToGoal     = Common::Vec2(ballToGoal.x * ballVelToGoalDot, ballToGoal.y * ballVelToGoalDot);
-    Common::Vec2 ballVelPrepToGoal = Common::Vec2(m_world_state.ball.velocity.x - ballVelToGoal.x,
-                                                  m_world_state.ball.velocity.y - ballVelToGoal.y);
+    Common::Vec2 ballVelToGoal = Common::Vec2(ballToGoal.x * ballVelToGoalDot, ballToGoal.y * ballVelToGoalDot);
+    Common::Vec2 ballVelPrepToGoal =
+        Common::Vec2(m_world_state.ball.velocity.x - ballVelToGoal.x, m_world_state.ball.velocity.y - ballVelToGoal.y);
 
     // Common::debug().draw(m_world_state.ball.position,m_world_state.ball.position+Common::Vec2(m_world_state.ball.velocity.x,
     // m_world_state.ball.velocity.y)/1.0f);
@@ -315,9 +314,8 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
                     Common::logDebug("elendil: {}", elendil);
                     Common::Angle hehe2 = PredictedBall.angleWith(OwnRobot[robot_num].state().position);
                     hehe2               = angle - hehe2;
-                    bool el =
-                        ((hehe2.deg() < 5) &&
-                         (m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) < 100));
+                    bool el             = ((hehe2.deg() < 5) &&
+                               (m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) < 100));
                     if (el || (elendil > 0))
                     {
 

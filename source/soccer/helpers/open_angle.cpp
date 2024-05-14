@@ -202,8 +202,8 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 #if 1
     static Common::MedianFilter<Common::Angle> freeAngleFilter[Common::Setting::kMaxOnFieldTeamRobots];
 
-    freeAngleFilter[robot_num].AddData(finalAns.center);
-    finalAns.center = freeAngleFilter[robot_num].GetCurrent();
+    freeAngleFilter[robot_num].add(finalAns.center);
+    finalAns.center = freeAngleFilter[robot_num].current();
 
 #endif
 

@@ -15,15 +15,15 @@ void Ai::calculateBallTrajectory()
 
     static Common::MedianFilter<float> visionM;
     if (m_world_state.ball.velocity.x == 0)
-        visionM.AddData(100.0f);
+        visionM.add(100.0f);
     else
-        visionM.AddData(std::fabs(m_world_state.ball.velocity.y / m_world_state.ball.velocity.x));
+        visionM.add(std::fabs(m_world_state.ball.velocity.y / m_world_state.ball.velocity.x));
 
-    bool isVertical = visionM.GetCurrent() > 1.0f;
+    bool isVertical = visionM.current() > 1.0f;
 
-    std::vector<float>          ball_x;
-    std::vector<float>          ball_y;
-    Common::MedianFilter<float> dMedian(5);
+    std::vector<float>             ball_x;
+    std::vector<float>             ball_y;
+    Common::MedianFilter<float, 5> dMedian;
 
     int i;
     for (i = ballHist.size() - 1; i >= 0; i--)
@@ -42,8 +42,8 @@ void Ai::calculateBallTrajectory()
                 d = ballLine.getDisToPoint(ballHist[i].position);
             }
 
-            dMedian.AddData(d);
-            if ((dMedian.GetCurrent() > 50) && (ballHist.size() - i > 5))
+            dMedian.add(d);
+            if ((dMedian.current() > 50) && (ballHist.size() - i > 5))
             {
                 break;
             }
