@@ -135,7 +135,7 @@ private:
 
     ~Hub() = default;
 
-    friend struct Services;
+    friend struct ::Tyr::Common::Services;
 
     std::unique_ptr<NngServer> m_server;
 
