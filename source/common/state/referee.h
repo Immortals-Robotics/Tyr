@@ -39,7 +39,7 @@ public:
 
     RefereeState(const Protos::Immortals::RefereeState &t_state)
     {
-        time = t_state.time();
+        time = TimePoint::fromMicroseconds(t_state.time());
 
         state             = t_state.state();
         color             = (TeamColor) t_state.color();
@@ -49,7 +49,7 @@ public:
 
     void fillProto(Protos::Immortals::RefereeState *const t_state) const
     {
-        t_state->set_time(time.timestamp());
+        t_state->set_time(time.microseconds());
 
         t_state->set_state(state);
         t_state->set_color((Protos::Immortals::TeamColor) color);

@@ -13,7 +13,7 @@ bool Dumper::process()
             continue;
 
         any = true;
-        entry.storage.storeRaw(message.time().timestamp(), {message.data(), message.size()});
+        entry.storage.storeRaw(message.time().microseconds(), {message.data(), message.size()});
     }
 
     return any;

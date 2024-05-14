@@ -85,7 +85,7 @@ struct RawWorldState
 
     RawWorldState(const Protos::Ssl::Vision::DetectionFrame &t_frame)
     {
-        time = (TimeStamp) t_frame.t_capture() * 1000;
+        time = Common::TimePoint::fromSeconds(t_frame.t_capture());
 
         for (const auto &ball : t_frame.balls())
         {
@@ -105,7 +105,7 @@ struct RawWorldState
 
     RawWorldState(const Protos::Immortals::RawWorldState &t_state)
     {
-        time = t_state.time();
+        time = Common::TimePoint::fromMicroseconds(t_state.time());
 
         for (const auto &ball : t_state.balls())
         {
@@ -125,7 +125,7 @@ struct RawWorldState
 
     void fillProto(Protos::Immortals::RawWorldState *const t_state) const
     {
-        t_state->set_time(time.timestamp());
+        t_state->set_time(time.microseconds());
 
         for (const auto &ball : balls)
         {
@@ -286,7 +286,7 @@ struct WorldState
 
     WorldState(const Protos::Immortals::WorldState &t_state)
     {
-        time = t_state.time();
+        time = Common::TimePoint::fromMicroseconds(t_state.time());
 
         ball = t_state.ball();
 
@@ -303,7 +303,7 @@ struct WorldState
 
     void fillProto(Protos::Immortals::WorldState *const t_state) const
     {
-        t_state->set_time(time.timestamp());
+        t_state->set_time(time.microseconds());
 
         ball.fillProto(t_state->mutable_ball());
 

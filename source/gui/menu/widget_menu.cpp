@@ -231,9 +231,11 @@ void WidgetMenu::refBroadcast(const Protos::Ssl::Gc::Referee_Command t_command)
             m_clicked_mouse_pos.fillProto(ref_packet.mutable_designated_position());
         }
 
+        const Common::TimePoint now = Common::TimePoint::now();
+
         ref_packet.set_command(t_command);
-        ref_packet.set_command_timestamp(1);
-        ref_packet.set_packet_timestamp(1);
+        ref_packet.set_command_timestamp(now.microseconds());
+        ref_packet.set_packet_timestamp(now.microseconds());
         ref_packet.set_command_counter(m_command_counter);
         ref_packet.set_stage(Protos::Ssl::Gc::Referee_Stage_NORMAL_FIRST_HALF);
 
