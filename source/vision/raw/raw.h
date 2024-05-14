@@ -27,7 +27,6 @@ private:
 
     void processBalls();
 
-private:
     std::unique_ptr<Common::UdpClient> m_client;
     std::unique_ptr<Common::NngServer> m_server;
 
