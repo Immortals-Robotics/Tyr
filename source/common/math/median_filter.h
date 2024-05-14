@@ -27,7 +27,7 @@ public:
         std::array<T, size> m_temp = m_data;
 
         const size_t middle = m_temp.size() / 2;
-        nth_element(m_temp.begin(), m_temp.begin() + middle, m_temp.end());
+        std::nth_element(m_temp.begin(), m_temp.begin() + middle, m_temp.end());
         return m_temp[middle];
     }
 
