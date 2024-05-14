@@ -48,7 +48,6 @@ set(SOURCE_FILES
 	config/config.cpp
 	debugging/debug.cpp
 	logging/logging.cpp
-	math/angle.cpp
 	math/linear.cpp
 	math/random.cpp
 	math/vector.cpp

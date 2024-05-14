@@ -42,26 +42,9 @@ struct Vec2
         return x * x + y * y;
     }
 
-    [[nodiscard]] inline Vec2 rotated(Angle t_ang) const
-    {
-        const Angle rotated_angle = toAngle() + t_ang;
-        return rotated_angle.toUnitVec() * length();
-    }
+    [[nodiscard]] inline Vec2 rotated(Angle t_ang) const;
 
-    [[nodiscard]] inline Angle toAngle() const
-    {
-        if (y == 0.0 && x == 0.0)
-        {
-            return Angle::fromDeg(0.0);
-        }
-
-        Angle ans = Angle::fromRad(std::atan(y / x));
-
-        if (x < 0)
-            ans += Angle::fromDeg(180);
-
-        return ans;
-    }
+    [[nodiscard]] inline Angle toAngle() const;
 
     [[nodiscard]] inline float dot(Vec2 t_v) const
     {
@@ -78,15 +61,9 @@ struct Vec2
         return (t_v - *this).lengthSquared();
     }
 
-    [[nodiscard]] inline Angle angleWith(Vec2 t_v) const
-    {
-        return (t_v - *this).toAngle();
-    }
+    [[nodiscard]] inline Angle angleWith(Vec2 t_v) const;
 
-    [[nodiscard]] inline Angle angleDiff(Vec2 t_v) const
-    {
-        return t_v.toAngle() - this->toAngle();
-    }
+    [[nodiscard]] inline Angle angleDiff(Vec2 t_v) const;
 
     // TODO: this should be replaced by line / circle usage
     [[nodiscard]] inline Vec2 pointOnConnectingLine(Vec2 secondPoint, float distance) const
@@ -101,10 +78,7 @@ struct Vec2
         return ans;
     }
 
-    [[nodiscard]] inline Vec2 circleAroundPoint(Angle angle, float radius) const
-    {
-        return *this + angle.toUnitVec() * radius;
-    }
+    [[nodiscard]] inline Vec2 circleAroundPoint(Angle angle, float radius) const;
 
     [[nodiscard]] inline Vec2 operator+(Vec2 t_v) const
     {
