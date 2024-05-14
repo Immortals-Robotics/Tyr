@@ -79,13 +79,13 @@ void Ai::their_place_ball()
     }
 #else
     ERRTSetObstacles(dmf, true, true);
-    obs_map.addCircle({m_world_state.ball.position, 1010.0f});
-    obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
+    g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
+    g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
+            g_obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
         }
     }
     OwnRobot[dmf].face(m_world_state.ball.position);
@@ -98,13 +98,13 @@ void Ai::their_place_ball()
         100, VelocityProfile::Type::Aroom);
 
     ERRTSetObstacles(rw, true, true);
-    obs_map.addCircle({m_world_state.ball.position, 1010.0f});
-    obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
+    g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
+    g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
+            g_obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
         }
     }
     OwnRobot[rw].face(m_world_state.ball.position);
@@ -117,13 +117,13 @@ void Ai::their_place_ball()
                        100, VelocityProfile::Type::Aroom);
 
     ERRTSetObstacles(lw, true, true);
-    obs_map.addCircle({m_world_state.ball.position, 1010.0f});
-    obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
+    g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
+    g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
+            g_obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
         }
     }
     OwnRobot[lw].face(m_world_state.ball.position);
@@ -136,13 +136,13 @@ void Ai::their_place_ball()
                        100, VelocityProfile::Type::Aroom);
 
     ERRTSetObstacles(lmf, true, true);
-    obs_map.addCircle({m_world_state.ball.position, 1010.0f});
-    obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
+    g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
+    g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
+            g_obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
         }
     }
     OwnRobot[lmf].face(m_world_state.ball.position);
@@ -154,13 +154,13 @@ void Ai::their_place_ball()
                        100, VelocityProfile::Type::Aroom);
 
     ERRTSetObstacles(rmf, true, true);
-    obs_map.addCircle({m_world_state.ball.position, 1010.0f});
-    obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
+    g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
+    g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
+            g_obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
         }
     }
     OwnRobot[rmf].face(m_world_state.ball.position);
@@ -172,13 +172,13 @@ void Ai::their_place_ball()
                        100, VelocityProfile::Type::Aroom);
 
     ERRTSetObstacles(cmf, true, true);
-    obs_map.addCircle({m_world_state.ball.position, 1010.0f});
-    obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
+    g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
+    g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
+            g_obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
         }
     }
     OwnRobot[cmf].face(m_world_state.ball.position);

@@ -17,14 +17,14 @@ void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
     m_tree.reset();
     m_tree.AddNode(init_state, nullptr);
 
-    m_started_in_obs = obs_map.isInObstacle(init);
+    m_started_in_obs = g_obs_map.isInObstacle(init);
 }
 
 Common::Vec2 Planner::nearestFree(Common::Vec2 state)
 {
     const float acceptable_free_dis = 50.0f;
 
-    if (!obs_map.isInObstacle(state))
+    if (!g_obs_map.isInObstacle(state))
         return state;
 
     Common::Vec2 ans    = state;
@@ -34,7 +34,7 @@ Common::Vec2 Planner::nearestFree(Common::Vec2 state)
     {
         Common::Vec2 newRndPoint = randomState();
         const float  tmp_d       = state.distanceSquaredTo(newRndPoint);
-        if ((!obs_map.isInObstacle(newRndPoint)) && tmp_d < minDis)
+        if ((!g_obs_map.isInObstacle(newRndPoint)) && tmp_d < minDis)
         {
             ans    = newRndPoint;
             minDis = tmp_d;
@@ -56,10 +56,10 @@ Node *Planner::extend(Node *s, Common::Vec2 &target)
     Common::Vec2 new_state = s->state + step_vec;
 
     // collision check
-    if (obs_map.isInObstacle(new_state))
+    if (g_obs_map.isInObstacle(new_state))
         return nullptr;
 
-    if (obs_map.collisionDetect(new_state, s->state))
+    if (g_obs_map.collisionDetect(new_state, s->state))
         return nullptr;
 
     return m_tree.AddNode(new_state, s);
@@ -86,7 +86,7 @@ void Planner::setWayPoints()
 Common::Vec2 Planner::plan()
 {
     // return final_state;
-    if (!obs_map.collisionDetect(init_state, final_state))
+    if (!g_obs_map.collisionDetect(init_state, final_state))
     {
         m_tree.AddNode(final_state, m_tree.NearestNeighbour(final_state));
     }
@@ -98,7 +98,7 @@ Common::Vec2 Planner::plan()
             Node        *new_s = extend(m_tree.NearestNeighbour(r), r);
         }
 
-        if ((isReached()) && (!obs_map.isInObstacle(final_state)) &&
+        if ((isReached()) && (!g_obs_map.isInObstacle(final_state)) &&
             (final_state.distanceTo(m_tree.NearestNeighbour(final_state)->state) > 1))
         {
             m_tree.AddNode(final_state, m_tree.NearestNeighbour(final_state));
@@ -122,7 +122,7 @@ void Planner::optimize_tree()
 {
     for (int i = 0; i < m_waypoints.size() - 1; i++)
     {
-        if (obs_map.collisionDetect(m_waypoints[i], m_waypoints.back()) == false)
+        if (g_obs_map.collisionDetect(m_waypoints[i], m_waypoints.back()) == false)
         {
             std::swap(m_waypoints[i + 1], m_waypoints.back());
             m_waypoints.resize(i + 2);

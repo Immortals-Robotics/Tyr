@@ -147,7 +147,7 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     Common::Vec2              a_cmd;
     const Common::RobotState &state = own_robots[robot_num].state();
 
-    if (state.seen_state == Common::SeenState::CompletelyOut || obs_map.isInObstacle(state.position))
+    if (state.seen_state == Common::SeenState::CompletelyOut || g_obs_map.isInObstacle(state.position))
     {
         a_cmd = target_a_cmd;
     }

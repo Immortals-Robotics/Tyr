@@ -24,7 +24,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
 
     const float current_robot_radius = calculateRobotRadius(OwnRobot[robot_num].state());
 
-    obs_map.resetMap();
+    g_obs_map.resetMap();
 
     // own
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
@@ -32,7 +32,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
         if ((OwnRobot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != robot_num) &&
             (OwnRobot[i].state().vision_id != OwnRobot[robot_num].state().vision_id))
         {
-            obs_map.addCircle({OwnRobot[i].state().position, current_robot_radius + Common::field().robot_radius});
+            g_obs_map.addCircle({OwnRobot[i].state().position, current_robot_radius + Common::field().robot_radius});
             // Common::debug().draw({OwnRobot[i].state().position,ownRobotRadius + (!dribble)*ownRobotRadius},Cyan);
         }
     }
@@ -44,7 +44,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
         {
             const float radius = calculateRobotRadius(m_world_state.opp_robot[i]);
 
-            obs_map.addCircle({m_world_state.opp_robot[i].position, radius + current_robot_radius});
+            g_obs_map.addCircle({m_world_state.opp_robot[i].position, radius + current_robot_radius});
             // Common::debug().draw({m_world_state.opp_robot[i].position,ownRobotRadius +
             // (!dribble)*ownRobotRadius},Cyan);
         }
@@ -52,7 +52,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
 
     if (bll || !m_ref_state.allowedNearBall())
     {
-        obs_map.addCircle({m_world_state.ball.position, ballAreaRadius + current_robot_radius});
+        g_obs_map.addCircle({m_world_state.ball.position, ballAreaRadius + current_robot_radius});
     }
 
     const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
@@ -66,7 +66,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
             -side * (penaltyAreaExtensionBehindGoal + current_robot_radius + Common::field().penalty_area_depth);
         const float h = Common::field().penalty_area_width + 2 * current_robot_radius;
 
-        obs_map.addRectangle({start, w, h});
+        g_obs_map.addRectangle({start, w, h});
     }
 
     if (oppPenalty)
@@ -78,7 +78,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
             side * (penaltyAreaExtensionBehindGoal + current_robot_radius + Common::field().penalty_area_depth);
         const float h = Common::field().penalty_area_width + 2 * current_robot_radius;
 
-        obs_map.addRectangle({start, w, h});
+        g_obs_map.addRectangle({start, w, h});
     }
 
     if (oppPenaltyBig)
@@ -93,7 +93,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
         const float w = side * (penaltyAreaExtensionBehindGoal + current_robot_radius + big_penalty_area_r);
         const float h = big_penalty_area_w + 2 * current_robot_radius;
 
-        obs_map.addRectangle({start, w, h});
+        g_obs_map.addRectangle({start, w, h});
     }
 
     // avoid the line between the ball and the placement point
@@ -106,14 +106,14 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
         {
             const float        t        = (float) i / (float) ball_obs_count;
             const Common::Vec2 ball_obs = m_world_state.ball.position + ball_line * t;
-            obs_map.addCircle({ball_obs, ballAreaRadius + current_robot_radius});
+            g_obs_map.addCircle({ball_obs, ballAreaRadius + current_robot_radius});
         }
     }
 }
 
 void Ai::ERRTSetGkClearObstacles(int robot_num)
 {
-    obs_map.resetMap();
+    g_obs_map.resetMap();
 
     // our penalty area
     static constexpr float area_extension_size     = 200.0f;
@@ -124,6 +124,6 @@ void Ai::ERRTSetGkClearObstacles(int robot_num)
     const float w = -side * (area_extension_size + Common::field().penalty_area_depth);
     const float h = Common::field().penalty_area_width + 2 * area_extension_size;
 
-    obs_map.addRectangle({start, w, h});
+    g_obs_map.addRectangle({start, w, h});
 }
 } // namespace Tyr::Soccer

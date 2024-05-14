@@ -2,23 +2,7 @@
 
 namespace Tyr::Soccer
 {
-ObstacleMap obs_map{};
-
-ObstacleMap::ObstacleMap()
-{}
-
-void ObstacleMap::addCircle(const Common::Circle t_circle)
-{
-    // TODO: verify if this check is needed
-    if (t_circle.r > 0)
-    {
-        m_circle_obstacles.emplace_back(t_circle);
-    }
-}
-void ObstacleMap::addRectangle(const Common::Rect t_rect)
-{
-    m_rect_obstacles.emplace_back(t_rect);
-}
+ObstacleMap g_obs_map{};
 
 bool ObstacleMap::isInObstacle(const Common::Vec2 t_p)
 {
@@ -86,11 +70,5 @@ bool ObstacleMap::collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2)
     }
 
     return false;
-}
-
-void ObstacleMap::resetMap()
-{
-    m_circle_obstacles.clear();
-    m_rect_obstacles.clear();
 }
 } // namespace Tyr::Soccer
