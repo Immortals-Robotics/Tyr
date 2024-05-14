@@ -25,6 +25,29 @@ std::optional<Vec2> Line::intersect(const Line &t_line) const
     }
 }
 
+std::vector<float> Line::abcFormula(const float t_a, const float t_b, const float t_c)
+{
+    // discriminant is b^2 - 4*a*c
+    const float discr = t_b * t_b - 4 * t_a * t_c;
+
+    if (std::abs(discr) < std::numeric_limits<float>::epsilon())
+    {
+        // discriminant = 0: only one solution
+        return {-t_b / (2 * t_a)};
+    }
+    else if (discr < 0)
+    {
+        // discriminant < 0: no solutions
+        return {};
+    }
+    else
+    {
+        // discriminant > 0: two solutions
+        const float discr_sq = std::sqrt(discr);
+        return {(-t_b + discr_sq) / (2 * t_a), (-t_b - discr_sq) / (2 * t_a)};
+    }
+}
+
 // TODO: untested, and probably broken
 std::vector<Vec2> Line::intersect(const Circle &t_circle) const
 {

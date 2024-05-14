@@ -83,6 +83,9 @@ public:
         return -(a * t_y + c) / b;
     }
 
+    // This method performs the abc formula (Pythagoras' Theorem) on the given parameters.
+    static std::vector<float> abcFormula(float t_a, float t_b, float t_c);
+
     [[nodiscard]] std::optional<Vec2> intersect(const Line &t_line) const;
 
     [[nodiscard]] std::vector<Vec2> intersect(const Circle &t_circle) const;
