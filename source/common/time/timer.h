@@ -1,17 +1,3 @@
-/*========================================================================
-    timer.h : Simple C++ wrapper for making interval timers
-  ------------------------------------------------------------------------
-    Copyright (C) 1999-2002  James R. Bruce
-    School of Computer Science, Carnegie Mellon University
-  ------------------------------------------------------------------------
-    This software is distributed under the GNU General Public License,
-    version 2.  If you do not have a copy of this licence, visit
-    www.gnu.org, or write: Free Software Foundation, 59 Temple Place,
-    Suite 330 Boston, MA 02111-1307 USA.  This program is distributed
-    in the hope that it will be useful, but WITHOUT ANY WARRANTY,
-    including MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  ========================================================================*/
-
 #pragma once
 
 namespace Tyr::Common
@@ -19,16 +5,36 @@ namespace Tyr::Common
 class Timer
 {
 public:
-    void start();
-    void end();
+    inline void start()
+    {
+        m_start = std::chrono::high_resolution_clock::now();
+    }
 
-    float time();
-    float interval();
+    inline float time()
+    {
+        const auto now       = std::chrono::high_resolution_clock::now();
+        const auto time_span = std::chrono::duration_cast<std::chrono::duration<float>>(now - m_start);
+        return time_span.count();
+    }
 
-    float intervalSmooth();
+    inline float interval()
+    {
+        const float t = time();
+        start();
+        return t;
+    }
+
+    inline float intervalSmooth()
+    {
+        static constexpr float kAlpha = 0.1f;
+
+        m_interval = (kAlpha * interval()) + (1.0f - kAlpha) * m_interval;
+        return m_interval;
+    }
 
 private:
-    std::chrono::high_resolution_clock::time_point tv1, tv2;
+    std::chrono::high_resolution_clock::time_point m_start;
+
     float m_interval = 0.0f;
 };
 } // namespace Tyr::Common

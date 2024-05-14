@@ -57,8 +57,7 @@ set(SOURCE_FILES
 	network/udp_client.cpp
 	network/udp_server.cpp
 	storage/dumper.cpp
-	storage/storage.cpp
-	time/timer.cpp)
+	storage/storage.cpp)
 
 add_library(${PROJECT_NAME}
 	${SOURCE_FILES} ${HEADER_FILES})
