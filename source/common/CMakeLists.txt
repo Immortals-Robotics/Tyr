@@ -53,7 +53,6 @@ set(SOURCE_FILES
 	services.cpp
 	setting.cpp
 	config/config.cpp
-	debugging/hub.cpp
 	logging/logging.cpp
 	math/linear.cpp
 	math/geom/circle.cpp
