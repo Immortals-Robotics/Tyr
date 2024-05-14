@@ -10,9 +10,9 @@ public:
 
     bool receive();
     void process();
-    bool camsReady() const;
-
     bool publish() const;
+
+    [[nodiscard]] bool camsReady() const;
 
     void updateAddress(const Common::NetworkAddress &t_address);
 
@@ -27,13 +27,13 @@ private:
 
     void processBalls();
 
-private:
     std::unique_ptr<Common::UdpClient> m_client;
     std::unique_ptr<Common::NngServer> m_server;
 
     Common::RawBallState m_last_raw_ball; // The last position of the locked ball
 
-    bool                       m_packet_received[Common::Setting::kCamCount];
+    std::array<bool, Common::Setting::kCamCount> m_packet_received;
+
     Protos::SSL_DetectionFrame m_d_frame[Common::Setting::kCamCount];
 
     Common::RawWorldState m_state;

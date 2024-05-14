@@ -4,8 +4,7 @@ namespace Tyr::Vision
 {
 Raw::Raw()
 {
-    for (int i = 0; i < Common::Setting::kCamCount; i++)
-        m_packet_received[i] = false;
+    m_packet_received.fill(false);
 
     m_client = std::make_unique<Common::UdpClient>(Common::setting().vision_address);
     if (!m_client->isConnected())
@@ -34,8 +33,7 @@ void Raw::process()
 
     m_state.time = Common::TimePoint::now();
 
-    for (int i = 0; i < Common::Setting::kCamCount; i++)
-        m_packet_received[i] = false;
+    m_packet_received.fill(false);
 }
 
 bool Raw::publish() const
