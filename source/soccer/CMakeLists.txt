@@ -10,10 +10,9 @@ set(HEADER_FILES
 	errt/errt.h
 	errt/tree.h
 
-	obstacle/base.h
 	obstacle/circle.h
 	obstacle/map.h
-	obstacle/rectangle.h
+	obstacle/rect.h
 
 	plays/play_book.h
 

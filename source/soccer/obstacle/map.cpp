@@ -1,8 +1,5 @@
 #include "map.h"
 
-#include "circle.h"
-#include "rectangle.h"
-
 namespace Tyr::Soccer
 {
 ObstacleMap obs_map{};
@@ -15,21 +12,28 @@ void ObstacleMap::addCircle(const Common::Circle t_circle)
     // TODO: verify if this check is needed
     if (t_circle.r > 0)
     {
-        m_obstacles.emplace_back(std::make_unique<CircleObstacle>(t_circle));
+        m_circle_obstacles.emplace_back(t_circle);
     }
 }
 void ObstacleMap::addRectangle(const Common::Rect t_rect)
 {
-    m_obstacles.emplace_back(std::make_unique<RectangleObstacle>(t_rect));
+    m_rect_obstacles.emplace_back(t_rect);
 }
 
 bool ObstacleMap::isInObstacle(const Common::Vec2 t_p)
 {
-    for (int i = 0; i < getObsNum(); i++)
+    for (const auto &obstacle : m_circle_obstacles)
     {
-        if (m_obstacles[i]->IsInObstacle(t_p))
+        if (obstacle.IsInObstacle(t_p))
             return true;
     }
+
+    for (const auto &obstacle : m_rect_obstacles)
+    {
+        if (obstacle.IsInObstacle(t_p))
+            return true;
+    }
+
     if (std::fabs(t_p.x) > 10000 ||
         std::fabs(t_p.y) > 10000) // If the  values where getting to much (this fixes the errors for now...
     {
@@ -42,9 +46,19 @@ float ObstacleMap::nearestDistance(const Common::Vec2 t_p)
 {
     float dis = std::numeric_limits<float>::max();
     float tmp_dis;
-    for (int i = 0; i < getObsNum(); i++)
+
+    for (const auto &obstacle : m_circle_obstacles)
     {
-        tmp_dis = m_obstacles[i]->NearestDistance(t_p);
+        tmp_dis = obstacle.NearestDistance(t_p);
+        if (tmp_dis < dis)
+            dis = tmp_dis;
+        if (dis <= 0)
+            return dis;
+    }
+
+    for (const auto &obstacle : m_rect_obstacles)
+    {
+        tmp_dis = obstacle.NearestDistance(t_p);
         if (tmp_dis < dis)
             dis = tmp_dis;
         if (dis <= 0)
@@ -76,11 +90,7 @@ bool ObstacleMap::collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2)
 
 void ObstacleMap::resetMap()
 {
-    m_obstacles.clear();
-}
-
-int ObstacleMap::getObsNum()
-{
-    return m_obstacles.size();
+    m_circle_obstacles.clear();
+    m_rect_obstacles.clear();
 }
 } // namespace Tyr::Soccer

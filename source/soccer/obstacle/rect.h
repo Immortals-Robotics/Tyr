@@ -1,24 +1,22 @@
 #pragma once
 
-#include "base.h"
-
 namespace Tyr::Soccer
 {
-class RectangleObstacle final : public BaseObstacle
+class RectObstacle
 {
 private:
     Common::Rect m_rect;
 
 public:
-    RectangleObstacle(const Common::Rect t_rect) : m_rect(t_rect)
+    RectObstacle(const Common::Rect t_rect) : m_rect(t_rect)
     {}
 
-    inline bool IsInObstacle(Common::Vec2 t_point) override
+    inline bool IsInObstacle(Common::Vec2 t_point) const
     {
         return m_rect.inside(t_point);
     }
 
-    inline float NearestDistance(Common::Vec2 t_point) override
+    inline float NearestDistance(Common::Vec2 t_point) const
     {
         if (IsInObstacle(t_point))
             return -1.0f;

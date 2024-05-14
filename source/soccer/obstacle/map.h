@@ -1,13 +1,15 @@
 #pragma once
 
-#include "base.h"
+#include "circle.h"
+#include "rect.h"
 
 namespace Tyr::Soccer
 {
 class ObstacleMap
 {
 private:
-    std::vector<std::unique_ptr<BaseObstacle>> m_obstacles;
+    std::vector<CircleObstacle> m_circle_obstacles;
+    std::vector<RectObstacle>   m_rect_obstacles;
 
 public:
     ObstacleMap();
@@ -21,8 +23,6 @@ public:
     bool collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2);
 
     void resetMap();
-
-    int getObsNum();
 };
 
 extern ObstacleMap obs_map;
