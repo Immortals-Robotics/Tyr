@@ -50,6 +50,7 @@ void Ai::our_place_ball()
     {
         circle_ball(attack, outFieldAng, 24, 0, 0.0);
 
+        // TODO: transition when dmf fits behind the ball
         if (last_state_ball_pos.distanceTo(m_world_state.ball.position) > 400)
         {
             FUNC_CNT++;
@@ -102,7 +103,6 @@ void Ai::our_place_ball()
         }
         circle_ball(attack, outFieldAng, 0, 0, 0.0);
         Common::logDebug("outFieldAng: {}", outFieldAng.deg());
-        Common::logDebug("OwnRobot[dmf].state().velocity.magnitude__{}", OwnRobot[dmf].state().velocity.length());
 
         if (OwnRobot[attack].state().velocity.length() < 20)
         {
@@ -124,16 +124,17 @@ void Ai::our_place_ball()
             t_ang.setDeg(0.0f);
             t_opp_ang.setDeg(180.0f);
         }
-        else if (m_world_state.ball.position.distanceTo(m_ref_state.place_ball_target) < 10000.0f)
-        {
-            FUNC_state = 3;
-            FUNC_CNT   = 0;
-        }
+        // TODO: only do this when dmf doesn't fit behind the ball
         else if (outOfField(m_world_state.ball.position))
         { // Do a little shoot on the wall
             FUNC_state = -1;
             FUNC_CNT   = 0;
             outFieldAng.setDeg(0.0f);
+        }
+        else if (m_world_state.ball.position.distanceTo(m_ref_state.place_ball_target) < 10000.0f)
+        {
+            FUNC_state = 3;
+            FUNC_CNT   = 0;
         }
 
         OwnRobot[dmf].target.angle = move_angle;
@@ -348,7 +349,6 @@ void Ai::our_place_ball()
         bool success = m_ref_state.place_ball_target.distanceTo(m_world_state.ball.position) < 100.0;
 
         Common::logDebug("______IN___STATE_DONE_____");
-        Common::logDebug("{}", m_ref_state.place_ball_target - m_world_state.ball.position);
         if (success)
         {
             Common::logInfo("MADE it!!!");
@@ -361,8 +361,8 @@ void Ai::our_place_ball()
     Common::logInfo("______IN___STATE_{}_____", FUNC_state);
 
     Common::logInfo("___DIS___{}", m_ref_state.place_ball_target.distanceTo(m_world_state.ball.position));
-    Common::logInfo("___BALL__POS_XY__{}, {}", m_world_state.ball.position.x, m_world_state.ball.position.y);
-    Common::logInfo("___TARGET__POS_XY__{}, {}", m_ref_state.place_ball_target.x, m_ref_state.place_ball_target.y);
     Common::logInfo("__OUT__{}", outOfField(m_world_state.ball.position));
+
+    Common::debug().draw(m_ref_state.place_ball_target, Common::Color::red(), 20.0f);
 }
 } // namespace Tyr::Soccer
