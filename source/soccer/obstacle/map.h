@@ -16,16 +16,16 @@ public:
 
     inline void addCircle(Common::Circle t_circle)
     {
-        // TODO: verify if this check is needed
-        if (t_circle.r > 0)
-        {
-            m_circle_obstacles.emplace_back(t_circle);
-        }
+        m_circle_obstacles.emplace_back(t_circle);
+
+        Common::debug().draw(t_circle, Common::Color::maroon().transparent(), false);
     }
 
     inline void addRectangle(Common::Rect t_rect)
     {
         m_rect_obstacles.emplace_back(t_rect);
+
+        Common::debug().draw(t_rect, Common::Color::maroon().transparent(), false);
     }
 
     bool  isInObstacle(Common::Vec2 t_point);

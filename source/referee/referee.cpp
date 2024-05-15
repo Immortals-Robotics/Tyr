@@ -85,6 +85,8 @@ void Referee::transition(const Protos::Ssl::Gc::Referee_Command ref_command)
 {
     const bool ball_kicked = isKicked() || m_timer.time() > 5;
 
+    m_state.color.reset();
+
     if (ref_command == Protos::Ssl::Gc::Referee_Command_HALT)
     {
         m_state.state = Common::RefereeState::STATE_HALTED;
@@ -147,7 +149,6 @@ void Referee::transition(const Protos::Ssl::Gc::Referee_Command ref_command)
             break;
         }
 
-        m_state.color.reset();
         switch (ref_command)
         {
         case Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_BLUE:

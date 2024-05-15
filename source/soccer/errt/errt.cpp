@@ -133,8 +133,6 @@ void Planner::optimize_tree()
 
 void Planner::draw(Common::Color t_color) const
 {
-    m_tree.draw(Common::Color::black().transparent());
-
     for (int i = 0; i < m_waypoints.size() - 1; i++)
     {
         Common::debug().draw(Common::LineSegment{m_waypoints[i], m_waypoints[i + 1]}, t_color, 5.0f);
