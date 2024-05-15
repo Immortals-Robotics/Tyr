@@ -22,7 +22,7 @@ public:
     void draw(const Common::RawWorldState &t_world);
 
     void draw(const Common::RobotState &t_robot);
-    void draw(const Common::BallState &t_ball, bool draw_goal_lines);
+    void draw(const Common::BallState &t_ball);
     void draw(const Common::WorldState &t_world);
 
     void draw(const Common::FieldState &t_field);

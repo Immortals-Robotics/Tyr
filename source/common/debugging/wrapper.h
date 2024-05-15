@@ -20,7 +20,7 @@ struct Wrapper
 
     Wrapper(const Protos::Immortals::Debug::Wrapper &t_wrapper)
     {
-        time = t_wrapper.time();
+        time = TimePoint::fromMicroseconds(t_wrapper.time());
 
         strings.reserve(t_wrapper.strings().size());
         for (const auto &entry : t_wrapper.strings())
@@ -38,7 +38,7 @@ struct Wrapper
 
     void fillProto(Protos::Immortals::Debug::Wrapper *t_wrapper)
     {
-        t_wrapper->set_time(time.timestamp());
+        t_wrapper->set_time(time.microseconds());
 
         for (const auto &draw : draws)
             draw.fillProto(t_wrapper->add_draw(), &strings);

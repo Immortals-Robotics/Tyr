@@ -61,7 +61,7 @@ struct CommandsWrapper
 
     CommandsWrapper(const Protos::Immortals::CommandsWrapper &t_wrapper)
     {
-        time = t_wrapper.time();
+        time = Common::TimePoint::fromMicroseconds(t_wrapper.time());
 
         for (const auto &command : t_wrapper.command())
             this->command.emplace_back(command);
@@ -69,7 +69,7 @@ struct CommandsWrapper
 
     void fillProto(Protos::Immortals::CommandsWrapper *const t_wrapper) const
     {
-        t_wrapper->set_time(time.timestamp());
+        t_wrapper->set_time(time.microseconds());
 
         for (const auto &command : command)
             command.fillProto(t_wrapper->add_command());

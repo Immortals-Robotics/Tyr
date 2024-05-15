@@ -16,15 +16,7 @@ WidgetMenu::WidgetMenu()
 
     m_joystick_texture = LoadRenderTexture(770., 400.);
 
-    m_udp     = std::make_unique<Common::UdpServer>();
-    m_address = Common::setting().referee_address;
-    m_team_info.set_name("Immortals");
-    m_team_info.set_score(0);
-    m_team_info.set_red_cards(0);
-    m_team_info.set_yellow_cards(0);
-    m_team_info.set_timeouts(0);
-    m_team_info.set_timeout_time(0);
-    m_team_info.set_goalkeeper(Common::setting().init_gk_id);
+    m_udp = std::make_unique<Common::UdpServer>();
 
     m_xbox_texture = LoadTexture(xbox_texture_dir.string().c_str());
     m_ps5_texture  = LoadTexture(ps5_texture_dir.string().c_str());
@@ -32,20 +24,7 @@ WidgetMenu::WidgetMenu()
 
 void WidgetMenu::drawJoystick()
 {
-    const char              *controller_choices[] = {"Disable", "Referee", "Robot Control"};
-    int                      axis_count           = GetGamepadAxisCount(0);
-    std::unique_ptr<float[]> axis                 = std::make_unique<float[]>(axis_count);
-    std::unique_ptr<float[]> buttons              = std::make_unique<float[]>(18);
-
-    for (auto i = 0; i < axis_count; i++)
-    {
-        axis[i] = GetGamepadAxisMovement(0, i);
-    }
-
-    for (auto i = 0; i < 18; i++)
-    {
-        buttons[i] = IsGamepadButtonDown(0, i);
-    }
+    const char *controller_choices[] = {"Disable", "Referee", "Robot Control"};
 
     BeginTextureMode(m_joystick_texture);
     ClearBackground(BLACK);
@@ -54,50 +33,67 @@ void WidgetMenu::drawJoystick()
     if (std::string(GetGamepadName(0)).find("Xbox") != std::string::npos)
     {
         DrawTexturePro(m_xbox_texture, {0, 0, 800, 450}, {385, 200, 800, 450}, {400, 225}, 180., LIGHTGRAY);
-        DrawCircle(486, 275, 15., buttons[8] ? RED : BLACK);
-        DrawCircle(522, 310, 15., buttons[5] ? RED : BLACK);
-        DrawCircle(558, 275, 15., buttons[6] ? RED : BLACK);
-        DrawCircle(522, 239, 15., buttons[7] ? RED : BLACK);
 
-        DrawRectangle(301, 150, 22, 30, buttons[3] ? RED : BLACK);
-        DrawRectangle(272, 177, 30, 22, buttons[4] ? RED : BLACK);
-        DrawRectangle(301, 197, 22, 30, buttons[1] ? RED : BLACK);
-        DrawRectangle(321, 177, 30, 22, buttons[2] ? RED : BLACK);
+        DrawCircle(486, 275, 15., IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT) ? RED : BLACK);
+        DrawCircle(522, 310, 15., IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_UP) ? RED : BLACK);
+        DrawCircle(558, 275, 15., IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ? RED : BLACK);
+        DrawCircle(522, 239, 15., IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ? RED : BLACK);
 
-        DrawCircle(530, 360, 10., buttons[11] ? RED : BLACK);
-        DrawCircle(230, 360, 10., buttons[9] ? RED : BLACK);
-        DrawRectangle(610, 300, 30, axis[5] * 40 + 42, {static_cast<unsigned char>(axis[5] * 127 + 127), 0, 255, 255});
-        DrawRectangle(120, 300, 30, axis[4] * 40 + 42, {static_cast<unsigned char>(axis[4] * 127 + 127), 0, 255, 255});
+        DrawRectangle(301, 150, 22, 30, IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) ? RED : BLACK);
+        DrawRectangle(272, 177, 30, 22, IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT) ? RED : BLACK);
+        DrawRectangle(301, 197, 22, 30, IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_UP) ? RED : BLACK);
+        DrawRectangle(321, 177, 30, 22, IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) ? RED : BLACK);
 
-        DrawCircle(422, 275, 10., buttons[15] ? RED : BLACK);
-        DrawCircle(337, 275, 10., buttons[13] ? RED : BLACK);
-        DrawCircle(245 + axis[0] * 40, 273 - axis[1] * 40, 27., buttons[16] ? RED : GREEN);
-        DrawCircle(446 + axis[2] * 40, 188 - axis[3] * 40, 27., buttons[17] ? RED : GREEN);
+        DrawCircle(530, 360, 10., IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) ? RED : BLACK);
+        DrawCircle(230, 360, 10., IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_TRIGGER_1) ? RED : BLACK);
+        DrawRectangle(610, 300, 30, GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_TRIGGER) * 40 + 42,
+                      {static_cast<unsigned char>(GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_TRIGGER) * 127 + 127), 0,
+                       255, 255});
+        DrawRectangle(120, 300, 30, GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_TRIGGER) * 40 + 42,
+                      {static_cast<unsigned char>(GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_TRIGGER) * 127 + 127), 0,
+                       255, 255});
+
+        DrawCircle(422, 275, 10., IsGamepadButtonDown(0, GAMEPAD_BUTTON_MIDDLE_RIGHT) ? RED : BLACK);
+        DrawCircle(337, 275, 10., IsGamepadButtonDown(0, GAMEPAD_BUTTON_MIDDLE_LEFT) ? RED : BLACK);
+        DrawCircle(245 + GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) * 40,
+                   273 - GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) * 40, 27.,
+                   IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_THUMB) ? RED : GREEN);
+        DrawCircle(446 + GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X) * 40,
+                   188 - GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y) * 40, 27.,
+                   IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_THUMB) ? RED : GREEN);
     }
     else
     {
         DrawTexturePro(m_ps5_texture, {0, 0, 954, 674}, {385, 200, 800, 450}, {400, 225}, 180., WHITE);
-        DrawCircle(547, 270, 15., buttons[8] ? RED : transparent);
-        DrawCircle(597, 310, 15., buttons[5] ? RED : transparent);
-        DrawCircle(647, 270, 15., buttons[6] ? RED : transparent);
-        DrawCircle(597, 230, 15., buttons[7] ? RED : transparent);
+        DrawCircle(547, 270, 15., IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT) ? RED : transparent);
+        DrawCircle(597, 310, 15., IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_UP) ? RED : transparent);
+        DrawCircle(647, 270, 15., IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ? RED : transparent);
+        DrawCircle(597, 230, 15., IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ? RED : transparent);
 
-        DrawRectangle(162, 290, 20, 20, buttons[1] ? RED : transparent);
-        DrawRectangle(122, 260, 20, 20, buttons[4] ? RED : transparent);
-        DrawRectangle(162, 230, 20, 20, buttons[3] ? RED : transparent);
-        DrawRectangle(202, 260, 20, 20, buttons[2] ? RED : transparent);
+        DrawRectangle(162, 290, 20, 20, IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_UP) ? RED : transparent);
+        DrawRectangle(122, 260, 20, 20, IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT) ? RED : transparent);
+        DrawRectangle(162, 230, 20, 20, IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) ? RED : transparent);
+        DrawRectangle(202, 260, 20, 20, IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) ? RED : transparent);
 
-        DrawCircle(590, 365, 10., buttons[11] ? RED : transparent);
-        DrawCircle(180, 365, 10., buttons[9] ? RED : transparent);
+        DrawCircle(590, 365, 10., IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) ? RED : transparent);
+        DrawCircle(180, 365, 10., IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_TRIGGER_1) ? RED : transparent);
 
-        DrawRectangle(695, 300, 30, axis[5] * 40 + 42, {static_cast<unsigned char>(axis[5] * 127 + 127), 0, 255, 255});
-        DrawRectangle(40, 300, 30, axis[4] * 40 + 42, {static_cast<unsigned char>(axis[4] * 127 + 127), 0, 255, 255});
+        DrawRectangle(695, 300, 30, GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_TRIGGER) * 40 + 42,
+                      {static_cast<unsigned char>(GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_TRIGGER) * 127 + 127), 0,
+                       255, 255});
+        DrawRectangle(40, 300, 30, GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_TRIGGER) * 40 + 42,
+                      {static_cast<unsigned char>(GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_TRIGGER) * 127 + 127), 0,
+                       255, 255});
 
-        DrawCircle(545, 330, 10., buttons[15] ? RED : transparent);
-        DrawCircle(225, 330, 10., buttons[13] ? RED : transparent);
+        DrawCircle(545, 330, 10., IsGamepadButtonDown(0, GAMEPAD_BUTTON_MIDDLE_RIGHT) ? RED : transparent);
+        DrawCircle(225, 330, 10., IsGamepadButtonDown(0, GAMEPAD_BUTTON_MIDDLE_LEFT) ? RED : transparent);
 
-        DrawCircle(275 + axis[0] * 40, 195 - axis[1] * 40, 27., buttons[16] ? RED : GREEN);
-        DrawCircle(495 + axis[2] * 40, 195 - axis[3] * 40, 27., buttons[17] ? RED : GREEN);
+        DrawCircle(275 + GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) * 40,
+                   195 - GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) * 40, 27.,
+                   IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_THUMB) ? RED : GREEN);
+        DrawCircle(495 + GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_X) * 40,
+                   195 - GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_Y) * 40, 27.,
+                   IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_THUMB) ? RED : GREEN);
     }
     EndTextureMode();
     ImGui::Spacing();
@@ -107,7 +103,7 @@ void WidgetMenu::drawJoystick()
     ImGui::Spacing();
     ImGui::Spacing();
     ImGui::Separator();
-    ImGui::Combo("Mode", &m_controller_mode, controller_choices, IM_ARRAYSIZE(controller_choices));
+    ImGui::Combo("Mode", (int *) &m_controller_mode, controller_choices, IM_ARRAYSIZE(controller_choices));
 }
 
 void WidgetMenu::drawControllerTab()
@@ -120,7 +116,7 @@ void WidgetMenu::drawControllerTab()
         ImGui::Text("Controller connected [%s]", GetGamepadName(0));
         ImGui::PopStyleColor();
         drawJoystick();
-        if (m_controller_mode == static_cast<int>(ControllerMode::REF))
+        if (m_controller_mode == ControllerMode::Referee)
             switch (GetGamepadButtonPressed())
             {
             case GAMEPAD_BUTTON_RIGHT_FACE_DOWN:
@@ -184,7 +180,7 @@ void WidgetMenu::drawControllerTab()
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
         ImGui::Text("No Controller connected");
         ImGui::PopStyleColor();
-        m_controller_mode = static_cast<int>(ControllerMode::DISABLED);
+        m_controller_mode = ControllerMode::Disabled;
     }
 }
 
@@ -206,18 +202,15 @@ void WidgetMenu::drawTabBar()
         ImGui::EndTabBar();
     }
 }
-void WidgetMenu::draw(Common::Vec2 _mouse_pos)
+void WidgetMenu::draw(const Common::Vec2 t_mouse_pos)
 {
-    auto main_window_height = GetScreenHeight();
-    auto main_window_width  = GetScreenWidth();
-
-    m_mouse_pos = _mouse_pos;
     if (ImGui::IsMouseClicked(0))
     {
-        m_clicked_mouse_pos = m_mouse_pos;
+        m_clicked_mouse_pos = t_mouse_pos;
     }
+
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
-    ImGui::SetNextWindowPos(ImVec2(main_window_width - 400., 0));
+    ImGui::SetNextWindowPos(ImVec2(GetScreenWidth() - 400., 0));
     ImGui::SetNextWindowSize(ImVec2(400., 400.));
     if (ImGui::Begin("Widgets", nullptr, window_flags))
     {
@@ -226,30 +219,46 @@ void WidgetMenu::draw(Common::Vec2 _mouse_pos)
     }
 }
 
-void WidgetMenu::refBroadcast(Protos::Ssl::Gc::Referee_Command _command)
+void WidgetMenu::refBroadcast(const Protos::Ssl::Gc::Referee_Command t_command)
 {
-    static Protos::Ssl::Gc::Referee_Command last_command = Protos::Ssl::Gc::Referee_Command_HALT;
-    if (_command != last_command)
+    if (t_command != m_last_command)
     {
-        if (_command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_BLUE ||
-            _command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_YELLOW)
-        {
-            auto *designated_position = m_ref_packet.mutable_designated_position();
+        Protos::Ssl::Gc::Referee ref_packet;
 
-            designated_position->set_x(m_clicked_mouse_pos.x);
-            designated_position->set_y(m_clicked_mouse_pos.y);
+        if (t_command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_BLUE ||
+            t_command == Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_YELLOW)
+        {
+            m_clicked_mouse_pos.fillProto(ref_packet.mutable_designated_position());
         }
-        m_ref_packet.set_command(_command);
-        m_ref_packet.set_command_timestamp(1);
-        m_ref_packet.set_packet_timestamp(1);
-        m_ref_packet.set_command_counter(m_command_counter);
-        m_ref_packet.set_stage(m_stage);
-        m_ref_packet.mutable_blue()->CopyFrom(m_team_info);
-        m_ref_packet.mutable_yellow()->CopyFrom(m_team_info);
-        m_udp->send(m_ref_packet, m_address);
-        m_ref_packet.Clear();
+
+        const Common::TimePoint now = Common::TimePoint::now();
+
+        ref_packet.set_command(t_command);
+        ref_packet.set_command_timestamp(now.microseconds());
+        ref_packet.set_packet_timestamp(now.microseconds());
+        ref_packet.set_command_counter(m_command_counter);
+        ref_packet.set_stage(Protos::Ssl::Gc::Referee_Stage_NORMAL_FIRST_HALF);
+
+        ref_packet.mutable_blue()->set_name("Immortals");
+        ref_packet.mutable_blue()->set_score(0);
+        ref_packet.mutable_blue()->set_red_cards(0);
+        ref_packet.mutable_blue()->set_yellow_cards(0);
+        ref_packet.mutable_blue()->set_timeouts(0);
+        ref_packet.mutable_blue()->set_timeout_time(0);
+        ref_packet.mutable_blue()->set_goalkeeper(Common::setting().init_gk_id);
+
+        ref_packet.mutable_yellow()->set_name("Immortals");
+        ref_packet.mutable_yellow()->set_score(0);
+        ref_packet.mutable_yellow()->set_red_cards(0);
+        ref_packet.mutable_yellow()->set_yellow_cards(0);
+        ref_packet.mutable_yellow()->set_timeouts(0);
+        ref_packet.mutable_yellow()->set_timeout_time(0);
+        ref_packet.mutable_yellow()->set_goalkeeper(Common::setting().init_gk_id);
+
+        m_udp->send(ref_packet, Common::setting().referee_address);
+
         m_command_counter++;
-        last_command = _command;
+        m_last_command = t_command;
     }
 }
 } // namespace Tyr::Gui

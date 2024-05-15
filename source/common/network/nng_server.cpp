@@ -25,7 +25,7 @@ bool NngServer::send(const TimePoint &t_time, const google::protobuf::MessageLit
 {
     NngMessage message{t_message.ByteSizeLong()};
 
-    *message.mutableTime() = t_time.timestamp();
+    *message.mutableTime() = t_time.microseconds();
 
     if (!t_message.SerializeToArray(message.data(), message.size()))
     {

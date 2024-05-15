@@ -140,7 +140,7 @@ bool Ai::publishCommands() const
 
     Protos::Immortals::CommandsWrapper pb_wrapper;
 
-    pb_wrapper.set_time(time.timestamp());
+    pb_wrapper.set_time(time.microseconds());
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {

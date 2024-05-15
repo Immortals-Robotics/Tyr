@@ -17,7 +17,17 @@ struct Vec3
     Vec3(const Protos::Immortals::Vec3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
     {}
 
+    Vec3(const Protos::Ssl::Vector3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
+    {}
+
     void fillProto(Protos::Immortals::Vec3 *const t_v) const
+    {
+        t_v->set_x(x);
+        t_v->set_y(y);
+        t_v->set_z(z);
+    }
+
+    void fillProto(Protos::Ssl::Vector3 *const t_v) const
     {
         t_v->set_x(x);
         t_v->set_y(y);
