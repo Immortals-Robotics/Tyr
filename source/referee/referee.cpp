@@ -147,6 +147,7 @@ void Referee::transition(const Protos::Ssl::Gc::Referee_Command ref_command)
             break;
         }
 
+        m_state.color.reset();
         switch (ref_command)
         {
         case Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_BLUE:
