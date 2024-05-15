@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 void Ai::throwin_chip_shoot()
 {
     GKHi(gk, true);
-    DefBy3(def, rw, lw, nullptr, true);
+    DefHi(def, rw, lw, nullptr, true);
 
     ERRTSetObstacles(mid2, true, true);
     OwnRobot[mid2].face(m_world_state.ball.position);

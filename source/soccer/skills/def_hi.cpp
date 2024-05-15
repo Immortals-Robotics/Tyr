@@ -4,11 +4,11 @@
 
 namespace Tyr::Soccer
 {
-void Ai::DefBy3(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, bool stop)
+void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, bool stop)
 {
     if (!defendTarget)
         defendTarget = &(m_world_state.ball.position);
-        
+
     Common::Angle alpha = Common::Vec2(side * Common::field().width, 0).angleWith(m_world_state.ball.position) +
                           Common::Angle::fromDeg(90 + side * 90);
     alpha.setDeg(std::clamp(alpha.deg(), -90.0f, 90.0f));

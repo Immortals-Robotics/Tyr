@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 void Ai::kickoff_us_chip()
 {
     GKHi(gk, true);
-    DefBy3(def, rw, lw, nullptr, true);
+    DefHi(def, rw, lw, nullptr, true);
 
     ERRTSetObstacles(dmf, true, true);
     OwnRobot[dmf].face(m_world_state.ball.position);

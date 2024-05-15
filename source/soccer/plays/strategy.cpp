@@ -159,7 +159,7 @@ void Ai::strategy()
     }
 
     bool new_receivers_reached = true;
-    DefBy3(def, rw, lw, nullptr, true);
+    DefHi(def, rw, lw, nullptr, true);
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
         // if ((*stm2AInum[i]==gk)||(*stm2AInum[i]==def)) {

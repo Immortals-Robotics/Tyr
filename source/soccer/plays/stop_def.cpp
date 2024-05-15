@@ -26,7 +26,7 @@ void Ai::Stop_def()
     }
 
     GKHi(gk, true);
-    DefBy3(def, rw, lw, nullptr, true);
+    DefHi(def, rw, lw, nullptr, true);
 
     std::map<int, Common::Vec2> static_pos;
     static_pos[dmf]  = Common::Vec2(side * 4200, Common::sign(m_world_state.ball.position.y) * 1000.0f);

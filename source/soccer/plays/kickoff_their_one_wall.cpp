@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 void Ai::kickoff_their_one_wall()
 {
     GKHi(gk, 1);
-    DefBy3(def, rw, lw, nullptr, true);
+    DefHi(def, rw, lw, nullptr, true);
 
     ERRTSetObstacles(dmf, true, true);
     OwnRobot[dmf].face(m_world_state.ball.position);

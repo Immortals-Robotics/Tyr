@@ -30,7 +30,7 @@ void Ai::Stop()
     }
 
     GKHi(gk, true);
-    DefBy3(def, rw, lw, nullptr, true);
+    DefHi(def, rw, lw, nullptr, true);
 
 #if mark_in_stop
     MarkManager(false);

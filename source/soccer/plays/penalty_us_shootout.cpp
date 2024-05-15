@@ -6,7 +6,7 @@ static float t_nml;
 
 void Ai::penalty_us_shootout()
 {
-    DefBy3(def, rw, lw, nullptr, true);
+    DefHi(def, rw, lw, nullptr, true);
 
     OwnRobot[dmf].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(dmf, true, true);

@@ -140,7 +140,7 @@ private:
     void GK(int robot_num = 0, int defence_num = 2, bool stop = false);
     void GK_shirje(int robot_num = 0);
     void GKHi(int robot_num = 0, bool stop = false);
-    void DefBy3(int robot_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr,
+    void DefHi(int robot_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr,
                 bool stop = false);
     void runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarget, bool stop);
     void DefenceWall(int robot_num, bool kickOff = false);

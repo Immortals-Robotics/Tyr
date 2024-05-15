@@ -7,7 +7,7 @@ namespace Tyr::Soccer
 void Ai::our_place_ball()
 {
     GKHi(gk, true);
-    DefBy3(def, rw, lw, nullptr, true);
+    DefHi(def, rw, lw, nullptr, true);
 
     static Common::Angle move_angle, temp_opp_ang;
     if (m_world_state.ball.position.distanceTo(m_ref_state.place_ball_target) > 100)

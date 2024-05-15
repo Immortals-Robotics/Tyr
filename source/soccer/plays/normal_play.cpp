@@ -8,7 +8,7 @@ void Ai::NewNormalPlay()
 {
     GKHi(gk, 0);
 
-    DefBy3(def, rw, lw, nullptr, false);
+    DefHi(def, rw, lw, nullptr, false);
 
     CalcIsDefending();
 

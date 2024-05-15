@@ -11,12 +11,12 @@ void Ai::corner_their_global()
         ERRTNavigate2Point(gk, Common::Vec2(side * (Common::field().width - 100), 0), 100,
                            VelocityProfile::Type::Mamooli);
 
-        DefBy3(def, rw, lw, nullptr, true);
+        DefHi(def, rw, lw, nullptr, true);
     }
     else
     {
         GKHi(gk, true);
-        DefBy3(def, rw, lw, nullptr, true);
+        DefHi(def, rw, lw, nullptr, true);
     }
 
     isDefending = true;
