@@ -36,9 +36,10 @@ void Grsim::queueCommand(const Command &command)
     }
     else if (command.chip > 0)
     {
-        float chip = command.chip / 25.0f;
-        proto_command->set_kickspeedx(chip * 0.707f);
-        proto_command->set_kickspeedz(chip / 0.707f);
+        const float        chip_mag = command.chip / 20.0f;
+        const Common::Vec2 chip_dir = Common::Angle::fromDeg(45.0f).toUnitVec();
+        proto_command->set_kickspeedx(chip_mag * chip_dir.x);
+        proto_command->set_kickspeedz(chip_mag * chip_dir.y);
     }
     else
     {
