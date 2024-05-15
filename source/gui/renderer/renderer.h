@@ -6,9 +6,8 @@ class Renderer
 {
 public:
     Renderer();
-    void initialize();
 
-    void beginDraw();
+    void beginDraw(const Common::FieldState &t_field);
     void endDraw();
 
     void draw(Common::Vec2 t_point, Common::Color t_color, bool t_is_filled, float t_thickness = 1);
@@ -30,7 +29,7 @@ public:
 
     void draw(const Common::FieldState &t_field);
 
-    void drawText(Common::Vec2 t_pos, const std::string &t_str, float t_font_size = 120,
+    void drawText(Common::Vec2 t_pos, const std::string &t_str, int t_font_size = 200,
                   Common::Color t_color = Common::Color::white());
 
     void draw(const Common::Debug::Wrapper &t_wrapper);
@@ -38,16 +37,12 @@ public:
     Common::Vec2 getMousePosition();
 
 private:
-    const float  robotArcAngle;
-    const float  m_window_border;
-    Common::Vec2 m_w_size;
-    Common::Vec2 overallFieldSize;
-    float        m_zoom_scale;
-    Common::Vec2 m_avil_size;
-    Font         m_font;
-    Common::Vec2 m_mouse_pos;
+    static constexpr float kRobotArcAngle = 50.0f;
+    static constexpr float kWindowBorder  = 8.0f;
+
+    Camera2D m_camera;
+    Font     m_font;
 
     Vector2 ConvertSignedVecToPixelVec(Common::Vec2 _signedVec);
-    void    calculateMousePos();
 };
 } // namespace Tyr::Gui

@@ -84,7 +84,7 @@ public:
             }
             else
             {
-                Common::debug().draw(Common::LineSegment{m_nodes[i].state, m_nodes[i].parent->state}, t_color, 0.5f);
+                Common::debug().draw(Common::LineSegment{m_nodes[i].state, m_nodes[i].parent->state}, t_color, 8.0f);
             }
         }
     }

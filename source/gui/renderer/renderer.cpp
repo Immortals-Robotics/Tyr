@@ -2,10 +2,7 @@
 
 namespace Tyr::Gui
 {
-Renderer::Renderer() : robotArcAngle(50.f), m_window_border(8.f)
-{}
-
-void Renderer::initialize()
+Renderer::Renderer()
 {
     const std::filesystem::path data_dir(DATA_DIR);
     const std::filesystem::path font_path = data_dir / "fonts/open-sans-regular.ttf";
@@ -13,48 +10,41 @@ void Renderer::initialize()
     m_font = LoadFont(font_path.string().c_str());
 }
 
-void Renderer::beginDraw()
+void Renderer::beginDraw(const Common::FieldState &t_field)
 {
-    const Common::Vec2 pos  = {ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y};
-    const Common::Vec2 size = {ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y};
+    const Common::Vec2 window_pos  = {ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y};
+    const Common::Vec2 window_size = {ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y};
 
-    const bool   x     = size.x < size.y;
-    Common::Vec2 ratio = Common::Vec2(size.x / overallFieldSize.x, size.y / overallFieldSize.y);
-    this->m_zoom_scale = x ? (ratio.x > ratio.y ? ratio.x : ratio.y) : (ratio.x > ratio.y ? ratio.y : ratio.x);
+    const Common::Vec2 offset = window_pos + window_size / 2.0f;
 
-    const Camera2D camera = {
-        .offset   = Vector2{pos.x + size.x / 2.0f, pos.y + size.y / 2.0f}, // Offset from the target
-        .target   = Vector2{0.0f, 0.0f},                                   // Camera target (center of the screen)
-        .rotation = 0.0f,                                                  // Camera rotation in degrees
-        .zoom     = m_zoom_scale,                                          // Camera zoom (1.0f means no zoom)
+    const Common::Vec2 field_size = {t_field.width * 2.0f + 4.0f * t_field.boundary_width,
+                                     t_field.height * 2.0f + 4.0f * t_field.boundary_width};
+
+    const Common::Vec2 ratio = window_size / field_size;
+
+    const float zoom = window_size.x < window_size.y ? (ratio.x > ratio.y ? ratio.x : ratio.y)
+                                                     : (ratio.x > ratio.y ? ratio.y : ratio.x);
+
+    m_camera = {
+        .offset   = Vector2{offset.x, offset.y}, // Offset from the target
+        .target   = Vector2{0.0f, 0.0f},         // Camera target (center of the screen)
+        .rotation = 0.0f,                        // Camera rotation in degrees
+        .zoom     = zoom,                        // Camera zoom (1.0f means no zoom)
     };
 
-    BeginMode2D(camera);
-    BeginScissorMode(pos.x, pos.y, size.x, size.y);
+    BeginMode2D(m_camera);
+    BeginScissorMode(window_pos.x, window_pos.y, window_size.x, window_size.y);
 }
 
 void Renderer::endDraw()
 {
-    EndMode2D();
     EndScissorMode();
+    EndMode2D();
 }
 
 Vector2 Renderer::ConvertSignedVecToPixelVec(Common::Vec2 _signedVec)
 {
     return {.x = _signedVec.x, .y = -_signedVec.y};
-}
-
-void Renderer::calculateMousePos()
-{
-    m_avil_size.x             = ImGui::GetContentRegionAvail().x;
-    m_avil_size.y             = ImGui::GetContentRegionAvail().y;
-    Common::Vec2 window_scale = m_w_size / m_avil_size;
-    m_mouse_pos.x             = ImGui::GetMousePos().x;
-    m_mouse_pos.y             = ImGui::GetMousePos().y;
-    m_mouse_pos.x = (m_mouse_pos.x - ImGui::GetWindowPos().x - m_window_border) / m_zoom_scale * window_scale.x -
-                    overallFieldSize.x / 2;
-    m_mouse_pos.y = -1 * ((m_mouse_pos.y - ImGui::GetWindowPos().y - m_window_border) / m_zoom_scale * window_scale.y -
-                          overallFieldSize.y / 2);
 }
 
 static Color raylibColor(const Common::Color &t_color)
@@ -75,13 +65,12 @@ void Renderer::draw(Common::Vec2 point, Common::Color t_color, bool t_is_filled,
 
 void Renderer::draw(Common::Rect rect, Common::Color t_color, bool t_is_filled, float t_thickness)
 {
-    Vector2 v1   = ConvertSignedVecToPixelVec(rect.min);
-    Vector2 v2   = ConvertSignedVecToPixelVec(rect.max);
-    t_thickness  = t_thickness / m_zoom_scale;
-    float posX   = (v1.x < v2.x) ? v1.x : v2.x;
-    float posY   = (v1.y < v2.y) ? v1.y : v2.y;
-    float length = (v1.x < v2.x) ? v2.x - v1.x : v1.x - v2.x;
-    float width  = (v1.y < v2.y) ? v2.y - v1.y : v1.y - v2.y;
+    Vector2 v1     = ConvertSignedVecToPixelVec(rect.min);
+    Vector2 v2     = ConvertSignedVecToPixelVec(rect.max);
+    float   posX   = (v1.x < v2.x) ? v1.x : v2.x;
+    float   posY   = (v1.y < v2.y) ? v1.y : v2.y;
+    float   length = (v1.x < v2.x) ? v2.x - v1.x : v1.x - v2.x;
+    float   width  = (v1.y < v2.y) ? v2.y - v1.y : v1.y - v2.y;
 
     Rectangle ray_rect = {.x = posX, .y = posY, .width = length, .height = width};
 
@@ -102,9 +91,8 @@ void Renderer::draw(Common::Line t_line, Common::Color t_color, float t_thicknes
 
 void Renderer::draw(Common::LineSegment line_segment, Common::Color t_color, float t_thickness)
 {
-    t_thickness = t_thickness / m_zoom_scale;
-    Vector2 v1  = ConvertSignedVecToPixelVec(line_segment.start);
-    Vector2 v2  = ConvertSignedVecToPixelVec(line_segment.end);
+    Vector2 v1 = ConvertSignedVecToPixelVec(line_segment.start);
+    Vector2 v2 = ConvertSignedVecToPixelVec(line_segment.end);
 
     DrawLineEx(v1, v2, t_thickness, raylibColor(t_color));
 }
@@ -112,7 +100,6 @@ void Renderer::draw(Common::LineSegment line_segment, Common::Color t_color, flo
 void Renderer::draw(Common::Circle circle, Common::Color t_color, bool t_is_filled, float t_thickness)
 {
     Vector2 center = ConvertSignedVecToPixelVec(circle.center);
-    t_thickness    = t_thickness / m_zoom_scale;
 
     if (t_is_filled)
     {
@@ -163,10 +150,10 @@ void Renderer::draw(Common::Triangle triangle, Common::Color t_color, bool t_is_
     }
 }
 
-void Renderer::drawText(Common::Vec2 _pos, const std::string &_str, float _fontSize, Common::Color t_color)
+void Renderer::drawText(Common::Vec2 _pos, const std::string &_str, int _fontSize, Common::Color t_color)
 {
     Vector2 pos = ConvertSignedVecToPixelVec(_pos);
-    DrawTextEx(m_font, _str.c_str(), pos, (int) _fontSize, 0., raylibColor(t_color));
+    DrawTextEx(m_font, _str.c_str(), pos, _fontSize, 0., raylibColor(t_color));
 }
 
 void Renderer::draw(const Common::RawWorldState &t_world)
@@ -191,11 +178,6 @@ void Renderer::draw(const Common::WorldState &t_world)
 void Renderer::draw(const Common::FieldState &t_field)
 {
     ClearBackground(GREEN);
-
-    this->overallFieldSize.x = t_field.width * 2.0f + 4.0f * t_field.boundary_width;
-    this->overallFieldSize.y = t_field.height * 2.0f + 4 * t_field.boundary_width;
-
-    calculateMousePos();
 
     Common::Vec2 fieldWallStartPoint = Common::Vec2(t_field.width * 2.0f / -2 - t_field.boundary_width,
                                                     t_field.height * 2.0f / -2 - t_field.boundary_width);
@@ -223,9 +205,9 @@ void Renderer::draw(const Common::FieldState &t_field)
 
     float centerCircleRad = t_field.center_circle_radius;
 
-    draw(Common::Rect{fieldWallStartPoint, fieldWallEndPoint}, Common::Color::brown(), false, 10.0f);
+    draw(Common::Rect{fieldWallStartPoint, fieldWallEndPoint}, Common::Color::brown(), false, 70.0f);
 
-    static constexpr float kLineWidth = 2.0f;
+    static constexpr float kLineWidth = 20.0f;
 
     draw(Common::Rect{fieldEndPoint, fieldStartPoint}, Common::Color::white(), false, kLineWidth);
     draw(Common::Rect{ourGoalEndPoint, ourGoalStartPoint}, Common::Color::white(), false, kLineWidth);
@@ -244,7 +226,7 @@ void Renderer::draw(const Common::FieldState &t_field)
     if (ImGui::IsMouseClicked(0))
     {
         clicked     = true;
-        clicked_pos = m_mouse_pos;
+        clicked_pos = getMousePosition();
     }
     else if (ImGui::IsMouseClicked(1))
     {
@@ -259,6 +241,7 @@ void Renderer::draw(const Common::FieldState &t_field)
 
 Common::Vec2 Renderer::getMousePosition()
 {
-    return m_mouse_pos;
+    const Vector2 mouse_pos = GetScreenToWorld2D(GetMousePosition(), m_camera);
+    return {mouse_pos.x, -mouse_pos.y};
 }
 } // namespace Tyr::Gui

@@ -112,8 +112,6 @@ bool Application::initialize(const int width, const int height)
     m_demo_menu   = std::make_unique<DemoMenu>();
     m_log_menu    = std::make_unique<LogMenu>();
 
-    m_renderer->initialize();
-
     Common::logInfo(" Now it is time, lets rock...");
     return true;
 }
@@ -184,7 +182,7 @@ void Application::update()
     }
     else
     {
-        m_renderer->beginDraw();
+        m_renderer->beginDraw(Common::field());
 
         m_renderer->draw(Common::field());
 
