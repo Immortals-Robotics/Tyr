@@ -184,6 +184,8 @@ void Application::update()
     }
     else
     {
+        m_renderer->beginDraw();
+
         m_renderer->draw(Common::field());
 
         // TODO(mhmd): add an option for this
@@ -199,15 +201,6 @@ void Application::update()
             m_renderer->draw(m_demo_menu->worldStateFiltered());
         }
 
-        if (m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
-            m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_IP)
-        {
-            updated_address.ip = m_config_menu->getNetworkParam(InputCallbackType::VISION_IP);
-            updated_address.port =
-                static_cast<unsigned short>(std::stoi(m_config_menu->getNetworkParam(InputCallbackType::VISION_PORT)));
-            m_config_menu->updateNetworkData();
-        }
-
         if (m_demo_menu->getState() == LogState::None)
         {
             m_renderer->draw(m_debug_wrapper);
@@ -219,12 +212,24 @@ void Application::update()
             m_log_menu->draw(m_demo_menu->debugWrapper());
         }
 
+        m_renderer->endDraw();
+
         m_renderer->applyShader();
         ImGui::Image(&m_renderer->shader_rt.texture, ImGui::GetContentRegionAvail());
         ImGui::End();
     }
-    // end ImGui Content
+
     m_config_menu->draw();
+
+    if (m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
+        m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_IP)
+    {
+        updated_address.ip = m_config_menu->getNetworkParam(InputCallbackType::VISION_IP);
+        updated_address.port =
+            static_cast<unsigned short>(std::stoi(m_config_menu->getNetworkParam(InputCallbackType::VISION_PORT)));
+        m_config_menu->updateNetworkData();
+    }
+
     m_widget_menu->draw(m_renderer->getMousePosition());
     m_demo_menu->draw();
     rlImGuiEnd();

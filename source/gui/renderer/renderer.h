@@ -8,6 +8,9 @@ public:
     Renderer(Common::Vec2 _wSize, float _upScalingFactor);
     void initialize();
 
+    void beginDraw();
+    void endDraw();
+
     void draw(Common::Vec2 t_point, Common::Color t_color, bool t_is_filled, float t_thickness = 1);
     void draw(Common::Rect t_rect, Common::Color t_color, bool t_is_filled, float t_thickness = 1);
     void draw(Common::Circle t_circle, Common::Color t_color, bool t_is_filled, float t_thickness = 1);
@@ -52,7 +55,6 @@ private:
 
     void    CalculateZoom();
     Vector2 ConvertSignedVecToPixelVec(Common::Vec2 _signedVec);
-    int     ConvertRealityUnitToPixels(float _value);
     void    calculateMousePos();
 };
 } // namespace Tyr::Gui

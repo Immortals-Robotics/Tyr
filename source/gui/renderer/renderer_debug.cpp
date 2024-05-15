@@ -4,8 +4,6 @@ namespace Tyr::Gui
 {
 void Renderer::draw(const Common::Debug::Wrapper &t_wrapper)
 {
-    BeginTextureMode(main_rt);
-
     for (const auto &draw : t_wrapper.draws)
     {
         if (auto point = std::get_if<Common::Vec2>(&draw.shape); point)
@@ -23,8 +21,6 @@ void Renderer::draw(const Common::Debug::Wrapper &t_wrapper)
         else
             Common::logWarning("Unsupported draw.shape type: {}", draw.shape.index());
     }
-
-    EndTextureMode();
 }
 
 } // namespace Tyr::Gui
