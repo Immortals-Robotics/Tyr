@@ -10,9 +10,15 @@ void Ai::process()
     internalProcessData();
 
     Common::debug().draw(m_world_state.ball.position, Common::Color::red());
-    //	Common::debug().draw(m_world_state.ball.position,Common::Vec2(m_world_state.ball.velocity.x,m_world_state.ball.velocity.y)
-    //+ m_world_state.ball.position,
-    // Black);
+
+    Common::Vec2 ourgoal_p1 = Common::Vec2(Common::field().width, Common::field().goal_width / 2);
+    Common::Vec2 ourgoal_p2 = Common::Vec2(Common::field().width, Common::field().goal_width / -2);
+    Common::Vec2 oppgoal_p1 = ourgoal_p1 * -1;
+    Common::Vec2 oppgoal_p2 = ourgoal_p2 * -1;
+    Common::debug().draw(Common::Triangle{ourgoal_p1, m_world_state.ball.position, ourgoal_p2},
+                         Common::Color::blue().transparent(), true);
+    Common::debug().draw(Common::Triangle{oppgoal_p1, m_world_state.ball.position, oppgoal_p2},
+                         Common::Color::red().transparent(), true);
 
     if (lastReferee != m_ref_state.get())
     {

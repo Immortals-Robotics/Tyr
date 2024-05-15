@@ -200,7 +200,7 @@ void Renderer::draw(const Common::WorldState &t_world)
 {
     BeginTextureMode(main_rt);
 
-    draw(t_world.ball, true);
+    draw(t_world.ball);
     for (const auto &robot : t_world.own_robot)
         draw(robot);
     for (const auto &robot : t_world.opp_robot)
