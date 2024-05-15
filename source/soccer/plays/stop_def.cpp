@@ -26,8 +26,7 @@ void Ai::Stop_def()
     }
 
     GKHi(gk, true);
-    // DefHi(def,nullptr, true);
-    DefMid(def, rw, lw, nullptr, true);
+    DefBy3(def, rw, lw, nullptr, true);
 
     std::map<int, Common::Vec2> static_pos;
     static_pos[dmf]  = Common::Vec2(side * 4200, Common::sign(m_world_state.ball.position.y) * 1000.0f);
@@ -48,11 +47,9 @@ void Ai::Stop_def()
 
     ERRTSetObstacles(attack, true, true);
     OwnRobot[attack].face(m_world_state.ball.position);
-    ERRTNavigate2Point(
-        attack,
-        m_world_state.ball.position.circleAroundPoint(
-            m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
-            580),
-        40, VelocityProfile::Type::Aroom);
+    ERRTNavigate2Point(attack,
+                       m_world_state.ball.position.circleAroundPoint(
+                           m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)), 580),
+                       40, VelocityProfile::Type::Aroom);
 }
 } // namespace Tyr::Soccer

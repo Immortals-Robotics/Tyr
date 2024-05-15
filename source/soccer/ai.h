@@ -147,7 +147,9 @@ private:
     void GK(int robot_num = 0, int defence_num = 2, bool stop = false);
     void GK_shirje(int robot_num = 0);
     void GKHi(int robot_num = 0, bool stop = false);
-    void DefHi(int robot_num, Common::Vec2 *defendTarget = nullptr, bool stop = false);
+    void DefBy3(int robot_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr,
+                bool stop = false);
+    void runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarget, bool stop);
     void DefenceWall(int robot_num, bool kickOff = false);
     void tech_circle(int robot_num, Common::Angle angle, int kick = 0, int chip = 0, bool needRRT = true,
                      bool gameRestart = false, bool kiss = false, bool dribbler = false, bool needOppRRT = false);
@@ -161,15 +163,7 @@ private:
     void circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_pow, int chip_pow, float precision,
                           float near_dis_override = -1.0f);
 
-    void DefMid(int &robot_num, int &rightdef_num, int &leftdef_num, Common::Vec2 *defendTarget = nullptr,
-                bool stop = false, bool replace = true);
-    void DefBy3(int robot_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr,
-                bool stop = false);
-    void DefBy2(int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr, bool stop = false);
-    void DefBy1(int thelastdef_num, Common::Vec2 *defendTarget = nullptr, bool stop = false);
-    void runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarget, bool stop);
-
-    // Plays
+        // Plays
     void Stop();
     void Stop_def();
     void NewNormalPlay();

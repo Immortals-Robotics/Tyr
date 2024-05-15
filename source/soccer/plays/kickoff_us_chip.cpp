@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 void Ai::kickoff_us_chip()
 {
     GKHi(gk, true);
-    DefMid(def, rw, lw, nullptr, false);
+    DefBy3(def, rw, lw, nullptr, true);
 
     ERRTSetObstacles(dmf, true, true);
     OwnRobot[dmf].face(m_world_state.ball.position);
@@ -13,8 +13,7 @@ void Ai::kickoff_us_chip()
         dmf,
         m_world_state.ball.position.pointOnConnectingLine(
             Common::Vec2(side * Common::field().width, 0),
-            m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) /
-                3.0f),
+            m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
         40, VelocityProfile::Type::Mamooli);
 
     if (timer.time() < 0.5)
@@ -27,12 +26,10 @@ void Ai::kickoff_us_chip()
 
     OwnRobot[mid2].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(mid2, true, true);
-    ERRTNavigate2Point(mid2, Common::Vec2(m_world_state.ball.position.x + side * 150,
-                                          (Common::field().height - 300)));
+    ERRTNavigate2Point(mid2, Common::Vec2(m_world_state.ball.position.x + side * 150, (Common::field().height - 300)));
     OwnRobot[mid1].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(mid1, true, true);
-    ERRTNavigate2Point(mid1, Common::Vec2(m_world_state.ball.position.x + side * 150,
-                                          -(Common::field().height - 300)));
+    ERRTNavigate2Point(mid1, Common::Vec2(m_world_state.ball.position.x + side * 150, -(Common::field().height - 300)));
     Common::Vec2 chip_target = Common::Vec2(-side * 2000, 0);
 
     Common::logDebug("can kick ball: {}", m_ref_state.canKickBall());

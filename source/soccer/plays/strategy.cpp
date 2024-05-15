@@ -159,7 +159,7 @@ void Ai::strategy()
     }
 
     bool new_receivers_reached = true;
-    DefMid(def, rw, lw, nullptr, false, false);
+    DefBy3(def, rw, lw, nullptr, true);
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
         // if ((*stm2AInum[i]==gk)||(*stm2AInum[i]==def)) {
@@ -172,18 +172,6 @@ void Ai::strategy()
                 GKHi(gk, true);
             else if (*stm2AInum[i] == def && *stm2AInum[i] == lw && *stm2AInum[i] == rw) // No need to halt these guys
                 continue;
-            //            else if (*stm2AInum[i]==def)
-            //            {
-            //				DefMid(def,rw,lw,nullptr,false,false);
-            //            }
-            //			else if (*stm2AInum[i]==lw)
-            //			{
-            //				DefMid(def,rw,lw,nullptr,false,false);
-            //			}
-            //			else if (*stm2AInum[i]==rw)
-            //			{
-            //				DefMid(def,rw,lw,nullptr,false,false);
-            //			}
             else
                 Halt(*stm2AInum[i]);
             continue;

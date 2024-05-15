@@ -8,14 +8,15 @@ void Ai::corner_their_global()
     {
         ERRTSetObstacles(gk, 0, 0);
         OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
-        ERRTNavigate2Point(gk, Common::Vec2(side * (Common::field().width - 100), 0), 100, VelocityProfile::Type::Mamooli);
+        ERRTNavigate2Point(gk, Common::Vec2(side * (Common::field().width - 100), 0), 100,
+                           VelocityProfile::Type::Mamooli);
 
-        DefMid(def, rw, lw, nullptr, false);
+        DefBy3(def, rw, lw, nullptr, true);
     }
     else
     {
         GKHi(gk, true);
-        DefMid(def, rw, lw, nullptr, false);
+        DefBy3(def, rw, lw, nullptr, true);
     }
 
     isDefending = true;

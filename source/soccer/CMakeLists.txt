@@ -71,7 +71,6 @@ set(SOURCE_FILES
 	plays/throwin_chip_shoot.cpp
 
 	skills/circle_ball.cpp
-	skills/def_2018.cpp
 	skills/def_hi.cpp
 	skills/defence_wall.cpp
 	skills/gk_hi.cpp
@@ -83,6 +82,7 @@ set(SOURCE_FILES
 	skills/pass_omghi.cpp
 	skills/pass.cpp
 	skills/receive_pass.cpp
+	skills/running_def.cpp
 	skills/tech_circle.cpp
 
 	robot/robot.cpp)

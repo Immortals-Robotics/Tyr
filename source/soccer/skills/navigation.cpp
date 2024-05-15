@@ -24,10 +24,10 @@ void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, float speed, const Vel
 
 void Ai::ERRTNavigate2Point(int robot_num, Common::Vec2 dest, float speed, const VelocityProfile::Type velocityProfile)
 {
-    // Navigate2Point(robot_num, dest,accurate,speed,velocityProfile);
-    // return;
     if (OwnRobot[robot_num].state().seen_state == Common::SeenState::CompletelyOut)
+    {
         Halt(robot_num);
+    }
     else
     {
         if (OwnRobot[robot_num].state().position.distanceTo(dest) > 100.0f)
@@ -38,11 +38,7 @@ void Ai::ERRTNavigate2Point(int robot_num, Common::Vec2 dest, float speed, const
 
         planner[robot_num].draw();
 
-        // if ( planner[robot_num].getWayPointNum ( ) <= 2 )
         Navigate2Point(robot_num, wayp, speed, velocityProfile, true);
-        // else
-        //	Navigate2Point ( robot_num , wayp , false , speed , velocityProfile );
-        // Navigate2Point ( robot_num , dest , accurate , speed );
     }
 }
 } // namespace Tyr::Soccer

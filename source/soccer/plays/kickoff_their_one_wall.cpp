@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 void Ai::kickoff_their_one_wall()
 {
     GKHi(gk, 1);
-    DefMid(def, rw, lw, nullptr, false);
+    DefBy3(def, rw, lw, nullptr, true);
 
     ERRTSetObstacles(dmf, true, true);
     OwnRobot[dmf].face(m_world_state.ball.position);
@@ -13,8 +13,7 @@ void Ai::kickoff_their_one_wall()
         dmf,
         m_world_state.ball.position.pointOnConnectingLine(
             Common::Vec2(side * Common::field().width, 0),
-            m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) /
-                2.0f),
+            m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 2.0f),
         40, VelocityProfile::Type::Mamooli);
 
     int indexP = -1;
@@ -62,26 +61,24 @@ void Ai::kickoff_their_one_wall()
         {
             ERRTSetObstacles(mid1, true, true);
             OwnRobot[mid1].face(m_world_state.ball.position);
-            ERRTNavigate2Point(
-                mid1,
-                m_world_state.ball.position.circleAroundPoint(
-                    Common::Angle::fromDeg(20.0f) + m_world_state.ball.position.angleWith(
-                                                        Common::Vec2(side * Common::field().width, 0)),
-                    790.0f),
-                100);
+            ERRTNavigate2Point(mid1,
+                               m_world_state.ball.position.circleAroundPoint(
+                                   Common::Angle::fromDeg(20.0f) + m_world_state.ball.position.angleWith(
+                                                                       Common::Vec2(side * Common::field().width, 0)),
+                                   790.0f),
+                               100);
             markMap[&mid1] = -1;
         }
         else
         {
             ERRTSetObstacles(mid2, true, true);
             OwnRobot[mid2].face(m_world_state.ball.position);
-            ERRTNavigate2Point(
-                mid2,
-                m_world_state.ball.position.circleAroundPoint(
-                    Common::Angle::fromDeg(-20.0f) + m_world_state.ball.position.angleWith(
-                                                         Common::Vec2(side * Common::field().width, 0)),
-                    790.0f),
-                100);
+            ERRTNavigate2Point(mid2,
+                               m_world_state.ball.position.circleAroundPoint(
+                                   Common::Angle::fromDeg(-20.0f) + m_world_state.ball.position.angleWith(
+                                                                        Common::Vec2(side * Common::field().width, 0)),
+                                   790.0f),
+                               100);
             markMap[&mid2] = -1;
         }
     }
@@ -113,26 +110,24 @@ void Ai::kickoff_their_one_wall()
         {
             ERRTSetObstacles(mid1, true, true);
             OwnRobot[mid1].face(m_world_state.ball.position);
-            ERRTNavigate2Point(
-                mid1,
-                m_world_state.ball.position.circleAroundPoint(
-                    Common::Angle::fromDeg(20) + m_world_state.ball.position.angleWith(
-                                                     Common::Vec2(side * Common::field().width, 0)),
-                    790),
-                100);
+            ERRTNavigate2Point(mid1,
+                               m_world_state.ball.position.circleAroundPoint(
+                                   Common::Angle::fromDeg(20) + m_world_state.ball.position.angleWith(
+                                                                    Common::Vec2(side * Common::field().width, 0)),
+                                   790),
+                               100);
             markMap[&mid1] = -1;
         }
         else
         {
             ERRTSetObstacles(mid2, true, true);
             OwnRobot[mid2].face(m_world_state.ball.position);
-            ERRTNavigate2Point(
-                mid2,
-                m_world_state.ball.position.circleAroundPoint(
-                    Common::Angle::fromDeg(-20) + m_world_state.ball.position.angleWith(
-                                                      Common::Vec2(side * Common::field().width, 0)),
-                    790),
-                100);
+            ERRTNavigate2Point(mid2,
+                               m_world_state.ball.position.circleAroundPoint(
+                                   Common::Angle::fromDeg(-20) + m_world_state.ball.position.angleWith(
+                                                                     Common::Vec2(side * Common::field().width, 0)),
+                                   790),
+                               100);
             markMap[&mid2] = -1;
         }
     }

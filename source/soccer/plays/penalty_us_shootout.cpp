@@ -6,7 +6,7 @@ static float t_nml;
 
 void Ai::penalty_us_shootout()
 {
-    DefMid(def, rw, lw, nullptr, true);
+    DefBy3(def, rw, lw, nullptr, true);
 
     OwnRobot[dmf].face(Common::Vec2(-side * Common::field().width, 0));
     ERRTSetObstacles(dmf, true, true);
@@ -32,8 +32,8 @@ void Ai::penalty_us_shootout()
     }
     else
     {
-        circle_ball(attack, Common::Vec2(-side * Common::field().width, 400).angleWith(m_world_state.ball.position), 60, 0,
-                    0);
+        circle_ball(attack, Common::Vec2(-side * Common::field().width, 400).angleWith(m_world_state.ball.position), 60,
+                    0, 0);
         Common::logInfo("step2 - Kick in the goal!!!!");
     }
 }
