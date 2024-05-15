@@ -114,7 +114,6 @@ public:
     NetworkAddress referee_address = {"224.5.23.1", 10003};
 
     NetworkAddress sender_address     = {"224.5.92.5", 60005};
-    NetworkAddress sender_rec_address = {"", 0}; // TODO: unused?
 
     NetworkAddress commands_address = {"224.5.92.6", 60007};
 
@@ -154,6 +153,8 @@ public:
     double ang_gamma_reality    = 1;
     double ang_gamma_simulation = 1;
 
-    std::string robot_behavior_tree_config_filename = "bt_default.xml";
+    float one_touch_beta   = 0.4;  // Damping factor
+    float one_touch_gamma  = 0.14; // Reflect factor
+    float one_touch_shoot_k = 4000.0f;
 };
 } // namespace Tyr::Common

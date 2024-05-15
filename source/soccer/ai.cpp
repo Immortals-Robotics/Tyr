@@ -35,10 +35,6 @@ Ai::Ai()
     isDefending  = false;
     oppRestarted = false;
 
-    beta   = 0.4;  // Damping factor
-    gamma  = 0.14; // Reflect factor
-    shootK = 4000.0f;
-
     lastReferee = Common::RefereeState::STATE_GAME_OFF;
 
     attack = cmf;
