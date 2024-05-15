@@ -171,7 +171,8 @@ struct RobotState
         angle            = t_robot.angle();
         angular_velocity = t_robot.angular_velocity();
 
-        seen_state = (SeenState) t_robot.seen_state();
+        seen_state         = (SeenState) t_robot.seen_state();
+        out_for_substitute = t_robot.out_for_substitute();
     }
 
     void fillProto(Protos::Immortals::RobotState *const t_robot) const
@@ -186,6 +187,7 @@ struct RobotState
         angular_velocity.fillProto(t_robot->mutable_angular_velocity());
 
         t_robot->set_seen_state((Protos::Immortals::SeenState) seen_state);
+        t_robot->set_out_for_substitute(out_for_substitute);
     }
 };
 
