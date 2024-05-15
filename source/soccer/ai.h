@@ -86,7 +86,6 @@ private:
     int side;
 
     // Helpers
-    Common::Vec2 DefGhuz(Common::Vec2 *defendTarget = nullptr);
     Common::Vec2 CalculatePassPos(int robot_num, const Common::Vec2 &target, const Common::Vec2 &statPos,
                                   float bar = 89.0f);
     void         calculateBallTrajectory();
