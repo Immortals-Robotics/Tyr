@@ -106,7 +106,7 @@ bool Application::initialize(const int width, const int height)
 
     rlImGuiSetup(true);
 
-    m_renderer    = std::make_unique<Renderer>(Common::Vec2(900.f, 693.f), 4.0f);
+    m_renderer    = std::make_unique<Renderer>();
     m_config_menu = std::make_unique<ConfigMenu>();
     m_widget_menu = std::make_unique<WidgetMenu>();
     m_demo_menu   = std::make_unique<DemoMenu>();
@@ -163,19 +163,19 @@ void Application::update()
 
     rlImGuiBegin();
 
-    static bool  opened = true, opened2 = true;
-    Common::Vec2 margin = Common::Vec2(30, 30) * 2;
-    Common::Vec2 wSize  = Common::Vec2(900.f, 700.f) + margin;
-    // TODO: draw gui
+    static bool opened = true, opened2 = true;
+
     ImGuiWindowFlags renderer_window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
-                                             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration;
-    auto main_window_height = GetScreenHeight();
-    auto main_window_width  = GetScreenWidth();
+                                             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration |
+                                             ImGuiWindowFlags_NoBackground;
+    int main_window_height = GetScreenHeight();
+    int main_window_width  = GetScreenWidth();
     ImGui::SetNextWindowPos(ImVec2(250., 0.));
     if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
     {
         main_window_width = (main_window_height - 200.) / 0.77 + 650.;
     }
+
     ImGui::SetNextWindowSize(ImVec2(main_window_width - 650., (main_window_width - 650.) * 0.77));
 
     if (!ImGui::Begin("Field", &opened, renderer_window_flags))
@@ -204,19 +204,24 @@ void Application::update()
         if (m_demo_menu->getState() == LogState::None)
         {
             m_renderer->draw(m_debug_wrapper);
-            m_log_menu->draw(m_debug_wrapper);
         }
         else
         {
             m_renderer->draw(m_demo_menu->debugWrapper());
-            m_log_menu->draw(m_demo_menu->debugWrapper());
         }
 
         m_renderer->endDraw();
 
-        m_renderer->applyShader();
-        ImGui::Image(&m_renderer->shader_rt.texture, ImGui::GetContentRegionAvail());
         ImGui::End();
+    }
+
+    if (m_demo_menu->getState() == LogState::None)
+    {
+        m_log_menu->draw(m_debug_wrapper);
+    }
+    else
+    {
+        m_log_menu->draw(m_demo_menu->debugWrapper());
     }
 
     m_config_menu->draw();

@@ -5,7 +5,7 @@ namespace Tyr::Gui
 class Renderer
 {
 public:
-    Renderer(Common::Vec2 _wSize, float _upScalingFactor);
+    Renderer();
     void initialize();
 
     void beginDraw();
@@ -30,15 +30,12 @@ public:
 
     void draw(const Common::FieldState &t_field);
 
-    void drawText(Common::Vec2 t_pos, const std::string &t_str, int t_font_size = 12,
+    void drawText(Common::Vec2 t_pos, const std::string &t_str, float t_font_size = 120,
                   Common::Color t_color = Common::Color::white());
 
     void draw(const Common::Debug::Wrapper &t_wrapper);
 
-    void applyShader();
-
-    Common::Vec2  getMousePosition();
-    RenderTexture main_rt, shader_rt;
+    Common::Vec2 getMousePosition();
 
 private:
     const float  robotArcAngle;
@@ -46,14 +43,10 @@ private:
     Common::Vec2 m_w_size;
     Common::Vec2 overallFieldSize;
     float        m_zoom_scale;
-    float        m_upscaling_factor;
     Common::Vec2 m_avil_size;
     Font         m_font;
     Common::Vec2 m_mouse_pos;
 
-    Shader fxaaShader;
-
-    void    CalculateZoom();
     Vector2 ConvertSignedVecToPixelVec(Common::Vec2 _signedVec);
     void    calculateMousePos();
 };

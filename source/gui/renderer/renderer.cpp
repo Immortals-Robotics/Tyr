@@ -2,49 +2,41 @@
 
 namespace Tyr::Gui
 {
-Renderer::Renderer(Common::Vec2 _wSize, float _upScalingFactor) : robotArcAngle(50.f), m_window_border(8.f)
-{
-    m_w_size           = _wSize * _upScalingFactor;
-    m_upscaling_factor = _upScalingFactor;
-
-    main_rt   = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
-    shader_rt = LoadRenderTexture((int) m_w_size.x, (int) m_w_size.y);
-
-    SetTextureFilter(main_rt.texture, TEXTURE_FILTER_BILINEAR);
-    SetTextureFilter(shader_rt.texture, TEXTURE_FILTER_BILINEAR);
-}
+Renderer::Renderer() : robotArcAngle(50.f), m_window_border(8.f)
+{}
 
 void Renderer::initialize()
 {
-    std::array<float, 2> resolution = {m_w_size.x, m_w_size.y};
-
     const std::filesystem::path data_dir(DATA_DIR);
-    const std::filesystem::path vertex_path   = data_dir / "shaders/raylib_vertex.vs";
-    const std::filesystem::path fragment_path = data_dir / "shaders/fxaa.fs";
-    const std::filesystem::path font_path     = data_dir / "fonts/open-sans-regular.ttf";
+    const std::filesystem::path font_path = data_dir / "fonts/open-sans-regular.ttf";
 
-    fxaaShader = LoadShader(vertex_path.string().c_str(), fragment_path.string().c_str());
-    m_font     = LoadFont(font_path.string().c_str());
-    SetShaderValue(fxaaShader, GetShaderLocation(fxaaShader, "resolution"), resolution.data(), SHADER_UNIFORM_VEC2);
+    m_font = LoadFont(font_path.string().c_str());
 }
 
 void Renderer::beginDraw()
 {
+    const Common::Vec2 pos  = {ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y};
+    const Common::Vec2 size = {ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y};
+
+    const bool   x     = size.x < size.y;
+    Common::Vec2 ratio = Common::Vec2(size.x / overallFieldSize.x, size.y / overallFieldSize.y);
+    this->m_zoom_scale = x ? (ratio.x > ratio.y ? ratio.x : ratio.y) : (ratio.x > ratio.y ? ratio.y : ratio.x);
+
     const Camera2D camera = {
-        .offset   = Vector2{main_rt.texture.width / 2.0f, main_rt.texture.height / 2.0f}, // Offset from the target
-        .target   = Vector2{0.0f, 0.0f}, // Camera target (center of the screen)
-        .rotation = 0.0f,                // Camera rotation in degrees
-        .zoom     = m_zoom_scale,        // Camera zoom (1.0f means no zoom)
+        .offset   = Vector2{pos.x + size.x / 2.0f, pos.y + size.y / 2.0f}, // Offset from the target
+        .target   = Vector2{0.0f, 0.0f},                                   // Camera target (center of the screen)
+        .rotation = 0.0f,                                                  // Camera rotation in degrees
+        .zoom     = m_zoom_scale,                                          // Camera zoom (1.0f means no zoom)
     };
 
-    BeginTextureMode(main_rt);
     BeginMode2D(camera);
+    BeginScissorMode(pos.x, pos.y, size.x, size.y);
 }
 
 void Renderer::endDraw()
 {
-    EndTextureMode();
     EndMode2D();
+    EndScissorMode();
 }
 
 Vector2 Renderer::ConvertSignedVecToPixelVec(Common::Vec2 _signedVec)
@@ -54,16 +46,14 @@ Vector2 Renderer::ConvertSignedVecToPixelVec(Common::Vec2 _signedVec)
 
 void Renderer::calculateMousePos()
 {
-    m_avil_size.x             = ImGui::GetContentRegionAvail().x * m_upscaling_factor;
-    m_avil_size.y             = ImGui::GetContentRegionAvail().y * m_upscaling_factor;
+    m_avil_size.x             = ImGui::GetContentRegionAvail().x;
+    m_avil_size.y             = ImGui::GetContentRegionAvail().y;
     Common::Vec2 window_scale = m_w_size / m_avil_size;
     m_mouse_pos.x             = ImGui::GetMousePos().x;
     m_mouse_pos.y             = ImGui::GetMousePos().y;
-    m_mouse_pos.x = (m_mouse_pos.x - ImGui::GetWindowPos().x - m_window_border) / m_zoom_scale * m_upscaling_factor *
-                        window_scale.x -
+    m_mouse_pos.x = (m_mouse_pos.x - ImGui::GetWindowPos().x - m_window_border) / m_zoom_scale * window_scale.x -
                     overallFieldSize.x / 2;
-    m_mouse_pos.y = -1 * ((m_mouse_pos.y - ImGui::GetWindowPos().y - m_window_border) / m_zoom_scale *
-                              m_upscaling_factor * window_scale.y -
+    m_mouse_pos.y = -1 * ((m_mouse_pos.y - ImGui::GetWindowPos().y - m_window_border) / m_zoom_scale * window_scale.y -
                           overallFieldSize.y / 2);
 }
 
@@ -173,28 +163,10 @@ void Renderer::draw(Common::Triangle triangle, Common::Color t_color, bool t_is_
     }
 }
 
-void Renderer::drawText(Common::Vec2 _pos, const std::string &_str, int _fontSize, Common::Color t_color)
+void Renderer::drawText(Common::Vec2 _pos, const std::string &_str, float _fontSize, Common::Color t_color)
 {
-    _fontSize = _fontSize / m_zoom_scale;
-
     Vector2 pos = ConvertSignedVecToPixelVec(_pos);
-    DrawTextEx(m_font, _str.c_str(), pos, _fontSize * m_upscaling_factor, 0., raylibColor(t_color));
-}
-
-void Renderer::CalculateZoom()
-{
-    bool         x     = this->m_w_size.x < this->m_w_size.y;
-    Common::Vec2 ratio = Common::Vec2(this->m_w_size.x / overallFieldSize.x, this->m_w_size.y / overallFieldSize.y);
-    this->m_zoom_scale = x ? (ratio.x > ratio.y ? ratio.x : ratio.y) : (ratio.x > ratio.y ? ratio.y : ratio.x);
-}
-
-void Renderer::applyShader()
-{
-    BeginTextureMode(shader_rt);
-    BeginShaderMode(fxaaShader);
-    DrawTexture(main_rt.texture, 0, 0, WHITE);
-    EndShaderMode();
-    EndTextureMode();
+    DrawTextEx(m_font, _str.c_str(), pos, (int) _fontSize, 0., raylibColor(t_color));
 }
 
 void Renderer::draw(const Common::RawWorldState &t_world)
@@ -223,7 +195,6 @@ void Renderer::draw(const Common::FieldState &t_field)
     this->overallFieldSize.x = t_field.width * 2.0f + 4.0f * t_field.boundary_width;
     this->overallFieldSize.y = t_field.height * 2.0f + 4 * t_field.boundary_width;
 
-    CalculateZoom();
     calculateMousePos();
 
     Common::Vec2 fieldWallStartPoint = Common::Vec2(t_field.width * 2.0f / -2 - t_field.boundary_width,
@@ -254,7 +225,7 @@ void Renderer::draw(const Common::FieldState &t_field)
 
     draw(Common::Rect{fieldWallStartPoint, fieldWallEndPoint}, Common::Color::brown(), false, 10.0f);
 
-    static constexpr float kLineWidth = 4.0f;
+    static constexpr float kLineWidth = 2.0f;
 
     draw(Common::Rect{fieldEndPoint, fieldStartPoint}, Common::Color::white(), false, kLineWidth);
     draw(Common::Rect{ourGoalEndPoint, ourGoalStartPoint}, Common::Color::white(), false, kLineWidth);
@@ -264,7 +235,7 @@ void Renderer::draw(const Common::FieldState &t_field)
     draw(Common::LineSegment{centerLineStartPoint, centerLineEndPoint}, Common::Color::white(), kLineWidth);
     draw(Common::Circle{fieldCenter, centerCircleRad}, Common::Color::white(), false, kLineWidth);
 
-    drawText(fieldWallEndPoint + Common::Vec2(-800., 300.), "GUI FPS: " + std::to_string(GetFPS()), 14,
+    drawText(fieldWallEndPoint + Common::Vec2(-800., 300.), "GUI FPS: " + std::to_string(GetFPS()), 200,
              Common::Color::black());
 
     static bool         clicked = false;
