@@ -101,9 +101,6 @@ Ai::Ai()
     circleReachedBehindBall = false;
     PredictedBall           = Common::Vec2();
 
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
-        requiredRobots[i] = false;
-
     const auto strategy_path = std::filesystem::path(DATA_DIR) / "strategy.ims";
     loadPlayBook(strategy_path);
 

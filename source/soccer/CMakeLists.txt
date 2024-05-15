@@ -51,7 +51,6 @@ set(SOURCE_FILES
 	helpers/one_touch_angle.cpp
 	helpers/open_angle.cpp
 	helpers/out_of_field.cpp
-	helpers/robot_check.cpp
 	helpers/strategy_weight.cpp
 
 	plays/corner_their_global.cpp

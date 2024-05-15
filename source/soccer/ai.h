@@ -126,12 +126,6 @@ private:
     float        calculateSwitchToAttackerScore(int robot_num);
     float        outOfField(Common::Vec2 point);
 
-    // These functions make sure the required robots are present (in case if any of the robots got out):
-    void wantThisRobot(int robot_num); // First we tell which robot we need
-    bool positionRobots(bool avoid_GK  = true,
-                        bool avoid_DEF = true); // now we swap the apsent robots (TRUE if it succeeds)
-    bool requiredRobots[Common::Setting::kMaxOnFieldTeamRobots];
-
     // Skills
     void Navigate2Point(int robot_num, Common::Vec2 dest, float speed = 80.0f,
                         VelocityProfile::Type velocityProfile = VelocityProfile::Type::Mamooli, bool use_dss = false);
@@ -177,9 +171,7 @@ private:
     void penalty_their_simple();
     void corner_their_global();
     void strategy();
-    void our_place_ball_shoot();
-    void our_place_ball_shoot_V2();
-    void our_place_ball_shoot_taki();
+    void our_place_ball();
     void their_place_ball();
 
     void internalPrepare();

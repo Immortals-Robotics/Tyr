@@ -58,9 +58,7 @@ void Ai::process()
     }
     else if (m_ref_state.ourPlaceBall())
     {
-        currentPlay = &Ai::our_place_ball_shoot;
-        currentPlay = &Ai::our_place_ball_shoot_V2; // COMMENT this if it's not working...
-        // currentPlay = &Ai::our_place_ball_shoot_taki;
+        currentPlay = &Ai::our_place_ball;
     }
     else if (m_ref_state.theirFreeKick())
     {
