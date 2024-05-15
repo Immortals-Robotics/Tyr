@@ -12,6 +12,11 @@ void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, float speed, VelocityP
         velocityProfile = VelocityProfile::Type::Aroom;
     }
 
+    if (navigated[robot_num])
+    {
+        Common::logWarning("Robot {} is navigated more than once", OwnRobot[robot_num].vision_id);
+    }
+
     OwnRobot[robot_num].target.position.x = dest.x;
     OwnRobot[robot_num].target.position.y = dest.y;
 

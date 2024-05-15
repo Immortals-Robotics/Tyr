@@ -33,28 +33,6 @@ void Ai::our_place_ball()
             m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
         100, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(rw);
-    g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
-    OwnRobot[rw].face(m_world_state.ball.position);
-    ERRTNavigate2Point(
-        rw,
-        Common::Vec2(0, -100) +
-            m_world_state.ball.position.pointOnConnectingLine(
-                Common::Vec2(side * Common::field().width, 0),
-                m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
-        100, VelocityProfile::Type::Aroom);
-
-    ERRTSetObstacles(lw);
-    g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
-    OwnRobot[lw].face(m_world_state.ball.position);
-    ERRTNavigate2Point(
-        lw,
-        Common::Vec2(0, 100) +
-            m_world_state.ball.position.pointOnConnectingLine(
-                Common::Vec2(side * Common::field().width, 0),
-                m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
-        100, VelocityProfile::Type::Aroom);
-
     ERRTSetObstacles(mid2);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     OwnRobot[mid2].face(m_world_state.ball.position);
