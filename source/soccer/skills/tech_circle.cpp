@@ -136,7 +136,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
             PredictedBall = predictBallForwardAI(d);
         }
 
-        Common::debug().draw(Common::Circle{PredictedBall, 100}, Common::Color::blue());
+        Common::debug().draw(Common::Circle{PredictedBall, 50}, Common::Color::blue(), false);
 
         /*float d = Common::Vec2::distance ( OwnRobot[robot_num].state().position , Common::circleAroundPoint (
         m_world_state.ball.position , angle , 200.0f ) ); d += Common::Vec2::distance (
@@ -212,7 +212,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
 
     if (passedBall)
     {
-        Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 200}, Common::Color::gold());
+        Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 100}, Common::Color::gold(), false);
     }
 
     if (m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) < 400)
@@ -284,7 +284,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     if ((std::fabs(hehe.deg()) < tetta)) //|| ( circleReachedBehindBall ) )
     {
 
-        Common::debug().draw(Common::Circle{Common::Vec2(0, 0), 1000}, Common::Color::red());
+        Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 100}, Common::Color::red(), false);
         // hehe = angle;
         // if ( OwnRobot[2].state().angle < 0 )
         if ((kick) || (chip))
@@ -371,7 +371,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     }
     else
     {
-        Common::debug().draw(Common::Circle{Common::Vec2(0, 0), 1000}, Common::Color::orange());
+        Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 100}, Common::Color::orange(), false);
 
         hehe = PredictedBall.angleWith(OwnRobot[robot_num].state().position) +
                Common::Angle::fromDeg(Common::sign(hehe.deg()) * tetta);
@@ -387,7 +387,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
                                VelocityProfile::Type::Kharaki);
     }
 
-    Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 90}, Common::Color::violet());
+    Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 100}, Common::Color::violet(), false);
     Common::debug().draw(
         Common::LineSegment{
             OwnRobot[robot_num].state().position,

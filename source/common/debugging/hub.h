@@ -39,18 +39,19 @@ public:
         m_server->send(m_wrapper.time, pb_wrapper);
     }
 
-    inline void draw(Vec2 t_pos, Color t_color = Color::white(),
+    inline void draw(Vec2 t_pos, Color t_color = Color::black(), float t_thickness = 10.0f,
                      std::source_location source = std::source_location::current())
     {
         Draw draw{};
-        draw.source = source;
-        draw.shape  = t_pos;
-        draw.color  = t_color;
+        draw.source    = source;
+        draw.shape     = t_pos;
+        draw.color     = t_color;
+        draw.thickness = t_thickness;
 
         this->draw(std::move(draw));
     }
 
-    inline void draw(const Line &t_line, Color t_color = Color::white(), float t_thickness = 1.0f,
+    inline void draw(const Line &t_line, Color t_color = Color::black(), float t_thickness = 10.0f,
                      std::source_location source = std::source_location::current())
     {
         Draw draw{};
@@ -62,7 +63,7 @@ public:
         this->draw(std::move(draw));
     }
 
-    inline void draw(const LineSegment &t_line, Color t_color = Color::white(), float t_thickness = 1.0f,
+    inline void draw(const LineSegment &t_line, Color t_color = Color::black(), float t_thickness = 10.0f,
                      std::source_location source = std::source_location::current())
     {
         Draw draw{};
@@ -74,8 +75,8 @@ public:
         this->draw(std::move(draw));
     }
 
-    inline void draw(const Rect &t_rect, Color t_color = Color::white(), bool t_filled = true, float t_thickness = 1.0f,
-                     std::source_location source = std::source_location::current())
+    inline void draw(const Rect &t_rect, Color t_color = Color::black(), bool t_filled = true,
+                     float t_thickness = 10.0f, std::source_location source = std::source_location::current())
     {
         Draw draw{};
         draw.source    = source;
@@ -87,8 +88,8 @@ public:
         this->draw(std::move(draw));
     }
 
-    inline void draw(const Circle &t_circle, Color t_color = Color::white(), bool t_filled = true,
-                     float t_thickness = 1.0f, std::source_location source = std::source_location::current())
+    inline void draw(const Circle &t_circle, Color t_color = Color::black(), bool t_filled = true,
+                     float t_thickness = 10.0f, std::source_location source = std::source_location::current())
     {
         Draw draw{};
         draw.source    = source;
@@ -100,8 +101,8 @@ public:
         this->draw(std::move(draw));
     }
 
-    inline void draw(const Triangle &t_triangle, Color t_color = Color::white(), bool t_filled = true,
-                     float t_thickness = 1.0f, std::source_location source = std::source_location::current())
+    inline void draw(const Triangle &t_triangle, Color t_color = Color::black(), bool t_filled = true,
+                     float t_thickness = 10.0f, std::source_location source = std::source_location::current())
     {
         Draw draw{};
         draw.source    = source;

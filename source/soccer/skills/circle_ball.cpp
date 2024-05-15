@@ -44,7 +44,7 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         ERRTNavigate2Point(robot_num, m_world_state.ball.position, 30, VelocityProfile::Type::Mamooli);
 
         Common::debug().draw(Common::Circle{m_world_state.ball.position, very_far_ball_dis - 90.0f},
-                             Common::Color::red());
+                             Common::Color::red(), false);
 
         if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) < very_far_ball_dis)
         {
@@ -61,8 +61,8 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
             m_world_state.ball.position.angleWith(OwnRobot[robot_num].state().position), near_ball_dis);
         ERRTNavigate2Point(robot_num, target_point, 20, VelocityProfile::Type::Aroom);
 
-        Common::debug().draw(Common::Circle{m_world_state.ball.position, far_ball_dis - 90.0f},
-                             Common::Color::pink());
+        Common::debug().draw(Common::Circle{m_world_state.ball.position, far_ball_dis - 90.0f}, Common::Color::pink(),
+                             false);
 
         if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) < far_ball_dis)
         {
@@ -106,8 +106,7 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         else
             ERRTNavigate2Point(robot_num, target_point, 20, VelocityProfile::Type::Mamooli);
 
-        if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) >
-            far_ball_dis * shmit_coeff)
+        if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) > far_ball_dis * shmit_coeff)
         {
             state         = kFar;
             last_change_t = timer.time();
@@ -145,11 +144,10 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         if (chip_pow > 0)
             OwnRobot[robot_num].Chip(chip_pow);
         Common::debug().draw(Common::Circle{m_world_state.ball.position, very_far_ball_dis - 90.0f},
-                             Common::Color::red());
+                             Common::Color::red(), false);
         // tech_circle(robot_num, tagret_angle, shoot_pow, chip_pow, 1, 1, 0, 0);
 
-        if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) >
-            near_ball_dis * shmit_coeff)
+        if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) > near_ball_dis * shmit_coeff)
         {
             state         = kFar;
             last_change_t = timer.time();
@@ -193,7 +191,7 @@ void Ai::circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_p
         ERRTNavigate2Point(robot_num, m_world_state.ball.position, 30, VelocityProfile::Type::Aroom);
 
         Common::debug().draw(Common::Circle{m_world_state.ball.position, very_far_ball_dis - 90.0f},
-                             Common::Color::red());
+                             Common::Color::red(), false);
 
         if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) < very_far_ball_dis)
         {
@@ -209,8 +207,8 @@ void Ai::circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_p
             m_world_state.ball.position.angleWith(OwnRobot[robot_num].state().position), near_ball_dis);
         ERRTNavigate2Point(robot_num, target_point, 20, VelocityProfile::Type::Aroom);
 
-        Common::debug().draw(Common::Circle{m_world_state.ball.position, far_ball_dis - 90.0f},
-                             Common::Color::pink());
+        Common::debug().draw(Common::Circle{m_world_state.ball.position, far_ball_dis - 90.0f}, Common::Color::pink(),
+                             false);
 
         if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) < far_ball_dis)
         {
@@ -253,8 +251,7 @@ void Ai::circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_p
         else
             ERRTNavigate2Point(robot_num, target_point, 20, VelocityProfile::Type::Mamooli);
 
-        if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) >
-            far_ball_dis * shmit_coeff)
+        if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) > far_ball_dis * shmit_coeff)
         {
             state         = kFar;
             last_change_t = timer.time();
@@ -291,11 +288,10 @@ void Ai::circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_p
         if (chip_pow > 0)
             OwnRobot[robot_num].Chip(chip_pow);
         Common::debug().draw(Common::Circle{m_world_state.ball.position, very_far_ball_dis - 90.0f},
-                             Common::Color::red());
+                             Common::Color::red(), false);
         // tech_circle(robot_num, tagret_angle, shoot_pow, chip_pow, 1, 1, 0, 0);
 
-        if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) >
-            near_ball_dis * shmit_coeff)
+        if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) > near_ball_dis * shmit_coeff)
         {
             state         = kFar;
             last_change_t = timer.time();

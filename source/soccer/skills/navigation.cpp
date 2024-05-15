@@ -30,6 +30,9 @@ void Ai::ERRTNavigate2Point(int robot_num, Common::Vec2 dest, float speed, const
         Halt(robot_num);
     else
     {
+        if (OwnRobot[robot_num].state().position.distanceTo(dest) > 100.0f)
+            Common::debug().draw(dest);
+
         planner[robot_num].init(OwnRobot[robot_num].state().position, dest, 90.0f);
         Common::Vec2 wayp = planner[robot_num].plan();
 

@@ -4,8 +4,8 @@ namespace Tyr::Soccer
 {
 Common::Vec2 Ai::CalculatePassPos(int robot_num, const Common::Vec2 &target, const Common::Vec2 &statPos, float bar)
 {
-    Common::Line ball_line = Common::Line::fromPointAndAngle(m_world_state.ball.position,
-                                                             m_world_state.ball.velocity.toAngle());
+    Common::Line ball_line =
+        Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());
     // Common::Line ball_line ( 1.0 , -ballLine.getSlope() , -ballLine.getIntercept() );
 
     if (chip_head.deg() < 180)
@@ -18,7 +18,7 @@ Common::Vec2 Ai::CalculatePassPos(int robot_num, const Common::Vec2 &target, con
     // angleWithTarget = OwnRobot[robot_num].state().angle;
     Common::Vec2 ans  = ball_line.closestPoint(statPos + angleWithTarget.toUnitVec() * bar);
     Common::Vec2 fans = ans - angleWithTarget.toUnitVec() * bar;
-    Common::debug().draw(Common::Circle{fans, 90}, Common::Color::dark_blue());
+    Common::debug().draw(fans, Common::Color::dark_blue());
     return fans;
 }
 
@@ -64,9 +64,9 @@ float getCalibratedShootPowCPY(int vision_id, float raw_shoot)
 
 void Ai::WaitForPass(int robot_num, bool chip, const Common::Vec2 *target, Common::Vec2 *statPos)
 {
-    Common::Vec2 pos = CalculatePassPos(
-        robot_num, target == nullptr ? Common::Vec2(-side * Common::field().width, 0) : *target,
-        statPos == nullptr ? OwnRobot[robot_num].state().position : *statPos, 78);
+    Common::Vec2 pos =
+        CalculatePassPos(robot_num, target == nullptr ? Common::Vec2(-side * Common::field().width, 0) : *target,
+                         statPos == nullptr ? OwnRobot[robot_num].state().position : *statPos, 78);
 
     /*if (target==nullptr) {
         target = new Common::Vec2(Common::Vec2(-side*3025, 0));

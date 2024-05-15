@@ -4,6 +4,11 @@ namespace Tyr::Soccer
 {
 void Ai::NormalPlayDef()
 {
+    Common::Vec2 ourgoal_p1 = Common::Vec2(side * Common::field().width, side * Common::field().goal_width / 2);
+    Common::Vec2 ourgoal_p2 = Common::Vec2(side * Common::field().width, side * Common::field().goal_width / -2);
+    Common::debug().draw(Common::Triangle{ourgoal_p1, m_world_state.ball.position, ourgoal_p2},
+                         Common::Color::blue().transparent(), true);
+
     ManageAttRoles();
 
     MarkManager(false);
@@ -88,10 +93,9 @@ void Ai::NormalPlayDef()
 #if 1
     if (attackFuckingAngle() && kicker_opp != -1)
     {
-        shootAngle =
-            m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0));
-        shoot_pow = 1;
-        chip_pow  = 0;
+        shootAngle = m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0));
+        shoot_pow  = 1;
+        chip_pow   = 0;
     }
 #endif
 
