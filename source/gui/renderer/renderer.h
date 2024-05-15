@@ -5,17 +5,26 @@ namespace Tyr::Gui
 class Renderer
 {
 public:
-    Renderer(Common::Vec2 _wSize, float _upScalingFactor);
-    void initialize();
+    Renderer();
 
-    void draw(Common::Vec2 t_point, Common::Color t_color, bool t_is_filled, float t_thickness = 1);
-    void draw(Common::Rect t_rect, Common::Color t_color, bool t_is_filled, float t_thickness = 1);
-    void draw(Common::Circle t_circle, Common::Color t_color, bool t_is_filled, float t_thickness = 1);
-    void drawCircleSector(Common::Circle t_circle, Common::Color t_color, float t_start_angle, float t_end_angle,
-                          bool t_is_filled);
-    void draw(Common::Line t_line, Common::Color t_color, float t_thickness = 1);
-    void draw(Common::LineSegment t_line_segment, Common::Color t_color, float t_thickness = 1);
-    void draw(Common::Triangle t_triangle, Common::Color t_color, bool t_is_filled = true, float t_thickness = 1);
+    void begin(const Common::FieldState &t_field);
+    void end();
+
+    inline void draw(const Common::Vec2 &t_point, const Common::Color &t_color, float t_thickness = 10.0f);
+    inline void draw(const Common::Rect &t_rect, const Common::Color &t_color, bool t_is_filled,
+                     float t_thickness = 10.0f);
+    inline void draw(const Common::Circle &t_circle, const Common::Color &t_color, bool t_is_filled,
+                     float t_thickness = 10.0f);
+    inline void drawCircleSector(const Common::Circle &t_circle, const Common::Color &t_color, float t_start_angle,
+                                 float t_end_angle, bool t_is_filled);
+    inline void draw(const Common::Line &t_line, const Common::Color &t_color, float t_thickness = 10.0f);
+    inline void draw(const Common::LineSegment &t_line_segment, const Common::Color &t_color,
+                     float t_thickness = 10.0f);
+    inline void draw(const Common::Triangle &t_triangle, const Common::Color &t_color, bool t_is_filled = true,
+                     float t_thickness = 10.0f);
+
+    inline void draw(const Common::Vec2 &t_pos, const std::string &t_text, const Common::Color &t_color,
+                     float t_font_size = 200);
 
     void draw(const Common::RawRobotState &t_robot);
     void draw(const Common::RawBallState &t_ball);
@@ -27,32 +36,32 @@ public:
 
     void draw(const Common::FieldState &t_field);
 
-    void drawText(Common::Vec2 t_pos, const std::string &t_str, int t_font_size = 12,
-                  Common::Color t_color = Common::Color::white());
-
     void draw(const Common::Debug::Wrapper &t_wrapper);
 
-    void applyShader();
-
-    Common::Vec2  getMousePosition();
-    RenderTexture main_rt, shader_rt;
+    inline Common::Vec2 mousePosition() const
+    {
+        return mirrorY(GetScreenToWorld2D(GetMousePosition(), m_camera));
+    }
 
 private:
-    const float  robotArcAngle;
-    const float  m_window_border;
-    Common::Vec2 m_w_size;
-    Common::Vec2 overallFieldSize;
-    float        m_zoom_scale;
-    float        m_upscaling_factor;
-    Common::Vec2 m_avil_size;
-    Font         m_font;
-    Common::Vec2 m_mouse_pos;
+    static constexpr float kRobotArcAngle = 50.0f;
+    static constexpr float kWindowBorder  = 8.0f;
 
-    Shader fxaaShader;
+    static inline Vector2 mirrorY(const Vector2 t_v)
+    {
+        return {.x = t_v.x, .y = -t_v.y};
+    }
 
-    void    CalculateZoom();
-    Vector2 ConvertSignedVecToPixelVec(Common::Vec2 _signedVec);
-    int     ConvertRealityUnitToPixels(float _value);
-    void    calculateMousePos();
+    static inline Rectangle mirrorY(const Rectangle t_rect)
+    {
+        return {.x = t_rect.x, .y = -(t_rect.y + t_rect.height), .width = t_rect.width, .height = t_rect.height};
+    }
+
+    Camera2D m_camera;
+    Font     m_font;
+
+    std::optional<Common::Vec2> m_clicked_pos;
 };
 } // namespace Tyr::Gui
+
+#include "draw.inl"

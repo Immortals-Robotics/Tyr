@@ -137,7 +137,7 @@ void Planner::draw(Common::Color t_color) const
 
     for (int i = 0; i < m_waypoints.size() - 1; i++)
     {
-        Common::debug().draw(Common::LineSegment{m_waypoints[i], m_waypoints[i + 1]}, t_color, 0.5f);
+        Common::debug().draw(Common::LineSegment{m_waypoints[i], m_waypoints[i + 1]}, t_color, 5.0f);
     }
 }
 } // namespace Tyr::Soccer

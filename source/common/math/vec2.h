@@ -17,19 +17,35 @@ struct Vec2
     constexpr Vec2(float t_x, float t_y) : x(t_x), y(t_y)
     {}
 
-    Vec2(const Protos::Immortals::Vec2 &t_v) : Vec2(t_v.x(), t_v.y())
+    inline Vec2(const Protos::Immortals::Vec2 &t_v) : Vec2(t_v.x(), t_v.y())
     {}
 
-    Vec2(const Protos::Ssl::Vector2 &t_v) : Vec2(t_v.x(), t_v.y())
+    inline Vec2(const Protos::Ssl::Vector2 &t_v) : Vec2(t_v.x(), t_v.y())
     {}
 
-    void fillProto(Protos::Immortals::Vec2 *const t_v) const
+    inline Vec2(const ::Vector2 &t_v) : Vec2(t_v.x, t_v.y)
+    {}
+
+    inline Vec2(const ::ImVec2 &t_v) : Vec2(t_v.x, t_v.y)
+    {}
+
+    inline operator ::Vector2() const
+    {
+        return {.x = x, .y = y};
+    }
+
+    inline operator ::ImVec2() const
+    {
+        return {x, y};
+    }
+
+    inline void fillProto(Protos::Immortals::Vec2 *const t_v) const
     {
         t_v->set_x(x);
         t_v->set_y(y);
     }
 
-    void fillProto(Protos::Ssl::Vector2 *const t_v) const
+    inline void fillProto(Protos::Ssl::Vector2 *const t_v) const
     {
         t_v->set_x(x);
         t_v->set_y(y);

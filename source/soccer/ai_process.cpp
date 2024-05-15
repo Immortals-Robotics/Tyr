@@ -9,8 +9,6 @@ void Ai::process()
     internalPrepare();
     internalProcessData();
 
-    Common::debug().draw(m_world_state.ball.position, Common::Color::red());
-
     Common::Vec2 ourgoal_p1 = Common::Vec2(Common::field().width, Common::field().goal_width / 2);
     Common::Vec2 ourgoal_p2 = Common::Vec2(Common::field().width, Common::field().goal_width / -2);
     Common::Vec2 oppgoal_p1 = ourgoal_p1 * -1;
