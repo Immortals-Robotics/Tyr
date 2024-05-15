@@ -21,9 +21,7 @@ void LogMenu::drawTerminal(const Common::Debug::Wrapper &t_wrapper)
                     fmt::format("[{:%a %H:%M:%S}] [{}] [{}:{}] {}", t_wrapper.time, line.levelName(),
                                 file_path.filename(), line.source.line, line.text);
 
-                Common::Color color = line.color();
-                ImVec4        line_color(color.r / 255., color.g / 255., color.b / 255., color.a / 255.);
-                ImGui::TextColored(line_color, "%s", text.c_str());
+                ImGui::TextColored(line.color(), "%s", text.c_str());
             }
         }
         if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())

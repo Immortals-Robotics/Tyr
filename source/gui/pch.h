@@ -9,6 +9,7 @@
 #include <string>
 #include <thread>
 #include <shared_mutex>
+#include <optional>
 
 #include <raylib.h>
 #include <raymath.h>

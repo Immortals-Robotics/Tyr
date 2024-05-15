@@ -8,6 +8,7 @@ set(HEADER_FILES
 	pch.h
 	app.h
 	renderer/renderer.h
+	renderer/draw.inl
 	menu/config_menu.h
 	menu/widget_menu.h
 	menu/demo_menu.h
@@ -21,10 +22,11 @@ set(SOURCE_FILES
 	menu/widget_menu.cpp
 	menu/demo_menu.cpp
 	menu/log_menu.cpp
-	renderer/renderer_ball.cpp
-	renderer/renderer_robot.cpp
+	renderer/ball.cpp
+	renderer/debug.cpp
+	renderer/field.cpp
 	renderer/renderer.cpp
-	renderer/renderer_debug.cpp
+	renderer/robot.cpp
 )
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})

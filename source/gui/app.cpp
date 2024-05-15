@@ -182,7 +182,7 @@ void Application::update()
     }
     else
     {
-        m_renderer->beginDraw(Common::field());
+        m_renderer->begin(Common::field());
 
         m_renderer->draw(Common::field());
 
@@ -208,7 +208,7 @@ void Application::update()
             m_renderer->draw(m_demo_menu->debugWrapper());
         }
 
-        m_renderer->endDraw();
+        m_renderer->end();
 
         ImGui::End();
     }
@@ -233,7 +233,7 @@ void Application::update()
         m_config_menu->updateNetworkData();
     }
 
-    m_widget_menu->draw(m_renderer->getMousePosition());
+    m_widget_menu->draw(m_renderer->mousePosition());
     m_demo_menu->draw();
     rlImGuiEnd();
 
