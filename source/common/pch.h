@@ -22,10 +22,12 @@
 #include <fmt/chrono.h>
 #include <fmt/format.h>
 #include <fmt/std.h>
+#include <imgui.h>
 #include <lmdb.h>
 #include <nng/nng.h>
 #include <nng/protocol/pubsub0/pub.h>
 #include <nng/protocol/pubsub0/sub.h>
+#include <raylib.h>
 #include <spdlog/async.h>
 #include <spdlog/details/null_mutex.h>
 #include <spdlog/sinks/base_sink.h>

@@ -18,6 +18,14 @@ public:
     Rect(const Protos::Immortals::Rect &t_rect) : Rect(t_rect.min(), t_rect.max())
     {}
 
+    inline Rect(const ::Rectangle &t_rect) : Rect(Vec2{t_rect.x, t_rect.y}, t_rect.width, t_rect.height)
+    {}
+
+    inline operator ::Rectangle() const
+    {
+        return {.x = min.x, .y = min.y, .width = width(), .height = height()};
+    }
+
     void fillProto(Protos::Immortals::Rect *const t_rect) const
     {
         min.fillProto(t_rect->mutable_min());
@@ -68,6 +76,21 @@ public:
     inline bool isCircleCross(Vec2 t_point1, Vec2 t_point2, float t_r) const
     {
         return (min.x <= t_point1.x) && (max.x >= t_point1.x) && (min.y <= t_point1.y) && (max.y >= t_point1.y);
+    }
+
+    inline Vec2 size() const
+    {
+        return max - min;
+    }
+
+    inline float width() const
+    {
+        return max.x - min.x;
+    }
+
+    inline float height() const
+    {
+        return max.y - min.y;
     }
 
     Vec2 min;

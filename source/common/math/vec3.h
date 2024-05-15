@@ -9,25 +9,33 @@ struct Angle;
 struct Vec3
 {
     Vec3() = default;
-    constexpr Vec3(float t_f) : Vec3(t_f, t_f, t_f)
+    inline constexpr Vec3(float t_f) : Vec3(t_f, t_f, t_f)
     {}
-    constexpr Vec3(float t_x, float t_y, float t_z) : x(t_x), y(t_y), z(t_z)
-    {}
-
-    Vec3(const Protos::Immortals::Vec3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
+    inline constexpr Vec3(float t_x, float t_y, float t_z) : x(t_x), y(t_y), z(t_z)
     {}
 
-    Vec3(const Protos::Ssl::Vector3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
+    inline Vec3(const Protos::Immortals::Vec3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
     {}
 
-    void fillProto(Protos::Immortals::Vec3 *const t_v) const
+    inline Vec3(const Protos::Ssl::Vector3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
+    {}
+
+    inline Vec3(const ::Vector3 &t_v) : Vec3(t_v.x, t_v.y, t_v.z)
+    {}
+
+    inline operator ::Vector3() const
+    {
+        return {.x = x, .y = y, .z = z};
+    }
+
+    inline void fillProto(Protos::Immortals::Vec3 *const t_v) const
     {
         t_v->set_x(x);
         t_v->set_y(y);
         t_v->set_z(z);
     }
 
-    void fillProto(Protos::Ssl::Vector3 *const t_v) const
+    inline void fillProto(Protos::Ssl::Vector3 *const t_v) const
     {
         t_v->set_x(x);
         t_v->set_y(y);
