@@ -2,9 +2,16 @@
 
 namespace Tyr::Soccer
 {
-void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, float speed, const VelocityProfile::Type velocityProfile,
+void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, float speed, VelocityProfile::Type velocityProfile,
                         bool use_dss)
 {
+    if (m_ref_state.shouldSlowDown() &&
+        (velocityProfile == VelocityProfile::Type::Mamooli || velocityProfile == VelocityProfile::Type::Kharaki ||
+         velocityProfile == VelocityProfile::Type::Killer))
+    {
+        velocityProfile = VelocityProfile::Type::Aroom;
+    }
+
     OwnRobot[robot_num].target.position.x = dest.x;
     OwnRobot[robot_num].target.position.y = dest.y;
 

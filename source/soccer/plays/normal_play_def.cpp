@@ -30,7 +30,7 @@ void Ai::NormalPlayDef()
                 int oppAttacker = findKickerOpp(-1);
 
                 OwnRobot[own].face(Common::Vec2(-side * Common::field().width, 0));
-                ERRTSetObstacles(own, 0, 1);
+                ERRTSetObstacles(own);
 
                 if (own == dmf)
                 {

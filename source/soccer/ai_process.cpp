@@ -41,7 +41,7 @@ void Ai::process()
     {
         currentPlay = &Ai::kickoff_us_chip;
     }
-    else if ((m_ref_state.ourDirectKick()) || (m_ref_state.ourIndirectKick()))
+    else if (m_ref_state.ourDirectKick() || m_ref_state.ourIndirectKick())
     {
         if (target_str != -1)
         {
@@ -76,12 +76,13 @@ void Ai::process()
     {
         currentPlay = &Ai::their_place_ball;
     }
-    else if (m_ref_state.get() == Common::RefereeState::STATE_HALTED)
+    else if (!m_ref_state.canMove())
     {
         currentPlay = &Ai::HaltAll;
     }
     else
     {
+        Common::logWarning("Unhandled ref state: {}", (int) m_ref_state.get());
         currentPlay = &Ai::Stop;
     }
 
@@ -94,8 +95,13 @@ void Ai::process()
 
     for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
     {
-        if ((OwnRobot[i].state().seen_state == Common::SeenState::CompletelyOut) || (!navigated[i]))
+        if (OwnRobot[i].state().seen_state == Common::SeenState::CompletelyOut)
         {
+            Halt(i);
+        }
+        else if (!navigated[i])
+        {
+            Common::logWarning("Own robot {} was not navigated", OwnRobot[i].vision_id);
             Halt(i);
         }
     }

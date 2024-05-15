@@ -15,10 +15,10 @@ static float calculateRobotRadius(const Common::RobotState &state)
     return Common::field().robot_radius * (1.0f + extension_factor);
 }
 
-void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
+void Ai::ERRTSetObstacles(int robot_num, bool bll)
 {
-    const bool ourPenalty = field || (robot_num != gk && !m_ref_state.ourPlaceBall());
-    const bool oppPenalty = field || !m_ref_state.ourPlaceBall();
+    const bool ourPenalty = robot_num != gk && !m_ref_state.ourPlaceBall();
+    const bool oppPenalty = !m_ref_state.ourPlaceBall();
 
     const bool oppPenaltyBig = m_ref_state.freeKick() || m_ref_state.stop();
 

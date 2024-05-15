@@ -44,7 +44,7 @@ void Ai::Stop()
         {
             if (own == dmf)
             {
-                ERRTSetObstacles(dmf, true, true);
+                ERRTSetObstacles(dmf);
                 OwnRobot[dmf].face(m_world_state.ball.position);
                 ERRTNavigate2Point(
                     dmf,
@@ -57,7 +57,7 @@ void Ai::Stop()
             }
             else if (own == lmf)
             {
-                ERRTSetObstacles(lmf, true, true);
+                ERRTSetObstacles(lmf);
                 OwnRobot[lmf].face(m_world_state.ball.position);
                 ERRTNavigate2Point(
                     lmf,
@@ -71,7 +71,7 @@ void Ai::Stop()
             }
             else if (own == rmf)
             {
-                ERRTSetObstacles(rmf, true, true);
+                ERRTSetObstacles(rmf);
                 OwnRobot[rmf].face(m_world_state.ball.position);
                 ERRTNavigate2Point(
                     rmf,
@@ -90,7 +90,7 @@ void Ai::Stop()
         }
     }
 #else
-    ERRTSetObstacles(dmf, true, true);
+    ERRTSetObstacles(dmf);
     OwnRobot[dmf].face(m_world_state.ball.position);
     ERRTNavigate2Point(
         dmf,
@@ -100,7 +100,7 @@ void Ai::Stop()
         100, VelocityProfile::Type::Aroom);
     OwnRobot[dmf].Shoot(0);
 
-    ERRTSetObstacles(lmf, true, true);
+    ERRTSetObstacles(lmf);
     OwnRobot[lmf].face(m_world_state.ball.position);
     ERRTNavigate2Point(lmf,
                        m_world_state.ball.position.circleAroundPoint(
@@ -110,7 +110,7 @@ void Ai::Stop()
                        100, VelocityProfile::Type::Aroom);
     OwnRobot[lmf].Shoot(0);
 
-    ERRTSetObstacles(rmf, true, true);
+    ERRTSetObstacles(rmf);
     OwnRobot[rmf].face(m_world_state.ball.position);
     ERRTNavigate2Point(rmf,
                        m_world_state.ball.position.circleAroundPoint(
@@ -121,7 +121,7 @@ void Ai::Stop()
     OwnRobot[rmf].Shoot(0);
 #endif
 
-    ERRTSetObstacles(cmf, true, true);
+    ERRTSetObstacles(cmf);
     OwnRobot[cmf].face(m_world_state.ball.position);
     ERRTNavigate2Point(cmf,
                        m_world_state.ball.position.circleAroundPoint(

@@ -216,15 +216,7 @@ void Ai::strategy()
 
         else
         {
-            if (1)
-            { // strategy.role[i].path[step[i]].needrrt()==0) {
-                ERRTSetObstacles(*stm2AInum[i], 1, 1);
-                // ERRTSetObstacles(*stm2AInum[i], 0, 0);
-            }
-            else
-            {
-                ERRTSetObstacles(*stm2AInum[i], 1, 1);
-            }
+            ERRTSetObstacles(*stm2AInum[i], true);
 
             const VelocityProfile::Type profile = strategy.role[i].path[step[i]].velocity_profile;
 

@@ -7,13 +7,13 @@ void Ai::throwin_chip_shoot()
     GKHi(gk, true);
     DefHi(def, rw, lw, nullptr, true);
 
-    ERRTSetObstacles(mid2, true, true);
+    ERRTSetObstacles(mid2, true);
     OwnRobot[mid2].face(m_world_state.ball.position);
     ERRTNavigate2Point(mid2, Common::Vec2(-side * 1500, Common::sign(m_world_state.ball.position.y) * 2500.0f), 70,
                        VelocityProfile::Type::Mamooli);
     oneTouchType[mid2] = shirje;
 
-    ERRTSetObstacles(mid1, true, true);
+    ERRTSetObstacles(mid1, true);
     OwnRobot[mid1].face(m_world_state.ball.position);
     ERRTNavigate2Point(mid1, Common::Vec2(-side * 3500, Common::sign(m_world_state.ball.position.y) * 2500.0f), 70,
                        VelocityProfile::Type::Mamooli);
@@ -37,7 +37,7 @@ void Ai::throwin_chip_shoot()
     }
 
     OwnRobot[attack].face(Common::Vec2(-side * Common::field().width, 0));
-    ERRTSetObstacles(attack, 0, 1); // TODO the Obstacle avoidance for Opp was disabled (just added it)
+    ERRTSetObstacles(attack);
     g_obs_map.addCircle({m_world_state.ball.position, 320.0f});
     if (randomParam < 0.0)
         ERRTNavigate2Point(attack, m_world_state.ball.position.pointOnConnectingLine(

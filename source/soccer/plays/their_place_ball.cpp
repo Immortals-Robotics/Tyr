@@ -19,7 +19,7 @@ void Ai::their_place_ball()
         {
             if (own == dmf)
             {
-                ERRTSetObstacles(dmf, true, true);
+                ERRTSetObstacles(dmf);
                 OwnRobot[dmf].face(m_world_state.ball.position);
                 ERRTNavigate2Point(
                     dmf,
@@ -31,7 +31,7 @@ void Ai::their_place_ball()
             }
             else if (own == lmf)
             {
-                ERRTSetObstacles(lmf, true, true);
+                ERRTSetObstacles(lmf);
                 OwnRobot[lmf].face(m_world_state.ball.position);
                 ERRTNavigate2Point(
                     lmf,
@@ -44,7 +44,7 @@ void Ai::their_place_ball()
             }
             else if (own == rmf)
             {
-                ERRTSetObstacles(rmf, true, true);
+                ERRTSetObstacles(rmf);
                 OwnRobot[rmf].face(m_world_state.ball.position);
                 ERRTNavigate2Point(
                     rmf,
@@ -57,7 +57,7 @@ void Ai::their_place_ball()
             }
             else if (own == cmf)
             {
-                ERRTSetObstacles(cmf, true, true);
+                ERRTSetObstacles(cmf);
                 OwnRobot[cmf].face(m_world_state.ball.position);
                 ERRTNavigate2Point(
                     cmf,
@@ -75,7 +75,7 @@ void Ai::their_place_ball()
         }
     }
 #else
-    ERRTSetObstacles(dmf, true, true);
+    ERRTSetObstacles(dmf);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
@@ -93,7 +93,7 @@ void Ai::their_place_ball()
             m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
         100, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(rw, true, true);
+    ERRTSetObstacles(rw);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
@@ -112,7 +112,7 @@ void Ai::their_place_ball()
                 m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
         100, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(lw, true, true);
+    ERRTSetObstacles(lw);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
@@ -131,7 +131,7 @@ void Ai::their_place_ball()
                 m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
         100, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(lmf, true, true);
+    ERRTSetObstacles(lmf);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
@@ -149,7 +149,7 @@ void Ai::their_place_ball()
                            1090),
                        100, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(rmf, true, true);
+    ERRTSetObstacles(rmf);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
@@ -167,7 +167,7 @@ void Ai::their_place_ball()
                            1090),
                        100, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(cmf, true, true);
+    ERRTSetObstacles(cmf);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)

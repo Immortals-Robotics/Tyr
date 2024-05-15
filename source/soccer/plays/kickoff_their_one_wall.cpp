@@ -7,7 +7,7 @@ void Ai::kickoff_their_one_wall()
     GKHi(gk, 1);
     DefHi(def, rw, lw, nullptr, true);
 
-    ERRTSetObstacles(dmf, true, true);
+    ERRTSetObstacles(dmf);
     OwnRobot[dmf].face(m_world_state.ball.position);
     ERRTNavigate2Point(
         dmf,
@@ -38,7 +38,7 @@ void Ai::kickoff_their_one_wall()
     {
         if (side == -1)
         {
-            ERRTSetObstacles(mid1, true, true);
+            ERRTSetObstacles(mid1);
             OwnRobot[mid1].face(Common::Vec2(-side * Common::field().width, 0));
             ERRTNavigate2Point(mid1, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
                                          Common::Vec2(side * Common::field().width, 0),
@@ -47,7 +47,7 @@ void Ai::kickoff_their_one_wall()
         }
         else
         {
-            ERRTSetObstacles(mid2, true, true);
+            ERRTSetObstacles(mid2);
             OwnRobot[mid2].face(Common::Vec2(-side * Common::field().width, 0));
             ERRTNavigate2Point(mid2, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
                                          Common::Vec2(side * Common::field().width, 0),
@@ -59,7 +59,7 @@ void Ai::kickoff_their_one_wall()
     {
         if (side == -1)
         {
-            ERRTSetObstacles(mid1, true, true);
+            ERRTSetObstacles(mid1);
             OwnRobot[mid1].face(m_world_state.ball.position);
             ERRTNavigate2Point(mid1,
                                m_world_state.ball.position.circleAroundPoint(
@@ -71,7 +71,7 @@ void Ai::kickoff_their_one_wall()
         }
         else
         {
-            ERRTSetObstacles(mid2, true, true);
+            ERRTSetObstacles(mid2);
             OwnRobot[mid2].face(m_world_state.ball.position);
             ERRTNavigate2Point(mid2,
                                m_world_state.ball.position.circleAroundPoint(
@@ -87,7 +87,7 @@ void Ai::kickoff_their_one_wall()
     {
         if (side == 1)
         {
-            ERRTSetObstacles(mid1, true, true);
+            ERRTSetObstacles(mid1);
             OwnRobot[mid1].face(Common::Vec2(-side * Common::field().width, 0));
             ERRTNavigate2Point(mid1, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
                                          Common::Vec2(side * Common::field().width, 0),
@@ -96,7 +96,7 @@ void Ai::kickoff_their_one_wall()
         }
         else
         {
-            ERRTSetObstacles(mid2, true, true);
+            ERRTSetObstacles(mid2);
             OwnRobot[mid2].face(Common::Vec2(-side * Common::field().width, 0));
             ERRTNavigate2Point(mid2, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
                                          Common::Vec2(side * Common::field().width, 0),
@@ -108,7 +108,7 @@ void Ai::kickoff_their_one_wall()
     {
         if (side == 1)
         {
-            ERRTSetObstacles(mid1, true, true);
+            ERRTSetObstacles(mid1);
             OwnRobot[mid1].face(m_world_state.ball.position);
             ERRTNavigate2Point(mid1,
                                m_world_state.ball.position.circleAroundPoint(
@@ -120,7 +120,7 @@ void Ai::kickoff_their_one_wall()
         }
         else
         {
-            ERRTSetObstacles(mid2, true, true);
+            ERRTSetObstacles(mid2);
             OwnRobot[mid2].face(m_world_state.ball.position);
             ERRTNavigate2Point(mid2,
                                m_world_state.ball.position.circleAroundPoint(

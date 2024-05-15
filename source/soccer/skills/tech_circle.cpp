@@ -220,17 +220,6 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     else if (m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) > 600)
         circleReachedBehindBall = false;
 
-    if (0)
-    {
-        ERRTSetObstacles(robot_num, 0, 0);
-        planner[robot_num].init(m_world_state.ball.position, Common::Vec2(-0, 0), 9);
-        Common::Vec2 wayp = planner[robot_num].plan();
-
-        // wayp = Common::Vec2 ( -3025 , 0 );
-
-        angle = wayp.angleWith(m_world_state.ball.position);
-    }
-
     Common::logDebug("circle dadam");
 
     float r = 150.0f;
@@ -274,10 +263,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     hehe               = angle - hehe;
 
     if (needRRT)
-    {
-        ERRTSetObstacles(robot_num, false, true);
-    }
-
+        ERRTSetObstacles(robot_num);
     else
         g_obs_map.resetMap();
 

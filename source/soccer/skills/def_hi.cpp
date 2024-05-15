@@ -60,7 +60,7 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
             Common::Vec2 fans = Common::Vec2(ans.x, ans.y);
 
             OwnRobot[middef_num].target.angle = Common::Angle::fromDeg(alphaSgn * 43.0 + 90 + side * 90);
-            ERRTSetObstacles(middef_num, stop, 1);
+            ERRTSetObstacles(middef_num);
             ERRTNavigate2Point(middef_num, fans, 100, DEF_VEL_PROFILE);
         }
     }
@@ -78,7 +78,7 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
             Common::Vec2 fans = Common::Vec2(ans.x, ans.y);
 
             OwnRobot[rightdef_num].target.angle = Common::Angle::fromDeg(-85.0 + 90 + side * 90);
-            ERRTSetObstacles(rightdef_num, stop, 1);
+            ERRTSetObstacles(rightdef_num);
             ERRTNavigate2Point(rightdef_num, fans, 100, DEF_VEL_PROFILE);
         }
         else if (alpha.deg() < -48.0)
@@ -102,7 +102,7 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
             Common::Vec2 fans = Common::Vec2(ans.x, ans.y);
 
             OwnRobot[rightdef_num].target.angle = Common::Angle::fromDeg(-48.0 + 90 + side * 90);
-            ERRTSetObstacles(rightdef_num, stop, 1);
+            ERRTSetObstacles(rightdef_num);
             ERRTNavigate2Point(rightdef_num, fans, 100, DEF_VEL_PROFILE);
         }
     }
@@ -120,7 +120,7 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
             Common::Vec2 fans = Common::Vec2(ans.x, ans.y);
 
             OwnRobot[leftdef_num].target.angle = Common::Angle::fromDeg(85.0 + 90 + side * 90);
-            ERRTSetObstacles(leftdef_num, stop, 1);
+            ERRTSetObstacles(leftdef_num);
             ERRTNavigate2Point(leftdef_num, fans, 100, DEF_VEL_PROFILE);
         }
         else if (alpha.deg() > 48.0)
@@ -144,7 +144,7 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
             Common::Vec2 fans = Common::Vec2(ans.x, ans.y);
 
             OwnRobot[leftdef_num].target.angle = Common::Angle::fromDeg(48.0 + 90 + side * 90);
-            ERRTSetObstacles(leftdef_num, stop, 1);
+            ERRTSetObstacles(leftdef_num);
             ERRTNavigate2Point(leftdef_num, fans, 100, DEF_VEL_PROFILE);
         }
     }

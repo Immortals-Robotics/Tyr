@@ -33,19 +33,19 @@ void Ai::Stop_def()
     static_pos[mid1] = Common::Vec2(side * 4500, Common::sign(-m_world_state.ball.position.y) * 3000.0f);
     static_pos[mid2] = Common::Vec2(side * 4200, Common::sign(-m_world_state.ball.position.y) * 1000.0f);
 
-    ERRTSetObstacles(dmf, true, true);
+    ERRTSetObstacles(dmf);
     OwnRobot[dmf].face(m_world_state.ball.position);
     ERRTNavigate2Point(dmf, static_pos[dmf], 40, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(mid1, true, true);
+    ERRTSetObstacles(mid1);
     OwnRobot[mid1].face(m_world_state.ball.position);
     ERRTNavigate2Point(mid1, static_pos[mid1], 40, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(mid2, true, true);
+    ERRTSetObstacles(mid2);
     OwnRobot[mid2].face(m_world_state.ball.position);
     ERRTNavigate2Point(mid2, static_pos[mid2], 40, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(attack, true, true);
+    ERRTSetObstacles(attack);
     OwnRobot[attack].face(m_world_state.ball.position);
     ERRTNavigate2Point(attack,
                        m_world_state.ball.position.circleAroundPoint(

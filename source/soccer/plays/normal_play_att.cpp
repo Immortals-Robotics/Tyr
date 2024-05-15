@@ -18,7 +18,7 @@ void Ai::NormalPlayAtt()
 
     if (oneTouchType[attack] == allaf)
     {
-        ERRTSetObstacles(attack, false, true);
+        ERRTSetObstacles(attack);
         OwnRobot[attack].face(Common::Vec2(-side * Common::field().width, 0));
         // OwnRobot[robot_num].target.angle=-90;
         ERRTNavigate2Point(attack, allafPos[attack], 100, VelocityProfile::Type::Mamooli);

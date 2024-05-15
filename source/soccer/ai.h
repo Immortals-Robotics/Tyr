@@ -130,14 +130,14 @@ private:
                         VelocityProfile::Type velocityProfile = VelocityProfile::Type::Mamooli, bool use_dss = false);
     void ERRTNavigate2Point(int robot_num, Common::Vec2 dest, float speed = 80.0f,
                             VelocityProfile::Type velocityProfile = VelocityProfile::Type::Mamooli);
-    void ERRTSetObstacles(int robot_num, bool bll = false, bool field = true);
+    void ERRTSetObstacles(int robot_num, bool bll = false);
     void ERRTSetGkClearObstacles(int robot_num);
 
     void Mark(int robot_num, int opp, float dist = 220.0f);
     void Mark2Goal(int robot_num, int opp, float dist = 220.0f);
     void Mark2Ball(int robot_num, int opp, float dist = 220.0f);
     void Halt(int robot_num);
-    void GK(int robot_num = 0, int defence_num = 2, bool stop = false);
+    
     void GK_shirje(int robot_num = 0);
     void GKHi(int robot_num = 0, bool stop = false);
     void DefHi(int robot_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr,
@@ -153,8 +153,6 @@ private:
     void receivePass(int robot_num, Common::Vec2 staticPos, bool chip = false);
     void circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, int chip_pow, float precision,
                      float near_dis_override = -1.0f);
-    void circle_ball_free(int robot_num, Common::Angle tagret_angle, int shoot_pow, int chip_pow, float precision,
-                          float near_dis_override = -1.0f);
 
         // Plays
     void Stop();

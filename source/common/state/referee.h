@@ -182,5 +182,11 @@ public:
     {
         return gameOn() || (ourRestart() && (state & STATE_READY));
     }
+
+    // TODO: check this in the rules
+    bool shouldSlowDown() const
+    {
+        return stop();
+    }
 };
 } // namespace Tyr::Common

@@ -9,7 +9,7 @@ void Ai::WaitForGool(int robot_num, bool chip)
 
     OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width, 0));
 
-    ERRTSetObstacles(robot_num, 0, 1);
+    ERRTSetObstacles(robot_num);
     ERRTNavigate2Point(robot_num, pos, 100, VelocityProfile::Type::Mamooli);
 
     OwnRobot[robot_num].Shoot(100);
