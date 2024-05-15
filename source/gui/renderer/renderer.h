@@ -10,17 +10,18 @@ public:
     void begin(const Common::FieldState &t_field);
     void end();
 
-    inline void draw(const Common::Vec2 &t_point, const Common::Color &t_color, bool t_is_filled,
-                     float t_thickness = 1);
-    inline void draw(const Common::Rect &t_rect, const Common::Color &t_color, bool t_is_filled, float t_thickness = 1);
+    inline void draw(const Common::Vec2 &t_point, const Common::Color &t_color, float t_thickness = 10.0f);
+    inline void draw(const Common::Rect &t_rect, const Common::Color &t_color, bool t_is_filled,
+                     float t_thickness = 10.0f);
     inline void draw(const Common::Circle &t_circle, const Common::Color &t_color, bool t_is_filled,
-                     float t_thickness = 1);
+                     float t_thickness = 10.0f);
     inline void drawCircleSector(const Common::Circle &t_circle, const Common::Color &t_color, float t_start_angle,
                                  float t_end_angle, bool t_is_filled);
-    inline void draw(const Common::Line &t_line, const Common::Color &t_color, float t_thickness = 1);
-    inline void draw(const Common::LineSegment &t_line_segment, const Common::Color &t_color, float t_thickness = 1);
+    inline void draw(const Common::Line &t_line, const Common::Color &t_color, float t_thickness = 10.0f);
+    inline void draw(const Common::LineSegment &t_line_segment, const Common::Color &t_color,
+                     float t_thickness = 10.0f);
     inline void draw(const Common::Triangle &t_triangle, const Common::Color &t_color, bool t_is_filled = true,
-                     float t_thickness = 1);
+                     float t_thickness = 10.0f);
 
     inline void draw(const Common::Vec2 &t_pos, const std::string &t_text, const Common::Color &t_color,
                      float t_font_size = 200);

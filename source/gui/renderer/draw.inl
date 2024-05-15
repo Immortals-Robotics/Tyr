@@ -3,10 +3,22 @@
 namespace Tyr::Gui
 {
 
-inline void Renderer::draw(const Common::Vec2 &point, const Common::Color &t_color, bool t_is_filled, float t_thickness)
+inline void Renderer::draw(const Common::Vec2 &point, const Common::Color &t_color, const float t_thickness)
 {
-    // TODO: do sth better
-    draw(Common::Circle(point, 50.0f), t_color, t_is_filled, t_thickness);
+    static constexpr float cross_size = 50.0f;
+
+    const Common::LineSegment line_a = Common::LineSegment{
+        point + Common::Vec2{-cross_size, -cross_size},
+        point + Common::Vec2{cross_size, cross_size},
+    };
+
+    const Common::LineSegment line_b = Common::LineSegment{
+        point + Common::Vec2{-cross_size, cross_size},
+        point + Common::Vec2{cross_size, -cross_size},
+    };
+
+    draw(line_a, t_color, t_thickness);
+    draw(line_b, t_color, t_thickness);
 }
 
 inline void Renderer::draw(const Common::Rect &t_rect, const Common::Color &t_color, bool t_is_filled,
