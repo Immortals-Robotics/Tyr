@@ -93,7 +93,7 @@ void Ai::process()
 
     (this->*currentPlay)();
 
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OwnRobot[i].state().seen_state == Common::SeenState::CompletelyOut)
         {

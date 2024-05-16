@@ -27,7 +27,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll)
     g_obs_map.resetMap();
 
     // own
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if ((OwnRobot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != robot_num) &&
             (OwnRobot[i].state().vision_id != OwnRobot[robot_num].state().vision_id))

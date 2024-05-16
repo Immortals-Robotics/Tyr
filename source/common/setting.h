@@ -109,7 +109,6 @@ public:
     bool use_kalman_ang = true; // TODO: check if this is in serious need in reality
 
     // soccer
-    static constexpr int kMaxOnFieldTeamRobots = 8;
 
     NetworkAddress referee_address = {"224.5.23.1", 10003};
 

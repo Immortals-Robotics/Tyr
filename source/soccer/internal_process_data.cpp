@@ -10,10 +10,12 @@ void Ai::internalProcessData()
         ballHist.pop_front();
     calculateBallTrajectory();
 
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         bool halt_this_robot_for_now = false;
 
+// TODO: this is completely broken now
+#if 0
         if (m_ref_state.stop())
         {
             if (OwnRobot[i].state().out_for_substitute)
@@ -25,7 +27,7 @@ void Ai::internalProcessData()
                         (std::fabs(m_world_state.own_robot[j].position.y) < Common::field().height))
                     {
                         bool suitable = true;
-                        for (int k = 0; k < Common::Setting::kMaxOnFieldTeamRobots; k++)
+                        for (int k = 0; k < Common::Setting::kMaxRobots; k++)
                         {
                             if (OwnRobot[k].vision_id == j)
                             {
@@ -42,6 +44,7 @@ void Ai::internalProcessData()
                 }
             }
         }
+#endif
 
         OwnRobot[i].shoot    = 0;
         OwnRobot[i].dribbler = 0;

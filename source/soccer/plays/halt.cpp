@@ -13,7 +13,7 @@ void Ai::Halt(int robot_num)
 
 void Ai::HaltAll()
 {
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         Halt(i);
     }

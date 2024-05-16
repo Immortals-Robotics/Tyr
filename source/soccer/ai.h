@@ -37,12 +37,12 @@ private:
     float randomParam;
     int   target_str;
 
-    int gk  = 3;
-    int def = 5;
-    int dmf = 4;
-    int rmf = 1;
-    int lmf = 2;
-    int cmf = 0;
+    int gk  = 0;
+    int def = 1;
+    int dmf = 2;
+    int lmf = 3;
+    int rmf = 4;
+    int cmf = 5;
     int rw  = 6;
     int lw  = 7;
 
@@ -50,9 +50,9 @@ private:
     int mid1;
     int mid2;
 
-    int *stm2AInum[Common::Setting::kMaxOnFieldTeamRobots];
+    int *stm2AInum[Common::Setting::kMaxRobots] = {};
 
-    Common::Vec2 allafPos[Common::Setting::kMaxOnFieldTeamRobots];
+    Common::Vec2 allafPos[Common::Setting::kMaxRobots];
 
     std::map<int *, int> markMap;
 
@@ -67,12 +67,12 @@ private:
     std::deque<Common::BallState> ballHist;
     Common::Linear                ballLine;
 
-    Planner planner[Common::Setting::kMaxOnFieldTeamRobots];
+    Planner planner[Common::Setting::kMaxRobots];
     Dss    *dss;
 
-    bool navigated[Common::Setting::kMaxOnFieldTeamRobots];
+    bool navigated[Common::Setting::kMaxRobots];
 
-    OneTouchDetector oneTouchDetector[Common::Setting::kMaxOnFieldTeamRobots];
+    OneTouchDetector oneTouchDetector[Common::Setting::kMaxRobots];
     enum OneTouchType
     {
         oneTouch = 0,
@@ -80,8 +80,8 @@ private:
         gool,
         allaf
     };
-    OneTouchType oneTouchType[Common::Setting::kMaxOnFieldTeamRobots];
-    bool         oneTouchTypeUsed[Common::Setting::kMaxOnFieldTeamRobots];
+    OneTouchType oneTouchType[Common::Setting::kMaxRobots];
+    bool         oneTouchTypeUsed[Common::Setting::kMaxRobots];
 
     int side;
 
@@ -175,7 +175,9 @@ private:
     void internalProcessData();
 
 public:
-    Robot OwnRobot[Common::Setting::kMaxOnFieldTeamRobots];
+    Robot OwnRobot[Common::Setting::kMaxRobots];
+
+
     Ai();
 
     bool receiveWorld();

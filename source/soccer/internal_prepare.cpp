@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 void Ai::internalPrepare()
 {
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         OwnRobot[i].halted = false;
     }
@@ -17,7 +17,7 @@ void Ai::internalPrepare()
         }
     }
 
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (OwnRobot[i].state().seen_state == Common::SeenState::CompletelyOut)
             continue;

@@ -52,7 +52,7 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 
     // Set Obstacles //////////////////////////////////////////////
 
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if ((OwnRobot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != robot_num))
         {
@@ -200,7 +200,7 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
         finalAns = OpenAngle{Common::Angle::fromRad(max), Common::Angle::fromRad(maxFree * step)};
 
 #if 1
-    static Common::MedianFilter<Common::Angle> freeAngleFilter[Common::Setting::kMaxOnFieldTeamRobots];
+    static Common::MedianFilter<Common::Angle> freeAngleFilter[Common::Setting::kMaxRobots];
 
     freeAngleFilter[robot_num].add(finalAns.center);
     finalAns.center = freeAngleFilter[robot_num].current();

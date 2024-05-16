@@ -16,7 +16,7 @@ private:
     const Robot *const              own_robots;
     const Common::RobotState *const opp_robots;
 
-    Common::Vec2 computed_motions[Common::Setting::kMaxOnFieldTeamRobots];
+    Common::Vec2 computed_motions[Common::Setting::kMaxRobots];
 
     Common::Vec2 GetAccFromMotion(const int robot_num, const Common::Vec2 &motion);
     Common::Vec2 GetMotionFromAcc(const int robot_num, const Common::Vec2 &acc);

@@ -56,7 +56,7 @@ Ai::Ai()
     stm2AInum[6] = &rw;
     stm2AInum[7] = &lw;
 
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         OwnRobot[i] = Robot(&m_world_state);
 
@@ -70,31 +70,10 @@ Ai::Ai()
         allafPos[i] = Common::Vec2(0, 0);
     }
 
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        OwnRobot[i].setVisionId(i + 1);
+        OwnRobot[i].setVisionId(i);
     }
-
-#if 0
-    OwnRobot[gk].setVisionId(4);
-    OwnRobot[def].setVisionId(10);
-    OwnRobot[dmf].setVisionId(1);
-    OwnRobot[lmf].setVisionId(6);
-    OwnRobot[rmf].setVisionId(0);
-    OwnRobot[cmf].setVisionId(2);
-    OwnRobot[rw].setVisionId(7);
-    OwnRobot[lw].setVisionId(8);
-#else
-    // TODO comment this (used fogrSim)
-    OwnRobot[gk].setVisionId(0);
-    OwnRobot[def].setVisionId(1);
-    OwnRobot[dmf].setVisionId(2);
-    OwnRobot[lmf].setVisionId(3);
-    OwnRobot[rmf].setVisionId(4);
-    OwnRobot[cmf].setVisionId(5);
-    OwnRobot[rw].setVisionId(6);
-    OwnRobot[lw].setVisionId(7);
-#endif
 
     chip_head = Common::Angle::fromDeg(200);
 
@@ -135,7 +114,7 @@ bool Ai::publishCommands() const
 
     pb_wrapper.set_time(time.microseconds());
 
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         OwnRobot[i].GetCurrentCommand().fillProto(pb_wrapper.add_command());
     }

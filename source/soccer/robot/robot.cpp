@@ -101,7 +101,7 @@ Common::Vec3 Robot::ComputeMotionCommand(float speed, const VelocityProfile::Typ
 
     speed = std::clamp(speed, 0.0f, 100.0f);
 
-    static Common::Vec3 oldAns[12] = {};
+    static Common::Vec3 oldAns[Common::Setting::kMaxRobots] = {};
 
     Common::Vec3 motion; // The output of this function
     motion.z = target.angle.deg();

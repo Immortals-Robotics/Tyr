@@ -69,7 +69,7 @@ bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
         return false;
     }
 
-    for (int robot_idx = 0; robot_idx < Common::Setting::kMaxOnFieldTeamRobots; ++robot_idx)
+    for (int robot_idx = 0; robot_idx < Common::Setting::kMaxRobots; ++robot_idx)
     {
         if (robot_idx == robot_num)
         {
@@ -124,7 +124,7 @@ float Dss::ComputeError(const Common::Vec2 &target, const Common::Vec2 &current)
 
 void Dss::Reset()
 {
-    for (int robot_idx = 0; robot_idx < Common::Setting::kMaxOnFieldTeamRobots; ++robot_idx)
+    for (int robot_idx = 0; robot_idx < Common::Setting::kMaxRobots; ++robot_idx)
     {
         const Common::RobotState &state = own_robots[robot_idx].state();
 

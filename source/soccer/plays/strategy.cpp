@@ -81,9 +81,9 @@ bool Ai::setPlayBook(const Protos::Immortals::PlayBook &t_playbook)
     return true;
 }
 
-int        step[Common::Setting::kMaxOnFieldTeamRobots]    = {0, 0, 0, 0, 0, 0, 0, 0};
-float      lastAdv[Common::Setting::kMaxOnFieldTeamRobots] = {0, 0, 0, 0, 0, 0, 0, 0};
-static int curr_str_id                                     = -1;
+int        step[Common::Setting::kMaxRobots]    = {};
+float      lastAdv[Common::Setting::kMaxRobots] = {};
+static int curr_str_id                          = -1;
 
 bool receivers_reached = false;
 
@@ -109,7 +109,7 @@ void Ai::strategy()
     Common::logDebug("timer: {}", timer.time());
     if (timer.time() < 0.5)
     {
-        for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+        for (int i = 0; i < strategy.role.size(); i++)
         {
             // FOR NOW: advance to the last step
             step[i]    = std::max(0, (int) strategy.role[i].path.size() - 2);
@@ -160,7 +160,7 @@ void Ai::strategy()
 
     bool new_receivers_reached = true;
     DefHi(def, rw, lw, nullptr, true);
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < strategy.role.size(); i++)
     {
         // if ((*stm2AInum[i]==gk)||(*stm2AInum[i]==def)) {
         //	continue;
