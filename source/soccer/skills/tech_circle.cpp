@@ -286,74 +286,49 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
                         angle, std::min((r / 1.6f), std::fabs(hehe.deg()) * 320.0f / (tetta * 1.2f)));
                 }
                 else
+                {
                     targetPoint =
                         PredictedBall.circleAroundPoint(angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / (tetta)));
-
-                // Common::Line newLine = Common::Line::fromTwoPoints ( Common::Vec2 ( targetPoint.x , targetPoint.y ) ,
-                // Common::Vec2 ( OwnRobot[robot_num].state().position.x , OwnRobot[robot_num].state().position.y ) );
-                // Circle newCircle ( Common::Vec2 ( OwnRobot[robot_num].state().position.x ,
-                // OwnRobot[robot_num].state().position.y ) , Common::Vec2::distance(targetPoint,
-                // OwnRobot.state().position)
-                // * 2 );
-                if (1) //! gameRestart )
-                {
-                    Common::logDebug("elendil: {}", elendil);
-                    Common::Angle hehe2 = PredictedBall.angleWith(OwnRobot[robot_num].state().position);
-                    hehe2               = angle - hehe2;
-                    bool el             = ((hehe2.deg() < 5) &&
-                               (m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) < 100));
-                    if (el || (elendil > 0))
-                    {
-
-                        targetPoint.x -= 150.0 * angle.cos();
-                        targetPoint.y -= 150.0 * angle.sin();
-                        // targetPoint = Common::Vec2(3*targetPoint.x-2*OwnRobot[robot_num].state().position.x,
-                        // 3*targetPoint.y-2*OwnRobot[robot_num].state().position.y);
-                        targetPoint.x /= 1;
-                        targetPoint.y /= 1;
-
-                        // if (elendil<=0)
-                        {
-                            Pelendil = targetPoint;
-                        }
-
-                        elendil--;
-                        if (el)
-                        {
-                            elendil = 30;
-                        }
-                        navigate(robot_num, Pelendil, 100, VelocityProfile::Type::Kharaki);
-                    }
-                    else
-                    {
-                        // targetPoint.x -= 550.0 * pow(std::fabs ( sinDeg(hehe) ),4.0) * cosDeg(angle);
-                        // targetPoint.y -= 550.0 * pow(std::fabs ( sinDeg(hehe) ),4.0) * sinDeg(angle);
-                        targetPoint = Common::Vec2(3 * targetPoint.x - OwnRobot[robot_num].state().position.x,
-                                                   3 * targetPoint.y - OwnRobot[robot_num].state().position.y);
-                        targetPoint.x /= 2;
-                        targetPoint.y /= 2;
-                        navigate(robot_num, targetPoint, 100, VelocityProfile::Type::Kharaki);
-                    }
-                    // Halt(robot_num);
                 }
 
+                Common::logDebug("elendil: {}", elendil);
+                Common::Angle hehe2 = PredictedBall.angleWith(OwnRobot[robot_num].state().position);
+                hehe2               = angle - hehe2;
+                bool el             = ((hehe2.deg() < 5) &&
+                           (m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) < 100));
+                if (el || (elendil > 0))
+                {
+
+                    targetPoint.x -= 150.0 * angle.cos();
+                    targetPoint.y -= 150.0 * angle.sin();
+                    targetPoint.x /= 1;
+                    targetPoint.y /= 1;
+
+                    Pelendil = targetPoint;
+
+                    elendil--;
+                    if (el)
+                    {
+                        elendil = 30;
+                    }
+                    navigate(robot_num, Pelendil, VelocityProfile::Type::Kharaki);
+                }
                 else
                 {
-                    navigate(robot_num, targetPoint, 100, VelocityProfile::Type::Mamooli);
+                    targetPoint = Common::Vec2(3 * targetPoint.x - OwnRobot[robot_num].state().position.x,
+                                               3 * targetPoint.y - OwnRobot[robot_num].state().position.y);
+                    targetPoint.x /= 2;
+                    targetPoint.y /= 2;
+                    navigate(robot_num, targetPoint, VelocityProfile::Type::Kharaki);
                 }
-
-                // targetPoint = Common::Vec2((targetPoint.x+OwnRobot[robot_num].state().position.x)/2,
-                // (targetPoint.y+OwnRobot[robot_num].state().position.y)/2);
             }
             else
-                navigate(
-                    robot_num,
-                    PredictedBall.circleAroundPoint(angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / tetta)), 100,
-                    VelocityProfile::Type::Mamooli);
-            // circleReachedBehindBall = true;
+                navigate(robot_num,
+                         PredictedBall.circleAroundPoint(angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / tetta)),
+                         VelocityProfile::Type::Mamooli);
         }
         else
-            navigate(robot_num, PredictedBall.circleAroundPoint(angle + hehe * 0.0f, r), 100);
+            navigate(robot_num, PredictedBall.circleAroundPoint(angle + hehe * 0.0f, r));
     }
     else
     {
@@ -361,16 +336,10 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
 
         hehe = PredictedBall.angleWith(OwnRobot[robot_num].state().position) +
                Common::Angle::fromDeg(Common::sign(hehe.deg()) * tetta);
-        // if ( Common::Vec2::distance ( OwnRobot[robot_num].state().position , m_world_state.ball.position ) <
-        // 200
-        // )
-        //	navigate ( robot_num , Common::circleAroundPoint ( PredictedBall , hehe , r ) , 0 , 20 );
-        // else
         if (passedBall)
-            navigate(robot_num, PredictedBall.circleAroundPoint(hehe, r), 100);
+            navigate(robot_num, PredictedBall.circleAroundPoint(hehe, r));
         else
-            navigate(robot_num, PredictedBall.circleAroundPoint(hehe, r), 100,
-                               VelocityProfile::Type::Kharaki);
+            navigate(robot_num, PredictedBall.circleAroundPoint(hehe, r), VelocityProfile::Type::Kharaki);
     }
 
     Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 100}, Common::Color::violet(), false);
@@ -385,11 +354,6 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     {
         Common::Vec2  tmpPos = OwnRobot[robot_num].state().position;
         Common::Angle tmpAng = OwnRobot[robot_num].state().angle;
-        /*if ( side == -1 )
-        {
-            tmpPos.x = -tmpPos.x;
-            tmpAng += 180.0f;
-        }*/
 
         if (std::fabs((OwnRobot[robot_num].target.angle - OwnRobot[robot_num].state().angle).deg()) < 40)
             lockAngleCounter++;

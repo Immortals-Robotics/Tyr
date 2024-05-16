@@ -9,12 +9,11 @@ void Ai::kickoff_their_one_wall()
 
     setObstacles(dmf);
     OwnRobot[dmf].face(m_world_state.ball.position);
-    navigate(
-        dmf,
-        m_world_state.ball.position.pointOnConnectingLine(
-            Common::Vec2(side * Common::field().width, 0),
-            m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 2.0f),
-        40, VelocityProfile::Type::Mamooli);
+    navigate(dmf,
+             m_world_state.ball.position.pointOnConnectingLine(
+                 Common::Vec2(side * Common::field().width, 0),
+                 m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 2.0f),
+             VelocityProfile::Type::Mamooli);
 
     int indexP = -1;
     int indexN = -1;
@@ -41,8 +40,8 @@ void Ai::kickoff_their_one_wall()
             setObstacles(mid1);
             OwnRobot[mid1].face(Common::Vec2(-side * Common::field().width, 0));
             navigate(mid1, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
-                                         Common::Vec2(side * Common::field().width, 0),
-                                         (std::fabs(m_world_state.opp_robot[indexN].position.x) + 14) * 1.5));
+                               Common::Vec2(side * Common::field().width, 0),
+                               (std::fabs(m_world_state.opp_robot[indexN].position.x) + 14) * 1.5));
             markMap[&mid1] = indexN;
         }
         else
@@ -50,8 +49,8 @@ void Ai::kickoff_their_one_wall()
             setObstacles(mid2);
             OwnRobot[mid2].face(Common::Vec2(-side * Common::field().width, 0));
             navigate(mid2, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
-                                         Common::Vec2(side * Common::field().width, 0),
-                                         (std::fabs(m_world_state.opp_robot[indexN].position.x) + 14) * 1.5));
+                               Common::Vec2(side * Common::field().width, 0),
+                               (std::fabs(m_world_state.opp_robot[indexN].position.x) + 14) * 1.5));
             markMap[&mid2] = indexN;
         }
     }
@@ -61,24 +60,20 @@ void Ai::kickoff_their_one_wall()
         {
             setObstacles(mid1);
             OwnRobot[mid1].face(m_world_state.ball.position);
-            navigate(mid1,
-                               m_world_state.ball.position.circleAroundPoint(
-                                   Common::Angle::fromDeg(20.0f) + m_world_state.ball.position.angleWith(
-                                                                       Common::Vec2(side * Common::field().width, 0)),
-                                   790.0f),
-                               100);
+            navigate(mid1, m_world_state.ball.position.circleAroundPoint(
+                               Common::Angle::fromDeg(20.0f) +
+                                   m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
+                               790.0f));
             markMap[&mid1] = -1;
         }
         else
         {
             setObstacles(mid2);
             OwnRobot[mid2].face(m_world_state.ball.position);
-            navigate(mid2,
-                               m_world_state.ball.position.circleAroundPoint(
-                                   Common::Angle::fromDeg(-20.0f) + m_world_state.ball.position.angleWith(
-                                                                        Common::Vec2(side * Common::field().width, 0)),
-                                   790.0f),
-                               100);
+            navigate(mid2, m_world_state.ball.position.circleAroundPoint(
+                               Common::Angle::fromDeg(-20.0f) +
+                                   m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
+                               790.0f));
             markMap[&mid2] = -1;
         }
     }
@@ -90,8 +85,8 @@ void Ai::kickoff_their_one_wall()
             setObstacles(mid1);
             OwnRobot[mid1].face(Common::Vec2(-side * Common::field().width, 0));
             navigate(mid1, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
-                                         Common::Vec2(side * Common::field().width, 0),
-                                         (std::fabs(m_world_state.opp_robot[indexP].position.x) + 14) * 1.5));
+                               Common::Vec2(side * Common::field().width, 0),
+                               (std::fabs(m_world_state.opp_robot[indexP].position.x) + 14) * 1.5));
             markMap[&mid1] = indexP;
         }
         else
@@ -99,8 +94,8 @@ void Ai::kickoff_their_one_wall()
             setObstacles(mid2);
             OwnRobot[mid2].face(Common::Vec2(-side * Common::field().width, 0));
             navigate(mid2, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
-                                         Common::Vec2(side * Common::field().width, 0),
-                                         (std::fabs(m_world_state.opp_robot[indexP].position.x) + 14) * 1.5));
+                               Common::Vec2(side * Common::field().width, 0),
+                               (std::fabs(m_world_state.opp_robot[indexP].position.x) + 14) * 1.5));
             markMap[&mid2] = indexP;
         }
     }
@@ -110,24 +105,20 @@ void Ai::kickoff_their_one_wall()
         {
             setObstacles(mid1);
             OwnRobot[mid1].face(m_world_state.ball.position);
-            navigate(mid1,
-                               m_world_state.ball.position.circleAroundPoint(
-                                   Common::Angle::fromDeg(20) + m_world_state.ball.position.angleWith(
-                                                                    Common::Vec2(side * Common::field().width, 0)),
-                                   790),
-                               100);
+            navigate(mid1, m_world_state.ball.position.circleAroundPoint(
+                               Common::Angle::fromDeg(20) +
+                                   m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
+                               790));
             markMap[&mid1] = -1;
         }
         else
         {
             setObstacles(mid2);
             OwnRobot[mid2].face(m_world_state.ball.position);
-            navigate(mid2,
-                               m_world_state.ball.position.circleAroundPoint(
-                                   Common::Angle::fromDeg(-20) + m_world_state.ball.position.angleWith(
-                                                                     Common::Vec2(side * Common::field().width, 0)),
-                                   790),
-                               100);
+            navigate(mid2, m_world_state.ball.position.circleAroundPoint(
+                               Common::Angle::fromDeg(-20) +
+                                   m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
+                               790));
             markMap[&mid2] = -1;
         }
     }

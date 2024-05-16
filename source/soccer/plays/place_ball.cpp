@@ -26,20 +26,19 @@ void Ai::our_place_ball()
     setObstacles(mid1);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     OwnRobot[mid1].face(m_world_state.ball.position);
-    navigate(
-        mid1,
-        m_world_state.ball.position.pointOnConnectingLine(
-            Common::Vec2(side * Common::field().width, 0),
-            m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
-        100, VelocityProfile::Type::Aroom);
+    navigate(mid1,
+             m_world_state.ball.position.pointOnConnectingLine(
+                 Common::Vec2(side * Common::field().width, 0),
+                 m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
+             VelocityProfile::Type::Aroom);
 
     setObstacles(mid2);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     OwnRobot[mid2].face(m_world_state.ball.position);
     navigate(mid2,
-                       m_world_state.ball.position.circleAroundPoint(
-                           m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)), 1090),
-                       100, VelocityProfile::Type::Aroom);
+             m_world_state.ball.position.circleAroundPoint(
+                 m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)), 1090),
+             VelocityProfile::Type::Aroom);
 
     if (FUNC_state == -2)
     {
@@ -136,8 +135,7 @@ void Ai::our_place_ball()
 
         setObstacles(dmf);
         g_obs_map.addCircle({m_world_state.ball.position, 150.0f});
-        navigate(dmf, m_ref_state.place_ball_target.circleAroundPoint(temp_opp_ang, 250), 40,
-                           VelocityProfile::Type::Aroom);
+        navigate(dmf, m_ref_state.place_ball_target.circleAroundPoint(temp_opp_ang, 250), VelocityProfile::Type::Aroom);
 
         g_obs_map.resetMap();
         circle_ball(attack, move_angle, 0, 0, 0.0);
@@ -197,13 +195,12 @@ void Ai::our_place_ball()
         OwnRobot[dmf].target.angle    = temp_opp_ang;
         setObstacles(attack);
         g_obs_map.addCircle({m_world_state.ball.position, 150.0f});
-        navigate(attack, m_world_state.ball.position.circleAroundPoint(temp_opp_ang, 250), 40,
-                           VelocityProfile::Type::Aroom);
+        navigate(attack, m_world_state.ball.position.circleAroundPoint(temp_opp_ang, 250),
+                 VelocityProfile::Type::Aroom);
         setObstacles(dmf);
         g_obs_map.addCircle({m_world_state.ball.position, 150.0f});
 
-        navigate(dmf, m_world_state.ball.position.circleAroundPoint(move_angle, 250), 40,
-                           VelocityProfile::Type::Aroom);
+        navigate(dmf, m_world_state.ball.position.circleAroundPoint(move_angle, 250), VelocityProfile::Type::Aroom);
 
         if (m_world_state.ball.position.circleAroundPoint(temp_opp_ang, 250)
                     .distanceTo(OwnRobot[attack].state().position) < 100 &&
@@ -229,11 +226,10 @@ void Ai::our_place_ball()
         OwnRobot[attack].target.angle = move_angle;
         OwnRobot[dmf].target.angle    = temp_opp_ang;
         g_obs_map.resetMap();
-        navigate(attack, t_pos.circleAroundPoint(temp_opp_ang, 75), 20,
-                       VelocityProfile::Type::BallPlaceKheyliSooski);
+        navigate(attack, t_pos.circleAroundPoint(temp_opp_ang, 75), VelocityProfile::Type::BallPlaceKheyliSooski);
 
         g_obs_map.resetMap();
-        navigate(dmf, t_pos.circleAroundPoint(move_angle, 75), 20, VelocityProfile::Type::BallPlaceKheyliSooski);
+        navigate(dmf, t_pos.circleAroundPoint(move_angle, 75), VelocityProfile::Type::BallPlaceKheyliSooski);
 
         bool ball_has_slipt = ((OwnRobot[attack].state().position + OwnRobot[dmf].state().position) / 2)
                                   .distanceTo(m_world_state.ball.position) > 300;
@@ -261,14 +257,14 @@ void Ai::our_place_ball()
     {
         OwnRobot[attack].target.angle = t_ang;
         OwnRobot[dmf].target.angle    = t_opp_ang;
-        
-        g_obs_map.resetMap();
-        navigate(attack, m_ref_state.place_ball_target.circleAroundPoint(t_opp_ang, 75), 20,
-                       VelocityProfile::Type::BallPlaceKheyliSooski);
 
         g_obs_map.resetMap();
-        navigate(dmf, m_ref_state.place_ball_target.circleAroundPoint(t_ang, 75), 20,
-                       VelocityProfile::Type::BallPlaceKheyliSooski);
+        navigate(attack, m_ref_state.place_ball_target.circleAroundPoint(t_opp_ang, 75),
+                 VelocityProfile::Type::BallPlaceKheyliSooski);
+
+        g_obs_map.resetMap();
+        navigate(dmf, m_ref_state.place_ball_target.circleAroundPoint(t_ang, 75),
+                 VelocityProfile::Type::BallPlaceKheyliSooski);
 
         bool ball_has_slipt = ((OwnRobot[attack].state().position + OwnRobot[dmf].state().position) / 2)
                                   .distanceTo(m_world_state.ball.position) > 300;
@@ -299,24 +295,24 @@ void Ai::our_place_ball()
         if (false && outOfField(target1))
         {
             g_obs_map.resetMap();
-            navigate(attack, Common::Vec2(0, 0), 20, VelocityProfile::Type::BallPlaceKheyliSooski);
+            navigate(attack, Common::Vec2(0, 0), VelocityProfile::Type::BallPlaceKheyliSooski);
         }
         else
         {
             g_obs_map.resetMap();
-            navigate(attack, target1, 20, VelocityProfile::Type::BallPlaceKheyliSooski);
+            navigate(attack, target1, VelocityProfile::Type::BallPlaceKheyliSooski);
         }
         Common::Vec2 target2 = m_ref_state.place_ball_target.circleAroundPoint(t_ang, 550);
 
         if (false && outOfField(target1))
         {
             g_obs_map.resetMap();
-            navigate(dmf, Common::Vec2(0, 0), 20, VelocityProfile::Type::BallPlaceKheyliSooski);
+            navigate(dmf, Common::Vec2(0, 0), VelocityProfile::Type::BallPlaceKheyliSooski);
         }
         else
         {
             g_obs_map.resetMap();
-            navigate(dmf, target2, 20, VelocityProfile::Type::BallPlaceKheyliSooski);
+            navigate(dmf, target2, VelocityProfile::Type::BallPlaceKheyliSooski);
         }
 
         if (m_ref_state.place_ball_target.circleAroundPoint(t_opp_ang, 550)
@@ -343,12 +339,12 @@ void Ai::our_place_ball()
     {
         OwnRobot[attack].face(m_world_state.ball.position); // TODO test this
         setObstacles(attack, true);
-        navigate(attack, m_ref_state.place_ball_target.circleAroundPoint(t_opp_ang, 550), 20,
-                           VelocityProfile::Type::BallPlaceKheyliSooski);
+        navigate(attack, m_ref_state.place_ball_target.circleAroundPoint(t_opp_ang, 550),
+                 VelocityProfile::Type::BallPlaceKheyliSooski);
         OwnRobot[dmf].face(m_world_state.ball.position);
         setObstacles(dmf, true);
-        navigate(dmf, m_ref_state.place_ball_target.circleAroundPoint(t_ang, 550), 20,
-                           VelocityProfile::Type::BallPlaceKheyliSooski);
+        navigate(dmf, m_ref_state.place_ball_target.circleAroundPoint(t_ang, 550),
+                 VelocityProfile::Type::BallPlaceKheyliSooski);
 
         bool success = m_ref_state.place_ball_target.distanceTo(m_world_state.ball.position) < 100.0;
 

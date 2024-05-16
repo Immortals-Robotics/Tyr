@@ -1,7 +1,5 @@
 #include "../ai.h"
 
-#define DEF_VEL_PROFILE (stop ? VelocityProfile::Type::Aroom : VelocityProfile::Type::Mamooli)
-
 namespace Tyr::Soccer
 {
 void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarget, bool stop)
@@ -78,7 +76,7 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     {
         setObstacles(robot_num);
         OwnRobot[robot_num].face(Common::Vec2((*defendTarget).x, (*defendTarget).y));
-        navigate(robot_num, target, 100, DEF_VEL_PROFILE);
+        navigate(robot_num, target, VelocityProfile::Type::Mamooli);
     }
 }
 } // namespace Tyr::Soccer

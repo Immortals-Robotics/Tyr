@@ -110,20 +110,4 @@ void Ai::setObstacles(int robot_num, bool bll)
         }
     }
 }
-
-void Ai::setGkClearObstacles(int robot_num)
-{
-    g_obs_map.resetMap();
-
-    // our penalty area
-    static constexpr float area_extension_size     = 200.0f;
-    const float            penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
-
-    const Common::Vec2 start{side * Common::field().width, -(penalty_area_half_width + area_extension_size)};
-
-    const float w = -side * (area_extension_size + Common::field().penalty_area_depth);
-    const float h = Common::field().penalty_area_width + 2 * area_extension_size;
-
-    g_obs_map.addRectangle({start, w, h});
-}
 } // namespace Tyr::Soccer

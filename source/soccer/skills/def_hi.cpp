@@ -1,7 +1,5 @@
 #include "../ai.h"
 
-#define DEF_VEL_PROFILE (stop ? VelocityProfile::Type::Aroom : VelocityProfile::Type::Mamooli)
-
 namespace Tyr::Soccer
 {
 void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget, bool stop)
@@ -61,7 +59,7 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
 
             OwnRobot[middef_num].target.angle = Common::Angle::fromDeg(alphaSgn * 43.0 + 90 + side * 90);
             setObstacles(middef_num);
-            navigate(middef_num, fans, 100, DEF_VEL_PROFILE);
+            navigate(middef_num, fans, VelocityProfile::Type::Mamooli);
         }
     }
 
@@ -79,7 +77,7 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
 
             OwnRobot[rightdef_num].target.angle = Common::Angle::fromDeg(-85.0 + 90 + side * 90);
             setObstacles(rightdef_num);
-            navigate(rightdef_num, fans, 100, DEF_VEL_PROFILE);
+            navigate(rightdef_num, fans, VelocityProfile::Type::Mamooli);
         }
         else if (alpha.deg() < -48.0)
         {
@@ -103,7 +101,7 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
 
             OwnRobot[rightdef_num].target.angle = Common::Angle::fromDeg(-48.0 + 90 + side * 90);
             setObstacles(rightdef_num);
-            navigate(rightdef_num, fans, 100, DEF_VEL_PROFILE);
+            navigate(rightdef_num, fans, VelocityProfile::Type::Mamooli);
         }
     }
 
@@ -121,7 +119,7 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
 
             OwnRobot[leftdef_num].target.angle = Common::Angle::fromDeg(85.0 + 90 + side * 90);
             setObstacles(leftdef_num);
-            navigate(leftdef_num, fans, 100, DEF_VEL_PROFILE);
+            navigate(leftdef_num, fans, VelocityProfile::Type::Mamooli);
         }
         else if (alpha.deg() > 48.0)
         {
@@ -145,7 +143,7 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
 
             OwnRobot[leftdef_num].target.angle = Common::Angle::fromDeg(48.0 + 90 + side * 90);
             setObstacles(leftdef_num);
-            navigate(leftdef_num, fans, 100, DEF_VEL_PROFILE);
+            navigate(leftdef_num, fans, VelocityProfile::Type::Mamooli);
         }
     }
 }

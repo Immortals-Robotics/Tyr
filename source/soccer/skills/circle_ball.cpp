@@ -41,7 +41,7 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         Common::logDebug("STEPPPPP1");
         OwnRobot[robot_num].face(m_world_state.ball.position);
         setObstacles(robot_num);
-        navigate(robot_num, m_world_state.ball.position, 30, VelocityProfile::Type::Mamooli);
+        navigate(robot_num, m_world_state.ball.position, VelocityProfile::Type::Mamooli);
 
         Common::debug().draw(Common::Circle{m_world_state.ball.position, very_far_ball_dis - 90.0f},
                              Common::Color::red(), false);
@@ -59,7 +59,7 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         setObstacles(robot_num);
         Common::Vec2 target_point = m_world_state.ball.position.circleAroundPoint(
             m_world_state.ball.position.angleWith(OwnRobot[robot_num].state().position), near_ball_dis);
-        navigate(robot_num, target_point, 20, VelocityProfile::Type::Aroom);
+        navigate(robot_num, target_point, VelocityProfile::Type::Aroom);
 
         Common::debug().draw(Common::Circle{m_world_state.ball.position, far_ball_dis - 90.0f}, Common::Color::pink(),
                              false);
@@ -102,9 +102,9 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         Common::Vec2 target_point =
             m_world_state.ball.position.circleAroundPoint(newToRobot, near_ball_dis / deltaAngle.cos());
         if (near_dis_override > 0)
-            navigate(robot_num, target_point, 20, VelocityProfile::Type::Aroom);
+            navigate(robot_num, target_point, VelocityProfile::Type::Aroom);
         else
-            navigate(robot_num, target_point, 20, VelocityProfile::Type::Mamooli);
+            navigate(robot_num, target_point, VelocityProfile::Type::Mamooli);
 
         if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) > far_ball_dis * shmit_coeff)
         {
@@ -138,7 +138,7 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         // OwnRobot[robot_num].face(m_world_state.ball.position);
         OwnRobot[robot_num].target.angle = tagret_angle + Common::Angle::fromDeg(180.0f);
         setObstacles(robot_num);
-        navigate(robot_num, m_world_state.ball.position, 100, VelocityProfile::Type::Aroom);
+        navigate(robot_num, m_world_state.ball.position, VelocityProfile::Type::Aroom);
         if (shoot_pow > 0)
             OwnRobot[robot_num].shoot(shoot_pow);
         if (chip_pow > 0)

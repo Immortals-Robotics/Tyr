@@ -9,14 +9,14 @@ void Ai::throwin_chip_shoot()
 
     setObstacles(mid2, true);
     OwnRobot[mid2].face(m_world_state.ball.position);
-    navigate(mid2, Common::Vec2(-side * 1500, Common::sign(m_world_state.ball.position.y) * 2500.0f), 70,
-                       VelocityProfile::Type::Mamooli);
+    navigate(mid2, Common::Vec2(-side * 1500, Common::sign(m_world_state.ball.position.y) * 2500.0f),
+             VelocityProfile::Type::Mamooli);
     oneTouchType[mid2] = shirje;
 
     setObstacles(mid1, true);
     OwnRobot[mid1].face(m_world_state.ball.position);
-    navigate(mid1, Common::Vec2(-side * 3500, Common::sign(m_world_state.ball.position.y) * 2500.0f), 70,
-                       VelocityProfile::Type::Mamooli);
+    navigate(mid1, Common::Vec2(-side * 3500, Common::sign(m_world_state.ball.position.y) * 2500.0f),
+             VelocityProfile::Type::Mamooli);
     oneTouchType[mid1] = shirje;
 
     if (timer.time() > 4)
@@ -41,16 +41,16 @@ void Ai::throwin_chip_shoot()
     g_obs_map.addCircle({m_world_state.ball.position, 320.0f});
     if (randomParam < 0.0)
         navigate(attack, m_world_state.ball.position.pointOnConnectingLine(
-                                       Common::Vec2(-side * Common::field().width, 0), 350));
+                             Common::Vec2(-side * Common::field().width, 0), 350));
     else if (randomParam < 0.5)
         navigate(attack, m_world_state.ball.position.pointOnConnectingLine(
-                                       Common::Vec2(-side * Common::field().width,
-                                                    Common::sign(-m_world_state.ball.position.x) * 2000.0f),
-                                       350));
+                             Common::Vec2(-side * Common::field().width,
+                                          Common::sign(-m_world_state.ball.position.x) * 2000.0f),
+                             350));
     else
-        navigate(attack, m_world_state.ball.position.pointOnConnectingLine(
-                                       Common::Vec2(-side * Common::field().width,
-                                                    Common::sign(m_world_state.ball.position.x) * 2000.0f),
-                                       350));
+        navigate(attack,
+                 m_world_state.ball.position.pointOnConnectingLine(
+                     Common::Vec2(-side * Common::field().width, Common::sign(m_world_state.ball.position.x) * 2000.0f),
+                     350));
 }
 } // namespace Tyr::Soccer

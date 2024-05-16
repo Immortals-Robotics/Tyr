@@ -9,12 +9,11 @@ void Ai::kickoff_us_chip()
 
     setObstacles(dmf, true);
     OwnRobot[dmf].face(m_world_state.ball.position);
-    navigate(
-        dmf,
-        m_world_state.ball.position.pointOnConnectingLine(
-            Common::Vec2(side * Common::field().width, 0),
-            m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
-        40, VelocityProfile::Type::Mamooli);
+    navigate(dmf,
+             m_world_state.ball.position.pointOnConnectingLine(
+                 Common::Vec2(side * Common::field().width, 0),
+                 m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
+             VelocityProfile::Type::Mamooli);
 
     if (timer.time() < 0.5)
     {

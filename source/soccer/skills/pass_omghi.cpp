@@ -4,8 +4,8 @@ namespace Tyr::Soccer
 {
 void Ai::WaitForOmghi(int robot_num, bool chip)
 {
-    Common::Line ball_line = Common::Line::fromPointAndAngle(m_world_state.ball.position,
-                                                             m_world_state.ball.velocity.toAngle());
+    Common::Line ball_line =
+        Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());
     if (chip_head.deg() < 180)
     {
         ball_line = Common::Line::fromPointAndAngle(m_world_state.ball.position, chip_head);
@@ -34,8 +34,8 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
     Common::Vec2 target = ans; // CalculatePassPos(robot_num, 89);
 
     OwnRobot[robot_num].target.angle = calculateOneTouchAngle(robot_num, target);
-    OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width,
-                                          -Common::sign(OwnRobot[robot_num].state().position.y) * 300));
+    OwnRobot[robot_num].face(
+        Common::Vec2(-side * Common::field().width, -Common::sign(OwnRobot[robot_num].state().position.y) * 300));
 
     setObstacles(robot_num);
 
@@ -43,7 +43,9 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
                               OwnRobot[robot_num].state().position, -200);
 
     Common::logDebug("sBAR:    {}", sBAR);
-    navigate(robot_num, target, sBAR, VelocityProfile::Type::Kharaki);
+    // TODO: sBAR should be max speed
+
+    navigate(robot_num, target, VelocityProfile::Type::Kharaki);
 
     OwnRobot[robot_num].shoot(100);
     OwnRobot[robot_num].dribble(15);

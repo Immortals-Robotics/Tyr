@@ -42,7 +42,19 @@ void Ai::GKHi(int robot_num, bool stop)
 
         my_hys = 0;
 
-        setGkClearObstacles(robot_num);
+        g_obs_map.resetMap();
+
+        // our penalty area
+        static constexpr float area_extension_size     = 200.0f;
+        const float            penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
+
+        const Common::Vec2 start{side * Common::field().width, -(penalty_area_half_width + area_extension_size)};
+
+        const float w = -side * (area_extension_size + Common::field().penalty_area_depth);
+        const float h = Common::field().penalty_area_width + 2 * area_extension_size;
+
+        g_obs_map.addRectangle({start, w, h});
+
         if ((g_obs_map.isInObstacle(m_world_state.ball.position)) && (m_world_state.ball.velocity.length() < 1500) &&
             m_ref_state.canKickBall() && (!stop))
         {
@@ -93,8 +105,7 @@ void Ai::GKHi(int robot_num, bool stop)
 #endif
             OwnRobot[robot_num].face(m_world_state.ball.position);
             setObstacles(robot_num);
-            navigate(robot_num, target, 80,
-                               stop ? VelocityProfile::Type::Aroom : VelocityProfile::Type::Mamooli);
+            navigate(robot_num, target, VelocityProfile::Type::Mamooli);
         }
     }
     // side = -side;
@@ -111,7 +122,7 @@ void Ai::GK_shirje(int robot_num)
     OwnRobot[robot_num].face(m_world_state.ball.position);
     ans = ((ans - OwnRobot[robot_num].state().position) * 2.0f) + OwnRobot[robot_num].state().position;
     setObstacles(robot_num);
-    navigate(robot_num, ans, 100, VelocityProfile::Type::Kharaki);
+    navigate(robot_num, ans, VelocityProfile::Type::Kharaki);
     OwnRobot[robot_num].chip(150);
 }
 } // namespace Tyr::Soccer

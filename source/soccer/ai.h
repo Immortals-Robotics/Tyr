@@ -124,10 +124,9 @@ private:
     float        outOfField(Common::Vec2 point);
 
     // Skills
-    void navigate(int robot_num, Common::Vec2 dest, float speed = 80.0f,
+    void navigate(int robot_num, Common::Vec2 dest,
                             VelocityProfile::Type velocityProfile = VelocityProfile::Type::Mamooli);
     void setObstacles(int robot_num, bool bll = false);
-    void setGkClearObstacles(int robot_num);
 
     void Mark(int robot_num, int opp, float dist = 220.0f);
     void Mark2Goal(int robot_num, int opp, float dist = 220.0f);

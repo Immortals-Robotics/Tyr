@@ -228,8 +228,7 @@ void Ai::strategy()
                 OwnRobot[*stm2AInum[i]].face(Common::Vec2(-side * Common::field().width, 0));
                 // else
                 //     OwnRobot[*stm2AInum[i]].face(Common::Vec2(strategy.role[i].path[step[i]].x(),strategy.role[i].path[step[i]].y()));
-                navigate(*stm2AInum[i], strategy.role[i].path[step[i]].position * sign_modifier,
-                                   strategy.role[i].path[step[i]].speed, profile);
+                navigate(*stm2AInum[i], strategy.role[i].path[step[i]].position * sign_modifier, profile);
             }
             else
             {

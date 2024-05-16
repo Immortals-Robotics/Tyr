@@ -14,7 +14,6 @@ void Ai::Mark2Ball(int robot_num, int opp, float dist)
 
     OwnRobot[robot_num].face(m_world_state.ball.position);
     setObstacles(robot_num, true);
-    navigate(robot_num, target, 100,
-                       m_ref_state.stop() ? VelocityProfile::Type::Aroom : VelocityProfile::Type::Mamooli);
+    navigate(robot_num, target, VelocityProfile::Type::Mamooli);
 }
 } // namespace Tyr::Soccer

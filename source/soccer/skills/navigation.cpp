@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::navigate(int robot_num, Common::Vec2 dest, float speed, VelocityProfile::Type velocityProfile)
+void Ai::navigate(int robot_num, Common::Vec2 dest, VelocityProfile::Type velocityProfile)
 {
     if (OwnRobot[robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         return;
@@ -24,7 +24,7 @@ void Ai::navigate(int robot_num, Common::Vec2 dest, float speed, VelocityProfile
 
     OwnRobot[robot_num].target.position = wayp;
 
-    Common::Vec2 motion_cmd = OwnRobot[robot_num].computeMotion(speed, velocityProfile);
+    Common::Vec2 motion_cmd = OwnRobot[robot_num].computeMotion(velocityProfile);
 
     motion_cmd = dss->ComputeSafeMotion(robot_num, Common::Vec2(motion_cmd.x, motion_cmd.y));
 

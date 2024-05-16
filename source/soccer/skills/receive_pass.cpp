@@ -74,7 +74,7 @@ void Ai::receivePass(int robot_num, Common::Vec2 staticPos, bool chip)
             setObstacles(robot_num);
             OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width, 0));
             // OwnRobot[robot_num].target.angle=-90;
-            navigate(robot_num, staticPos, 100, VelocityProfile::Type::Mamooli);
+            navigate(robot_num, staticPos, VelocityProfile::Type::Mamooli);
         }
     }
     else
@@ -87,7 +87,7 @@ void Ai::receivePass(int robot_num, Common::Vec2 staticPos, bool chip)
         setObstacles(robot_num, true);
         OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width, 0));
         // OwnRobot[robot_num].target.angle=-90;
-        navigate(robot_num, staticPos, 100, VelocityProfile::Type::Mamooli);
+        navigate(robot_num, staticPos, VelocityProfile::Type::Mamooli);
     }
 }
 } // namespace Tyr::Soccer

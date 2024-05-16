@@ -38,7 +38,7 @@ public:
         return m_navigated;
     }
 
-    [[nodiscard]] Common::Vec2 computeMotion(float speed, VelocityProfile::Type velocityProfile);
+    [[nodiscard]] Common::Vec2 computeMotion(VelocityProfile::Type velocityProfile);
 
     [[nodiscard]] Common::Vec2    currentMotion() const;
     [[nodiscard]] Sender::Command currentCommand() const;

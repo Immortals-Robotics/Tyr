@@ -21,7 +21,7 @@ void Ai::NormalPlayAtt()
         setObstacles(attack);
         OwnRobot[attack].face(Common::Vec2(-side * Common::field().width, 0));
         // OwnRobot[robot_num].target.angle=-90;
-        navigate(attack, allafPos[attack], 100, VelocityProfile::Type::Mamooli);
+        navigate(attack, allafPos[attack], VelocityProfile::Type::Mamooli);
         if (timer.time() > 2.5)
         {
             oneTouchType[attack] = oneTouch;

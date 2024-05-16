@@ -70,7 +70,7 @@ void Robot::face(const Common::Vec2 t_target)
     target.angle = state().position.angleWith(t_target);
 }
 
-Common::Vec2 Robot::computeMotion(float speed, const VelocityProfile::Type velocityProfileType)
+Common::Vec2 Robot::computeMotion(const VelocityProfile::Type velocityProfileType)
 {
     const VelocityProfile profile(velocityProfileType);
 
@@ -82,8 +82,6 @@ Common::Vec2 Robot::computeMotion(float speed, const VelocityProfile::Type veloc
     if (std::fabs(target.position.y) > Common::field().height + field_extra_area)
         target.position.y = Common::sign(target.position.y) * (Common::field().height + field_extra_area);
 
-    speed = std::clamp(speed, 0.0f, 100.0f);
-
     Common::Vec2 motion; // The output of this function
 
     Common::Vec2 diff = target.position - state().position;
@@ -92,26 +90,9 @@ Common::Vec2 Robot::computeMotion(float speed, const VelocityProfile::Type veloc
 
     float target_dis = Common::Vec2(0.0f).distanceTo(diff);
     tmp_max_speed.x  = profile.max_spd.x * std::fabs(diff.x) / target_dis;
+    tmp_max_speed.y  = profile.max_spd.y * std::fabs(diff.y) / target_dis;
 
-    tmp_max_speed.y = profile.max_spd.y * std::fabs(diff.y) / target_dis;
-
-    if (tmp_max_speed.length() > speed)
-    {
-        tmp_max_speed = tmp_max_speed.normalized() * speed;
-    }
-
-    float KP   = 0.10;
-    float Pdis = 0;
-
-    motion.x = speed;
-    if (std::fabs(diff.x) < Pdis) // always FALSE (?)
-    {
-        motion.x = KP * profile.max_dec.x * std::fabs(diff.x);
-    }
-    else
-    {
-        motion.x = pow(0.6f * profile.max_dec.x * std::fabs(diff.x), 0.6f);
-    }
+    motion.x = pow(0.6f * profile.max_dec.x * std::fabs(diff.x), 0.6f);
     motion.x *= Common::sign(diff.x);
     if (std::fabs(diff.x) < 5)
         motion.x = 0.0f;
@@ -154,15 +135,7 @@ Common::Vec2 Robot::computeMotion(float speed, const VelocityProfile::Type veloc
         }
     }
 
-    motion.y = speed;
-    if (std::fabs(diff.y) < Pdis)
-    {
-        motion.y = KP * profile.max_dec.y * std::fabs(diff.y);
-    }
-    else
-    {
-        motion.y = pow(0.6f * profile.max_dec.y * std::fabs(diff.y), 0.6f);
-    }
+    motion.y = pow(0.6f * profile.max_dec.y * std::fabs(diff.y), 0.6f);
     motion.y *= Common::sign(diff.y);
     if (std::fabs(diff.y) < 5)
     {
