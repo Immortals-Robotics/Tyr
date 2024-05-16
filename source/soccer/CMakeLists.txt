@@ -79,7 +79,7 @@ set(SOURCE_FILES
 	skills/pass.cpp
 	skills/receive_pass.cpp
 	skills/running_def.cpp
-	skills/tech_circle.cpp
+	skills/attacker.cpp
 
 	robot/robot.cpp)
 

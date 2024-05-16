@@ -89,7 +89,7 @@ float Ai::calculateBallRobotReachTime(int robot_num, VelocityProfile vel_profile
     return predTFilt.current();
 }
 
-void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, bool gameRestart, bool kiss, bool dribbler)
+void Ai::attacker(int robot_num, Common::Angle angle, int kick, int chip, bool gameRestart, bool kiss, bool dribbler)
 {
     // kick=100;
     if (gameRestart && (chip > 0))

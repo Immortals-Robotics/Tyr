@@ -61,7 +61,7 @@ void Ai::GKHi(int robot_num, bool stop)
 
             gkIntercepting = true;
 
-            tech_circle(robot_num,
+            attacker(robot_num,
                         m_world_state.ball.position.angleWith(Common::Vec2(side * (Common::field().width + 110), 0)), 0,
                         80, 0, 0, 0);
         }

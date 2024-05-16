@@ -33,7 +33,7 @@ void Ai::kickoff_us_chip()
     Common::logDebug("can kick ball: {}", m_ref_state.canKickBall());
     if (m_ref_state.canKickBall())
     {
-        tech_circle(attack, chip_target.angleWith(m_world_state.ball.position), 0, 80, 1, 0, 1);
+        attacker(attack, chip_target.angleWith(m_world_state.ball.position), 0, 80, 1, 0, 1);
     }
     else
     {
