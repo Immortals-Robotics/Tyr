@@ -11,8 +11,6 @@ void Ai::Stop()
     }
 #endif
 
-    // Common::debug().draw({m_world_state.ball.position,500},Red);
-
     if (OwnRobot[attack].state().out_for_substitute)
     {
         if (!OwnRobot[mid1].state().out_for_substitute)

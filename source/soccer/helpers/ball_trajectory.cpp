@@ -78,11 +78,13 @@ void Ai::calculateBallTrajectory()
                              isVertical ? Common::Color::yellow() : Common::Color::red());
     }
 
-    for (i = std::max((int) ballHist.size() - 60, 0); i < ballHist.size(); i += 10)
+    for (i = 0; i < ballHist.size(); i += 1)
     {
-        // Common::debug().draw({ballHist[i].position,10+10.0*(float(i)/float(ballHist.size()))},Red);
+        Common::debug().draw(Common::Circle{ballHist[i].position, 5.0f + 30.0f * (float(i) / float(ballHist.size()))},
+                             Common::Color::red().transparent());
     }
 
-    // Common::debug().draw(ballHist.front().position,ballHist.back().position,Blue);
+    Common::debug().draw(Common::LineSegment{ballHist.front().position, ballHist.back().position},
+                         Common::Color::blue().transparent());
 }
 } // namespace Tyr::Soccer

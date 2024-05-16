@@ -33,7 +33,6 @@ void Ai::setObstacles(int robot_num, bool bll)
             (OwnRobot[i].state().vision_id != OwnRobot[robot_num].state().vision_id))
         {
             g_obs_map.addCircle({OwnRobot[i].state().position, current_robot_radius + Common::field().robot_radius});
-            // Common::debug().draw({OwnRobot[i].state().position,ownRobotRadius + (!dribble)*ownRobotRadius},Cyan);
         }
     }
 
@@ -45,8 +44,6 @@ void Ai::setObstacles(int robot_num, bool bll)
             const float radius = calculateRobotRadius(m_world_state.opp_robot[i]);
 
             g_obs_map.addCircle({m_world_state.opp_robot[i].position, radius + current_robot_radius});
-            // Common::debug().draw({m_world_state.opp_robot[i].position,ownRobotRadius +
-            // (!dribble)*ownRobotRadius},Cyan);
         }
     }
 

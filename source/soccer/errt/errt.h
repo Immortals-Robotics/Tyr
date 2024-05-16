@@ -15,7 +15,7 @@ public:
 
     Common::Vec2 plan();
 
-    void draw(Common::Color t_color = Common::Color::white()) const;
+    void draw(Common::Color t_color = Common::Color::black().transparent()) const;
 
 private:
     Common::Vec2 init_state;

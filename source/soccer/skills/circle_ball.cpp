@@ -145,9 +145,6 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
             OwnRobot[robot_num].shoot(shoot_pow);
         if (chip_pow > 0)
             OwnRobot[robot_num].chip(chip_pow);
-        Common::debug().draw(Common::Circle{m_world_state.ball.position, very_far_ball_dis - 90.0f},
-                             Common::Color::red(), false);
-        // tech_circle(robot_num, tagret_angle, shoot_pow, chip_pow, 1, 1, 0, 0);
 
         if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) > near_ball_dis * shmit_coeff)
         {
@@ -155,8 +152,5 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
             last_change_t = timer.time();
         }
     }
-
-    Common::debug().draw(Common::LineSegment{OwnRobot[robot_num].state().position, OwnRobot[robot_num].target.position},
-                         Common::Color::black());
 }
 } // namespace Tyr::Soccer

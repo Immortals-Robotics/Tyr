@@ -11,7 +11,6 @@ void Ai::GKHi(int robot_num, bool stop)
     Common::logDebug("GKhi: {} _ {}", ballIsGoaling(),
                      m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) /
                          m_world_state.ball.velocity.length());
-    // side = -side;
     if (ballIsGoaling())
     {
         Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 100}, Common::Color::red(), false);
