@@ -161,8 +161,6 @@ void Application::update()
 
     rlImGuiBegin();
 
-    static bool opened = true, opened2 = true;
-
     ImGuiWindowFlags renderer_window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
                                              ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration |
                                              ImGuiWindowFlags_NoBackground;
@@ -176,6 +174,7 @@ void Application::update()
 
     ImGui::SetNextWindowSize(ImVec2(main_window_width - 650., (main_window_width - 650.) * 0.77));
 
+    bool opened = true;
     if (!ImGui::Begin("Field", &opened, renderer_window_flags))
     {
         ImGui::End();
