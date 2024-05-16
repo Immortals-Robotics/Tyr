@@ -62,8 +62,8 @@ void Ai::GKHi(int robot_num, bool stop)
             gkIntercepting = true;
 
             attacker(robot_num,
-                        m_world_state.ball.position.angleWith(Common::Vec2(side * (Common::field().width + 110), 0)), 0,
-                        80, 0, 0, 0);
+                     m_world_state.ball.position.angleWith(Common::Vec2(side * (Common::field().width + 110), 0)), 0,
+                     80, 0, 0, 0);
         }
         else
         {
@@ -75,7 +75,6 @@ void Ai::GKHi(int robot_num, bool stop)
             navigate(robot_num, target, VelocityProfile::mamooli());
         }
     }
-    // side = -side;
 }
 
 void Ai::GK_shirje(int robot_num)
