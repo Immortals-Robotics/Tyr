@@ -70,7 +70,7 @@ void Robot::face(const Common::Vec2 t_target)
     target.angle = state().position.angleWith(t_target);
 }
 
-Common::Vec3 Robot::computeMotion(float speed, const VelocityProfile::Type velocityProfileType)
+Common::Vec2 Robot::computeMotion(float speed, const VelocityProfile::Type velocityProfileType)
 {
     const VelocityProfile profile(velocityProfileType);
 
@@ -84,9 +84,7 @@ Common::Vec3 Robot::computeMotion(float speed, const VelocityProfile::Type veloc
 
     speed = std::clamp(speed, 0.0f, 100.0f);
 
-    Common::Vec3 motion; // The output of this function
-    motion.z = target.angle.deg();
-    motion.z /= 5.0f;
+    Common::Vec2 motion; // The output of this function
 
     Common::Vec2 diff = target.position - state().position;
 
@@ -223,7 +221,7 @@ Common::Vec3 Robot::computeMotion(float speed, const VelocityProfile::Type veloc
     return motion;
 }
 
-void Robot::move(Common::Vec3 motion)
+void Robot::move(Common::Vec2 motion)
 {
     if (m_navigated && state().seen_state != Common::SeenState::CompletelyOut)
     {
@@ -243,7 +241,7 @@ void Robot::halt()
     m_halted = true;
 }
 
-Common::Vec3 Robot::currentMotion() const
+Common::Vec2 Robot::currentMotion() const
 {
     return m_last_motion;
 }

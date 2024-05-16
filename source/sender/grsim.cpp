@@ -14,12 +14,10 @@ void Grsim::queueCommand(const Command &command)
 
     proto_command->set_wheelsspeed(false);
 
-    const Common::Vec3 motion = command.motion;
+    Common::Angle robot_ang = Common::Angle::fromDeg(90.0f) - command.current_angle;
 
-    float robot_ang = (Common::Angle::fromDeg(90.0f) - command.current_angle).rad();
-
-    float new_VelX = motion.x * cos(robot_ang) - motion.y * sin(robot_ang);
-    float new_VelY = motion.x * sin(robot_ang) + motion.y * cos(robot_ang);
+    float new_VelX = command.motion.x * robot_ang.cos() - command.motion.y * robot_ang.sin();
+    float new_VelY = command.motion.x * robot_ang.sin() + command.motion.y * robot_ang.cos();
 
     proto_command->set_veltangent(new_VelY / 20.0);
     proto_command->set_velnormal(-new_VelX / 20.0);

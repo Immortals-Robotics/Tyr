@@ -8,7 +8,7 @@ struct Command
 {
     int vision_id = -1;
 
-    Common::Vec3 motion;
+    Common::Vec2 motion;
     bool         halted = true;
 
     Common::Angle current_angle;

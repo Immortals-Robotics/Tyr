@@ -21,11 +21,8 @@ void Nrf::queueCommand(const Command &command)
 {
     unsigned char data[32] = {};
 
-    Common::Vec3 motion = command.motion;
-    motion.x *= 2.55;
-    motion.y *= 2.55;
-    convert_float_to_2x_buff(data + 3, motion.x);
-    convert_float_to_2x_buff(data + 5, motion.y);
+    convert_float_to_2x_buff(data + 3, command.motion.x * 2.55f);
+    convert_float_to_2x_buff(data + 5, command.motion.y * 2.55f);
     convert_float_to_2x_buff(data + 7, command.target_angle.deg());
 
     data[0] = command.vision_id;

@@ -30,7 +30,7 @@ public:
     void dribble(float pow);
 
     void face(Common::Vec2 t_target);
-    void move(Common::Vec3 motion);
+    void move(Common::Vec2 motion);
     void halt();
 
     [[nodiscard]] bool navigated() const
@@ -38,9 +38,9 @@ public:
         return m_navigated;
     }
 
-    [[nodiscard]] Common::Vec3 computeMotion(float speed, VelocityProfile::Type velocityProfile);
+    [[nodiscard]] Common::Vec2 computeMotion(float speed, VelocityProfile::Type velocityProfile);
 
-    [[nodiscard]] Common::Vec3    currentMotion() const;
+    [[nodiscard]] Common::Vec2    currentMotion() const;
     [[nodiscard]] Sender::Command currentCommand() const;
 
     Common::RobotState target;
@@ -50,9 +50,9 @@ private:
 
     // used in mition plan
     // TODO: merge with last_motions
-    Common::Vec3 m_old_motion;
+    Common::Vec2 m_old_motion;
 
-    Common::Vec3 m_last_motion;
+    Common::Vec2 m_last_motion;
 
     float m_shoot    = 0;
     float m_chip     = 0;
