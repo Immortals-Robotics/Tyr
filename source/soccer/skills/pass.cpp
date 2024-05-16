@@ -45,7 +45,6 @@ void Ai::WaitForPass(int robot_num, bool chip, const Common::Vec2 *target, Commo
     Common::debug().draw(Common::LineSegment{pos, Common::Vec2(oppGoal().x, open_line.y(oppGoal().x))},
                          Common::Color::pink());
 
-    setObstacles(robot_num);
     navigate(robot_num, pos, VelocityProfile::kharaki());
 
     if (target == nullptr)

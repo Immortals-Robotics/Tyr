@@ -46,7 +46,6 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
             Common::Vec2 fans = ball_line.intersect(Front_line).value_or(Common::Vec2());
 
             OwnRobot[middef_num].target.angle = Common::Angle::fromDeg(alphaSgn * 43.0 + 90 + side * 90);
-            setObstacles(middef_num);
             navigate(middef_num, fans, VelocityProfile::mamooli());
         }
     }
@@ -62,7 +61,6 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
             Common::Vec2 fans = ball_line.intersect(Front_line).value_or(Common::Vec2());
 
             OwnRobot[rightdef_num].target.angle = Common::Angle::fromDeg(-85.0 + 90 + side * 90);
-            setObstacles(rightdef_num);
             navigate(rightdef_num, fans, VelocityProfile::mamooli());
         }
         else if (alpha.deg() < -48.0)
@@ -82,7 +80,6 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
             Common::Vec2 fans = ball_line.intersect(Front_line).value_or(Common::Vec2());
 
             OwnRobot[rightdef_num].target.angle = Common::Angle::fromDeg(-48.0 + 90 + side * 90);
-            setObstacles(rightdef_num);
             navigate(rightdef_num, fans, VelocityProfile::mamooli());
         }
     }
@@ -98,7 +95,6 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
             Common::Vec2 fans = ball_line.intersect(Front_line).value_or(Common::Vec2());
 
             OwnRobot[leftdef_num].target.angle = Common::Angle::fromDeg(85.0 + 90 + side * 90);
-            setObstacles(leftdef_num);
             navigate(leftdef_num, fans, VelocityProfile::mamooli());
         }
         else if (alpha.deg() > 48.0)
@@ -118,7 +114,6 @@ void Ai::DefHi(int middef_num, int rightdef_num, int leftdef_num, Common::Vec2 *
             Common::Vec2 fans = ball_line.intersect(Front_line).value_or(Common::Vec2());
 
             OwnRobot[leftdef_num].target.angle = Common::Angle::fromDeg(48.0 + 90 + side * 90);
-            setObstacles(leftdef_num);
             navigate(leftdef_num, fans, VelocityProfile::mamooli());
         }
     }

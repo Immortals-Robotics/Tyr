@@ -32,17 +32,15 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
     Common::Vec2 target = ans; // CalculatePassPos(robot_num, 89);
 
     OwnRobot[robot_num].target.angle = calculateOneTouchAngle(robot_num, target);
-    OwnRobot[robot_num].face(
-        Common::Vec2(oppGoal().x, -Common::sign(OwnRobot[robot_num].state().position.y) * 300));
-
-    setObstacles(robot_num);
+    OwnRobot[robot_num].face(Common::Vec2(oppGoal().x, -Common::sign(OwnRobot[robot_num].state().position.y) * 300));
 
     target = CalculatePassPos(robot_num, oppGoal(), OwnRobot[robot_num].state().position, -200);
 
     Common::logDebug("sBAR:    {}", sBAR);
-    // TODO: sBAR should be max speed
+    VelocityProfile profile = VelocityProfile::kharaki();
+    profile.max_spd         = sBAR * 45.0f;
 
-    navigate(robot_num, target, VelocityProfile::kharaki());
+    navigate(robot_num, target, profile);
 
     OwnRobot[robot_num].shoot(100);
     OwnRobot[robot_num].dribble(15);

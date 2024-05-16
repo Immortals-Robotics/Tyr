@@ -89,8 +89,8 @@ float Ai::calculateBallRobotReachTime(int robot_num, VelocityProfile vel_profile
     return predTFilt.current();
 }
 
-void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, bool needRRT, bool gameRestart, bool kiss,
-                     bool dribbler, bool needOppRRT)
+void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, bool gameRestart, bool kiss, bool dribbler,
+                     bool needOppRRT)
 {
     // kick=100;
     if (gameRestart && (chip > 0))
@@ -201,14 +201,8 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     Common::Angle hehe = PredictedBall.angleWith(OwnRobot[robot_num].state().position);
     hehe               = angle - hehe;
 
-    if (needRRT)
-        setObstacles(robot_num);
-    else
-        g_obs_map.resetMap();
-
     if ((std::fabs(hehe.deg()) < tetta)) //|| ( circleReachedBehindBall ) )
     {
-
         Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 100}, Common::Color::red(), false);
         if ((kick) || (chip))
         {

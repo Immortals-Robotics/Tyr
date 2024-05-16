@@ -6,7 +6,6 @@ void Ai::corner_their_global()
 {
     if (side * m_world_state.ball.position.x > Common::field().width - 1000)
     {
-        setObstacles(gk);
         OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
         navigate(gk, Common::Vec2(side * (Common::field().width - 100), 0), VelocityProfile::mamooli());
 
@@ -38,7 +37,6 @@ void Ai::corner_their_global()
             if (static_pos.find(own) != static_pos.end())
             {
                 OwnRobot[own].face(oppGoal());
-                setObstacles(own);
                 navigate(own, static_pos[own], VelocityProfile::mamooli());
             }
         }

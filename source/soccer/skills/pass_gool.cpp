@@ -8,7 +8,6 @@ void Ai::WaitForGool(int robot_num, bool chip)
 
     OwnRobot[robot_num].face(oppGoal());
 
-    setObstacles(robot_num);
     navigate(robot_num, pos, VelocityProfile::mamooli());
 
     OwnRobot[robot_num].shoot(100);

@@ -65,15 +65,12 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     //    if(1)
     {
         Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");
-        setObstacles(robot_num);
-        // tech_circle(robot_num,Common::sign(m_world_state.ball.position.y)*side*60 ,0,15,false);
         tech_circle(robot_num,
                     m_world_state.ball.position.angleWith(Common::Vec2(side * (Common::field().width + 110), 0)), 0, 80,
-                    true, 0, 0, 0);
+                    0, 0, 0);
     }
     else
     {
-        setObstacles(robot_num);
         OwnRobot[robot_num].face(*defendTarget);
         navigate(robot_num, target, VelocityProfile::mamooli());
     }

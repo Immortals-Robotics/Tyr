@@ -42,40 +42,31 @@ void Ai::Stop()
         {
             if (own == dmf)
             {
-                setObstacles(dmf);
                 OwnRobot[dmf].face(m_world_state.ball.position);
                 navigate(dmf,
-                         pointOnConnectingLine(m_world_state.ball.position,
-                                               ownGoal(),
-                                               Common::Vec2::distance(m_world_state.ball.position,
-                                                                      ownGoal()) /
-                                                   3.0f),
+                         pointOnConnectingLine(m_world_state.ball.position, ownGoal(),
+                                               Common::Vec2::distance(m_world_state.ball.position, ownGoal()) / 3.0f),
                          VelocityProfile::aroom());
                 OwnRobot[dmf].shoot(0);
             }
             else if (own == mid2)
             {
-                setObstacles(mid2);
                 OwnRobot[mid2].face(m_world_state.ball.position);
                 navigate(mid2,
-                         circleAroundPoint(m_world_state.ball.position,
-                                           NormalizeAngle(-20 + Common::Vec2::angleWith(
-                                                                    m_world_state.ball.position,
-                                                                    ownGoal())),
-                                           650),
+                         circleAroundPoint(
+                             m_world_state.ball.position,
+                             NormalizeAngle(-20 + Common::Vec2::angleWith(m_world_state.ball.position, ownGoal())),
+                             650),
                          VelocityProfile::aroom());
                 OwnRobot[mid2].shoot(0);
             }
             else if (own == mid1)
             {
-                setObstacles(mid1);
                 OwnRobot[mid1].face(m_world_state.ball.position);
                 navigate(mid1,
-                         circleAroundPoint(m_world_state.ball.position,
-                                           NormalizeAngle(20 + Common::Vec2::angleWith(
-                                                                   m_world_state.ball.position,
-                                                                   ownGoal())),
-                                           650),
+                         circleAroundPoint(
+                             m_world_state.ball.position,
+                             NormalizeAngle(20 + Common::Vec2::angleWith(m_world_state.ball.position, ownGoal())), 650),
                          VelocityProfile::aroom());
                 OwnRobot[mid1].shoot(0);
             }
@@ -86,41 +77,31 @@ void Ai::Stop()
         }
     }
 #else
-    setObstacles(dmf);
     OwnRobot[dmf].face(m_world_state.ball.position);
     navigate(dmf,
              m_world_state.ball.position.pointOnConnectingLine(
-                 ownGoal(),
-                 m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
+                 ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
              VelocityProfile::aroom());
     OwnRobot[dmf].shoot(0);
 
-    setObstacles(mid2);
     OwnRobot[mid2].face(m_world_state.ball.position);
     navigate(mid2,
              m_world_state.ball.position.circleAroundPoint(
-                 Common::Angle::fromDeg(-20.0f) +
-                     m_world_state.ball.position.angleWith(ownGoal()),
-                 650),
+                 Common::Angle::fromDeg(-20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 650),
              VelocityProfile::aroom());
     OwnRobot[mid2].shoot(0);
 
-    setObstacles(mid1);
     OwnRobot[mid1].face(m_world_state.ball.position);
     navigate(mid1,
              m_world_state.ball.position.circleAroundPoint(
-                 Common::Angle::fromDeg(20.0f) +
-                     m_world_state.ball.position.angleWith(ownGoal()),
-                 650),
+                 Common::Angle::fromDeg(20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 650),
              VelocityProfile::aroom());
     OwnRobot[mid1].shoot(0);
 #endif
 
-    setObstacles(attack);
     OwnRobot[attack].face(m_world_state.ball.position);
     navigate(attack,
-             m_world_state.ball.position.circleAroundPoint(
-                 m_world_state.ball.position.angleWith(ownGoal()), 650),
+             m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 650),
              VelocityProfile::aroom());
     OwnRobot[attack].shoot(0);
 }

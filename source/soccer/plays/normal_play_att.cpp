@@ -17,7 +17,6 @@ void Ai::NormalPlayAtt()
 
     if (oneTouchType[attack] == allaf)
     {
-        setObstacles(attack);
         OwnRobot[attack].face(oppGoal());
         navigate(attack, allafPos[attack], VelocityProfile::mamooli());
         if (timer.time() > 2.5)
@@ -91,7 +90,7 @@ void Ai::NormalPlayAtt()
                 passAngle = oppGoal().angleWith(m_world_state.ball.position);
                 chip_pow  = 0;
             }
-            tech_circle(attack, passAngle, 0, chip_pow, 1, 0, 0, 1);
+            tech_circle(attack, passAngle, 0, chip_pow, 0, 0, 1);
         }
         else
         {
@@ -111,7 +110,7 @@ void Ai::NormalPlayAtt()
                 shoot_pow = 1;
             }
 
-            tech_circle(attack, shootAngle, shoot_pow, 0, 1, 0, 0, 0);
+            tech_circle(attack, shootAngle, shoot_pow, 0, 0, 0, 0);
         }
     }
 

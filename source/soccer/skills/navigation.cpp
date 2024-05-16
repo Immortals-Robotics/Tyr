@@ -2,10 +2,12 @@
 
 namespace Tyr::Soccer
 {
-void Ai::navigate(int robot_num, Common::Vec2 dest, VelocityProfile profile)
+void Ai::navigate(int robot_num, Common::Vec2 dest, VelocityProfile profile, const NavigationFlags t_flags)
 {
     if (OwnRobot[robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         return;
+
+    setObstacles(robot_num, t_flags);
 
     if (m_ref_state.shouldSlowDown())
     {
@@ -24,7 +26,8 @@ void Ai::navigate(int robot_num, Common::Vec2 dest, VelocityProfile profile)
 
     Common::Vec2 motion_cmd = OwnRobot[robot_num].computeMotion(profile);
 
-    motion_cmd = dss->ComputeSafeMotion(robot_num, motion_cmd, profile);
+    if (!(t_flags & NavigationFlagsForceNoObstacles))
+        motion_cmd = dss->ComputeSafeMotion(robot_num, motion_cmd, profile);
 
     OwnRobot[robot_num].move(motion_cmd);
 }

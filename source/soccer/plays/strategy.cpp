@@ -216,14 +216,13 @@ void Ai::strategy()
 
         else
         {
-            setObstacles(*stm2AInum[i], true);
-
             const VelocityProfile profile = strategy.role[i].path[step[i]].velocity_profile;
 
             if (step[i] != strategy.role[i].path.size() - 1)
             {
                 OwnRobot[*stm2AInum[i]].face(oppGoal());
-                navigate(*stm2AInum[i], strategy.role[i].path[step[i]].position * sign_modifier, profile);
+                navigate(*stm2AInum[i], strategy.role[i].path[step[i]].position * sign_modifier, profile,
+                         NavigationFlagsForceBallObstacle);
             }
             else
             {

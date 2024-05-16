@@ -40,7 +40,6 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
     {
         Common::logDebug("STEPPPPP1");
         OwnRobot[robot_num].face(m_world_state.ball.position);
-        setObstacles(robot_num);
         VelocityProfile profile = VelocityProfile::mamooli();
         profile.max_spd         = 900.0f;
         navigate(robot_num, m_world_state.ball.position, profile);
@@ -58,7 +57,6 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
     {
         Common::logDebug("STEPPPPP2");
         OwnRobot[robot_num].face(m_world_state.ball.position);
-        setObstacles(robot_num);
         Common::Vec2 target_point = m_world_state.ball.position.circleAroundPoint(
             m_world_state.ball.position.angleWith(OwnRobot[robot_num].state().position), near_ball_dis);
         navigate(robot_num, target_point, VelocityProfile::aroom());
@@ -99,8 +97,6 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         OwnRobot[robot_num].face(m_world_state.ball.position);
         OwnRobot[robot_num].target.angle +=
             (newToRobot + Common::Angle::fromDeg(180.0f) - OwnRobot[robot_num].target.angle) / 2.0f;
-        // OwnRobot[robot_num].target.angle = NormalizeAngle(OwnRobot[robot_num].target.angle);
-        setObstacles(robot_num);
         Common::Vec2 target_point =
             m_world_state.ball.position.circleAroundPoint(newToRobot, near_ball_dis / deltaAngle.cos());
         if (near_dis_override > 0)
@@ -137,9 +133,7 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         {
             chip_head = OwnRobot[robot_num].state().angle;
         }
-        // OwnRobot[robot_num].face(m_world_state.ball.position);
         OwnRobot[robot_num].target.angle = tagret_angle + Common::Angle::fromDeg(180.0f);
-        setObstacles(robot_num);
         navigate(robot_num, m_world_state.ball.position, VelocityProfile::aroom());
         if (shoot_pow > 0)
             OwnRobot[robot_num].shoot(shoot_pow);

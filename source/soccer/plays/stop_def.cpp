@@ -33,23 +33,18 @@ void Ai::Stop_def()
     static_pos[mid1] = Common::Vec2(side * 4500, Common::sign(-m_world_state.ball.position.y) * 3000.0f);
     static_pos[mid2] = Common::Vec2(side * 4200, Common::sign(-m_world_state.ball.position.y) * 1000.0f);
 
-    setObstacles(dmf);
     OwnRobot[dmf].face(m_world_state.ball.position);
     navigate(dmf, static_pos[dmf], VelocityProfile::aroom());
 
-    setObstacles(mid1);
     OwnRobot[mid1].face(m_world_state.ball.position);
     navigate(mid1, static_pos[mid1], VelocityProfile::aroom());
 
-    setObstacles(mid2);
     OwnRobot[mid2].face(m_world_state.ball.position);
     navigate(mid2, static_pos[mid2], VelocityProfile::aroom());
 
-    setObstacles(attack);
     OwnRobot[attack].face(m_world_state.ball.position);
     navigate(attack,
-             m_world_state.ball.position.circleAroundPoint(
-                 m_world_state.ball.position.angleWith(ownGoal()), 580),
+             m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 580),
              VelocityProfile::aroom());
 }
 } // namespace Tyr::Soccer

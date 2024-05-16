@@ -12,7 +12,6 @@ void Ai::Mark2Goal(int robot_num, int opp, float dist)
     Common::Vec2 target = predictedOpp.pointOnConnectingLine(ownGoal(), dist);
 
     OwnRobot[robot_num].face(m_world_state.ball.position);
-    setObstacles(robot_num, true);
-    navigate(robot_num, target, VelocityProfile::mamooli());
+    navigate(robot_num, target, VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
 }
 } // namespace Tyr::Soccer

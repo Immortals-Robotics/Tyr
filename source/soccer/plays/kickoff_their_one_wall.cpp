@@ -7,12 +7,10 @@ void Ai::kickoff_their_one_wall()
     GKHi(gk, 1);
     DefHi(def, rw, lw, nullptr, true);
 
-    setObstacles(dmf);
     OwnRobot[dmf].face(m_world_state.ball.position);
     navigate(dmf,
              m_world_state.ball.position.pointOnConnectingLine(
-                 ownGoal(),
-                 m_world_state.ball.position.distanceTo(ownGoal()) / 2.0f),
+                 ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 2.0f),
              VelocityProfile::mamooli());
 
     int indexP = -1;
@@ -37,20 +35,16 @@ void Ai::kickoff_their_one_wall()
     {
         if (side == -1)
         {
-            setObstacles(mid1);
             OwnRobot[mid1].face(oppGoal());
             navigate(mid1, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
-                               ownGoal(),
-                               (std::fabs(m_world_state.opp_robot[indexN].position.x) + 14) * 1.5));
+                               ownGoal(), (std::fabs(m_world_state.opp_robot[indexN].position.x) + 14) * 1.5));
             markMap[&mid1] = indexN;
         }
         else
         {
-            setObstacles(mid2);
             OwnRobot[mid2].face(oppGoal());
             navigate(mid2, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
-                               ownGoal(),
-                               (std::fabs(m_world_state.opp_robot[indexN].position.x) + 14) * 1.5));
+                               ownGoal(), (std::fabs(m_world_state.opp_robot[indexN].position.x) + 14) * 1.5));
             markMap[&mid2] = indexN;
         }
     }
@@ -58,22 +52,18 @@ void Ai::kickoff_their_one_wall()
     {
         if (side == -1)
         {
-            setObstacles(mid1);
             OwnRobot[mid1].face(m_world_state.ball.position);
-            navigate(mid1, m_world_state.ball.position.circleAroundPoint(
-                               Common::Angle::fromDeg(20.0f) +
-                                   m_world_state.ball.position.angleWith(ownGoal()),
-                               790.0f));
+            navigate(mid1,
+                     m_world_state.ball.position.circleAroundPoint(
+                         Common::Angle::fromDeg(20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 790.0f));
             markMap[&mid1] = -1;
         }
         else
         {
-            setObstacles(mid2);
             OwnRobot[mid2].face(m_world_state.ball.position);
-            navigate(mid2, m_world_state.ball.position.circleAroundPoint(
-                               Common::Angle::fromDeg(-20.0f) +
-                                   m_world_state.ball.position.angleWith(ownGoal()),
-                               790.0f));
+            navigate(mid2,
+                     m_world_state.ball.position.circleAroundPoint(
+                         Common::Angle::fromDeg(-20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 790.0f));
             markMap[&mid2] = -1;
         }
     }
@@ -82,20 +72,16 @@ void Ai::kickoff_their_one_wall()
     {
         if (side == 1)
         {
-            setObstacles(mid1);
             OwnRobot[mid1].face(oppGoal());
             navigate(mid1, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
-                               ownGoal(),
-                               (std::fabs(m_world_state.opp_robot[indexP].position.x) + 14) * 1.5));
+                               ownGoal(), (std::fabs(m_world_state.opp_robot[indexP].position.x) + 14) * 1.5));
             markMap[&mid1] = indexP;
         }
         else
         {
-            setObstacles(mid2);
             OwnRobot[mid2].face(oppGoal());
             navigate(mid2, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
-                               ownGoal(),
-                               (std::fabs(m_world_state.opp_robot[indexP].position.x) + 14) * 1.5));
+                               ownGoal(), (std::fabs(m_world_state.opp_robot[indexP].position.x) + 14) * 1.5));
             markMap[&mid2] = indexP;
         }
     }
@@ -103,22 +89,16 @@ void Ai::kickoff_their_one_wall()
     {
         if (side == 1)
         {
-            setObstacles(mid1);
             OwnRobot[mid1].face(m_world_state.ball.position);
             navigate(mid1, m_world_state.ball.position.circleAroundPoint(
-                               Common::Angle::fromDeg(20) +
-                                   m_world_state.ball.position.angleWith(ownGoal()),
-                               790));
+                               Common::Angle::fromDeg(20) + m_world_state.ball.position.angleWith(ownGoal()), 790));
             markMap[&mid1] = -1;
         }
         else
         {
-            setObstacles(mid2);
             OwnRobot[mid2].face(m_world_state.ball.position);
             navigate(mid2, m_world_state.ball.position.circleAroundPoint(
-                               Common::Angle::fromDeg(-20) +
-                                   m_world_state.ball.position.angleWith(ownGoal()),
-                               790));
+                               Common::Angle::fromDeg(-20) + m_world_state.ball.position.angleWith(ownGoal()), 790));
             markMap[&mid2] = -1;
         }
     }

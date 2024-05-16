@@ -10,7 +10,6 @@ void Ai::penalty_their_simple()
     if (index == -1)
     {
         OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
-        setObstacles(gk);
         navigate(gk, Common::Vec2(side * penalty_x, 0.0f));
     }
     else
@@ -28,22 +27,14 @@ void Ai::penalty_their_simple()
 
         OwnRobot[gk].face(m_world_state.ball.position);
 
-        setObstacles(gk);
         navigate(gk, Common::Vec2(side * penalty_x, gkp_y), VelocityProfile::kharaki());
     }
-    setObstacles(lw);
     navigate(lw, Common::Vec2(-side * 4300, 500), VelocityProfile::aroom());
-    setObstacles(rw);
     navigate(rw, Common::Vec2(-side * 4300, -500), VelocityProfile::aroom());
-    setObstacles(def);
     navigate(def, Common::Vec2(-side * 4300, 800), VelocityProfile::aroom());
-    setObstacles(dmf);
     navigate(dmf, Common::Vec2(-side * 4300, -800), VelocityProfile::aroom());
-    setObstacles(mid1);
     navigate(mid1, Common::Vec2(-side * 4300, -1500), VelocityProfile::aroom());
-    setObstacles(mid2);
     navigate(mid2, Common::Vec2(-side * 4300, 1500), VelocityProfile::aroom());
-    setObstacles(attack);
     navigate(attack, Common::Vec2(-side * 4300, 0), VelocityProfile::aroom());
 }
 } // namespace Tyr::Soccer

@@ -41,7 +41,7 @@ void Ai::GKHi(int robot_num, bool stop)
 
         my_hys = 0;
 
-        g_obs_map.resetMap();
+        ObstacleMap obs_map;
 
         // our penalty area
         static constexpr float area_extension_size     = 200.0f;
@@ -52,20 +52,18 @@ void Ai::GKHi(int robot_num, bool stop)
         const float w = -side * (area_extension_size + Common::field().penalty_area_depth);
         const float h = Common::field().penalty_area_width + 2 * area_extension_size;
 
-        g_obs_map.addRectangle({start, w, h});
+        obs_map.addRectangle({start, w, h});
 
-        if ((g_obs_map.isInObstacle(m_world_state.ball.position)) && (m_world_state.ball.velocity.length() < 1500) &&
+        if ((obs_map.isInObstacle(m_world_state.ball.position)) && (m_world_state.ball.velocity.length() < 1500) &&
             m_ref_state.canKickBall() && (!stop))
         {
             Common::logDebug("GK intercepting");
 
             gkIntercepting = true;
 
-            setObstacles(robot_num);
-            // tech_circle(robot_num,Common::sign(m_world_state.ball.position.y)*side*60 ,0,15,false);
             tech_circle(robot_num,
                         m_world_state.ball.position.angleWith(Common::Vec2(side * (Common::field().width + 110), 0)), 0,
-                        80, false, 0, 0, 0);
+                        80, 0, 0, 0);
         }
         else
         {
@@ -74,7 +72,6 @@ void Ai::GKHi(int robot_num, bool stop)
             target.x            = Common::sign(target.x) * std::min(Common::field().width - 90, std::fabs(target.x));
 
             OwnRobot[robot_num].face(m_world_state.ball.position);
-            setObstacles(robot_num);
             navigate(robot_num, target, VelocityProfile::mamooli());
         }
     }
@@ -90,7 +87,6 @@ void Ai::GK_shirje(int robot_num)
     Common::Vec2 ans = ball_line.closestPoint(OwnRobot[robot_num].state().position);
     OwnRobot[robot_num].face(m_world_state.ball.position);
     ans = ((ans - OwnRobot[robot_num].state().position) * 2.0f) + OwnRobot[robot_num].state().position;
-    setObstacles(robot_num);
     navigate(robot_num, ans, VelocityProfile::kharaki());
     OwnRobot[robot_num].chip(150);
 }

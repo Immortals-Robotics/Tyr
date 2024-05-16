@@ -119,8 +119,18 @@ private:
     float        calculateSwitchToAttackerScore(int robot_num);
 
     // Skills
-    void navigate(int robot_num, Common::Vec2 dest, VelocityProfile velocityProfile = VelocityProfile::mamooli());
-    void setObstacles(int robot_num, bool bll = false);
+    enum NavigationFlags
+    {
+        NavigationFlagsNone                    = 0,
+        NavigationFlagsForceNoObstacles        = (1 << 1), // only used in ball placement
+        NavigationFlagsForceBallObstacle       = (1 << 2), // 500.0f
+        NavigationFlagsForceBallMediumObstacle = (1 << 3), // 230.0f
+        NavigationFlagsForceBallSmallObstacle  = (1 << 4), // 60.0f
+    };
+
+    void navigate(int robot_num, Common::Vec2 dest, VelocityProfile velocityProfile = VelocityProfile::mamooli(),
+                  NavigationFlags t_flags = NavigationFlagsNone);
+    void setObstacles(int robot_num, NavigationFlags t_flags = NavigationFlagsNone);
 
     void Mark(int robot_num, int opp, float dist = 220.0f);
     void Mark2Goal(int robot_num, int opp, float dist = 220.0f);
@@ -133,8 +143,8 @@ private:
                bool stop = false);
     void runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarget, bool stop);
     void DefenceWall(int robot_num, bool kickOff = false);
-    void tech_circle(int robot_num, Common::Angle angle, int kick = 0, int chip = 0, bool needRRT = true,
-                     bool gameRestart = false, bool kiss = false, bool dribbler = false, bool needOppRRT = false);
+    void tech_circle(int robot_num, Common::Angle angle, int kick = 0, int chip = 0, bool gameRestart = false,
+                     bool kiss = false, bool dribbler = false, bool needOppRRT = false);
     void WaitForPass(int robot_num, bool chip = false, const Common::Vec2 *target = nullptr,
                      Common::Vec2 *statPos = nullptr);
     void WaitForOmghi(int robot_num, bool chip = false);
