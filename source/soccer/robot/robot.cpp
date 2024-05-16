@@ -225,6 +225,11 @@ Common::Vec3 Robot::computeMotion(float speed, const VelocityProfile::Type veloc
 
 void Robot::move(Common::Vec3 motion)
 {
+    if (m_navigated && state().seen_state != Common::SeenState::CompletelyOut)
+    {
+        Common::logWarning("Robot {} is navigated more than once", state().vision_id);
+    }
+
     motion.x = std::clamp(motion.x, -100.0f, 100.0f);
     motion.y = std::clamp(motion.y, -100.0f, 100.0f);
 
@@ -234,6 +239,8 @@ void Robot::move(Common::Vec3 motion)
     m_motion_idx++;
     if (m_motion_idx > PREDICT_CMDS - 1)
         m_motion_idx = 0;
+
+    m_navigated = true;
 }
 
 void Robot::halt()
