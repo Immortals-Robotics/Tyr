@@ -144,7 +144,7 @@ private:
     void runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarget, bool stop);
     void DefenceWall(int robot_num, bool kickOff = false);
     void tech_circle(int robot_num, Common::Angle angle, int kick = 0, int chip = 0, bool gameRestart = false,
-                     bool kiss = false, bool dribbler = false, bool needOppRRT = false);
+                     bool kiss = false, bool dribbler = false);
     void WaitForPass(int robot_num, bool chip = false, const Common::Vec2 *target = nullptr,
                      Common::Vec2 *statPos = nullptr);
     void WaitForOmghi(int robot_num, bool chip = false);
