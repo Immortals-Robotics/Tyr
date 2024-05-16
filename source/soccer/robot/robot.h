@@ -2,8 +2,6 @@
 
 #include "velocity_profile.h"
 
-#define PREDICT_CMDS 6
-
 namespace Tyr::Soccer
 {
 class Robot
@@ -54,10 +52,7 @@ private:
     // TODO: merge with last_motions
     Common::Vec3 m_old_motion;
 
-    // TODO: find out why we have both
-    Common::Vec3 last_motions[11]  = {};
-    int          m_last_motion_idx = 0;
-    int          m_motion_idx      = 0;
+    Common::Vec3 m_last_motion;
 
     float m_shoot    = 0;
     float m_chip     = 0;

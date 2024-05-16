@@ -233,12 +233,7 @@ void Robot::move(Common::Vec3 motion)
     motion.x = std::clamp(motion.x, -100.0f, 100.0f);
     motion.y = std::clamp(motion.y, -100.0f, 100.0f);
 
-    last_motions[m_motion_idx] = motion;
-
-    m_last_motion_idx = m_motion_idx;
-    m_motion_idx++;
-    if (m_motion_idx > PREDICT_CMDS - 1)
-        m_motion_idx = 0;
+    m_last_motion = motion;
 
     m_navigated = true;
 }
@@ -250,7 +245,7 @@ void Robot::halt()
 
 Common::Vec3 Robot::currentMotion() const
 {
-    return last_motions[m_last_motion_idx];
+    return m_last_motion;
 }
 
 Sender::Command Robot::currentCommand() const
