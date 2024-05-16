@@ -12,8 +12,8 @@ struct VelocityProfile
     {
         return {
             .max_spd = 450.0f,
-            .max_dec = 45.0f,
-            .max_acc = 27.0f,
+            .max_dec = 2700.0f,
+            .max_acc = 1620.0f,
         };
     }
 
@@ -21,8 +21,8 @@ struct VelocityProfile
     {
         return {
             .max_spd = 900.0f,
-            .max_dec = 45.0f,
-            .max_acc = 36.0f,
+            .max_dec = 2700.0f,
+            .max_acc = 2160.0f,
         };
     }
 
@@ -30,8 +30,8 @@ struct VelocityProfile
     {
         return {
             .max_spd = 1800.0f,
-            .max_dec = 67.5f,
-            .max_acc = 45.0f,
+            .max_dec = 4050.5f,
+            .max_acc = 2700.0f,
         };
     }
 
@@ -39,8 +39,8 @@ struct VelocityProfile
     {
         return {
             .max_spd = 1800.0f,
-            .max_dec = 81.0f,
-            .max_acc = 58.5f,
+            .max_dec = 4860.0f,
+            .max_acc = 3510.0f,
         };
     }
 };
