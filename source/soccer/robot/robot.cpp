@@ -236,6 +236,11 @@ void Robot::move(Common::Vec3 motion)
         m_motion_idx = 0;
 }
 
+void Robot::halt()
+{
+    m_halted = true;
+}
+
 Common::Vec3 Robot::currentMotion() const
 {
     return last_motions[m_last_motion_idx];
@@ -245,7 +250,7 @@ Sender::Command Robot::currentCommand() const
 {
     Sender::Command command;
     command.vision_id     = state().vision_id;
-    command.halted        = halted;
+    command.halted        = m_halted;
     command.motion        = currentMotion();
     command.current_angle = state().angle;
     command.target_angle  = target.angle;

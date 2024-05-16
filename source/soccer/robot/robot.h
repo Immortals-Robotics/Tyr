@@ -24,7 +24,7 @@ public:
         m_chip     = 0;
         m_dribbler = 0;
         navigated  = false;
-        halted     = false;
+        m_halted   = false;
     }
 
     void shoot(float pow);
@@ -33,6 +33,7 @@ public:
 
     void face(Common::Vec2 t_target);
     void move(Common::Vec3 motion);
+    void halt();
 
     Common::Vec3 computeMotion(float speed, VelocityProfile::Type velocityProfile);
 
@@ -41,7 +42,6 @@ public:
 
     Common::RobotState target;
 
-    bool halted    = false;
     bool navigated = false;
 
 private:
@@ -59,5 +59,7 @@ private:
     Common::Vec3 last_motions[11]  = {};
     int          m_last_motion_idx = 0;
     int          m_motion_idx      = 0;
+
+    bool m_halted = false;
 };
 } // namespace Tyr::Soccer
