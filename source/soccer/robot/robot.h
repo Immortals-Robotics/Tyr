@@ -15,6 +15,7 @@ public:
     int  chip     = 0;
     int  dribbler = 0;
     bool halted   = false;
+    bool navigated = false;
 
     Common::Vec3 last_motions[11] = {};
 

@@ -99,7 +99,7 @@ void Ai::process()
         {
             Halt(i);
         }
-        else if (!navigated[i])
+        else if (!OwnRobot[i].navigated)
         {
             Common::logWarning("Own robot {} was not navigated", OwnRobot[i].state().vision_id);
             Halt(i);

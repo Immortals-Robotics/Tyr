@@ -70,8 +70,6 @@ private:
     Planner planner[Common::Setting::kMaxRobots];
     Dss    *dss;
 
-    bool navigated[Common::Setting::kMaxRobots];
-
     OneTouchDetector oneTouchDetector[Common::Setting::kMaxRobots];
     enum OneTouchType
     {

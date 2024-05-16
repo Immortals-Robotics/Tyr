@@ -12,7 +12,7 @@ void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, float speed, VelocityP
         velocityProfile = VelocityProfile::Type::Aroom;
     }
 
-    if (navigated[robot_num] && OwnRobot[robot_num].state().seen_state != Common::SeenState::CompletelyOut)
+    if (OwnRobot[robot_num].navigated && OwnRobot[robot_num].state().seen_state != Common::SeenState::CompletelyOut)
     {
         Common::logWarning("Robot {} is navigated more than once", OwnRobot[robot_num].state().vision_id);
     }
@@ -31,7 +31,7 @@ void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, float speed, VelocityP
     }
     OwnRobot[robot_num].MoveByMotion(motion_cmd);
 
-    navigated[robot_num] = true;
+    OwnRobot[robot_num].navigated = true;
 }
 
 void Ai::ERRTNavigate2Point(int robot_num, Common::Vec2 dest, float speed, const VelocityProfile::Type velocityProfile)
