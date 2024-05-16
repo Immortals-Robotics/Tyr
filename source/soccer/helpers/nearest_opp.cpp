@@ -2,9 +2,9 @@
 
 namespace Tyr::Soccer
 {
-int Ai::findNearestAsshole(Common::Vec2 pos, int mask, bool acceptNearBall)
+int Ai::findNearestOpp(Common::Vec2 pos, int mask, bool acceptNearBall)
 {
-    float mdis  = 7000;
+    float mdis  = std::numeric_limits<float>::max();
     int   index = -1;
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
@@ -12,7 +12,7 @@ int Ai::findNearestAsshole(Common::Vec2 pos, int mask, bool acceptNearBall)
             continue;
         if (m_world_state.opp_robot[i].seen_state == Common::SeenState::CompletelyOut)
             continue;
-        if ((std::fabs(m_world_state.opp_robot[i].position.x) > Common::field().width) || (std::fabs(m_world_state.opp_robot[i].position.y) > Common::field().height))
+        if (isOut(m_world_state.opp_robot[i].position))
             continue;
         if ((!acceptNearBall) && ((m_world_state.ball.position.distanceTo(m_world_state.opp_robot[i].position) < 500)))
         {

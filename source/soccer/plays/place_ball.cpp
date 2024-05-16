@@ -119,7 +119,7 @@ void Ai::our_place_ball()
             t_opp_ang.setDeg(180.0f);
         }
         // TODO: only do this when dmf doesn't fit behind the ball
-        else if (outOfField(m_world_state.ball.position))
+        else if (isOut(m_world_state.ball.position))
         { // Do a little shoot on the wall
             FUNC_state = -1;
             FUNC_CNT   = 0;
@@ -292,7 +292,7 @@ void Ai::our_place_ball()
         OwnRobot[attack].target.angle = t_ang;
         OwnRobot[dmf].target.angle    = t_opp_ang;
         Common::Vec2 target1          = m_ref_state.place_ball_target.circleAroundPoint(t_opp_ang, 550);
-        if (false && outOfField(target1))
+        if (false && isOut(target1))
         {
             setObstacles(attack);
             navigate(attack, Common::Vec2(), VelocityProfile::sooski());
@@ -304,7 +304,7 @@ void Ai::our_place_ball()
         }
         Common::Vec2 target2 = m_ref_state.place_ball_target.circleAroundPoint(t_ang, 550);
 
-        if (false && outOfField(target1))
+        if (false && isOut(target1))
         {
             setObstacles(dmf);
             navigate(dmf, Common::Vec2(), VelocityProfile::sooski());
@@ -361,7 +361,7 @@ void Ai::our_place_ball()
     Common::logInfo("______IN___STATE_{}_____", FUNC_state);
 
     Common::logInfo("___DIS___{}", m_ref_state.place_ball_target.distanceTo(m_world_state.ball.position));
-    Common::logInfo("__OUT__{}", outOfField(m_world_state.ball.position));
+    Common::logInfo("__OUT__{}", isOut(m_world_state.ball.position));
 
     Common::debug().draw(m_ref_state.place_ball_target, Common::Color::red(), 20.0f);
 }

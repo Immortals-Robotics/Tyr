@@ -45,10 +45,9 @@ set(SOURCE_FILES
 	helpers/goal_blocked.cpp
 	helpers/manage_att_roles.cpp
 	helpers/mark_manager.cpp
-	helpers/nearest_asshole.cpp
+	helpers/nearest_opp.cpp
 	helpers/one_touch_angle.cpp
 	helpers/open_angle.cpp
-	helpers/out_of_field.cpp
 	helpers/strategy_weight.cpp
 
 	plays/corner_their_global.cpp

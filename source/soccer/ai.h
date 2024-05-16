@@ -109,7 +109,7 @@ private:
     OpenAngle calculateOpenAngleToGoal(Common::Vec2 init, int robot_num);
 
     bool         ballIsGoaling();
-    int          findNearestAsshole(Common::Vec2 pos, int mask, bool acceptNearBall = true);
+    int          findNearestOpp(Common::Vec2 pos, int mask, bool acceptNearBall = true);
     int          findKickerOpp(int mask, float max_dis = 500.0f);
     bool         goalBlocked(Common::Vec2 init_pos, float max_shoot_blocker_dis, float shoot_blocker_r);
     bool         attackFuckingAngle();
@@ -117,7 +117,6 @@ private:
     float        calculateOppThreat(int opp, bool restart = false);
     float        calculateMarkCost(int robot_num, int opp);
     float        calculateSwitchToAttackerScore(int robot_num);
-    float        outOfField(Common::Vec2 point);
 
     // Skills
     void navigate(int robot_num, Common::Vec2 dest, VelocityProfile velocityProfile = VelocityProfile::mamooli());
@@ -201,6 +200,12 @@ private:
     inline Common::LineSegment oppGoalLine() const
     {
         return {oppGoalPostBottom(), oppGoalPostTop()};
+    }
+
+    inline bool isOut(Common::Vec2 t_point, const float t_margin = 0.0f) const
+    {
+        return std::fabs(t_point.x) > Common::field().width + t_margin ||
+               std::fabs(t_point.y) > Common::field().height + t_margin;
     }
 
 public:

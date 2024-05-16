@@ -32,8 +32,8 @@ float Ai::calculateSwitchToAttackerScore(int robot_num)
     {
         int opp = marked_id;
         if ((m_world_state.opp_robot[opp].position.distanceTo(m_world_state.ball.position) < 400) &&
-            (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) < 400) && (currAttBallDis > 600) &&
-            (m_world_state.ball.velocity.length() < 500))
+            (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) < 400) &&
+            (currAttBallDis > 600) && (m_world_state.ball.velocity.length() < 500))
         {
             return 0;
         }

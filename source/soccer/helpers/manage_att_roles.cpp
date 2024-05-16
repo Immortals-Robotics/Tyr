@@ -6,8 +6,8 @@ static int attackerChangeHys = 0;
 
 void Ai::ManageAttRoles()
 {
-    if (OwnRobot[attack].state().position.distanceTo(m_world_state.ball.position) >
-        600) // Check if the current attacker has lost the ball, before switching its role
+    // Check if the current attacker has lost the ball, before switching its role
+    if (OwnRobot[attack].state().position.distanceTo(m_world_state.ball.position) > 600)
         attackerChangeHys++;
     if (OwnRobot[attack].state().seen_state == Common::SeenState::CompletelyOut)
         attackerChangeHys = 100;

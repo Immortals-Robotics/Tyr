@@ -57,7 +57,6 @@ void Ai::calculateBallTrajectory()
     if (isVertical)
         ballLine.chapeKon();
 
-    // ball_line.calculate(ball_x.size(), &ball_x[0], &ball_y[0]);
     if (ballLine.isAmoodi())
     {
         Common::debug().draw(Common::LineSegment{Common::Vec2(ballLine.getXIntercept(), -2000),
