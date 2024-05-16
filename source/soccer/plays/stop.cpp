@@ -55,31 +55,31 @@ void Ai::Stop()
                          VelocityProfile::aroom());
                 OwnRobot[dmf].shoot(0);
             }
-            else if (own == lmf)
+            else if (own == mid2)
             {
-                setObstacles(lmf);
-                OwnRobot[lmf].face(m_world_state.ball.position);
-                navigate(lmf,
+                setObstacles(mid2);
+                OwnRobot[mid2].face(m_world_state.ball.position);
+                navigate(mid2,
                          circleAroundPoint(m_world_state.ball.position,
                                            NormalizeAngle(-20 + Common::Vec2::angleWith(
                                                                     m_world_state.ball.position,
                                                                     Common::Vec2(side * Common::field().width, 0))),
                                            650),
                          VelocityProfile::aroom());
-                OwnRobot[lmf].shoot(0);
+                OwnRobot[mid2].shoot(0);
             }
-            else if (own == rmf)
+            else if (own == mid1)
             {
-                setObstacles(rmf);
-                OwnRobot[rmf].face(m_world_state.ball.position);
-                navigate(rmf,
+                setObstacles(mid1);
+                OwnRobot[mid1].face(m_world_state.ball.position);
+                navigate(mid1,
                          circleAroundPoint(m_world_state.ball.position,
                                            NormalizeAngle(20 + Common::Vec2::angleWith(
                                                                    m_world_state.ball.position,
                                                                    Common::Vec2(side * Common::field().width, 0))),
                                            650),
                          VelocityProfile::aroom());
-                OwnRobot[rmf].shoot(0);
+                OwnRobot[mid1].shoot(0);
             }
         }
         else
@@ -97,33 +97,33 @@ void Ai::Stop()
              VelocityProfile::aroom());
     OwnRobot[dmf].shoot(0);
 
-    setObstacles(lmf);
-    OwnRobot[lmf].face(m_world_state.ball.position);
-    navigate(lmf,
+    setObstacles(mid2);
+    OwnRobot[mid2].face(m_world_state.ball.position);
+    navigate(mid2,
              m_world_state.ball.position.circleAroundPoint(
                  Common::Angle::fromDeg(-20.0f) +
                      m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
                  650),
              VelocityProfile::aroom());
-    OwnRobot[lmf].shoot(0);
+    OwnRobot[mid2].shoot(0);
 
-    setObstacles(rmf);
-    OwnRobot[rmf].face(m_world_state.ball.position);
-    navigate(rmf,
+    setObstacles(mid1);
+    OwnRobot[mid1].face(m_world_state.ball.position);
+    navigate(mid1,
              m_world_state.ball.position.circleAroundPoint(
                  Common::Angle::fromDeg(20.0f) +
                      m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
                  650),
              VelocityProfile::aroom());
-    OwnRobot[rmf].shoot(0);
+    OwnRobot[mid1].shoot(0);
 #endif
 
-    setObstacles(cmf);
-    OwnRobot[cmf].face(m_world_state.ball.position);
-    navigate(cmf,
+    setObstacles(attack);
+    OwnRobot[attack].face(m_world_state.ball.position);
+    navigate(attack,
              m_world_state.ball.position.circleAroundPoint(
                  m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)), 650),
              VelocityProfile::aroom());
-    OwnRobot[cmf].shoot(0);
+    OwnRobot[attack].shoot(0);
 }
 } // namespace Tyr::Soccer

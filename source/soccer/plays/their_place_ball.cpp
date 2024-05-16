@@ -28,43 +28,43 @@ void Ai::their_place_ball()
                          VelocityProfile::aroom());
                 OwnRobot[dmf].shoot(0);
             }
-            else if (own == lmf)
+            else if (own == mid2)
             {
-                setObstacles(lmf);
-                OwnRobot[lmf].face(m_world_state.ball.position);
+                setObstacles(mid2);
+                OwnRobot[mid2].face(m_world_state.ball.position);
                 navigate(
-                    lmf,
+                    mid2,
                     CircleAroundPoint(m_world_state.ball.position,
                                       NormalizeAngle(-20 + AngleWith(m_world_state.ball.position,
                                                                      Common::Vec2(side * Common::field().width, 0))),
                                       650),
                     VelocityProfile::aroom());
-                OwnRobot[lmf].shoot(0);
+                OwnRobot[mid2].shoot(0);
             }
-            else if (own == rmf)
+            else if (own == mid1)
             {
-                setObstacles(rmf);
-                OwnRobot[rmf].face(m_world_state.ball.position);
+                setObstacles(mid1);
+                OwnRobot[mid1].face(m_world_state.ball.position);
                 navigate(
-                    rmf,
+                    mid1,
                     CircleAroundPoint(m_world_state.ball.position,
                                       NormalizeAngle(20 + AngleWith(m_world_state.ball.position,
                                                                     Common::Vec2(side * Common::field().width, 0))),
                                       650),
                     VelocityProfile::aroom());
-                OwnRobot[rmf].shoot(0);
+                OwnRobot[mid1].shoot(0);
             }
-            else if (own == cmf)
+            else if (own == attack)
             {
-                setObstacles(cmf);
-                OwnRobot[cmf].face(m_world_state.ball.position);
-                navigate(cmf,
+                setObstacles(attack);
+                OwnRobot[attack].face(m_world_state.ball.position);
+                navigate(attack,
                          CircleAroundPoint(m_world_state.ball.position,
                                            NormalizeAngle(AngleWith(m_world_state.ball.position,
                                                                     Common::Vec2(side * Common::field().width, 0))),
                                            650),
                          VelocityProfile::aroom());
-                OwnRobot[cmf].shoot(0);
+                OwnRobot[attack].shoot(0);
             }
         }
         else
@@ -126,7 +126,7 @@ void Ai::their_place_ball()
                      m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
              VelocityProfile::aroom());
 
-    setObstacles(lmf);
+    setObstacles(mid2);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
@@ -136,15 +136,15 @@ void Ai::their_place_ball()
             g_obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
         }
     }
-    OwnRobot[lmf].face(m_world_state.ball.position);
-    navigate(lmf,
+    OwnRobot[mid2].face(m_world_state.ball.position);
+    navigate(mid2,
              m_world_state.ball.position.circleAroundPoint(
                  Common::Angle::fromDeg(-20) +
                      m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
                  1090),
              VelocityProfile::aroom());
 
-    setObstacles(rmf);
+    setObstacles(mid1);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
@@ -154,15 +154,15 @@ void Ai::their_place_ball()
             g_obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
         }
     }
-    OwnRobot[rmf].face(m_world_state.ball.position);
-    navigate(rmf,
+    OwnRobot[mid1].face(m_world_state.ball.position);
+    navigate(mid1,
              m_world_state.ball.position.circleAroundPoint(
                  Common::Angle::fromDeg(20) +
                      m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
                  1090),
              VelocityProfile::aroom());
 
-    setObstacles(cmf);
+    setObstacles(attack);
     g_obs_map.addCircle({m_world_state.ball.position, 1010.0f});
     g_obs_map.addCircle({m_ref_state.place_ball_target, 1010.0f});
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
@@ -172,8 +172,8 @@ void Ai::their_place_ball()
             g_obs_map.addCircle({m_world_state.opp_robot[i].position, 300.0f});
         }
     }
-    OwnRobot[cmf].face(m_world_state.ball.position);
-    navigate(cmf,
+    OwnRobot[attack].face(m_world_state.ball.position);
+    navigate(attack,
              m_world_state.ball.position.circleAroundPoint(
                  m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)), 1090),
              VelocityProfile::aroom());

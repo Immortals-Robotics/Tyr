@@ -37,10 +37,6 @@ Ai::Ai()
 
     lastReferee = Common::RefereeState::STATE_GAME_OFF;
 
-    attack = cmf;
-    mid1   = rmf;
-    mid2   = lmf;
-
     markMap[&dmf]  = -1;
     markMap[&mid1] = -1;
     markMap[&mid2] = -1;

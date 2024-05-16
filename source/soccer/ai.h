@@ -37,18 +37,14 @@ private:
     float randomParam;
     int   target_str;
 
-    int gk  = 0;
-    int def = 1;
-    int dmf = 2;
-    int lmf = 3;
-    int rmf = 4;
-    int cmf = 5;
-    int rw  = 6;
-    int lw  = 7;
-
-    int attack;
-    int mid1;
-    int mid2;
+    int gk     = 0;
+    int def    = 1;
+    int dmf    = 2;
+    int mid2   = 3;
+    int mid1   = 4;
+    int attack = 5;
+    int rw     = 6;
+    int lw     = 7;
 
     int *stm2AInum[Common::Setting::kMaxRobots] = {};
 

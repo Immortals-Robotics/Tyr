@@ -86,7 +86,7 @@ void Ai::NormalPlayAtt()
             {
 
                 // float passAngle = Common::Vec2::angleWith (
-                // OwnRobot[randomParam<0.3?dmf:(randomParam<0.6?rmf:lmf)].state().position ,
+                // OwnRobot[randomParam<0.3?dmf:(randomParam<0.6?mid1:mid2)].state().position ,
                 // m_world_state.ball.position );
                 Common::Angle passAngle =
                     Common::Vec2(-side * 1700, Common::sign(-m_world_state.ball.position.y) * 1700.0f)
