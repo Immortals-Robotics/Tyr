@@ -76,7 +76,7 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     {
         setObstacles(robot_num);
         OwnRobot[robot_num].face(Common::Vec2((*defendTarget).x, (*defendTarget).y));
-        navigate(robot_num, target, VelocityProfile::Type::Mamooli);
+        navigate(robot_num, target, VelocityProfile::mamooli());
     }
 }
 } // namespace Tyr::Soccer

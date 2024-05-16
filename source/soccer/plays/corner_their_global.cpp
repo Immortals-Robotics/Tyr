@@ -8,7 +8,7 @@ void Ai::corner_their_global()
     {
         setObstacles(gk);
         OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
-        navigate(gk, Common::Vec2(side * (Common::field().width - 100), 0), VelocityProfile::Type::Mamooli);
+        navigate(gk, Common::Vec2(side * (Common::field().width - 100), 0), VelocityProfile::mamooli());
 
         DefHi(def, rw, lw, nullptr, true);
     }
@@ -39,7 +39,7 @@ void Ai::corner_their_global()
             {
                 OwnRobot[own].face(Common::Vec2(-side * Common::field().width, 0));
                 setObstacles(own);
-                navigate(own, static_pos[own], VelocityProfile::Type::Mamooli);
+                navigate(own, static_pos[own], VelocityProfile::mamooli());
             }
         }
         else

@@ -13,7 +13,7 @@ void Ai::kickoff_us_chip()
              m_world_state.ball.position.pointOnConnectingLine(
                  Common::Vec2(side * Common::field().width, 0),
                  m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
-             VelocityProfile::Type::Mamooli);
+             VelocityProfile::mamooli());
 
     if (timer.time() < 0.5)
     {

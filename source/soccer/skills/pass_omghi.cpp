@@ -45,7 +45,7 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
     Common::logDebug("sBAR:    {}", sBAR);
     // TODO: sBAR should be max speed
 
-    navigate(robot_num, target, VelocityProfile::Type::Kharaki);
+    navigate(robot_num, target, VelocityProfile::kharaki());
 
     OwnRobot[robot_num].shoot(100);
     OwnRobot[robot_num].dribble(15);

@@ -35,21 +35,21 @@ void Ai::Stop_def()
 
     setObstacles(dmf);
     OwnRobot[dmf].face(m_world_state.ball.position);
-    navigate(dmf, static_pos[dmf], VelocityProfile::Type::Aroom);
+    navigate(dmf, static_pos[dmf], VelocityProfile::aroom());
 
     setObstacles(mid1);
     OwnRobot[mid1].face(m_world_state.ball.position);
-    navigate(mid1, static_pos[mid1], VelocityProfile::Type::Aroom);
+    navigate(mid1, static_pos[mid1], VelocityProfile::aroom());
 
     setObstacles(mid2);
     OwnRobot[mid2].face(m_world_state.ball.position);
-    navigate(mid2, static_pos[mid2], VelocityProfile::Type::Aroom);
+    navigate(mid2, static_pos[mid2], VelocityProfile::aroom());
 
     setObstacles(attack);
     OwnRobot[attack].face(m_world_state.ball.position);
     navigate(attack,
              m_world_state.ball.position.circleAroundPoint(
                  m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)), 580),
-             VelocityProfile::Type::Aroom);
+             VelocityProfile::aroom());
 }
 } // namespace Tyr::Soccer

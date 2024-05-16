@@ -70,10 +70,8 @@ void Robot::face(const Common::Vec2 t_target)
     target.angle = state().position.angleWith(t_target);
 }
 
-Common::Vec2 Robot::computeMotion(const VelocityProfile::Type velocityProfileType)
+Common::Vec2 Robot::computeMotion(const VelocityProfile &profile)
 {
-    const VelocityProfile profile(velocityProfileType);
-
     const float field_extra_area = 200.f;
 
     if (std::fabs(target.position.x) > Common::field().width + field_extra_area)
@@ -89,23 +87,23 @@ Common::Vec2 Robot::computeMotion(const VelocityProfile::Type velocityProfileTyp
     Common::Vec2 tmp_max_speed;
 
     float target_dis = Common::Vec2(0.0f).distanceTo(diff);
-    tmp_max_speed.x  = profile.max_spd.x * std::fabs(diff.x) / target_dis;
-    tmp_max_speed.y  = profile.max_spd.y * std::fabs(diff.y) / target_dis;
+    tmp_max_speed.x  = profile.max_spd * std::fabs(diff.x) / target_dis;
+    tmp_max_speed.y  = profile.max_spd * std::fabs(diff.y) / target_dis;
 
-    motion.x = pow(0.6f * profile.max_dec.x * std::fabs(diff.x), 0.6f);
+    motion.x = pow(0.6f * profile.max_dec * std::fabs(diff.x), 0.6f);
     motion.x *= Common::sign(diff.x);
     if (std::fabs(diff.x) < 5)
         motion.x = 0.0f;
 
     if (motion.x * m_last_motion.x <= 0)
     {
-        float tmp = m_last_motion.x + profile.max_dec.x * Common::sign(motion.x);
+        float tmp = m_last_motion.x + profile.max_dec * Common::sign(motion.x);
         if (motion.x == 0)
-            tmp = m_last_motion.x - profile.max_dec.x * Common::sign(m_last_motion.x);
+            tmp = m_last_motion.x - profile.max_dec * Common::sign(m_last_motion.x);
 
         if (tmp * motion.x > 0)
         {
-            tmp = std::min(profile.max_acc.x, std::fabs(tmp)) * Common::sign(motion.x);
+            tmp = std::min(profile.max_acc, std::fabs(tmp)) * Common::sign(motion.x);
             if (std::fabs(tmp) > std::fabs(motion.x))
                 tmp = motion.x;
         }
@@ -114,28 +112,28 @@ Common::Vec2 Robot::computeMotion(const VelocityProfile::Type velocityProfileTyp
     }
     else
     {
-        if (std::fabs(motion.x) > std::fabs(m_last_motion.x) + profile.max_acc.x)
+        if (std::fabs(motion.x) > std::fabs(m_last_motion.x) + profile.max_acc)
         {
-            motion.x = (std::fabs(m_last_motion.x) + profile.max_acc.x) * Common::sign(motion.x);
+            motion.x = (std::fabs(m_last_motion.x) + profile.max_acc) * Common::sign(motion.x);
         }
-        else if (std::fabs(motion.x) < std::fabs(m_last_motion.x) - profile.max_dec.x)
+        else if (std::fabs(motion.x) < std::fabs(m_last_motion.x) - profile.max_dec)
         {
-            motion.x = (std::fabs(m_last_motion.x) - profile.max_dec.x) * Common::sign(motion.x);
+            motion.x = (std::fabs(m_last_motion.x) - profile.max_dec) * Common::sign(motion.x);
         }
         if (std::fabs(motion.x) > tmp_max_speed.x)
         {
             if (Common::sign(motion.x) == 0)
             { // NOT ENTERING HERE!!!!
-                motion.x = std::max(std::fabs(m_last_motion.x) - profile.max_dec.x, std::fabs(tmp_max_speed.x)) *
+                motion.x = std::max(std::fabs(m_last_motion.x) - profile.max_dec, std::fabs(tmp_max_speed.x)) *
                            Common::sign(m_last_motion.x);
             }
             else
-                motion.x = std::max(std::fabs(m_last_motion.x) - profile.max_dec.x, std::fabs(tmp_max_speed.x)) *
+                motion.x = std::max(std::fabs(m_last_motion.x) - profile.max_dec, std::fabs(tmp_max_speed.x)) *
                            Common::sign(motion.x);
         }
     }
 
-    motion.y = pow(0.6f * profile.max_dec.y * std::fabs(diff.y), 0.6f);
+    motion.y = pow(0.6f * profile.max_dec * std::fabs(diff.y), 0.6f);
     motion.y *= Common::sign(diff.y);
     if (std::fabs(diff.y) < 5)
     {
@@ -143,12 +141,12 @@ Common::Vec2 Robot::computeMotion(const VelocityProfile::Type velocityProfileTyp
     }
     if (motion.y * m_last_motion.y <= 0)
     {
-        float tmp = m_last_motion.y + profile.max_dec.y * Common::sign(motion.y);
+        float tmp = m_last_motion.y + profile.max_dec * Common::sign(motion.y);
         if (motion.y == 0)
-            tmp = m_last_motion.y - profile.max_dec.y * Common::sign(m_last_motion.y);
+            tmp = m_last_motion.y - profile.max_dec * Common::sign(m_last_motion.y);
         if (tmp * motion.y > 0)
         {
-            tmp = std::min(profile.max_acc.y, std::fabs(tmp)) * Common::sign(motion.y);
+            tmp = std::min(profile.max_acc, std::fabs(tmp)) * Common::sign(motion.y);
             if (std::fabs(tmp) > std::fabs(motion.y))
                 tmp = motion.y;
         }
@@ -157,32 +155,32 @@ Common::Vec2 Robot::computeMotion(const VelocityProfile::Type velocityProfileTyp
     }
     else
     {
-        if (std::fabs(motion.y) > std::fabs(m_last_motion.y) + profile.max_acc.y)
+        if (std::fabs(motion.y) > std::fabs(m_last_motion.y) + profile.max_acc)
         {
-            motion.y = (std::fabs(m_last_motion.y) + profile.max_acc.y) * Common::sign(motion.y);
+            motion.y = (std::fabs(m_last_motion.y) + profile.max_acc) * Common::sign(motion.y);
         }
-        else if (std::fabs(motion.y) < std::fabs(m_last_motion.y) - profile.max_dec.y)
+        else if (std::fabs(motion.y) < std::fabs(m_last_motion.y) - profile.max_dec)
         {
-            motion.y = (std::fabs(m_last_motion.y) - profile.max_dec.y) * Common::sign(motion.y);
+            motion.y = (std::fabs(m_last_motion.y) - profile.max_dec) * Common::sign(motion.y);
         }
         if (std::fabs(motion.y) > tmp_max_speed.y)
         {
             if (Common::sign(motion.y) == 0)
-                motion.y = std::max(std::fabs(m_last_motion.y) - profile.max_dec.y, std::fabs(tmp_max_speed.y)) *
+                motion.y = std::max(std::fabs(m_last_motion.y) - profile.max_dec, std::fabs(tmp_max_speed.y)) *
                            Common::sign(m_last_motion.y);
             else
-                motion.y = std::max(std::fabs(m_last_motion.y) - profile.max_dec.y, std::fabs(tmp_max_speed.y)) *
+                motion.y = std::max(std::fabs(m_last_motion.y) - profile.max_dec, std::fabs(tmp_max_speed.y)) *
                            Common::sign(motion.y);
         }
 
         if (std::fabs(motion.y) > std::fabs(m_last_motion.y))
-            if (std::fabs(motion.y - m_last_motion.y) > profile.max_acc.y * 1.1)
-                Common::logDebug("    gaz nade    {}        <    {}", profile.max_acc.y,
+            if (std::fabs(motion.y - m_last_motion.y) > profile.max_acc * 1.1)
+                Common::logDebug("    gaz nade    {}        <    {}", profile.max_acc,
                                  std::fabs(motion.y - m_last_motion.y));
 
         if (std::fabs(motion.y) < std::fabs(m_last_motion.y))
-            if (std::fabs(motion.y - m_last_motion.y) > profile.max_dec.y * 1.1)
-                Common::logDebug("    tormoz nakon    {}        <    ", profile.max_dec.y,
+            if (std::fabs(motion.y - m_last_motion.y) > profile.max_dec * 1.1)
+                Common::logDebug("    tormoz nakon    {}        <    ", profile.max_dec,
                                  std::fabs(motion.y - m_last_motion.y));
     }
 

@@ -10,7 +10,7 @@ void Ai::WaitForGool(int robot_num, bool chip)
     OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width, 0));
 
     setObstacles(robot_num);
-    navigate(robot_num, pos, VelocityProfile::Type::Mamooli);
+    navigate(robot_num, pos, VelocityProfile::mamooli());
 
     OwnRobot[robot_num].shoot(100);
     OwnRobot[robot_num].dribble(15);

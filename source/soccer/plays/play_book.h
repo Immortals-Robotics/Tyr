@@ -40,13 +40,13 @@ struct Waypoint
         Time     = 1,
     };
 
-    Type                  type = Type::Position;
-    Common::Vec2          position;
-    bool                  need_rrt         = true;
-    float                 speed            = 100.0f;
-    VelocityProfile::Type velocity_profile = VelocityProfile::Type::Mamooli;
-    float                 tolerance        = 100.0f;
-    float                 time;
+    Type            type = Type::Position;
+    Common::Vec2    position;
+    bool            need_rrt         = true;
+    float           speed            = 100.0f;
+    VelocityProfile velocity_profile = VelocityProfile::mamooli();
+    float           tolerance        = 100.0f;
+    float           time;
 
     Waypoint() = default;
 
@@ -60,13 +60,13 @@ struct Waypoint
         switch (t_waypoint.velocity_profile())
         {
         case Protos::Immortals::Waypoint_VelocityProfile_Aroom:
-            velocity_profile = VelocityProfile::Type::Aroom;
+            velocity_profile = VelocityProfile::aroom();
             break;
         case Protos::Immortals::Waypoint_VelocityProfile_Mamooli:
-            velocity_profile = VelocityProfile::Type::Mamooli;
+            velocity_profile = VelocityProfile::mamooli();
             break;
         case Protos::Immortals::Waypoint_VelocityProfile_Kharaki:
-            velocity_profile = VelocityProfile::Type::Kharaki;
+            velocity_profile = VelocityProfile::kharaki();
             break;
         }
 

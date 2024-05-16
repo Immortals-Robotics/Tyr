@@ -2,16 +2,14 @@
 
 namespace Tyr::Soccer
 {
-void Ai::navigate(int robot_num, Common::Vec2 dest, VelocityProfile::Type velocityProfile)
+void Ai::navigate(int robot_num, Common::Vec2 dest, VelocityProfile profile)
 {
     if (OwnRobot[robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         return;
 
-    if (m_ref_state.shouldSlowDown() &&
-        (velocityProfile == VelocityProfile::Type::Mamooli || velocityProfile == VelocityProfile::Type::Kharaki ||
-         velocityProfile == VelocityProfile::Type::Killer))
+    if (m_ref_state.shouldSlowDown())
     {
-        velocityProfile = VelocityProfile::Type::Aroom;
+        profile.max_spd = std::min(profile.max_spd, 20.0f);
     }
 
     if (OwnRobot[robot_num].state().position.distanceTo(dest) > 100.0f)
@@ -24,7 +22,7 @@ void Ai::navigate(int robot_num, Common::Vec2 dest, VelocityProfile::Type veloci
 
     OwnRobot[robot_num].target.position = wayp;
 
-    Common::Vec2 motion_cmd = OwnRobot[robot_num].computeMotion(velocityProfile);
+    Common::Vec2 motion_cmd = OwnRobot[robot_num].computeMotion(profile);
 
     motion_cmd = dss->ComputeSafeMotion(robot_num, Common::Vec2(motion_cmd.x, motion_cmd.y));
 

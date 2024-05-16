@@ -13,7 +13,7 @@ void Ai::kickoff_their_one_wall()
              m_world_state.ball.position.pointOnConnectingLine(
                  Common::Vec2(side * Common::field().width, 0),
                  m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 2.0f),
-             VelocityProfile::Type::Mamooli);
+             VelocityProfile::mamooli());
 
     int indexP = -1;
     int indexN = -1;

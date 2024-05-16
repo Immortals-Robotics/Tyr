@@ -218,7 +218,7 @@ void Ai::strategy()
         {
             setObstacles(*stm2AInum[i], true);
 
-            const VelocityProfile::Type profile = strategy.role[i].path[step[i]].velocity_profile;
+            const VelocityProfile profile = strategy.role[i].path[step[i]].velocity_profile;
 
             if (step[i] != strategy.role[i].path.size() - 1)
             {

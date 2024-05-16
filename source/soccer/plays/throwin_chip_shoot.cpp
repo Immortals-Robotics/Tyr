@@ -10,13 +10,13 @@ void Ai::throwin_chip_shoot()
     setObstacles(mid2, true);
     OwnRobot[mid2].face(m_world_state.ball.position);
     navigate(mid2, Common::Vec2(-side * 1500, Common::sign(m_world_state.ball.position.y) * 2500.0f),
-             VelocityProfile::Type::Mamooli);
+             VelocityProfile::mamooli());
     oneTouchType[mid2] = shirje;
 
     setObstacles(mid1, true);
     OwnRobot[mid1].face(m_world_state.ball.position);
     navigate(mid1, Common::Vec2(-side * 3500, Common::sign(m_world_state.ball.position.y) * 2500.0f),
-             VelocityProfile::Type::Mamooli);
+             VelocityProfile::mamooli());
     oneTouchType[mid1] = shirje;
 
     if (timer.time() > 4)

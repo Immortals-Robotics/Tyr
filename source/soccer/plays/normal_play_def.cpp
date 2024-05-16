@@ -37,7 +37,7 @@ void Ai::NormalPlayDef()
                     navigate(dmf,
                              m_world_state.ball.position.pointOnConnectingLine(
                                  Common::Vec2(side * Common::field().width, 0), 1800),
-                             VelocityProfile::Type::Mamooli);
+                             VelocityProfile::mamooli());
                 }
                 else if (own == mid1)
                 {
@@ -45,7 +45,7 @@ void Ai::NormalPlayDef()
                         Mark2Goal(own, oppAttacker, 500);
                     else
                         navigate(own, Common::Vec2(m_world_state.ball.position.x, 1000),
-                                 VelocityProfile::Type::Mamooli);
+                                 VelocityProfile::mamooli());
                 }
                 else if (own == mid2)
                 {
@@ -53,7 +53,7 @@ void Ai::NormalPlayDef()
                         Mark2Goal(own, oppAttacker, 500);
                     else
                         navigate(own, Common::Vec2(m_world_state.ball.position.x, -1000),
-                                 VelocityProfile::Type::Mamooli);
+                                 VelocityProfile::mamooli());
                 }
             }
             else
