@@ -11,10 +11,10 @@ class Robot
 public:
     Common::RobotState target;
 
-    int  shoot    = 0;
-    int  chip     = 0;
-    int  dribbler = 0;
-    bool halted   = false;
+    int  shoot     = 0;
+    int  chip      = 0;
+    int  dribbler  = 0;
+    bool halted    = false;
     bool navigated = false;
 
     Common::Vec3 last_motions[11] = {};
@@ -48,5 +48,9 @@ public:
 
 private:
     const Common::RobotState *m_state = nullptr;
+
+    // used in mition plan
+    // TODO: merge with last_motions
+    Common::Vec3 m_old_motion;
 };
 } // namespace Tyr::Soccer
