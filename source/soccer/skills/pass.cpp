@@ -24,9 +24,8 @@ Common::Vec2 Ai::CalculatePassPos(int robot_num, const Common::Vec2 &target, con
 
 void Ai::WaitForPass(int robot_num, bool chip, const Common::Vec2 *target, Common::Vec2 *statPos)
 {
-    Common::Vec2 pos =
-        CalculatePassPos(robot_num, target == nullptr ? Common::Vec2(-side * Common::field().width, 0) : *target,
-                         statPos == nullptr ? OwnRobot[robot_num].state().position : *statPos, 78);
+    Common::Vec2 pos = CalculatePassPos(robot_num, target == nullptr ? oppGoal() : *target,
+                                        statPos == nullptr ? OwnRobot[robot_num].state().position : *statPos, 78);
 
     if (target == nullptr)
     {
@@ -41,11 +40,9 @@ void Ai::WaitForPass(int robot_num, bool chip, const Common::Vec2 *target, Commo
 
     Common::Line shoot_line = Common::Line::fromPointAndAngle(pos, OwnRobot[robot_num].target.angle);
     Common::Line open_line  = Common::Line::fromPointAndAngle(pos, open_angle.center);
-    Common::debug().draw(Common::LineSegment{pos, Common::Vec2(-side * Common::field().width,
-                                                               shoot_line.y(-side * Common::field().width))},
+    Common::debug().draw(Common::LineSegment{pos, Common::Vec2(oppGoal().x, shoot_line.y(oppGoal().x))},
                          Common::Color::brown());
-    Common::debug().draw(Common::LineSegment{pos, Common::Vec2(-side * Common::field().width,
-                                                               open_line.y(-side * Common::field().width))},
+    Common::debug().draw(Common::LineSegment{pos, Common::Vec2(oppGoal().x, open_line.y(oppGoal().x))},
                          Common::Color::pink());
 
     setObstacles(robot_num);

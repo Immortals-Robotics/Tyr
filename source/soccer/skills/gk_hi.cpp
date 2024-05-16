@@ -47,7 +47,7 @@ void Ai::GKHi(int robot_num, bool stop)
         static constexpr float area_extension_size     = 200.0f;
         const float            penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
-        const Common::Vec2 start{side * Common::field().width, -(penalty_area_half_width + area_extension_size)};
+        const Common::Vec2 start{ownGoal().x, -(penalty_area_half_width + area_extension_size)};
 
         const float w = -side * (area_extension_size + Common::field().penalty_area_depth);
         const float h = Common::field().penalty_area_width + 2 * area_extension_size;
@@ -69,39 +69,10 @@ void Ai::GKHi(int robot_num, bool stop)
         }
         else
         {
-#if 0
 
-            float cornerStartMul = pow(std::max(0,1.2-timer.time()),1.1);
+            Common::Vec2 target = ownGoal().pointOnConnectingLine(m_world_state.ball.position, 1500);
+            target.x            = Common::sign(target.x) * std::min(Common::field().width - 90, std::fabs(target.x));
 
-			//Added by Dot_blue:
-			float penalty_x = Common::field().width - 85.0;
-			float max_reach_y = (Common::field().goal_width/2.0) + 20.0;
-			float tmp_x,tmp_y;
-			Common::Line GK_Rail = Common::Line::fromTwoPoints(Common::Vec2(side * penalty_x, 100),
-													   Common::Vec2(side * penalty_x, -100));
-			Common::Vec2 ans;
-			if(DIS(m_world_state.ball.position,Common::Vec2(side*Common::field().width,0))<2500 && m_world_state.ball.position.x > side*(Common::field().width -1200) ){
-				ans = GK_Rail.closestPoint(m_world_state.ball.position);
-				tmp_x = ans.getX();
-				tmp_y = ans.getY();
-			} else {
-				tmp_x = side * penalty_x;
-				tmp_y = (6.0 * m_world_state.ball.position.y) / 40.0f;
-			}
-
-			if (tmp_y < -max_reach_y) {
-				tmp_y = -max_reach_y;
-			}
-			if (tmp_y > max_reach_y) {
-				tmp_y = max_reach_y;
-			}
-			Common::Vec2 target = Common::Vec2(tmp_x, tmp_y);
-			//Done by Dot_Blue TODO #9 test this...
-#else
-            Common::Vec2 target =
-                Common::Vec2(side * Common::field().width, 0).pointOnConnectingLine(m_world_state.ball.position, 1500);
-            target.x = Common::sign(target.x) * std::min(Common::field().width - 90, std::fabs(target.x));
-#endif
             OwnRobot[robot_num].face(m_world_state.ball.position);
             setObstacles(robot_num);
             navigate(robot_num, target, VelocityProfile::mamooli());
@@ -116,8 +87,7 @@ void Ai::GK_shirje(int robot_num)
 
     Common::Line ball_line =
         Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());
-    Common::Vec2 ans = ball_line.closestPoint(
-        Common::Vec2(OwnRobot[robot_num].state().position.x, OwnRobot[robot_num].state().position.y));
+    Common::Vec2 ans = ball_line.closestPoint(OwnRobot[robot_num].state().position);
     OwnRobot[robot_num].face(m_world_state.ball.position);
     ans = ((ans - OwnRobot[robot_num].state().position) * 2.0f) + OwnRobot[robot_num].state().position;
     setObstacles(robot_num);

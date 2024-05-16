@@ -5,8 +5,8 @@ namespace Tyr::Soccer
 void Ai::Mark(int robot_num, int opp, float dist)
 {
     auto oppToBall    = (m_world_state.ball.position - m_world_state.opp_robot[opp].position).normalized();
-    auto oppToGoal    = (Common::Vec2(side * Common::field().width, 0) - m_world_state.opp_robot[opp].position).normalized();
-    auto oppToGoalDis = m_world_state.opp_robot[opp].position.distanceTo(Common::Vec2(side * Common::field().width, 0));
+    auto oppToGoal    = (ownGoal() - m_world_state.opp_robot[opp].position).normalized();
+    auto oppToGoalDis = m_world_state.opp_robot[opp].position.distanceTo(ownGoal());
     auto ballToOppDis = m_world_state.ball.position.distanceTo(m_world_state.opp_robot[opp].position);
     auto oneTouchDot  = oppToBall.dot(oppToGoal);
     if (oneTouchDot > 0 || oppToGoalDis < 2500)

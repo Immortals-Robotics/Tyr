@@ -34,7 +34,7 @@ void Ai::calculateBallTrajectory()
             if (isVertical)
             {
                 ballLine.calculate(ball_x.size(), &ball_y[0], &ball_x[0]);
-                d = ballLine.getDisToPoint(Common::Vec2(ballHist[i].position.y, ballHist[i].position.x));
+                d = ballLine.getDisToPoint(ballHist[i].position.yx());
             }
             else
             {

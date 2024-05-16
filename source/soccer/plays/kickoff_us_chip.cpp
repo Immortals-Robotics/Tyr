@@ -11,8 +11,8 @@ void Ai::kickoff_us_chip()
     OwnRobot[dmf].face(m_world_state.ball.position);
     navigate(dmf,
              m_world_state.ball.position.pointOnConnectingLine(
-                 Common::Vec2(side * Common::field().width, 0),
-                 m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
+                 ownGoal(),
+                 m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
              VelocityProfile::mamooli());
 
     if (timer.time() < 0.5)
@@ -23,10 +23,10 @@ void Ai::kickoff_us_chip()
         }
     }
 
-    OwnRobot[mid2].face(Common::Vec2(-side * Common::field().width, 0));
+    OwnRobot[mid2].face(oppGoal());
     setObstacles(mid2, true);
     navigate(mid2, Common::Vec2(m_world_state.ball.position.x + side * 150, (Common::field().height - 300)));
-    OwnRobot[mid1].face(Common::Vec2(-side * Common::field().width, 0));
+    OwnRobot[mid1].face(oppGoal());
     setObstacles(mid1, true);
     navigate(mid1, Common::Vec2(m_world_state.ball.position.x + side * 150, -(Common::field().height - 300)));
     Common::Vec2 chip_target = Common::Vec2(-side * 2000, 0);

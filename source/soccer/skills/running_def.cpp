@@ -24,8 +24,7 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
 
     ballAriving = oneTouchDetector[robot_num].IsArriving(40, 80);
 
-    Common::Vec2 oneTouchPos = CalculatePassPos(robot_num, Common::Vec2(-side * Common::field().width, 0),
-                                                OwnRobot[robot_num].state().position);
+    Common::Vec2 oneTouchPos = CalculatePassPos(robot_num, oppGoal(), OwnRobot[robot_num].state().position);
 
     if (oneTouchPos.distanceTo(target) < max_def_move_to_intercept)
     {
@@ -75,7 +74,7 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     else
     {
         setObstacles(robot_num);
-        OwnRobot[robot_num].face(Common::Vec2((*defendTarget).x, (*defendTarget).y));
+        OwnRobot[robot_num].face(*defendTarget);
         navigate(robot_num, target, VelocityProfile::mamooli());
     }
 }

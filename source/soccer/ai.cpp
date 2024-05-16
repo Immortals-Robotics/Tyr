@@ -63,7 +63,7 @@ Ai::Ai()
         oneTouchType[i]     = oneTouch;
         oneTouchTypeUsed[i] = false;
 
-        allafPos[i] = Common::Vec2(0, 0);
+        allafPos[i] = Common::Vec2();
     }
 
     chip_head = Common::Angle::fromDeg(200);

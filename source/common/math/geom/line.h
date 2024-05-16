@@ -86,6 +86,8 @@ public:
 
     [[nodiscard]] std::optional<Vec2> intersect(const Line &t_line) const;
 
+    [[nodiscard]] std::optional<Vec2> intersect(const LineSegment &t_line) const;
+
     [[nodiscard]] std::vector<Vec2> intersect(const Circle &t_circle) const;
 
     [[nodiscard]] inline Line tangentLine(Vec2 t_pos) const

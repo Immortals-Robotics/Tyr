@@ -6,7 +6,7 @@ bool Ai::goalBlocked(Common::Vec2 init_pos, float max_shoot_blocker_dis, float s
 {
     bool oppGoalOpen = true;
 
-    Common::Line ballGoalLine = Common::Line::fromTwoPoints(Common::Vec2(-side * Common::field().width, 0), init_pos);
+    Common::Line ballGoalLine = Common::Line::fromTwoPoints(oppGoal(), init_pos);
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (m_world_state.opp_robot[i].seen_state == Common::SeenState::CompletelyOut)

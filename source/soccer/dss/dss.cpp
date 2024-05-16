@@ -12,18 +12,16 @@ Dss::Dss(const Robot *const own_robots, const Common::RobotState *const opp_robo
 
 Common::Vec2 Dss::GetAccFromMotion(const int robot_num, const Common::Vec2 &motion)
 {
-    const Common::RobotState &state         = own_robots[robot_num].state();
-    const Common::Vec2        current_speed = Common::Vec2(state.velocity.x, state.velocity.y);
-    const Common::Vec2        target_speed  = motion * 45.f;
+    const Common::RobotState &state        = own_robots[robot_num].state();
+    const Common::Vec2        target_speed = motion * 45.f;
 
-    return (target_speed - current_speed) / cmd_dt;
+    return (target_speed - state.velocity) / cmd_dt;
 }
 
 Common::Vec2 Dss::GetMotionFromAcc(const int robot_num, const Common::Vec2 &acc)
 {
-    const Common::RobotState &state         = own_robots[robot_num].state();
-    const Common::Vec2        current_speed = Common::Vec2(state.velocity.x, state.velocity.y);
-    const Common::Vec2        target_speed  = current_speed + (acc * cmd_dt);
+    const Common::RobotState &state        = own_robots[robot_num].state();
+    const Common::Vec2        target_speed = state.velocity + (acc * cmd_dt);
 
     return target_speed / 45.f;
 }
@@ -111,10 +109,10 @@ Common::Vec2 Dss::GetRandomAcceleration(const Common::Vec2 &v, const float a_mag
 {
     const float max_acc = 3000.f;
 
-    const float rnd_angle     = m_random.get(0.0f, 2.f * 3.1415f);
-    const float rnd_magnitude = m_random.get(0.0f, a_mag);
+    const Common::Angle rnd_angle     = Common::Angle::fromDeg(m_random.get(0.0f, 360.0f));
+    const float         rnd_magnitude = m_random.get(0.0f, a_mag);
 
-    return Common::Vec2(cos(rnd_angle), sin(rnd_angle)) * rnd_magnitude;
+    return rnd_angle.toUnitVec() * rnd_magnitude;
 }
 
 float Dss::ComputeError(const Common::Vec2 &target, const Common::Vec2 &current)
@@ -130,7 +128,7 @@ void Dss::Reset()
 
         if (state.seen_state == Common::SeenState::CompletelyOut)
         {
-            computed_motions[robot_idx] = Common::Vec2(0.f, 0.f);
+            computed_motions[robot_idx] = Common::Vec2();
         }
         else
         {

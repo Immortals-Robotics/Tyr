@@ -49,7 +49,7 @@ void Ai::Stop_def()
     OwnRobot[attack].face(m_world_state.ball.position);
     navigate(attack,
              m_world_state.ball.position.circleAroundPoint(
-                 m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)), 580),
+                 m_world_state.ball.position.angleWith(ownGoal()), 580),
              VelocityProfile::aroom());
 }
 } // namespace Tyr::Soccer

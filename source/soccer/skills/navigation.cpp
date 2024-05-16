@@ -24,7 +24,7 @@ void Ai::navigate(int robot_num, Common::Vec2 dest, VelocityProfile profile)
 
     Common::Vec2 motion_cmd = OwnRobot[robot_num].computeMotion(profile);
 
-    motion_cmd = dss->ComputeSafeMotion(robot_num, Common::Vec2(motion_cmd.x, motion_cmd.y));
+    motion_cmd = dss->ComputeSafeMotion(robot_num, motion_cmd);
 
     OwnRobot[robot_num].move(motion_cmd);
 }

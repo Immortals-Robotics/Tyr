@@ -14,22 +14,19 @@ float normalizeAngleR(float angle) // radian
 
 Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 {
+    int  counter = 0;
+    bool oops    = 0;
 
-    int          counter  = 0;
-    bool         oops     = 0;
-    int          obsCount = 0;
-    int          obs[50][2];
-    Common::Vec2 t2 =
-        Common::Vec2(-Common::field().width * side, Common::field().goal_width / 2.0);
-    Common::Vec2 t1 =
-        Common::Vec2(-Common::field().width * side, -Common::field().goal_width / 2.0);
-    Common::Vec2 MidGoal = Common::Vec2(-Common::field().width * side, 0);
-    float        midGoalAngel;
-    float        t1Angel;
-    float        t2Angel;
-    midGoalAngel = atan2((MidGoal.y - p1.y), (MidGoal.x - p1.x));
-    t1Angel      = atan2((t1.y - p1.y), (t1.x - p1.x));
-    t2Angel      = atan2((t2.y - p1.y), (t2.x - p1.x));
+    std::vector<Common::Vec2> obstacles;
+    obstacles.reserve(50);
+
+    const Common::Vec2 t2      = oppGoalPostTop();
+    const Common::Vec2 t1      = oppGoalPostBottom();
+    const Common::Vec2 MidGoal = oppGoal();
+
+    float midGoalAngel = atan2((MidGoal.y - p1.y), (MidGoal.x - p1.x));
+    float t1Angel      = atan2((t1.y - p1.y), (t1.x - p1.x));
+    float t2Angel      = atan2((t2.y - p1.y), (t2.x - p1.x));
 
     if (std::fabs(t1Angel - t2Angel) > 3.1415)
         oops = 1;
@@ -56,29 +53,25 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
     {
         if ((OwnRobot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != robot_num))
         {
-            obs[obsCount][0] = OwnRobot[i].state().position.x;
-            obs[obsCount][1] = OwnRobot[i].state().position.y;
-            obsCount++;
+            obstacles.emplace_back(OwnRobot[i].state().position);
         }
     }
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            obs[obsCount][0] = m_world_state.opp_robot[i].position.x;
-            obs[obsCount][1] = m_world_state.opp_robot[i].position.y;
-            obsCount++;
+            obstacles.emplace_back(m_world_state.opp_robot[i].position);
         }
     }
 
     ///////////////////////////////////////////////////////////////
 
-    for (int i = 0; i < obsCount; i++)
+    for (int i = 0; i < obstacles.size(); i++)
     {
 
-        d[counter][0] = atan2((obs[i][1] - p1.y), obs[i][0] - p1.x);
+        d[counter][0] = atan2(obstacles[i].y - p1.y, obstacles[i].x - p1.x);
 
-        float dd = std::atan(90.0f / p1.distanceTo(Common::Vec2(obs[i][0], obs[i][1])));
+        float dd = std::atan(90.0f / p1.distanceTo(obstacles[i]));
         if (dd < 0)
             dd = -dd;
         d[counter][1] = d[counter][0] + dd;

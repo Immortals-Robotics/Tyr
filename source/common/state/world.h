@@ -221,6 +221,11 @@ struct BallState
 
         t_ball->set_seen_state((Protos::Immortals::SeenState) seen_state);
     }
+
+    inline Common::Line line() const
+    {
+        return Common::Line::fromPointAndAngle(position, velocity.toAngle());
+    }
 };
 
 struct FieldState

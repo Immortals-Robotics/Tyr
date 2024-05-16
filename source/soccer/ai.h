@@ -163,6 +163,46 @@ private:
 
     void internalProcessData();
 
+    inline Common::Vec2 ownGoal() const
+    {
+        return Common::Vec2(side * Common::field().width, 0);
+    }
+
+    inline Common::Vec2 ownGoalPostTop() const
+    {
+        return ownGoal() + Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
+    }
+
+    inline Common::Vec2 ownGoalPostBottom() const
+    {
+        return ownGoal() - Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
+    }
+
+    inline Common::LineSegment ownGoalLine() const
+    {
+        return {ownGoalPostBottom(), ownGoalPostTop()};
+    }
+
+    inline Common::Vec2 oppGoal() const
+    {
+        return Common::Vec2(-side * Common::field().width, 0);
+    }
+
+    inline Common::Vec2 oppGoalPostTop() const
+    {
+        return oppGoal() + Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
+    }
+
+    inline Common::Vec2 oppGoalPostBottom() const
+    {
+        return oppGoal() - Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
+    }
+
+    inline Common::LineSegment oppGoalLine() const
+    {
+        return {oppGoalPostBottom(), oppGoalPostTop()};
+    }
+
 public:
     Robot OwnRobot[Common::Setting::kMaxRobots];
 

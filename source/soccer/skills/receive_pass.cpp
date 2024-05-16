@@ -72,7 +72,7 @@ void Ai::receivePass(int robot_num, Common::Vec2 staticPos, bool chip)
         else
         { // probably allaf!!!
             setObstacles(robot_num);
-            OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width, 0));
+            OwnRobot[robot_num].face(oppGoal());
             // OwnRobot[robot_num].target.angle=-90;
             navigate(robot_num, staticPos, VelocityProfile::mamooli());
         }
@@ -85,7 +85,7 @@ void Ai::receivePass(int robot_num, Common::Vec2 staticPos, bool chip)
             oneTouchType[robot_num]     = oneTouch;
         }
         setObstacles(robot_num, true);
-        OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width, 0));
+        OwnRobot[robot_num].face(oppGoal());
         // OwnRobot[robot_num].target.angle=-90;
         navigate(robot_num, staticPos, VelocityProfile::mamooli());
     }

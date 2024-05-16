@@ -9,12 +9,9 @@ float Ai::calculateMarkCost(int robot_num, int opp)
     if (m_world_state.opp_robot[opp].seen_state == Common::SeenState::CompletelyOut)
         return -1;
 
-    const float predict_t = 0.3f;
-    auto        predicted_pos_own =
-        Common::Vec2(OwnRobot[robot_num].state().position.x + OwnRobot[robot_num].state().velocity.x * predict_t,
-                     OwnRobot[robot_num].state().position.y + OwnRobot[robot_num].state().velocity.y * predict_t);
-    auto predicted_pos_opp = Common::Vec2(m_world_state.opp_robot[opp].position.x + m_world_state.opp_robot[opp].velocity.x * predict_t,
-                                          m_world_state.opp_robot[opp].position.y + m_world_state.opp_robot[opp].velocity.y * predict_t);
+    const float predict_t  = 0.3f;
+    auto predicted_pos_own = OwnRobot[robot_num].state().position + OwnRobot[robot_num].state().velocity * predict_t;
+    auto predicted_pos_opp = m_world_state.opp_robot[opp].position + m_world_state.opp_robot[opp].velocity * predict_t;
 
     auto dis_pred       = predicted_pos_own.distanceTo(predicted_pos_opp);
     bool already_marked = false;

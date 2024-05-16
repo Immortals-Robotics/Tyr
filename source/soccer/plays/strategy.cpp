@@ -222,12 +222,7 @@ void Ai::strategy()
 
             if (step[i] != strategy.role[i].path.size() - 1)
             {
-                // float dis_to_reach = Common::Vec2::distance(OwnRobot[*stm2AInum[i]].state().position,
-                // Common::Vec2(strategy.role[i].path[step[i]].x(),strategy.role[i].path[step[i]].y())); if
-                // ((step[i]>=strategy.role[i].path.size()-2) || (dis_to_reach < 500))
-                OwnRobot[*stm2AInum[i]].face(Common::Vec2(-side * Common::field().width, 0));
-                // else
-                //     OwnRobot[*stm2AInum[i]].face(Common::Vec2(strategy.role[i].path[step[i]].x(),strategy.role[i].path[step[i]].y()));
+                OwnRobot[*stm2AInum[i]].face(oppGoal());
                 navigate(*stm2AInum[i], strategy.role[i].path[step[i]].position * sign_modifier, profile);
             }
             else
@@ -247,7 +242,7 @@ void Ai::strategy()
         case Role::Afterlife::OneTouch:
             oneTouchType[*stm2AInum[i]] = oneTouch;
             if (strategy.role[i].path.size() == 0)
-                allafPos[*stm2AInum[i]] = Common::Vec2(0, 0);
+                allafPos[*stm2AInum[i]] = Common::Vec2();
             else
                 allafPos[*stm2AInum[i]] = strategy.role[i].path.back().position * sign_modifier;
 
@@ -267,7 +262,7 @@ void Ai::strategy()
             else
             {
                 if (strategy.role[i].path.size() == 0)
-                    allafPos[*stm2AInum[i]] = Common::Vec2(0, 0);
+                    allafPos[*stm2AInum[i]] = Common::Vec2();
                 else
                     allafPos[*stm2AInum[i]] = strategy.role[i].path.back().position * sign_modifier;
             }

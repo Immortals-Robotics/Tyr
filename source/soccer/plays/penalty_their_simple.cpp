@@ -11,16 +11,10 @@ void Ai::penalty_their_simple()
     {
         OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
         setObstacles(gk);
-        navigate(gk, Common::Vec2(side * penalty_x));
+        navigate(gk, Common::Vec2(side * penalty_x, 0.0f));
     }
     else
     {
-        //		float gkp_y = Common::Line::fromTwoPoints ( Common::Vec2 (
-        // m_world_state.opp_robot[index].position.x ,
-        // m_world_state.opp_robot[index].position.y ) , m_world_state.ball.position).intersect (
-        // Common::Line::fromTwoPoints ( Common::Vec2 ( side * penalty_x , 100 ) , Common::Vec2 ( side * penalty_x ,
-        // -100 ) ) ).getY ( );
-        // TODO #7 check this!!!!
         float gkp_y = Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.opp_robot[index].angle)
                           .intersect(Common::Line::fromTwoPoints(Common::Vec2(side * penalty_x, 100),
                                                                  Common::Vec2(side * penalty_x, -100)))

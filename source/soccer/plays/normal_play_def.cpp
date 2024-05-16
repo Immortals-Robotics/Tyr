@@ -4,8 +4,8 @@ namespace Tyr::Soccer
 {
 void Ai::NormalPlayDef()
 {
-    Common::Vec2 ourgoal_p1 = Common::Vec2(side * Common::field().width, side * Common::field().goal_width / 2);
-    Common::Vec2 ourgoal_p2 = Common::Vec2(side * Common::field().width, side * Common::field().goal_width / -2);
+    Common::Vec2 ourgoal_p1 = ownGoalPostTop();
+    Common::Vec2 ourgoal_p2 = ownGoalPostBottom();
     Common::debug().draw(Common::Triangle{ourgoal_p1, m_world_state.ball.position, ourgoal_p2},
                          Common::Color::blue().transparent(), true);
 
@@ -29,14 +29,12 @@ void Ai::NormalPlayDef()
             {
                 int oppAttacker = findKickerOpp(-1);
 
-                OwnRobot[own].face(Common::Vec2(-side * Common::field().width, 0));
+                OwnRobot[own].face(oppGoal());
                 setObstacles(own);
 
                 if (own == dmf)
                 {
-                    navigate(dmf,
-                             m_world_state.ball.position.pointOnConnectingLine(
-                                 Common::Vec2(side * Common::field().width, 0), 1800),
+                    navigate(dmf, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 1800),
                              VelocityProfile::mamooli());
                 }
                 else if (own == mid1)
@@ -44,16 +42,14 @@ void Ai::NormalPlayDef()
                     if (oppAttacker != -1)
                         Mark2Goal(own, oppAttacker, 500);
                     else
-                        navigate(own, Common::Vec2(m_world_state.ball.position.x, 1000),
-                                 VelocityProfile::mamooli());
+                        navigate(own, Common::Vec2(m_world_state.ball.position.x, 1000), VelocityProfile::mamooli());
                 }
                 else if (own == mid2)
                 {
                     if (oppAttacker != -1)
                         Mark2Goal(own, oppAttacker, 500);
                     else
-                        navigate(own, Common::Vec2(m_world_state.ball.position.x, -1000),
-                                 VelocityProfile::mamooli());
+                        navigate(own, Common::Vec2(m_world_state.ball.position.x, -1000), VelocityProfile::mamooli());
                 }
             }
             else
@@ -93,7 +89,7 @@ void Ai::NormalPlayDef()
 #if 1
     if (attackFuckingAngle() && kicker_opp != -1)
     {
-        shootAngle = m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0));
+        shootAngle = m_world_state.ball.position.angleWith(ownGoal());
         shoot_pow  = 1;
         chip_pow   = 0;
     }

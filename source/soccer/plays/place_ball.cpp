@@ -28,8 +28,8 @@ void Ai::our_place_ball()
     OwnRobot[mid1].face(m_world_state.ball.position);
     navigate(mid1,
              m_world_state.ball.position.pointOnConnectingLine(
-                 Common::Vec2(side * Common::field().width, 0),
-                 m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
+                 ownGoal(),
+                 m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
              VelocityProfile::aroom());
 
     setObstacles(mid2);
@@ -37,7 +37,7 @@ void Ai::our_place_ball()
     OwnRobot[mid2].face(m_world_state.ball.position);
     navigate(mid2,
              m_world_state.ball.position.circleAroundPoint(
-                 m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)), 1090),
+                 m_world_state.ball.position.angleWith(ownGoal()), 1090),
              VelocityProfile::aroom());
 
     if (FUNC_state == -2)
@@ -294,8 +294,8 @@ void Ai::our_place_ball()
         Common::Vec2 target1          = m_ref_state.place_ball_target.circleAroundPoint(t_opp_ang, 550);
         if (false && outOfField(target1))
         {
-            g_obs_map.resetMap();
-            navigate(attack, Common::Vec2(0, 0), VelocityProfile::sooski());
+            setObstacles(attack);
+            navigate(attack, Common::Vec2(), VelocityProfile::sooski());
         }
         else
         {
@@ -306,8 +306,8 @@ void Ai::our_place_ball()
 
         if (false && outOfField(target1))
         {
-            g_obs_map.resetMap();
-            navigate(dmf, Common::Vec2(0, 0), VelocityProfile::sooski());
+            setObstacles(dmf);
+            navigate(dmf, Common::Vec2(), VelocityProfile::sooski());
         }
         else
         {

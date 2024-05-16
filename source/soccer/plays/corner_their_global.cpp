@@ -22,7 +22,7 @@ void Ai::corner_their_global()
     DefenceWall(attack, false);
 
     std::map<int, Common::Vec2> static_pos;
-    static_pos[dmf]  = Common::Vec2(side * 3500, Common::sign(-m_world_state.ball.position.y) * 1100.0f);
+    static_pos[dmf]  = Common::Vec2(side * 3500, -Common::sign(m_world_state.ball.position.y) * 1100.0f);
     static_pos[mid1] = Common::Vec2(side * 3200, 600);
     static_pos[mid2] = Common::Vec2(side * 3200, 0);
 
@@ -37,7 +37,7 @@ void Ai::corner_their_global()
         {
             if (static_pos.find(own) != static_pos.end())
             {
-                OwnRobot[own].face(Common::Vec2(-side * Common::field().width, 0));
+                OwnRobot[own].face(oppGoal());
                 setObstacles(own);
                 navigate(own, static_pos[own], VelocityProfile::mamooli());
             }

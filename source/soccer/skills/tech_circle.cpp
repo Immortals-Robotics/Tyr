@@ -125,13 +125,12 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
         goalPredictMul = -0.15;
     }
 
-    Common::Vec2 ballToGoal = Common::Vec2(-side * Common::field().width, 0) - m_world_state.ball.position;
+    Common::Vec2 ballToGoal = oppGoal() - m_world_state.ball.position;
     ballToGoal              = ballToGoal.normalized();
     float ballVelToGoalDot =
         (m_world_state.ball.velocity.x * ballToGoal.x + m_world_state.ball.velocity.y * ballToGoal.y);
-    Common::Vec2 ballVelToGoal = Common::Vec2(ballToGoal.x * ballVelToGoalDot, ballToGoal.y * ballVelToGoalDot);
-    Common::Vec2 ballVelPrepToGoal =
-        Common::Vec2(m_world_state.ball.velocity.x - ballVelToGoal.x, m_world_state.ball.velocity.y - ballVelToGoal.y);
+    Common::Vec2 ballVelToGoal     = ballToGoal * ballVelToGoalDot;
+    Common::Vec2 ballVelPrepToGoal = m_world_state.ball.velocity - ballVelToGoal;
 
     Common::debug().draw(
         Common::LineSegment{m_world_state.ball.position, m_world_state.ball.position + m_world_state.ball.velocity});
@@ -252,10 +251,8 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
                 }
                 else
                 {
-                    targetPoint = Common::Vec2(3 * targetPoint.x - OwnRobot[robot_num].state().position.x,
-                                               3 * targetPoint.y - OwnRobot[robot_num].state().position.y);
-                    targetPoint.x /= 2;
-                    targetPoint.y /= 2;
+                    targetPoint = (targetPoint * 3.0f) - OwnRobot[robot_num].state().position;
+                    targetPoint /= 2.0f;
                     navigate(robot_num, targetPoint, VelocityProfile::kharaki());
                 }
             }

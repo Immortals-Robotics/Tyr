@@ -10,7 +10,7 @@ Trajectory Trajectory::MakeTrajectory(const Common::RobotState &state, const Com
     const float t0 = 0.f;
 
     const Common::Vec2 p0 = state.position;
-    const Common::Vec2 v0 = Common::Vec2(state.velocity.x, state.velocity.y);
+    const Common::Vec2 v0 = state.velocity;
     const Common::Vec2 a0 = a_acc;
 
     const float t1 = t0 + a_dt;
@@ -35,11 +35,11 @@ Trajectory Trajectory::MakeTrajectory(const Common::RobotState &state, const Com
     trajectory.dec.a  = a1;
 
     const Common::Vec2 p2 = trajectory.dec.Evaluate(t2);
-    const Common::Vec2 v2 = Common::Vec2(0.f, 0.f);
-    const Common::Vec2 a2 = Common::Vec2(0.f, 0.f);
+    const Common::Vec2 v2{};
+    const Common::Vec2 a2{};
 
     trajectory.stopped.t0 = t2;
-    trajectory.stopped.t1 = FLT_MAX;
+    trajectory.stopped.t1 = std::numeric_limits<float>::max();
     trajectory.stopped.p  = p2;
     trajectory.stopped.v  = v2;
     trajectory.stopped.a  = a2;
@@ -54,8 +54,8 @@ Trajectory Trajectory::MakeOpponentTrajectory(const Common::RobotState &state, c
     const float t0 = -1.f;
 
     const Common::Vec2 p0 = state.position;
-    const Common::Vec2 v0 = Common::Vec2(state.velocity.x, state.velocity.y);
-    const Common::Vec2 a0 = Common::Vec2(0.f, 0.f);
+    const Common::Vec2 v0 = state.velocity;
+    const Common::Vec2 a0{};
 
     const float t1 = 0.f;
 
@@ -79,11 +79,11 @@ Trajectory Trajectory::MakeOpponentTrajectory(const Common::RobotState &state, c
     trajectory.dec.a  = a1;
 
     const Common::Vec2 p2 = trajectory.dec.Evaluate(t2);
-    const Common::Vec2 v2 = Common::Vec2(0.f, 0.f);
-    const Common::Vec2 a2 = Common::Vec2(0.f, 0.f);
+    const Common::Vec2 v2{};
+    const Common::Vec2 a2{};
 
     trajectory.stopped.t0 = t2;
-    trajectory.stopped.t1 = FLT_MAX;
+    trajectory.stopped.t1 = std::numeric_limits<float>::max();
     trajectory.stopped.p  = p2;
     trajectory.stopped.v  = v2;
     trajectory.stopped.a  = a2;
