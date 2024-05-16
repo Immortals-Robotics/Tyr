@@ -151,10 +151,6 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     {
         a_cmd = target_a_cmd;
     }
-    /*else if (state.vision_id != 4)
-    {
-        a_cmd = target_a_cmd;
-    }*/
     else if (IsAccSafe(robot_num, target_a_cmd))
     {
         a_cmd = target_a_cmd;

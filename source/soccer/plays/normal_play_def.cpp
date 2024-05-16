@@ -30,11 +30,11 @@ void Ai::NormalPlayDef()
                 int oppAttacker = findKickerOpp(-1);
 
                 OwnRobot[own].face(Common::Vec2(-side * Common::field().width, 0));
-                ERRTSetObstacles(own);
+                setObstacles(own);
 
                 if (own == dmf)
                 {
-                    ERRTNavigate2Point(dmf,
+                    navigate(dmf,
                                        m_world_state.ball.position.pointOnConnectingLine(
                                            Common::Vec2(side * Common::field().width, 0), 1800),
                                        100, VelocityProfile::Type::Mamooli);
@@ -44,7 +44,7 @@ void Ai::NormalPlayDef()
                     if (oppAttacker != -1)
                         Mark2Goal(own, oppAttacker, 500);
                     else
-                        ERRTNavigate2Point(own, Common::Vec2(m_world_state.ball.position.x, 1000), 100,
+                        navigate(own, Common::Vec2(m_world_state.ball.position.x, 1000), 100,
                                            VelocityProfile::Type::Mamooli);
                 }
                 else if (own == mid2)
@@ -52,7 +52,7 @@ void Ai::NormalPlayDef()
                     if (oppAttacker != -1)
                         Mark2Goal(own, oppAttacker, 500);
                     else
-                        ERRTNavigate2Point(own, Common::Vec2(m_world_state.ball.position.x, -1000), 100,
+                        navigate(own, Common::Vec2(m_world_state.ball.position.x, -1000), 100,
                                            VelocityProfile::Type::Mamooli);
                 }
             }

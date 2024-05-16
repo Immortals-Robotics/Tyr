@@ -18,9 +18,9 @@ public:
 
     inline void reset()
     {
-        m_shoot     = 0;
-        m_chip      = 0;
-        m_dribbler  = 0;
+        m_shoot     = 0.0f;
+        m_chip      = 0.0f;
+        m_dribbler  = 0.0f;
         m_navigated = false;
         m_halted    = false;
     }
@@ -48,15 +48,11 @@ public:
 private:
     const Common::RobotState *m_state = nullptr;
 
-    // used in mition plan
-    // TODO: merge with last_motions
-    Common::Vec2 m_old_motion;
-
     Common::Vec2 m_last_motion;
 
-    float m_shoot    = 0;
-    float m_chip     = 0;
-    float m_dribbler = 0;
+    float m_shoot    = 0.0f;
+    float m_chip     = 0.0f;
+    float m_dribbler = 0.0f;
 
     bool m_navigated = false;
     bool m_halted    = false;

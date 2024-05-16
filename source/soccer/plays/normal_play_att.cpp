@@ -18,10 +18,10 @@ void Ai::NormalPlayAtt()
 
     if (oneTouchType[attack] == allaf)
     {
-        ERRTSetObstacles(attack);
+        setObstacles(attack);
         OwnRobot[attack].face(Common::Vec2(-side * Common::field().width, 0));
         // OwnRobot[robot_num].target.angle=-90;
-        ERRTNavigate2Point(attack, allafPos[attack], 100, VelocityProfile::Type::Mamooli);
+        navigate(attack, allafPos[attack], 100, VelocityProfile::Type::Mamooli);
         if (timer.time() > 2.5)
         {
             oneTouchType[attack] = oneTouch;

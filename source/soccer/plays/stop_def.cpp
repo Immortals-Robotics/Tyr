@@ -33,21 +33,21 @@ void Ai::Stop_def()
     static_pos[mid1] = Common::Vec2(side * 4500, Common::sign(-m_world_state.ball.position.y) * 3000.0f);
     static_pos[mid2] = Common::Vec2(side * 4200, Common::sign(-m_world_state.ball.position.y) * 1000.0f);
 
-    ERRTSetObstacles(dmf);
+    setObstacles(dmf);
     OwnRobot[dmf].face(m_world_state.ball.position);
-    ERRTNavigate2Point(dmf, static_pos[dmf], 40, VelocityProfile::Type::Aroom);
+    navigate(dmf, static_pos[dmf], 40, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(mid1);
+    setObstacles(mid1);
     OwnRobot[mid1].face(m_world_state.ball.position);
-    ERRTNavigate2Point(mid1, static_pos[mid1], 40, VelocityProfile::Type::Aroom);
+    navigate(mid1, static_pos[mid1], 40, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(mid2);
+    setObstacles(mid2);
     OwnRobot[mid2].face(m_world_state.ball.position);
-    ERRTNavigate2Point(mid2, static_pos[mid2], 40, VelocityProfile::Type::Aroom);
+    navigate(mid2, static_pos[mid2], 40, VelocityProfile::Type::Aroom);
 
-    ERRTSetObstacles(attack);
+    setObstacles(attack);
     OwnRobot[attack].face(m_world_state.ball.position);
-    ERRTNavigate2Point(attack,
+    navigate(attack,
                        m_world_state.ball.position.circleAroundPoint(
                            m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)), 580),
                        40, VelocityProfile::Type::Aroom);

@@ -263,7 +263,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     hehe               = angle - hehe;
 
     if (needRRT)
-        ERRTSetObstacles(robot_num);
+        setObstacles(robot_num);
     else
         g_obs_map.resetMap();
 
@@ -322,7 +322,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
                         {
                             elendil = 30;
                         }
-                        ERRTNavigate2Point(robot_num, Pelendil, 100, VelocityProfile::Type::Kharaki);
+                        navigate(robot_num, Pelendil, 100, VelocityProfile::Type::Kharaki);
                     }
                     else
                     {
@@ -332,28 +332,28 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
                                                    3 * targetPoint.y - OwnRobot[robot_num].state().position.y);
                         targetPoint.x /= 2;
                         targetPoint.y /= 2;
-                        ERRTNavigate2Point(robot_num, targetPoint, 100, VelocityProfile::Type::Kharaki);
+                        navigate(robot_num, targetPoint, 100, VelocityProfile::Type::Kharaki);
                     }
                     // Halt(robot_num);
                 }
 
                 else
                 {
-                    ERRTNavigate2Point(robot_num, targetPoint, 100, VelocityProfile::Type::Mamooli);
+                    navigate(robot_num, targetPoint, 100, VelocityProfile::Type::Mamooli);
                 }
 
                 // targetPoint = Common::Vec2((targetPoint.x+OwnRobot[robot_num].state().position.x)/2,
                 // (targetPoint.y+OwnRobot[robot_num].state().position.y)/2);
             }
             else
-                ERRTNavigate2Point(
+                navigate(
                     robot_num,
                     PredictedBall.circleAroundPoint(angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / tetta)), 100,
                     VelocityProfile::Type::Mamooli);
             // circleReachedBehindBall = true;
         }
         else
-            ERRTNavigate2Point(robot_num, PredictedBall.circleAroundPoint(angle + hehe * 0.0f, r), 100);
+            navigate(robot_num, PredictedBall.circleAroundPoint(angle + hehe * 0.0f, r), 100);
     }
     else
     {
@@ -364,12 +364,12 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
         // if ( Common::Vec2::distance ( OwnRobot[robot_num].state().position , m_world_state.ball.position ) <
         // 200
         // )
-        //	ERRTNavigate2Point ( robot_num , Common::circleAroundPoint ( PredictedBall , hehe , r ) , 0 , 20 );
+        //	navigate ( robot_num , Common::circleAroundPoint ( PredictedBall , hehe , r ) , 0 , 20 );
         // else
         if (passedBall)
-            ERRTNavigate2Point(robot_num, PredictedBall.circleAroundPoint(hehe, r), 100);
+            navigate(robot_num, PredictedBall.circleAroundPoint(hehe, r), 100);
         else
-            ERRTNavigate2Point(robot_num, PredictedBall.circleAroundPoint(hehe, r), 100,
+            navigate(robot_num, PredictedBall.circleAroundPoint(hehe, r), 100,
                                VelocityProfile::Type::Kharaki);
     }
 

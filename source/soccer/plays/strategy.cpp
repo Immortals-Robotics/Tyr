@@ -216,7 +216,7 @@ void Ai::strategy()
 
         else
         {
-            ERRTSetObstacles(*stm2AInum[i], true);
+            setObstacles(*stm2AInum[i], true);
 
             const VelocityProfile::Type profile = strategy.role[i].path[step[i]].velocity_profile;
 
@@ -228,7 +228,7 @@ void Ai::strategy()
                 OwnRobot[*stm2AInum[i]].face(Common::Vec2(-side * Common::field().width, 0));
                 // else
                 //     OwnRobot[*stm2AInum[i]].face(Common::Vec2(strategy.role[i].path[step[i]].x(),strategy.role[i].path[step[i]].y()));
-                ERRTNavigate2Point(*stm2AInum[i], strategy.role[i].path[step[i]].position * sign_modifier,
+                navigate(*stm2AInum[i], strategy.role[i].path[step[i]].position * sign_modifier,
                                    strategy.role[i].path[step[i]].speed, profile);
             }
             else

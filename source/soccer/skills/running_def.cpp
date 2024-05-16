@@ -68,7 +68,7 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     //    if(1)
     {
         Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");
-        ERRTSetObstacles(robot_num);
+        setObstacles(robot_num);
         // tech_circle(robot_num,Common::sign(m_world_state.ball.position.y)*side*60 ,0,15,false);
         tech_circle(robot_num,
                     m_world_state.ball.position.angleWith(Common::Vec2(side * (Common::field().width + 110), 0)), 0, 80,
@@ -76,9 +76,9 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     }
     else
     {
-        ERRTSetObstacles(robot_num);
+        setObstacles(robot_num);
         OwnRobot[robot_num].face(Common::Vec2((*defendTarget).x, (*defendTarget).y));
-        ERRTNavigate2Point(robot_num, target, 100, DEF_VEL_PROFILE);
+        navigate(robot_num, target, 100, DEF_VEL_PROFILE);
     }
 }
 } // namespace Tyr::Soccer

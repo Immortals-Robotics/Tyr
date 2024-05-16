@@ -42,7 +42,7 @@ void Ai::GKHi(int robot_num, bool stop)
 
         my_hys = 0;
 
-        ERRTSetGkClearObstacles(robot_num);
+        setGkClearObstacles(robot_num);
         if ((g_obs_map.isInObstacle(m_world_state.ball.position)) && (m_world_state.ball.velocity.length() < 1500) &&
             m_ref_state.canKickBall() && (!stop))
         {
@@ -50,7 +50,7 @@ void Ai::GKHi(int robot_num, bool stop)
 
             gkIntercepting = true;
 
-            ERRTSetObstacles(robot_num);
+            setObstacles(robot_num);
             // tech_circle(robot_num,Common::sign(m_world_state.ball.position.y)*side*60 ,0,15,false);
             tech_circle(robot_num,
                         m_world_state.ball.position.angleWith(Common::Vec2(side * (Common::field().width + 110), 0)), 0,
@@ -92,8 +92,8 @@ void Ai::GKHi(int robot_num, bool stop)
             target.x = Common::sign(target.x) * std::min(Common::field().width - 90, std::fabs(target.x));
 #endif
             OwnRobot[robot_num].face(m_world_state.ball.position);
-            ERRTSetObstacles(robot_num);
-            ERRTNavigate2Point(robot_num, target, 80,
+            setObstacles(robot_num);
+            navigate(robot_num, target, 80,
                                stop ? VelocityProfile::Type::Aroom : VelocityProfile::Type::Mamooli);
         }
     }
@@ -110,8 +110,8 @@ void Ai::GK_shirje(int robot_num)
         Common::Vec2(OwnRobot[robot_num].state().position.x, OwnRobot[robot_num].state().position.y));
     OwnRobot[robot_num].face(m_world_state.ball.position);
     ans = ((ans - OwnRobot[robot_num].state().position) * 2.0f) + OwnRobot[robot_num].state().position;
-    ERRTSetObstacles(robot_num);
-    ERRTNavigate2Point(robot_num, ans, 100, VelocityProfile::Type::Kharaki);
+    setObstacles(robot_num);
+    navigate(robot_num, ans, 100, VelocityProfile::Type::Kharaki);
     OwnRobot[robot_num].chip(150);
 }
 } // namespace Tyr::Soccer

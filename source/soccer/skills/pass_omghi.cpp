@@ -37,13 +37,13 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
     OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width,
                                           -Common::sign(OwnRobot[robot_num].state().position.y) * 300));
 
-    ERRTSetObstacles(robot_num);
+    setObstacles(robot_num);
 
     target = CalculatePassPos(robot_num, Common::Vec2(-side * Common::field().width, 0),
                               OwnRobot[robot_num].state().position, -200);
 
     Common::logDebug("sBAR:    {}", sBAR);
-    ERRTNavigate2Point(robot_num, target, sBAR, VelocityProfile::Type::Kharaki);
+    navigate(robot_num, target, sBAR, VelocityProfile::Type::Kharaki);
 
     OwnRobot[robot_num].shoot(100);
     OwnRobot[robot_num].dribble(15);

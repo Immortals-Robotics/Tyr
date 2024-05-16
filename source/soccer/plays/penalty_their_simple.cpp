@@ -10,8 +10,8 @@ void Ai::penalty_their_simple()
     if (index == -1)
     {
         OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
-        ERRTSetObstacles(gk);
-        ERRTNavigate2Point(gk, Common::Vec2(side * penalty_x));
+        setObstacles(gk);
+        navigate(gk, Common::Vec2(side * penalty_x));
     }
     else
     {
@@ -34,22 +34,22 @@ void Ai::penalty_their_simple()
 
         OwnRobot[gk].face(m_world_state.ball.position);
 
-        ERRTSetObstacles(gk);
-        ERRTNavigate2Point(gk, Common::Vec2(side * penalty_x, gkp_y), 100, VelocityProfile::Type::Killer);
+        setObstacles(gk);
+        navigate(gk, Common::Vec2(side * penalty_x, gkp_y), 100, VelocityProfile::Type::Killer);
     }
-    ERRTSetObstacles(lw);
-    ERRTNavigate2Point(lw, Common::Vec2(-side * 4300, 500), 80, VelocityProfile::Type::Aroom);
-    ERRTSetObstacles(rw);
-    ERRTNavigate2Point(rw, Common::Vec2(-side * 4300, -500), 80, VelocityProfile::Type::Aroom);
-    ERRTSetObstacles(def);
-    ERRTNavigate2Point(def, Common::Vec2(-side * 4300, 800), 80, VelocityProfile::Type::Aroom);
-    ERRTSetObstacles(dmf);
-    ERRTNavigate2Point(dmf, Common::Vec2(-side * 4300, -800), 80, VelocityProfile::Type::Aroom);
-    ERRTSetObstacles(mid1);
-    ERRTNavigate2Point(mid1, Common::Vec2(-side * 4300, -1500), 80, VelocityProfile::Type::Aroom);
-    ERRTSetObstacles(mid2);
-    ERRTNavigate2Point(mid2, Common::Vec2(-side * 4300, 1500), 80, VelocityProfile::Type::Aroom);
-    ERRTSetObstacles(attack);
-    ERRTNavigate2Point(attack, Common::Vec2(-side * 4300, 0), 80, VelocityProfile::Type::Aroom);
+    setObstacles(lw);
+    navigate(lw, Common::Vec2(-side * 4300, 500), 80, VelocityProfile::Type::Aroom);
+    setObstacles(rw);
+    navigate(rw, Common::Vec2(-side * 4300, -500), 80, VelocityProfile::Type::Aroom);
+    setObstacles(def);
+    navigate(def, Common::Vec2(-side * 4300, 800), 80, VelocityProfile::Type::Aroom);
+    setObstacles(dmf);
+    navigate(dmf, Common::Vec2(-side * 4300, -800), 80, VelocityProfile::Type::Aroom);
+    setObstacles(mid1);
+    navigate(mid1, Common::Vec2(-side * 4300, -1500), 80, VelocityProfile::Type::Aroom);
+    setObstacles(mid2);
+    navigate(mid2, Common::Vec2(-side * 4300, 1500), 80, VelocityProfile::Type::Aroom);
+    setObstacles(attack);
+    navigate(attack, Common::Vec2(-side * 4300, 0), 80, VelocityProfile::Type::Aroom);
 }
 } // namespace Tyr::Soccer

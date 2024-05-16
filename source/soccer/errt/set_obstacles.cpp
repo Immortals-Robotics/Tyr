@@ -15,7 +15,7 @@ static float calculateRobotRadius(const Common::RobotState &state)
     return Common::field().robot_radius * (1.0f + extension_factor);
 }
 
-void Ai::ERRTSetObstacles(int robot_num, bool bll)
+void Ai::setObstacles(int robot_num, bool bll)
 {
     const bool ourPenalty = robot_num != gk && !m_ref_state.ourPlaceBall();
     const bool oppPenalty = !m_ref_state.ourPlaceBall();
@@ -111,7 +111,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll)
     }
 }
 
-void Ai::ERRTSetGkClearObstacles(int robot_num)
+void Ai::setGkClearObstacles(int robot_num)
 {
     g_obs_map.resetMap();
 
