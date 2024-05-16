@@ -23,7 +23,7 @@ Ai::Ai()
 
     m_cmd_server = std::make_unique<Common::NngServer>(Common::setting().commands_url);
 
-    dss = new Dss(&m_world_state, 1.f / 61.57f, 7000.f, 3000.f);
+    dss = new Dss(&m_world_state, 1000.f);
 
     currentPlay = &Ai::HaltAll;
 

@@ -49,7 +49,7 @@ void Filtered::filterRobots(Common::TeamColor t_color)
                 filt_vel = m_robot_kalman[color_id][i].getVelocity();
 
                 m_angle_filter[color_id][i].add((raw_robot.angle - m_raw_angles[color_id][i]) *
-                                                    Common::setting().vision_frame_rate);
+                                                Common::setting().vision_frame_rate);
                 m_raw_angles[color_id][i] = raw_robot.angle;
 
                 robot.angular_velocity = m_angle_filter[color_id][i].current();
@@ -99,17 +99,15 @@ void Filtered::predictRobots()
         if (own_robots[i].seen_state != Common::SeenState::Seen)
         {
 #if VISION_HAS_COMMANDS
-            own_robots[i].position.x += m_state.last_cmds[i][(int) m_state.last_cmds[i][10].x].x / 1.2f;
-            own_robots[i].position.y += m_state.last_cmds[i][(int) m_state.last_cmds[i][10].x].y / 1.2f;
+            own_robots[i].position += m_state.last_cmds[i][(int) m_state.last_cmds[i][10].x] / 54.f;
 #endif
         }
         else
         {
-            for (int j = 0; j < Common::Setting::kMaxRobots; j++)
+            for (int j = 0; j < 10; j++)
             {
 #if VISION_HAS_COMMANDS
-                own_robots[i].position.x += m_state.last_cmds[i][j].x / 1.4f;
-                own_robots[i].position.y += m_state.last_cmds[i][j].y / 1.4f;
+                own_robots[i].position += m_state.last_cmds[i][j] / 63.f;
 #endif
             }
         }

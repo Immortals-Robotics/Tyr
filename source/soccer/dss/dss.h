@@ -7,17 +7,17 @@ namespace Tyr::Soccer
 class Dss
 {
 public:
-    Dss(const Common::WorldState *t_world, float cmd_dt, float max_dec, float max_dec_opp);
+    Dss(const Common::WorldState *t_world, float max_dec_opp);
 
     void Reset();
 
-    Common::Vec2 ComputeSafeMotion(int robot_num, const Common::Vec2 &motion);
+    Common::Vec2 ComputeSafeMotion(int robot_num, const Common::Vec2 &motion, const VelocityProfile &t_profile);
 
 private:
     Common::Random m_random;
 
-    const float cmd_dt;
-    const float max_dec;
+    VelocityProfile m_profile;
+
     const float max_dec_opp;
 
     const Common::WorldState *m_world;
@@ -27,10 +27,12 @@ private:
     Common::Vec2 GetAccFromMotion(int robot_num, const Common::Vec2 &motion);
     Common::Vec2 GetMotionFromAcc(int robot_num, const Common::Vec2 &acc);
 
-    bool OwnRobotsHaveCollision(const Common::RobotState &state_a, const Common::Vec2 &cmd_a,
-                                const Common::RobotState &state_b, const Common::Vec2 &cmd_b) const;
-    bool OppRobotsHaveCollision(const Common::RobotState &state_own, const Common::Vec2 &cmd_own,
-                                const Common::RobotState &state_opp) const;
+    bool collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2 &cmd_a,
+                          const Common::RobotState &state_b, const Common::Vec2 &cmd_b) const;
+
+    bool collisionWithOpp(const Common::RobotState &state_own, const Common::Vec2 &cmd_own,
+                          const Common::RobotState &state_opp) const;
+
     bool RobotHasStaticCollision(const Common::RobotState &state, const Common::Vec2 &cmd) const;
 
     bool         IsAccSafe(int robot_num, const Common::Vec2 &cmd);

@@ -79,7 +79,7 @@ public:
 
     bool enable_debug = false;
 
-    double vision_frame_rate = 60.0;
+    float vision_frame_rate = 60.0f;
 
     TeamColor our_color;
 
@@ -98,9 +98,9 @@ public:
 
     int max_ball_hist = 10;
 
-    double merge_distance        = 70.0;
-    double ball_merge_distance   = 70.0;
-    double max_ball_2_frame_dist = 1000.0;
+    float merge_distance        = 70.0;
+    float ball_merge_distance   = 70.0;
+    float max_ball_2_frame_dist = 1000.0;
 
     int max_robot_frame_not_seen = 200;
     int max_ball_frame_not_seen  = 120; // 2 seconds
@@ -112,7 +112,7 @@ public:
 
     NetworkAddress referee_address = {"224.5.23.1", 10003};
 
-    NetworkAddress sender_address     = {"224.5.92.5", 60005};
+    NetworkAddress sender_address = {"224.5.92.5", 60005};
 
     NetworkAddress commands_address = {"224.5.92.6", 60007};
 
@@ -147,13 +147,13 @@ public:
 
     RobotPhysicalStatus robot_physical_status[kMaxRobots];
 
-    double gamma_reality        = 19;
-    double gamma_simulation     = 900;
-    double ang_gamma_reality    = 1;
-    double ang_gamma_simulation = 1;
+    float gamma_reality        = 19;
+    float gamma_simulation     = 900;
+    float ang_gamma_reality    = 1;
+    float ang_gamma_simulation = 1;
 
-    float one_touch_beta   = 0.4;  // Damping factor
-    float one_touch_gamma  = 0.14; // Reflect factor
+    float one_touch_beta    = 0.4;  // Damping factor
+    float one_touch_gamma   = 0.14; // Reflect factor
     float one_touch_shoot_k = 4000.0f;
 };
 } // namespace Tyr::Common
