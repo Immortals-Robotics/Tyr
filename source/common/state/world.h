@@ -272,8 +272,6 @@ struct WorldState
     RobotState own_robot[Setting::kMaxRobots];
     RobotState opp_robot[Setting::kMaxRobots];
 
-    Vec3 last_cmds[Setting::kMaxRobots][11] = {};
-
     WorldState()
     {
         for (int i = 0; i < Setting::kMaxRobots; i++)

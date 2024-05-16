@@ -27,7 +27,7 @@ void Ai::their_place_ball()
                         m_world_state.ball.position, Common::Vec2(side * Common::field().width, 0),
                         DIS(m_world_state.ball.position, Common::Vec2(side * Common::field().width, 0)) / 3.0f),
                     100, VelocityProfile::Type::Aroom);
-                OwnRobot[dmf].Shoot(0);
+                OwnRobot[dmf].shoot(0);
             }
             else if (own == lmf)
             {
@@ -40,7 +40,7 @@ void Ai::their_place_ball()
                                                                      Common::Vec2(side * Common::field().width, 0))),
                                       650),
                     100, VelocityProfile::Type::Aroom);
-                OwnRobot[lmf].Shoot(0);
+                OwnRobot[lmf].shoot(0);
             }
             else if (own == rmf)
             {
@@ -53,7 +53,7 @@ void Ai::their_place_ball()
                                                                     Common::Vec2(side * Common::field().width, 0))),
                                       650),
                     100, VelocityProfile::Type::Aroom);
-                OwnRobot[rmf].Shoot(0);
+                OwnRobot[rmf].shoot(0);
             }
             else if (own == cmf)
             {
@@ -66,7 +66,7 @@ void Ai::their_place_ball()
                                                                Common::Vec2(side * Common::field().width, 0))),
                                       650),
                     100, VelocityProfile::Type::Aroom);
-                OwnRobot[cmf].Shoot(0);
+                OwnRobot[cmf].shoot(0);
             }
         }
         else

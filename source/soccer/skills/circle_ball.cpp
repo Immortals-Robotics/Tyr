@@ -140,9 +140,9 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         ERRTSetObstacles(robot_num);
         ERRTNavigate2Point(robot_num, m_world_state.ball.position, 100, VelocityProfile::Type::Aroom);
         if (shoot_pow > 0)
-            OwnRobot[robot_num].Shoot(shoot_pow);
+            OwnRobot[robot_num].shoot(shoot_pow);
         if (chip_pow > 0)
-            OwnRobot[robot_num].Chip(chip_pow);
+            OwnRobot[robot_num].chip(chip_pow);
         Common::debug().draw(Common::Circle{m_world_state.ball.position, very_far_ball_dis - 90.0f},
                              Common::Color::red(), false);
         // tech_circle(robot_num, tagret_angle, shoot_pow, chip_pow, 1, 1, 0, 0);

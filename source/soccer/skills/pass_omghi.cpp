@@ -45,7 +45,7 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
     Common::logDebug("sBAR:    {}", sBAR);
     ERRTNavigate2Point(robot_num, target, sBAR, VelocityProfile::Type::Kharaki);
 
-    OwnRobot[robot_num].Shoot(100);
-    OwnRobot[robot_num].Dribble(15);
+    OwnRobot[robot_num].shoot(100);
+    OwnRobot[robot_num].dribble(15);
 }
 } // namespace Tyr::Soccer

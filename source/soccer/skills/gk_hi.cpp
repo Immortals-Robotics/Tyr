@@ -38,7 +38,7 @@ void Ai::GKHi(int robot_num, bool stop)
 
     else
     {
-        // OwnRobot[robot_num].Chip(50);
+        // OwnRobot[robot_num].chip(50);
 
         my_hys = 0;
 
@@ -112,6 +112,6 @@ void Ai::GK_shirje(int robot_num)
     ans = ((ans - OwnRobot[robot_num].state().position) * 2.0f) + OwnRobot[robot_num].state().position;
     ERRTSetObstacles(robot_num);
     ERRTNavigate2Point(robot_num, ans, 100, VelocityProfile::Type::Kharaki);
-    OwnRobot[robot_num].Chip(150);
+    OwnRobot[robot_num].chip(150);
 }
 } // namespace Tyr::Soccer

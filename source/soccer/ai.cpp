@@ -111,7 +111,7 @@ bool Ai::publishCommands() const
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        OwnRobot[i].GetCurrentCommand().fillProto(pb_wrapper.add_command());
+        OwnRobot[i].currentCommand().fillProto(pb_wrapper.add_command());
     }
 
     return m_cmd_server->send(time, pb_wrapper);

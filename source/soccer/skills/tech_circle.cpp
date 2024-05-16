@@ -251,7 +251,7 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
     if (dribbler)
     {
         if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) < 190)
-            OwnRobot[robot_num].Dribble(15);
+            OwnRobot[robot_num].dribble(15);
     }
 
     if (gameRestart)
@@ -399,13 +399,13 @@ void Ai::tech_circle(int robot_num, Common::Angle angle, int kick, int chip, boo
         // if ( lockAngleCounter > 1 )
         {
             // if ( chip )
-            OwnRobot[robot_num].Chip(chip);
+            OwnRobot[robot_num].chip(chip);
             // else
             kick            = std::min(80, kick);
             float vel_delta = OwnRobot[robot_num].state().velocity.length() / 100.0f;
             vel_delta       = std::min(40.0f, vel_delta);
             vel_delta       = kick - vel_delta;
-            OwnRobot[robot_num].Shoot(kick);
+            OwnRobot[robot_num].shoot(kick);
         }
     }
 }

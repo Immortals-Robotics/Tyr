@@ -20,7 +20,7 @@ void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, float speed, VelocityP
     OwnRobot[robot_num].target.position.x = dest.x;
     OwnRobot[robot_num].target.position.y = dest.y;
 
-    Common::Vec3 motion_cmd = OwnRobot[robot_num].ComputeMotionCommand(speed, velocityProfile);
+    Common::Vec3 motion_cmd = OwnRobot[robot_num].computeMotion(speed, velocityProfile);
 
     if (use_dss)
     {
@@ -29,7 +29,7 @@ void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, float speed, VelocityP
         motion_cmd.x = safe_motion_cmd.x;
         motion_cmd.y = safe_motion_cmd.y;
     }
-    OwnRobot[robot_num].MoveByMotion(motion_cmd);
+    OwnRobot[robot_num].move(motion_cmd);
 
     OwnRobot[robot_num].navigated = true;
 }

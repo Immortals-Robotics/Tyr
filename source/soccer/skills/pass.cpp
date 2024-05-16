@@ -101,7 +101,7 @@ void Ai::WaitForPass(int robot_num, bool chip, const Common::Vec2 *target, Commo
     {
         if (chip)
         {
-            OwnRobot[robot_num].Chip(60);
+            OwnRobot[robot_num].chip(60);
         }
         else
         {
@@ -115,19 +115,19 @@ void Ai::WaitForPass(int robot_num, bool chip, const Common::Vec2 *target, Commo
             //            }
             //            vel_delta = getCalibratedShootPowCPY(robot_num,60);
             Common::logDebug("ball vel: {}", vel_delta);
-            OwnRobot[robot_num].Shoot(40);
+            OwnRobot[robot_num].shoot(40);
         }
     }
     else
     {
         if (chip)
         {
-            OwnRobot[robot_num].Chip(0);
+            OwnRobot[robot_num].chip(0);
         }
         else
-            OwnRobot[robot_num].Shoot(0);
+            OwnRobot[robot_num].shoot(0);
     }
 
-    // OwnRobot[robot_num].Dribble( 15 );
+    // OwnRobot[robot_num].dribble( 15 );
 }
 } // namespace Tyr::Soccer

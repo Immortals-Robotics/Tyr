@@ -46,11 +46,7 @@ void Ai::internalProcessData()
         }
 #endif
 
-        OwnRobot[i].shoot     = 0;
-        OwnRobot[i].dribbler  = 0;
-        OwnRobot[i].shoot     = 0;
-        OwnRobot[i].chip      = 0;
-        OwnRobot[i].navigated = false;
+        OwnRobot[i].reset();
     }
 
     if (Common::setting().our_side == Common::TeamSide::Right)

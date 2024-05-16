@@ -51,26 +51,26 @@ float getCalibratedShootPow(int vision_id, float raw_shoot, float coeffs[Common:
     return calib_shoot;
 }
 
-void Robot::Shoot(int pow)
+void Robot::shoot(const float pow)
 {
-    shoot = getCalibratedShootPow(state().vision_id, pow / 9.5f, shoot_coeffs);
+    m_shoot = getCalibratedShootPow(state().vision_id, pow / 9.5f, shoot_coeffs);
 }
-void Robot::Chip(int pow)
+void Robot::chip(const float pow)
 {
-    chip = getCalibratedShootPow(state().vision_id, pow / 2.0f, chip_coeffs);
-}
-
-void Robot::Dribble(int pow)
-{
-    dribbler = 16 * pow;
+    m_chip = getCalibratedShootPow(state().vision_id, pow / 2.0f, chip_coeffs);
 }
 
-void Robot::face(Common::Vec2 _target)
+void Robot::dribble(const float pow)
 {
-    target.angle = state().position.angleWith(_target);
+    m_dribbler = 16 * pow;
 }
 
-Common::Vec3 Robot::ComputeMotionCommand(float speed, const VelocityProfile::Type velocityProfileType)
+void Robot::face(const Common::Vec2 t_target)
+{
+    target.angle = state().position.angleWith(t_target);
+}
+
+Common::Vec3 Robot::computeMotion(float speed, const VelocityProfile::Type velocityProfileType)
 {
     const VelocityProfile profile(velocityProfileType);
 
@@ -223,35 +223,35 @@ Common::Vec3 Robot::ComputeMotionCommand(float speed, const VelocityProfile::Typ
     return motion;
 }
 
-void Robot::MoveByMotion(Common::Vec3 motion)
+void Robot::move(Common::Vec3 motion)
 {
     motion.x = std::clamp(motion.x, -100.0f, 100.0f);
     motion.y = std::clamp(motion.y, -100.0f, 100.0f);
 
-    last_motions[motion_idx] = motion;
+    last_motions[m_motion_idx] = motion;
 
-    last_motion_idx = motion_idx;
-    motion_idx++;
-    if (motion_idx > PREDICT_CMDS - 1)
-        motion_idx = 0;
+    m_last_motion_idx = m_motion_idx;
+    m_motion_idx++;
+    if (m_motion_idx > PREDICT_CMDS - 1)
+        m_motion_idx = 0;
 }
 
-Common::Vec3 Robot::GetCurrentMotion() const
+Common::Vec3 Robot::currentMotion() const
 {
-    return last_motions[last_motion_idx];
+    return last_motions[m_last_motion_idx];
 }
 
-Sender::Command Robot::GetCurrentCommand() const
+Sender::Command Robot::currentCommand() const
 {
     Sender::Command command;
     command.vision_id     = state().vision_id;
     command.halted        = halted;
-    command.motion        = GetCurrentMotion();
+    command.motion        = currentMotion();
     command.current_angle = state().angle;
     command.target_angle  = target.angle;
-    command.shoot         = shoot;
-    command.chip          = chip;
-    command.dribbler      = dribbler;
+    command.shoot         = m_shoot;
+    command.chip          = m_chip;
+    command.dribbler      = m_dribbler;
 
     return command;
 }

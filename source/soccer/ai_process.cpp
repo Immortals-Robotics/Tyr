@@ -6,7 +6,6 @@ void Ai::process()
 {
     static int PRCS_CNT = 0;
 
-    internalPrepare();
     internalProcessData();
 
     if (lastReferee != m_ref_state.get())

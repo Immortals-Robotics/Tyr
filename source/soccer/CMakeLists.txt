@@ -24,7 +24,6 @@ set(HEADER_FILES
 set(SOURCE_FILES
 	ai.cpp
 	ai_process.cpp
-	internal_prepare.cpp
 	internal_process_data.cpp
 
 	dss/dss.cpp

@@ -98,15 +98,19 @@ void Filtered::predictRobots()
     {
         if (own_robots[i].seen_state != Common::SeenState::Seen)
         {
+#if VISION_HAS_COMMANDS
             own_robots[i].position.x += m_state.last_cmds[i][(int) m_state.last_cmds[i][10].x].x / 1.2f;
             own_robots[i].position.y += m_state.last_cmds[i][(int) m_state.last_cmds[i][10].x].y / 1.2f;
+#endif
         }
         else
         {
             for (int j = 0; j < Common::Setting::kMaxRobots; j++)
             {
+#if VISION_HAS_COMMANDS
                 own_robots[i].position.x += m_state.last_cmds[i][j].x / 1.4f;
                 own_robots[i].position.y += m_state.last_cmds[i][j].y / 1.4f;
+#endif
             }
         }
     }

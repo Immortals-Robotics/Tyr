@@ -169,7 +169,6 @@ private:
     void our_place_ball();
     void their_place_ball();
 
-    void internalPrepare();
     void internalProcessData();
 
 public:

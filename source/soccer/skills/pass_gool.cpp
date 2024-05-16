@@ -12,7 +12,7 @@ void Ai::WaitForGool(int robot_num, bool chip)
     ERRTSetObstacles(robot_num);
     ERRTNavigate2Point(robot_num, pos, 100, VelocityProfile::Type::Mamooli);
 
-    OwnRobot[robot_num].Shoot(100);
-    OwnRobot[robot_num].Dribble(15);
+    OwnRobot[robot_num].shoot(100);
+    OwnRobot[robot_num].dribble(15);
 }
 } // namespace Tyr::Soccer

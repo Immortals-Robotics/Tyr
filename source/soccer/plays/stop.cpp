@@ -53,7 +53,7 @@ void Ai::Stop()
                                                                  Common::Vec2(side * Common::field().width, 0)) /
                                               3.0f),
                     100, VelocityProfile::Type::Aroom);
-                OwnRobot[dmf].Shoot(0);
+                OwnRobot[dmf].shoot(0);
             }
             else if (own == lmf)
             {
@@ -67,7 +67,7 @@ void Ai::Stop()
                                                                      Common::Vec2(side * Common::field().width, 0))),
                         650),
                     100, VelocityProfile::Type::Aroom);
-                OwnRobot[lmf].Shoot(0);
+                OwnRobot[lmf].shoot(0);
             }
             else if (own == rmf)
             {
@@ -81,7 +81,7 @@ void Ai::Stop()
                                                                     Common::Vec2(side * Common::field().width, 0))),
                         650),
                     100, VelocityProfile::Type::Aroom);
-                OwnRobot[rmf].Shoot(0);
+                OwnRobot[rmf].shoot(0);
             }
         }
         else
@@ -98,7 +98,7 @@ void Ai::Stop()
             Common::Vec2(side * Common::field().width, 0),
             m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) / 3.0f),
         100, VelocityProfile::Type::Aroom);
-    OwnRobot[dmf].Shoot(0);
+    OwnRobot[dmf].shoot(0);
 
     ERRTSetObstacles(lmf);
     OwnRobot[lmf].face(m_world_state.ball.position);
@@ -108,7 +108,7 @@ void Ai::Stop()
                                m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
                            650),
                        100, VelocityProfile::Type::Aroom);
-    OwnRobot[lmf].Shoot(0);
+    OwnRobot[lmf].shoot(0);
 
     ERRTSetObstacles(rmf);
     OwnRobot[rmf].face(m_world_state.ball.position);
@@ -118,7 +118,7 @@ void Ai::Stop()
                                m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
                            650),
                        100, VelocityProfile::Type::Aroom);
-    OwnRobot[rmf].Shoot(0);
+    OwnRobot[rmf].shoot(0);
 #endif
 
     ERRTSetObstacles(cmf);
@@ -127,6 +127,6 @@ void Ai::Stop()
                        m_world_state.ball.position.circleAroundPoint(
                            m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)), 650),
                        100, VelocityProfile::Type::Aroom);
-    OwnRobot[cmf].Shoot(0);
+    OwnRobot[cmf].shoot(0);
 }
 } // namespace Tyr::Soccer
