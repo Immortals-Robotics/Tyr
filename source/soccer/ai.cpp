@@ -58,7 +58,7 @@ Ai::Ai()
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        OwnRobot[i] = Robot(&m_world_state);
+        OwnRobot[i] = Robot(&m_world_state.own_robot[i]);
 
         oneTouchDetector[i].rState = &OwnRobot[i];
         oneTouchDetector[i].ball   = &m_world_state.ball;
@@ -68,11 +68,6 @@ Ai::Ai()
         oneTouchTypeUsed[i] = false;
 
         allafPos[i] = Common::Vec2(0, 0);
-    }
-
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
-    {
-        OwnRobot[i].setVisionId(i);
     }
 
     chip_head = Common::Angle::fromDeg(200);

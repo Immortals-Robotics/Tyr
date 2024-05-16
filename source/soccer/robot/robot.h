@@ -10,24 +10,25 @@ class Robot
 {
 public:
     Common::RobotState target;
-    int                shoot, chip, dribbler;
-    int                vision_id;
-    bool               halted;
 
-    Common::Vec3 last_motions[11];
+    int  shoot    = 0;
+    int  chip     = 0;
+    int  dribbler = 0;
+    bool halted   = false;
+
+    Common::Vec3 last_motions[11] = {};
 
     int last_motion_idx = 0;
-    int motion_idx;
+    int motion_idx      = 0;
 
     Robot() = default;
-    Robot(const Common::WorldState *t_world_state);
+    Robot(const Common::RobotState *t_state) : m_state(t_state)
+    {}
 
     inline const Common::RobotState &state() const
     {
-        return m_world_state->own_robot[vision_id];
+        return *m_state;
     }
-
-    void setVisionId(unsigned short v_id);
 
     void Shoot(int pow);
 
@@ -45,6 +46,6 @@ public:
     Sender::Command GetCurrentCommand() const;
 
 private:
-    const Common::WorldState *m_world_state = nullptr;
+    const Common::RobotState *m_state = nullptr;
 };
 } // namespace Tyr::Soccer

@@ -51,30 +51,13 @@ float getCalibratedShootPow(int vision_id, float raw_shoot, float coeffs[Common:
     return calib_shoot;
 }
 
-Robot::Robot(const Common::WorldState *const t_world_state) : m_world_state(t_world_state)
-{
-    motion_idx = 0;
-    for (int i = 0; i < 10; i++)
-        last_motions[i] = Common::Vec3();
-
-    shoot    = 0;
-    chip     = 0;
-    dribbler = 0;
-    halted   = false;
-}
-
-void Robot::setVisionId(unsigned short v_id)
-{
-    vision_id = v_id;
-}
-
 void Robot::Shoot(int pow)
 {
-    shoot = getCalibratedShootPow(vision_id, pow / 9.5f, shoot_coeffs);
+    shoot = getCalibratedShootPow(state().vision_id, pow / 9.5f, shoot_coeffs);
 }
 void Robot::Chip(int pow)
 {
-    chip = getCalibratedShootPow(vision_id, pow / 2.0f, chip_coeffs);
+    chip = getCalibratedShootPow(state().vision_id, pow / 2.0f, chip_coeffs);
 }
 
 void Robot::Dribble(int pow)
@@ -267,7 +250,7 @@ Common::Vec3 Robot::GetCurrentMotion() const
 Sender::Command Robot::GetCurrentCommand() const
 {
     Sender::Command command;
-    command.vision_id     = vision_id;
+    command.vision_id     = state().vision_id;
     command.halted        = halted;
     command.motion        = GetCurrentMotion();
     command.current_angle = state().angle;

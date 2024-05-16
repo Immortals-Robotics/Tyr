@@ -101,7 +101,7 @@ void Ai::process()
         }
         else if (!navigated[i])
         {
-            Common::logWarning("Own robot {} was not navigated", OwnRobot[i].vision_id);
+            Common::logWarning("Own robot {} was not navigated", OwnRobot[i].state().vision_id);
             Halt(i);
         }
     }
