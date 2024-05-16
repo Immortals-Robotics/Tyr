@@ -26,33 +26,25 @@ void Ai::Stop_def()
     }
 
     GKHi(gk, true);
-    // DefHi(def,nullptr, true);
-    DefMid(def, rw, lw, nullptr, true);
+    DefHi(def, rw, lw, nullptr, true);
 
     std::map<int, Common::Vec2> static_pos;
     static_pos[dmf]  = Common::Vec2(side * 4200, Common::sign(m_world_state.ball.position.y) * 1000.0f);
     static_pos[mid1] = Common::Vec2(side * 4500, Common::sign(-m_world_state.ball.position.y) * 3000.0f);
     static_pos[mid2] = Common::Vec2(side * 4200, Common::sign(-m_world_state.ball.position.y) * 1000.0f);
 
-    ERRTSetObstacles(dmf, true, true);
     OwnRobot[dmf].face(m_world_state.ball.position);
-    ERRTNavigate2Point(dmf, static_pos[dmf], 40, VelocityProfile::Type::Aroom);
+    navigate(dmf, static_pos[dmf], VelocityProfile::aroom());
 
-    ERRTSetObstacles(mid1, true, true);
     OwnRobot[mid1].face(m_world_state.ball.position);
-    ERRTNavigate2Point(mid1, static_pos[mid1], 40, VelocityProfile::Type::Aroom);
+    navigate(mid1, static_pos[mid1], VelocityProfile::aroom());
 
-    ERRTSetObstacles(mid2, true, true);
     OwnRobot[mid2].face(m_world_state.ball.position);
-    ERRTNavigate2Point(mid2, static_pos[mid2], 40, VelocityProfile::Type::Aroom);
+    navigate(mid2, static_pos[mid2], VelocityProfile::aroom());
 
-    ERRTSetObstacles(attack, true, true);
     OwnRobot[attack].face(m_world_state.ball.position);
-    ERRTNavigate2Point(
-        attack,
-        m_world_state.ball.position.circleAroundPoint(
-            m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
-            580),
-        40, VelocityProfile::Type::Aroom);
+    navigate(attack,
+             m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 580),
+             VelocityProfile::aroom());
 }
 } // namespace Tyr::Soccer

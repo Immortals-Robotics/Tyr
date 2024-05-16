@@ -202,6 +202,26 @@ struct Vec2
     {
         return !(*this == t_v);
     }
+
+    [[nodiscard]] inline Vec2 xx() const
+    {
+        return {x, x};
+    }
+
+    [[nodiscard]] inline Vec2 yy() const
+    {
+        return {y, y};
+    }
+
+    [[nodiscard]] inline Vec2 yx() const
+    {
+        return {y, x};
+    }
+
+    [[nodiscard]] inline Vec2 abs() const
+    {
+        return {std::abs(x), std::abs(y)};
+    }
 };
 } // namespace Tyr::Common
 

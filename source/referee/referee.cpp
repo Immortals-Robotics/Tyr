@@ -88,14 +88,17 @@ void Referee::transition(const Protos::Ssl::Gc::Referee_Command ref_command)
     if (ref_command == Protos::Ssl::Gc::Referee_Command_HALT)
     {
         m_state.state = Common::RefereeState::STATE_HALTED;
+        m_state.color.reset();
     }
     else if (ref_command == Protos::Ssl::Gc::Referee_Command_STOP)
     {
         m_state.state = Common::RefereeState::STATE_GAME_OFF;
+        m_state.color.reset();
     }
     else if (ref_command == Protos::Ssl::Gc::Referee_Command_FORCE_START)
     {
         m_state.state = Common::RefereeState::STATE_GAME_ON;
+        m_state.color.reset();
     }
     else if (ref_command == Protos::Ssl::Gc::Referee_Command_NORMAL_START &&
              (m_state.state & Common::RefereeState::STATE_NOTREADY))
@@ -106,6 +109,7 @@ void Referee::transition(const Protos::Ssl::Gc::Referee_Command ref_command)
     else if (m_state.state & Common::RefereeState::STATE_READY && ball_kicked)
     {
         m_state.state = Common::RefereeState::STATE_GAME_ON;
+        m_state.color.reset();
     }
     else if (m_state.state == Common::RefereeState::STATE_GAME_OFF)
     {
@@ -147,6 +151,7 @@ void Referee::transition(const Protos::Ssl::Gc::Referee_Command ref_command)
             break;
         }
 
+        m_state.color.reset();
         switch (ref_command)
         {
         case Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_BLUE:

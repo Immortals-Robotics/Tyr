@@ -24,7 +24,6 @@ set(HEADER_FILES
 set(SOURCE_FILES
 	ai.cpp
 	ai_process.cpp
-	internal_prepare.cpp
 	internal_process_data.cpp
 
 	dss/dss.cpp
@@ -42,16 +41,13 @@ set(SOURCE_FILES
 	helpers/calculate_mark_cost.cpp
 	helpers/calculate_opp_threat.cpp
 	helpers/calculate_switch_to_attacker_score.cpp
-	helpers/def_ghuz.cpp
 	helpers/find_kicker_opp.cpp
 	helpers/goal_blocked.cpp
 	helpers/manage_att_roles.cpp
 	helpers/mark_manager.cpp
-	helpers/nearest_asshole.cpp
+	helpers/nearest_opp.cpp
 	helpers/one_touch_angle.cpp
 	helpers/open_angle.cpp
-	helpers/out_of_field.cpp
-	helpers/robot_check.cpp
 	helpers/strategy_weight.cpp
 
 	plays/corner_their_global.cpp
@@ -71,7 +67,6 @@ set(SOURCE_FILES
 	plays/throwin_chip_shoot.cpp
 
 	skills/circle_ball.cpp
-	skills/def_2018.cpp
 	skills/def_hi.cpp
 	skills/defence_wall.cpp
 	skills/gk_hi.cpp
@@ -83,7 +78,8 @@ set(SOURCE_FILES
 	skills/pass_omghi.cpp
 	skills/pass.cpp
 	skills/receive_pass.cpp
-	skills/tech_circle.cpp
+	skills/running_def.cpp
+	skills/attacker.cpp
 
 	robot/robot.cpp)
 

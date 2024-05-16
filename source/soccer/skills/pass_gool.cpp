@@ -4,15 +4,13 @@ namespace Tyr::Soccer
 {
 void Ai::WaitForGool(int robot_num, bool chip)
 {
-    Common::Vec2 pos =
-        CalculatePassPos(robot_num, Common::Vec2(-side * 3025, 0), OwnRobot[robot_num].state().position, -1600);
+    Common::Vec2 pos = CalculatePassPos(robot_num, oppGoal(), OwnRobot[robot_num].state().position, -1600);
 
-    OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width, 0));
+    OwnRobot[robot_num].face(oppGoal());
 
-    ERRTSetObstacles(robot_num, 0, 1);
-    ERRTNavigate2Point(robot_num, pos, 100, VelocityProfile::Type::Mamooli);
+    navigate(robot_num, pos, VelocityProfile::mamooli());
 
-    OwnRobot[robot_num].Shoot(100);
-    OwnRobot[robot_num].Dribble(15);
+    OwnRobot[robot_num].shoot(100);
+    OwnRobot[robot_num].dribble(15);
 }
 } // namespace Tyr::Soccer

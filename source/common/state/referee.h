@@ -29,10 +29,10 @@ public:
 
     TimePoint time;
 
-    int       state = STATE_GAME_OFF;
-    TeamColor color = TeamColor::Blue;
-    Vec2      place_ball_target;
-    int       opp_gk = -1;
+    int                      state = STATE_GAME_OFF;
+    std::optional<TeamColor> color;
+    Vec2                     place_ball_target;
+    int                      opp_gk = -1;
 
 public:
     RefereeState() = default;
@@ -41,8 +41,9 @@ public:
     {
         time = TimePoint::fromMicroseconds(t_state.time());
 
-        state             = t_state.state();
-        color             = (TeamColor) t_state.color();
+        state = t_state.state();
+        if (t_state.has_color())
+            color = (TeamColor) t_state.color();
         place_ball_target = t_state.place_ball_target();
         opp_gk            = t_state.opp_gk();
     }
@@ -52,7 +53,8 @@ public:
         t_state->set_time(time.microseconds());
 
         t_state->set_state(state);
-        t_state->set_color((Protos::Immortals::TeamColor) color);
+        if (color.has_value())
+            t_state->set_color((Protos::Immortals::TeamColor) color.value());
         place_ball_target.fillProto(t_state->mutable_place_ball_target());
         t_state->set_opp_gk(opp_gk);
     }
@@ -181,6 +183,12 @@ public:
     bool canKickBall() const
     {
         return gameOn() || (ourRestart() && (state & STATE_READY));
+    }
+
+    // TODO: check this in the rules
+    bool shouldSlowDown() const
+    {
+        return stop();
     }
 };
 } // namespace Tyr::Common

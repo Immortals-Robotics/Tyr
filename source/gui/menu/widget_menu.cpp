@@ -112,10 +112,10 @@ void WidgetMenu::drawControllerTab()
     ImGui::Spacing();
     if (IsGamepadAvailable(0))
     {
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
-        ImGui::Text("Controller connected [%s]", GetGamepadName(0));
-        ImGui::PopStyleColor();
+        ImGui::TextColored(Common::Color::green(), "Controller connected [%s]", GetGamepadName(0));
+
         drawJoystick();
+
         if (m_controller_mode == ControllerMode::Referee)
             switch (GetGamepadButtonPressed())
             {
@@ -177,9 +177,7 @@ void WidgetMenu::drawControllerTab()
     }
     else
     {
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-        ImGui::Text("No Controller connected");
-        ImGui::PopStyleColor();
+        ImGui::TextColored(Common::Color::red(), "No Controller connected");
         m_controller_mode = ControllerMode::Disabled;
     }
 }

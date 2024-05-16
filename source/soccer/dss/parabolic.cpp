@@ -91,9 +91,9 @@ Common::Vec2 Parabolic::Evaluate(const float t) const
     }
 
     const float dt = t - t0;
-    const float x  = p.x + (v.x * dt) + (a.x * (dt * dt * .5f));
-    const float y  = p.y + (v.y * dt) + (a.y * (dt * dt * .5f));
-    return Common::Vec2(x, y);
+
+    const Common::Vec2 result = p + (v * dt) + (a * (dt * dt * .5f));
+    return result;
 }
 
 Common::Vec2 Parabolic::EvaluateDerivative(const float t) const
@@ -104,8 +104,8 @@ Common::Vec2 Parabolic::EvaluateDerivative(const float t) const
     }
 
     const float dt = t - t0;
-    const float x  = v.x + (a.x * dt);
-    const float y  = v.y + (a.y * dt);
-    return Common::Vec2(x, y);
+
+    const Common::Vec2 result = v + (a * dt);
+    return result;
 }
 } // namespace Tyr::Soccer

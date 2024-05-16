@@ -2,49 +2,64 @@
 
 #include "velocity_profile.h"
 
-#define PREDICT_CMDS 6
-
 namespace Tyr::Soccer
 {
 class Robot
 {
 public:
-    Common::RobotState target;
-    int                shoot, chip, dribbler;
-    int                vision_id;
-    bool               halted;
-
-    Common::Vec3 last_motions[11];
-
-    int last_motion_idx = 0;
-    int motion_idx;
-
     Robot() = default;
-    Robot(const Common::WorldState *t_world_state);
+    Robot(const Common::RobotState *t_state) : m_state(t_state)
+    {}
 
     inline const Common::RobotState &state() const
     {
-        return m_world_state->own_robot[vision_id];
+        return *m_state;
     }
 
-    void setVisionId(unsigned short v_id);
+    inline void reset()
+    {
+        m_shoot     = 0.0f;
+        m_chip      = 0.0f;
+        m_dribbler  = 0.0f;
+        m_navigated = false;
+        m_halted    = false;
+    }
 
-    void Shoot(int pow);
+    void shoot(float pow);
+    void chip(float pow);
+    void dribble(float pow);
 
-    void Chip(int pow);
+    void face(Common::Vec2 t_target);
+    void move(Common::Vec2 motion);
+    void halt();
 
-    void Dribble(int pow);
+    [[nodiscard]] bool navigated() const
+    {
+        return m_navigated;
+    }
 
-    void face(Common::Vec2 _target);
+    [[nodiscard]] bool halted() const
+    {
+        return m_halted;
+    }
 
-    void MoveByMotion(Common::Vec3 motion);
+    [[nodiscard]] Common::Vec2 computeMotion(const VelocityProfile &profile);
 
-    Common::Vec3 ComputeMotionCommand(float speed, VelocityProfile::Type velocityProfile);
+    [[nodiscard]] Common::Vec2    currentMotion() const;
+    [[nodiscard]] Sender::Command currentCommand() const;
 
-    Common::Vec3    GetCurrentMotion() const;
-    Sender::Command GetCurrentCommand() const;
+    Common::RobotState target;
 
 private:
-    const Common::WorldState *m_world_state = nullptr;
+    const Common::RobotState *m_state = nullptr;
+
+    Common::Vec2 m_last_motion;
+
+    float m_shoot    = 0.0f;
+    float m_chip     = 0.0f;
+    float m_dribbler = 0.0f;
+
+    bool m_navigated = false;
+    bool m_halted    = false;
 };
 } // namespace Tyr::Soccer

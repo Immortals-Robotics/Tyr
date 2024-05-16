@@ -81,9 +81,9 @@ bool Ai::setPlayBook(const Protos::Immortals::PlayBook &t_playbook)
     return true;
 }
 
-int        step[Common::Setting::kMaxOnFieldTeamRobots]    = {0, 0, 0, 0, 0, 0, 0, 0};
-float      lastAdv[Common::Setting::kMaxOnFieldTeamRobots] = {0, 0, 0, 0, 0, 0, 0, 0};
-static int curr_str_id                                     = -1;
+int        step[Common::Setting::kMaxRobots]    = {};
+float      lastAdv[Common::Setting::kMaxRobots] = {};
+static int curr_str_id                          = -1;
 
 bool receivers_reached = false;
 
@@ -109,7 +109,7 @@ void Ai::strategy()
     Common::logDebug("timer: {}", timer.time());
     if (timer.time() < 0.5)
     {
-        for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+        for (int i = 0; i < strategy.role.size(); i++)
         {
             // FOR NOW: advance to the last step
             step[i]    = std::max(0, (int) strategy.role[i].path.size() - 2);
@@ -159,8 +159,8 @@ void Ai::strategy()
     }
 
     bool new_receivers_reached = true;
-    DefMid(def, rw, lw, nullptr, false, false);
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    DefHi(def, rw, lw, nullptr, true);
+    for (int i = 0; i < strategy.role.size(); i++)
     {
         // if ((*stm2AInum[i]==gk)||(*stm2AInum[i]==def)) {
         //	continue;
@@ -172,18 +172,6 @@ void Ai::strategy()
                 GKHi(gk, true);
             else if (*stm2AInum[i] == def && *stm2AInum[i] == lw && *stm2AInum[i] == rw) // No need to halt these guys
                 continue;
-            //            else if (*stm2AInum[i]==def)
-            //            {
-            //				DefMid(def,rw,lw,nullptr,false,false);
-            //            }
-            //			else if (*stm2AInum[i]==lw)
-            //			{
-            //				DefMid(def,rw,lw,nullptr,false,false);
-            //			}
-            //			else if (*stm2AInum[i]==rw)
-            //			{
-            //				DefMid(def,rw,lw,nullptr,false,false);
-            //			}
             else
                 Halt(*stm2AInum[i]);
             continue;
@@ -228,28 +216,13 @@ void Ai::strategy()
 
         else
         {
-            if (1)
-            { // strategy.role[i].path[step[i]].needrrt()==0) {
-                ERRTSetObstacles(*stm2AInum[i], 1, 1);
-                // ERRTSetObstacles(*stm2AInum[i], 0, 0);
-            }
-            else
-            {
-                ERRTSetObstacles(*stm2AInum[i], 1, 1);
-            }
-
-            const VelocityProfile::Type profile = strategy.role[i].path[step[i]].velocity_profile;
+            const VelocityProfile profile = strategy.role[i].path[step[i]].velocity_profile;
 
             if (step[i] != strategy.role[i].path.size() - 1)
             {
-                // float dis_to_reach = Common::Vec2::distance(OwnRobot[*stm2AInum[i]].state().position,
-                // Common::Vec2(strategy.role[i].path[step[i]].x(),strategy.role[i].path[step[i]].y())); if
-                // ((step[i]>=strategy.role[i].path.size()-2) || (dis_to_reach < 500))
-                OwnRobot[*stm2AInum[i]].face(Common::Vec2(-side * Common::field().width, 0));
-                // else
-                //     OwnRobot[*stm2AInum[i]].face(Common::Vec2(strategy.role[i].path[step[i]].x(),strategy.role[i].path[step[i]].y()));
-                ERRTNavigate2Point(*stm2AInum[i], strategy.role[i].path[step[i]].position * sign_modifier,
-                                   strategy.role[i].path[step[i]].speed, profile);
+                OwnRobot[*stm2AInum[i]].face(oppGoal());
+                navigate(*stm2AInum[i], strategy.role[i].path[step[i]].position * sign_modifier, profile,
+                         NavigationFlagsForceBallObstacle);
             }
             else
             {
@@ -268,7 +241,7 @@ void Ai::strategy()
         case Role::Afterlife::OneTouch:
             oneTouchType[*stm2AInum[i]] = oneTouch;
             if (strategy.role[i].path.size() == 0)
-                allafPos[*stm2AInum[i]] = Common::Vec2(0, 0);
+                allafPos[*stm2AInum[i]] = Common::Vec2();
             else
                 allafPos[*stm2AInum[i]] = strategy.role[i].path.back().position * sign_modifier;
 
@@ -288,7 +261,7 @@ void Ai::strategy()
             else
             {
                 if (strategy.role[i].path.size() == 0)
-                    allafPos[*stm2AInum[i]] = Common::Vec2(0, 0);
+                    allafPos[*stm2AInum[i]] = Common::Vec2();
                 else
                     allafPos[*stm2AInum[i]] = strategy.role[i].path.back().position * sign_modifier;
             }

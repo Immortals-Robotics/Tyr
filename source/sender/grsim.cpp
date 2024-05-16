@@ -14,20 +14,12 @@ void Grsim::queueCommand(const Command &command)
 
     proto_command->set_wheelsspeed(false);
 
-    const Common::Vec3 motion = command.motion;
-
-    float robot_ang = (Common::Angle::fromDeg(90.0f) - command.current_angle).rad();
-
-    float new_VelX = motion.x * cos(robot_ang) - motion.y * sin(robot_ang);
-    float new_VelY = motion.x * sin(robot_ang) + motion.y * cos(robot_ang);
-
-    proto_command->set_veltangent(new_VelY / 20.0);
-    proto_command->set_velnormal(-new_VelX / 20.0);
+    const Common::Vec2 local_vel = command.motion.rotated(Common::Angle::fromDeg(90.0f) - command.current_angle);
+    proto_command->set_veltangent(local_vel.y / 1000.0f);
+    proto_command->set_velnormal(-local_vel.x / 1000.0f);
 
     float w = (command.target_angle - command.current_angle).deg();
-    w /= 10.0f;
-
-    proto_command->set_velangular(w);
+    proto_command->set_velangular(w / 10.0f);
 
     if (command.shoot > 0)
     {
@@ -36,9 +28,10 @@ void Grsim::queueCommand(const Command &command)
     }
     else if (command.chip > 0)
     {
-        float chip = command.chip / 25.0f;
-        proto_command->set_kickspeedx(chip * 0.707f);
-        proto_command->set_kickspeedz(chip / 0.707f);
+        const float        chip_mag = command.chip / 20.0f;
+        const Common::Vec2 chip_dir = Common::Angle::fromDeg(45.0f).toUnitVec();
+        proto_command->set_kickspeedx(chip_mag * chip_dir.x);
+        proto_command->set_kickspeedz(chip_mag * chip_dir.y);
     }
     else
     {

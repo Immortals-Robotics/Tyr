@@ -4,7 +4,7 @@ namespace Tyr::Common
 {
 void Setting::load(const toml::table t_table)
 {
-    m_config_table           = t_table;
+    m_config_table    = t_table;
     const auto common = t_table["common"];
 
     immortals_is_the_best_team = common["immortals_is_the_best_team"].value_or(immortals_is_the_best_team);
@@ -29,8 +29,6 @@ void Setting::load(const toml::table t_table)
     commands_address.load(network["commands"]);
 
     strategy_address.load(network["strategy"]);
-
-    // sender_rec_address.load(network["referee"]);
 
     grsim_address.load(network["grsim"]);
 
@@ -83,8 +81,11 @@ void Setting::load(const toml::table t_table)
     ang_gamma_reality    = soccer["ang_gamma_reality"].value_or(ang_gamma_reality);
     ang_gamma_simulation = soccer["ang_gamma_simulation"].value_or(ang_gamma_simulation);
 
-    robot_behavior_tree_config_filename =
-        soccer["robot_behavior_tree_config_filename"].value_or(robot_behavior_tree_config_filename);
+    one_touch_beta    = soccer["one_touch_beta"].value_or(one_touch_beta);
+    one_touch_gamma   = soccer["one_touch_gamma"].value_or(one_touch_gamma);
+    one_touch_shoot_k = soccer["one_touch_shoot_k"].value_or(one_touch_shoot_k);
+
+    gamma_simulation = soccer["gamma_simulation"].value_or(gamma_simulation);
 
     init_gk_id = soccer["init_gk_id"].value_or(init_gk_id);
 

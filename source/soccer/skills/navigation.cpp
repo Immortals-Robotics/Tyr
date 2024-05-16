@@ -2,44 +2,33 @@
 
 namespace Tyr::Soccer
 {
-void Ai::Navigate2Point(int robot_num, Common::Vec2 dest, float speed, const VelocityProfile::Type velocityProfile,
-                        bool use_dss)
+void Ai::navigate(int robot_num, Common::Vec2 dest, VelocityProfile profile, const NavigationFlags t_flags)
 {
-    OwnRobot[robot_num].target.position.x = dest.x;
-    OwnRobot[robot_num].target.position.y = dest.y;
-
-    Common::Vec3 motion_cmd = OwnRobot[robot_num].ComputeMotionCommand(speed, velocityProfile);
-
-    if (use_dss)
-    {
-        const Common::Vec2 safe_motion_cmd =
-            dss->ComputeSafeMotion(robot_num, Common::Vec2(motion_cmd.x, motion_cmd.y));
-        motion_cmd.x = safe_motion_cmd.x;
-        motion_cmd.y = safe_motion_cmd.y;
-    }
-    OwnRobot[robot_num].MoveByMotion(motion_cmd);
-
-    navigated[robot_num] = true;
-}
-
-void Ai::ERRTNavigate2Point(int robot_num, Common::Vec2 dest, float speed, const VelocityProfile::Type velocityProfile)
-{
-    // Navigate2Point(robot_num, dest,accurate,speed,velocityProfile);
-    // return;
     if (OwnRobot[robot_num].state().seen_state == Common::SeenState::CompletelyOut)
-        Halt(robot_num);
-    else
+        return;
+
+    setObstacles(robot_num, t_flags);
+
+    if (m_ref_state.shouldSlowDown())
     {
-        planner[robot_num].init(OwnRobot[robot_num].state().position, dest, 90.0f);
-        Common::Vec2 wayp = planner[robot_num].plan();
-
-        planner[robot_num].draw();
-
-        // if ( planner[robot_num].getWayPointNum ( ) <= 2 )
-        Navigate2Point(robot_num, wayp, speed, velocityProfile, true);
-        // else
-        //	Navigate2Point ( robot_num , wayp , false , speed , velocityProfile );
-        // Navigate2Point ( robot_num , dest , accurate , speed );
+        profile.max_spd = std::min(profile.max_spd, 900.0f);
     }
+
+    if (OwnRobot[robot_num].state().position.distanceTo(dest) > 100.0f)
+        Common::debug().draw(dest);
+
+    planner[robot_num].init(OwnRobot[robot_num].state().position, dest, 90.0f);
+    Common::Vec2 wayp = planner[robot_num].plan();
+
+    planner[robot_num].draw();
+
+    OwnRobot[robot_num].target.position = wayp;
+
+    Common::Vec2 motion_cmd = OwnRobot[robot_num].computeMotion(profile);
+
+    if (!(t_flags & NavigationFlagsForceNoObstacles))
+        motion_cmd = dss->ComputeSafeMotion(robot_num, motion_cmd, profile);
+
+    OwnRobot[robot_num].move(motion_cmd);
 }
 } // namespace Tyr::Soccer

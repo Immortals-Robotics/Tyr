@@ -6,7 +6,6 @@ void Ai::receivePass(int robot_num, Common::Vec2 staticPos, bool chip)
 {
     const float contStrStaticTime = 1.0f;
 
-    // oneTouchType[robot_num] = oneTouch;
     if (timer.time() > 0.7)
     {
         chip_head.setDeg(200);
@@ -63,7 +62,6 @@ void Ai::receivePass(int robot_num, Common::Vec2 staticPos, bool chip)
         else if (oneTouchType[robot_num] == shirje)
         {
             WaitForOmghi(robot_num, chip);
-            // WaitForPass(robot_num, 0, &OwnRobot[dmf].state().position);
         }
         else if (oneTouchType[robot_num] == gool)
         {
@@ -71,10 +69,8 @@ void Ai::receivePass(int robot_num, Common::Vec2 staticPos, bool chip)
         }
         else
         { // probably allaf!!!
-            ERRTSetObstacles(robot_num, false, true);
-            OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width, 0));
-            // OwnRobot[robot_num].target.angle=-90;
-            ERRTNavigate2Point(robot_num, staticPos, 100, VelocityProfile::Type::Mamooli);
+            OwnRobot[robot_num].face(oppGoal());
+            navigate(robot_num, staticPos, VelocityProfile::mamooli());
         }
     }
     else
@@ -84,10 +80,8 @@ void Ai::receivePass(int robot_num, Common::Vec2 staticPos, bool chip)
             oneTouchTypeUsed[robot_num] = false;
             oneTouchType[robot_num]     = oneTouch;
         }
-        ERRTSetObstacles(robot_num, true, true);
-        OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width, 0));
-        // OwnRobot[robot_num].target.angle=-90;
-        ERRTNavigate2Point(robot_num, staticPos, 100, VelocityProfile::Type::Mamooli);
+        OwnRobot[robot_num].face(oppGoal());
+        navigate(robot_num, staticPos, VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
     }
 }
 } // namespace Tyr::Soccer

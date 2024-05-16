@@ -171,7 +171,8 @@ struct RobotState
         angle            = t_robot.angle();
         angular_velocity = t_robot.angular_velocity();
 
-        seen_state = (SeenState) t_robot.seen_state();
+        seen_state         = (SeenState) t_robot.seen_state();
+        out_for_substitute = t_robot.out_for_substitute();
     }
 
     void fillProto(Protos::Immortals::RobotState *const t_robot) const
@@ -186,6 +187,7 @@ struct RobotState
         angular_velocity.fillProto(t_robot->mutable_angular_velocity());
 
         t_robot->set_seen_state((Protos::Immortals::SeenState) seen_state);
+        t_robot->set_out_for_substitute(out_for_substitute);
     }
 };
 
@@ -218,6 +220,11 @@ struct BallState
         velocity.fillProto(t_ball->mutable_velocity());
 
         t_ball->set_seen_state((Protos::Immortals::SeenState) seen_state);
+    }
+
+    inline Common::Line line() const
+    {
+        return Common::Line::fromPointAndAngle(position, velocity.toAngle());
     }
 };
 
@@ -269,8 +276,6 @@ struct WorldState
 
     RobotState own_robot[Setting::kMaxRobots];
     RobotState opp_robot[Setting::kMaxRobots];
-
-    Vec3 last_cmds[Setting::kMaxRobots][11] = {};
 
     WorldState()
     {

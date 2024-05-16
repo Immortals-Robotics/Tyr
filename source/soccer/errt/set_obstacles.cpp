@@ -15,10 +15,10 @@ static float calculateRobotRadius(const Common::RobotState &state)
     return Common::field().robot_radius * (1.0f + extension_factor);
 }
 
-void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
+void Ai::setObstacles(int robot_num, const NavigationFlags t_flags)
 {
-    const bool ourPenalty = field || (robot_num != gk && !m_ref_state.ourPlaceBall());
-    const bool oppPenalty = field || !m_ref_state.ourPlaceBall();
+    const bool ourPenalty = robot_num != gk && !m_ref_state.ourPlaceBall();
+    const bool oppPenalty = !m_ref_state.ourPlaceBall();
 
     const bool oppPenaltyBig = m_ref_state.freeKick() || m_ref_state.stop();
 
@@ -26,14 +26,18 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
 
     g_obs_map.resetMap();
 
+    if (t_flags & NavigationFlagsForceNoObstacles)
+    {
+        return;
+    }
+
     // own
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
         if ((OwnRobot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != robot_num) &&
             (OwnRobot[i].state().vision_id != OwnRobot[robot_num].state().vision_id))
         {
             g_obs_map.addCircle({OwnRobot[i].state().position, current_robot_radius + Common::field().robot_radius});
-            // Common::debug().draw({OwnRobot[i].state().position,ownRobotRadius + (!dribble)*ownRobotRadius},Cyan);
         }
     }
 
@@ -45,14 +49,20 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
             const float radius = calculateRobotRadius(m_world_state.opp_robot[i]);
 
             g_obs_map.addCircle({m_world_state.opp_robot[i].position, radius + current_robot_radius});
-            // Common::debug().draw({m_world_state.opp_robot[i].position,ownRobotRadius +
-            // (!dribble)*ownRobotRadius},Cyan);
         }
     }
 
-    if (bll || !m_ref_state.allowedNearBall())
+    float ball_radius = 0.0f;
+    if ((t_flags & NavigationFlagsForceBallObstacle) || !m_ref_state.allowedNearBall())
+        ball_radius = ballAreaRadius;
+    else if (t_flags & NavigationFlagsForceBallMediumObstacle)
+        ball_radius = 230.0f;
+    else if (t_flags & NavigationFlagsForceBallSmallObstacle)
+        ball_radius = 60.0f;
+
+    if (ball_radius > 0.0f)
     {
-        g_obs_map.addCircle({m_world_state.ball.position, ballAreaRadius + current_robot_radius});
+        g_obs_map.addCircle({m_world_state.ball.position, ball_radius + current_robot_radius});
     }
 
     const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
@@ -99,7 +109,7 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
     // avoid the line between the ball and the placement point
     if (m_ref_state.theirPlaceBall())
     {
-        const Common::Vec2 ball_line = m_ref_state.place_ball_target - m_world_state.ball.position;
+        const Common::Vec2 ball_line      = m_ref_state.place_ball_target - m_world_state.ball.position;
         const int          ball_obs_count = std::ceil(ball_line.length() / (ballAreaRadius + current_robot_radius));
 
         for (int i = 0; i < ball_obs_count; i++)
@@ -109,21 +119,5 @@ void Ai::ERRTSetObstacles(int robot_num, bool bll, bool field)
             g_obs_map.addCircle({ball_obs, ballAreaRadius + current_robot_radius});
         }
     }
-}
-
-void Ai::ERRTSetGkClearObstacles(int robot_num)
-{
-    g_obs_map.resetMap();
-
-    // our penalty area
-    static constexpr float area_extension_size     = 200.0f;
-    const float            penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
-
-    const Common::Vec2 start{side * Common::field().width, -(penalty_area_half_width + area_extension_size)};
-
-    const float w = -side * (area_extension_size + Common::field().penalty_area_depth);
-    const float h = Common::field().penalty_area_width + 2 * area_extension_size;
-
-    g_obs_map.addRectangle({start, w, h});
 }
 } // namespace Tyr::Soccer

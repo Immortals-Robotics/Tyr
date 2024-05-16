@@ -34,7 +34,7 @@ void Ai::calculateBallTrajectory()
             if (isVertical)
             {
                 ballLine.calculate(ball_x.size(), &ball_y[0], &ball_x[0]);
-                d = ballLine.getDisToPoint(Common::Vec2(ballHist[i].position.y, ballHist[i].position.x));
+                d = ballLine.getDisToPoint(ballHist[i].position.yx());
             }
             else
             {
@@ -57,7 +57,6 @@ void Ai::calculateBallTrajectory()
     if (isVertical)
         ballLine.chapeKon();
 
-    // ball_line.calculate(ball_x.size(), &ball_x[0], &ball_y[0]);
     if (ballLine.isAmoodi())
     {
         Common::debug().draw(Common::LineSegment{Common::Vec2(ballLine.getXIntercept(), -2000),
@@ -78,11 +77,13 @@ void Ai::calculateBallTrajectory()
                              isVertical ? Common::Color::yellow() : Common::Color::red());
     }
 
-    for (i = std::max((int) ballHist.size() - 60, 0); i < ballHist.size(); i += 10)
+    for (i = 0; i < ballHist.size(); i += 1)
     {
-        // Common::debug().draw({ballHist[i].position,10+10.0*(float(i)/float(ballHist.size()))},Red);
+        Common::debug().draw(Common::Circle{ballHist[i].position, 5.0f + 30.0f * (float(i) / float(ballHist.size()))},
+                             Common::Color::red().transparent());
     }
 
-    // Common::debug().draw(ballHist.front().position,ballHist.back().position,Blue);
+    Common::debug().draw(Common::LineSegment{ballHist.front().position, ballHist.back().position},
+                         Common::Color::blue().transparent());
 }
 } // namespace Tyr::Soccer

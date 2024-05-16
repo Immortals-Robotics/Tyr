@@ -4,16 +4,14 @@ namespace Tyr::Soccer
 {
 void Ai::WaitForOmghi(int robot_num, bool chip)
 {
-    Common::Line ball_line = Common::Line::fromPointAndAngle(m_world_state.ball.position,
-                                                             m_world_state.ball.velocity.toAngle());
+    Common::Line ball_line =
+        Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());
     if (chip_head.deg() < 180)
     {
         ball_line = Common::Line::fromPointAndAngle(m_world_state.ball.position, chip_head);
         Common::logDebug("calcing with static head: {}", chip_head);
     }
-    Common::Line to_goal_line = Common::Line::fromTwoPoints(
-        Common::Vec2(OwnRobot[robot_num].state().position.x, OwnRobot[robot_num].state().position.y),
-        Common::Vec2(-side * Common::field().width, 0));
+    Common::Line to_goal_line = Common::Line::fromTwoPoints(OwnRobot[robot_num].state().position, oppGoal());
 
     Common::Vec2 ans = ball_line.intersect(to_goal_line).value_or(Common::Vec2());
 
@@ -34,18 +32,17 @@ void Ai::WaitForOmghi(int robot_num, bool chip)
     Common::Vec2 target = ans; // CalculatePassPos(robot_num, 89);
 
     OwnRobot[robot_num].target.angle = calculateOneTouchAngle(robot_num, target);
-    OwnRobot[robot_num].face(Common::Vec2(-side * Common::field().width,
-                                          -Common::sign(OwnRobot[robot_num].state().position.y) * 300));
+    OwnRobot[robot_num].face(Common::Vec2(oppGoal().x, -Common::sign(OwnRobot[robot_num].state().position.y) * 300));
 
-    ERRTSetObstacles(robot_num);
-
-    target = CalculatePassPos(robot_num, Common::Vec2(-side * Common::field().width, 0),
-                              OwnRobot[robot_num].state().position, -200);
+    target = CalculatePassPos(robot_num, oppGoal(), OwnRobot[robot_num].state().position, -200);
 
     Common::logDebug("sBAR:    {}", sBAR);
-    ERRTNavigate2Point(robot_num, target, sBAR, VelocityProfile::Type::Kharaki);
+    VelocityProfile profile = VelocityProfile::kharaki();
+    profile.max_spd         = sBAR * 45.0f;
 
-    OwnRobot[robot_num].Shoot(100);
-    OwnRobot[robot_num].Dribble(15);
+    navigate(robot_num, target, profile);
+
+    OwnRobot[robot_num].shoot(100);
+    OwnRobot[robot_num].dribble(15);
 }
 } // namespace Tyr::Soccer

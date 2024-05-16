@@ -25,6 +25,28 @@ std::optional<Vec2> Line::intersect(const Line &t_line) const
     }
 }
 
+std::optional<Vec2> Line::intersect(const LineSegment &t_line) const
+{
+    const auto point = intersect(fromSegment(t_line));
+
+    if (!point.has_value())
+        return {};
+
+    const float min_x = std::min(t_line.start.x, t_line.end.x);
+    const float max_x = std::max(t_line.start.x, t_line.end.x);
+    const float min_y = std::min(t_line.start.y, t_line.end.y);
+    const float max_y = std::max(t_line.start.y, t_line.end.y);
+
+    if ((point.value().x > min_x && point.value().x < max_x) || (point.value().y > min_y && point.value().y < max_y))
+    {
+        return point;
+    }
+    else
+    {
+        return {};
+    }
+}
+
 std::vector<float> Line::abcFormula(const float t_a, const float t_b, const float t_c)
 {
     // discriminant is b^2 - 4*a*c

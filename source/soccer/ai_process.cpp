@@ -6,17 +6,7 @@ void Ai::process()
 {
     static int PRCS_CNT = 0;
 
-    internalPrepare();
     internalProcessData();
-
-    Common::Vec2 ourgoal_p1 = Common::Vec2(Common::field().width, Common::field().goal_width / 2);
-    Common::Vec2 ourgoal_p2 = Common::Vec2(Common::field().width, Common::field().goal_width / -2);
-    Common::Vec2 oppgoal_p1 = ourgoal_p1 * -1;
-    Common::Vec2 oppgoal_p2 = ourgoal_p2 * -1;
-    Common::debug().draw(Common::Triangle{ourgoal_p1, m_world_state.ball.position, ourgoal_p2},
-                         Common::Color::blue().transparent(), true);
-    Common::debug().draw(Common::Triangle{oppgoal_p1, m_world_state.ball.position, oppgoal_p2},
-                         Common::Color::red().transparent(), true);
 
     if (lastReferee != m_ref_state.get())
     {
@@ -50,7 +40,7 @@ void Ai::process()
     {
         currentPlay = &Ai::kickoff_us_chip;
     }
-    else if ((m_ref_state.ourDirectKick()) || (m_ref_state.ourIndirectKick()))
+    else if (m_ref_state.ourDirectKick() || m_ref_state.ourIndirectKick())
     {
         if (target_str != -1)
         {
@@ -67,9 +57,7 @@ void Ai::process()
     }
     else if (m_ref_state.ourPlaceBall())
     {
-        currentPlay = &Ai::our_place_ball_shoot;
-        currentPlay = &Ai::our_place_ball_shoot_V2; // COMMENT this if it's not working...
-        // currentPlay = &Ai::our_place_ball_shoot_taki;
+        currentPlay = &Ai::our_place_ball;
     }
     else if (m_ref_state.theirFreeKick())
     {
@@ -87,12 +75,13 @@ void Ai::process()
     {
         currentPlay = &Ai::their_place_ball;
     }
-    else if (m_ref_state.get() == Common::RefereeState::STATE_HALTED)
+    else if (!m_ref_state.canMove())
     {
         currentPlay = &Ai::HaltAll;
     }
     else
     {
+        Common::logWarning("Unhandled ref state: {}", (int) m_ref_state.get());
         currentPlay = &Ai::Stop;
     }
 
@@ -103,10 +92,15 @@ void Ai::process()
 
     (this->*currentPlay)();
 
-    for (int i = 0; i < Common::Setting::kMaxOnFieldTeamRobots; i++)
+    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if ((OwnRobot[i].state().seen_state == Common::SeenState::CompletelyOut) || (!navigated[i]))
+        if (OwnRobot[i].state().seen_state == Common::SeenState::CompletelyOut)
         {
+            Halt(i);
+        }
+        else if (!OwnRobot[i].navigated() && !OwnRobot[i].halted())
+        {
+            Common::logWarning("Own robot {} was neither navigated nor halted", OwnRobot[i].state().vision_id);
             Halt(i);
         }
     }

@@ -11,8 +11,6 @@ void Ai::Stop()
     }
 #endif
 
-    // Common::debug().draw({m_world_state.ball.position,500},Red);
-
     if (OwnRobot[attack].state().out_for_substitute)
     {
         if (!OwnRobot[mid1].state().out_for_substitute)
@@ -30,8 +28,7 @@ void Ai::Stop()
     }
 
     GKHi(gk, true);
-    // DefHi(def,nullptr, true);
-    DefMid(def, rw, lw, nullptr, true);
+    DefHi(def, rw, lw, nullptr, true);
 
 #if mark_in_stop
     MarkManager(false);
@@ -45,47 +42,33 @@ void Ai::Stop()
         {
             if (own == dmf)
             {
-                ERRTSetObstacles(dmf, true, true);
                 OwnRobot[dmf].face(m_world_state.ball.position);
-                ERRTNavigate2Point(
-                    dmf,
-                    pointOnConnectingLine(
-                        m_world_state.ball.position, Common::Vec2(side * Common::field().width, 0),
-                        Common::Vec2::distance(m_world_state.ball.position,
-                                               Common::Vec2(side * Common::field().width, 0)) /
-                            3.0f),
-                    100, VelocityProfile::Type::Aroom);
-                OwnRobot[dmf].Shoot(0);
+                navigate(dmf,
+                         pointOnConnectingLine(m_world_state.ball.position, ownGoal(),
+                                               Common::Vec2::distance(m_world_state.ball.position, ownGoal()) / 3.0f),
+                         VelocityProfile::aroom());
+                OwnRobot[dmf].shoot(0);
             }
-            else if (own == lmf)
+            else if (own == mid2)
             {
-                ERRTSetObstacles(lmf, true, true);
-                OwnRobot[lmf].face(m_world_state.ball.position);
-                ERRTNavigate2Point(
-                    lmf,
-                    circleAroundPoint(
-                        m_world_state.ball.position,
-                        NormalizeAngle(
-                            -20 + Common::Vec2::angleWith(m_world_state.ball.position,
-                                                          Common::Vec2(side * Common::field().width, 0))),
-                        650),
-                    100, VelocityProfile::Type::Aroom);
-                OwnRobot[lmf].Shoot(0);
+                OwnRobot[mid2].face(m_world_state.ball.position);
+                navigate(mid2,
+                         circleAroundPoint(
+                             m_world_state.ball.position,
+                             NormalizeAngle(-20 + Common::Vec2::angleWith(m_world_state.ball.position, ownGoal())),
+                             650),
+                         VelocityProfile::aroom());
+                OwnRobot[mid2].shoot(0);
             }
-            else if (own == rmf)
+            else if (own == mid1)
             {
-                ERRTSetObstacles(rmf, true, true);
-                OwnRobot[rmf].face(m_world_state.ball.position);
-                ERRTNavigate2Point(
-                    rmf,
-                    circleAroundPoint(
-                        m_world_state.ball.position,
-                        NormalizeAngle(
-                            20 + Common::Vec2::angleWith(m_world_state.ball.position,
-                                                         Common::Vec2(side * Common::field().width, 0))),
-                        650),
-                    100, VelocityProfile::Type::Aroom);
-                OwnRobot[rmf].Shoot(0);
+                OwnRobot[mid1].face(m_world_state.ball.position);
+                navigate(mid1,
+                         circleAroundPoint(
+                             m_world_state.ball.position,
+                             NormalizeAngle(20 + Common::Vec2::angleWith(m_world_state.ball.position, ownGoal())), 650),
+                         VelocityProfile::aroom());
+                OwnRobot[mid1].shoot(0);
             }
         }
         else
@@ -94,46 +77,32 @@ void Ai::Stop()
         }
     }
 #else
-    ERRTSetObstacles(dmf, true, true);
     OwnRobot[dmf].face(m_world_state.ball.position);
-    ERRTNavigate2Point(
-        dmf,
-        m_world_state.ball.position.pointOnConnectingLine(
-            Common::Vec2(side * Common::field().width, 0),
-            m_world_state.ball.position.distanceTo(Common::Vec2(side * Common::field().width, 0)) /
-                3.0f),
-        100, VelocityProfile::Type::Aroom);
-    OwnRobot[dmf].Shoot(0);
+    navigate(dmf,
+             m_world_state.ball.position.pointOnConnectingLine(
+                 ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
+             VelocityProfile::aroom());
+    OwnRobot[dmf].shoot(0);
 
-    ERRTSetObstacles(lmf, true, true);
-    OwnRobot[lmf].face(m_world_state.ball.position);
-    ERRTNavigate2Point(lmf,
-                       m_world_state.ball.position.circleAroundPoint(
-                           Common::Angle::fromDeg(-20.0f) + m_world_state.ball.position.angleWith(Common::Vec2(
-                                                                side * Common::field().width, 0)),
-                           650),
-                       100, VelocityProfile::Type::Aroom);
-    OwnRobot[lmf].Shoot(0);
+    OwnRobot[mid2].face(m_world_state.ball.position);
+    navigate(mid2,
+             m_world_state.ball.position.circleAroundPoint(
+                 Common::Angle::fromDeg(-20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 650),
+             VelocityProfile::aroom());
+    OwnRobot[mid2].shoot(0);
 
-    ERRTSetObstacles(rmf, true, true);
-    OwnRobot[rmf].face(m_world_state.ball.position);
-    ERRTNavigate2Point(rmf,
-                       m_world_state.ball.position.circleAroundPoint(
-                           Common::Angle::fromDeg(20.0f) + m_world_state.ball.position.angleWith(Common::Vec2(
-                                                               side * Common::field().width, 0)),
-                           650),
-                       100, VelocityProfile::Type::Aroom);
-    OwnRobot[rmf].Shoot(0);
+    OwnRobot[mid1].face(m_world_state.ball.position);
+    navigate(mid1,
+             m_world_state.ball.position.circleAroundPoint(
+                 Common::Angle::fromDeg(20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 650),
+             VelocityProfile::aroom());
+    OwnRobot[mid1].shoot(0);
 #endif
 
-    ERRTSetObstacles(cmf, true, true);
-    OwnRobot[cmf].face(m_world_state.ball.position);
-    ERRTNavigate2Point(
-        cmf,
-        m_world_state.ball.position.circleAroundPoint(
-            m_world_state.ball.position.angleWith(Common::Vec2(side * Common::field().width, 0)),
-            650),
-        100, VelocityProfile::Type::Aroom);
-    OwnRobot[cmf].Shoot(0);
+    OwnRobot[attack].face(m_world_state.ball.position);
+    navigate(attack,
+             m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 650),
+             VelocityProfile::aroom());
+    OwnRobot[attack].shoot(0);
 }
 } // namespace Tyr::Soccer
