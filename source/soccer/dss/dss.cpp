@@ -5,25 +5,24 @@
 
 namespace Tyr::Soccer
 {
-Dss::Dss(const Robot *const own_robots, const Common::RobotState *const opp_robots, const float cmd_dt,
-         const float max_dec, const float max_dec_opp)
-    : own_robots(own_robots), opp_robots(opp_robots), cmd_dt(cmd_dt), max_dec(max_dec), max_dec_opp(max_dec_opp)
+Dss::Dss(const Common::WorldState *const t_world, const float cmd_dt, const float max_dec, const float max_dec_opp)
+    : m_world(t_world), cmd_dt(cmd_dt), max_dec(max_dec), max_dec_opp(max_dec_opp)
 {}
 
 Common::Vec2 Dss::GetAccFromMotion(const int robot_num, const Common::Vec2 &motion)
 {
-    const Common::RobotState &state        = own_robots[robot_num].state();
-    const Common::Vec2        target_speed = motion * 45.f;
+    const Common::RobotState &state        = m_world->own_robot[robot_num];
+    const Common::Vec2        target_speed = motion;
 
     return (target_speed - state.velocity) / cmd_dt;
 }
 
 Common::Vec2 Dss::GetMotionFromAcc(const int robot_num, const Common::Vec2 &acc)
 {
-    const Common::RobotState &state        = own_robots[robot_num].state();
+    const Common::RobotState &state        = m_world->own_robot[robot_num];
     const Common::Vec2        target_speed = state.velocity + (acc * cmd_dt);
 
-    return target_speed / 45.f;
+    return target_speed;
 }
 
 bool Dss::OwnRobotsHaveCollision(const Common::RobotState &state_a, const Common::Vec2 &cmd_a,
@@ -60,7 +59,7 @@ bool Dss::RobotHasStaticCollision(const Common::RobotState &state, const Common:
 
 bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
 {
-    const Common::RobotState &state = own_robots[robot_num].state();
+    const Common::RobotState &state = m_world->own_robot[robot_num];
 
     if (RobotHasStaticCollision(state, cmd))
     {
@@ -74,7 +73,7 @@ bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
             continue;
         }
 
-        const Common::RobotState &other_state = own_robots[robot_idx].state();
+        const Common::RobotState &other_state = m_world->own_robot[robot_idx];
         if (other_state.seen_state == Common::SeenState::CompletelyOut)
         {
             continue;
@@ -90,7 +89,7 @@ bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
 
     for (int robot_idx = 0; robot_idx < Common::Setting::kMaxRobots; ++robot_idx)
     {
-        const Common::RobotState &other_state = opp_robots[robot_idx];
+        const Common::RobotState &other_state = m_world->opp_robot[robot_idx];
         if (other_state.seen_state == Common::SeenState::CompletelyOut)
         {
             continue;
@@ -124,7 +123,7 @@ void Dss::Reset()
 {
     for (int robot_idx = 0; robot_idx < Common::Setting::kMaxRobots; ++robot_idx)
     {
-        const Common::RobotState &state = own_robots[robot_idx].state();
+        const Common::RobotState &state = m_world->own_robot[robot_idx];
 
         if (state.seen_state == Common::SeenState::CompletelyOut)
         {
@@ -143,7 +142,7 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     const Common::Vec2        target_a_cmd     = GetAccFromMotion(robot_num, motion);
     const float               target_a_cmd_mag = target_a_cmd.length();
     Common::Vec2              a_cmd;
-    const Common::RobotState &state = own_robots[robot_num].state();
+    const Common::RobotState &state = m_world->own_robot[robot_num];
 
     if (state.seen_state == Common::SeenState::CompletelyOut || g_obs_map.isInObstacle(state.position))
     {

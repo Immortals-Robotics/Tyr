@@ -9,7 +9,7 @@ void Ai::navigate(int robot_num, Common::Vec2 dest, VelocityProfile profile)
 
     if (m_ref_state.shouldSlowDown())
     {
-        profile.max_spd = std::min(profile.max_spd, 20.0f);
+        profile.max_spd = std::min(profile.max_spd, 900.0f);
     }
 
     if (OwnRobot[robot_num].state().position.distanceTo(dest) > 100.0f)

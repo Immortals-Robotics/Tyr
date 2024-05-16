@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-static float shoot_coeffs[Common::Setting::kMaxRobots][2] = {
+static Common::Vec2 shoot_coeffs[Common::Setting::kMaxRobots] = {
     {6.68088f, 4.88984f},   //  0
     {5.47922f, 7.44389f},   //  1
     {8.42397f, 11.95175f},  //  2
@@ -15,9 +15,13 @@ static float shoot_coeffs[Common::Setting::kMaxRobots][2] = {
     {0, 0},                 //  9*
     {0, 0},                 // 10*
     {0, 0},                 // 11*
+    {0, 0},                 // 12*
+    {0, 0},                 // 13*
+    {0, 0},                 // 14*
+    {0, 0},                 // 15*
 };
 
-static float chip_coeffs[Common::Setting::kMaxRobots][2] = {
+static Common::Vec2 chip_coeffs[Common::Setting::kMaxRobots] = {
     {5.41180f, 12.58416f}, //  0
     {4.19252f, 15.25629f}, //  1
     {9.14946f, 8.34962f},  //  2
@@ -30,22 +34,22 @@ static float chip_coeffs[Common::Setting::kMaxRobots][2] = {
     {0, 0},                //  9*
     {0, 0},                // 10*
     {0, 0},                // 11*
+    {0, 0},                // 12*
+    {0, 0},                // 13*
+    {0, 0},                // 14*
+    {0, 0},                // 15*
 };
 
-float getCalibratedShootPow(int vision_id, float raw_shoot, float coeffs[Common::Setting::kMaxRobots][2])
+static float getCalibratedShootPow(float raw_shoot, const Common::Vec2 &coeffs)
 {
     if (raw_shoot <= 0)
     {
         return 0;
     }
-    vision_id = std::min((int) Common::Setting::kMaxRobots, std::max(0, vision_id));
-
-    const float a = coeffs[vision_id][0];
-    const float b = coeffs[vision_id][1];
 
     raw_shoot = std::min(150.0f, std::max(0.0f, raw_shoot));
 
-    float calib_shoot = a * raw_shoot + b;
+    float calib_shoot = coeffs.x * raw_shoot + coeffs.y;
     calib_shoot       = std::min(100.0f, std::max(0.0f, calib_shoot));
 
     return calib_shoot;
@@ -53,11 +57,11 @@ float getCalibratedShootPow(int vision_id, float raw_shoot, float coeffs[Common:
 
 void Robot::shoot(const float pow)
 {
-    m_shoot = getCalibratedShootPow(state().vision_id, pow / 9.5f, shoot_coeffs);
+    m_shoot = getCalibratedShootPow(pow / 9.5f, shoot_coeffs[state().vision_id]);
 }
 void Robot::chip(const float pow)
 {
-    m_chip = getCalibratedShootPow(state().vision_id, pow / 2.0f, chip_coeffs);
+    m_chip = getCalibratedShootPow(pow / 2.0f, chip_coeffs[state().vision_id]);
 }
 
 void Robot::dribble(const float pow)
@@ -72,13 +76,11 @@ void Robot::face(const Common::Vec2 t_target)
 
 Common::Vec2 Robot::computeMotion(const VelocityProfile &profile)
 {
-    const float field_extra_area = 200.f;
+    if (std::fabs(target.position.x) > Common::field().width + Common::field().boundary_width)
+        target.position.x = Common::sign(target.position.x) * (Common::field().width + Common::field().boundary_width);
 
-    if (std::fabs(target.position.x) > Common::field().width + field_extra_area)
-        target.position.x = Common::sign(target.position.x) * (Common::field().width + field_extra_area);
-
-    if (std::fabs(target.position.y) > Common::field().height + field_extra_area)
-        target.position.y = Common::sign(target.position.y) * (Common::field().height + field_extra_area);
+    if (std::fabs(target.position.y) > Common::field().height + Common::field().boundary_width)
+        target.position.y = Common::sign(target.position.y) * (Common::field().height + Common::field().boundary_width);
 
     Common::Vec2 motion; // The output of this function
 
@@ -86,7 +88,7 @@ Common::Vec2 Robot::computeMotion(const VelocityProfile &profile)
 
     Common::Vec2 tmp_max_speed = diff.abs().normalized() * profile.max_spd;
 
-    motion.x = pow(0.6f * profile.max_dec * std::fabs(diff.x), 0.6f);
+    motion.x = pow(7.6f * profile.max_dec * std::fabs(diff.x), 0.6f);
     motion.x *= Common::sign(diff.x);
     if (std::fabs(diff.x) < 5)
         motion.x = 0.0f;
@@ -118,18 +120,12 @@ Common::Vec2 Robot::computeMotion(const VelocityProfile &profile)
         }
         if (std::fabs(motion.x) > tmp_max_speed.x)
         {
-            if (Common::sign(motion.x) == 0)
-            { // NOT ENTERING HERE!!!!
-                motion.x = std::max(std::fabs(m_last_motion.x) - profile.max_dec, std::fabs(tmp_max_speed.x)) *
-                           Common::sign(m_last_motion.x);
-            }
-            else
-                motion.x = std::max(std::fabs(m_last_motion.x) - profile.max_dec, std::fabs(tmp_max_speed.x)) *
-                           Common::sign(motion.x);
+            motion.x = std::max(std::fabs(m_last_motion.x) - profile.max_dec, std::fabs(tmp_max_speed.x)) *
+                       Common::sign(motion.x);
         }
     }
 
-    motion.y = pow(0.6f * profile.max_dec * std::fabs(diff.y), 0.6f);
+    motion.y = pow(7.6f * profile.max_dec * std::fabs(diff.y), 0.6f);
     motion.y *= Common::sign(diff.y);
     if (std::fabs(diff.y) < 5)
     {
@@ -190,8 +186,8 @@ void Robot::move(Common::Vec2 motion)
         Common::logWarning("Robot {} is navigated more than once", state().vision_id);
     }
 
-    motion.x = std::clamp(motion.x, -100.0f, 100.0f);
-    motion.y = std::clamp(motion.y, -100.0f, 100.0f);
+    motion.x = std::clamp(motion.x, -4500.0f, 4500.0f);
+    motion.y = std::clamp(motion.y, -4500.0f, 4500.0f);
 
     m_last_motion = motion;
 

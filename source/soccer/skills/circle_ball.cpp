@@ -42,7 +42,7 @@ void Ai::circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, i
         OwnRobot[robot_num].face(m_world_state.ball.position);
         setObstacles(robot_num);
         VelocityProfile profile = VelocityProfile::mamooli();
-        profile.max_spd         = 20.0f;
+        profile.max_spd         = 900.0f;
         navigate(robot_num, m_world_state.ball.position, profile);
 
         Common::debug().draw(Common::Circle{m_world_state.ball.position, very_far_ball_dis - 90.0f},

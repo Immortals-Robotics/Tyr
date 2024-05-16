@@ -11,36 +11,36 @@ struct VelocityProfile
     inline static constexpr VelocityProfile sooski()
     {
         return {
-            .max_spd = 10.0f,
-            .max_dec = 1.0f,
-            .max_acc = 0.6f,
+            .max_spd = 450.0f,
+            .max_dec = 45.0f,
+            .max_acc = 27.0f,
         };
     }
 
     inline static constexpr VelocityProfile aroom()
     {
         return {
-            .max_spd = 20.0f,
-            .max_dec = 1.0f,
-            .max_acc = 0.8f,
+            .max_spd = 900.0f,
+            .max_dec = 45.0f,
+            .max_acc = 36.0f,
         };
     }
 
     inline static constexpr VelocityProfile mamooli()
     {
         return {
-            .max_spd = 40.0f,
-            .max_dec = 1.5f,
-            .max_acc = 1.0f,
+            .max_spd = 1800.0f,
+            .max_dec = 67.5f,
+            .max_acc = 45.0f,
         };
     }
 
     inline static constexpr VelocityProfile kharaki()
     {
         return {
-            .max_spd = 40.0f,
-            .max_dec = 1.8f,
-            .max_acc = 1.3f,
+            .max_spd = 1800.0f,
+            .max_dec = 81.0f,
+            .max_acc = 58.5f,
         };
     }
 };
