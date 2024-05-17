@@ -71,6 +71,7 @@ private:
     bool                                      m_use_kalman_pos = true;
     bool                                      m_all_filter     = true;
     bool                                      m_all_change     = false;
+    unsigned long                             m_last_refresh   = 0;
     const std::map<InputCallbackType, char *> m_type_input_text_map{
         {InputCallbackType::VISION_IP, m_vision_ip_text},     {InputCallbackType::VISION_PORT, m_vision_port_text},
         {InputCallbackType::REF_IP, m_referee_ip_text},       {InputCallbackType::REF_PORT, m_referee_port_text},
