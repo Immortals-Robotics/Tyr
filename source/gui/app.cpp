@@ -200,25 +200,20 @@ void Application::update()
 
         if (m_demo_menu->getState() == LogState::None)
         {
-            m_renderer->draw(m_debug_wrapper);
+            m_config_menu->feedDebug(m_debug_wrapper);
+            m_renderer->draw(m_debug_wrapper, m_config_menu->nodeMap());
+            m_log_menu->draw(m_debug_wrapper, m_config_menu->nodeMap());
         }
         else
         {
-            m_renderer->draw(m_demo_menu->debugWrapper());
+            m_config_menu->feedDebug(m_demo_menu->debugWrapper());
+            m_renderer->draw(m_demo_menu->debugWrapper(), m_config_menu->nodeMap());
+            m_log_menu->draw(m_demo_menu->debugWrapper(), m_config_menu->nodeMap());
         }
 
         m_renderer->end();
 
         ImGui::End();
-    }
-
-    if (m_demo_menu->getState() == LogState::None)
-    {
-        m_log_menu->draw(m_debug_wrapper);
-    }
-    else
-    {
-        m_log_menu->draw(m_demo_menu->debugWrapper());
     }
 
     m_config_menu->draw();

@@ -11,7 +11,7 @@ void DemoMenu::draw()
     auto       main_window_height = GetScreenHeight();
     auto       main_window_width  = GetScreenWidth();
     const auto now                = std::chrono::system_clock::now();
-    m_real_time = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    m_real_time = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                                     ImGuiWindowFlags_NoDecoration;
@@ -33,7 +33,7 @@ void DemoMenu::draw()
         ImGui::PushFont(font);
         if (ImGui::Combo("##DemoList", &m_selected_demo, m_demo_names.data(), m_demo_names.size()) && m_start_times.size())
         {
-            m_playback_size = static_cast<float>(m_end_times[m_selected_demo] - m_start_times[m_selected_demo]) / 1000.;
+            m_playback_size = static_cast<float>(m_end_times[m_selected_demo] - m_start_times[m_selected_demo]) / 1000000.;
             m_log_state     = LogState::None;
             m_worldstate_filtered.info.current_ts = m_start_times[m_selected_demo];
         }
@@ -114,7 +114,7 @@ void DemoMenu::draw()
         if (ImGui::SliderFloat("##time", &m_playback_time, 0.0f, m_playback_size, "%.3fs") && m_start_times.size())
         {
             m_worldstate_filtered.info.current_ts =
-                static_cast<Common::Storage::Key>(m_playback_time * 1000) + m_start_times[m_selected_demo];
+                static_cast<Common::Storage::Key>(m_playback_time * 1000000) + m_start_times[m_selected_demo];
         }
         ImGui::Spacing();
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.7f, 0.25f, 0.3f, 1.0f));        // Dark frame background
@@ -125,7 +125,7 @@ void DemoMenu::draw()
         if (ImGui::DragFloat("##timescrol", &m_playback_time, 0.01f, 0.0f, m_playback_size, "Fine Control"))
         {
             m_worldstate_filtered.info.current_ts =
-                static_cast<Common::Storage::Key>(m_playback_time * 1000) + m_start_times[m_selected_demo];
+                static_cast<Common::Storage::Key>(m_playback_time * 1000000) + m_start_times[m_selected_demo];
         }
         ImGui::PopStyleColor(3);
 
@@ -168,7 +168,7 @@ void DemoMenu::demoHandler()
                 m_play_time += m_worldstate_filtered.info.time_between_frames;
                 m_worldstate_filtered.info.current_ts = next_ts;
                 m_playback_time =
-                    static_cast<float>(m_worldstate_filtered.info.current_ts - m_start_times[m_selected_demo]) / 1000;
+                    static_cast<float>(m_worldstate_filtered.info.current_ts - m_start_times[m_selected_demo]) / 1000000;
             }
         }
         break;
@@ -215,7 +215,7 @@ void DemoMenu::analyzeDatabase()
     {
         m_storage.getTwo(m_worldstate_filtered.info.current_ts, &m_worldstate_filtered.info.current_ts, &next_ts,
                          &first_world_filtered, &second_world_filtered);
-        if (next_ts - m_worldstate_filtered.info.current_ts > 1000)
+        if (next_ts - m_worldstate_filtered.info.current_ts > 1000000)
         {
             m_end_times.push_back(m_worldstate_filtered.info.current_ts);
             pushStartPoints(next_ts);
@@ -224,17 +224,18 @@ void DemoMenu::analyzeDatabase()
     }
     m_end_times.push_back(m_worldstate_filtered.info.end_ts);
 
-    m_playback_size                       = static_cast<float>(m_end_times[0] - m_start_times[0]) / 1000.;
+    m_playback_size                       = static_cast<float>(m_end_times[0] - m_start_times[0]) / 1000000.;
     m_worldstate_filtered.info.current_ts = m_start_times[0];
 }
 
 void DemoMenu::pushStartPoints(Common::Storage::Key t_ts)
 {
-    auto               tp         = std::chrono::system_clock::time_point(std::chrono::milliseconds(t_ts));
+    auto               tp         = std::chrono::system_clock::time_point(std::chrono::microseconds(t_ts));
     auto               time       = std::chrono::system_clock::to_time_t(tp);
     auto              *local_time = std::localtime(&time);
     std::ostringstream oss;
     oss << std::put_time(local_time, "%Y/%m/%d-%H:%M:%S");
+    Common::logError("{}",oss.str());
     m_start_times.push_back(t_ts);
 
     char *c_str = new char[oss.str().length() + 1];

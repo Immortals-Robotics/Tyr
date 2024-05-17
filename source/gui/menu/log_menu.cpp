@@ -1,8 +1,11 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-identifier-naming"
 #include "log_menu.h"
 
 namespace Tyr::Gui
 {
-void LogMenu::drawTerminal(const Common::Debug::Wrapper &t_wrapper)
+void LogMenu::drawTerminal(const Common::Debug::Wrapper                                    &t_wrapper,
+                           const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
 {
     const char *filter_choices[] = {"Trace - 0", "Debug - 1", "Info - 2", "Warning - 3", "Error - 4", "Critical - 5"};
 
@@ -13,7 +16,7 @@ void LogMenu::drawTerminal(const Common::Debug::Wrapper &t_wrapper)
     {
         for (const auto &line : t_wrapper.logs)
         {
-            if (static_cast<int>(line.level) >= m_filter_level)
+            if (static_cast<int>(line.level) >= m_filter_level && ConfigMenu::applyFilter(line.source, t_map))
             {
                 const std::filesystem::path file_path{line.source.file};
 
@@ -30,7 +33,8 @@ void LogMenu::drawTerminal(const Common::Debug::Wrapper &t_wrapper)
     ImGui::EndChild();
 }
 
-void LogMenu::draw(const Common::Debug::Wrapper &t_wrapper)
+void LogMenu::draw(const Common::Debug::Wrapper                                    &t_wrapper,
+                   const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
 {
     auto main_window_height = GetScreenHeight();
     auto main_window_width  = GetScreenWidth();
@@ -45,8 +49,9 @@ void LogMenu::draw(const Common::Debug::Wrapper &t_wrapper)
         ImVec2(main_window_width - 650., main_window_height - ((main_window_width - 650.) * 0.77)));
     if (ImGui::Begin("Log", nullptr, window_flags))
     {
-        drawTerminal(t_wrapper);
+        drawTerminal(t_wrapper, t_map);
         ImGui::End();
     }
 }
 } // namespace Tyr::Gui
+#pragma clang diagnostic pop
