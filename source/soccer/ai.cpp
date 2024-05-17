@@ -23,7 +23,7 @@ Ai::Ai()
 
     m_cmd_server = std::make_unique<Common::NngServer>(Common::setting().commands_url);
 
-    m_dss = new Dss(&m_world_state, 1000.f);
+    m_dss = std::make_unique<Dss>(&m_world_state, 1000.f);
 
     m_current_play = &Ai::haltAll;
 
@@ -32,7 +32,7 @@ Ai::Ai()
     m_random_param = 0.0f;
     m_target_str   = -1;
 
-    m_is_defending = false;
+    m_is_defending  = false;
     m_opp_restarted = false;
 
     m_last_referee = Common::RefereeState::STATE_GAME_OFF;
@@ -60,7 +60,7 @@ Ai::Ai()
         m_one_touch_detector[i].ball   = &m_world_state.ball;
         m_one_touch_detector[i].side   = &m_side;
 
-        m_one_touch_type[i]     = OneTouchType::OneTouch;
+        m_one_touch_type[i]      = OneTouchType::OneTouch;
         m_one_touch_type_used[i] = false;
 
         m_allaf_pos[i] = Common::Vec2();
@@ -69,7 +69,7 @@ Ai::Ai()
     m_chip_head = Common::Angle::fromDeg(200);
 
     m_circle_reached_behind_ball = false;
-    m_predicted_ball        = Common::Vec2();
+    m_predicted_ball             = Common::Vec2();
 
     const auto strategy_path = std::filesystem::path(DATA_DIR) / "strategy.ims";
     loadPlayBook(strategy_path);

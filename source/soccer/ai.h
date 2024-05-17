@@ -61,8 +61,8 @@ private:
     std::deque<Common::BallState> m_ball_hist;
     Common::Linear                m_ball_line;
 
-    Planner m_planner[Common::Setting::kMaxRobots];
-    Dss    *m_dss;
+    Planner              m_planner[Common::Setting::kMaxRobots];
+    std::unique_ptr<Dss> m_dss;
 
     OneTouchDetector m_one_touch_detector[Common::Setting::kMaxRobots];
     enum class OneTouchType
@@ -115,6 +115,17 @@ private:
     float        calculateOppThreat(int t_opp, bool t_restart = false);
     float        calculateMarkCost(int t_robot_num, int t_opp);
     float        calculateSwitchToAttackerScore(int t_robot_num);
+
+    // Field helpers
+    inline Common::Vec2 ownGoal() const;
+    inline Common::Vec2 ownGoalPostTop() const;
+    inline Common::Vec2 ownGoalPostBottom() const;
+    inline Common::LineSegment ownGoalLine() const;
+    inline Common::Vec2 oppGoal() const;
+    inline Common::Vec2 oppGoalPostTop() const;
+    inline Common::Vec2 oppGoalPostBottom() const;
+    inline Common::LineSegment oppGoalLine() const;
+    inline bool isOut(Common::Vec2 t_point, const float t_margin = 0.0f) const;
 
     // Skills
     enum NavigationFlags
@@ -170,52 +181,6 @@ private:
 
     void internalProcessData();
 
-    inline Common::Vec2 ownGoal() const
-    {
-        return Common::Vec2(m_side * Common::field().width, 0);
-    }
-
-    inline Common::Vec2 ownGoalPostTop() const
-    {
-        return ownGoal() + Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
-    }
-
-    inline Common::Vec2 ownGoalPostBottom() const
-    {
-        return ownGoal() - Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
-    }
-
-    inline Common::LineSegment ownGoalLine() const
-    {
-        return {ownGoalPostBottom(), ownGoalPostTop()};
-    }
-
-    inline Common::Vec2 oppGoal() const
-    {
-        return Common::Vec2(-m_side * Common::field().width, 0);
-    }
-
-    inline Common::Vec2 oppGoalPostTop() const
-    {
-        return oppGoal() + Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
-    }
-
-    inline Common::Vec2 oppGoalPostBottom() const
-    {
-        return oppGoal() - Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
-    }
-
-    inline Common::LineSegment oppGoalLine() const
-    {
-        return {oppGoalPostBottom(), oppGoalPostTop()};
-    }
-
-    inline bool isOut(Common::Vec2 t_point, const float t_margin = 0.0f) const
-    {
-        return std::fabs(t_point.x) > Common::field().width + t_margin ||
-               std::fabs(t_point.y) > Common::field().height + t_margin;
-    }
-
 public:
     Robot m_own_robot[Common::Setting::kMaxRobots];
 
@@ -233,3 +198,5 @@ public:
     bool setPlayBook(const Protos::Immortals::PlayBook &t_playbook);
 };
 } // namespace Tyr::Soccer
+
+#include "helpers/field.inl"
