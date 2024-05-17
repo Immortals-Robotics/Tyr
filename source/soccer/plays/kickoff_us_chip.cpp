@@ -33,7 +33,8 @@ void Ai::kickoffUsChip()
     Common::logDebug("can kick ball: {}", m_ref_state.canKickBall());
     if (m_ref_state.canKickBall())
     {
-        attacker(m_attack, chip_target.angleWith(m_world_state.ball.position), 0, 80, 1, 0, 1);
+        // TODO: why isn't this circleBall?
+        attacker(m_attack, chip_target.angleWith(m_world_state.ball.position), 0, 80, 0, 1);
     }
     else
     {

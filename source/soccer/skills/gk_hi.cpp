@@ -63,7 +63,7 @@ void Ai::gkHi(int t_robot_num)
 
             attacker(t_robot_num,
                      m_world_state.ball.position.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0,
-                     80, 0, 0, 0);
+                     80, 0, 0);
         }
         else
         {

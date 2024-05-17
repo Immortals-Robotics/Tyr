@@ -25,7 +25,7 @@ void Ai::cornerTheirGlobal()
     static_pos[m_mid1] = Common::Vec2(m_side * 3200, 600);
     static_pos[m_mid2] = Common::Vec2(m_side * 3200, 0);
 
-    markManager(true);
+    markManager();
 
     for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
     {

@@ -90,7 +90,7 @@ void Ai::normalPlayAtt()
                 passAngle = oppGoal().angleWith(m_world_state.ball.position);
                 chip_pow  = 0;
             }
-            attacker(m_attack, passAngle, 0, chip_pow, 0, 0, 1);
+            attacker(m_attack, passAngle, 0, chip_pow, 0, 1);
         }
         else
         {
@@ -110,7 +110,7 @@ void Ai::normalPlayAtt()
                 shoot_pow = 1;
             }
 
-            attacker(m_attack, shootAngle, shoot_pow, 0, 0, 0, 0);
+            attacker(m_attack, shootAngle, shoot_pow, 0, 0, 0);
         }
     }
 

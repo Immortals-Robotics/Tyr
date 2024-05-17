@@ -89,10 +89,10 @@ float Ai::calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile
     return predTFilt.current();
 }
 
-void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip, bool t_restart, bool t_kiss, bool t_dribbler)
+void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip, bool t_kiss, bool t_dribbler)
 {
     // t_kick=100;
-    if (t_restart && (t_chip > 0))
+    if (m_ref_state.restart() && (t_chip > 0))
     {
         m_chip_head = m_own_robot[t_robot_num].state().angle;
     }
@@ -171,7 +171,7 @@ void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip
 
     if ((t_kick > 0) || (t_chip > 0))
     {
-        if (t_restart)
+        if (m_ref_state.restart())
         {
             r     = 200.0f;
             tetta = 20.0f;
@@ -191,7 +191,7 @@ void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip
             m_own_robot[t_robot_num].dribble(15);
     }
 
-    if (t_restart)
+    if (m_ref_state.restart())
         m_own_robot[t_robot_num].face(m_predicted_ball);
     else
         m_own_robot[t_robot_num].target.angle = t_angle - Common::Angle::fromDeg(180.0f);
@@ -208,7 +208,7 @@ void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip
             {
                 Common::logDebug("reached");
                 Common::Vec2 targetPoint;
-                if (!t_restart)
+                if (!m_ref_state.restart())
                 {
                     targetPoint = m_predicted_ball.circleAroundPoint(
                         t_angle, std::min((r / 1.6f), std::fabs(hehe.deg()) * 320.0f / (tetta * 1.2f)));

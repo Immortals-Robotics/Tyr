@@ -33,7 +33,7 @@ void Ai::stop()
 
     if (Common::setting().mark_in_stop)
     {
-        markManager(false);
+        markManager();
 
         for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
         {

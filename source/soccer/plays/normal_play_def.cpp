@@ -11,7 +11,7 @@ void Ai::normalPlayDef()
 
     manageAttRoles();
 
-    markManager(false);
+    markManager();
 
     for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
     {
@@ -103,7 +103,7 @@ void Ai::normalPlayDef()
         chip_pow   = 0;
     }
 
-    attacker(m_attack, shootAngle, shoot_pow, chip_pow, 0, 0, 1);
+    attacker(m_attack, shootAngle, shoot_pow, chip_pow, 0, 1);
     // circleBall(m_attack, 90, 80, 0, 1.0f);
 }
 } // namespace Tyr::Soccer

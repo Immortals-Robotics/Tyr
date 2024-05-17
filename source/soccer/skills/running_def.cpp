@@ -67,8 +67,8 @@ void Ai::runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defe
     {
         Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");
         attacker(t_robot_num,
-                    m_world_state.ball.position.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0, 80,
-                    0, 0, 0);
+                 m_world_state.ball.position.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0, 80,
+                 0, 0);
     }
     else
     {

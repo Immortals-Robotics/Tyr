@@ -87,7 +87,7 @@ private:
     // boz ha
     void manageAttRoles();
     void calcIsDefending();
-    void markManager(bool t_restart = true);
+    void markManager();
 
     PlayBook m_playbook;
     int      strategyWeight();
@@ -137,11 +137,9 @@ private:
 
     void gkShirje(int t_robot_num);
     void gkHi(int t_robot_num);
-    void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target);
     void runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
     void defenceWall(int t_robot_num, bool t_kick_off = false);
-    void attacker(int t_robot_num, Common::Angle t_angle, int t_kick = 0, int t_chip = 0, bool t_restart = false,
-                  bool t_kiss = false, bool t_dribbler = false);
+    void attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip, bool t_kiss, bool t_dribbler);
     void waitForPass(int t_robot_num, bool t_chip = false, const Common::Vec2 *t_target = nullptr,
                      Common::Vec2 *t_stat_pos = nullptr);
     void waitForOmghi(int t_robot_num, bool t_chip = false);
@@ -149,6 +147,9 @@ private:
     void receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip = false);
     void circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow, float t_precision,
                     float t_near_dis_override = -1.0f);
+
+    // Tactics
+    void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target);
 
     // Plays
     void stop();

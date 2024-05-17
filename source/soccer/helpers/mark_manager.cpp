@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::markManager(bool t_restart)
+void Ai::markManager()
 {
     if (!m_is_defending)
     {
@@ -22,7 +22,7 @@ void Ai::markManager(bool t_restart)
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        float threat = calculateOppThreat(i, t_restart);
+        float threat = calculateOppThreat(i, m_ref_state.theirRestart());
         if (threat < 0)
             continue;
         crunchingOpps.push_back(std::make_pair(i, threat));
