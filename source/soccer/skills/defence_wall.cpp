@@ -2,11 +2,11 @@
 
 namespace Tyr::Soccer
 {
-void Ai::defenceWall(int robot_num, bool kickOff)
+void Ai::defenceWall(int t_robot_num, bool t_kick_off)
 {
     float x     = -m_side * m_world_state.ball.position.x;
     float tetta = -0.000003f * x * x + 0.0016f * x + 90.0f;
-    if (kickOff)
+    if (t_kick_off)
     {
         tetta = 14.0f;
     }
@@ -45,7 +45,7 @@ void Ai::defenceWall(int robot_num, bool kickOff)
         target = m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 730);
     }
 
-    m_own_robot[robot_num].face(m_world_state.ball.position);
-    navigate(robot_num, target);
+    m_own_robot[t_robot_num].face(m_world_state.ball.position);
+    navigate(t_robot_num, target);
 }
 } // namespace Tyr::Soccer

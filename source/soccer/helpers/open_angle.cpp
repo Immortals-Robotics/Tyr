@@ -12,7 +12,7 @@ float normalizeAngleR(float angle) // radian
     return (angle);
 }
 
-Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
+Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 t_pos, int t_robot_num)
 {
     int  counter = 0;
     bool oops    = 0;
@@ -24,9 +24,9 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
     const Common::Vec2 t1      = oppGoalPostBottom();
     const Common::Vec2 MidGoal = oppGoal();
 
-    float midGoalAngel = atan2((MidGoal.y - p1.y), (MidGoal.x - p1.x));
-    float t1Angel      = atan2((t1.y - p1.y), (t1.x - p1.x));
-    float t2Angel      = atan2((t2.y - p1.y), (t2.x - p1.x));
+    float midGoalAngel = atan2((MidGoal.y - t_pos.y), (MidGoal.x - t_pos.x));
+    float t1Angel      = atan2((t1.y - t_pos.y), (t1.x - t_pos.x));
+    float t2Angel      = atan2((t2.y - t_pos.y), (t2.x - t_pos.x));
 
     if (std::fabs(t1Angel - t2Angel) > 3.1415)
         oops = 1;
@@ -51,7 +51,7 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if ((m_own_robot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != robot_num))
+        if ((m_own_robot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != t_robot_num))
         {
             obstacles.emplace_back(m_own_robot[i].state().position);
         }
@@ -69,9 +69,9 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
     for (int i = 0; i < obstacles.size(); i++)
     {
 
-        d[counter][0] = atan2(obstacles[i].y - p1.y, obstacles[i].x - p1.x);
+        d[counter][0] = atan2(obstacles[i].y - t_pos.y, obstacles[i].x - t_pos.x);
 
-        float dd = std::atan(90.0f / p1.distanceTo(obstacles[i]));
+        float dd = std::atan(90.0f / t_pos.distanceTo(obstacles[i]));
         if (dd < 0)
             dd = -dd;
         d[counter][1] = d[counter][0] + dd;
@@ -195,8 +195,8 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 #if 1
     static Common::MedianFilter<Common::Angle> freeAngleFilter[Common::Setting::kMaxRobots];
 
-    freeAngleFilter[robot_num].add(finalAns.center);
-    finalAns.center = freeAngleFilter[robot_num].current();
+    freeAngleFilter[t_robot_num].add(finalAns.center);
+    finalAns.center = freeAngleFilter[t_robot_num].current();
 
 #endif
 

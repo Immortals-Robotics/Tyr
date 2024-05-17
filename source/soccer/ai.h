@@ -35,14 +35,14 @@ private:
     float m_random_param;
     int   m_target_str;
 
-    int gk     = 0;
-    int def    = 1;
-    int dmf    = 2;
-    int mid2   = 3;
-    int mid1   = 4;
-    int attack = 5;
-    int rw     = 6;
-    int lw     = 7;
+    int m_gk     = 0;
+    int m_def    = 1;
+    int m_dmf    = 2;
+    int m_mid2   = 3;
+    int m_mid1   = 4;
+    int m_attack = 5;
+    int m_rw     = 6;
+    int m_lw     = 7;
 
     int *m_stm_to_ai_num[Common::Setting::kMaxRobots] = {};
 
@@ -78,23 +78,23 @@ private:
     int m_side;
 
     // Helpers
-    Common::Vec2 calculatePassPos(int t_robot_num, const Common::Vec2 &target, const Common::Vec2 &statPos,
-                                  float bar = 89.0f);
+    Common::Vec2 calculatePassPos(int t_robot_num, const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos,
+                                  float t_bar = 89.0f);
     void         calculateBallTrajectory();
-    float        calculateRobotReachTime(int robot_num, Common::Vec2 dest, VelocityProfile vel_profile);
-    float        calculateBallRobotReachTime(int robot_num, VelocityProfile vel_profile);
+    float        calculateRobotReachTime(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile);
+    float        calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile);
 
     // boz ha
     void manageAttRoles();
     void calcIsDefending();
-    void markManager(bool restart = true);
+    void markManager(bool t_restart = true);
 
     PlayBook m_playbook;
     int      strategyWeight();
 
     Common::Vec2  m_predicted_ball;
     bool          m_circle_reached_behind_ball;
-    Common::Angle calculateOneTouchAngle(int robot_num, Common::Vec2 oneTouchPosition);
+    Common::Angle calculateOneTouchAngle(int t_robot_num, Common::Vec2 t_one_touch_position);
 
     struct OpenAngle
     {
@@ -104,17 +104,17 @@ private:
         Common::Angle magnitude;
     };
 
-    OpenAngle calculateOpenAngleToGoal(Common::Vec2 init, int robot_num);
+    OpenAngle calculateOpenAngleToGoal(Common::Vec2 t_pos, int t_robot_num);
 
     bool         ballIsGoaling();
-    int          findNearestOpp(Common::Vec2 pos, int mask, bool acceptNearBall = true);
-    int          findKickerOpp(int mask, float max_dis = 500.0f);
-    bool         goalBlocked(Common::Vec2 init_pos, float max_shoot_blocker_dis, float shoot_blocker_r);
+    int          findNearestOpp(Common::Vec2 t_pos, int t_mask, bool t_accept_near_ball = true);
+    int          findKickerOpp(int t_mask, float t_max_dis = 500.0f);
+    bool         goalBlocked(Common::Vec2 t_init_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r);
     bool         attackFuckingAngle();
-    Common::Vec2 predictBallForwardAI(float timeAhead);
-    float        calculateOppThreat(int opp, bool restart = false);
-    float        calculateMarkCost(int robot_num, int opp);
-    float        calculateSwitchToAttackerScore(int robot_num);
+    Common::Vec2 predictBallForwardAI(float t_time_ahead);
+    float        calculateOppThreat(int t_opp, bool t_restart = false);
+    float        calculateMarkCost(int t_robot_num, int t_opp);
+    float        calculateSwitchToAttackerScore(int t_robot_num);
 
     // Skills
     enum NavigationFlags
@@ -126,30 +126,30 @@ private:
         NavigationFlagsForceBallSmallObstacle  = (1 << 4), // 60.0f
     };
 
-    void navigate(int robot_num, Common::Vec2 dest, VelocityProfile velocityProfile = VelocityProfile::mamooli(),
+    void navigate(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile = VelocityProfile::mamooli(),
                   NavigationFlags t_flags = NavigationFlagsNone);
-    void setObstacles(int robot_num, NavigationFlags t_flags = NavigationFlagsNone);
+    void setObstacles(int t_robot_num, NavigationFlags t_flags = NavigationFlagsNone);
 
-    void mark(int robot_num, int opp, float dist = 220.0f);
-    void mark2Goal(int robot_num, int opp, float dist = 220.0f);
-    void mark2Ball(int robot_num, int opp, float dist = 220.0f);
-    void halt(int robot_num);
+    void mark(int t_robot_num, int t_opp, float t_dist = 220.0f);
+    void mark2Goal(int t_robot_num, int t_opp, float t_dist = 220.0f);
+    void mark2Ball(int t_robot_num, int t_opp, float t_dist = 220.0f);
+    void halt(int t_robot_num);
 
-    void gkShirje(int robot_num = 0);
-    void gkHi(int robot_num = 0, bool stop = false);
-    void defHi(int robot_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr,
-               bool stop = false);
-    void runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarget, bool stop);
-    void defenceWall(int robot_num, bool kickOff = false);
-    void attacker(int robot_num, Common::Angle angle, int kick = 0, int chip = 0, bool gameRestart = false,
-                  bool kiss = false, bool dribbler = false);
-    void waitForPass(int robot_num, bool chip = false, const Common::Vec2 *target = nullptr,
-                     Common::Vec2 *statPos = nullptr);
-    void waitForOmghi(int robot_num, bool chip = false);
-    void waitForGool(int robot_num, bool chip = false);
-    void receivePass(int robot_num, Common::Vec2 staticPos, bool chip = false);
-    void circleBall(int robot_num, Common::Angle tagret_angle, int shoot_pow, int chip_pow, float precision,
-                    float near_dis_override = -1.0f);
+    void gkShirje(int t_robot_num = 0);
+    void gkHi(int t_robot_num = 0, bool t_stop = false);
+    void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target = nullptr,
+               bool t_stop = false);
+    void runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defend_target, bool t_stop);
+    void defenceWall(int t_robot_num, bool t_kick_off = false);
+    void attacker(int t_robot_num, Common::Angle t_angle, int t_kick = 0, int t_chip = 0, bool t_restart = false,
+                  bool t_kiss = false, bool t_dribbler = false);
+    void waitForPass(int t_robot_num, bool t_chip = false, const Common::Vec2 *t_target = nullptr,
+                     Common::Vec2 *t_stat_pos = nullptr);
+    void waitForOmghi(int t_robot_num, bool t_chip = false);
+    void waitForGool(int t_robot_num, bool t_chip = false);
+    void receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip = false);
+    void circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow, float t_precision,
+                    float t_near_dis_override = -1.0f);
 
     // Plays
     void stop();

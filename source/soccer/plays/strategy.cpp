@@ -117,7 +117,7 @@ void Ai::strategy()
             Common::logDebug("zeroed: {}", i);
         }
         Common::Angle passAngle = Common::Angle::fromDeg(90.0f - m_side * 90.0f);
-        circleBall(attack, passAngle, 0, 0, 1.0f);
+        circleBall(m_attack, passAngle, 0, 0, 1.0f);
         return;
     }
     else
@@ -135,7 +135,7 @@ void Ai::strategy()
                 continue;
             }
 
-            if ((strategy.role[i].path[step[i]].type == Waypoint::Type::Time) || (*m_stm_to_ai_num[i] == attack))
+            if ((strategy.role[i].path[step[i]].type == Waypoint::Type::Time) || (*m_stm_to_ai_num[i] == m_attack))
             {
                 if (m_timer.time() - lastAdv[i] > strategy.role[i].path[step[i]].time * 0.1f)
                 {
@@ -159,25 +159,25 @@ void Ai::strategy()
     }
 
     bool new_receivers_reached = true;
-    defHi(def, rw, lw, nullptr, true);
+    defHi(m_def, m_rw, m_lw, nullptr, true);
     for (int i = 0; i < strategy.role.size(); i++)
     {
-        // if ((*m_stm_to_ai_num[i]==gk)||(*m_stm_to_ai_num[i]==def)) {
+        // if ((*m_stm_to_ai_num[i]==m_gk)||(*m_stm_to_ai_num[i]==m_def)) {
         //	continue;
         // }
 
         if (strategy.role[i].path.size() == 0)
         {
-            if (*m_stm_to_ai_num[i] == gk)
-                gkHi(gk, true);
-            else if (*m_stm_to_ai_num[i] == def && *m_stm_to_ai_num[i] == lw && *m_stm_to_ai_num[i] == rw) // No need to halt these guys
+            if (*m_stm_to_ai_num[i] == m_gk)
+                gkHi(m_gk, true);
+            else if (*m_stm_to_ai_num[i] == m_def && *m_stm_to_ai_num[i] == m_lw && *m_stm_to_ai_num[i] == m_rw) // No need to halt these guys
                 continue;
             else
                 halt(*m_stm_to_ai_num[i]);
             continue;
         }
 
-        else if (*m_stm_to_ai_num[i] == attack)
+        else if (*m_stm_to_ai_num[i] == m_attack)
         {
             int shoot = 0;
             int chip  = 0;
@@ -246,7 +246,7 @@ void Ai::strategy()
                 m_allaf_pos[*m_stm_to_ai_num[i]] = strategy.role[i].path.back().position * sign_modifier;
 
             if (step[i] != strategy.role[i].path.size() - 1)
-                // if (i == dmf && remainingDis > 150)
+                // if (i == m_dmf && remainingDis > 150)
                 new_receivers_reached = false;
             break;
         case Role::Afterlife::Shirje:
@@ -254,7 +254,7 @@ void Ai::strategy()
             break;
         case Role::Afterlife::Allaf:
             m_one_touch_type[*m_stm_to_ai_num[i]] = OneTouchType::Allaf;
-            if (*m_stm_to_ai_num[i] == attack)
+            if (*m_stm_to_ai_num[i] == m_attack)
             {
                 m_allaf_pos[*m_stm_to_ai_num[i]] = m_world_state.ball.position;
             }

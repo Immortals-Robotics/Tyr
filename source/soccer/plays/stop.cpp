@@ -12,24 +12,24 @@ void Ai::stop()
         }
     }
 
-    if (m_own_robot[attack].state().out_for_substitute)
+    if (m_own_robot[m_attack].state().out_for_substitute)
     {
-        if (!m_own_robot[mid1].state().out_for_substitute)
+        if (!m_own_robot[m_mid1].state().out_for_substitute)
         {
-            std::swap(attack, mid1);
+            std::swap(m_attack, m_mid1);
         }
-        else if (!m_own_robot[mid2].state().out_for_substitute)
+        else if (!m_own_robot[m_mid2].state().out_for_substitute)
         {
-            std::swap(attack, mid2);
+            std::swap(m_attack, m_mid2);
         }
     }
-    if (m_side * m_own_robot[mid1].state().position.y < m_side * m_own_robot[mid2].state().position.y) // Nice :D
+    if (m_side * m_own_robot[m_mid1].state().position.y < m_side * m_own_robot[m_mid2].state().position.y) // Nice :D
     {
-        std::swap(mid1, mid2);
+        std::swap(m_mid1, m_mid2);
     }
 
-    gkHi(gk, true);
-    defHi(def, rw, lw, nullptr, true);
+    gkHi(m_gk, true);
+    defHi(m_def, m_rw, m_lw, nullptr, true);
 
     if (Common::setting().mark_in_stop)
     {
@@ -42,32 +42,32 @@ void Ai::stop()
 
             if (opp == -1)
             {
-                if (own == dmf)
+                if (own == m_dmf)
                 {
-                    m_own_robot[dmf].face(m_world_state.ball.position);
-                    navigate(dmf,
+                    m_own_robot[m_dmf].face(m_world_state.ball.position);
+                    navigate(m_dmf,
                              m_world_state.ball.position.pointOnConnectingLine(
                                  ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
                              VelocityProfile::aroom());
-                    m_own_robot[dmf].shoot(0);
+                    m_own_robot[m_dmf].shoot(0);
                 }
-                else if (own == mid2)
+                else if (own == m_mid2)
                 {
-                    m_own_robot[mid2].face(m_world_state.ball.position);
-                    navigate(mid2,
+                    m_own_robot[m_mid2].face(m_world_state.ball.position);
+                    navigate(m_mid2,
                              m_world_state.ball.position.circleAroundPoint(
                                  Common::Angle::fromDeg(-20) + m_world_state.ball.position.angleWith(ownGoal()), 650),
                              VelocityProfile::aroom());
-                    m_own_robot[mid2].shoot(0);
+                    m_own_robot[m_mid2].shoot(0);
                 }
-                else if (own == mid1)
+                else if (own == m_mid1)
                 {
-                    m_own_robot[mid1].face(m_world_state.ball.position);
-                    navigate(mid1,
+                    m_own_robot[m_mid1].face(m_world_state.ball.position);
+                    navigate(m_mid1,
                              m_world_state.ball.position.circleAroundPoint(
                                  Common::Angle::fromDeg(20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 650),
                              VelocityProfile::aroom());
-                    m_own_robot[mid1].shoot(0);
+                    m_own_robot[m_mid1].shoot(0);
                 }
             }
             else
@@ -78,32 +78,32 @@ void Ai::stop()
     }
     else
     {
-        m_own_robot[dmf].face(m_world_state.ball.position);
-        navigate(dmf,
+        m_own_robot[m_dmf].face(m_world_state.ball.position);
+        navigate(m_dmf,
                  m_world_state.ball.position.pointOnConnectingLine(
                      ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
                  VelocityProfile::aroom());
-        m_own_robot[dmf].shoot(0);
+        m_own_robot[m_dmf].shoot(0);
 
-        m_own_robot[mid2].face(m_world_state.ball.position);
-        navigate(mid2,
+        m_own_robot[m_mid2].face(m_world_state.ball.position);
+        navigate(m_mid2,
                  m_world_state.ball.position.circleAroundPoint(
                      Common::Angle::fromDeg(-20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 650),
                  VelocityProfile::aroom());
-        m_own_robot[mid2].shoot(0);
+        m_own_robot[m_mid2].shoot(0);
 
-        m_own_robot[mid1].face(m_world_state.ball.position);
-        navigate(mid1,
+        m_own_robot[m_mid1].face(m_world_state.ball.position);
+        navigate(m_mid1,
                  m_world_state.ball.position.circleAroundPoint(
                      Common::Angle::fromDeg(20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 650),
                  VelocityProfile::aroom());
-        m_own_robot[mid1].shoot(0);
+        m_own_robot[m_mid1].shoot(0);
     }
 
-    m_own_robot[attack].face(m_world_state.ball.position);
-    navigate(attack,
+    m_own_robot[m_attack].face(m_world_state.ball.position);
+    navigate(m_attack,
              m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 650),
              VelocityProfile::aroom());
-    m_own_robot[attack].shoot(0);
+    m_own_robot[m_attack].shoot(0);
 }
 } // namespace Tyr::Soccer

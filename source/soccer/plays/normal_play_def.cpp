@@ -31,19 +31,19 @@ void Ai::normalPlayDef()
 
                 m_own_robot[own].face(oppGoal());
 
-                if (own == dmf)
+                if (own == m_dmf)
                 {
-                    navigate(dmf, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 1800),
+                    navigate(m_dmf, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 1800),
                              VelocityProfile::mamooli());
                 }
-                else if (own == mid1)
+                else if (own == m_mid1)
                 {
                     if (oppAttacker != -1)
                         mark2Goal(own, oppAttacker, 500);
                     else
                         navigate(own, Common::Vec2(m_world_state.ball.position.x, 1000), VelocityProfile::mamooli());
                 }
-                else if (own == mid2)
+                else if (own == m_mid2)
                 {
                     if (oppAttacker != -1)
                         mark2Goal(own, oppAttacker, 500);
@@ -58,12 +58,12 @@ void Ai::normalPlayDef()
         }
     }
 
-    OpenAngle     openAngle  = calculateOpenAngleToGoal(m_world_state.ball.position, attack);
+    OpenAngle     openAngle  = calculateOpenAngleToGoal(m_world_state.ball.position, m_attack);
     Common::Angle shootAngle = Common::Angle::fromDeg(180) + openAngle.center;
 
     float shoot_pow = 1;
     float chip_pow  = 1;
-    if (m_own_robot[attack].state().position.distanceTo(m_world_state.ball.position) > 400)
+    if (m_own_robot[m_attack].state().position.distanceTo(m_world_state.ball.position) > 400)
     {
         chip_pow = 1;
     }
@@ -73,7 +73,7 @@ void Ai::normalPlayDef()
     }
     else if (!goalBlocked(m_world_state.ball.position, 3000, 130))
     {
-        shoot_pow = 50 - m_own_robot[attack].state().velocity.length() * 0.005f;
+        shoot_pow = 50 - m_own_robot[m_attack].state().velocity.length() * 0.005f;
         chip_pow  = 0;
     }
     else
@@ -96,14 +96,14 @@ void Ai::normalPlayDef()
 
     if (kicker_opp != -1)
     {
-        Common::logDebug("in def we trust");
+        Common::logDebug("in m_def we trust");
 
         shootAngle = m_world_state.opp_robot[kicker_opp].position.angleWith(m_world_state.ball.position);
         shoot_pow  = 1;
         chip_pow   = 0;
     }
 
-    attacker(attack, shootAngle, shoot_pow, chip_pow, 0, 0, 1);
-    // circleBall(attack, 90, 80, 0, 1.0f);
+    attacker(m_attack, shootAngle, shoot_pow, chip_pow, 0, 0, 1);
+    // circleBall(m_attack, 90, 80, 0, 1.0f);
 }
 } // namespace Tyr::Soccer

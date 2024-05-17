@@ -9,8 +9,8 @@ void Ai::penaltyTheirSimple()
     int index = findKickerOpp(-1);
     if (index == -1)
     {
-        m_own_robot[gk].target.angle = Common::Angle::fromDeg((1 + m_side) * 90.0f);
-        navigate(gk, Common::Vec2(m_side * penalty_x, 0.0f));
+        m_own_robot[m_gk].target.angle = Common::Angle::fromDeg((1 + m_side) * 90.0f);
+        navigate(m_gk, Common::Vec2(m_side * penalty_x, 0.0f));
     }
     else
     {
@@ -25,16 +25,16 @@ void Ai::penaltyTheirSimple()
         if (-max_reach_y > gkp_y)
             gkp_y = -max_reach_y;
 
-        m_own_robot[gk].face(m_world_state.ball.position);
+        m_own_robot[m_gk].face(m_world_state.ball.position);
 
-        navigate(gk, Common::Vec2(m_side * penalty_x, gkp_y), VelocityProfile::kharaki());
+        navigate(m_gk, Common::Vec2(m_side * penalty_x, gkp_y), VelocityProfile::kharaki());
     }
-    navigate(lw, Common::Vec2(-m_side * 4300, 500), VelocityProfile::aroom());
-    navigate(rw, Common::Vec2(-m_side * 4300, -500), VelocityProfile::aroom());
-    navigate(def, Common::Vec2(-m_side * 4300, 800), VelocityProfile::aroom());
-    navigate(dmf, Common::Vec2(-m_side * 4300, -800), VelocityProfile::aroom());
-    navigate(mid1, Common::Vec2(-m_side * 4300, -1500), VelocityProfile::aroom());
-    navigate(mid2, Common::Vec2(-m_side * 4300, 1500), VelocityProfile::aroom());
-    navigate(attack, Common::Vec2(-m_side * 4300, 0), VelocityProfile::aroom());
+    navigate(m_lw, Common::Vec2(-m_side * 4300, 500), VelocityProfile::aroom());
+    navigate(m_rw, Common::Vec2(-m_side * 4300, -500), VelocityProfile::aroom());
+    navigate(m_def, Common::Vec2(-m_side * 4300, 800), VelocityProfile::aroom());
+    navigate(m_dmf, Common::Vec2(-m_side * 4300, -800), VelocityProfile::aroom());
+    navigate(m_mid1, Common::Vec2(-m_side * 4300, -1500), VelocityProfile::aroom());
+    navigate(m_mid2, Common::Vec2(-m_side * 4300, 1500), VelocityProfile::aroom());
+    navigate(m_attack, Common::Vec2(-m_side * 4300, 0), VelocityProfile::aroom());
 }
 } // namespace Tyr::Soccer

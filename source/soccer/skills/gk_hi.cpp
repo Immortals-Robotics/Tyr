@@ -4,40 +4,40 @@ namespace Tyr::Soccer
 {
 static int my_hys = 0;
 
-void Ai::gkHi(int robot_num, bool stop)
+void Ai::gkHi(int t_robot_num, bool t_stop)
 {
     m_gk_intercepting = false;
 
     Common::logDebug("GKhi: {} _ {}", ballIsGoaling(),
-                     m_world_state.ball.position.distanceTo(m_own_robot[robot_num].state().position) /
+                     m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) /
                          m_world_state.ball.velocity.length());
     if (ballIsGoaling())
     {
-        Common::debug().draw(Common::Circle{m_own_robot[robot_num].state().position, 100}, Common::Color::red(), false);
+        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::red(), false);
     }
     else
     {
-        Common::debug().draw(Common::Circle{m_own_robot[robot_num].state().position, 100}, Common::Color::yellow(), false);
+        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::yellow(), false);
     }
 
     if ((ballIsGoaling()) &&
-        (m_world_state.ball.position.distanceTo(m_own_robot[robot_num].state().position) /
+        (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) /
              m_world_state.ball.velocity.length() <
          3) &&
-        (!stop))
+        (!t_stop))
     {
-        gkShirje(robot_num);
+        gkShirje(t_robot_num);
         my_hys = 10;
     }
-    else if ((my_hys > 0) && (!stop))
+    else if ((my_hys > 0) && (!t_stop))
     {
-        gkShirje(robot_num);
+        gkShirje(t_robot_num);
         my_hys--;
     }
 
     else
     {
-        // m_own_robot[robot_num].chip(50);
+        // m_own_robot[t_robot_num].chip(50);
 
         my_hys = 0;
 
@@ -55,13 +55,13 @@ void Ai::gkHi(int robot_num, bool stop)
         obs_map.addRectangle({start, w, h});
 
         if ((obs_map.isInObstacle(m_world_state.ball.position)) && (m_world_state.ball.velocity.length() < 1500) &&
-            m_ref_state.canKickBall() && (!stop))
+            m_ref_state.canKickBall() && (!t_stop))
         {
             Common::logDebug("GK intercepting");
 
             m_gk_intercepting = true;
 
-            attacker(robot_num,
+            attacker(t_robot_num,
                      m_world_state.ball.position.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0,
                      80, 0, 0, 0);
         }
@@ -71,22 +71,22 @@ void Ai::gkHi(int robot_num, bool stop)
             Common::Vec2 target = ownGoal().pointOnConnectingLine(m_world_state.ball.position, 1500);
             target.x            = Common::sign(target.x) * std::min(Common::field().width - 90, std::fabs(target.x));
 
-            m_own_robot[robot_num].face(m_world_state.ball.position);
-            navigate(robot_num, target, VelocityProfile::mamooli());
+            m_own_robot[t_robot_num].face(m_world_state.ball.position);
+            navigate(t_robot_num, target, VelocityProfile::mamooli());
         }
     }
 }
 
-void Ai::gkShirje(int robot_num)
+void Ai::gkShirje(int t_robot_num)
 {
     Common::logDebug("GK Shirje");
 
     Common::Line ball_line =
         Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());
-    Common::Vec2 ans = ball_line.closestPoint(m_own_robot[robot_num].state().position);
-    m_own_robot[robot_num].face(m_world_state.ball.position);
-    ans = ((ans - m_own_robot[robot_num].state().position) * 2.0f) + m_own_robot[robot_num].state().position;
-    navigate(robot_num, ans, VelocityProfile::kharaki());
-    m_own_robot[robot_num].chip(150);
+    Common::Vec2 ans = ball_line.closestPoint(m_own_robot[t_robot_num].state().position);
+    m_own_robot[t_robot_num].face(m_world_state.ball.position);
+    ans = ((ans - m_own_robot[t_robot_num].state().position) * 2.0f) + m_own_robot[t_robot_num].state().position;
+    navigate(t_robot_num, ans, VelocityProfile::kharaki());
+    m_own_robot[t_robot_num].chip(150);
 }
 } // namespace Tyr::Soccer

@@ -2,9 +2,9 @@
 
 namespace Tyr::Soccer
 {
-void Ai::halt(int robot_num)
+void Ai::halt(int t_robot_num)
 {
-    m_own_robot[robot_num].halt();
+    m_own_robot[t_robot_num].halt();
 }
 
 void Ai::haltAll()

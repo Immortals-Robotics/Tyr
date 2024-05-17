@@ -6,9 +6,9 @@ Common::Timer activeShootTimer_omid;
 
 void Ai::newNormalPlay()
 {
-    gkHi(gk, 0);
+    gkHi(m_gk, 0);
 
-    defHi(def, rw, lw, nullptr, false);
+    defHi(m_def, m_rw, m_lw, nullptr, false);
 
     calcIsDefending();
 

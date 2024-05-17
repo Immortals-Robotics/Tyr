@@ -37,20 +37,20 @@ Ai::Ai()
 
     m_last_referee = Common::RefereeState::STATE_GAME_OFF;
 
-    m_mark_map[&dmf]  = -1;
-    m_mark_map[&mid1] = -1;
-    m_mark_map[&mid2] = -1;
-    m_mark_map[&lw]   = -1;
-    m_mark_map[&rw]   = -1;
+    m_mark_map[&m_dmf]  = -1;
+    m_mark_map[&m_mid1] = -1;
+    m_mark_map[&m_mid2] = -1;
+    m_mark_map[&m_lw]   = -1;
+    m_mark_map[&m_rw]   = -1;
 
-    m_stm_to_ai_num[0] = &gk;
-    m_stm_to_ai_num[1] = &def;
-    m_stm_to_ai_num[2] = &dmf;
-    m_stm_to_ai_num[3] = &mid2;
-    m_stm_to_ai_num[4] = &mid1;
-    m_stm_to_ai_num[5] = &attack;
-    m_stm_to_ai_num[6] = &rw;
-    m_stm_to_ai_num[7] = &lw;
+    m_stm_to_ai_num[0] = &m_gk;
+    m_stm_to_ai_num[1] = &m_def;
+    m_stm_to_ai_num[2] = &m_dmf;
+    m_stm_to_ai_num[3] = &m_mid2;
+    m_stm_to_ai_num[4] = &m_mid1;
+    m_stm_to_ai_num[5] = &m_attack;
+    m_stm_to_ai_num[6] = &m_rw;
+    m_stm_to_ai_num[7] = &m_lw;
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {

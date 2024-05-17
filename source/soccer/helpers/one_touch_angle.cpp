@@ -2,9 +2,9 @@
 
 namespace Tyr::Soccer
 {
-Common::Angle Ai::calculateOneTouchAngle(int robot_num, Common::Vec2 oneTouchPosition)
+Common::Angle Ai::calculateOneTouchAngle(int t_robot_num, Common::Vec2 t_one_touch_position)
 {
-    // oneTouchPosition = m_world_state.ball.position;
+    // t_one_touch_position = m_world_state.ball.position;
     float v0x, v0y;
     float v1x, v1y;
 
@@ -13,10 +13,10 @@ Common::Angle Ai::calculateOneTouchAngle(int robot_num, Common::Vec2 oneTouchPos
 
     const Common::LineSegment targetLine = oppGoalLine();
 
-    OpenAngle boz = calculateOpenAngleToGoal(oneTouchPosition, robot_num);
+    OpenAngle boz = calculateOpenAngleToGoal(t_one_touch_position, t_robot_num);
     Common::logDebug("Open angle : {}    {}", boz.center.deg(), boz.magnitude.deg());
 
-    Common::Line ball_line = Common::Line::fromPointAndAngle(oneTouchPosition, boz.center);
+    Common::Line ball_line = Common::Line::fromPointAndAngle(t_one_touch_position, boz.center);
 
     Common::Vec2 goal = ball_line.intersect(targetLine).value_or(Common::Vec2(oppGoal().x, 0.0f));
 
@@ -35,8 +35,8 @@ Common::Angle Ai::calculateOneTouchAngle(int robot_num, Common::Vec2 oneTouchPos
         v1y = Common::setting().one_touch_beta * (-sin(a) * v0x + cos(a) * v0y) * (cos(a)) +
               Common::setting().one_touch_shoot_k * sin(a) +
               Common::setting().one_touch_gamma * (v0y - 2 * (v0x * cos(a) + v0y * sin(a)) * sin(a));
-        float e = v1x * (-m_own_robot[robot_num].state().position.y + goal.y) +
-                  v1y * (m_own_robot[robot_num].state().position.x - goal.x);
+        float e = v1x * (-m_own_robot[t_robot_num].state().position.y + goal.y) +
+                  v1y * (m_own_robot[t_robot_num].state().position.x - goal.x);
         if (std::fabs(e) < max)
         {
             max = std::fabs(e);
