@@ -5,8 +5,6 @@
 #include "helpers/one_touch_detector.h"
 #include "plays/play_book.h"
 
-#define mark_in_stop 0
-
 namespace Tyr::Soccer
 {
 class Ai
