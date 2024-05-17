@@ -35,11 +35,11 @@ CheckOptions:
 # Fields
   - key:             readability-identifier-naming.MemberCase
     value:           lower_case
-  - key:             readability-identifier-naming.PrivateMemberSuffix
+  - key:             readability-identifier-naming.PrivateMemberPrefix
     value:           m_
   - key:             readability-identifier-naming.ProtectedMemberPrefix
     value:           m_
-  - key:             readability-identifier-naming.PublicMemberSuffix
+  - key:             readability-identifier-naming.PublicMemberPrefix
     value:           ''
 
 # Enums
