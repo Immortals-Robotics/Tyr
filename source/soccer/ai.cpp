@@ -23,58 +23,58 @@ Ai::Ai()
 
     m_cmd_server = std::make_unique<Common::NngServer>(Common::setting().commands_url);
 
-    dss = new Dss(&m_world_state, 1000.f);
+    m_dss = new Dss(&m_world_state, 1000.f);
 
-    currentPlay = &Ai::HaltAll;
+    m_current_play = &Ai::haltAll;
 
-    gkIntercepting = false;
+    m_gk_intercepting = false;
 
-    randomParam = 0.0f;
-    target_str  = -1;
+    m_random_param = 0.0f;
+    m_target_str   = -1;
 
-    isDefending  = false;
-    oppRestarted = false;
+    m_is_defending = false;
+    m_opp_restarted = false;
 
-    lastReferee = Common::RefereeState::STATE_GAME_OFF;
+    m_last_referee = Common::RefereeState::STATE_GAME_OFF;
 
-    markMap[&dmf]  = -1;
-    markMap[&mid1] = -1;
-    markMap[&mid2] = -1;
-    markMap[&lw]   = -1;
-    markMap[&rw]   = -1;
+    m_mark_map[&dmf]  = -1;
+    m_mark_map[&mid1] = -1;
+    m_mark_map[&mid2] = -1;
+    m_mark_map[&lw]   = -1;
+    m_mark_map[&rw]   = -1;
 
-    stm2AInum[0] = &gk;
-    stm2AInum[1] = &def;
-    stm2AInum[2] = &dmf;
-    stm2AInum[3] = &mid2;
-    stm2AInum[4] = &mid1;
-    stm2AInum[5] = &attack;
-    stm2AInum[6] = &rw;
-    stm2AInum[7] = &lw;
+    m_stm_to_ai_num[0] = &gk;
+    m_stm_to_ai_num[1] = &def;
+    m_stm_to_ai_num[2] = &dmf;
+    m_stm_to_ai_num[3] = &mid2;
+    m_stm_to_ai_num[4] = &mid1;
+    m_stm_to_ai_num[5] = &attack;
+    m_stm_to_ai_num[6] = &rw;
+    m_stm_to_ai_num[7] = &lw;
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        OwnRobot[i] = Robot(&m_world_state.own_robot[i]);
+        m_own_robot[i] = Robot(&m_world_state.own_robot[i]);
 
-        oneTouchDetector[i].rState = &OwnRobot[i];
-        oneTouchDetector[i].ball   = &m_world_state.ball;
-        oneTouchDetector[i].side   = &side;
+        m_one_touch_detector[i].rState = &m_own_robot[i];
+        m_one_touch_detector[i].ball   = &m_world_state.ball;
+        m_one_touch_detector[i].side   = &m_side;
 
-        oneTouchType[i]     = oneTouch;
-        oneTouchTypeUsed[i] = false;
+        m_one_touch_type[i]     = OneTouchType::OneTouch;
+        m_one_touch_type_used[i] = false;
 
-        allafPos[i] = Common::Vec2();
+        m_allaf_pos[i] = Common::Vec2();
     }
 
-    chip_head = Common::Angle::fromDeg(200);
+    m_chip_head = Common::Angle::fromDeg(200);
 
-    circleReachedBehindBall = false;
-    PredictedBall           = Common::Vec2();
+    m_circle_reached_behind_ball = false;
+    m_predicted_ball        = Common::Vec2();
 
     const auto strategy_path = std::filesystem::path(DATA_DIR) / "strategy.ims";
     loadPlayBook(strategy_path);
 
-    timer.start();
+    m_timer.start();
 }
 
 bool Ai::receiveWorld()
@@ -107,7 +107,7 @@ bool Ai::publishCommands() const
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        OwnRobot[i].currentCommand().fillProto(pb_wrapper.add_command());
+        m_own_robot[i].currentCommand().fillProto(pb_wrapper.add_command());
     }
 
     return m_cmd_server->send(time, pb_wrapper);

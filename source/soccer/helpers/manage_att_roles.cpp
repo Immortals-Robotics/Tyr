@@ -4,12 +4,12 @@ namespace Tyr::Soccer
 {
 static int attackerChangeHys = 0;
 
-void Ai::ManageAttRoles()
+void Ai::manageAttRoles()
 {
     // Check if the current attacker has lost the ball, before switching its role
-    if (OwnRobot[attack].state().position.distanceTo(m_world_state.ball.position) > 600)
+    if (m_own_robot[attack].state().position.distanceTo(m_world_state.ball.position) > 600)
         attackerChangeHys++;
-    if (OwnRobot[attack].state().seen_state == Common::SeenState::CompletelyOut)
+    if (m_own_robot[attack].state().seen_state == Common::SeenState::CompletelyOut)
         attackerChangeHys = 100;
 
     if (attackerChangeHys > 30)
@@ -50,7 +50,7 @@ void Ai::ManageAttRoles()
         }
     }
 
-    if (OwnRobot[mid1].state().position.y < OwnRobot[mid2].state().position.y)
+    if (m_own_robot[mid1].state().position.y < m_own_robot[mid2].state().position.y)
     {
         std::swap(mid1, mid2);
     }

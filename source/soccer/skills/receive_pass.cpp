@@ -6,81 +6,82 @@ void Ai::receivePass(int robot_num, Common::Vec2 staticPos, bool chip)
 {
     const float contStrStaticTime = 1.0f;
 
-    if (timer.time() > 0.7)
+    if (m_timer.time() > 0.7)
     {
-        chip_head.setDeg(200);
+        m_chip_head.setDeg(200);
     }
-    if (oneTouchType[robot_num] == allaf)
-        staticPos = allafPos[robot_num];
-    if (oneTouchType[robot_num] == oneTouch && timer.time() < contStrStaticTime)
-        staticPos = allafPos[robot_num];
+    if (m_one_touch_type[robot_num] == OneTouchType::Allaf)
+        staticPos = m_allaf_pos[robot_num];
+    if (m_one_touch_type[robot_num] == OneTouchType::OneTouch && m_timer.time() < contStrStaticTime)
+        staticPos = m_allaf_pos[robot_num];
 
-    if (timer.time() > 2.5)
+    if (m_timer.time() > 2.5)
     {
-        oneTouchTypeUsed[robot_num] = true;
+        m_one_touch_type_used[robot_num] = true;
     }
 
     float angleTol, maxBallAngle;
 
-    if (oneTouchType[robot_num] == oneTouch)
+    if (m_one_touch_type[robot_num] == OneTouchType::OneTouch)
     {
         angleTol     = 45;
         maxBallAngle = 150;
     }
-    else if (oneTouchType[robot_num] == shirje)
+    else if (m_one_touch_type[robot_num] == OneTouchType::Shirje)
     {
         // angleTol = 55;
         // maxBallAngle = 140;
         angleTol     = 45;
         maxBallAngle = 90;
     }
-    else if (oneTouchType[robot_num] == gool)
+    else if (m_one_touch_type[robot_num] == OneTouchType::Gool)
     {
         angleTol     = 35;
         maxBallAngle = 110;
     }
     else
-    { // probably allaf!!!
+    { // probably Allaf!!!
         angleTol     = 0;
         maxBallAngle = 0;
     }
 
-    float distCoeff = m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) / 1500.0f;
+    float distCoeff = m_world_state.ball.position.distanceTo(m_own_robot[robot_num].state().position) / 1500.0f;
     distCoeff       = std::max(0.8f, distCoeff);
     distCoeff       = std::min(1.2f, distCoeff);
 
-    if ((oneTouchDetector[robot_num].IsArriving(angleTol, maxBallAngle)) && (oneTouchType[robot_num] != allaf))
+    if ((m_one_touch_detector[robot_num].IsArriving(angleTol, maxBallAngle)) &&
+        (m_one_touch_type[robot_num] != OneTouchType::Allaf))
     {
-        oneTouchTypeUsed[robot_num] = true;
-        if (oneTouchType[robot_num] == oneTouch)
+        m_one_touch_type_used[robot_num] = true;
+        if (m_one_touch_type[robot_num] == OneTouchType::OneTouch)
         {
-            if (timer.time() < contStrStaticTime)
-                WaitForPass(robot_num, chip, nullptr, &staticPos);
+            if (m_timer.time() < contStrStaticTime)
+                waitForPass(robot_num, chip, nullptr, &staticPos);
             else
-                WaitForPass(robot_num, chip);
+                waitForPass(robot_num, chip);
         }
-        else if (oneTouchType[robot_num] == shirje)
+        else if (m_one_touch_type[robot_num] == OneTouchType::Shirje)
         {
-            WaitForOmghi(robot_num, chip);
+            waitForOmghi(robot_num, chip);
         }
-        else if (oneTouchType[robot_num] == gool)
+        else if (m_one_touch_type[robot_num] == OneTouchType::Gool)
         {
-            WaitForGool(robot_num, chip);
+            waitForGool(robot_num, chip);
         }
         else
-        { // probably allaf!!!
-            OwnRobot[robot_num].face(oppGoal());
+        { // probably Allaf!!!
+            m_own_robot[robot_num].face(oppGoal());
             navigate(robot_num, staticPos, VelocityProfile::mamooli());
         }
     }
     else
     {
-        if (oneTouchTypeUsed[robot_num])
+        if (m_one_touch_type_used[robot_num])
         {
-            oneTouchTypeUsed[robot_num] = false;
-            oneTouchType[robot_num]     = oneTouch;
+            m_one_touch_type_used[robot_num] = false;
+            m_one_touch_type[robot_num]      = OneTouchType::OneTouch;
         }
-        OwnRobot[robot_num].face(oppGoal());
+        m_own_robot[robot_num].face(oppGoal());
         navigate(robot_num, staticPos, VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
     }
 }

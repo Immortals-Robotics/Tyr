@@ -2,16 +2,16 @@
 
 namespace Tyr::Soccer
 {
-void Ai::Halt(int robot_num)
+void Ai::halt(int robot_num)
 {
-    OwnRobot[robot_num].halt();
+    m_own_robot[robot_num].halt();
 }
 
-void Ai::HaltAll()
+void Ai::haltAll()
 {
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        Halt(i);
+        halt(i);
     }
 }
 } // namespace Tyr::Soccer

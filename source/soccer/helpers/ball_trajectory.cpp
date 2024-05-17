@@ -8,7 +8,7 @@ void Ai::calculateBallTrajectory()
     if (m_world_state.ball.velocity.length() == 0.0f)
         return;
 
-    if (ballHist.size() < 5)
+    if (m_ball_hist.size() < 5)
     {
         return;
     }
@@ -26,64 +26,64 @@ void Ai::calculateBallTrajectory()
     Common::MedianFilter<float, 5> dMedian;
 
     int i;
-    for (i = ballHist.size() - 1; i >= 0; i--)
+    for (i = m_ball_hist.size() - 1; i >= 0; i--)
     {
         if (ball_x.size() > 1)
         {
             float d;
             if (isVertical)
             {
-                ballLine.calculate(ball_x.size(), &ball_y[0], &ball_x[0]);
-                d = ballLine.getDisToPoint(ballHist[i].position.yx());
+                m_ball_line.calculate(ball_x.size(), &ball_y[0], &ball_x[0]);
+                d = m_ball_line.getDisToPoint(m_ball_hist[i].position.yx());
             }
             else
             {
-                ballLine.calculate(ball_x.size(), &ball_x[0], &ball_y[0]);
-                d = ballLine.getDisToPoint(ballHist[i].position);
+                m_ball_line.calculate(ball_x.size(), &ball_x[0], &ball_y[0]);
+                d = m_ball_line.getDisToPoint(m_ball_hist[i].position);
             }
 
             dMedian.add(d);
-            if ((dMedian.current() > 50) && (ballHist.size() - i > 5))
+            if ((dMedian.current() > 50) && (m_ball_hist.size() - i > 5))
             {
                 break;
             }
         }
-        ball_x.push_back(ballHist[i].position.x);
-        ball_y.push_back(ballHist[i].position.y);
+        ball_x.push_back(m_ball_hist[i].position.x);
+        ball_y.push_back(m_ball_hist[i].position.y);
     }
 
     i++;
 
     if (isVertical)
-        ballLine.chapeKon();
+        m_ball_line.chapeKon();
 
-    if (ballLine.isAmoodi())
+    if (m_ball_line.isAmoodi())
     {
-        Common::debug().draw(Common::LineSegment{Common::Vec2(ballLine.getXIntercept(), -2000),
-                                                 Common::Vec2(ballLine.getXIntercept(), 2000)},
+        Common::debug().draw(Common::LineSegment{Common::Vec2(m_ball_line.getXIntercept(), -2000),
+                                                 Common::Vec2(m_ball_line.getXIntercept(), 2000)},
                              Common::Color::purple());
     }
     Common::debug().draw(Common::LineSegment{
-        Common::Vec2(m_world_state.ball.position.x, ballLine.getValue(m_world_state.ball.position.x)),
-        Common::Vec2(ballHist[i].position.x, ballLine.getValue(ballHist[i].position.x))});
+        Common::Vec2(m_world_state.ball.position.x, m_ball_line.getValue(m_world_state.ball.position.x)),
+        Common::Vec2(m_ball_hist[i].position.x, m_ball_line.getValue(m_ball_hist[i].position.x))});
 
-    if (!ballLine.isAmoodi())
+    if (!m_ball_line.isAmoodi())
     {
-        Common::Line new_line(1.0, -ballLine.getSlope(), -ballLine.getIntercept());
+        Common::Line new_line(1.0, -m_ball_line.getSlope(), -m_ball_line.getIntercept());
         Common::Vec2 ballN, lastN;
         ballN = new_line.closestPoint(m_world_state.ball.position);
-        lastN = new_line.closestPoint(ballHist[i].position);
+        lastN = new_line.closestPoint(m_ball_hist[i].position);
         Common::debug().draw(Common::LineSegment{ballN, lastN},
                              isVertical ? Common::Color::yellow() : Common::Color::red());
     }
 
-    for (i = 0; i < ballHist.size(); i += 1)
+    for (i = 0; i < m_ball_hist.size(); i += 1)
     {
-        Common::debug().draw(Common::Circle{ballHist[i].position, 5.0f + 30.0f * (float(i) / float(ballHist.size()))},
+        Common::debug().draw(Common::Circle{m_ball_hist[i].position, 5.0f + 30.0f * (float(i) / float(m_ball_hist.size()))},
                              Common::Color::red().transparent());
     }
 
-    Common::debug().draw(Common::LineSegment{ballHist.front().position, ballHist.back().position},
+    Common::debug().draw(Common::LineSegment{m_ball_hist.front().position, m_ball_hist.back().position},
                          Common::Color::blue().transparent());
 }
 } // namespace Tyr::Soccer

@@ -4,18 +4,19 @@ namespace Tyr::Soccer
 {
 float Ai::calculateMarkCost(int robot_num, int opp)
 {
-    if (OwnRobot[robot_num].state().seen_state == Common::SeenState::CompletelyOut)
+    if (m_own_robot[robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         return -1;
     if (m_world_state.opp_robot[opp].seen_state == Common::SeenState::CompletelyOut)
         return -1;
 
     const float predict_t  = 0.3f;
-    auto predicted_pos_own = OwnRobot[robot_num].state().position + OwnRobot[robot_num].state().velocity * predict_t;
+    auto predicted_pos_own =
+        m_own_robot[robot_num].state().position + m_own_robot[robot_num].state().velocity * predict_t;
     auto predicted_pos_opp = m_world_state.opp_robot[opp].position + m_world_state.opp_robot[opp].velocity * predict_t;
 
     auto dis_pred       = predicted_pos_own.distanceTo(predicted_pos_opp);
     bool already_marked = false;
-    for (auto it = markMap.begin(); it != markMap.end(); ++it)
+    for (auto it = m_mark_map.begin(); it != m_mark_map.end(); ++it)
     {
         if (*it->first == robot_num)
         {

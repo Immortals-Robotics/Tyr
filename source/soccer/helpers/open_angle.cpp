@@ -51,9 +51,9 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 p1, int robot_num)
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if ((OwnRobot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != robot_num))
+        if ((m_own_robot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != robot_num))
         {
-            obstacles.emplace_back(OwnRobot[i].state().position);
+            obstacles.emplace_back(m_own_robot[i].state().position);
         }
     }
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)

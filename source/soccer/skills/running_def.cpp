@@ -22,9 +22,9 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     bool ownAttackHasBall = false;
     bool ballIsToGoal     = false;
 
-    ballAriving = oneTouchDetector[robot_num].IsArriving(40, 80);
+    ballAriving = m_one_touch_detector[robot_num].IsArriving(40, 80);
 
-    Common::Vec2 oneTouchPos = CalculatePassPos(robot_num, oppGoal(), OwnRobot[robot_num].state().position);
+    Common::Vec2 oneTouchPos = calculatePassPos(robot_num, oppGoal(), m_own_robot[robot_num].state().position);
 
     if (oneTouchPos.distanceTo(target) < max_def_move_to_intercept)
     {
@@ -45,8 +45,9 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
 
     //    ballMovingFast = m_world_state.ball.velocity.length() > max_fast_ball_spd;
 
-    ownAttackHasBall = OwnRobot[attack].state().position.distanceTo(m_world_state.ball.position) < max_own_attacker_dis;
-    if (OwnRobot[attack].state().seen_state == Common::SeenState::CompletelyOut)
+    ownAttackHasBall =
+        m_own_robot[attack].state().position.distanceTo(m_world_state.ball.position) < max_own_attacker_dis;
+    if (m_own_robot[attack].state().seen_state == Common::SeenState::CompletelyOut)
     {
         ownAttackHasBall = false;
     }
@@ -58,20 +59,20 @@ void Ai::runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarg
     Common::logDebug("ballMovingFast: {}", ballMovingFast);
     Common::logDebug("ownAttackHasBall: {}", ownAttackHasBall);
     Common::logDebug("ballIsToGoal: {}", ballIsToGoal);
-    Common::logDebug("gkIntercepting: {}", gkIntercepting);
+    Common::logDebug("m_gk_intercepting: {}", m_gk_intercepting);
 
     if ((interceptNear) && (!oppHasBall) && (!ballMovingFast) && (!ownAttackHasBall) && (!ballIsToGoal) &&
-        (!gkIntercepting) && (!stop))
+        (!m_gk_intercepting) && (!stop))
     //    if(1)
     {
         Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");
         attacker(robot_num,
-                    m_world_state.ball.position.angleWith(Common::Vec2(side * (Common::field().width + 110), 0)), 0, 80,
+                    m_world_state.ball.position.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0, 80,
                     0, 0, 0);
     }
     else
     {
-        OwnRobot[robot_num].face(*defendTarget);
+        m_own_robot[robot_num].face(*defendTarget);
         navigate(robot_num, target, VelocityProfile::mamooli());
     }
 }

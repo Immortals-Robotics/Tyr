@@ -5,9 +5,9 @@ namespace Tyr::Soccer
 void Ai::internalProcessData()
 {
     if (m_world_state.ball.seen_state != Common::SeenState::CompletelyOut)
-        ballHist.push_back(m_world_state.ball);
-    if (ballHist.size() > maxBallHist)
-        ballHist.pop_front();
+        m_ball_hist.push_back(m_world_state.ball);
+    if (m_ball_hist.size() > kMaxBallHist)
+        m_ball_hist.pop_front();
     calculateBallTrajectory();
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
@@ -18,7 +18,7 @@ void Ai::internalProcessData()
 #if 0
         if (m_ref_state.stop())
         {
-            if (OwnRobot[i].state().out_for_substitute)
+            if (m_own_robot[i].state().out_for_substitute)
             {
                 for (int j = 0; j < Common::Setting::kMaxRobots; j++)
                 {
@@ -29,7 +29,7 @@ void Ai::internalProcessData()
                         bool suitable = true;
                         for (int k = 0; k < Common::Setting::kMaxRobots; k++)
                         {
-                            if (OwnRobot[k].vision_id == j)
+                            if (m_own_robot[k].vision_id == j)
                             {
                                 suitable = false;
                                 break;
@@ -37,7 +37,7 @@ void Ai::internalProcessData()
                         }
                         if (suitable)
                         {
-                            OwnRobot[i].setVisionId(j);
+                            m_own_robot[i].setVisionId(j);
                             break;
                         }
                     }
@@ -46,12 +46,12 @@ void Ai::internalProcessData()
         }
 #endif
 
-        OwnRobot[i].reset();
+        m_own_robot[i].reset();
     }
 
     if (Common::setting().our_side == Common::TeamSide::Right)
-        side = 1;
+        m_side = 1;
     else
-        side = -1;
+        m_side = -1;
 }
 } // namespace Tyr::Soccer

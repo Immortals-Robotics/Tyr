@@ -8,100 +8,100 @@ void Ai::process()
 
     internalProcessData();
 
-    if (lastReferee != m_ref_state.get())
+    if (m_last_referee != m_ref_state.get())
     {
-        timer.start();
-        lastReferee = m_ref_state.get();
-        randomParam = m_random.get(0.0f, 1.0f);
-        target_str  = strategy_weight();
-        FUNC_state  = 0;
-        FUNC_CNT    = 0;
+        m_timer.start();
+        m_last_referee = m_ref_state.get();
+        m_random_param = m_random.get(0.0f, 1.0f);
+        m_target_str   = strategyWeight();
+        m_func_state = 0;
+        m_func_count = 0;
     }
 
     if (m_ref_state.stop())
     {
-        FUNC_state = 0;
+        m_func_state = 0;
 
-        oppRestarted = false;
-        if (side * m_world_state.ball.position.x > Common::field().width * 0.7f)
+        m_opp_restarted = false;
+        if (m_side * m_world_state.ball.position.x > Common::field().width * 0.7f)
         {
-            currentPlay = &Ai::Stop_def;
+            m_current_play = &Ai::stopDef;
         }
         else
         {
-            currentPlay = &Ai::Stop;
+            m_current_play = &Ai::stop;
         }
     }
     else if (m_ref_state.gameOn())
     {
-        currentPlay = &Ai::NewNormalPlay;
+        m_current_play = &Ai::newNormalPlay;
     }
     else if (m_ref_state.ourKickoff())
     {
-        currentPlay = &Ai::kickoff_us_chip;
+        m_current_play = &Ai::kickoffUsChip;
     }
     else if (m_ref_state.ourDirectKick() || m_ref_state.ourIndirectKick())
     {
-        if (target_str != -1)
+        if (m_target_str != -1)
         {
-            currentPlay = &Ai::strategy;
+            m_current_play = &Ai::strategy;
         }
         else
         {
-            currentPlay = &Ai::throwin_chip_shoot;
+            m_current_play = &Ai::throwinChipShoot;
         }
     }
     else if (m_ref_state.ourPenaltyKick())
     {
-        currentPlay = &Ai::penalty_us_shootout;
+        m_current_play = &Ai::penaltyUsShootout;
     }
     else if (m_ref_state.ourPlaceBall())
     {
-        currentPlay = &Ai::our_place_ball;
+        m_current_play = &Ai::ourPlaceBall;
     }
     else if (m_ref_state.theirFreeKick())
     {
-        currentPlay = &Ai::corner_their_global;
+        m_current_play = &Ai::cornerTheirGlobal;
     }
     else if (m_ref_state.theirKickoff())
     {
-        currentPlay = &Ai::kickoff_their_one_wall;
+        m_current_play = &Ai::kickoffTheirOneWall;
     }
     else if (m_ref_state.theirPenaltyKick())
     {
-        currentPlay = &Ai::penalty_their_simple;
+        m_current_play = &Ai::penaltyTheirSimple;
     }
     else if (m_ref_state.theirPlaceBall())
     {
-        currentPlay = &Ai::their_place_ball;
+        m_current_play = &Ai::theirPlaceBall;
     }
     else if (!m_ref_state.canMove())
     {
-        currentPlay = &Ai::HaltAll;
+        m_current_play = &Ai::haltAll;
     }
     else
     {
         Common::logWarning("Unhandled ref state: {}", (int) m_ref_state.get());
-        currentPlay = &Ai::Stop;
+        m_current_play = &Ai::stop;
     }
 
     if (m_ref_state.theirRestart())
     {
-        oppRestarted = true;
+        m_opp_restarted = true;
     }
 
-    (this->*currentPlay)();
+    (this->*m_current_play)();
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if (OwnRobot[i].state().seen_state == Common::SeenState::CompletelyOut)
+        if (m_own_robot[i].state().seen_state == Common::SeenState::CompletelyOut)
         {
-            Halt(i);
+            halt(i);
         }
-        else if (!OwnRobot[i].navigated() && !OwnRobot[i].halted())
+        else if (!m_own_robot[i].navigated() && !m_own_robot[i].halted())
         {
-            Common::logWarning("Own robot {} was neither navigated nor halted", OwnRobot[i].state().vision_id);
-            Halt(i);
+            Common::logWarning("Own robot {} was neither navigated nor halted", m_own_robot[i].state().vision_id);
+            halt(i);
         }
     }
 }
