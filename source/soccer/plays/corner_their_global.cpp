@@ -13,7 +13,7 @@ void Ai::cornerTheirGlobal()
     }
     else
     {
-        gkHi(m_gk, true);
+        gkHi(m_gk);
         defHi(m_def, m_rw, m_lw, nullptr, true);
     }
 

@@ -25,7 +25,7 @@ void Ai::stopDef()
         std::swap(m_mid1, m_mid2);
     }
 
-    gkHi(m_gk, true);
+    gkHi(m_gk);
     defHi(m_def, m_rw, m_lw, nullptr, true);
 
     std::map<int, Common::Vec2> static_pos;

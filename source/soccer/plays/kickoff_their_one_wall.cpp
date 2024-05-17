@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 void Ai::kickoffTheirOneWall()
 {
-    gkHi(m_gk, 1);
+    gkHi(m_gk);
     defHi(m_def, m_rw, m_lw, nullptr, true);
 
     m_own_robot[m_dmf].face(m_world_state.ball.position);

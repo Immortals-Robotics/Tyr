@@ -28,7 +28,7 @@ void Ai::stop()
         std::swap(m_mid1, m_mid2);
     }
 
-    gkHi(m_gk, true);
+    gkHi(m_gk);
     defHi(m_def, m_rw, m_lw, nullptr, true);
 
     if (Common::setting().mark_in_stop)

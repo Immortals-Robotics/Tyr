@@ -169,7 +169,7 @@ void Ai::strategy()
         if (strategy.role[i].path.size() == 0)
         {
             if (*m_stm_to_ai_num[i] == m_gk)
-                gkHi(m_gk, true);
+                gkHi(m_gk);
             else if (*m_stm_to_ai_num[i] == m_def && *m_stm_to_ai_num[i] == m_lw && *m_stm_to_ai_num[i] == m_rw) // No need to halt these guys
                 continue;
             else

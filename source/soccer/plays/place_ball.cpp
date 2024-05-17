@@ -6,7 +6,7 @@ namespace Tyr::Soccer
 {
 void Ai::ourPlaceBall()
 {
-    gkHi(m_gk, true);
+    gkHi(m_gk);
     defHi(m_def, m_rw, m_lw, nullptr, true);
 
     static Common::Angle move_angle, temp_opp_ang;

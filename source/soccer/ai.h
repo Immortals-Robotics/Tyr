@@ -135,8 +135,8 @@ private:
     void mark2Ball(int t_robot_num, int t_opp, float t_dist = 220.0f);
     void halt(int t_robot_num);
 
-    void gkShirje(int t_robot_num = 0);
-    void gkHi(int t_robot_num = 0, bool t_stop = false);
+    void gkShirje(int t_robot_num);
+    void gkHi(int t_robot_num);
     void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target = nullptr,
                bool t_stop = false);
     void runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defend_target, bool t_stop);

@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 static int my_hys = 0;
 
-void Ai::gkHi(int t_robot_num, bool t_stop)
+void Ai::gkHi(int t_robot_num)
 {
     m_gk_intercepting = false;
 
@@ -13,23 +13,25 @@ void Ai::gkHi(int t_robot_num, bool t_stop)
                          m_world_state.ball.velocity.length());
     if (ballIsGoaling())
     {
-        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::red(), false);
+        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::red(),
+                             false);
     }
     else
     {
-        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::yellow(), false);
+        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::yellow(),
+                             false);
     }
 
     if ((ballIsGoaling()) &&
         (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) /
              m_world_state.ball.velocity.length() <
          3) &&
-        (!t_stop))
+        m_ref_state.gameOn())
     {
         gkShirje(t_robot_num);
         my_hys = 10;
     }
-    else if ((my_hys > 0) && (!t_stop))
+    else if ((my_hys > 0) && m_ref_state.gameOn())
     {
         gkShirje(t_robot_num);
         my_hys--;
@@ -37,8 +39,6 @@ void Ai::gkHi(int t_robot_num, bool t_stop)
 
     else
     {
-        // m_own_robot[t_robot_num].chip(50);
-
         my_hys = 0;
 
         ObstacleMap obs_map;
@@ -55,7 +55,7 @@ void Ai::gkHi(int t_robot_num, bool t_stop)
         obs_map.addRectangle({start, w, h});
 
         if ((obs_map.isInObstacle(m_world_state.ball.position)) && (m_world_state.ball.velocity.length() < 1500) &&
-            m_ref_state.canKickBall() && (!t_stop))
+            m_ref_state.gameOn())
         {
             Common::logDebug("GK intercepting");
 
