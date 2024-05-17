@@ -254,7 +254,11 @@ void ConfigMenu::drawTabBar()
             drawConfigTab();
             ImGui::EndTabItem();
         }
-
+        if (ImGui::BeginTabItem("Debug Filter"))
+        {
+            drawFilterTab();
+            ImGui::EndTabItem();
+        }
         ImGui::EndTabBar();
     }
 }
@@ -281,15 +285,15 @@ void ConfigMenu::updateNetworkData()
     this->m_network_needs_update = InputCallbackType::None;
 }
 
-ConfigCallback::ConfigCallback(ConfigMenu *_menu)
+ConfigCallback::ConfigCallback(ConfigMenu *t_menu)
 {
-    m_menu = _menu;
+    m_menu = t_menu;
 }
 
-void ConfigCallback::setParams(const InputCallbackType _callback_type, const std::regex _regex)
+void ConfigCallback::setParams(const InputCallbackType t_type, const std::regex t_regex)
 {
-    m_callback_type = _callback_type;
-    m_regex         = _regex;
+    m_callback_type = t_type;
+    m_regex         = t_regex;
 }
 
 const std::regex ConfigCallback::getRegex()
@@ -297,8 +301,9 @@ const std::regex ConfigCallback::getRegex()
     return m_regex;
 }
 
-void ConfigCallback::executeCallback(std::string _data)
+void ConfigCallback::executeCallback(std::string t_data)
 {
-    m_menu->setNetworkInput(_data, m_callback_type);
+    m_menu->setNetworkInput(t_data, m_callback_type);
 }
+
 } // namespace Tyr::Gui
