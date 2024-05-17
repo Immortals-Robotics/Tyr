@@ -5,15 +5,6 @@ namespace Tyr::Gui
 {
 void ConfigMenu::drawFilterTab()
 {
-    const auto now                = std::chrono::system_clock::now();
-    auto time_seconds = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
-
-    if(time_seconds > m_last_refresh + 5) {
-        m_last_refresh = time_seconds;
-        m_filter_tree.clear();
-        m_node_map.clear();
-    }
-    
     if (ImGui::Checkbox("All", &m_all_filter))
     {
         m_all_change = true;
