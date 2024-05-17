@@ -1,5 +1,5 @@
 #pragma once
-
+#include "../menu/config_menu.h"
 namespace Tyr::Gui
 {
 class Renderer
@@ -36,7 +36,8 @@ public:
 
     void draw(const Common::FieldState &t_field);
 
-    void draw(const Common::Debug::Wrapper &t_wrapper);
+
+    void draw(const Common::Debug::Wrapper &t_wrapper, const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map);
 
     inline Common::Vec2 mousePosition() const
     {
