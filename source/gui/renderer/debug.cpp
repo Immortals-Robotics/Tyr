@@ -2,11 +2,12 @@
 
 namespace Tyr::Gui
 {
-void Renderer::draw(const Common::Debug::Wrapper &t_wrapper, const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
+void Renderer::draw(const Common::Debug::Wrapper                                    &t_wrapper,
+                    const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
 {
     for (const auto &draw : t_wrapper.draws)
     {
-        if(ConfigMenu::applyFilter(draw.source, t_map))
+        if (ConfigMenu::applyFilter(draw.source, t_map))
         {
             if (auto point = std::get_if<Common::Vec2>(&draw.shape); point)
                 this->draw(*point, draw.color, draw.thickness);
