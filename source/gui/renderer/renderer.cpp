@@ -22,13 +22,13 @@ void Renderer::begin(const Common::FieldState &t_field)
 
     const Common::Vec2 ratio = window_size / field_size;
 
-    m_zoom = window_size.x < window_size.y ? (ratio.x > ratio.y ? ratio.x : ratio.y)
+    const float zoom = window_size.x < window_size.y ? (ratio.x > ratio.y ? ratio.x : ratio.y)
                                                      : (ratio.x > ratio.y ? ratio.y : ratio.x);
     m_camera = {
         .offset   = offset,              // Offset from the target
         .target   = Vector2{0.0f, 0.0f}, // Camera target (center of the screen)
         .rotation = 0.0f,                // Camera rotation in degrees
-        .zoom     = m_zoom,                // Camera zoom (1.0f means no zoom)
+        .zoom     = zoom,                // Camera zoom (1.0f means no zoom)
     };
 
     BeginMode2D(m_camera);

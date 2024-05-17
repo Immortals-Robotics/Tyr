@@ -62,7 +62,6 @@ private:
 
     Camera2D m_camera;
     Font     m_font;
-    float    m_zoom;
 
     std::optional<Common::Vec2> m_clicked_pos;
 };
