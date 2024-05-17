@@ -2,27 +2,27 @@
 
 namespace Tyr::Soccer
 {
-void Ai::MarkManager(bool restart)
+void Ai::markManager()
 {
-    if (!isDefending)
+    if (!m_is_defending)
     {
-        for (std::map<int *, int>::const_iterator i = markMap.begin(); i != markMap.end(); ++i)
+        for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
         {
-            markMap[i->first] = -1;
+            m_mark_map[i->first] = -1;
         }
         return;
     }
 
-    const float start_t = timer.time();
+    const float start_t = m_timer.time();
 
-    // if ( ( !restart ) && ( markMap[&dmf] == -1 ) )
-    //	markMap[&dmf] = findKickerOpp(-1);
+    // if ( ( !t_restart ) && ( m_mark_map[&m_dmf] == -1 ) )
+    //	m_mark_map[&m_dmf] = findKickerOpp(-1);
 
     std::vector<std::pair<int, float>> crunchingOpps;
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        float threat = calculateOppThreat(i, restart);
+        float threat = calculateOppThreat(i, m_ref_state.theirRestart());
         if (threat < 0)
             continue;
         crunchingOpps.push_back(std::make_pair(i, threat));
@@ -47,7 +47,7 @@ void Ai::MarkManager(bool restart)
     int                   mpi = 0;
     for (auto it = crunchingOpps.begin(); it != crunchingOpps.end(); ++it)
     {
-        for (auto it2 = markMap.begin(); it2 != markMap.end(); ++it2)
+        for (auto it2 = m_mark_map.begin(); it2 != m_mark_map.end(); ++it2)
         {
             auto own  = *it2->first;
             auto opp  = it->first;
@@ -56,14 +56,14 @@ void Ai::MarkManager(bool restart)
                 continue;
             mark_pairs.push_back(MarkPair{own, opp, cost});
         }
-        if (++mpi >= markMap.size())
+        if (++mpi >= m_mark_map.size())
             break;
     }
 
     int def_count = 0;
-    for (std::map<int *, int>::const_iterator i = markMap.begin(); i != markMap.end(); ++i)
+    for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
     {
-        if (OwnRobot[*i->first].state().seen_state != Common::SeenState::CompletelyOut)
+        if (m_own_robot[*i->first].state().seen_state != Common::SeenState::CompletelyOut)
         {
             def_count++;
         }
@@ -178,8 +178,8 @@ void Ai::MarkManager(bool restart)
              }
          });
 
-    for (auto it = markMap.begin(); it != markMap.end(); ++it)
-        markMap[it->first] = -1;
+    for (auto it = m_mark_map.begin(); it != m_mark_map.end(); ++it)
+        m_mark_map[it->first] = -1;
 
     if (!valid_formations.empty())
     {
@@ -187,7 +187,7 @@ void Ai::MarkManager(bool restart)
         for (auto it = best_pair.begin(); it != best_pair.end(); ++it)
         {
             Common::logDebug(" XXXXXX {} : {}", it->first, it->second);
-            for (auto it1 = markMap.begin(); it1 != markMap.end(); ++it1)
+            for (auto it1 = m_mark_map.begin(); it1 != m_mark_map.end(); ++it1)
             {
                 if (*it1->first == it->first)
                 {
@@ -198,8 +198,8 @@ void Ai::MarkManager(bool restart)
         }
     }
 
-    const float end_t = timer.time();
+    const float end_t = m_timer.time();
 
-    Common::logDebug("MarkManager execution time: {}", (end_t - start_t) * 1000.0f);
+    Common::logDebug("markManager execution time: {}", (end_t - start_t) * 1000.0f);
 }
 } // namespace Tyr::Soccer

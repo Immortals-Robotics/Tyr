@@ -2,24 +2,25 @@
 
 namespace Tyr::Soccer
 {
-float Ai::calculateMarkCost(int robot_num, int opp)
+float Ai::calculateMarkCost(int t_robot_num, int t_opp)
 {
-    if (OwnRobot[robot_num].state().seen_state == Common::SeenState::CompletelyOut)
+    if (m_own_robot[t_robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         return -1;
-    if (m_world_state.opp_robot[opp].seen_state == Common::SeenState::CompletelyOut)
+    if (m_world_state.opp_robot[t_opp].seen_state == Common::SeenState::CompletelyOut)
         return -1;
 
     const float predict_t  = 0.3f;
-    auto predicted_pos_own = OwnRobot[robot_num].state().position + OwnRobot[robot_num].state().velocity * predict_t;
-    auto predicted_pos_opp = m_world_state.opp_robot[opp].position + m_world_state.opp_robot[opp].velocity * predict_t;
+    auto predicted_pos_own =
+        m_own_robot[t_robot_num].state().position + m_own_robot[t_robot_num].state().velocity * predict_t;
+    auto predicted_pos_opp = m_world_state.opp_robot[t_opp].position + m_world_state.opp_robot[t_opp].velocity * predict_t;
 
     auto dis_pred       = predicted_pos_own.distanceTo(predicted_pos_opp);
     bool already_marked = false;
-    for (auto it = markMap.begin(); it != markMap.end(); ++it)
+    for (auto it = m_mark_map.begin(); it != m_mark_map.end(); ++it)
     {
-        if (*it->first == robot_num)
+        if (*it->first == t_robot_num)
         {
-            already_marked = it->second == opp;
+            already_marked = it->second == t_opp;
             break;
         }
     }
@@ -41,7 +42,7 @@ float Ai::calculateMarkCost(int robot_num, int opp)
     else
         cost_reach = (dis_pred - 500.0f) / 1000.0f;
 
-    float cost_attack = robot_num == attack ? 1.0f : 0.0f;
+    float cost_attack = t_robot_num == m_attack ? 1.0f : 0.0f;
 
     score_stay  = std::min(1.0f, std::max(0.0f, score_stay));
     cost_reach  = std::min(1.0f, std::max(0.0f, cost_reach));

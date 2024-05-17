@@ -5,8 +5,6 @@
 #include "helpers/one_touch_detector.h"
 #include "plays/play_book.h"
 
-#define mark_in_stop 0
-
 namespace Tyr::Soccer
 {
 class Ai
@@ -25,78 +23,78 @@ private:
     Common::Random m_random;
 
     using Play = void (Ai::*)();
-    Play currentPlay;
+    Play m_current_play;
 
-    int FUNC_state = 0;
-    int FUNC_CNT   = 0;
+    int m_func_state = 0;
+    int m_func_count = 0;
 
-    bool gkIntercepting;
+    bool m_gk_intercepting;
 
-    Common::Angle chip_head;
+    Common::Angle m_chip_head;
 
-    float randomParam;
-    int   target_str;
+    float m_random_param;
+    int   m_target_str;
 
-    int gk     = 0;
-    int def    = 1;
-    int dmf    = 2;
-    int mid2   = 3;
-    int mid1   = 4;
-    int attack = 5;
-    int rw     = 6;
-    int lw     = 7;
+    int m_gk     = 0;
+    int m_def    = 1;
+    int m_dmf    = 2;
+    int m_mid2   = 3;
+    int m_mid1   = 4;
+    int m_attack = 5;
+    int m_rw     = 6;
+    int m_lw     = 7;
 
-    int *stm2AInum[Common::Setting::kMaxRobots] = {};
+    int *m_stm_to_ai_num[Common::Setting::kMaxRobots] = {};
 
-    Common::Vec2 allafPos[Common::Setting::kMaxRobots];
+    Common::Vec2 m_allaf_pos[Common::Setting::kMaxRobots];
 
-    std::map<int *, int> markMap;
+    std::map<int *, int> m_mark_map;
 
-    int lastReferee;
+    int m_last_referee;
 
-    Common::Timer timer;
+    Common::Timer m_timer;
 
-    bool isDefending;
-    bool oppRestarted;
+    bool m_is_defending;
+    bool m_opp_restarted;
 
-    const int                     maxBallHist = 240;
-    std::deque<Common::BallState> ballHist;
-    Common::Linear                ballLine;
+    static constexpr int          kMaxBallHist = 240;
+    std::deque<Common::BallState> m_ball_hist;
+    Common::Linear                m_ball_line;
 
-    Planner planner[Common::Setting::kMaxRobots];
-    Dss    *dss;
+    Planner              m_planner[Common::Setting::kMaxRobots];
+    std::unique_ptr<Dss> m_dss;
 
-    OneTouchDetector oneTouchDetector[Common::Setting::kMaxRobots];
-    enum OneTouchType
+    OneTouchDetector m_one_touch_detector[Common::Setting::kMaxRobots];
+    enum class OneTouchType
     {
-        oneTouch = 0,
-        shirje,
-        gool,
-        allaf
+        OneTouch = 0,
+        Shirje,
+        Gool,
+        Allaf,
     };
-    OneTouchType oneTouchType[Common::Setting::kMaxRobots];
-    bool         oneTouchTypeUsed[Common::Setting::kMaxRobots];
+    OneTouchType m_one_touch_type[Common::Setting::kMaxRobots];
+    bool         m_one_touch_type_used[Common::Setting::kMaxRobots];
 
-    int side;
+    int m_side;
 
     // Helpers
-    Common::Vec2 CalculatePassPos(int robot_num, const Common::Vec2 &target, const Common::Vec2 &statPos,
-                                  float bar = 89.0f);
+    Common::Vec2 calculatePassPos(int t_robot_num, const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos,
+                                  float t_bar = 89.0f);
     void         calculateBallTrajectory();
-    float        calculateRobotReachTime(int robot_num, Common::Vec2 dest, VelocityProfile vel_profile);
-    float        calculateBallRobotReachTime(int robot_num, VelocityProfile vel_profile);
+    float        calculateRobotReachTime(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile);
+    float        calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile);
 
     // boz ha
-    void ManageAttRoles();
-    void CalcIsDefending();
-    void MarkManager(bool restart = true);
+    void manageAttRoles();
+    void calcIsDefending();
+    void markManager();
 
     PlayBook m_playbook;
-    int      strategy_weight();
+    int      strategyWeight();
 
-    Common::Vec2  PredictedBall;
-    bool          circleReachedBehindBall;
-    Common::Angle calculateOneTouchAngle(int robot_num, Common::Vec2 oneTouchPosition);
+    Common::Vec2  m_predicted_ball;
+    bool          m_circle_reached_behind_ball;
+    Common::Angle calculateOneTouchAngle(int t_robot_num, Common::Vec2 t_one_touch_position);
 
     struct OpenAngle
     {
@@ -106,17 +104,28 @@ private:
         Common::Angle magnitude;
     };
 
-    OpenAngle calculateOpenAngleToGoal(Common::Vec2 init, int robot_num);
+    OpenAngle calculateOpenAngleToGoal(Common::Vec2 t_pos, int t_robot_num);
 
     bool         ballIsGoaling();
-    int          findNearestOpp(Common::Vec2 pos, int mask, bool acceptNearBall = true);
-    int          findKickerOpp(int mask, float max_dis = 500.0f);
-    bool         goalBlocked(Common::Vec2 init_pos, float max_shoot_blocker_dis, float shoot_blocker_r);
+    int          findNearestOpp(Common::Vec2 t_pos, int t_mask, bool t_accept_near_ball = true);
+    int          findKickerOpp(int t_mask, float t_max_dis = 500.0f);
+    bool         goalBlocked(Common::Vec2 t_init_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r);
     bool         attackFuckingAngle();
-    Common::Vec2 predictBallForwardAI(float timeAhead);
-    float        calculateOppThreat(int opp, bool restart = false);
-    float        calculateMarkCost(int robot_num, int opp);
-    float        calculateSwitchToAttackerScore(int robot_num);
+    Common::Vec2 predictBallForwardAI(float t_time_ahead);
+    float        calculateOppThreat(int t_opp, bool t_restart = false);
+    float        calculateMarkCost(int t_robot_num, int t_opp);
+    float        calculateSwitchToAttackerScore(int t_robot_num);
+
+    // Field helpers
+    inline Common::Vec2 ownGoal() const;
+    inline Common::Vec2 ownGoalPostTop() const;
+    inline Common::Vec2 ownGoalPostBottom() const;
+    inline Common::LineSegment ownGoalLine() const;
+    inline Common::Vec2 oppGoal() const;
+    inline Common::Vec2 oppGoalPostTop() const;
+    inline Common::Vec2 oppGoalPostBottom() const;
+    inline Common::LineSegment oppGoalLine() const;
+    inline bool isOut(Common::Vec2 t_point, const float t_margin = 0.0f) const;
 
     // Skills
     enum NavigationFlags
@@ -128,98 +137,52 @@ private:
         NavigationFlagsForceBallSmallObstacle  = (1 << 4), // 60.0f
     };
 
-    void navigate(int robot_num, Common::Vec2 dest, VelocityProfile velocityProfile = VelocityProfile::mamooli(),
+    void navigate(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile = VelocityProfile::mamooli(),
                   NavigationFlags t_flags = NavigationFlagsNone);
-    void setObstacles(int robot_num, NavigationFlags t_flags = NavigationFlagsNone);
+    void setObstacles(int t_robot_num, NavigationFlags t_flags = NavigationFlagsNone);
 
-    void Mark(int robot_num, int opp, float dist = 220.0f);
-    void Mark2Goal(int robot_num, int opp, float dist = 220.0f);
-    void Mark2Ball(int robot_num, int opp, float dist = 220.0f);
-    void Halt(int robot_num);
+    void mark(int t_robot_num, int t_opp, float t_dist = 220.0f);
+    void mark2Goal(int t_robot_num, int t_opp, float t_dist = 220.0f);
+    void mark2Ball(int t_robot_num, int t_opp, float t_dist = 220.0f);
+    void halt(int t_robot_num);
 
-    void GK_shirje(int robot_num = 0);
-    void GKHi(int robot_num = 0, bool stop = false);
-    void DefHi(int robot_num, int rightdef_num, int leftdef_num, Common::Vec2 *defendTarget = nullptr,
-               bool stop = false);
-    void runningDef(int robot_num, Common::Vec2 target, Common::Vec2 *defendTarget, bool stop);
-    void DefenceWall(int robot_num, bool kickOff = false);
-    void attacker(int robot_num, Common::Angle angle, int kick = 0, int chip = 0, bool gameRestart = false,
-                     bool kiss = false, bool dribbler = false);
-    void WaitForPass(int robot_num, bool chip = false, const Common::Vec2 *target = nullptr,
-                     Common::Vec2 *statPos = nullptr);
-    void WaitForOmghi(int robot_num, bool chip = false);
-    void WaitForGool(int robot_num, bool chip = false);
-    void receivePass(int robot_num, Common::Vec2 staticPos, bool chip = false);
-    void circle_ball(int robot_num, Common::Angle tagret_angle, int shoot_pow, int chip_pow, float precision,
-                     float near_dis_override = -1.0f);
+    void gkShirje(int t_robot_num);
+    void gkHi(int t_robot_num);
+    void runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
+    void defenceWall(int t_robot_num, bool t_kick_off = false);
+    void attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip, bool t_kiss, bool t_dribbler);
+    void waitForPass(int t_robot_num, bool t_chip = false, const Common::Vec2 *t_target = nullptr,
+                     Common::Vec2 *t_stat_pos = nullptr);
+    void waitForOmghi(int t_robot_num, bool t_chip = false);
+    void waitForGool(int t_robot_num, bool t_chip = false);
+    void receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip = false);
+    void circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow, float t_precision,
+                    float t_near_dis_override = -1.0f);
+
+    // Tactics
+    void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target);
 
     // Plays
-    void Stop();
-    void Stop_def();
-    void NewNormalPlay();
-    void NormalPlayDef();
-    void NormalPlayAtt();
-    void HaltAll();
-    void penalty_us_shootout();
-    void kickoff_us_chip();
-    void throwin_chip_shoot();
-    void kickoff_their_one_wall();
-    void penalty_their_simple();
-    void corner_their_global();
+    void stop();
+    void stopDef();
+    void newNormalPlay();
+    void normalPlayDef();
+    void normalPlayAtt();
+    void haltAll();
+    void penaltyUsShootout();
+    void kickoffUsChip();
+    void throwinChipShoot();
+    void kickoffTheirOneWall();
+    void penaltyTheirSimple();
+    void cornerTheirGlobal();
     void strategy();
-    void our_place_ball();
-    void their_place_ball();
+    void ourPlaceBall();
+    void theirPlaceBall();
 
     void internalProcessData();
 
-    inline Common::Vec2 ownGoal() const
-    {
-        return Common::Vec2(side * Common::field().width, 0);
-    }
-
-    inline Common::Vec2 ownGoalPostTop() const
-    {
-        return ownGoal() + Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
-    }
-
-    inline Common::Vec2 ownGoalPostBottom() const
-    {
-        return ownGoal() - Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
-    }
-
-    inline Common::LineSegment ownGoalLine() const
-    {
-        return {ownGoalPostBottom(), ownGoalPostTop()};
-    }
-
-    inline Common::Vec2 oppGoal() const
-    {
-        return Common::Vec2(-side * Common::field().width, 0);
-    }
-
-    inline Common::Vec2 oppGoalPostTop() const
-    {
-        return oppGoal() + Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
-    }
-
-    inline Common::Vec2 oppGoalPostBottom() const
-    {
-        return oppGoal() - Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
-    }
-
-    inline Common::LineSegment oppGoalLine() const
-    {
-        return {oppGoalPostBottom(), oppGoalPostTop()};
-    }
-
-    inline bool isOut(Common::Vec2 t_point, const float t_margin = 0.0f) const
-    {
-        return std::fabs(t_point.x) > Common::field().width + t_margin ||
-               std::fabs(t_point.y) > Common::field().height + t_margin;
-    }
-
 public:
-    Robot OwnRobot[Common::Setting::kMaxRobots];
+    Robot m_own_robot[Common::Setting::kMaxRobots];
 
     Ai();
 
@@ -235,3 +198,5 @@ public:
     bool setPlayBook(const Protos::Immortals::PlayBook &t_playbook);
 };
 } // namespace Tyr::Soccer
+
+#include "helpers/field.inl"

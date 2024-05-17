@@ -2,32 +2,32 @@
 
 namespace Tyr::Soccer
 {
-void Ai::corner_their_global()
+void Ai::cornerTheirGlobal()
 {
-    if (side * m_world_state.ball.position.x > Common::field().width - 1000)
+    if (m_side * m_world_state.ball.position.x > Common::field().width - 1000)
     {
-        OwnRobot[gk].target.angle = Common::Angle::fromDeg((1 + side) * 90.0f);
-        navigate(gk, Common::Vec2(side * (Common::field().width - 100), 0), VelocityProfile::mamooli());
+        m_own_robot[m_gk].target.angle = Common::Angle::fromDeg((1 + m_side) * 90.0f);
+        navigate(m_gk, Common::Vec2(m_side * (Common::field().width - 100), 0), VelocityProfile::mamooli());
 
-        DefHi(def, rw, lw, nullptr, true);
+        defHi(m_def, m_rw, m_lw, nullptr);
     }
     else
     {
-        GKHi(gk, true);
-        DefHi(def, rw, lw, nullptr, true);
+        gkHi(m_gk);
+        defHi(m_def, m_rw, m_lw, nullptr);
     }
 
-    isDefending = true;
-    DefenceWall(attack, false);
+    m_is_defending = true;
+    defenceWall(m_attack, false);
 
     std::map<int, Common::Vec2> static_pos;
-    static_pos[dmf]  = Common::Vec2(side * 3500, -Common::sign(m_world_state.ball.position.y) * 1100.0f);
-    static_pos[mid1] = Common::Vec2(side * 3200, 600);
-    static_pos[mid2] = Common::Vec2(side * 3200, 0);
+    static_pos[m_dmf]  = Common::Vec2(m_side * 3500, -Common::sign(m_world_state.ball.position.y) * 1100.0f);
+    static_pos[m_mid1] = Common::Vec2(m_side * 3200, 600);
+    static_pos[m_mid2] = Common::Vec2(m_side * 3200, 0);
 
-    MarkManager(true);
+    markManager();
 
-    for (std::map<int *, int>::const_iterator i = markMap.begin(); i != markMap.end(); ++i)
+    for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
     {
         int opp = i->second;
         int own = *i->first;
@@ -36,13 +36,13 @@ void Ai::corner_their_global()
         {
             if (static_pos.find(own) != static_pos.end())
             {
-                OwnRobot[own].face(oppGoal());
+                m_own_robot[own].face(oppGoal());
                 navigate(own, static_pos[own], VelocityProfile::mamooli());
             }
         }
         else
         {
-            Mark(own, opp, 500);
+            mark(own, opp, 500);
         }
     }
 }

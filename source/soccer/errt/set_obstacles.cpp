@@ -15,14 +15,14 @@ static float calculateRobotRadius(const Common::RobotState &state)
     return Common::field().robot_radius * (1.0f + extension_factor);
 }
 
-void Ai::setObstacles(int robot_num, const NavigationFlags t_flags)
+void Ai::setObstacles(int t_robot_num, const NavigationFlags t_flags)
 {
-    const bool ourPenalty = robot_num != gk && !m_ref_state.ourPlaceBall();
+    const bool ourPenalty = t_robot_num != m_gk && !m_ref_state.ourPlaceBall();
     const bool oppPenalty = !m_ref_state.ourPlaceBall();
 
     const bool oppPenaltyBig = m_ref_state.freeKick() || m_ref_state.stop();
 
-    const float current_robot_radius = calculateRobotRadius(OwnRobot[robot_num].state());
+    const float current_robot_radius = calculateRobotRadius(m_own_robot[t_robot_num].state());
 
     g_obs_map.resetMap();
 
@@ -34,10 +34,10 @@ void Ai::setObstacles(int robot_num, const NavigationFlags t_flags)
     // own
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        if ((OwnRobot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != robot_num) &&
-            (OwnRobot[i].state().vision_id != OwnRobot[robot_num].state().vision_id))
+        if ((m_own_robot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != t_robot_num) &&
+            (m_own_robot[i].state().vision_id != m_own_robot[t_robot_num].state().vision_id))
         {
-            g_obs_map.addCircle({OwnRobot[i].state().position, current_robot_radius + Common::field().robot_radius});
+            g_obs_map.addCircle({m_own_robot[i].state().position, current_robot_radius + Common::field().robot_radius});
         }
     }
 
@@ -69,11 +69,11 @@ void Ai::setObstacles(int robot_num, const NavigationFlags t_flags)
 
     if (ourPenalty)
     {
-        const Common::Vec2 start{side * (Common::field().width + penaltyAreaExtensionBehindGoal),
+        const Common::Vec2 start{m_side * (Common::field().width + penaltyAreaExtensionBehindGoal),
                                  -(penalty_area_half_width + current_robot_radius)};
 
         const float w =
-            -side * (penaltyAreaExtensionBehindGoal + current_robot_radius + Common::field().penalty_area_depth);
+            -m_side * (penaltyAreaExtensionBehindGoal + current_robot_radius + Common::field().penalty_area_depth);
         const float h = Common::field().penalty_area_width + 2 * current_robot_radius;
 
         g_obs_map.addRectangle({start, w, h});
@@ -81,11 +81,11 @@ void Ai::setObstacles(int robot_num, const NavigationFlags t_flags)
 
     if (oppPenalty)
     {
-        const Common::Vec2 start{-side * (Common::field().width + penaltyAreaExtensionBehindGoal),
+        const Common::Vec2 start{-m_side * (Common::field().width + penaltyAreaExtensionBehindGoal),
                                  -(penalty_area_half_width + current_robot_radius)};
 
         const float w =
-            side * (penaltyAreaExtensionBehindGoal + current_robot_radius + Common::field().penalty_area_depth);
+            m_side * (penaltyAreaExtensionBehindGoal + current_robot_radius + Common::field().penalty_area_depth);
         const float h = Common::field().penalty_area_width + 2 * current_robot_radius;
 
         g_obs_map.addRectangle({start, w, h});
@@ -97,10 +97,10 @@ void Ai::setObstacles(int robot_num, const NavigationFlags t_flags)
         const float big_penalty_area_w      = Common::field().penalty_area_width + bigPenaltyAddition;
         const float penalty_area_half_width = big_penalty_area_w / 2.0f;
 
-        const Common::Vec2 start{-side * (Common::field().width + penaltyAreaExtensionBehindGoal),
+        const Common::Vec2 start{-m_side * (Common::field().width + penaltyAreaExtensionBehindGoal),
                                  -(penalty_area_half_width + current_robot_radius)};
 
-        const float w = side * (penaltyAreaExtensionBehindGoal + current_robot_radius + big_penalty_area_r);
+        const float w = m_side * (penaltyAreaExtensionBehindGoal + current_robot_radius + big_penalty_area_r);
         const float h = big_penalty_area_w + 2 * current_robot_radius;
 
         g_obs_map.addRectangle({start, w, h});

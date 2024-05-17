@@ -155,5 +155,7 @@ public:
     float one_touch_beta    = 0.4;  // Damping factor
     float one_touch_gamma   = 0.14; // Reflect factor
     float one_touch_shoot_k = 4000.0f;
+
+    bool mark_in_stop = false;
 };
 } // namespace Tyr::Common

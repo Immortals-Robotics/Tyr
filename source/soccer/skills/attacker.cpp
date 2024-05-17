@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 int          lockAngleCounter = 0;
 int          elendil          = 0;
 Common::Vec2 Pelendil;
-Common::Vec2 Ai::predictBallForwardAI(float timeAhead)
+Common::Vec2 Ai::predictBallForwardAI(float t_time_ahead)
 {
     Common::BallState _ball = m_world_state.ball;
     _ball.position.x /= 1000.0f;
@@ -24,7 +24,7 @@ Common::Vec2 Ai::predictBallForwardAI(float timeAhead)
 
     float vball_vision = float(sqrt(vx_vision * vx_vision + vy_vision * vy_vision));
 
-    float t = timeAhead;
+    float t = t_time_ahead;
 
     float v     = vball_vision - k * t;
     float dist0 = vball_vision * t - k * (t * t) / 2.0f;
@@ -62,13 +62,13 @@ Common::Vec2 Ai::predictBallForwardAI(float timeAhead)
     return _ball.position;
 }
 
-float Ai::calculateRobotReachTime(int robot_num, Common::Vec2 dest, VelocityProfile vel_profile_type)
+float Ai::calculateRobotReachTime(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile)
 {
-    const VelocityProfile vel_profile(vel_profile_type);
-    return OwnRobot[robot_num].state().position.distanceTo(dest) / (vel_profile.max_spd * 0.5);
+    const VelocityProfile vel_profile(t_profile);
+    return m_own_robot[t_robot_num].state().position.distanceTo(t_dest) / (vel_profile.max_spd * 0.5);
 }
 
-float Ai::calculateBallRobotReachTime(int robot_num, VelocityProfile vel_profile_type)
+float Ai::calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile)
 {
     static Common::MedianFilter<float, 5> predTFilt{};
 
@@ -77,7 +77,7 @@ float Ai::calculateBallRobotReachTime(int robot_num, VelocityProfile vel_profile
     for (float forwT = 0; forwT < tMax; forwT += 0.02f)
     {
         Common::Vec2 newBallPos  = predictBallForwardAI(forwT);
-        float        robotReachT = calculateRobotReachTime(robot_num, newBallPos, vel_profile_type);
+        float        robotReachT = calculateRobotReachTime(t_robot_num, newBallPos, t_profile);
         if (robotReachT <= forwT)
         {
             predT = robotReachT;
@@ -89,29 +89,28 @@ float Ai::calculateBallRobotReachTime(int robot_num, VelocityProfile vel_profile
     return predTFilt.current();
 }
 
-void Ai::attacker(int robot_num, Common::Angle angle, int kick, int chip, bool gameRestart, bool kiss, bool dribbler)
+void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip, bool t_kiss, bool t_dribbler)
 {
-    // kick=100;
-    if (gameRestart && (chip > 0))
+    // t_kick=100;
+    if (m_ref_state.restart() && (t_chip > 0))
     {
-        chip_head = OwnRobot[robot_num].state().angle;
+        m_chip_head = m_own_robot[t_robot_num].state().angle;
     }
 
-    PredictedBall = m_world_state.ball.position;
+    m_predicted_ball = m_world_state.ball.position;
 
-    float d =
-        OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position.circleAroundPoint(angle, 200.0f));
-    d += m_world_state.ball.position.distanceTo(m_world_state.ball.position.circleAroundPoint(angle, 200.0f));
+    float d = m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position.circleAroundPoint(t_angle, 200.0f));
+    d += m_world_state.ball.position.distanceTo(m_world_state.ball.position.circleAroundPoint(t_angle, 200.0f));
     d -= 100;
 
     d /= 2000.0f;
 
-    PredictedBall.x += d * m_world_state.ball.velocity.x / 45.0f;
-    PredictedBall.y += d * m_world_state.ball.velocity.y / 45.0f;
+    m_predicted_ball.x += d * m_world_state.ball.velocity.x / 45.0f;
+    m_predicted_ball.y += d * m_world_state.ball.velocity.y / 45.0f;
 
-    PredictedBall = predictBallForwardAI(d);
+    m_predicted_ball = predictBallForwardAI(d);
 
-    Common::debug().draw(Common::Circle{PredictedBall, 50}, Common::Color::blue(), false);
+    Common::debug().draw(Common::Circle{m_predicted_ball, 50}, Common::Color::blue(), false);
 
     static bool passedBall = false;
 
@@ -139,40 +138,40 @@ void Ai::attacker(int robot_num, Common::Angle angle, int kick, int chip, bool g
         Common::LineSegment{m_world_state.ball.position, m_world_state.ball.position + ballVelPrepToGoal},
         Common::Color::green());
 
-    Common::Vec2 robotToBall    = OwnRobot[robot_num].state().position - m_world_state.ball.position;
+    Common::Vec2 robotToBall    = m_own_robot[t_robot_num].state().position - m_world_state.ball.position;
     float        robotToBallDot = robotToBall.x * ballVelPrepToGoal.x + robotToBall.y * ballVelPrepToGoal.y;
     robotToBallDot /= robotToBall.length();
     robotToBallDot /= ballVelPrepToGoal.length();
     if (robotToBallDot > 0.3)
         passedBall = true;
     else if ((robotToBallDot < -0.2) ||
-             (m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) > 1050))
+             (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) > 1050))
         passedBall = false;
 
     if (passedBall)
     {
-        Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 100}, Common::Color::gold(), false);
+        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::gold(), false);
     }
 
-    if (m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) < 400)
-        circleReachedBehindBall = true;
-    else if (m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) > 600)
-        circleReachedBehindBall = false;
+    if (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) < 400)
+        m_circle_reached_behind_ball = true;
+    else if (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) > 600)
+        m_circle_reached_behind_ball = false;
 
     Common::logDebug("circle dadam");
 
     float r = 150.0f;
 
-    if (kiss)
+    if (t_kiss)
     {
         r = 82.0f;
     }
 
     float tetta = 10.0f;
 
-    if ((kick > 0) || (chip > 0))
+    if ((t_kick > 0) || (t_chip > 0))
     {
-        if (gameRestart)
+        if (m_ref_state.restart())
         {
             r     = 200.0f;
             tetta = 20.0f;
@@ -186,50 +185,50 @@ void Ai::attacker(int robot_num, Common::Angle angle, int kick, int chip, bool g
         }
     }
 
-    if (dribbler)
+    if (t_dribbler)
     {
-        if (OwnRobot[robot_num].state().position.distanceTo(m_world_state.ball.position) < 190)
-            OwnRobot[robot_num].dribble(15);
+        if (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) < 190)
+            m_own_robot[t_robot_num].dribble(15);
     }
 
-    if (gameRestart)
-        OwnRobot[robot_num].face(PredictedBall);
+    if (m_ref_state.restart())
+        m_own_robot[t_robot_num].face(m_predicted_ball);
     else
-        OwnRobot[robot_num].target.angle = angle - Common::Angle::fromDeg(180.0f);
+        m_own_robot[t_robot_num].target.angle = t_angle - Common::Angle::fromDeg(180.0f);
 
-    Common::Angle hehe = PredictedBall.angleWith(OwnRobot[robot_num].state().position);
-    hehe               = angle - hehe;
+    Common::Angle hehe = m_predicted_ball.angleWith(m_own_robot[t_robot_num].state().position);
+    hehe               = t_angle - hehe;
 
-    if ((std::fabs(hehe.deg()) < tetta)) //|| ( circleReachedBehindBall ) )
+    if ((std::fabs(hehe.deg()) < tetta)) //|| ( m_circle_reached_behind_ball ) )
     {
-        Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 100}, Common::Color::red(), false);
-        if ((kick) || (chip))
+        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::red(), false);
+        if ((t_kick) || (t_chip))
         {
-            if (circleReachedBehindBall)
+            if (m_circle_reached_behind_ball)
             {
                 Common::logDebug("reached");
                 Common::Vec2 targetPoint;
-                if (!gameRestart)
+                if (!m_ref_state.restart())
                 {
-                    targetPoint = PredictedBall.circleAroundPoint(
-                        angle, std::min((r / 1.6f), std::fabs(hehe.deg()) * 320.0f / (tetta * 1.2f)));
+                    targetPoint = m_predicted_ball.circleAroundPoint(
+                        t_angle, std::min((r / 1.6f), std::fabs(hehe.deg()) * 320.0f / (tetta * 1.2f)));
                 }
                 else
                 {
-                    targetPoint =
-                        PredictedBall.circleAroundPoint(angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / (tetta)));
+                    targetPoint = m_predicted_ball.circleAroundPoint(
+                        t_angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / (tetta)));
                 }
 
                 Common::logDebug("elendil: {}", elendil);
-                Common::Angle hehe2 = PredictedBall.angleWith(OwnRobot[robot_num].state().position);
-                hehe2               = angle - hehe2;
+                Common::Angle hehe2 = m_predicted_ball.angleWith(m_own_robot[t_robot_num].state().position);
+                hehe2               = t_angle - hehe2;
                 bool el             = ((hehe2.deg() < 5) &&
-                           (m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) < 100));
+                           (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) < 100));
                 if (el || (elendil > 0))
                 {
 
-                    targetPoint.x -= 150.0 * angle.cos();
-                    targetPoint.y -= 150.0 * angle.sin();
+                    targetPoint.x -= 150.0 * t_angle.cos();
+                    targetPoint.y -= 150.0 * t_angle.sin();
                     targetPoint.x /= 1;
                     targetPoint.y /= 1;
 
@@ -240,63 +239,63 @@ void Ai::attacker(int robot_num, Common::Angle angle, int kick, int chip, bool g
                     {
                         elendil = 30;
                     }
-                    navigate(robot_num, Pelendil, VelocityProfile::kharaki());
+                    navigate(t_robot_num, Pelendil, VelocityProfile::kharaki());
                 }
                 else
                 {
-                    targetPoint = (targetPoint * 3.0f) - OwnRobot[robot_num].state().position;
+                    targetPoint = (targetPoint * 3.0f) - m_own_robot[t_robot_num].state().position;
                     targetPoint /= 2.0f;
-                    navigate(robot_num, targetPoint, VelocityProfile::kharaki());
+                    navigate(t_robot_num, targetPoint, VelocityProfile::kharaki());
                 }
             }
             else
-                navigate(robot_num,
-                         PredictedBall.circleAroundPoint(angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / tetta)),
+                navigate(t_robot_num,
+                         m_predicted_ball.circleAroundPoint(t_angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / tetta)),
                          VelocityProfile::mamooli());
         }
         else
-            navigate(robot_num, PredictedBall.circleAroundPoint(angle + hehe * 0.0f, r));
+            navigate(t_robot_num, m_predicted_ball.circleAroundPoint(t_angle + hehe * 0.0f, r));
     }
     else
     {
-        Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 100}, Common::Color::orange(), false);
+        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::orange(), false);
 
-        hehe = PredictedBall.angleWith(OwnRobot[robot_num].state().position) +
+        hehe = m_predicted_ball.angleWith(m_own_robot[t_robot_num].state().position) +
                Common::Angle::fromDeg(Common::sign(hehe.deg()) * tetta);
         if (passedBall)
-            navigate(robot_num, PredictedBall.circleAroundPoint(hehe, r));
+            navigate(t_robot_num, m_predicted_ball.circleAroundPoint(hehe, r));
         else
-            navigate(robot_num, PredictedBall.circleAroundPoint(hehe, r), VelocityProfile::kharaki());
+            navigate(t_robot_num, m_predicted_ball.circleAroundPoint(hehe, r), VelocityProfile::kharaki());
     }
 
-    Common::debug().draw(Common::Circle{OwnRobot[robot_num].state().position, 100}, Common::Color::violet(), false);
+    Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::violet(), false);
     Common::debug().draw(
         Common::LineSegment{
-            OwnRobot[robot_num].state().position,
-            OwnRobot[robot_num].state().position +
-                (OwnRobot[robot_num].target.position - OwnRobot[robot_num].state().position).normalized() * 1000.0f},
+            m_own_robot[t_robot_num].state().position,
+            m_own_robot[t_robot_num].state().position +
+                (m_own_robot[t_robot_num].target.position - m_own_robot[t_robot_num].state().position).normalized() * 1000.0f},
         Common::Color::black());
 
-    if ((kick > 0) || (chip > 0))
+    if ((t_kick > 0) || (t_chip > 0))
     {
-        Common::Vec2  tmpPos = OwnRobot[robot_num].state().position;
-        Common::Angle tmpAng = OwnRobot[robot_num].state().angle;
+        Common::Vec2  tmpPos = m_own_robot[t_robot_num].state().position;
+        Common::Angle tmpAng = m_own_robot[t_robot_num].state().angle;
 
-        if (std::fabs((OwnRobot[robot_num].target.angle - OwnRobot[robot_num].state().angle).deg()) < 40)
+        if (std::fabs((m_own_robot[t_robot_num].target.angle - m_own_robot[t_robot_num].state().angle).deg()) < 40)
             lockAngleCounter++;
         else
             lockAngleCounter = 0;
 
         // if ( lockAngleCounter > 1 )
         {
-            // if ( chip )
-            OwnRobot[robot_num].chip(chip);
+            // if ( t_chip )
+            m_own_robot[t_robot_num].chip(t_chip);
             // else
-            kick            = std::min(80, kick);
-            float vel_delta = OwnRobot[robot_num].state().velocity.length() / 100.0f;
+            t_kick          = std::min(80, t_kick);
+            float vel_delta = m_own_robot[t_robot_num].state().velocity.length() / 100.0f;
             vel_delta       = std::min(40.0f, vel_delta);
-            vel_delta       = kick - vel_delta;
-            OwnRobot[robot_num].shoot(kick);
+            vel_delta       = t_kick - vel_delta;
+            m_own_robot[t_robot_num].shoot(t_kick);
         }
     }
 }

@@ -2,86 +2,87 @@
 
 namespace Tyr::Soccer
 {
-void Ai::receivePass(int robot_num, Common::Vec2 staticPos, bool chip)
+void Ai::receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip)
 {
     const float contStrStaticTime = 1.0f;
 
-    if (timer.time() > 0.7)
+    if (m_timer.time() > 0.7)
     {
-        chip_head.setDeg(200);
+        m_chip_head.setDeg(200);
     }
-    if (oneTouchType[robot_num] == allaf)
-        staticPos = allafPos[robot_num];
-    if (oneTouchType[robot_num] == oneTouch && timer.time() < contStrStaticTime)
-        staticPos = allafPos[robot_num];
+    if (m_one_touch_type[t_robot_num] == OneTouchType::Allaf)
+        t_static_pos = m_allaf_pos[t_robot_num];
+    if (m_one_touch_type[t_robot_num] == OneTouchType::OneTouch && m_timer.time() < contStrStaticTime)
+        t_static_pos = m_allaf_pos[t_robot_num];
 
-    if (timer.time() > 2.5)
+    if (m_timer.time() > 2.5)
     {
-        oneTouchTypeUsed[robot_num] = true;
+        m_one_touch_type_used[t_robot_num] = true;
     }
 
     float angleTol, maxBallAngle;
 
-    if (oneTouchType[robot_num] == oneTouch)
+    if (m_one_touch_type[t_robot_num] == OneTouchType::OneTouch)
     {
         angleTol     = 45;
         maxBallAngle = 150;
     }
-    else if (oneTouchType[robot_num] == shirje)
+    else if (m_one_touch_type[t_robot_num] == OneTouchType::Shirje)
     {
         // angleTol = 55;
         // maxBallAngle = 140;
         angleTol     = 45;
         maxBallAngle = 90;
     }
-    else if (oneTouchType[robot_num] == gool)
+    else if (m_one_touch_type[t_robot_num] == OneTouchType::Gool)
     {
         angleTol     = 35;
         maxBallAngle = 110;
     }
     else
-    { // probably allaf!!!
+    { // probably Allaf!!!
         angleTol     = 0;
         maxBallAngle = 0;
     }
 
-    float distCoeff = m_world_state.ball.position.distanceTo(OwnRobot[robot_num].state().position) / 1500.0f;
+    float distCoeff = m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) / 1500.0f;
     distCoeff       = std::max(0.8f, distCoeff);
     distCoeff       = std::min(1.2f, distCoeff);
 
-    if ((oneTouchDetector[robot_num].IsArriving(angleTol, maxBallAngle)) && (oneTouchType[robot_num] != allaf))
+    if ((m_one_touch_detector[t_robot_num].IsArriving(angleTol, maxBallAngle)) &&
+        (m_one_touch_type[t_robot_num] != OneTouchType::Allaf))
     {
-        oneTouchTypeUsed[robot_num] = true;
-        if (oneTouchType[robot_num] == oneTouch)
+        m_one_touch_type_used[t_robot_num] = true;
+        if (m_one_touch_type[t_robot_num] == OneTouchType::OneTouch)
         {
-            if (timer.time() < contStrStaticTime)
-                WaitForPass(robot_num, chip, nullptr, &staticPos);
+            if (m_timer.time() < contStrStaticTime)
+                waitForPass(t_robot_num, t_chip, nullptr, &t_static_pos);
             else
-                WaitForPass(robot_num, chip);
+                waitForPass(t_robot_num, t_chip);
         }
-        else if (oneTouchType[robot_num] == shirje)
+        else if (m_one_touch_type[t_robot_num] == OneTouchType::Shirje)
         {
-            WaitForOmghi(robot_num, chip);
+            waitForOmghi(t_robot_num, t_chip);
         }
-        else if (oneTouchType[robot_num] == gool)
+        else if (m_one_touch_type[t_robot_num] == OneTouchType::Gool)
         {
-            WaitForGool(robot_num, chip);
+            waitForGool(t_robot_num, t_chip);
         }
         else
-        { // probably allaf!!!
-            OwnRobot[robot_num].face(oppGoal());
-            navigate(robot_num, staticPos, VelocityProfile::mamooli());
+        { // probably Allaf!!!
+            m_own_robot[t_robot_num].face(oppGoal());
+            navigate(t_robot_num, t_static_pos, VelocityProfile::mamooli());
         }
     }
     else
     {
-        if (oneTouchTypeUsed[robot_num])
+        if (m_one_touch_type_used[t_robot_num])
         {
-            oneTouchTypeUsed[robot_num] = false;
-            oneTouchType[robot_num]     = oneTouch;
+            m_one_touch_type_used[t_robot_num] = false;
+            m_one_touch_type[t_robot_num]      = OneTouchType::OneTouch;
         }
-        OwnRobot[robot_num].face(oppGoal());
-        navigate(robot_num, staticPos, VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
+        m_own_robot[t_robot_num].face(oppGoal());
+        navigate(t_robot_num, t_static_pos, VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
     }
 }
 } // namespace Tyr::Soccer

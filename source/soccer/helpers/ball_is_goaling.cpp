@@ -6,9 +6,9 @@ bool Ai::ballIsGoaling()
 {
     bool towardGoal = false;
 
-    if ((side == -1) && (std::fabs(m_world_state.ball.velocity.toAngle().deg()) > 90.0f))
+    if ((m_side == -1) && (std::fabs(m_world_state.ball.velocity.toAngle().deg()) > 90.0f))
         towardGoal = true;
-    if ((side == 1) && (std::fabs(m_world_state.ball.velocity.toAngle().deg()) < 90.0f))
+    if ((m_side == 1) && (std::fabs(m_world_state.ball.velocity.toAngle().deg()) < 90.0f))
         towardGoal = true;
 
     if (!towardGoal)

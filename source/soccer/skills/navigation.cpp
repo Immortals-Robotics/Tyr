@@ -2,33 +2,33 @@
 
 namespace Tyr::Soccer
 {
-void Ai::navigate(int robot_num, Common::Vec2 dest, VelocityProfile profile, const NavigationFlags t_flags)
+void Ai::navigate(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile, const NavigationFlags t_flags)
 {
-    if (OwnRobot[robot_num].state().seen_state == Common::SeenState::CompletelyOut)
+    if (m_own_robot[t_robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         return;
 
-    setObstacles(robot_num, t_flags);
+    setObstacles(t_robot_num, t_flags);
 
     if (m_ref_state.shouldSlowDown())
     {
-        profile.max_spd = std::min(profile.max_spd, 900.0f);
+        t_profile.max_spd = std::min(t_profile.max_spd, 900.0f);
     }
 
-    if (OwnRobot[robot_num].state().position.distanceTo(dest) > 100.0f)
-        Common::debug().draw(dest);
+    if (m_own_robot[t_robot_num].state().position.distanceTo(t_dest) > 100.0f)
+        Common::debug().draw(t_dest);
 
-    planner[robot_num].init(OwnRobot[robot_num].state().position, dest, 90.0f);
-    Common::Vec2 wayp = planner[robot_num].plan();
+    m_planner[t_robot_num].init(m_own_robot[t_robot_num].state().position, t_dest, 90.0f);
+    Common::Vec2 wayp = m_planner[t_robot_num].plan();
 
-    planner[robot_num].draw();
+    m_planner[t_robot_num].draw();
 
-    OwnRobot[robot_num].target.position = wayp;
+    m_own_robot[t_robot_num].target.position = wayp;
 
-    Common::Vec2 motion_cmd = OwnRobot[robot_num].computeMotion(profile);
+    Common::Vec2 motion_cmd = m_own_robot[t_robot_num].computeMotion(t_profile);
 
     if (!(t_flags & NavigationFlagsForceNoObstacles))
-        motion_cmd = dss->ComputeSafeMotion(robot_num, motion_cmd, profile);
+        motion_cmd = m_dss->ComputeSafeMotion(t_robot_num, motion_cmd, t_profile);
 
-    OwnRobot[robot_num].move(motion_cmd);
+    m_own_robot[t_robot_num].move(motion_cmd);
 }
 } // namespace Tyr::Soccer

@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-int Ai::strategy_weight()
+int Ai::strategyWeight()
 {
     if (m_playbook.strategy.size() == 0)
     {
@@ -16,14 +16,14 @@ int Ai::strategy_weight()
 
     float sigma_w = 0;
 
-    const Common::Vec2 sign_modifier{(float) side, Common::sign(-m_world_state.ball.position.y)};
+    const Common::Vec2 sign_modifier{(float) m_side, Common::sign(-m_world_state.ball.position.y)};
 
     Common::logDebug("strategy:");
 
     for (int i = 0; i < m_playbook.strategy.size(); i++)
     {
-        if ((side * m_world_state.ball.position.x > m_playbook.strategy[i].area.min.x) &&
-            (side * m_world_state.ball.position.x < m_playbook.strategy[i].area.max.x) &&
+        if ((m_side * m_world_state.ball.position.x > m_playbook.strategy[i].area.min.x) &&
+            (m_side * m_world_state.ball.position.x < m_playbook.strategy[i].area.max.x) &&
             (std::fabs(m_world_state.ball.position.y) > m_playbook.strategy[i].area.min.y) &&
             (std::fabs(m_world_state.ball.position.y) < m_playbook.strategy[i].area.max.y) &&
             (m_playbook.weight[i] > 0))
@@ -43,7 +43,7 @@ int Ai::strategy_weight()
     int ans_str = -1;
     for (std::map<int, float>::const_iterator it = good_strs.begin(); it != good_strs.end(); ++it)
     {
-        if (randomParam * sigma_w <= it->second)
+        if (m_random_param * sigma_w <= it->second)
         {
             ans_str = it->first;
             break;

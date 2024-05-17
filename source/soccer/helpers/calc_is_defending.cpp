@@ -2,23 +2,23 @@
 
 namespace Tyr::Soccer
 {
-void Ai::CalcIsDefending()
+void Ai::calcIsDefending()
 {
-    if (isDefending)
+    if (m_is_defending)
     {
-        if (side * m_world_state.ball.position.x < -200)
+        if (m_side * m_world_state.ball.position.x < -200)
         {
-            isDefending = false;
+            m_is_defending = false;
         }
     }
-    else if (side * m_world_state.ball.position.x > 300)
+    else if (m_side * m_world_state.ball.position.x > 300)
     {
-        isDefending = true;
+        m_is_defending = true;
     }
 
-    if (oppRestarted && timer.time() < 2.0)
+    if (m_opp_restarted && m_timer.time() < 2.0)
     {
-        isDefending = true;
+        m_is_defending = true;
     }
 }
 } // namespace Tyr::Soccer

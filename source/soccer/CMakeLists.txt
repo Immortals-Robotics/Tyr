@@ -41,6 +41,7 @@ set(SOURCE_FILES
 	helpers/calculate_mark_cost.cpp
 	helpers/calculate_opp_threat.cpp
 	helpers/calculate_switch_to_attacker_score.cpp
+	helpers/field.inl
 	helpers/find_kicker_opp.cpp
 	helpers/goal_blocked.cpp
 	helpers/manage_att_roles.cpp

@@ -2,13 +2,13 @@
 
 namespace Tyr::Soccer
 {
-void Ai::kickoff_their_one_wall()
+void Ai::kickoffTheirOneWall()
 {
-    GKHi(gk, 1);
-    DefHi(def, rw, lw, nullptr, true);
+    gkHi(m_gk);
+    defHi(m_def, m_rw, m_lw, nullptr);
 
-    OwnRobot[dmf].face(m_world_state.ball.position);
-    navigate(dmf,
+    m_own_robot[m_dmf].face(m_world_state.ball.position);
+    navigate(m_dmf,
              m_world_state.ball.position.pointOnConnectingLine(
                  ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 2.0f),
              VelocityProfile::mamooli());
@@ -33,76 +33,76 @@ void Ai::kickoff_their_one_wall()
 
     if (indexN != -1)
     {
-        if (side == -1)
+        if (m_side == -1)
         {
-            OwnRobot[mid1].face(oppGoal());
-            navigate(mid1, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
+            m_own_robot[m_mid1].face(oppGoal());
+            navigate(m_mid1, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
                                ownGoal(), (std::fabs(m_world_state.opp_robot[indexN].position.x) + 14) * 1.5));
-            markMap[&mid1] = indexN;
+            m_mark_map[&m_mid1] = indexN;
         }
         else
         {
-            OwnRobot[mid2].face(oppGoal());
-            navigate(mid2, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
+            m_own_robot[m_mid2].face(oppGoal());
+            navigate(m_mid2, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
                                ownGoal(), (std::fabs(m_world_state.opp_robot[indexN].position.x) + 14) * 1.5));
-            markMap[&mid2] = indexN;
+            m_mark_map[&m_mid2] = indexN;
         }
     }
     else
     {
-        if (side == -1)
+        if (m_side == -1)
         {
-            OwnRobot[mid1].face(m_world_state.ball.position);
-            navigate(mid1,
+            m_own_robot[m_mid1].face(m_world_state.ball.position);
+            navigate(m_mid1,
                      m_world_state.ball.position.circleAroundPoint(
                          Common::Angle::fromDeg(20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 790.0f));
-            markMap[&mid1] = -1;
+            m_mark_map[&m_mid1] = -1;
         }
         else
         {
-            OwnRobot[mid2].face(m_world_state.ball.position);
-            navigate(mid2,
+            m_own_robot[m_mid2].face(m_world_state.ball.position);
+            navigate(m_mid2,
                      m_world_state.ball.position.circleAroundPoint(
                          Common::Angle::fromDeg(-20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 790.0f));
-            markMap[&mid2] = -1;
+            m_mark_map[&m_mid2] = -1;
         }
     }
 
     if (indexP != -1)
     {
-        if (side == 1)
+        if (m_side == 1)
         {
-            OwnRobot[mid1].face(oppGoal());
-            navigate(mid1, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
+            m_own_robot[m_mid1].face(oppGoal());
+            navigate(m_mid1, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
                                ownGoal(), (std::fabs(m_world_state.opp_robot[indexP].position.x) + 14) * 1.5));
-            markMap[&mid1] = indexP;
+            m_mark_map[&m_mid1] = indexP;
         }
         else
         {
-            OwnRobot[mid2].face(oppGoal());
-            navigate(mid2, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
+            m_own_robot[m_mid2].face(oppGoal());
+            navigate(m_mid2, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
                                ownGoal(), (std::fabs(m_world_state.opp_robot[indexP].position.x) + 14) * 1.5));
-            markMap[&mid2] = indexP;
+            m_mark_map[&m_mid2] = indexP;
         }
     }
     else
     {
-        if (side == 1)
+        if (m_side == 1)
         {
-            OwnRobot[mid1].face(m_world_state.ball.position);
-            navigate(mid1, m_world_state.ball.position.circleAroundPoint(
+            m_own_robot[m_mid1].face(m_world_state.ball.position);
+            navigate(m_mid1, m_world_state.ball.position.circleAroundPoint(
                                Common::Angle::fromDeg(20) + m_world_state.ball.position.angleWith(ownGoal()), 790));
-            markMap[&mid1] = -1;
+            m_mark_map[&m_mid1] = -1;
         }
         else
         {
-            OwnRobot[mid2].face(m_world_state.ball.position);
-            navigate(mid2, m_world_state.ball.position.circleAroundPoint(
+            m_own_robot[m_mid2].face(m_world_state.ball.position);
+            navigate(m_mid2, m_world_state.ball.position.circleAroundPoint(
                                Common::Angle::fromDeg(-20) + m_world_state.ball.position.angleWith(ownGoal()), 790));
-            markMap[&mid2] = -1;
+            m_mark_map[&m_mid2] = -1;
         }
     }
 
-    DefenceWall(attack, true);
+    defenceWall(m_attack, true);
 }
 } // namespace Tyr::Soccer

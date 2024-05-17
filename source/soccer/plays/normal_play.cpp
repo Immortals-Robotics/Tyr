@@ -4,21 +4,21 @@ namespace Tyr::Soccer
 {
 Common::Timer activeShootTimer_omid;
 
-void Ai::NewNormalPlay()
+void Ai::newNormalPlay()
 {
-    GKHi(gk, 0);
+    gkHi(m_gk);
 
-    DefHi(def, rw, lw, nullptr, false);
+    defHi(m_def, m_rw, m_lw, nullptr);
 
-    CalcIsDefending();
+    calcIsDefending();
 
-    if (isDefending)
+    if (m_is_defending)
     {
-        NormalPlayDef();
+        normalPlayDef();
     }
     else
     {
-        NormalPlayAtt();
+        normalPlayAtt();
     }
 }
 } // namespace Tyr::Soccer
