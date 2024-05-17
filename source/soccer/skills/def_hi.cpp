@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target, bool t_stop)
+void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target)
 {
     if (!t_defend_target)
         t_defend_target = &(m_world_state.ball.position);
@@ -34,7 +34,7 @@ void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common:
                 Common::Angle::fromDeg(90.0));
             Common::Vec2 target = ball_line.intersect(Front_line).value_or(Common::Vec2());
 
-            runningDef(t_robot_num, target, t_defend_target, t_stop);
+            runningDef(t_robot_num, target, t_defend_target);
         }
         else
         {
@@ -70,7 +70,7 @@ void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common:
                 Common::Vec2(0, m_side * (Common::field().penalty_area_depth + 100)), Common::Angle::fromDeg(0.0));
             Common::Vec2 target = ball_line.intersect(Front_line).value_or(Common::Vec2());
 
-            runningDef(t_right_def_num, target, t_defend_target, t_stop);
+            runningDef(t_right_def_num, target, t_defend_target);
         }
         else
         {
@@ -104,7 +104,7 @@ void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common:
                 Common::Vec2(0, -m_side * (Common::field().penalty_area_depth + 100)), Common::Angle::fromDeg(0.0));
             Common::Vec2 target = ball_line.intersect(Front_line).value_or(Common::Vec2());
 
-            runningDef(t_left_def_num, target, t_defend_target, t_stop);
+            runningDef(t_left_def_num, target, t_defend_target);
         }
         else
         {

@@ -137,9 +137,8 @@ private:
 
     void gkShirje(int t_robot_num);
     void gkHi(int t_robot_num);
-    void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target = nullptr,
-               bool t_stop = false);
-    void runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defend_target, bool t_stop);
+    void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target);
+    void runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
     void defenceWall(int t_robot_num, bool t_kick_off = false);
     void attacker(int t_robot_num, Common::Angle t_angle, int t_kick = 0, int t_chip = 0, bool t_restart = false,
                   bool t_kiss = false, bool t_dribbler = false);

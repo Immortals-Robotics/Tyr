@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 void Ai::throwinChipShoot()
 {
     gkHi(m_gk);
-    defHi(m_def, m_rw, m_lw, nullptr, true);
+    defHi(m_def, m_rw, m_lw, nullptr);
 
     m_own_robot[m_mid2].face(m_world_state.ball.position);
     navigate(m_mid2, Common::Vec2(-m_side * 1500, Common::sign(m_world_state.ball.position.y) * 2500.0f),

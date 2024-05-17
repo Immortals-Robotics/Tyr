@@ -159,7 +159,7 @@ void Ai::strategy()
     }
 
     bool new_receivers_reached = true;
-    defHi(m_def, m_rw, m_lw, nullptr, true);
+    defHi(m_def, m_rw, m_lw, nullptr);
     for (int i = 0; i < strategy.role.size(); i++)
     {
         // if ((*m_stm_to_ai_num[i]==m_gk)||(*m_stm_to_ai_num[i]==m_def)) {

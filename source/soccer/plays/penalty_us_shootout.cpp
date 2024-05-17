@@ -6,7 +6,7 @@ static float t_nml;
 
 void Ai::penaltyUsShootout()
 {
-    defHi(m_def, m_rw, m_lw, nullptr, true);
+    defHi(m_def, m_rw, m_lw, nullptr);
 
     m_own_robot[m_dmf].face(oppGoal());
     navigate(m_dmf, Common::Vec2(m_side * 4000, 0), VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);

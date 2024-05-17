@@ -9,12 +9,12 @@ void Ai::cornerTheirGlobal()
         m_own_robot[m_gk].target.angle = Common::Angle::fromDeg((1 + m_side) * 90.0f);
         navigate(m_gk, Common::Vec2(m_side * (Common::field().width - 100), 0), VelocityProfile::mamooli());
 
-        defHi(m_def, m_rw, m_lw, nullptr, true);
+        defHi(m_def, m_rw, m_lw, nullptr);
     }
     else
     {
         gkHi(m_gk);
-        defHi(m_def, m_rw, m_lw, nullptr, true);
+        defHi(m_def, m_rw, m_lw, nullptr);
     }
 
     m_is_defending = true;

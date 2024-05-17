@@ -29,7 +29,7 @@ void Ai::stop()
     }
 
     gkHi(m_gk);
-    defHi(m_def, m_rw, m_lw, nullptr, true);
+    defHi(m_def, m_rw, m_lw, nullptr);
 
     if (Common::setting().mark_in_stop)
     {

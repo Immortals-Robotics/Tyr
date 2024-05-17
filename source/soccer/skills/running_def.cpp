@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defend_target, bool t_stop)
+void Ai::runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defend_target)
 {
     const float max_def_move_to_intercept = 400.0f;
     const float max_near_opp_dis          = 750.0f;
@@ -62,7 +62,7 @@ void Ai::runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defe
     Common::logDebug("m_gk_intercepting: {}", m_gk_intercepting);
 
     if ((interceptNear) && (!oppHasBall) && (!ballMovingFast) && (!ownAttackHasBall) && (!ballIsToGoal) &&
-        (!m_gk_intercepting) && (!t_stop))
+        (!m_gk_intercepting) && m_ref_state.gameOn())
     //    if(1)
     {
         Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");
