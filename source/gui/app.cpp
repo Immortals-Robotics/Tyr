@@ -91,9 +91,10 @@ bool Application::initialize(const int width, const int height)
     m_dumper->addEntry(Common::setting().world_state_url, Common::setting().world_state_db);
     m_dumper->addEntry(Common::setting().debug_url, Common::setting().debug_db);
 
-    m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
-    m_raw_client   = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
-    m_debug_client = std::make_unique<Common::NngClient>(Common::setting().debug_url);
+    m_world_client   = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
+    m_raw_client     = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
+    m_debug_client   = std::make_unique<Common::NngClient>(Common::setting().debug_url);
+    m_referee_client = std::make_unique<Common::NngClient>(Common::setting().referee_state_url);
 
     SetTraceLogCallback(logCallback);
 
@@ -155,6 +156,7 @@ void Application::update()
 {
     receiveWorldStates();
     receiveDebug();
+    receiveRefereeState();
 
     BeginDrawing();
     ClearBackground(DARKGRAY);
@@ -184,6 +186,7 @@ void Application::update()
         m_renderer->begin(Common::field());
 
         m_renderer->draw(Common::field());
+        m_renderer->draw(m_referee_state, Common::field());
 
         // TODO(mhmd): add an option for this
         if (m_demo_menu->getState() == LogState::None)
@@ -248,6 +251,13 @@ void Application::receiveWorldStates()
     Protos::Immortals::WorldState pb_state;
     if (m_world_client->receive(&pb_state, nullptr, true))
         m_world_state = Common::WorldState(pb_state);
+}
+
+void Application::receiveRefereeState()
+{
+    Protos::Immortals::RefereeState pb_raw_state;
+    if (m_referee_client->receive(&pb_raw_state, nullptr, true))
+        m_referee_state = Common::RefereeState(pb_raw_state);
 }
 
 void Application::receiveDebug()

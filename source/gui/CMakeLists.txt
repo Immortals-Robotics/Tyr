@@ -28,6 +28,7 @@ set(SOURCE_FILES
 	renderer/renderer.cpp
 	menu/filter_tab.cpp
 	renderer/robot.cpp
+		renderer/info.cpp
 )
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
