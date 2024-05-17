@@ -6,28 +6,28 @@ void Renderer::draw(const Common::FieldState &t_field)
 {
     ClearBackground(GREEN);
 
-    Common::Vec2 fieldWallStartPoint = Common::Vec2(t_field.width * 2.0f / -2 - t_field.boundary_width,
-                                                    t_field.height * 2.0f / -2 - t_field.boundary_width);
-    Common::Vec2 fieldWallEndPoint   = Common::Vec2(t_field.width * 2.0f / 2 + t_field.boundary_width,
-                                                    t_field.height * 2.0f / 2 + t_field.boundary_width);
-    Common::Vec2 fieldStartPoint     = Common::Vec2(t_field.width * 2.0f / -2, t_field.height * 2.0f / -2);
-    Common::Vec2 fieldEndPoint       = Common::Vec2(t_field.width * 2.0f / 2, t_field.height * 2.0f / 2);
-    Common::Vec2 fieldCenter         = Common::Vec2(0, 0);
+    Common::Vec2 fieldWallStartPoint =
+        Common::Vec2(t_field.width * -1 - t_field.boundary_width, t_field.height * -1 - t_field.boundary_width);
+    Common::Vec2 fieldWallEndPoint =
+        Common::Vec2(t_field.width + t_field.boundary_width, t_field.height + t_field.boundary_width);
+    Common::Vec2 fieldStartPoint = Common::Vec2(t_field.width * -1, t_field.height * 2.0f / -2);
+    Common::Vec2 fieldEndPoint   = Common::Vec2(t_field.width, t_field.height * 2.0f / 2);
+    Common::Vec2 fieldCenter     = Common::Vec2(0, 0);
 
     Common::Vec2 ourGoalStartPoint =
-        Common::Vec2(t_field.width * 2.0f / -2 - t_field.goal_depth, t_field.goal_width / 2);
-    Common::Vec2 ourGoalEndPoint   = Common::Vec2(t_field.width * 2.0f / -2, t_field.goal_width / -2);
+        Common::Vec2(t_field.width * -1 - t_field.goal_depth, t_field.goal_width / 2);
+    Common::Vec2 ourGoalEndPoint   = Common::Vec2(t_field.width * -1, t_field.goal_width / -2);
     Common::Vec2 oppGoalStartPoint = ourGoalStartPoint * -1;
     Common::Vec2 oppGoalEndPoint   = ourGoalEndPoint * -1;
 
-    Common::Vec2 ourPenaltyStartPoint = Common::Vec2(t_field.width * 2.0f / -2, t_field.penalty_area_width / 2);
+    Common::Vec2 ourPenaltyStartPoint = Common::Vec2(t_field.width * -1, t_field.penalty_area_width / 2);
     Common::Vec2 ourPenaltyEndPoint =
         Common::Vec2(t_field.width * 2.0f / -2 + t_field.penalty_area_depth, t_field.penalty_area_width / -2);
 
     Common::Vec2 oppenaltyStartPoint = ourPenaltyStartPoint * -1;
     Common::Vec2 oppPenaltyEndPoint  = ourPenaltyEndPoint * -1;
 
-    Common::Vec2 centerLineStartPoint = Common::Vec2(0, t_field.height * 2.0f / -2);
+    Common::Vec2 centerLineStartPoint = Common::Vec2(0, t_field.height * -1);
     Common::Vec2 centerLineEndPoint   = centerLineStartPoint * -1;
 
     float centerCircleRad = t_field.center_circle_radius;
@@ -43,10 +43,6 @@ void Renderer::draw(const Common::FieldState &t_field)
     draw(Common::Rect{oppenaltyStartPoint, oppPenaltyEndPoint}, Common::Color::white(), false, kLineWidth);
     draw(Common::LineSegment{centerLineStartPoint, centerLineEndPoint}, Common::Color::white(), kLineWidth);
     draw(Common::Circle{fieldCenter, centerCircleRad}, Common::Color::white(), false, kLineWidth);
-
-    // TODO: this doesn't belong here
-    draw(fieldWallEndPoint + Common::Vec2(-500., 100.), "GUI FPS: " + std::to_string(GetFPS()), Common::Color::black(),
-         200);
 
     if (ImGui::IsMouseClicked(0))
     {
