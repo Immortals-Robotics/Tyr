@@ -5,10 +5,9 @@ namespace Tyr::Gui
 {
 void ConfigMenu::drawFilterTab()
 {
-    bool all_change = false;
     if (ImGui::Checkbox("All", &m_all_filter))
     {
-        all_change = true;
+        m_all_change = true;
         if(!m_all_filter) {
             m_filter_tree.clear();
             m_node_map.clear();
@@ -20,7 +19,7 @@ void ConfigMenu::drawFilterTab()
     for (const auto &node : m_filter_tree.nodes)
     {
         auto force_active = false;
-        if (all_change)
+        if (m_all_change)
         {
             force_active = true;
             node->active = m_all_filter;
@@ -43,6 +42,9 @@ void ConfigMenu::drawFilterTab()
         }
         ImGui::Separator();
         ImGui::Spacing();
+    }
+    if(m_filter_tree.nodes.size()) {
+        m_all_change = false;
     }
 }
 

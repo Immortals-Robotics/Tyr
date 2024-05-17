@@ -216,15 +216,6 @@ void Application::update()
         ImGui::End();
     }
 
-    if (m_demo_menu->getState() == LogState::None)
-    {
-        m_log_menu->draw(m_debug_wrapper);
-    }
-    else
-    {
-        m_log_menu->draw(m_demo_menu->debugWrapper());
-    }
-
     m_config_menu->draw();
 
     if (m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||

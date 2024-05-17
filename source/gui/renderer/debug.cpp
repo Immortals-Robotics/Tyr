@@ -9,7 +9,7 @@ void Renderer::draw(const Common::Debug::Wrapper &t_wrapper, const std::unordere
         if(ConfigMenu::applyFilter(draw.source, t_map))
         {
             if (auto point = std::get_if<Common::Vec2>(&draw.shape); point)
-                this->draw(*point, draw.color, draw.filled, draw.thickness);
+                this->draw(*point, draw.color, draw.thickness);
             else if (auto line = std::get_if<Common::Line>(&draw.shape); line)
                 this->draw(*line, draw.color, draw.thickness);
             else if (auto line = std::get_if<Common::LineSegment>(&draw.shape); line)

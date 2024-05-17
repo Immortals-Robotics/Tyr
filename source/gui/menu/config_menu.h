@@ -66,11 +66,11 @@ private:
     char m_merge_distance[10];
     char m_vision_frame_rate[10];
 
-    std::array<bool, max_num_of_cameras> m_use_camera     = {true, true, false};
-    bool                                 m_use_kalman_ang = false;
-    bool                                 m_use_kalman_pos = true;
-    bool                                 m_all_filter     = true;
-
+    std::array<bool, max_num_of_cameras>      m_use_camera     = {true, true, false};
+    bool                                      m_use_kalman_ang = false;
+    bool                                      m_use_kalman_pos = true;
+    bool                                      m_all_filter     = true;
+    bool                                      m_all_change     = false;
     const std::map<InputCallbackType, char *> m_type_input_text_map{
         {InputCallbackType::VISION_IP, m_vision_ip_text},     {InputCallbackType::VISION_PORT, m_vision_port_text},
         {InputCallbackType::REF_IP, m_referee_ip_text},       {InputCallbackType::REF_PORT, m_referee_port_text},

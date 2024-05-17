@@ -51,8 +51,7 @@ set(HEADER_FILES
 	storage/dumper.h
 	storage/storage.h
 	time/time_point.h
-	time/timer.h
-    util/tree.h)
+	time/timer.h)
 
 set(SOURCE_FILES
 	services.cpp
