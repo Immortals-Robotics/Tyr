@@ -39,6 +39,12 @@ private:
         Protos::Immortals::WorldState message;
     };
 
+    struct RefereeDemo
+    {
+        Info                            info;
+        Protos::Immortals::RefereeState message;
+    };
+
     char     m_record_button[7] = "\uf111";
     float    m_playback_time    = 0.;
     float    m_playback_size    = 100.;
@@ -52,11 +58,13 @@ private:
     int                       m_selected_demo = 0;
     std::vector<const char *> m_demo_names;
 
-    Common::Storage m_storage;
+    Common::Storage m_debug_storage;
     Common::Storage m_world_filtered_storage;
+    Common::Storage m_referee_storage;
 
     DebugDemo             m_debug;
     WorldSateFilteredDemo m_worldstate_filtered;
+    RefereeDemo           m_referee;
 
 public:
     DemoMenu() = default;
@@ -72,6 +80,11 @@ public:
     const Protos::Immortals::WorldState &worldStateFiltered() const
     {
         return m_worldstate_filtered.message;
+    }
+
+    const Protos::Immortals::RefereeState &refereeState() const
+    {
+        return m_referee.message;
     }
 };
 

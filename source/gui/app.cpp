@@ -90,10 +90,12 @@ bool Application::initialize(const int width, const int height)
     m_dumper->addEntry(Common::setting().raw_world_state_url, Common::setting().raw_world_state_db);
     m_dumper->addEntry(Common::setting().world_state_url, Common::setting().world_state_db);
     m_dumper->addEntry(Common::setting().debug_url, Common::setting().debug_db);
+    m_dumper->addEntry(Common::setting().referee_state_url, Common::setting().referee_db);
 
-    m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
-    m_raw_client   = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
-    m_debug_client = std::make_unique<Common::NngClient>(Common::setting().debug_url);
+    m_world_client   = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
+    m_raw_client     = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
+    m_debug_client   = std::make_unique<Common::NngClient>(Common::setting().debug_url);
+    m_referee_client = std::make_unique<Common::NngClient>(Common::setting().referee_state_url);
 
     SetTraceLogCallback(logCallback);
 
@@ -155,6 +157,7 @@ void Application::update()
 {
     receiveWorldStates();
     receiveDebug();
+    receiveRefereeState();
 
     BeginDrawing();
     ClearBackground(DARKGRAY);
@@ -188,6 +191,7 @@ void Application::update()
         // TODO(mhmd): add an option for this
         if (m_demo_menu->getState() == LogState::None)
         {
+            m_renderer->draw(m_referee_state, Common::field());
             if (1)
                 m_renderer->draw(m_world_state);
             else
@@ -196,6 +200,7 @@ void Application::update()
         else
         {
             m_renderer->draw(m_demo_menu->worldStateFiltered());
+            m_renderer->draw(m_demo_menu->refereeState(), Common::field());
         }
 
         if (m_demo_menu->getState() == LogState::None)
@@ -248,6 +253,13 @@ void Application::receiveWorldStates()
     Protos::Immortals::WorldState pb_state;
     if (m_world_client->receive(&pb_state, nullptr, true))
         m_world_state = Common::WorldState(pb_state);
+}
+
+void Application::receiveRefereeState()
+{
+    Protos::Immortals::RefereeState pb_raw_state;
+    if (m_referee_client->receive(&pb_raw_state, nullptr, true))
+        m_referee_state = Common::RefereeState(pb_raw_state);
 }
 
 void Application::receiveDebug()

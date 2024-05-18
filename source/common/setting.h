@@ -135,6 +135,7 @@ public:
     std::string raw_world_state_db = "raw_world_state";
     std::string world_state_db     = "world_state";
     std::string debug_db           = "debug";
+    std::string referee_db         = "referee";
 
     TeamSide our_side = TeamSide::Left;
 

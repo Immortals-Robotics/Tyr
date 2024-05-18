@@ -29,6 +29,18 @@ public:
 
     TimePoint time;
 
+    const static inline std::unordered_map<int, std::string> m_state_string = {
+        {0, "None"},
+        {STATE_GAME_ON, "Game on"},
+        {STATE_GAME_OFF, "Game off"},
+        {STATE_HALTED, "HALT"},
+        {STATE_KICKOFF, "Kickoff"},
+        {STATE_PENALTY, "Penalty"},
+        {STATE_DIRECT, "Direct free kick"},
+        {STATE_INDIRECT, "Indirect free kick"},
+        {STATE_PLACE_BALL, "Ball placement"},
+    };
+
     int                      state = STATE_GAME_OFF;
     std::optional<TeamColor> color;
     Vec2                     place_ball_target;
@@ -67,6 +79,17 @@ public:
     bool our() const
     {
         return color == setting().our_color;
+    }
+
+    std::string getString() const
+    {
+        auto state_str = RefereeState::m_state_string.at(
+            state & (STATE_GAME_ON | STATE_GAME_OFF | STATE_HALTED | STATE_RESTART | STATE_PLACE_BALL));
+        if (state & STATE_RESTART)
+        {
+            state_str = (our() ? "Our " : "Their ") + state_str;
+        }
+        return state_str;
     }
 
     bool stop() const

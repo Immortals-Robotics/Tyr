@@ -24,7 +24,6 @@ void Renderer::begin(const Common::FieldState &t_field)
 
     const float zoom = window_size.x < window_size.y ? (ratio.x > ratio.y ? ratio.x : ratio.y)
                                                      : (ratio.x > ratio.y ? ratio.y : ratio.x);
-
     m_camera = {
         .offset   = offset,              // Offset from the target
         .target   = Vector2{0.0f, 0.0f}, // Camera target (center of the screen)

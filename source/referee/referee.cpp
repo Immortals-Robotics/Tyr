@@ -46,6 +46,7 @@ void Referee::process()
         Common::logDebug("m_cmd_counter: {}", m_ssl_ref.command_counter());
     }
 
+    m_state.time = std::chrono::system_clock::now();
     transition(m_ssl_ref.command());
 }
 

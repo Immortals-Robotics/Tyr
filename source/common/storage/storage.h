@@ -14,7 +14,7 @@ public:
     bool close();
 
     bool get(Key t_key, google::protobuf::MessageLite *t_message) const;
-    bool getTwo(Key t_key, Key *t_first, Key *t_second, google::protobuf::MessageLite *t_message_first,
+    bool get(Key t_key, Key *t_first, Key *t_second, google::protobuf::MessageLite *t_message_first,
                 google::protobuf::MessageLite *t_message_second) const;
 
     unsigned long getBoundary(Key *t_first, Key *t_last) const;

@@ -164,14 +164,28 @@ bool Storage::get(Key t_key, google::protobuf::MessageLite *t_message) const
         .mv_data = &t_key,
     };
     MDB_val mdb_data;
-    result = mdb_get(transaction, m_dbi, &mdb_key, &mdb_data);
+
+    MDB_cursor *mdb_cursor;
+
+    result = mdb_cursor_open(transaction, m_dbi, &mdb_cursor);
     if (result != MDB_SUCCESS)
     {
-        logError("lmdb get [{}] failed with: {}", t_key, getErrorString(result));
+        Common::logError("lmdb cursor open failed with: {}", getErrorString(result));
         return false;
     }
 
-    const bool pb_result = t_message->ParseFromArray(mdb_data.mv_data, mdb_data.mv_size);
+    result = mdb_cursor_get(mdb_cursor, &mdb_key, &mdb_data, MDB_SET_RANGE);
+    if (result == MDB_NOTFOUND)
+    {
+        return false;
+    }
+    else if (result != MDB_SUCCESS)
+    {
+        Common::logError("lmdb get failed with: {}", getErrorString(result));
+        return false;
+    }
+
+    bool pb_result = t_message->ParseFromArray(mdb_data.mv_data, mdb_data.mv_size);
     mdb_txn_abort(transaction);
 
     if (!pb_result)
@@ -183,7 +197,7 @@ bool Storage::get(Key t_key, google::protobuf::MessageLite *t_message) const
     return true;
 }
 
-bool Storage::getTwo(Key t_key, Key *t_first, Key *t_second, google::protobuf::MessageLite *t_message_first,
+bool Storage::get(Key t_key, Key *t_first, Key *t_second, google::protobuf::MessageLite *t_message_first,
                      google::protobuf::MessageLite *t_message_second) const
 {
     int result;

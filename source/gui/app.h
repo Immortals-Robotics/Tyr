@@ -52,14 +52,18 @@ private:
     std::unique_ptr<Common::NngClient> m_world_client;
     std::unique_ptr<Common::NngClient> m_raw_client;
     std::unique_ptr<Common::NngClient> m_debug_client;
+    std::unique_ptr<Common::NngClient> m_referee_client;
 
     Common::WorldState    m_world_state;
     Common::RawWorldState m_raw_world_state;
 
     Common::Debug::Wrapper m_debug_wrapper;
 
+    Common::RefereeState m_referee_state;
+
     void receiveWorldStates();
     void receiveDebug();
+    void receiveRefereeState();
 
     void visionRawEntry();
     void visionFilteredEntry();
