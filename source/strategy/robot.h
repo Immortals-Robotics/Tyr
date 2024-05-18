@@ -7,6 +7,8 @@
 #define Shirje 2
 #define Allaf 3
 
+namespace Tyr::Strategy
+{
 class Robot
 {
 public:
@@ -26,3 +28,4 @@ public:
         Attack
     };
 };
+} // namespace Tyr::Strategy

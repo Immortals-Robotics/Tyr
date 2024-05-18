@@ -2,9 +2,9 @@
 
 #include "ui_frame.h"
 
-using namespace std;
-
-frame::frame(QWidget *parent) : QMainWindow(parent), ui(new Ui::frame)
+namespace Tyr::Strategy
+{
+Frame::Frame(QWidget *parent) : QMainWindow(parent), ui(new Ui::Frame)
 {
     ui->setupUi(this);
     g = new gui(this);
@@ -19,15 +19,15 @@ frame::frame(QWidget *parent) : QMainWindow(parent), ui(new Ui::frame)
     setAcceptDrops(true);
     connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
     timer.start(300);
-    udp = new Tyr::Common::UdpServer();
+    udp = new Common::UdpServer();
 }
 
-frame::~frame()
+Frame::~Frame()
 {
     delete ui;
 }
 
-void frame::update()
+void Frame::update()
 {
 
     if (g->strategCounter > 0)
@@ -103,22 +103,22 @@ void frame::update()
     }
 }
 
-void frame::paintEvent(QPaintEvent *event)
+void Frame::paintEvent(QPaintEvent *event)
 {}
 
-void frame::dragEnterEvent(QDragEnterEvent *event)
+void Frame::dragEnterEvent(QDragEnterEvent *event)
 {}
 
-void frame::dragMoveEvent(QDragMoveEvent *event)
+void Frame::dragMoveEvent(QDragMoveEvent *event)
 {}
 
-void frame::dropEvent(QDropEvent *event)
+void Frame::dropEvent(QDropEvent *event)
 {}
 
-void frame::mousePressEvent(QMouseEvent *event)
+void Frame::mousePressEvent(QMouseEvent *event)
 {}
 
-void frame::on_pushButton_clicked() // Add Strategy
+void Frame::on_pushButton_clicked() // Add Strategy
 {
     for (int i = 0; i < g->strategCounter; i++)
     {
@@ -150,7 +150,7 @@ void frame::on_pushButton_clicked() // Add Strategy
     QVariant b = g->strategy[g->currentStrategy]->getName();
     ui->lineEdit->setText(b.toString());
 }
-void frame::on_pushButton_2_clicked()
+void Frame::on_pushButton_2_clicked()
 {
     for (int i = 0; i < g->strategCounter; i++)
     {
@@ -175,7 +175,7 @@ void frame::on_pushButton_2_clicked()
     ui->lineEdit->setText(b.toString());
 }
 
-void frame::on_comboBox_3_currentIndexChanged(int index)
+void Frame::on_comboBox_3_currentIndexChanged(int index)
 {
     for (int i = 0; i < 8; i++)
     {
@@ -225,7 +225,7 @@ void frame::on_comboBox_3_currentIndexChanged(int index)
     }
 }
 
-void frame::on_comboBox_2_currentIndexChanged(int index)
+void Frame::on_comboBox_2_currentIndexChanged(int index)
 {
     g->currentRobot = ui->comboBox_2->currentIndex();
     ui->comboBox_6->setCurrentIndex(g->strategy[g->currentStrategy]->robot[g->currentRobot].finalRole);
@@ -241,12 +241,12 @@ void frame::on_comboBox_2_currentIndexChanged(int index)
     }
 }
 
-void frame::on_comboBox_4_currentIndexChanged(int index)
+void Frame::on_comboBox_4_currentIndexChanged(int index)
 {
     g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->wayPointType = index;
 }
 
-// void frame::on_lineEdit_2_returnPressed()
+// void Frame::on_lineEdit_2_returnPressed()
 //{
 //     QVariant b = ui->lineEdit_2->text();
 //     int y = g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->y();
@@ -257,7 +257,7 @@ void frame::on_comboBox_4_currentIndexChanged(int index)
 //     this->update();
 // }
 
-// void frame::on_lineEdit_3_returnPressed()
+// void Frame::on_lineEdit_3_returnPressed()
 //{
 //     QVariant b = ui->lineEdit_3->text();
 //     int x = g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->x();
@@ -268,7 +268,7 @@ void frame::on_comboBox_4_currentIndexChanged(int index)
 //     this->update();
 // }
 
-void frame::on_toolButton_clicked()
+void Frame::on_toolButton_clicked()
 {
     QString  str = "Sync Num ";
     QVariant b   = (int) g->syncCounter + 1;
@@ -277,23 +277,23 @@ void frame::on_toolButton_clicked()
     g->syncCounter++;
 }
 
-// void frame::on_toolButton_2_clicked()
+// void Frame::on_toolButton_2_clicked()
 //{
 //     ui->comboBox_6->removeItem(g->currentSync);
 //     g->currentSync--;
 // }
 
-void frame::on_comboBox_6_currentIndexChanged(int index)
+void Frame::on_comboBox_6_currentIndexChanged(int index)
 {
     g->strategy[g->currentStrategy]->robot[g->currentRobot].finalRole = index;
 }
 
-void frame::on_toolButton_3_clicked()
+void Frame::on_toolButton_3_clicked()
 {
     g->syncDatas[g->currentSync].point.remove(g->currentWaypoint);
 }
 
-void frame::on_toolButton_4_clicked()
+void Frame::on_toolButton_4_clicked()
 {
     for (int i = 0; i < g->syncDatas[g->currentSync].point.size(); i++)
     {
@@ -306,12 +306,12 @@ void frame::on_toolButton_4_clicked()
     g->clicked = 1;
 }
 
-void frame::on_pushButton_3_clicked()
+void Frame::on_pushButton_3_clicked()
 {
     playBook.Clear();
     for (int i = 0; i < g->strategCounter; i++)
     {
-        cout << "BOZ" << endl;
+        std::cout << "BOZ" << std::endl;
         Protos::Immortals::Strategy *strag = playBook.add_strategy();
         strag->set_name(g->strategy[i]->getName().toStdString());
         strag->set_min_x(g->strategy[i]->minX);
@@ -350,34 +350,34 @@ void frame::on_pushButton_3_clicked()
         }
     }
 
-    ofstream file(file_path.c_str(), ios::out | ios::binary);
+    std::ofstream file(file_path.c_str(), std::ios::out | std::ios::binary);
     if (!file.is_open())
     {
         QMessageBox msg;
         msg.setText("Can't Write to File !!! ");
         msg.exec();
     }
-    string str;
+    std::string str;
     playBook.SerializeToString(&str);
     file.clear();
     file.write(str.data(), str.length());
     file.close();
-    udp->send(playBook, {"224.5.23.3", 60006});
+    udp->send(playBook, Common::setting().strategy_address);
 }
 
-void frame::on_pushButton_4_clicked()
+void Frame::on_pushButton_4_clicked()
 {
-    ifstream::pos_type size;
-    char              *memblock;
+    std::ifstream::pos_type size;
+    char                   *memblock;
     file_path = DATA_DIR;
     file_path += "/strategy.ims";
-    ifstream file(file_path.c_str(), ios::in | ios::binary);
+    std::ifstream file(file_path.c_str(), std::ios::in | std::ios::binary);
     if (file.is_open())
     {
-        file.seekg(0, ios::end);
+        file.seekg(0, std::ios::end);
         size     = file.tellg();
         memblock = new char[size];
-        file.seekg(0, ios::beg);
+        file.seekg(0, std::ios::beg);
         file.read(memblock, size);
         playBook.ParseFromArray(memblock, size);
         for (int i = 0; i < g->strategCounter; i++)
@@ -412,7 +412,7 @@ void frame::on_pushButton_4_clicked()
                     int y =
                         (((playBook.strategy(i).role(j).path(k).y() / 1.0) - 4384) * 31) / -450; //((-+300)*3.0/2)-13;
 
-                    cout << "KHAR" << endl;
+                    std::cout << "KHAR" << std::endl;
                     g->strategy[i]->robot[j].waypoint[k]->move(x + 106, y + 45);
                     g->strategy[i]->robot[j].waypoint[k]->setParent(g);
                     g->strategy[i]->robot[j].waypoint[k]->wayPointType = playBook.strategy(i).role(j).path(k).type();
@@ -463,30 +463,30 @@ void frame::on_pushButton_4_clicked()
     }
 }
 
-void frame::on_comboBox_7_currentIndexChanged(int index)
+void Frame::on_comboBox_7_currentIndexChanged(int index)
 {
     g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->velProfile = index;
 }
 
-void frame::on_lineEdit_6_returnPressed()
+void Frame::on_lineEdit_6_returnPressed()
 {
     QVariant b = ui->lineEdit_6->text();
     g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->speed = b.toFloat();
 }
 
-void frame::on_lineEdit_5_returnPressed()
+void Frame::on_lineEdit_5_returnPressed()
 {
     QVariant b                                                                                 = ui->lineEdit_5->text();
     g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->time = b.toFloat();
 }
 
-void frame::on_lineEdit_4_returnPressed()
+void Frame::on_lineEdit_4_returnPressed()
 {
     QVariant b = ui->lineEdit_4->text();
     g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->tolerance = b.toFloat();
 }
 
-void frame::on_comboBox_5_currentIndexChanged(int index)
+void Frame::on_comboBox_5_currentIndexChanged(int index)
 {
     if (index == 1)
         g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->needRRT = true;
@@ -494,14 +494,14 @@ void frame::on_comboBox_5_currentIndexChanged(int index)
         g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->needRRT = false;
 }
 
-void frame::on_lineEdit_7_returnPressed()
+void Frame::on_lineEdit_7_returnPressed()
 {
     QVariant b = ui->lineEdit_7->text();
     if (g->strategCounter > 0)
         g->strategy[g->currentStrategy]->weight = b.toInt();
 }
 
-void frame::on_comboBox_8_currentIndexChanged(int index)
+void Frame::on_comboBox_8_currentIndexChanged(int index)
 {
     if (g->currentRobot == Robot::Attack && g->strategCounter > 0)
     {
@@ -511,7 +511,7 @@ void frame::on_comboBox_8_currentIndexChanged(int index)
     }
 }
 
-void frame::on_comboBox_9_currentIndexChanged(int index)
+void Frame::on_comboBox_9_currentIndexChanged(int index)
 {
     if (g->currentRobot == Robot::Attack && g->strategCounter > 0)
     {
@@ -519,35 +519,35 @@ void frame::on_comboBox_9_currentIndexChanged(int index)
     }
 }
 
-void frame::on_lineEdit_4_selectionChanged()
+void Frame::on_lineEdit_4_selectionChanged()
 {
     QVariant b = ui->lineEdit_4->text();
     if (g->strategCounter > 0)
         g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->tolerance = b.toFloat();
 }
 
-void frame::on_lineEdit_5_selectionChanged()
+void Frame::on_lineEdit_5_selectionChanged()
 {
     QVariant t = ui->lineEdit_5->text();
     if (g->strategCounter > 0)
         g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->time = t.toFloat();
 }
 
-void frame::on_lineEdit_6_selectionChanged()
+void Frame::on_lineEdit_6_selectionChanged()
 {
     QVariant b = ui->lineEdit_6->text();
     if (g->strategCounter > 0)
         g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->speed = b.toFloat();
 }
 
-void frame::on_lineEdit_7_selectionChanged()
+void Frame::on_lineEdit_7_selectionChanged()
 {
     QVariant b = ui->lineEdit_7->text();
     if (g->strategCounter > 0)
         g->strategy[g->currentStrategy]->weight = b.toInt();
 }
 
-void frame::on_pushButton_5_clicked()
+void Frame::on_pushButton_5_clicked()
 {
     for (int i = 0; i < g->strategCounter; i++)
     {
@@ -612,56 +612,57 @@ void frame::on_pushButton_5_clicked()
     g->strategCounter++;
 }
 
-void frame::on_pushButton_6_clicked()
+void Frame::on_pushButton_6_clicked()
 {
     // UDPSocket *
 }
 
-void frame::on_lineEdit_8_returnPressed()
+void Frame::on_lineEdit_8_returnPressed()
 {
     QVariant b                            = ui->lineEdit_8->text();
     g->strategy[g->currentStrategy]->minX = b.toInt();
 }
 
-void frame::on_lineEdit_9_returnPressed()
+void Frame::on_lineEdit_9_returnPressed()
 {
     QVariant b                            = ui->lineEdit_9->text();
     g->strategy[g->currentStrategy]->maxX = b.toInt();
 }
 
-void frame::on_pushButton_7_clicked()
+void Frame::on_pushButton_7_clicked()
 {
     g->strategy[g->currentStrategy]->SetName(ui->lineEdit->text());
     ui->comboBox_3->setItemText(ui->comboBox_3->currentIndex(), ui->lineEdit->text());
 }
 
-void frame::on_lineEdit_10_editingFinished()
+void Frame::on_lineEdit_10_editingFinished()
 {
     QVariant b                            = ui->lineEdit_10->text();
     g->strategy[g->currentStrategy]->minY = b.toInt();
 }
 
-void frame::on_lineEdit_11_editingFinished()
+void Frame::on_lineEdit_11_editingFinished()
 {
     QVariant b                            = ui->lineEdit_11->text();
     g->strategy[g->currentStrategy]->maxY = b.toInt();
 }
 
-void frame::on_lineEdit_8_editingFinished()
+void Frame::on_lineEdit_8_editingFinished()
 {
     QVariant b                            = ui->lineEdit_8->text();
     g->strategy[g->currentStrategy]->minX = b.toInt();
 }
 
-void frame::on_lineEdit_9_editingFinished()
+void Frame::on_lineEdit_9_editingFinished()
 {
     QVariant b                            = ui->lineEdit_9->text();
     g->strategy[g->currentStrategy]->maxX = b.toInt();
 }
 
-void frame::on_lineEdit_4_editingFinished()
+void Frame::on_lineEdit_4_editingFinished()
 {
     QVariant b = ui->lineEdit_4->text();
     if (g->strategCounter > 0)
         g->strategy[g->currentStrategy]->robot[g->currentRobot].waypoint[g->currentWaypoint]->tolerance = b.toInt();
 }
+} // namespace Tyr::Strategy

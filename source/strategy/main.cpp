@@ -1,11 +1,12 @@
+#include "application.h"
 #include "frame.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    frame        w;
-    w.setWindowState(Qt::WindowMaximized);
-    w.show();
+    Tyr::Strategy::Application app(argc, argv);
 
-    return a.exec();
+    Tyr::Strategy::Frame frame;
+    frame.show();
+
+    return app.exec();
 }

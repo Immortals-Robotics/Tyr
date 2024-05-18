@@ -8,6 +8,7 @@ find_package(protobuf CONFIG REQUIRED)
 
 set(HEADER_FILES
         pch.h
+        application.h
         frame.h
         strategy.h
         robot.h

@@ -1,8 +1,8 @@
 #include "gui.h"
 #include "waypoint.h"
 
-using namespace std;
-
+namespace Tyr::Strategy
+{
 gui::gui(QWidget *parent)
 {
     setWindowTitle("Strategy Center");
@@ -313,3 +313,4 @@ void gui::mousePressEvent(QMouseEvent *event)
         child->setPixmap(pixmap);
     }
 }
+} // namespace Tyr::Strategy

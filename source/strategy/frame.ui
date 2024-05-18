@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>frame</class>
- <widget class="QMainWindow" name="frame">
+ <class>Frame</class>
+ <widget class="QMainWindow" name="Frame">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -75,7 +75,7 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>frame</string>
+   <string>Frame</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QGroupBox" name="groupBox">

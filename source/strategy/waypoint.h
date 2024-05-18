@@ -4,6 +4,8 @@
 #define MAMOOLIE 1
 #define KHARAKIE 2
 
+namespace Tyr::Strategy
+{
 class WayPoint : public QLabel
 {
 public:
@@ -16,3 +18,4 @@ public:
     float        tolerance;
     float        time;
 };
+} // namespace Tyr::Strategy

@@ -4,19 +4,21 @@
 
 namespace Ui
 {
-class frame;
+class Frame;
 }
 
-class frame : public QMainWindow
+namespace Tyr::Strategy
+{
+class Frame : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit frame(QWidget *parent = 0);
-    ~frame();
+    explicit Frame(QWidget *parent = 0);
+    ~Frame();
     gui                        *g;
     Protos::Immortals::PlayBook playBook;
-    Tyr::Common::UdpServer     *udp;
+    Common::UdpServer          *udp;
 
     QPainter paint;
 
@@ -31,7 +33,7 @@ protected:
     QTimer timer;
 
 private:
-    Ui::frame *ui;
+    Ui::Frame *ui;
 
 private slots:
     void on_lineEdit_4_editingFinished();
@@ -69,3 +71,4 @@ private slots:
     void on_pushButton_clicked();
     void update();
 };
+} // namespace Tyr::Strategy

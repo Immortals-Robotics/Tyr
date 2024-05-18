@@ -3,6 +3,8 @@
 #include "strategy.h"
 #include "sync_data.h"
 
+namespace Tyr::Strategy
+{
 class gui : public QWidget
 {
     Q_OBJECT
@@ -42,3 +44,4 @@ private:
 
 public slots:
 };
+} // namespace Tyr::Strategy

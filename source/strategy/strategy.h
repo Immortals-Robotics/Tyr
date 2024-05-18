@@ -2,6 +2,8 @@
 
 #include "Robot.h"
 
+namespace Tyr::Strategy
+{
 class Strategys
 {
 public:
@@ -16,3 +18,4 @@ public:
     int     minY;
     int     maxY;
 };
+} // namespace Tyr::Strategy
