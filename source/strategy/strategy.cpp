@@ -7,7 +7,6 @@ Strategys::Strategys()
     for (int i = 0; i < 8; i++)
     {
         robot[i].waypointCounter = 0;
-        robot[i].ID              = i;
     }
 
     robot[0].Name = "gk";

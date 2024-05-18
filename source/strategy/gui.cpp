@@ -3,7 +3,7 @@
 
 namespace Tyr::Strategy
 {
-gui::gui(QWidget *parent)
+Gui::Gui(QWidget *parent)
 {
     setWindowTitle("Strategy Center");
     setGeometry(0, 0, 1600, 1000);
@@ -24,14 +24,14 @@ gui::gui(QWidget *parent)
     currentSync     = 0;
 }
 
-gui::~gui()
+Gui::~Gui()
 {
     // p.end();
 }
 
 QColor col[7] = {QColor(15, 127, 127), Qt::black, Qt::yellow, Qt::red, Qt::blue, QColor(150, 0, 150)};
 
-void gui::paintEvent(QPaintEvent *event)
+void Gui::paintEvent(QPaintEvent *event)
 {
     painter.begin(this);
     painter.drawImage(0, 0, QImage(QString(DATA_DIR) + "/strategy-images/field.png"));
@@ -64,7 +64,7 @@ void gui::paintEvent(QPaintEvent *event)
     painter.end();
 }
 
-void gui::dragEnterEvent(QDragEnterEvent *event)
+void Gui::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasFormat("application/x-dnditemdata"))
     {
@@ -85,7 +85,7 @@ void gui::dragEnterEvent(QDragEnterEvent *event)
     }
 }
 
-void gui::dragMoveEvent(QDragMoveEvent *event)
+void Gui::dragMoveEvent(QDragMoveEvent *event)
 {
     if (event->mimeData()->hasFormat("application/x-dnditemdata"))
     {
@@ -107,7 +107,7 @@ void gui::dragMoveEvent(QDragMoveEvent *event)
     }
 }
 
-void gui::dropEvent(QDropEvent *event)
+void Gui::dropEvent(QDropEvent *event)
 {
     if (event->mimeData()->hasFormat("application/x-dnditemdata"))
     {
@@ -138,7 +138,7 @@ void gui::dropEvent(QDropEvent *event)
     }
 }
 
-void gui::keyPressEvent(QKeyEvent *event)
+void Gui::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Shift)
     {
@@ -166,13 +166,13 @@ void gui::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void gui::keyReleaseEvent(QKeyEvent *event)
+void Gui::keyReleaseEvent(QKeyEvent *event)
 {
     keyType = 0;
     keySync = 0;
 }
 
-void gui::mousePressEvent(QMouseEvent *event)
+void Gui::mousePressEvent(QMouseEvent *event)
 {
     int     x, y;
     QLabel *child = static_cast<QLabel *>(childAt(event->pos()));

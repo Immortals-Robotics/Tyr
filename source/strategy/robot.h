@@ -2,22 +2,16 @@
 
 #include "waypoint.h"
 
-#define NormalPlay 0
-#define OneTouch 1
-#define Shirje 2
-#define Allaf 3
-
 namespace Tyr::Strategy
 {
 class Robot
 {
 public:
     Robot();
-    int       ID;
     QString   Name;
-    int       finalRole;
+    int       finalRole = 0;
     WayPoint *waypoint[60];
-    int       waypointCounter;
+    int       waypointCounter = 0;
     enum RobotType
     {
         GK,

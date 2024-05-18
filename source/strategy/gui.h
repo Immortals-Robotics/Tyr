@@ -5,13 +5,13 @@
 
 namespace Tyr::Strategy
 {
-class gui : public QWidget
+class Gui : public QWidget
 {
     Q_OBJECT
 
 public:
-    gui(QWidget *parent = 0);
-    ~gui();
+    Gui(QWidget *parent = 0);
+    ~Gui();
     Strategys *strategy[100];
     int        strategCounter;
     int        currentStrategy;
@@ -25,7 +25,6 @@ public:
     SyncDatas  syncDatas[10];
     int        currentSync;
     int        syncCounter;
-    QPainter   p;
 
 protected:
     void paintEvent(QPaintEvent *event);

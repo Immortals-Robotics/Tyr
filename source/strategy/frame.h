@@ -16,7 +16,7 @@ class Frame : public QMainWindow
 public:
     explicit Frame(QWidget *parent = 0);
     ~Frame();
-    gui                        *g;
+    Gui                        *gui;
     Protos::Immortals::PlayBook playBook;
     Common::UdpServer          *udp;
 
