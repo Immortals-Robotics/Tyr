@@ -29,7 +29,8 @@ public:
 
     TimePoint time;
 
-    std::unordered_map<int, std::string> stateToString = {
+    const static inline std::unordered_map<int, std::string> m_state_string = {
+        {0, "None"},
         {STATE_GAME_ON, "Game on"},
         {STATE_GAME_OFF, "Game off"},
         {STATE_HALTED, "HALT"},
@@ -82,7 +83,7 @@ public:
 
     std::string getString() const
     {
-        auto state_str = stateToString.at(
+        auto state_str = RefereeState::m_state_string.at(
             state & (STATE_GAME_ON | STATE_GAME_OFF | STATE_HALTED | STATE_RESTART | STATE_PLACE_BALL));
         if (state & STATE_RESTART)
         {
