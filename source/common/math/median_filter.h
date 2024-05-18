@@ -10,10 +10,10 @@ public:
 
     void add(const T t_data)
     {
-        if (empty)
+        if (m_empty)
         {
             m_data.fill(t_data);
-            empty = false;
+            m_empty = false;
         }
         else
         {
@@ -33,12 +33,12 @@ public:
 
     void reset()
     {
-        empty = true;
+        m_empty = true;
     }
 
 private:
     std::array<T, size> m_data;
 
-    bool empty = true;
+    bool m_empty = true;
 };
 } // namespace Tyr::Common

@@ -20,43 +20,43 @@ namespace Tyr::Common
 class Linear
 {
 public:
-    void calculate(int n, float *x, float *y);
+    [[nodiscard]] static Linear calculate(int n, float *x, float *y);
 
     //! Evaluates the linear regression function at the given abscissa.
-    inline float getValue(float x)
+    [[nodiscard]] inline float getValue(float x) const
     {
         return m_a + m_b * x;
     }
 
     //! Returns the slope of the regression line
-    inline float getSlope()
+    [[nodiscard]] inline float getSlope() const
     {
         return m_b;
     }
 
     //! Returns the intercept on the Y axis of the regression line
-    inline float getIntercept()
+    [[nodiscard]] inline float getIntercept() const
     {
         return m_a;
     }
 
     //! Returns the linear regression coefficient
-    inline float getCoefficient()
+    [[nodiscard]] inline float getCoefficient() const
     {
         return m_coeff;
     }
 
-    inline bool isAmoodi()
+    [[nodiscard]] inline bool isAmoodi() const
     {
         return amoodi;
     }
 
-    inline float getXIntercept()
+    [[nodiscard]] inline float getXIntercept() const
     {
         return xinter;
     }
 
-    inline float getDisToPoint(Vec2 p)
+    [[nodiscard]] inline float getDisToPoint(Vec2 p) const
     {
         if (amoodi)
             return std::fabs(p.x - xinter);
@@ -70,7 +70,11 @@ public:
     }
 
 private:
-    float m_a, m_b, m_coeff, xinter;
-    bool  amoodi;
+    float m_a     = 0.0f;
+    float m_b     = 0.0f;
+    float m_coeff = 0.0f;
+    float xinter  = 0.0f;
+
+    bool amoodi = false;
 };
 } // namespace Tyr::Common
