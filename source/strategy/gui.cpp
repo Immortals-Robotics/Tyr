@@ -201,7 +201,7 @@ void gui::mousePressEvent(QMouseEvent *event)
                 b = 8;
             str.append(b.toString());
             str.append(".png");
-            std::cout << "THE STR IS: " << str.toStdString() << std::endl;
+            Common::logDebug("THE STR IS: {}", str.toStdString());
             strategy[currentStrategy]
                 ->robot[currentRobot]
                 .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
@@ -270,7 +270,7 @@ void gui::mousePressEvent(QMouseEvent *event)
                     clicked = 1;
                     return;
                 }
-                std::cout << i << "   " << j << "\n";
+                Common::logTrace("{}   {}", i, j);
                 clickedRobot    = i;
                 clickedWayPoint = j;
                 currentWaypoint = j;

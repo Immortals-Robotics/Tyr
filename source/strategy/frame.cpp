@@ -311,7 +311,7 @@ void Frame::on_pushButton_3_clicked()
     playBook.Clear();
     for (int i = 0; i < g->strategCounter; i++)
     {
-        std::cout << "BOZ" << std::endl;
+        Common::logDebug("BOZ");
         Protos::Immortals::Strategy *strag = playBook.add_strategy();
         strag->set_name(g->strategy[i]->getName().toStdString());
         strag->set_min_x(g->strategy[i]->minX);
@@ -412,7 +412,7 @@ void Frame::on_pushButton_4_clicked()
                     int y =
                         (((playBook.strategy(i).role(j).path(k).y() / 1.0) - 4384) * 31) / -450; //((-+300)*3.0/2)-13;
 
-                    std::cout << "KHAR" << std::endl;
+                    Common::logDebug("KHAR");
                     g->strategy[i]->robot[j].waypoint[k]->move(x + 106, y + 45);
                     g->strategy[i]->robot[j].waypoint[k]->setParent(g);
                     g->strategy[i]->robot[j].waypoint[k]->wayPointType = playBook.strategy(i).role(j).path(k).type();
