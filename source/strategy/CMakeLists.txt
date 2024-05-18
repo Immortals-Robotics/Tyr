@@ -7,22 +7,22 @@ find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 find_package(protobuf CONFIG REQUIRED)
 
 set(HEADER_FILES
-    pch.h
-    frame.h
-    strategy.h
-    robot.h
-    gui.h
-    waypoint.h
-    syncdata.h
+        pch.h
+        frame.h
+        strategy.h
+        robot.h
+        gui.h
+        waypoint.h
+        sync_data.h
 )
 
 set(SOURCE_FILES
-    main.cpp
-    frame.cpp
-    strategy.cpp
-    robot.cpp
-    gui.cpp
-    waypoint.cpp
+        main.cpp
+        frame.cpp
+        strategy.cpp
+        robot.cpp
+        gui.cpp
+        waypoint.cpp
 )
 
 add_executable(${PROJECT_NAME}
@@ -30,9 +30,9 @@ add_executable(${PROJECT_NAME}
         ${SOURCE_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-    ${CMAKE_PROJECT_NAME}-common
-    Qt5::Core Qt5::Widgets
-    protobuf::libprotobuf
+        ${CMAKE_PROJECT_NAME}-common
+        Qt5::Core Qt5::Widgets
+        protobuf::libprotobuf
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})

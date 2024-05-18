@@ -1,7 +1,7 @@
 #pragma once
 
 #include "strategy.h"
-#include "syncdata.h"
+#include "sync_data.h"
 
 class gui : public QWidget
 {
