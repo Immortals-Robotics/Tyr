@@ -90,6 +90,7 @@ bool Application::initialize(const int width, const int height)
     m_dumper->addEntry(Common::setting().raw_world_state_url, Common::setting().raw_world_state_db);
     m_dumper->addEntry(Common::setting().world_state_url, Common::setting().world_state_db);
     m_dumper->addEntry(Common::setting().debug_url, Common::setting().debug_db);
+    m_dumper->addEntry(Common::setting().referee_state_url, Common::setting().referee_db);
 
     m_world_client   = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
     m_raw_client     = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
@@ -186,11 +187,11 @@ void Application::update()
         m_renderer->begin(Common::field());
 
         m_renderer->draw(Common::field());
-        m_renderer->draw(m_referee_state, Common::field());
 
         // TODO(mhmd): add an option for this
         if (m_demo_menu->getState() == LogState::None)
         {
+            m_renderer->draw(m_referee_state, Common::field());
             if (1)
                 m_renderer->draw(m_world_state);
             else
@@ -199,6 +200,7 @@ void Application::update()
         else
         {
             m_renderer->draw(m_demo_menu->worldStateFiltered());
+            m_renderer->draw(m_demo_menu->refereeState(), Common::field());
         }
 
         if (m_demo_menu->getState() == LogState::None)
