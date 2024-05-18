@@ -23,7 +23,7 @@ jobs:
       - name: Install system packages
         uses: ConorMacBride/install-package@v1
         with:
-          apt: libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config libgl1-mesa-dev libx11-dev libxrandr-dev
+          apt: libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config libgl1-mesa-dev libx11-dev libxrandr-dev ^libxcb.*-dev libx11-xcb-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
           brew: pkg-config
 
       - name: Install CMake
