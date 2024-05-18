@@ -23,7 +23,6 @@ set(SOURCE_FILES
     robot.cpp
     gui.cpp
     waypoint.cpp
-    syncdata.cpp
 )
 
 add_executable(${PROJECT_NAME}

@@ -1,7 +1,10 @@
 #pragma once
 
-#include <string.h>
+#include <fstream>
+#include <iostream>
+#include <string>
 
+#include <QDebug>
 #include <QFile>
 #include <QImage>
 #include <QKeyEvent>
@@ -18,3 +21,6 @@
 #include <QVariant>
 #include <QVector>
 #include <QWidget>
+#include <QtCore>
+#include <QtGui>
+#include <QtWidgets/QApplication>

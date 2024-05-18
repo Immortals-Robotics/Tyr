@@ -2,8 +2,9 @@
 
 #include "gui.h"
 
-namespace Ui {
-    class frame;
+namespace Ui
+{
+class frame;
 }
 
 class frame : public QMainWindow
@@ -13,22 +14,21 @@ class frame : public QMainWindow
 public:
     explicit frame(QWidget *parent = 0);
     ~frame();
-    gui* g;
+    gui                        *g;
     Protos::Immortals::PlayBook playBook;
-    Common::UdpClient * udp;
+    Tyr::Common::UdpServer     *udp;
 
     QPainter paint;
 
     std::string file_path;
 
-
 protected:
- void paintEvent(QPaintEvent *event);
- void dragEnterEvent(QDragEnterEvent *event);
- void dragMoveEvent(QDragMoveEvent *event);
- void dropEvent(QDropEvent *event);
- void mousePressEvent(QMouseEvent *event); 
- QTimer timer;
+    void   paintEvent(QPaintEvent *event);
+    void   dragEnterEvent(QDragEnterEvent *event);
+    void   dragMoveEvent(QDragMoveEvent *event);
+    void   dropEvent(QDropEvent *event);
+    void   mousePressEvent(QMouseEvent *event);
+    QTimer timer;
 
 private:
     Ui::frame *ui;
@@ -60,8 +60,8 @@ private slots:
     void on_pushButton_3_clicked();
     void on_toolButton_4_clicked();
     void on_toolButton_3_clicked();
-    void on_comboBox_6_currentIndexChanged(int index);    
-    void on_toolButton_clicked();    
+    void on_comboBox_6_currentIndexChanged(int index);
+    void on_toolButton_clicked();
     void on_comboBox_4_currentIndexChanged(int index);
     void on_comboBox_2_currentIndexChanged(int index);
     void on_comboBox_3_currentIndexChanged(int index);

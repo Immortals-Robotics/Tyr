@@ -3,6 +3,6 @@
 class SyncDatas
 {
 public:
-    SyncDatas();
+    SyncDatas() = default;
     QVector<int> point;
 };
