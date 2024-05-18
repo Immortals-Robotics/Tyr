@@ -3,21 +3,21 @@
 
 namespace Tyr::Gui
 {
-class LogMenu
+class FooterMenu
 {
 private:
     int m_filter_level = 0;
-    ImVec2 m_window_size;
-    ImVec2 m_window_pos;
-    bool m_is_right = false;
+    bool m_is_plot_maximized = false;
+    std::string m_plot_resize_icon = "\uf31e";
 
     void drawTerminal(const Common::Debug::Wrapper                                    &t_wrapper,
                       const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map);
 
+    void drawPlot();
 public:
     void draw(const Common::Debug::Wrapper                                    &t_wrapper,
               const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map);
-    LogMenu()  = default;
-    ~LogMenu() = default;
+    FooterMenu()  = default;
+    ~FooterMenu() = default;
 };
 } // namespace Tyr::Gui

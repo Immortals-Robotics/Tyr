@@ -12,7 +12,7 @@ set(HEADER_FILES
 	menu/config_menu.h
 	menu/widget_menu.h
 	menu/demo_menu.h
-	menu/log_menu.h
+		menu/footer_menu.h
 )
 
 set(SOURCE_FILES
@@ -21,7 +21,7 @@ set(SOURCE_FILES
 	menu/config_menu.cpp
 	menu/widget_menu.cpp
 	menu/demo_menu.cpp
-	menu/log_menu.cpp
+		menu/footer_menu.cpp
 	renderer/ball.cpp
 	renderer/debug.cpp
 	renderer/field.cpp

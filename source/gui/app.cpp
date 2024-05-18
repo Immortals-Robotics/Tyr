@@ -112,7 +112,7 @@ bool Application::initialize(const int width, const int height)
     m_config_menu = std::make_unique<ConfigMenu>();
     m_widget_menu = std::make_unique<WidgetMenu>();
     m_demo_menu   = std::make_unique<DemoMenu>();
-    m_log_menu    = std::make_unique<LogMenu>();
+    m_log_menu    = std::make_unique<FooterMenu>();
 
     Common::logInfo(" Now it is time, lets rock...");
     return true;

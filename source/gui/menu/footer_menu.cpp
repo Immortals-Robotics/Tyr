@@ -1,19 +1,15 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "readability-identifier-naming"
-#include "log_menu.h"
+#include "footer_menu.h"
 
 namespace Tyr::Gui
 {
-void LogMenu::drawTerminal(const Common::Debug::Wrapper                                    &t_wrapper,
-                           const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
+void FooterMenu::drawTerminal(const Common::Debug::Wrapper                                    &t_wrapper,
+                              const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
 {
     const char *filter_choices[] = {"Trace - 0", "Debug - 1", "Info - 2", "Warning - 3", "Error - 4", "Critical - 5"};
 
     ImGui::Combo("Log Level Filter", &m_filter_level, filter_choices, IM_ARRAYSIZE(filter_choices));
-    ImGui::SameLine(m_window_size.x - 20);
-    if(ImGui::Button("\uf061")) {
-        m_is_right = true;
-    }
     ImGui::Separator();
     if (ImGui::BeginChild("Scrolling", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()), false,
                           ImGuiWindowFlags_HorizontalScrollbar))
@@ -37,8 +33,24 @@ void LogMenu::drawTerminal(const Common::Debug::Wrapper                         
     ImGui::EndChild();
 }
 
-void LogMenu::draw(const Common::Debug::Wrapper                                    &t_wrapper,
-                   const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
+void FooterMenu::drawPlot()
+{
+    ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30);
+    if(ImGui::Button(m_plot_resize_icon.c_str())) {
+        if(m_is_plot_maximized) {
+            m_is_plot_maximized = false;
+            m_plot_resize_icon = "\uf31e";
+        }
+        else {
+            m_plot_resize_icon = "\uf78c";
+            m_is_plot_maximized = true;
+        }
+    }
+    ImGui::Separator();
+}
+
+void FooterMenu::draw(const Common::Debug::Wrapper                                    &t_wrapper,
+                      const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
 {
     auto main_window_height = GetScreenHeight();
     auto main_window_width  = GetScreenWidth();
@@ -49,19 +61,27 @@ void LogMenu::draw(const Common::Debug::Wrapper                                 
     {
         main_window_width = (main_window_height - 200.) / 0.77 + 650.;
     }
-    if(!m_is_right)
-    {
-        m_window_pos  = ImVec2(250, (main_window_width - 650.) * 0.77);
-        m_window_size = ImVec2(main_window_width - 650., main_window_height - ((main_window_width - 650.) * 0.77));
-    } else {
-        m_window_pos = ImVec2(main_window_width - 400 , 550.);
-        m_window_size = ImVec2(GetScreenWidth() - main_window_width + 400, main_window_height - 550.);
-    }
-    ImGui::SetNextWindowPos(m_window_pos);
-    ImGui::SetNextWindowSize(m_window_size);
-    if (ImGui::Begin("Log", nullptr, window_flags))
+    ImGui::SetNextWindowPos(ImVec2(0, (main_window_width - 650.) * 0.77));
+    ImGui::SetNextWindowSize(ImVec2(GetScreenWidth() / 2, main_window_height - ((main_window_width - 650.) * 0.77)));
+    if (ImGui::Begin("##Log", nullptr, window_flags))
     {
         drawTerminal(t_wrapper, t_map);
+        ImGui::End();
+    }
+    if(!m_is_plot_maximized)
+    {
+        ImGui::SetNextWindowPos(ImVec2(GetScreenWidth() / 2, (main_window_width - 650.) * 0.77));
+        ImGui::SetNextWindowSize(
+            ImVec2(GetScreenWidth() / 2, main_window_height - ((main_window_width - 650.) * 0.77)));
+    }
+    else {
+        ImGui::SetNextWindowPos(ImVec2(0,0));
+        ImGui::SetNextWindowSize(
+            ImVec2(main_window_width - 400.,((main_window_width - 650.) * 0.77)));
+    }
+    if (ImGui::Begin("##Plot", nullptr, window_flags))
+    {
+        drawPlot();
         ImGui::End();
     }
 }
