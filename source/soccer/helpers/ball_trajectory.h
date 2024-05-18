@@ -6,7 +6,7 @@ class BallTrajectory
 {
 public:
     void update(const Common::BallState &t_ball);
-    
+
     void reset()
     {
         m_empty = true;
@@ -15,11 +15,11 @@ public:
     void calculate() const;
 
 private:
-    static constexpr int kMaxBallHist = 240;
-
+    static constexpr int                   kMaxBallHist = 240;
     std::array<Common::Vec2, kMaxBallHist> m_ball_hist;
+    bool                                   m_empty = true;
 
-    bool m_empty = true;
+    Common::MedianFilter<float> m_vision_dir;
 
     Common::BallState m_ball;
 };

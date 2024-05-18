@@ -15,6 +15,14 @@ void BallTrajectory::update(const Common::BallState &t_ball)
         m_ball_hist.back() = t_ball.position;
     }
 
+    if (t_ball.velocity.length() > 0.0f)
+    {
+        if (m_ball.velocity.x == 0)
+            m_vision_dir.add(100.0f);
+        else
+            m_vision_dir.add(std::fabs(m_ball.velocity.y / m_ball.velocity.x));
+    }
+
     m_ball = t_ball;
 }
 
@@ -24,18 +32,7 @@ void BallTrajectory::calculate() const
     if (m_ball.velocity.length() == 0.0f)
         return;
 
-    if (m_ball_hist.size() < 5)
-    {
-        return;
-    }
-
-    static Common::MedianFilter<float> visionM;
-    if (m_ball.velocity.x == 0)
-        visionM.add(100.0f);
-    else
-        visionM.add(std::fabs(m_ball.velocity.y / m_ball.velocity.x));
-
-    bool isVertical = visionM.current() > 1.0f;
+    bool isVertical = m_vision_dir.current() > 1.0f;
 
     std::vector<float>             ball_x;
     std::vector<float>             ball_y;
