@@ -17,9 +17,12 @@ void DemoMenu::draw()
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                                     ImGuiWindowFlags_NoDecoration;
-
-    ImGui::SetNextWindowPos(ImVec2(main_window_width - 400., 400.));
-    ImGui::SetNextWindowSize(ImVec2(400., main_window_height - 400.));
+    if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
+    {
+        main_window_width = (main_window_height - 200.) / 0.77 + 650.;
+    }
+    ImGui::SetNextWindowPos(ImVec2(main_window_width - 400., 350.));
+    ImGui::SetNextWindowSize(ImVec2(GetScreenWidth() - main_window_width + 400, 200.));
     if (ImGui::Begin("Demo player", nullptr, window_flags))
     {
         ImGuiIO &io   = ImGui::GetIO();
