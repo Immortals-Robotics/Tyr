@@ -2,11 +2,6 @@
 
 #include "gui.h"
 
-namespace Ui
-{
-class Frame;
-}
-
 namespace Tyr::Strategy
 {
 class Frame : public QMainWindow
@@ -15,25 +10,25 @@ class Frame : public QMainWindow
 
 public:
     explicit Frame(QWidget *parent = 0);
-    ~Frame();
-    Gui                        *gui;
-    Protos::Immortals::PlayBook playBook;
-    Common::UdpServer          *udp;
-
-    QPainter paint;
-
-    std::string file_path;
+    ~Frame() = default;
 
 protected:
-    void   paintEvent(QPaintEvent *event);
-    void   dragEnterEvent(QDragEnterEvent *event);
-    void   dragMoveEvent(QDragMoveEvent *event);
-    void   dropEvent(QDropEvent *event);
-    void   mousePressEvent(QMouseEvent *event);
-    QTimer timer;
+    void paintEvent(QPaintEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+    void dropEvent(QDropEvent *event);
+    void mousePressEvent(QMouseEvent *event);
 
 private:
-    Ui::Frame *ui;
+    std::unique_ptr<Ui::Frame> m_frame;
+    std::unique_ptr<Gui>       m_gui;
+    QTimer                     m_timer;
+
+    std::unique_ptr<Common::UdpServer> m_udp;
+
+    Protos::Immortals::PlayBook m_playBook;
+
+    std::filesystem::path m_file_path;
 
 private slots:
     void on_lineEdit_4_editingFinished();

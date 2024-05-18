@@ -106,7 +106,7 @@ void Ai::strategy()
 
     const Common::Vec2 sign_modifier{(float) m_side, Common::sign(-m_world_state.ball.position.y)};
 
-    Common::logDebug("timer: {}", m_timer.time());
+    Common::logDebug("m_timer: {}", m_timer.time());
     if (m_timer.time() < 0.5)
     {
         for (int i = 0; i < strategy.role.size(); i++)

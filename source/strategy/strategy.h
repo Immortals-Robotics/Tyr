@@ -4,18 +4,23 @@
 
 namespace Tyr::Strategy
 {
-class Strategys
+class Strategy
 {
 public:
-    Strategys();
-    void    SetName(QString str);
-    QString getName();
+    Strategy();
+
+    void    setName(QString str);
+    QString getName() const;
+
+    Robot robot[8];
+    int   weight;
+
+    int min_x;
+    int max_x;
+    int min_y;
+    int max_y;
+
+private:
     QString name;
-    Robot   robot[8];
-    int     weight;
-    int     minX;
-    int     maxX;
-    int     minY;
-    int     maxY;
 };
 } // namespace Tyr::Strategy

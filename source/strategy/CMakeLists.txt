@@ -23,7 +23,6 @@ set(SOURCE_FILES
         strategy.cpp
         robot.cpp
         gui.cpp
-        waypoint.cpp
 )
 
 add_executable(${PROJECT_NAME}

@@ -1025,12 +1025,12 @@
      </item>
      <item>
       <property name="text">
-       <string>rw</string>
+       <string>RW</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>lw</string>
+       <string>LW</string>
       </property>
      </item>
     </widget>

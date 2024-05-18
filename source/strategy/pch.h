@@ -24,3 +24,5 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtWidgets/QApplication>
+
+#include "ui_frame.h"

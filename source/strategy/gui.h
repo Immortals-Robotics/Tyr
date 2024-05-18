@@ -11,20 +11,23 @@ class Gui : public QWidget
 
 public:
     Gui(QWidget *parent = 0);
-    ~Gui();
-    Strategys *strategy[100];
-    int        strategCounter;
-    int        currentStrategy;
-    int        currentRobot;
-    int        currentWaypoint;
-    int        clickedRobot;
-    int        clickedWayPoint;
-    bool       clicked;
-    int        keyType;
-    int        keySync;
-    SyncDatas  syncDatas[10];
-    int        currentSync;
-    int        syncCounter;
+    ~Gui() = default;
+
+    Strategy  *strategy[100];
+    int        strategy_counter = 0;
+    int        current_strategy = 0;
+
+    Robot::Type current_robot    = Robot::GK;
+    int         current_waypoint = 0;
+    int         clicked_robot    = 0;
+    int         clicked_waypoint = 0;
+    bool        clicked          = false;
+    int         key_type         = 0;
+    int         key_sync         = 0;
+
+    SyncData sync_data[10];
+    int      current_sync = 0;
+    int      sync_counter = 0;
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -37,9 +40,6 @@ protected:
 
 private:
     QPainter painter;
-    QImage   fieldGeometry;
-    QTimer  *timer;
-    bool     mouseMoveAccepted;
 
 public slots:
 };

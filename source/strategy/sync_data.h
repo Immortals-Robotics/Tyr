@@ -2,10 +2,8 @@
 
 namespace Tyr::Strategy
 {
-class SyncDatas
+struct SyncData
 {
-public:
-    SyncDatas() = default;
     QVector<int> point;
 };
 } // namespace Tyr::Strategy

@@ -7,19 +7,23 @@ namespace Tyr::Strategy
 class Robot
 {
 public:
-    Robot();
-    QString   Name;
-    int       finalRole = 0;
-    WayPoint *waypoint[60];
-    int       waypointCounter = 0;
-    enum RobotType
+    enum Type
     {
-        GK,
-        def1,
-        def2,
-        MidFielder,
-        Passgir,
-        Attack
+        GK = 0,
+        Def,
+        Dmf,
+        Lmf,
+        Rmf,
+        Attack,
+        Rw,
+        Lw,
     };
+
+    Robot();
+
+    QString   name;
+    int       final_role = 0;
+    WayPoint *waypoint[60];
+    int       waypoint_counter = 0;
 };
 } // namespace Tyr::Strategy

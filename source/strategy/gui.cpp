@@ -3,7 +3,7 @@
 
 namespace Tyr::Strategy
 {
-Gui::Gui(QWidget *parent)
+Gui::Gui(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Strategy Center");
     setGeometry(0, 0, 1600, 1000);
@@ -12,21 +12,6 @@ Gui::Gui(QWidget *parent)
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setFocusPolicy(Qt::StrongFocus);
     setAcceptDrops(true);
-
-    strategCounter  = 0;
-    currentStrategy = 0;
-    currentRobot    = 0;
-    clickedRobot    = 0;
-    clickedWayPoint = 0;
-    clicked         = 0;
-    keyType         = 0;
-    syncCounter     = 0;
-    currentSync     = 0;
-}
-
-Gui::~Gui()
-{
-    // p.end();
 }
 
 QColor col[7] = {QColor(15, 127, 127), Qt::black, Qt::yellow, Qt::red, Qt::blue, QColor(150, 0, 150)};
@@ -36,29 +21,29 @@ void Gui::paintEvent(QPaintEvent *event)
     painter.begin(this);
     painter.drawImage(0, 0, QImage(QString(DATA_DIR) + "/strategy-images/field.png"));
     // painter.drawImage(0,0,fieldGeometry);
-    if (strategCounter > 0)
+    if (strategy_counter > 0)
     {
         for (int j = 0; j < 8; j++)
         {
-            for (int i = 0; i < strategy[currentStrategy]->robot[j].waypointCounter - 1; i++)
+            for (int i = 0; i < strategy[current_strategy]->robot[j].waypoint_counter - 1; i++)
             {
                 painter.setPen(col[j]);
-                painter.drawLine(strategy[currentStrategy]->robot[j].waypoint[i]->x() + 12,
-                                 strategy[currentStrategy]->robot[j].waypoint[i]->y() + 12,
-                                 strategy[currentStrategy]->robot[j].waypoint[i + 1]->x() + 12,
-                                 strategy[currentStrategy]->robot[j].waypoint[i + 1]->y() + 12);
+                painter.drawLine(strategy[current_strategy]->robot[j].waypoint[i]->x() + 12,
+                                 strategy[current_strategy]->robot[j].waypoint[i]->y() + 12,
+                                 strategy[current_strategy]->robot[j].waypoint[i + 1]->x() + 12,
+                                 strategy[current_strategy]->robot[j].waypoint[i + 1]->y() + 12);
             }
         }
-        int x1 = (((strategy[currentStrategy]->minX / 10.0) + 450) * 3.0 / 2);
-        int x2 = (((strategy[currentStrategy]->maxX / 10.0) + 450) * 3.0 / 2);
-        int y1 = ((-(strategy[currentStrategy]->minY / 10.0) + 300) * 3.0 / 2);
-        int y2 = ((-(strategy[currentStrategy]->maxY / 10.0) + 300) * 3.0 / 2);
+        int x1 = (((strategy[current_strategy]->min_x / 10.0) + 450) * 3.0 / 2);
+        int x2 = (((strategy[current_strategy]->max_x / 10.0) + 450) * 3.0 / 2);
+        int y1 = ((-(strategy[current_strategy]->min_y / 10.0) + 300) * 3.0 / 2);
+        int y2 = ((-(strategy[current_strategy]->max_y / 10.0) + 300) * 3.0 / 2);
 
         x1 += 106;
         x2 += 106;
         y1 += 45;
         y2 += 45;
-        painter.fillRect(x1, y1 - 10, (x2 - x1), 20, QColor(255, 0, 0, strategy[currentStrategy]->weight * 20));
+        painter.fillRect(x1, y1 - 10, (x2 - x1), 20, QColor(255, 0, 0, strategy[current_strategy]->weight * 20));
     }
 
     painter.end();
@@ -117,9 +102,9 @@ void Gui::dropEvent(QDropEvent *event)
         QPixmap pixmap;
         QPoint  offset;
         dataStream >> pixmap >> offset;
-        strategy[currentStrategy]->robot[clickedRobot].waypoint[clickedWayPoint]->setPixmap(pixmap);
-        strategy[currentStrategy]->robot[clickedRobot].waypoint[clickedWayPoint]->move(event->pos() - offset);
-        strategy[currentStrategy]->robot[clickedRobot].waypoint[clickedWayPoint]->show();
+        strategy[current_strategy]->robot[clicked_robot].waypoint[clicked_waypoint]->setPixmap(pixmap);
+        strategy[current_strategy]->robot[clicked_robot].waypoint[clicked_waypoint]->move(event->pos() - offset);
+        strategy[current_strategy]->robot[clicked_robot].waypoint[clicked_waypoint]->show();
         clicked = 1;
         this->update();
         if (event->source() == this)
@@ -142,34 +127,34 @@ void Gui::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Shift)
     {
-        keyType = 1;
+        key_type = 1;
     }
     else if (event->key() == Qt::Key_Alt)
     {
-        keySync = 1;
+        key_sync = 1;
     }
     else if (event->key() == Qt::Key_Delete)
     {
-        for (int i = currentWaypoint; i < strategy[currentStrategy]->robot[currentRobot].waypointCounter - 1; i++)
+        for (int i = current_waypoint; i < strategy[current_strategy]->robot[current_robot].waypoint_counter - 1; i++)
         {
             int x, y;
-            x = strategy[currentStrategy]->robot[currentRobot].waypoint[i + 1]->x();
-            y = strategy[currentStrategy]->robot[currentRobot].waypoint[i + 1]->y();
-            strategy[currentStrategy]->robot[currentRobot].waypoint[i]->move(x, y);
-            strategy[currentStrategy]->robot[currentRobot].waypoint[i]->show();
+            x = strategy[current_strategy]->robot[current_robot].waypoint[i + 1]->x();
+            y = strategy[current_strategy]->robot[current_robot].waypoint[i + 1]->y();
+            strategy[current_strategy]->robot[current_robot].waypoint[i]->move(x, y);
+            strategy[current_strategy]->robot[current_robot].waypoint[i]->show();
         }
-        strategy[currentStrategy]->robot[currentRobot].waypointCounter--;
-        strategy[currentStrategy]
-            ->robot[currentRobot]
-            .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
+        strategy[current_strategy]->robot[current_robot].waypoint_counter--;
+        strategy[current_strategy]
+            ->robot[current_robot]
+            .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
             ->close();
     }
 }
 
 void Gui::keyReleaseEvent(QKeyEvent *event)
 {
-    keyType = 0;
-    keySync = 0;
+    key_type = 0;
+    key_sync = 0;
 }
 
 void Gui::mousePressEvent(QMouseEvent *event)
@@ -180,7 +165,7 @@ void Gui::mousePressEvent(QMouseEvent *event)
     {
         QString  str = QString(DATA_DIR) + "/strategy-images/";
         QVariant b;
-        if (strategCounter == 0)
+        if (strategy_counter == 0)
         {
             QMessageBox msg;
             msg.setText("Olagh esm bede be Strategy");
@@ -189,66 +174,68 @@ void Gui::mousePressEvent(QMouseEvent *event)
         }
         else
         {
-            strategy[currentStrategy]
-                ->robot[currentRobot]
-                .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
+            strategy[current_strategy]
+                ->robot[current_robot]
+                .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
                 ->move(event->x() - 13, event->y() - 13);
-            b = currentRobot + 1;
+            b = current_robot + 1;
             str.append(b.toString());
             str.append("/");
-            b = strategy[currentStrategy]->robot[currentRobot].waypointCounter + 1;
+            b = strategy[current_strategy]->robot[current_robot].waypoint_counter + 1;
             if (b.toInt() > 8)
                 b = 8;
             str.append(b.toString());
             str.append(".png");
             Common::logDebug("THE STR IS: {}", str.toStdString());
-            strategy[currentStrategy]
-                ->robot[currentRobot]
-                .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
+            strategy[current_strategy]
+                ->robot[current_robot]
+                .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
                 ->setPixmap(str);
-            strategy[currentStrategy]
-                ->robot[currentRobot]
-                .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
-                ->wayPointType = keyType;
-            strategy[currentStrategy]
-                ->robot[currentRobot]
-                .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
+            strategy[current_strategy]
+                ->robot[current_robot]
+                .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
+                ->waypoint_type = key_type;
+            strategy[current_strategy]
+                ->robot[current_robot]
+                .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
                 ->setParent(this);
-            if (strategy[currentStrategy]->robot[currentRobot].waypointCounter > 0)
+            if (strategy[current_strategy]->robot[current_robot].waypoint_counter > 0)
             {
-                strategy[currentStrategy]
-                    ->robot[currentRobot]
-                    .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
-                    ->wayPointType =
-                    strategy[currentStrategy]->robot[currentRobot].waypoint[currentWaypoint]->wayPointType;
-                strategy[currentStrategy]
-                    ->robot[currentRobot]
-                    .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
-                    ->needRRT = strategy[currentStrategy]->robot[currentRobot].waypoint[currentWaypoint]->needRRT;
-                strategy[currentStrategy]
-                    ->robot[currentRobot]
-                    .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
-                    ->tolerance = strategy[currentStrategy]->robot[currentRobot].waypoint[currentWaypoint]->tolerance;
-                strategy[currentStrategy]
-                    ->robot[currentRobot]
-                    .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
-                    ->time = strategy[currentStrategy]->robot[currentRobot].waypoint[currentWaypoint]->time;
-                strategy[currentStrategy]
-                    ->robot[currentRobot]
-                    .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
-                    ->speed = strategy[currentStrategy]->robot[currentRobot].waypoint[currentWaypoint]->speed;
-                strategy[currentStrategy]
-                    ->robot[currentRobot]
-                    .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
-                    ->velProfile = strategy[currentStrategy]->robot[currentRobot].waypoint[currentWaypoint]->velProfile;
+                strategy[current_strategy]
+                    ->robot[current_robot]
+                    .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
+                    ->waypoint_type =
+                    strategy[current_strategy]->robot[current_robot].waypoint[current_waypoint]->waypoint_type;
+                strategy[current_strategy]
+                    ->robot[current_robot]
+                    .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
+                    ->need_rrt = strategy[current_strategy]->robot[current_robot].waypoint[current_waypoint]->need_rrt;
+                strategy[current_strategy]
+                    ->robot[current_robot]
+                    .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
+                    ->tolerance =
+                    strategy[current_strategy]->robot[current_robot].waypoint[current_waypoint]->tolerance;
+                strategy[current_strategy]
+                    ->robot[current_robot]
+                    .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
+                    ->time = strategy[current_strategy]->robot[current_robot].waypoint[current_waypoint]->time;
+                strategy[current_strategy]
+                    ->robot[current_robot]
+                    .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
+                    ->speed = strategy[current_strategy]->robot[current_robot].waypoint[current_waypoint]->speed;
+                strategy[current_strategy]
+                    ->robot[current_robot]
+                    .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
+                    ->velocity_profile =
+                    strategy[current_strategy]->robot[current_robot].waypoint[current_waypoint]->velocity_profile;
             }
-            strategy[currentStrategy]
-                ->robot[currentRobot]
-                .waypoint[strategy[currentStrategy]->robot[currentRobot].waypointCounter]
+            strategy[current_strategy]
+                ->robot[current_robot]
+                .waypoint[strategy[current_strategy]->robot[current_robot].waypoint_counter]
                 ->show();
-            strategy[currentStrategy]->robot[currentRobot].waypointCounter++;
-            currentWaypoint = strategy[currentStrategy]->robot[currentRobot].waypointCounter - 1;
-            clickedWayPoint = currentWaypoint;
+            strategy[current_strategy]->robot[current_robot].waypoint_counter++;
+            current_waypoint = strategy[current_strategy]->robot[current_robot].waypoint_counter - 1;
+            clicked_waypoint = current_waypoint;
             this->update();
         }
         return;
@@ -258,23 +245,23 @@ void Gui::mousePressEvent(QMouseEvent *event)
 
     for (int i = 0; i < 8; i++)
     {
-        for (int j = 0; j < strategy[currentStrategy]->robot[i].waypointCounter; j++)
+        for (int j = 0; j < strategy[current_strategy]->robot[i].waypoint_counter; j++)
         {
-            if (x == strategy[currentStrategy]->robot[i].waypoint[j]->x() &&
-                y == strategy[currentStrategy]->robot[i].waypoint[j]->y())
+            if (x == strategy[current_strategy]->robot[i].waypoint[j]->x() &&
+                y == strategy[current_strategy]->robot[i].waypoint[j]->y())
             {
-                if (keySync == 1)
+                if (key_sync == 1)
                 {
                     int a = (i + 1) * 100 + (j + 1);
-                    syncDatas[currentSync].point.append(a);
+                    sync_data[current_sync].point.append(a);
                     clicked = 1;
                     return;
                 }
                 Common::logTrace("{}   {}", i, j);
-                clickedRobot    = i;
-                clickedWayPoint = j;
-                currentWaypoint = j;
-                clicked         = 1;
+                clicked_robot    = i;
+                clicked_waypoint = j;
+                current_waypoint = j;
+                clicked          = 1;
                 // return;
             }
         }
