@@ -16,6 +16,7 @@ set(HEADER_FILES
 
 	plays/play_book.h
 
+	helpers/ball_trajectory.h
 	helpers/one_touch_detector.h
 
 	robot/robot.h

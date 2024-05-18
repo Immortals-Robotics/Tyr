@@ -2,10 +2,11 @@
 
 namespace Tyr::Common
 {
-void Linear::calculate(int n, float *x, float *y)
+Linear Linear::calculate(int n, float *x, float *y)
 {
     // calculate the averages of arrays x and y
-    double xa = 0, ya = 0;
+    float xa = 0;
+    float ya = 0;
     for (int i = 0; i < n; i++)
     {
         xa += x[i];
@@ -15,37 +16,40 @@ void Linear::calculate(int n, float *x, float *y)
     ya /= n;
 
     // calculate auxiliary sums
-    double xx = 0, yy = 0, xy = 0;
+    float xx = 0;
+    float yy = 0;
+    float xy = 0;
     for (int i = 0; i < n; i++)
     {
-        double tmpx = x[i] - xa, tmpy = y[i] - ya;
-        xx += tmpx * tmpx;
+        float tmp_x = x[i] - xa;
+        float tmpy  = y[i] - ya;
+
+        xx += tmp_x * tmp_x;
         yy += tmpy * tmpy;
-        xy += tmpx * tmpy;
+        xy += tmp_x * tmpy;
     }
 
-    // calculate regression line parameters
-    amoodi  = false;
-    xinter  = 0;
-    m_a     = 0;
-    m_b     = 0;
-    m_coeff = 0;
+    Linear result;
+
     // make sure slope is not infinite
     if (xx < 0.01)
     {
-        amoodi = true;
-        xinter = xa;
-        return;
+        result.amoodi = true;
+        result.xinter = xa;
+        return result;
     }
 
-    m_b = xy / xx;
-    if (std::fabs(m_b) > 50)
+    result.m_b = xy / xx;
+    if (std::fabs(result.m_b) > 50)
     {
-        amoodi = true;
-        xinter = xa;
-        return;
+        result.amoodi = true;
+        result.xinter = xa;
+        return result;
     }
-    m_a     = ya - m_b * xa;
-    m_coeff = (std::fabs(yy) == 0) ? 1 : xy / sqrt(xx * yy);
+
+    result.m_a     = ya - result.m_b * xa;
+    result.m_coeff = (std::fabs(yy) == 0) ? 1 : xy / sqrt(xx * yy);
+
+    return result;
 }
 } // namespace Tyr::Common

@@ -2,6 +2,7 @@
 
 #include "dss/dss.h"
 #include "errt/errt.h"
+#include "helpers/ball_trajectory.h"
 #include "helpers/one_touch_detector.h"
 #include "plays/play_book.h"
 
@@ -21,20 +22,24 @@ private:
     std::unique_ptr<Common::NngServer> m_cmd_server;
 
     Common::Random m_random;
+    Common::Timer  m_timer;
 
     using Play = void (Ai::*)();
     Play m_current_play;
-
-    int m_func_state = 0;
-    int m_func_count = 0;
-
-    bool m_gk_intercepting;
 
     Common::Angle m_chip_head;
 
     float m_random_param;
     int   m_target_str;
 
+    int m_last_referee;
+
+    bool m_is_defending;
+    bool m_opp_restarted;
+
+    int m_side;
+
+    // Roles
     int m_gk     = 0;
     int m_def    = 1;
     int m_dmf    = 2;
@@ -44,25 +49,7 @@ private:
     int m_rw     = 6;
     int m_lw     = 7;
 
-    int *m_stm_to_ai_num[Common::Setting::kMaxRobots] = {};
-
-    Common::Vec2 m_allaf_pos[Common::Setting::kMaxRobots];
-
-    std::map<int *, int> m_mark_map;
-
-    int m_last_referee;
-
-    Common::Timer m_timer;
-
-    bool m_is_defending;
-    bool m_opp_restarted;
-
-    static constexpr int          kMaxBallHist = 240;
-    std::deque<Common::BallState> m_ball_hist;
-    Common::Linear                m_ball_line;
-
-    Planner              m_planner[Common::Setting::kMaxRobots];
-    std::unique_ptr<Dss> m_dss;
+    void manageAttRoles();
 
     OneTouchDetector m_one_touch_detector[Common::Setting::kMaxRobots];
     enum class OneTouchType
@@ -75,22 +62,20 @@ private:
     OneTouchType m_one_touch_type[Common::Setting::kMaxRobots];
     bool         m_one_touch_type_used[Common::Setting::kMaxRobots];
 
-    int m_side;
-
     // Helpers
     Common::Vec2 calculatePassPos(int t_robot_num, const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos,
                                   float t_bar = 89.0f);
-    void         calculateBallTrajectory();
     float        calculateRobotReachTime(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile);
     float        calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile);
 
-    // boz ha
-    void manageAttRoles();
-    void calcIsDefending();
-    void markManager();
+    BallTrajectory m_ball_trajectory;
 
-    PlayBook m_playbook;
-    int      strategyWeight();
+    // boz ha
+
+    void calcIsDefending();
+
+    void                 markManager();
+    std::map<int *, int> m_mark_map;
 
     Common::Vec2  m_predicted_ball;
     bool          m_circle_reached_behind_ball;
@@ -117,17 +102,17 @@ private:
     float        calculateSwitchToAttackerScore(int t_robot_num);
 
     // Field helpers
-    inline Common::Vec2 ownGoal() const;
-    inline Common::Vec2 ownGoalPostTop() const;
-    inline Common::Vec2 ownGoalPostBottom() const;
+    inline Common::Vec2        ownGoal() const;
+    inline Common::Vec2        ownGoalPostTop() const;
+    inline Common::Vec2        ownGoalPostBottom() const;
     inline Common::LineSegment ownGoalLine() const;
-    inline Common::Vec2 oppGoal() const;
-    inline Common::Vec2 oppGoalPostTop() const;
-    inline Common::Vec2 oppGoalPostBottom() const;
+    inline Common::Vec2        oppGoal() const;
+    inline Common::Vec2        oppGoalPostTop() const;
+    inline Common::Vec2        oppGoalPostBottom() const;
     inline Common::LineSegment oppGoalLine() const;
-    inline bool isOut(Common::Vec2 t_point, const float t_margin = 0.0f) const;
+    inline bool                isOut(Common::Vec2 t_point, const float t_margin = 0.0f) const;
 
-    // Skills
+    // Navigation
     enum NavigationFlags
     {
         NavigationFlagsNone                    = 0,
@@ -141,6 +126,10 @@ private:
                   NavigationFlags t_flags = NavigationFlagsNone);
     void setObstacles(int t_robot_num, NavigationFlags t_flags = NavigationFlagsNone);
 
+    Planner              m_planner[Common::Setting::kMaxRobots];
+    std::unique_ptr<Dss> m_dss;
+
+    // Skills
     void mark(int t_robot_num, int t_opp, float t_dist = 220.0f);
     void mark2Goal(int t_robot_num, int t_opp, float t_dist = 220.0f);
     void mark2Ball(int t_robot_num, int t_opp, float t_dist = 220.0f);
@@ -158,6 +147,8 @@ private:
     void receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip = false);
     void circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow, float t_precision,
                     float t_near_dis_override = -1.0f);
+
+    bool m_gk_intercepting;
 
     // Tactics
     void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target);
@@ -178,6 +169,17 @@ private:
     void strategy();
     void ourPlaceBall();
     void theirPlaceBall();
+
+    // Strategy
+    int strategyWeight();
+
+    PlayBook     m_playbook;
+    int         *m_stm_to_ai_num[Common::Setting::kMaxRobots] = {};
+    Common::Vec2 m_allaf_pos[Common::Setting::kMaxRobots];
+
+    // FSM
+    int m_func_state = 0;
+    int m_func_count = 0;
 
     void internalProcessData();
 

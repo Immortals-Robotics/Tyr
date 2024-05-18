@@ -4,11 +4,8 @@ namespace Tyr::Soccer
 {
 void Ai::internalProcessData()
 {
-    if (m_world_state.ball.seen_state != Common::SeenState::CompletelyOut)
-        m_ball_hist.push_back(m_world_state.ball);
-    if (m_ball_hist.size() > kMaxBallHist)
-        m_ball_hist.pop_front();
-    calculateBallTrajectory();
+    m_ball_trajectory.update(m_world_state.ball);
+    m_ball_trajectory.calculate();
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
