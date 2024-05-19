@@ -11,7 +11,7 @@
 		"lmdb",
 		"nng",
 		"xxhash",
-		"implot"
+		"implot",
 		"qt5-base"
 	]
 }
