@@ -41,7 +41,7 @@ void BallTrajectory::calculate() const
     Common::Linear m_ball_line;
 
     int i;
-    for (int i = m_ball_hist.size() - 1; i >= 0; i--)
+    for (i = m_ball_hist.size() - 1; i >= 0; i--)
     {
         if (ball_x.size() > 1)
         {

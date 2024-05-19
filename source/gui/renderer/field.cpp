@@ -33,15 +33,15 @@ void Renderer::draw(const Common::FieldState &t_field)
 
     draw(Common::Rect{fieldWallStartPoint, fieldWallEndPoint}, Common::Color::brown(), false, 70.0f);
 
-    static constexpr float kLineWidth = 20.0f;
+    const float line_width = 2.0f * Common::field().line_thickness;
 
-    draw(Common::Rect{fieldEndPoint, fieldStartPoint}, Common::Color::white(), false, kLineWidth);
-    draw(Common::Rect{ourGoalEndPoint, ourGoalStartPoint}, Common::Color::white(), false, kLineWidth);
-    draw(Common::Rect{oppGoalStartPoint, oppGoalEndPoint}, Common::Color::white(), false, kLineWidth);
-    draw(Common::Rect{ourPenaltyStartPoint, ourPenaltyEndPoint}, Common::Color::white(), false, kLineWidth);
-    draw(Common::Rect{oppenaltyStartPoint, oppPenaltyEndPoint}, Common::Color::white(), false, kLineWidth);
-    draw(Common::LineSegment{centerLineStartPoint, centerLineEndPoint}, Common::Color::white(), kLineWidth);
-    draw(Common::Circle{fieldCenter, centerCircleRad}, Common::Color::white(), false, kLineWidth);
+    draw(Common::Rect{fieldEndPoint, fieldStartPoint}, Common::Color::white(), false, line_width);
+    draw(Common::Rect{ourGoalEndPoint, ourGoalStartPoint}, Common::Color::white(), false, line_width);
+    draw(Common::Rect{oppGoalStartPoint, oppGoalEndPoint}, Common::Color::white(), false, line_width);
+    draw(Common::Rect{ourPenaltyStartPoint, ourPenaltyEndPoint}, Common::Color::white(), false, line_width);
+    draw(Common::Rect{oppenaltyStartPoint, oppPenaltyEndPoint}, Common::Color::white(), false, line_width);
+    draw(Common::LineSegment{centerLineStartPoint, centerLineEndPoint}, Common::Color::white(), line_width);
+    draw(Common::Circle{fieldCenter, centerCircleRad}, Common::Color::white(), false, line_width);
 
     if (ImGui::IsMouseClicked(0))
     {
