@@ -26,7 +26,7 @@ private:
     std::unique_ptr<ConfigMenu> m_config_menu;
     std::unique_ptr<WidgetMenu> m_widget_menu;
     std::unique_ptr<DemoMenu>   m_demo_menu;
-    std::unique_ptr<FooterMenu>    m_log_menu;
+    std::unique_ptr<FooterMenu> m_footer_menu;
 
     Common::NetworkAddress updated_address;
 
@@ -61,6 +61,7 @@ private:
 
     Common::RefereeState m_referee_state;
 
+    Gui::LogState m_log_state = Gui::LogState::None;
     void receiveWorldStates();
     void receiveDebug();
     void receiveRefereeState();

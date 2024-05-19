@@ -3,7 +3,7 @@ project(${CMAKE_PROJECT_NAME}-gui)
 find_package(raylib CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(rlimgui CONFIG REQUIRED)
-
+find_package(implot CONFIG REQUIRED)
 set(HEADER_FILES
 	pch.h
 	app.h
@@ -29,6 +29,7 @@ set(SOURCE_FILES
 	menu/filter_tab.cpp
 	renderer/robot.cpp
 		renderer/info.cpp
+		menu/plot.cpp
 )
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
@@ -41,7 +42,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	${CMAKE_PROJECT_NAME}-soccer
 	raylib
 	imgui::imgui
-	rlimgui::rlimgui)
+	rlimgui::rlimgui
+	implot::implot)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})
 

@@ -68,7 +68,7 @@ void DemoMenu::draw()
         ImGui::SameLine();
         if (ImGui::Button("\uf04c", {40, 40}))
         {
-            if (m_log_state != LogState::PlaybackPause)
+            if (m_log_state == LogState::PlaybackPlay)
             {
                 m_log_state = LogState::PlaybackPause;
             }

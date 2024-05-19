@@ -4,6 +4,15 @@
 
 namespace Tyr::Gui
 {
+FooterMenu::FooterMenu()
+{
+    ImPlot::CreateContext();
+}
+
+FooterMenu::~FooterMenu()
+{
+    ImPlot::DestroyContext();
+}
 void FooterMenu::drawTerminal(const Common::Debug::Wrapper                                    &t_wrapper,
                               const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
 {
@@ -33,24 +42,9 @@ void FooterMenu::drawTerminal(const Common::Debug::Wrapper                      
     ImGui::EndChild();
 }
 
-void FooterMenu::drawPlot()
-{
-    ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30);
-    if(ImGui::Button(m_plot_resize_icon.c_str())) {
-        if(m_is_plot_maximized) {
-            m_is_plot_maximized = false;
-            m_plot_resize_icon = "\uf31e";
-        }
-        else {
-            m_plot_resize_icon = "\uf78c";
-            m_is_plot_maximized = true;
-        }
-    }
-    ImGui::Separator();
-}
-
 void FooterMenu::draw(const Common::Debug::Wrapper                                    &t_wrapper,
-                      const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
+                      const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map,
+                      const Common::WorldState &t_world, const bool &t_playback)
 {
     auto main_window_height = GetScreenHeight();
     auto main_window_width  = GetScreenWidth();
@@ -68,20 +62,20 @@ void FooterMenu::draw(const Common::Debug::Wrapper                              
         drawTerminal(t_wrapper, t_map);
         ImGui::End();
     }
-    if(!m_is_plot_maximized)
+    if (!m_is_plot_maximized)
     {
         ImGui::SetNextWindowPos(ImVec2(GetScreenWidth() / 2, (main_window_width - 650.) * 0.77));
-        ImGui::SetNextWindowSize(
-            ImVec2(GetScreenWidth() / 2, main_window_height - ((main_window_width - 650.) * 0.77)));
+        m_plot_window_size = ImVec2(GetScreenWidth() / 2, main_window_height - ((main_window_width - 650.) * 0.77));
     }
-    else {
-        ImGui::SetNextWindowPos(ImVec2(0,0));
-        ImGui::SetNextWindowSize(
-            ImVec2(main_window_width - 400.,((main_window_width - 650.) * 0.77)));
+    else
+    {
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        m_plot_window_size = ImVec2(main_window_width - 400., ((main_window_width - 650.) * 0.77));
     }
+    ImGui::SetNextWindowSize(m_plot_window_size);
     if (ImGui::Begin("##Plot", nullptr, window_flags))
     {
-        drawPlot();
+        drawPlot(t_world, t_playback);
         ImGui::End();
     }
 }
