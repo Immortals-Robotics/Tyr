@@ -8,13 +8,16 @@ class FooterMenu
 private:
     int           m_filter_level      = 0;
     bool          m_is_plot_maximized = false;
+    bool          m_is_plot_pinned    = true;
     std::string   m_plot_resize_icon  = "\uf31e";
+    std::string   m_plot_pin_icon = "\uf08d";
     int           m_item;
     int           m_id;
     int           m_type;
     int           m_plot_queue_size = 1000;
     ImVec2        m_plot_window_size;
     unsigned long m_last_ts;
+    ImGuiCond     m_window_condition;
 
     enum class PlotType
     {
