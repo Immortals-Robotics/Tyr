@@ -51,6 +51,7 @@ void FooterMenu::draw(const Common::Debug::Wrapper                              
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                                     ImGuiWindowFlags_NoDecoration;
+    m_window_condition = ImGuiCond_Always;
     if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
     {
         main_window_width = (main_window_height - 200.) / 0.77 + 650.;
@@ -62,17 +63,25 @@ void FooterMenu::draw(const Common::Debug::Wrapper                              
         drawTerminal(t_wrapper, t_map);
         ImGui::End();
     }
+
+    if(!m_is_plot_pinned) {
+        window_flags = ImGuiWindowFlags_NoCollapse;
+        m_window_condition = ImGuiCond_Once;
+    }
+
     if (!m_is_plot_maximized)
     {
-        ImGui::SetNextWindowPos(ImVec2(GetScreenWidth() / 2, (main_window_width - 650.) * 0.77));
+        ImGui::SetNextWindowPos(ImVec2(GetScreenWidth() / 2, (main_window_width - 650.) * 0.77), m_window_condition);
         m_plot_window_size = ImVec2(GetScreenWidth() / 2, main_window_height - ((main_window_width - 650.) * 0.77));
     }
     else
     {
-        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowPos(ImVec2(0, 0), m_window_condition);
         m_plot_window_size = ImVec2(main_window_width - 400., ((main_window_width - 650.) * 0.77));
     }
-    ImGui::SetNextWindowSize(m_plot_window_size);
+    ImGui::SetNextWindowSize(m_plot_window_size, m_window_condition);
+
+
     if (ImGui::Begin("##Plot", nullptr, window_flags))
     {
         drawPlot(t_world, t_playback);
