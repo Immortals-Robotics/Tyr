@@ -143,7 +143,7 @@ void FooterMenu::drawPlot(const Common::WorldState &t_world, const bool &t_playb
         }
         else
         {
-            ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, 14);
+            ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, 30);
         }
         ImPlot::SetupAxisZoomConstraints(ImAxis_X1, 3., INFINITY);
 
