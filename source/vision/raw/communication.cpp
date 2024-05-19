@@ -7,14 +7,15 @@ bool Raw::receive()
     Protos::Ssl::Vision::WrapperPacket packet;
     if (m_client->receive(&packet))
     {
+        const auto receive_endpoint = m_client->getLastReceiveEndpoint();
+
         if (packet.has_detection())
         {
             const int camera_id = packet.detection().camera_id();
 
             if (Common::setting().use_camera[camera_id] &&
-                packet.detection().frame_number() > m_d_frame[camera_id].frame_number())
+                packet.detection().frame_number() != m_d_frame[camera_id].frame_number())
             {
-                const auto receive_endpoint = m_client->getLastReceiveEndpoint();
                 Common::logTrace("Received camera {} frame {} with size {} from {}:{}", camera_id,
                                  packet.detection().frame_number(), packet.ByteSizeLong(),
                                  receive_endpoint.address().to_string(), receive_endpoint.port());
@@ -22,6 +23,14 @@ bool Raw::receive()
                 m_d_frame[camera_id]         = packet.detection();
                 m_packet_received[camera_id] = true;
             }
+        }
+
+        if (packet.has_geometry() && packet.geometry().has_field())
+        {
+            Common::logTrace("Received field geometry from {}:{}", receive_endpoint.address().to_string(),
+                             receive_endpoint.port());
+
+            Common::field() = Common::FieldState{packet.geometry().field()};
         }
 
         return true;

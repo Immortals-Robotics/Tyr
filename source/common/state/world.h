@@ -243,6 +243,10 @@ struct FieldState
 
     float center_circle_radius = 500.0f;
 
+    float line_thickness = 10.0f;
+
+    float goal_center_to_penalty_mark = 8000.0f;
+
     float ball_radius  = 21.5f;
     float robot_radius = 90.0f;
 
@@ -258,13 +262,25 @@ struct FieldState
 
         boundary_width = t_field.boundary_width();
 
-        penalty_area_depth = t_field.penalty_area_depth();
-        penalty_area_width = t_field.penalty_area_width();
+        if (t_field.has_penalty_area_depth())
+            penalty_area_depth = t_field.penalty_area_depth();
+        if (t_field.has_penalty_area_width())
+            penalty_area_width = t_field.penalty_area_width();
 
-        center_circle_radius = t_field.center_circle_radius();
+        if (t_field.has_center_circle_radius())
+            center_circle_radius = t_field.center_circle_radius();
 
-        ball_radius  = t_field.ball_radius();
-        robot_radius = t_field.max_robot_radius();
+        if (t_field.has_line_thickness())
+            line_thickness = t_field.line_thickness();
+
+        if (t_field.has_goal_center_to_penalty_mark())
+            goal_center_to_penalty_mark = t_field.goal_center_to_penalty_mark();
+
+        if (t_field.has_ball_radius())
+            ball_radius = t_field.ball_radius();
+
+        if (t_field.has_max_robot_radius())
+            robot_radius = t_field.max_robot_radius();
     }
 };
 
