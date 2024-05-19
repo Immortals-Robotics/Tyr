@@ -10,6 +10,7 @@
 		"rlimgui",
 		"lmdb",
 		"nng",
-		"xxhash"
+		"xxhash",
+		"qt5-base"
 	]
 }

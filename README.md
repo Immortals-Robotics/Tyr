@@ -17,7 +17,7 @@
 * **git**. It is highly recommended that you use a visual git client, as we have had many problems with people using the cmd line interface.
 * Linux-specific **System packages**:
   ```
-  zip ninja-build libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config libgl1-mesa-dev libx11-dev libxrandr-dev
+  zip ninja-build libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config libgl1-mesa-dev libx11-dev libxrandr-dev ^libxcb.*-dev libx11-xcb-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
   ```
 
 We are actively testing on *Windows* and *macOS*, but other systems that meet the requirements should theoretically work fine.
