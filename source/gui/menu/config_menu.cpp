@@ -267,7 +267,13 @@ void ConfigMenu::draw()
 {
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     auto main_window_height = GetScreenHeight();
-    ImGui::SetNextWindowSize(ImVec2(250., main_window_height));
+    auto main_window_width = GetScreenWidth();
+    if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
+    {
+        main_window_width = (main_window_height - 200.) / 0.77 + 650.;
+    }
+
+    ImGui::SetNextWindowSize(ImVec2(250., (main_window_width - 650.) * 0.77));
     if (ImGui::Begin("Config", nullptr, m_window_flags))
     {
         drawTabBar();

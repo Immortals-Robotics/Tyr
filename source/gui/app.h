@@ -4,7 +4,7 @@
 
 #include "menu/config_menu.h"
 #include "menu/demo_menu.h"
-#include "menu/log_menu.h"
+#include "menu/footer_menu.h"
 #include "menu/widget_menu.h"
 #include "renderer/renderer.h"
 namespace Tyr::Gui
@@ -26,7 +26,7 @@ private:
     std::unique_ptr<ConfigMenu> m_config_menu;
     std::unique_ptr<WidgetMenu> m_widget_menu;
     std::unique_ptr<DemoMenu>   m_demo_menu;
-    std::unique_ptr<LogMenu>    m_log_menu;
+    std::unique_ptr<FooterMenu> m_footer_menu;
 
     Common::NetworkAddress updated_address;
 
@@ -61,6 +61,7 @@ private:
 
     Common::RefereeState m_referee_state;
 
+    Gui::LogState m_log_state = Gui::LogState::None;
     void receiveWorldStates();
     void receiveDebug();
     void receiveRefereeState();

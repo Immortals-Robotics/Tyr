@@ -112,7 +112,7 @@ bool Application::initialize(const int width, const int height)
     m_config_menu = std::make_unique<ConfigMenu>();
     m_widget_menu = std::make_unique<WidgetMenu>();
     m_demo_menu   = std::make_unique<DemoMenu>();
-    m_log_menu    = std::make_unique<LogMenu>();
+    m_footer_menu = std::make_unique<FooterMenu>();
 
     Common::logInfo(" Now it is time, lets rock...");
     return true;
@@ -207,17 +207,23 @@ void Application::update()
         {
             m_config_menu->feedDebug(m_debug_wrapper);
             m_renderer->draw(m_debug_wrapper, m_config_menu->nodeMap());
-            m_log_menu->draw(m_debug_wrapper, m_config_menu->nodeMap());
+            m_footer_menu->draw(m_debug_wrapper, m_config_menu->nodeMap(), m_world_state, false);
         }
         else
         {
             m_config_menu->feedDebug(m_demo_menu->debugWrapper());
             m_renderer->draw(m_demo_menu->debugWrapper(), m_config_menu->nodeMap());
-            m_log_menu->draw(m_demo_menu->debugWrapper(), m_config_menu->nodeMap());
+            m_footer_menu->draw(m_demo_menu->debugWrapper(), m_config_menu->nodeMap(),
+                                m_demo_menu->worldStateFiltered(), true);
         }
 
         m_renderer->end();
 
+        if (m_log_state != m_demo_menu->getState() && m_demo_menu->getState() != LogState::PlaybackPause)
+        {
+            m_footer_menu->clearPlot();
+            m_log_state = m_demo_menu->getState();
+        }
         ImGui::End();
     }
 
