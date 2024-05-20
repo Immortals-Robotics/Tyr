@@ -58,13 +58,13 @@ private:
     char m_grsim_ip_text[16]     = "127.0.0.1";
     char m_grsim_port_text[6]    = "20011";
 
-    char m_ball_merge_distance_text[10];
-    char m_max_ball_2_frame_dist[10];
-    char m_max_ball_frame_not_seen[10];
-    char m_max_ball_hist[10];
-    char m_max_robot_frame_not_seen[10];
-    char m_merge_distance[10];
-    char m_vision_frame_rate[10];
+    char m_ball_merge_distance_text[10] = "";
+    char m_max_ball_2_frame_dist[10]    = "";
+    char m_max_ball_frame_not_seen[10]  = "";
+    char m_max_ball_hist[10]            = "";
+    char m_max_robot_frame_not_seen[10] = "";
+    char m_merge_distance[10]           = "";
+    char m_vision_frame_rate[10]        = "";
 
     std::array<bool, max_num_of_cameras>      m_use_camera     = {true, true, false};
     bool                                      m_use_kalman_ang = false;
