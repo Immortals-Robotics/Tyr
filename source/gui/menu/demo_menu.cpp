@@ -20,7 +20,7 @@ void DemoMenu::draw()
     auto main_window_height = GetScreenHeight();
     auto main_window_width  = GetScreenWidth();
 
-    m_real_time = Common::TimePoint::now().microseconds();
+    m_real_time = Common::TimePoint::now();
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                                     ImGuiWindowFlags_NoDecoration;
@@ -40,112 +40,126 @@ void DemoMenu::draw()
         {
             analyzeDatabase();
         }
-        ImGui::SameLine();
-        font->Scale = 1;
-        ImGui::PushFont(font);
-        if (ImGui::Combo(
-                "##DemoList", &m_selected_demo, [](void *user_data, int idx) -> const char *
-                { return ((Demo *) user_data + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
-        {
-            m_playback_size = static_cast<float>(currentDemo().end_time - currentDemo().start_time) / 1000000.;
-            m_log_state     = LogState::None;
-            m_play_time     = currentDemo().start_time;
-        }
-        ImGui::Spacing();
-        ImGui::Spacing();
-        font->Scale = 1.8;
-        ImGui::PushFont(font);
-        if (ImGui::Button("\uf04a", {40, 40}))
-        {
-            if (m_log_state != LogState::None && m_play_time > m_play_time + 100)
-            {
-                m_play_time -= 100;
-            }
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("\uf04b", {40, 40}))
-        {
-            if (m_log_state != LogState::PlaybackPlay)
-            {
-                m_log_state = LogState::PlaybackPlay;
 
-                m_play_time       = std::clamp(m_play_time, currentDemo().start_time, currentDemo().end_time);
-                m_play_start_time = m_real_time - (m_play_time - currentDemo().start_time);
-            }
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("\uf04c", {40, 40}))
+        if (!m_demos.empty())
         {
-            if (m_log_state == LogState::PlaybackPlay)
-            {
-                m_log_state = LogState::PlaybackPause;
-            }
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("\uf04d", {40, 40}))
-        {
-            if (m_log_state != LogState::None)
+            ImGui::SameLine();
+            font->Scale = 1;
+            ImGui::PushFont(font);
+
+            if (ImGui::Combo(
+                    "##DemoList", &m_selected_demo, [](void *user_data, int idx) -> const char *
+                    { return ((Demo *) user_data + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
             {
                 m_log_state = LogState::None;
+                m_play_time = currentDemo().start_time;
             }
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("\uf04e", {40, 40}))
-        {
-            if (m_log_state != LogState::None)
+            ImGui::Spacing();
+            ImGui::Spacing();
+            font->Scale = 1.8;
+            ImGui::PushFont(font);
+            if (ImGui::Button("\uf04a", {40, 40}))
             {
-                m_play_time += 100;
+                if (m_log_state != LogState::None &&
+                    m_play_time > m_play_time + Common::Duration::fromMicroseconds(100))
+                {
+                    m_play_time -= Common::Duration::fromMicroseconds(100);
+                }
             }
-        }
-        ImGui::SameLine();
-        ImGui::Spacing();
-        ImGui::SameLine();
-        if (ImGui::Button(m_record_button, {40, 40}))
-        {
-            if (m_log_state != LogState::Record)
+            ImGui::SameLine();
+            if (ImGui::Button("\uf04b", {40, 40}))
             {
-                m_log_state = LogState::Record;
-                strcpy(m_record_button, "\uf28d");
+                if (m_log_state != LogState::PlaybackPlay)
+                {
+                    m_log_state = LogState::PlaybackPlay;
+
+                    m_play_time = std::clamp(m_play_time, currentDemo().start_time, currentDemo().end_time);
+
+                    m_play_start_time = m_real_time - (m_play_time - currentDemo().start_time);
+                }
             }
-            else
+            ImGui::SameLine();
+            if (ImGui::Button("\uf04c", {40, 40}))
             {
-                m_log_state = LogState::None;
-                strcpy(m_record_button, "\uf111");
+                if (m_log_state == LogState::PlaybackPlay)
+                {
+                    m_log_state = LogState::PlaybackPause;
+                }
             }
+            ImGui::SameLine();
+            if (ImGui::Button("\uf04d", {40, 40}))
+            {
+                if (m_log_state != LogState::None)
+                {
+                    m_log_state = LogState::None;
+                }
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("\uf04e", {40, 40}))
+            {
+                if (m_log_state != LogState::None)
+                {
+                    m_play_time += Common::Duration::fromMicroseconds(100);
+                }
+            }
+            ImGui::SameLine();
+            ImGui::Spacing();
+            ImGui::SameLine();
+            if (ImGui::Button(m_record_button, {40, 40}))
+            {
+                if (m_log_state != LogState::Record)
+                {
+                    m_log_state = LogState::Record;
+                    strcpy(m_record_button, "\uf28d");
+                }
+                else
+                {
+                    m_log_state = LogState::None;
+                    strcpy(m_record_button, "\uf111");
+                }
+            }
+
+            ImGui::Spacing();
+
+            font->Scale = 1;
+            ImGui::PushFont(font);
+
+            ImGui::Spacing();
+            ImGui::Spacing();
+            ImGui::Separator();
+            ImGui::Spacing();
+            ImGui::Spacing();
+
+            float elapsed_sec = m_playback_elapsed.seconds();
+            ImGui::SetNextItemWidth(390.);
+            if (ImGui::SliderFloat("##time", &elapsed_sec, 0.0f, currentDemo().length().seconds(), "%.3fs") &&
+                m_demos.size())
+            {
+                m_playback_elapsed = Common::Duration::fromSeconds(elapsed_sec);
+                m_play_time        = currentDemo().start_time + m_playback_elapsed;
+            }
+            ImGui::Spacing();
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.7f, 0.25f, 0.3f, 1.0f));        // Dark frame background
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.7f, 0.35f, 0.4f, 1.0f)); // Darker when hovered
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(1.0f, 0.2f, 0.2f, 1.0f));   // Brighter red when active
+
+            ImGui::SetNextItemWidth(390.);
+            elapsed_sec = m_playback_elapsed.seconds();
+            if (ImGui::DragFloat("##timescrol", &elapsed_sec, 0.01f, 0.0f, currentDemo().length().seconds(),
+                                 "Fine Control"))
+            {
+                m_playback_elapsed = Common::Duration::fromSeconds(elapsed_sec);
+                m_play_time        = currentDemo().start_time + m_playback_elapsed;
+            }
+            ImGui::PopStyleColor(3);
+
+            ImGui::PopFont();
+            ImGui::PopFont();
+            ImGui::PopFont();
         }
 
-        ImGui::Spacing();
-
+        ImGui::PopFont();
         font->Scale = 1;
-        ImGui::PushFont(font);
-
-        ImGui::Spacing();
-        ImGui::Spacing();
-        ImGui::Separator();
-        ImGui::Spacing();
-        ImGui::Spacing();
-
-        ImGui::SetNextItemWidth(390.);
-        if (ImGui::SliderFloat("##time", &m_playback_time, 0.0f, m_playback_size, "%.3fs") && m_demos.size())
-        {
-            m_play_time = static_cast<Common::Storage::Key>(m_playback_time * 1000000) + currentDemo().start_time;
-        }
-        ImGui::Spacing();
-        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.7f, 0.25f, 0.3f, 1.0f));        // Dark frame background
-        ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.7f, 0.35f, 0.4f, 1.0f)); // Darker when hovered
-        ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(1.0f, 0.2f, 0.2f, 1.0f));   // Brighter red when active
-
-        ImGui::SetNextItemWidth(390.);
-        if (ImGui::DragFloat("##timescrol", &m_playback_time, 0.01f, 0.0f, m_playback_size, "Fine Control"))
-        {
-            m_play_time = static_cast<Common::Storage::Key>(m_playback_time * 1000000) + currentDemo().start_time;
-        }
-        ImGui::PopStyleColor(3);
-
-        ImGui::PopFont();
-        ImGui::PopFont();
-        ImGui::PopFont();
-        ImGui::PopFont();
 
         ImGui::End();
     }
@@ -162,15 +176,15 @@ void DemoMenu::demoHandler()
     switch (m_log_state)
     {
     case LogState::PlaybackPlay:
-        m_play_time = (m_real_time - m_play_start_time) + currentDemo().start_time;
+        m_playback_elapsed = m_real_time - m_play_start_time;
+
+        m_play_time = currentDemo().start_time + m_playback_elapsed;
         m_play_time = std::min(m_play_time, currentDemo().end_time);
 
-        m_playback_time = static_cast<float>(m_play_time - currentDemo().start_time) / 1000000;
-
     case LogState::PlaybackPause:
-        m_world_filtered_storage.get(m_play_time, &m_worldstate_filtered);
-        m_debug_storage.get(m_play_time, &m_debug);
-        m_referee_storage.get(m_play_time, &m_referee);
+        m_world_filtered_storage.get(m_play_time.microseconds(), &m_worldstate_filtered);
+        m_debug_storage.get(m_play_time.microseconds(), &m_debug);
+        m_referee_storage.get(m_play_time.microseconds(), &m_referee);
         break;
     }
 }
@@ -184,8 +198,7 @@ void DemoMenu::analyzeDatabase()
 
     m_world_filtered_storage.getBoundary(&start_ts, &end_ts);
 
-    Demo demo{};
-    demo.start_time = start_ts;
+    Common::Storage::Key current_start_ts = start_ts;
 
     for (Common::Storage::Key current_ts = start_ts; current_ts < end_ts;)
     {
@@ -196,19 +209,13 @@ void DemoMenu::analyzeDatabase()
 
         if (next_ts - current_ts > 1000000)
         {
-            demo.end_time = current_ts;
-            demo.name     = fmt::format("{}", Common::TimePoint::fromMicroseconds(demo.start_time));
-            m_demos.push_back(std::move(demo));
-
-            demo.start_time = next_ts;
+            m_demos.emplace_back(current_start_ts, current_ts);
+            current_start_ts = next_ts;
         }
+
         current_ts = next_ts;
     }
 
-    demo.end_time = end_ts;
-    demo.name     = fmt::format("{}", Common::TimePoint::fromMicroseconds(demo.start_time));
-    m_demos.push_back(std::move(demo));
-
-    m_playback_size = static_cast<float>(m_demos[0].end_time - m_demos[0].start_time) / 1000000.;
+    m_demos.emplace_back(current_start_ts, end_ts);
 }
 } // namespace Tyr::Gui

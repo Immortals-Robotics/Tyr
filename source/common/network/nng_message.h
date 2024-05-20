@@ -10,7 +10,7 @@ struct NngMessage
     {}
 
     NngMessage(const size_t t_size)
-        : NngMessage((char *) nng_alloc(t_size + sizeof(TimeStampInt)), t_size + sizeof(TimeStampInt))
+        : NngMessage((char *) nng_alloc(t_size + sizeof(uint64_t)), t_size + sizeof(uint64_t))
     {}
 
     ~NngMessage()
@@ -25,23 +25,23 @@ struct NngMessage
 
     TimePoint time() const
     {
-        const TimeStampInt timestamp = m_data.size() >= sizeof(TimeStampInt) ? *((TimeStampInt *) m_data.data()) : 0;
+        const uint64_t timestamp = m_data.size() >= sizeof(uint64_t) ? *((uint64_t *) m_data.data()) : 0;
         return TimePoint::fromMicroseconds(timestamp);
     }
 
-    TimeStampInt *mutableTime()
+    uint64_t *mutableTime()
     {
-        return m_data.size() >= sizeof(TimeStampInt) ? (TimeStampInt *) m_data.data() : nullptr;
+        return m_data.size() >= sizeof(uint64_t) ? (uint64_t *) m_data.data() : nullptr;
     }
 
     char *data() const
     {
-        return m_data.data() != nullptr ? m_data.data() + sizeof(TimeStampInt) : nullptr;
+        return m_data.data() != nullptr ? m_data.data() + sizeof(uint64_t) : nullptr;
     }
 
     size_t size() const
     {
-        return m_data.size() >= sizeof(TimeStampInt) ? m_data.size() - sizeof(TimeStampInt) : 0;
+        return m_data.size() >= sizeof(uint64_t) ? m_data.size() - sizeof(uint64_t) : 0;
     }
 
 private:

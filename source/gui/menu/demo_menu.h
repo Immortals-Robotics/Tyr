@@ -17,19 +17,33 @@ private:
     void analyzeDatabase();
 
     char     m_record_button[7] = "\uf111";
-    float    m_playback_time    = 0.;
-    float    m_playback_size    = 100.;
     LogState m_log_state        = LogState::None;
 
-    Common::Storage::Key m_play_time       = 0;
-    Common::Storage::Key m_play_start_time = 0;
-    Common::Storage::Key m_real_time       = 0;
+    Common::TimePoint m_play_time;
+    Common::TimePoint m_play_start_time;
+    Common::TimePoint m_real_time;
+
+    Common::Duration m_playback_elapsed;
 
     struct Demo
     {
-        Common::Storage::Key start_time;
-        Common::Storage::Key end_time;
-        std::string          name;
+        Common::TimePoint start_time;
+        Common::TimePoint end_time;
+        std::string       name;
+
+        Demo() = default;
+
+        Demo(const Common::Storage::Key t_start_ts, const Common::Storage::Key t_end_ts)
+        {
+            start_time = Common::TimePoint::fromMicroseconds(t_start_ts);
+            end_time   = Common::TimePoint::fromMicroseconds(t_end_ts);
+            name       = fmt::format("{}", start_time);
+        }
+
+        inline Common::Duration length() const
+        {
+            return end_time - start_time;
+        }
     };
 
     inline const Demo &currentDemo() const

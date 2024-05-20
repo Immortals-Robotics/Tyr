@@ -50,6 +50,7 @@ set(HEADER_FILES
 	state/world.h
 	storage/dumper.h
 	storage/storage.h
+	time/duration.h
 	time/time_point.h
 	time/timer.h)
 
