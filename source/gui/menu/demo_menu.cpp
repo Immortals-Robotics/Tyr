@@ -43,13 +43,13 @@ void DemoMenu::draw()
         ImGui::SameLine();
         font->Scale = 1;
         ImGui::PushFont(font);
-        if (ImGui::Combo("##DemoList", &m_selected_demo, m_demo_names.data(), m_demo_names.size()) &&
-            m_start_times.size())
+        if (ImGui::Combo(
+                "##DemoList", &m_selected_demo, [](void *user_data, int idx) -> const char *
+                { return ((Demo *) user_data + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
         {
-            m_playback_size =
-                static_cast<float>(m_end_times[m_selected_demo] - m_start_times[m_selected_demo]) / 1000000.;
-            m_log_state                           = LogState::None;
-            m_worldstate_filtered.info.current_ts = m_start_times[m_selected_demo];
+            m_playback_size = static_cast<float>(currentDemo().end_time - currentDemo().start_time) / 1000000.;
+            m_log_state     = LogState::None;
+            m_play_time     = currentDemo().start_time;
         }
         ImGui::Spacing();
         ImGui::Spacing();
@@ -57,10 +57,9 @@ void DemoMenu::draw()
         ImGui::PushFont(font);
         if (ImGui::Button("\uf04a", {40, 40}))
         {
-            if (m_log_state != LogState::None &&
-                m_worldstate_filtered.info.current_ts > m_worldstate_filtered.info.start_ts + 100)
+            if (m_log_state != LogState::None && m_play_time > m_play_time + 100)
             {
-                m_worldstate_filtered.info.current_ts -= 100;
+                m_play_time -= 100;
             }
         }
         ImGui::SameLine();
@@ -69,7 +68,9 @@ void DemoMenu::draw()
             if (m_log_state != LogState::PlaybackPlay)
             {
                 m_log_state = LogState::PlaybackPlay;
-                m_play_time = m_real_time;
+
+                m_play_time       = std::clamp(m_play_time, currentDemo().start_time, currentDemo().end_time);
+                m_play_start_time = m_real_time - (m_play_time - currentDemo().start_time);
             }
         }
         ImGui::SameLine();
@@ -93,7 +94,7 @@ void DemoMenu::draw()
         {
             if (m_log_state != LogState::None)
             {
-                m_worldstate_filtered.info.current_ts += 100;
+                m_play_time += 100;
             }
         }
         ImGui::SameLine();
@@ -125,10 +126,9 @@ void DemoMenu::draw()
         ImGui::Spacing();
 
         ImGui::SetNextItemWidth(390.);
-        if (ImGui::SliderFloat("##time", &m_playback_time, 0.0f, m_playback_size, "%.3fs") && m_start_times.size())
+        if (ImGui::SliderFloat("##time", &m_playback_time, 0.0f, m_playback_size, "%.3fs") && m_demos.size())
         {
-            m_worldstate_filtered.info.current_ts =
-                static_cast<Common::Storage::Key>(m_playback_time * 1000000) + m_start_times[m_selected_demo];
+            m_play_time = static_cast<Common::Storage::Key>(m_playback_time * 1000000) + currentDemo().start_time;
         }
         ImGui::Spacing();
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.7f, 0.25f, 0.3f, 1.0f));        // Dark frame background
@@ -138,8 +138,7 @@ void DemoMenu::draw()
         ImGui::SetNextItemWidth(390.);
         if (ImGui::DragFloat("##timescrol", &m_playback_time, 0.01f, 0.0f, m_playback_size, "Fine Control"))
         {
-            m_worldstate_filtered.info.current_ts =
-                static_cast<Common::Storage::Key>(m_playback_time * 1000000) + m_start_times[m_selected_demo];
+            m_play_time = static_cast<Common::Storage::Key>(m_playback_time * 1000000) + currentDemo().start_time;
         }
         ImGui::PopStyleColor(3);
 
@@ -160,116 +159,56 @@ LogState DemoMenu::getState()
 
 void DemoMenu::demoHandler()
 {
-    Common::Storage::Key next_ts;
     switch (m_log_state)
     {
     case LogState::PlaybackPlay:
-        if (m_real_time - m_play_time >= m_worldstate_filtered.info.time_between_frames &&
-            m_worldstate_filtered.info.current_ts < m_end_times[m_selected_demo] && m_start_times.size())
-        {
-            if (m_world_filtered_storage.closest(m_worldstate_filtered.info.current_ts,
-                                                 &m_worldstate_filtered.info.current_ts, &next_ts))
-            {
-                m_worldstate_filtered.info.time_between_frames = next_ts - m_worldstate_filtered.info.current_ts;
-                m_play_time += m_worldstate_filtered.info.time_between_frames;
-                m_worldstate_filtered.info.current_ts = next_ts;
-                m_playback_time =
-                    static_cast<float>(m_worldstate_filtered.info.current_ts - m_start_times[m_selected_demo]) /
-                    1000000;
+        m_play_time = (m_real_time - m_play_start_time) + currentDemo().start_time;
+        m_play_time = std::min(m_play_time, currentDemo().end_time);
 
-                Protos::Immortals::WorldState world_filtered;
-                if (m_world_filtered_storage.get(m_worldstate_filtered.info.current_ts, &world_filtered))
-                {
-                    m_worldstate_filtered.message = world_filtered;
-                }
+        m_playback_time = static_cast<float>(m_play_time - currentDemo().start_time) / 1000000;
 
-                Protos::Immortals::Debug::Wrapper debug_message;
-                if (m_debug_storage.get(m_worldstate_filtered.info.current_ts, &debug_message))
-                {
-                    m_debug.message = debug_message;
-                }
-
-                Protos::Immortals::RefereeState referee_message;
-                if (m_referee_storage.get(m_worldstate_filtered.info.current_ts, &referee_message))
-                {
-                    m_referee.message = referee_message;
-                }
-            }
-        }
-        break;
     case LogState::PlaybackPause:
-        if (m_world_filtered_storage.closest(m_worldstate_filtered.info.current_ts,
-                                             &m_worldstate_filtered.info.current_ts, &next_ts))
-        {
-            Protos::Immortals::WorldState world_filtered;
-            if (m_world_filtered_storage.get(m_worldstate_filtered.info.current_ts, &world_filtered))
-            {
-                m_worldstate_filtered.message = world_filtered;
-            }
-
-            Protos::Immortals::Debug::Wrapper debug_message;
-            if (m_debug_storage.get(m_worldstate_filtered.info.current_ts, &debug_message))
-            {
-                m_debug.message = debug_message;
-            }
-
-            Protos::Immortals::RefereeState referee_message;
-            if (m_referee_storage.get(m_worldstate_filtered.info.current_ts, &referee_message))
-            {
-                m_referee.message = referee_message;
-            }
-        }
-        break;
-    default:
+        m_world_filtered_storage.get(m_play_time, &m_worldstate_filtered);
+        m_debug_storage.get(m_play_time, &m_debug);
+        m_referee_storage.get(m_play_time, &m_referee);
         break;
     }
 }
 
 void DemoMenu::analyzeDatabase()
 {
-    m_debug_storage.getBoundary(&m_debug.info.start_ts, &m_debug.info.end_ts);
-    m_world_filtered_storage.getBoundary(&m_worldstate_filtered.info.start_ts, &m_worldstate_filtered.info.end_ts);
-    m_referee_storage.getBoundary(&m_referee.info.start_ts, &m_referee.info.end_ts);
+    m_demos.clear();
 
-    m_debug.info.current_ts               = m_debug.info.start_ts;
-    m_worldstate_filtered.info.current_ts = m_worldstate_filtered.info.start_ts;
-    m_referee.info.current_ts             = m_referee.info.start_ts;
+    Common::Storage::Key start_ts = 0;
+    Common::Storage::Key end_ts   = 0;
 
-    m_start_times.clear();
-    m_demo_names.clear();
-    m_end_times.clear();
+    m_world_filtered_storage.getBoundary(&start_ts, &end_ts);
 
-    pushStartPoints(m_worldstate_filtered.info.current_ts);
+    Demo demo{};
+    demo.start_time = start_ts;
 
-    Common::Storage::Key next_ts;
-    while (m_worldstate_filtered.info.current_ts < m_worldstate_filtered.info.end_ts)
+    for (Common::Storage::Key current_ts = start_ts; current_ts < end_ts;)
     {
-        m_debug_storage.closest(m_worldstate_filtered.info.current_ts, &m_worldstate_filtered.info.current_ts,
-                                &next_ts);
-        if (next_ts - m_worldstate_filtered.info.current_ts > 1000000)
+        m_debug_storage.closest(current_ts, &current_ts);
+
+        Common::Storage::Key next_ts;
+        m_debug_storage.next(current_ts, &next_ts);
+
+        if (next_ts - current_ts > 1000000)
         {
-            m_end_times.push_back(m_worldstate_filtered.info.current_ts);
-            pushStartPoints(next_ts);
+            demo.end_time = current_ts;
+            demo.name     = fmt::format("{}", Common::TimePoint::fromMicroseconds(demo.start_time));
+            m_demos.push_back(std::move(demo));
+
+            demo.start_time = next_ts;
         }
-        m_worldstate_filtered.info.current_ts = next_ts;
+        current_ts = next_ts;
     }
-    m_end_times.push_back(m_worldstate_filtered.info.end_ts);
 
-    m_playback_size                       = static_cast<float>(m_end_times[0] - m_start_times[0]) / 1000000.;
-    m_worldstate_filtered.info.current_ts = m_start_times[0];
-}
+    demo.end_time = end_ts;
+    demo.name     = fmt::format("{}", Common::TimePoint::fromMicroseconds(demo.start_time));
+    m_demos.push_back(std::move(demo));
 
-void DemoMenu::pushStartPoints(Common::Storage::Key t_ts)
-{
-    auto               tp         = std::chrono::system_clock::time_point(std::chrono::microseconds(t_ts));
-    auto               time       = std::chrono::system_clock::to_time_t(tp);
-    auto              *local_time = std::localtime(&time);
-    std::ostringstream oss;
-    oss << std::put_time(local_time, "%Y/%m/%d-%H:%M:%S");
-    m_start_times.push_back(t_ts);
-
-    char *c_str = new char[oss.str().length() + 1];
-    strcpy(c_str, oss.str().c_str());
-    m_demo_names.push_back(c_str);
+    m_playback_size = static_cast<float>(m_demos[0].end_time - m_demos[0].start_time) / 1000000.;
 }
 } // namespace Tyr::Gui

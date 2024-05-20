@@ -15,7 +15,8 @@ public:
 
     bool get(Key t_key, google::protobuf::MessageLite *t_message) const;
 
-    bool closest(Key t_key, Key *t_first, Key *t_second) const;
+    bool closest(Key t_key, Key *t_closest) const;
+    bool next(Key t_key, Key *t_next) const;
 
     unsigned long getBoundary(Key *t_first, Key *t_last) const;
     bool          store(Key t_key, const google::protobuf::MessageLite &t_message);
