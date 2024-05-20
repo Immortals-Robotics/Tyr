@@ -5,7 +5,10 @@
 		"protobuf",
 		"tomlplusplus",
 		"spdlog",
-		"imgui",
+		{
+			"name": "imgui",
+			"features": ["docking-experimental"]
+		},
 		"raylib",
 		"rlimgui",
 		"lmdb",

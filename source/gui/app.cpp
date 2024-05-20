@@ -107,6 +107,8 @@ bool Application::initialize(const int width, const int height)
     SetWindowIcon(LoadImage(icon_path.string().c_str()));
 
     rlImGuiSetup(true);
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
     m_renderer    = std::make_unique<Renderer>();
     m_config_menu = std::make_unique<ConfigMenu>();
