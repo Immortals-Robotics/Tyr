@@ -5,6 +5,7 @@ set(HEADER_FILES
 	base.h
 	command.h
 	grsim.h
+	simulator.h
 	hub.h
 	nrf.h
 	protocol/data_lite.h
@@ -21,6 +22,7 @@ set(C_SOURCE_FILES
 set(SOURCE_FILES
 	grsim.cpp
 	nrf.cpp
+	simulator.cpp
 	${C_SOURCE_FILES})
 
 add_library(${PROJECT_NAME}
