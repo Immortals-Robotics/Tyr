@@ -125,18 +125,18 @@ void FooterMenu::drawPlot(const Common::WorldState &t_world, const bool &t_playb
             switch (static_cast<PlotType>(m_type))
             {
             case PlotType::Vel:
-                x_values.push_back(static_cast<double>(data.velocity.length()) / 1000.);
+                x_values.push_back(static_cast<double>(data.velocity.length()));
                 break;
             default:
-                x_values.push_back(static_cast<double>(data.velocity.x) / 1000.);
-                y_values.push_back(static_cast<double>(data.velocity.y) / 1000.);
+                x_values.push_back(static_cast<double>(data.velocity.x));
+                y_values.push_back(static_cast<double>(data.velocity.y));
                 break;
             }
         }
         //        ImPlot::Set
         const ImPlotAxisFlags time_flag = ImPlotAxisFlags_None;
         const ImPlotAxisFlags vel_flag  = ImPlotAxisFlags_AutoFit;
-        ImPlot::SetupAxes("time (s)", "Vel (m/s)", time_flag, vel_flag);
+        ImPlot::SetupAxes("time (s)", "Vel (mm/s)", time_flag, vel_flag);
         if (t_playback)
         {
             ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, INFINITY);
