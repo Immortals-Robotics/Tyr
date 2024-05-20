@@ -58,9 +58,9 @@ void DemoMenu::draw()
             ImGui::PushFont(font);
             if (ImGui::Button("\uf04a", {40, 40}))
             {
-                if (m_log_state != LogState::None && m_timer.time() > Common::Duration::fromMicroseconds(100))
+                if (m_log_state != LogState::None && m_timer.time() > Common::Duration::fromMilliseconds(100))
                 {
-                    m_timer.setTime(m_timer.time() - Common::Duration::fromMicroseconds(100));
+                    m_timer.setTime(m_timer.time() - Common::Duration::fromMilliseconds(100));
                 }
             }
             ImGui::SameLine();
@@ -96,7 +96,7 @@ void DemoMenu::draw()
             {
                 if (m_log_state != LogState::None)
                 {
-                    m_timer.setTime(m_timer.time() + Common::Duration::fromMicroseconds(100));
+                    m_timer.setTime(m_timer.time() + Common::Duration::fromMilliseconds(100));
                 }
             }
             ImGui::SameLine();
