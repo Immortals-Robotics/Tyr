@@ -197,8 +197,7 @@ bool Storage::get(Key t_key, google::protobuf::MessageLite *t_message) const
     return true;
 }
 
-bool Storage::get(Key t_key, Key *t_first, Key *t_second, google::protobuf::MessageLite *t_message_first,
-                     google::protobuf::MessageLite *t_message_second) const
+bool Storage::closest(Key t_key, Key *t_first, Key *t_second) const
 {
     int result;
 
@@ -228,37 +227,32 @@ bool Storage::get(Key t_key, Key *t_first, Key *t_second, google::protobuf::Mess
     result = mdb_cursor_get(mdb_cursor, &mdb_key, &mdb_data, MDB_SET_RANGE);
     if (result == MDB_NOTFOUND)
     {
+        Common::logWarning("lmdb cursor get failed with: {}", getErrorString(result));
         return false;
     }
     else if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb get failed with: {}", getErrorString(result));
+        Common::logError("lmdb cursor get failed with: {}", getErrorString(result));
         return false;
     }
 
-    *t_first       = *(Key *) mdb_key.mv_data;
-    bool pb_result = t_message_first->ParseFromArray(mdb_data.mv_data, mdb_data.mv_size);
+    *t_first = *(Key *) mdb_key.mv_data;
 
     result = mdb_cursor_get(mdb_cursor, &mdb_key, &mdb_data, MDB_NEXT);
     if (result == MDB_NOTFOUND)
     {
+        Common::logWarning("lmdb cursor get failed with: {}", getErrorString(result));
         return false;
     }
     else if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb get failed with: {}", getErrorString(result));
+        Common::logError("lmdb cursor get failed with: {}", getErrorString(result));
         return false;
     }
 
     *t_second = *(Key *) mdb_key.mv_data;
-    pb_result = t_message_second->ParseFromArray(mdb_data.mv_data, mdb_data.mv_size);
-    mdb_txn_abort(transaction);
 
-    if (!pb_result)
-    {
-        Common::logError("Failed to parse protobuf message with size {} from db", mdb_data.mv_size);
-        return false;
-    }
+    mdb_txn_abort(transaction);
 
     return true;
 }

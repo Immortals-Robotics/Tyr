@@ -14,17 +14,15 @@ class DemoMenu
 {
 private:
     void demoHandler();
-    void initStorage();
     void analyzeDatabase();
     void pushStartPoints(Common::Storage::Key t_ts);
 
     struct Info
     {
-        Common::Storage::Key start_ts;
-        Common::Storage::Key end_ts;
-        Common::Storage::Key current_ts;
-        Common::Storage::Key time_between_frames;
-        Info() = default;
+        Common::Storage::Key start_ts            = 0;
+        Common::Storage::Key end_ts              = 0;
+        Common::Storage::Key current_ts          = 0;
+        Common::Storage::Key time_between_frames = 0;
     };
 
     struct DebugDemo
@@ -67,7 +65,7 @@ private:
     RefereeDemo           m_referee;
 
 public:
-    DemoMenu() = default;
+    DemoMenu();
     ~DemoMenu();
     void     draw();
     LogState getState();

@@ -1,6 +1,13 @@
 #include "demo_menu.h"
 namespace Tyr::Gui
 {
+DemoMenu::DemoMenu()
+{
+    m_debug_storage.open(Common::setting().debug_db);
+    m_world_filtered_storage.open(Common::setting().world_state_db);
+    m_referee_storage.open(Common::setting().referee_db);
+}
+
 DemoMenu::~DemoMenu()
 {
     m_debug_storage.close();
@@ -10,10 +17,10 @@ DemoMenu::~DemoMenu()
 
 void DemoMenu::draw()
 {
-    auto       main_window_height = GetScreenHeight();
-    auto       main_window_width  = GetScreenWidth();
-    const auto now                = std::chrono::system_clock::now();
-    m_real_time = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
+    auto main_window_height = GetScreenHeight();
+    auto main_window_width  = GetScreenWidth();
+
+    m_real_time = Common::TimePoint::now().microseconds();
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                                     ImGuiWindowFlags_NoDecoration;
@@ -153,32 +160,36 @@ LogState DemoMenu::getState()
 
 void DemoMenu::demoHandler()
 {
-    Protos::Immortals::Debug::Wrapper debug_message;
-    Protos::Immortals::WorldState     first_world_filtered, second_world_filtered;
-    Protos::Immortals::RefereeState   referee_message;
-
     Common::Storage::Key next_ts;
     switch (m_log_state)
     {
     case LogState::PlaybackPlay:
-        if (m_real_time - (m_play_time) >= m_worldstate_filtered.info.time_between_frames &&
+        if (m_real_time - m_play_time >= m_worldstate_filtered.info.time_between_frames &&
             m_worldstate_filtered.info.current_ts < m_end_times[m_selected_demo] && m_start_times.size())
         {
-            if (m_world_filtered_storage.get(m_worldstate_filtered.info.current_ts,
-                                             &m_worldstate_filtered.info.current_ts, &next_ts, &first_world_filtered,
-                                             &second_world_filtered))
+            if (m_world_filtered_storage.closest(m_worldstate_filtered.info.current_ts,
+                                                 &m_worldstate_filtered.info.current_ts, &next_ts))
             {
-                m_worldstate_filtered.message                  = first_world_filtered;
                 m_worldstate_filtered.info.time_between_frames = next_ts - m_worldstate_filtered.info.current_ts;
                 m_play_time += m_worldstate_filtered.info.time_between_frames;
                 m_worldstate_filtered.info.current_ts = next_ts;
                 m_playback_time =
                     static_cast<float>(m_worldstate_filtered.info.current_ts - m_start_times[m_selected_demo]) /
                     1000000;
+
+                Protos::Immortals::WorldState world_filtered;
+                if (m_world_filtered_storage.get(m_worldstate_filtered.info.current_ts, &world_filtered))
+                {
+                    m_worldstate_filtered.message = world_filtered;
+                }
+
+                Protos::Immortals::Debug::Wrapper debug_message;
                 if (m_debug_storage.get(m_worldstate_filtered.info.current_ts, &debug_message))
                 {
                     m_debug.message = debug_message;
                 }
+
+                Protos::Immortals::RefereeState referee_message;
                 if (m_referee_storage.get(m_worldstate_filtered.info.current_ts, &referee_message))
                 {
                     m_referee.message = referee_message;
@@ -187,14 +198,22 @@ void DemoMenu::demoHandler()
         }
         break;
     case LogState::PlaybackPause:
-        if (m_world_filtered_storage.get(m_worldstate_filtered.info.current_ts, &m_worldstate_filtered.info.current_ts,
-                                         &next_ts, &first_world_filtered, &second_world_filtered))
+        if (m_world_filtered_storage.closest(m_worldstate_filtered.info.current_ts,
+                                             &m_worldstate_filtered.info.current_ts, &next_ts))
         {
-            m_worldstate_filtered.message = first_world_filtered;
+            Protos::Immortals::WorldState world_filtered;
+            if (m_world_filtered_storage.get(m_worldstate_filtered.info.current_ts, &world_filtered))
+            {
+                m_worldstate_filtered.message = world_filtered;
+            }
+
+            Protos::Immortals::Debug::Wrapper debug_message;
             if (m_debug_storage.get(m_worldstate_filtered.info.current_ts, &debug_message))
             {
                 m_debug.message = debug_message;
             }
+
+            Protos::Immortals::RefereeState referee_message;
             if (m_referee_storage.get(m_worldstate_filtered.info.current_ts, &referee_message))
             {
                 m_referee.message = referee_message;
@@ -206,18 +225,8 @@ void DemoMenu::demoHandler()
     }
 }
 
-void DemoMenu::initStorage()
-{
-    m_debug_storage.open(Common::setting().debug_db);
-    m_world_filtered_storage.open(Common::setting().world_state_db);
-    m_referee_storage.open(Common::setting().referee_db);
-}
-
 void DemoMenu::analyzeDatabase()
 {
-    Protos::Immortals::WorldState first_world_filtered, second_world_filtered;
-
-    initStorage();
     m_debug_storage.getBoundary(&m_debug.info.start_ts, &m_debug.info.end_ts);
     m_world_filtered_storage.getBoundary(&m_worldstate_filtered.info.start_ts, &m_worldstate_filtered.info.end_ts);
     m_referee_storage.getBoundary(&m_referee.info.start_ts, &m_referee.info.end_ts);
@@ -235,8 +244,8 @@ void DemoMenu::analyzeDatabase()
     Common::Storage::Key next_ts;
     while (m_worldstate_filtered.info.current_ts < m_worldstate_filtered.info.end_ts)
     {
-        m_debug_storage.get(m_worldstate_filtered.info.current_ts, &m_worldstate_filtered.info.current_ts, &next_ts,
-                            &first_world_filtered, &second_world_filtered);
+        m_debug_storage.closest(m_worldstate_filtered.info.current_ts, &m_worldstate_filtered.info.current_ts,
+                                &next_ts);
         if (next_ts - m_worldstate_filtered.info.current_ts > 1000000)
         {
             m_end_times.push_back(m_worldstate_filtered.info.current_ts);
@@ -263,5 +272,4 @@ void DemoMenu::pushStartPoints(Common::Storage::Key t_ts)
     strcpy(c_str, oss.str().c_str());
     m_demo_names.push_back(c_str);
 }
-
 } // namespace Tyr::Gui
