@@ -82,7 +82,7 @@ bool Application::initialize(const int width, const int height)
 
     m_sender_hub = std::make_unique<Sender::Hub>();
     m_sender_hub->registerSender<Sender::Nrf>();
-    m_sender_hub->registerSender<Sender::Grsim>();
+    m_sender_hub->registerSender<Sender::Simulator>();
 
     m_ai = std::make_unique<Soccer::Ai>();
 
