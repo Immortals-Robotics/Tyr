@@ -3,7 +3,10 @@
 	"version-string": "1.0.0",
 	"description": "A Raylib integration with DearImGui",
 	"dependencies": [
-		"imgui",
+		{
+			"name": "imgui",
+			"features": ["docking-experimental"]
+		},
 		"raylib",
 		{
 			"name": "vcpkg-cmake",
