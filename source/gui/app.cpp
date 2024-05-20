@@ -191,7 +191,7 @@ void Application::update()
         m_renderer->draw(Common::field());
 
         // TODO(mhmd): add an option for this
-        if (m_demo_menu->getState() == LogState::None)
+        if (m_demo_menu->getState() == LogState::Live)
         {
             m_renderer->draw(m_referee_state, Common::field());
             if (1)
@@ -205,7 +205,7 @@ void Application::update()
             m_renderer->draw(m_demo_menu->refereeState(), Common::field());
         }
 
-        if (m_demo_menu->getState() == LogState::None)
+        if (m_demo_menu->getState() == LogState::Live)
         {
             m_config_menu->feedDebug(m_debug_wrapper);
             m_renderer->draw(m_debug_wrapper, m_config_menu->nodeMap());
@@ -220,12 +220,6 @@ void Application::update()
         }
 
         m_renderer->end();
-
-        if (m_log_state != m_demo_menu->getState() && m_demo_menu->getState() != LogState::PlaybackPause)
-        {
-            m_footer_menu->clearPlot();
-            m_log_state = m_demo_menu->getState();
-        }
         ImGui::End();
     }
 

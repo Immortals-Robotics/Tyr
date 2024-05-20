@@ -4,10 +4,8 @@ namespace Tyr::Gui
 {
 enum class LogState
 {
-    None = 0,
-    Record,
-    PlaybackPlay,
-    PlaybackPause
+    Live = 0,
+    Replay,
 };
 
 class DemoMenu
@@ -16,8 +14,12 @@ private:
     void demoHandler();
     void analyzeDatabase();
 
-    char     m_record_button[7] = "\uf111";
-    LogState m_log_state        = LogState::None;
+    const char* kRecordButtonLive = "\uf28d";
+    const char* kRecordButtonReplay = "\uf111";
+
+    const char* m_record_button = kRecordButtonLive;
+
+    LogState m_log_state = LogState::Live;
 
     Common::Timer m_timer;
 

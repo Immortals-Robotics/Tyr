@@ -49,7 +49,7 @@ void DemoMenu::draw()
                     "##DemoList", &m_selected_demo, [](void *user_data, int idx) -> const char *
                     { return ((Demo *) user_data + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
             {
-                m_log_state = LogState::PlaybackPause;
+                m_log_state = LogState::Replay;
                 m_timer.reset();
             }
             ImGui::Spacing();
@@ -58,7 +58,7 @@ void DemoMenu::draw()
             ImGui::PushFont(font);
             if (ImGui::Button("\uf04a", {40, 40}))
             {
-                if (m_log_state != LogState::None && m_timer.time() > Common::Duration::fromMilliseconds(100))
+                if (m_log_state == LogState::Replay && m_timer.time() > Common::Duration::fromMilliseconds(100))
                 {
                     m_timer.setTime(m_timer.time() - Common::Duration::fromMilliseconds(100));
                 }
@@ -66,35 +66,31 @@ void DemoMenu::draw()
             ImGui::SameLine();
             if (ImGui::Button("\uf04b", {40, 40}))
             {
-                if (m_log_state != LogState::PlaybackPlay)
+                if (m_log_state == LogState::Replay)
                 {
-                    m_log_state = LogState::PlaybackPlay;
-
                     m_timer.resume();
                 }
             }
             ImGui::SameLine();
             if (ImGui::Button("\uf04c", {40, 40}))
             {
-                if (m_log_state == LogState::PlaybackPlay)
+                if (m_log_state == LogState::Replay)
                 {
-                    m_log_state = LogState::PlaybackPause;
-
                     m_timer.pause();
                 }
             }
             ImGui::SameLine();
             if (ImGui::Button("\uf04d", {40, 40}))
             {
-                if (m_log_state != LogState::None)
+                if (m_log_state == LogState::Replay)
                 {
-                    m_log_state = LogState::None;
+                    m_timer.reset();
                 }
             }
             ImGui::SameLine();
             if (ImGui::Button("\uf04e", {40, 40}))
             {
-                if (m_log_state != LogState::None)
+                if (m_log_state == LogState::Replay)
                 {
                     m_timer.setTime(m_timer.time() + Common::Duration::fromMilliseconds(100));
                 }
@@ -104,15 +100,17 @@ void DemoMenu::draw()
             ImGui::SameLine();
             if (ImGui::Button(m_record_button, {40, 40}))
             {
-                if (m_log_state != LogState::Record)
+                if (m_log_state != LogState::Live)
                 {
-                    m_log_state = LogState::Record;
-                    strcpy(m_record_button, "\uf28d");
+                    m_log_state     = LogState::Live;
+                    m_record_button = kRecordButtonLive;
+
+                    m_timer.reset();
                 }
                 else
                 {
-                    m_log_state = LogState::None;
-                    strcpy(m_record_button, "\uf111");
+                    m_log_state     = LogState::Replay;
+                    m_record_button = kRecordButtonReplay;
                 }
             }
 
@@ -170,23 +168,20 @@ LogState DemoMenu::getState()
 
 void DemoMenu::demoHandler()
 {
-    switch (m_log_state)
-    {
-    case LogState::PlaybackPlay:
-        if (m_timer.time() >= currentDemo().length())
-        {
-            m_log_state = LogState::PlaybackPause;
-            m_timer.pause();
-            m_timer.setTime(currentDemo().length());
-        }
-    case LogState::PlaybackPause:
-        const Common::TimePoint playback_point = currentDemo().start_time + m_timer.time();
+    if (m_log_state != LogState::Replay)
+        return;
 
-        m_world_filtered_storage.get(playback_point.microseconds(), &m_worldstate_filtered);
-        m_debug_storage.get(playback_point.microseconds(), &m_debug);
-        m_referee_storage.get(playback_point.microseconds(), &m_referee);
-        break;
+    if (!m_timer.paused() && m_timer.time() >= currentDemo().length())
+    {
+        m_timer.pause();
+        m_timer.setTime(currentDemo().length());
     }
+
+    const Common::TimePoint playback_point = currentDemo().start_time + m_timer.time();
+
+    m_world_filtered_storage.get(playback_point.microseconds(), &m_worldstate_filtered);
+    m_debug_storage.get(playback_point.microseconds(), &m_debug);
+    m_referee_storage.get(playback_point.microseconds(), &m_referee);
 }
 
 void DemoMenu::analyzeDatabase()

@@ -22,14 +22,20 @@ public:
 
     inline void pause()
     {
-        m_time_when_paused = time();
-        m_paused           = true;
+        if (!m_paused)
+        {
+            m_time_when_paused = time();
+            m_paused           = true;
+        }
     }
 
     inline void resume()
     {
-        m_start  = TimePoint::now() - m_time_when_paused;
-        m_paused = false;
+        if (m_paused)
+        {
+            m_start  = TimePoint::now() - m_time_when_paused;
+            m_paused = false;
+        }
     }
 
     inline bool paused() const
