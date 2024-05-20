@@ -8,24 +8,23 @@ struct TimePoint
 {
     inline static TimePoint fromMilliseconds(const uint64_t t_timestamp)
     {
-        return {.point = std::chrono::system_clock::time_point(std::chrono::milliseconds{t_timestamp})};
+        return {std::chrono::system_clock::time_point(std::chrono::milliseconds{t_timestamp})};
     }
 
     inline static TimePoint fromMicroseconds(const uint64_t t_timestamp)
     {
-        return {.point = std::chrono::system_clock::time_point(std::chrono::microseconds{t_timestamp})};
+        return {std::chrono::system_clock::time_point(std::chrono::microseconds{t_timestamp})};
     }
 
     inline static TimePoint fromSeconds(const float t_timestamp)
     {
         const auto duration = std::chrono::duration<float>{t_timestamp};
-        return {.point =
-                    std::chrono::system_clock::time_point(std::chrono::round<std::chrono::microseconds>(duration))};
+        return {std::chrono::system_clock::time_point(std::chrono::round<std::chrono::microseconds>(duration))};
     }
 
     inline static TimePoint now()
     {
-        return TimePoint(std::chrono::system_clock::now());
+        return {std::chrono::system_clock::now()};
     }
 
     inline uint64_t milliseconds() const
@@ -75,7 +74,7 @@ struct TimePoint
 
     inline Duration operator-(const TimePoint t_other) const
     {
-        return {.duration = point - t_other.point};
+        return {point - t_other.point};
     }
 
     inline TimePoint operator+(const Duration t_duration) const

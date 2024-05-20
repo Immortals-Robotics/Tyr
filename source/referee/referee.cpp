@@ -84,7 +84,7 @@ bool Referee::isKicked()
 
 void Referee::transition(const Protos::Ssl::Gc::Referee_Command ref_command)
 {
-    const bool ball_kicked = isKicked() || m_timer.time() > 5;
+    const bool ball_kicked = isKicked() || m_timer.time().seconds() > 5;
 
     if (ref_command == Protos::Ssl::Gc::Referee_Command_HALT)
     {

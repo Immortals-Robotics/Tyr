@@ -13,7 +13,7 @@ void Ai::markManager()
         return;
     }
 
-    const float start_t = m_timer.time();
+    const Common::Duration start_t = m_timer.time();
 
     // if ( ( !t_restart ) && ( m_mark_map[&m_dmf] == -1 ) )
     //	m_mark_map[&m_dmf] = findKickerOpp(-1);
@@ -198,8 +198,8 @@ void Ai::markManager()
         }
     }
 
-    const float end_t = m_timer.time();
+    const Common::Duration end_t = m_timer.time();
 
-    Common::logDebug("markManager execution time: {}", (end_t - start_t) * 1000.0f);
+    Common::logDebug("markManager execution time: {}", (end_t - start_t));
 }
 } // namespace Tyr::Soccer

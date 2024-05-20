@@ -168,7 +168,7 @@ void Ai::ourPlaceBall()
     {
         waitForPass(m_dmf, false, &m_own_robot[m_attack].state().position);
 
-        if (temp_time.time() > 2)
+        if (temp_time.time().seconds() > 2)
         {
             m_func_count++;
         }

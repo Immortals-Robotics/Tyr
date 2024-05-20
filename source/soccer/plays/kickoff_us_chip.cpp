@@ -13,7 +13,7 @@ void Ai::kickoffUsChip()
                  ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
              VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
 
-    if (m_timer.time() < 0.5)
+    if (m_timer.time().seconds() < 0.5)
     {
         if (m_own_robot[m_mid1].state().position.y > m_own_robot[m_mid2].state().position.y)
         {

@@ -89,7 +89,7 @@ bool receivers_reached = false;
 
 void Ai::strategy()
 {
-    if (m_timer.time() < 0.5)
+    if (m_timer.time().seconds() < 0.5)
     {
         curr_str_id       = m_target_str;
         receivers_reached = false;
@@ -107,13 +107,13 @@ void Ai::strategy()
     const Common::Vec2 sign_modifier{(float) m_side, Common::sign(-m_world_state.ball.position.y)};
 
     Common::logDebug("m_timer: {}", m_timer.time());
-    if (m_timer.time() < 0.5)
+    if (m_timer.time().seconds() < 0.5)
     {
         for (int i = 0; i < strategy.role.size(); i++)
         {
             // FOR NOW: advance to the last step
             step[i]    = std::max(0, (int) strategy.role[i].path.size() - 2);
-            lastAdv[i] = m_timer.time();
+            lastAdv[i] = m_timer.time().seconds();
             Common::logDebug("zeroed: {}", i);
         }
         Common::Angle passAngle = Common::Angle::fromDeg(90.0f - m_side * 90.0f);
@@ -130,17 +130,17 @@ void Ai::strategy()
             if (step[i] >= strategy.role[i].path.size() - 1)
             {
                 step[i]    = strategy.role[i].path.size() - 1;
-                lastAdv[i] = m_timer.time();
+                lastAdv[i] = m_timer.time().seconds();
                 Common::logDebug("zeroed: {}", i);
                 continue;
             }
 
             if ((strategy.role[i].path[step[i]].type == Waypoint::Type::Time) || (*m_stm_to_ai_num[i] == m_attack))
             {
-                if (m_timer.time() - lastAdv[i] > strategy.role[i].path[step[i]].time * 0.1f)
+                if (m_timer.time().seconds() - lastAdv[i] > strategy.role[i].path[step[i]].time * 0.1f)
                 {
                     step[i]    = std::min((int) strategy.role[i].path.size() - 1, step[i] + 1);
-                    lastAdv[i] = m_timer.time();
+                    lastAdv[i] = m_timer.time().seconds();
                     Common::logDebug("stepped: {}    {}", i, step[i]);
                 }
             }
@@ -151,7 +151,7 @@ void Ai::strategy()
                     strategy.role[i].path[step[i]].tolerance)
                 {
                     step[i]    = std::min((int) strategy.role[i].path.size() - 1, step[i] + 1);
-                    lastAdv[i] = m_timer.time();
+                    lastAdv[i] = m_timer.time().seconds();
                     Common::logDebug("stepped: {}    {}", i, step[i]);
                 }
             }
@@ -170,7 +170,8 @@ void Ai::strategy()
         {
             if (*m_stm_to_ai_num[i] == m_gk)
                 gkHi(m_gk);
-            else if (*m_stm_to_ai_num[i] == m_def && *m_stm_to_ai_num[i] == m_lw && *m_stm_to_ai_num[i] == m_rw) // No need to halt these guys
+            else if (*m_stm_to_ai_num[i] == m_def && *m_stm_to_ai_num[i] == m_lw &&
+                     *m_stm_to_ai_num[i] == m_rw) // No need to halt these guys
                 continue;
             else
                 halt(*m_stm_to_ai_num[i]);
@@ -193,7 +194,7 @@ void Ai::strategy()
                 Common::logDebug("ATTACK: chip:{}", chip);
             }
 
-            if (step[i] == strategy.role[i].path.size() - 1 && receivers_reached && m_timer.time() > 3)
+            if (step[i] == strategy.role[i].path.size() - 1 && receivers_reached && m_timer.time().seconds() > 3)
             {
                 Common::Angle passAngle =
                     (strategy.role[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
@@ -272,6 +273,6 @@ void Ai::strategy()
         }
     }
 
-    receivers_reached = new_receivers_reached || m_timer.time() > 4.5;
+    receivers_reached = new_receivers_reached || m_timer.time().seconds() > 4.5;
 }
 } // namespace Tyr::Soccer

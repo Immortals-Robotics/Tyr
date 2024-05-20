@@ -1,5 +1,8 @@
 #pragma once
 
+#include "duration.h"
+#include "time_point.h"
+
 namespace Tyr::Common
 {
 class Timer
@@ -7,33 +10,66 @@ class Timer
 public:
     inline void start()
     {
-        m_start = std::chrono::high_resolution_clock::now();
+        m_start  = TimePoint::now();
+        m_paused = false;
     }
 
-    inline double time()
+    inline void reset()
     {
-        const auto now       = std::chrono::high_resolution_clock::now();
-        const auto time_span = std::chrono::duration_cast<std::chrono::duration<double>>(now - m_start);
-        return time_span.count();
-    }
-
-    inline double interval()
-    {
-        const double t = time();
         start();
-        return t;
+        pause();
     }
 
-    inline double intervalSmooth()
+    inline void pause()
+    {
+        m_time_when_paused = time();
+        m_paused           = true;
+    }
+
+    inline void resume()
+    {
+        m_start  = TimePoint::now() - m_time_when_paused;
+        m_paused = false;
+    }
+
+    inline bool paused() const
+    {
+        return m_paused;
+    }
+
+    void setTime(const Duration t_time)
+    {
+        if (m_paused)
+            m_time_when_paused = t_time;
+        else
+            m_start += time() - t_time;
+    }
+
+    inline Duration time() const
+    {
+        return m_paused ? m_time_when_paused : TimePoint::now() - m_start;
+    }
+
+    inline Duration interval()
+    {
+        const Duration duration = time();
+        start();
+        return duration;
+    }
+
+    inline Duration intervalSmooth()
     {
         static constexpr double kAlpha = 0.1f;
 
-        m_interval = (kAlpha * interval()) + (1.0f - kAlpha) * m_interval;
-        return m_interval;
+        m_interval = (kAlpha * interval().seconds()) + (1.0f - kAlpha) * m_interval;
+        return Duration::fromSeconds(m_interval);
     }
 
 private:
-    std::chrono::high_resolution_clock::time_point m_start;
+    TimePoint m_start;
+
+    bool     m_paused = true;
+    Duration m_time_when_paused;
 
     double m_interval = 0.0f;
 };

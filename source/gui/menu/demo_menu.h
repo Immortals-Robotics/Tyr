@@ -19,11 +19,7 @@ private:
     char     m_record_button[7] = "\uf111";
     LogState m_log_state        = LogState::None;
 
-    Common::TimePoint m_play_time;
-    Common::TimePoint m_play_start_time;
-    Common::TimePoint m_real_time;
-
-    Common::Duration m_playback_elapsed;
+    Common::Timer m_timer;
 
     struct Demo
     {

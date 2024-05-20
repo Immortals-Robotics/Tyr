@@ -17,7 +17,7 @@ void Ai::throwinChipShoot()
              VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
     m_one_touch_type[m_mid1] = OneTouchType::Shirje;
 
-    if (m_timer.time() > 4)
+    if (m_timer.time().seconds() > 4)
     {
         circleBall(m_dmf,
                    Common::Vec2(oppGoal().x, Common::sign(m_world_state.ball.position.y) * 200.0f)

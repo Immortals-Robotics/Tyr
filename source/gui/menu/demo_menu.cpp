@@ -20,8 +20,6 @@ void DemoMenu::draw()
     auto main_window_height = GetScreenHeight();
     auto main_window_width  = GetScreenWidth();
 
-    m_real_time = Common::TimePoint::now();
-
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                                     ImGuiWindowFlags_NoDecoration;
     if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
@@ -51,8 +49,8 @@ void DemoMenu::draw()
                     "##DemoList", &m_selected_demo, [](void *user_data, int idx) -> const char *
                     { return ((Demo *) user_data + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
             {
-                m_log_state = LogState::None;
-                m_play_time = currentDemo().start_time;
+                m_log_state = LogState::PlaybackPause;
+                m_timer.reset();
             }
             ImGui::Spacing();
             ImGui::Spacing();
@@ -60,10 +58,9 @@ void DemoMenu::draw()
             ImGui::PushFont(font);
             if (ImGui::Button("\uf04a", {40, 40}))
             {
-                if (m_log_state != LogState::None &&
-                    m_play_time > m_play_time + Common::Duration::fromMicroseconds(100))
+                if (m_log_state != LogState::None && m_timer.time() > Common::Duration::fromMicroseconds(100))
                 {
-                    m_play_time -= Common::Duration::fromMicroseconds(100);
+                    m_timer.setTime(m_timer.time() - Common::Duration::fromMicroseconds(100));
                 }
             }
             ImGui::SameLine();
@@ -73,9 +70,7 @@ void DemoMenu::draw()
                 {
                     m_log_state = LogState::PlaybackPlay;
 
-                    m_play_time = std::clamp(m_play_time, currentDemo().start_time, currentDemo().end_time);
-
-                    m_play_start_time = m_real_time - (m_play_time - currentDemo().start_time);
+                    m_timer.resume();
                 }
             }
             ImGui::SameLine();
@@ -84,6 +79,8 @@ void DemoMenu::draw()
                 if (m_log_state == LogState::PlaybackPlay)
                 {
                     m_log_state = LogState::PlaybackPause;
+
+                    m_timer.pause();
                 }
             }
             ImGui::SameLine();
@@ -99,7 +96,7 @@ void DemoMenu::draw()
             {
                 if (m_log_state != LogState::None)
                 {
-                    m_play_time += Common::Duration::fromMicroseconds(100);
+                    m_timer.setTime(m_timer.time() + Common::Duration::fromMicroseconds(100));
                 }
             }
             ImGui::SameLine();
@@ -130,13 +127,14 @@ void DemoMenu::draw()
             ImGui::Spacing();
             ImGui::Spacing();
 
-            float elapsed_sec = m_playback_elapsed.seconds();
+            Common::Duration playback_time = m_timer.time();
+            float            playback_sec  = playback_time.seconds();
+
             ImGui::SetNextItemWidth(390.);
-            if (ImGui::SliderFloat("##time", &elapsed_sec, 0.0f, currentDemo().length().seconds(), "%.3fs") &&
+            if (ImGui::SliderFloat("##time", &playback_sec, 0.0f, currentDemo().length().seconds(), "%.3fs") &&
                 m_demos.size())
             {
-                m_playback_elapsed = Common::Duration::fromSeconds(elapsed_sec);
-                m_play_time        = currentDemo().start_time + m_playback_elapsed;
+                m_timer.setTime(Common::Duration::fromSeconds(playback_sec));
             }
             ImGui::Spacing();
             ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.7f, 0.25f, 0.3f, 1.0f));        // Dark frame background
@@ -144,12 +142,11 @@ void DemoMenu::draw()
             ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(1.0f, 0.2f, 0.2f, 1.0f));   // Brighter red when active
 
             ImGui::SetNextItemWidth(390.);
-            elapsed_sec = m_playback_elapsed.seconds();
-            if (ImGui::DragFloat("##timescrol", &elapsed_sec, 0.01f, 0.0f, currentDemo().length().seconds(),
+
+            if (ImGui::DragFloat("##timescrol", &playback_sec, 0.01f, 0.0f, currentDemo().length().seconds(),
                                  "Fine Control"))
             {
-                m_playback_elapsed = Common::Duration::fromSeconds(elapsed_sec);
-                m_play_time        = currentDemo().start_time + m_playback_elapsed;
+                m_timer.setTime(Common::Duration::fromSeconds(playback_sec));
             }
             ImGui::PopStyleColor(3);
 
@@ -176,15 +173,18 @@ void DemoMenu::demoHandler()
     switch (m_log_state)
     {
     case LogState::PlaybackPlay:
-        m_playback_elapsed = m_real_time - m_play_start_time;
-
-        m_play_time = currentDemo().start_time + m_playback_elapsed;
-        m_play_time = std::min(m_play_time, currentDemo().end_time);
-
+        if (m_timer.time() >= currentDemo().length())
+        {
+            m_log_state = LogState::PlaybackPause;
+            m_timer.pause();
+            m_timer.setTime(currentDemo().length());
+        }
     case LogState::PlaybackPause:
-        m_world_filtered_storage.get(m_play_time.microseconds(), &m_worldstate_filtered);
-        m_debug_storage.get(m_play_time.microseconds(), &m_debug);
-        m_referee_storage.get(m_play_time.microseconds(), &m_referee);
+        const Common::TimePoint playback_point = currentDemo().start_time + m_timer.time();
+
+        m_world_filtered_storage.get(playback_point.microseconds(), &m_worldstate_filtered);
+        m_debug_storage.get(playback_point.microseconds(), &m_debug);
+        m_referee_storage.get(playback_point.microseconds(), &m_referee);
         break;
     }
 }
