@@ -43,7 +43,7 @@ public:
 
     inline Common::Vec2 mousePosition() const
     {
-        return mirrorY(GetScreenToWorld2D(GetMousePosition(), m_camera));
+        return Common::Vec2{mirrorY(GetScreenToWorld2D(GetMousePosition(), m_camera))};
     }
 
 private:
@@ -67,4 +67,4 @@ private:
 };
 } // namespace Tyr::Gui
 
-#include "draw.inl"
+#include "draw_inl.h"

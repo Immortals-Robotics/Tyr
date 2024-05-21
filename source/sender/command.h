@@ -24,11 +24,11 @@ struct Command
     {
         vision_id = t_command.vision_id();
 
-        motion = t_command.motion();
+        motion = Common::Vec2{t_command.motion()};
         halted = t_command.halted();
 
-        current_angle = t_command.current_angle();
-        target_angle  = t_command.target_angle();
+        current_angle = Common::Angle{t_command.current_angle()};
+        target_angle  = Common::Angle{t_command.target_angle()};
 
         shoot    = t_command.shoot();
         chip     = t_command.chip();

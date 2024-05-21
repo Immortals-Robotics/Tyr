@@ -56,7 +56,7 @@ public:
         state = t_state.state();
         if (t_state.has_color())
             color = (TeamColor) t_state.color();
-        place_ball_target = t_state.place_ball_target();
+        place_ball_target = Common::Vec2{t_state.place_ball_target()};
         opp_gk            = t_state.opp_gk();
     }
 

@@ -24,7 +24,7 @@ inline void Renderer::draw(const Common::Vec2 &point, const Common::Color &t_col
 inline void Renderer::draw(const Common::Rect &t_rect, const Common::Color &t_color, bool t_is_filled,
                            float t_thickness)
 {
-    const Rectangle rect = mirrorY(t_rect);
+    const Rectangle rect = mirrorY(static_cast<Rectangle>(t_rect));
 
     if (t_is_filled)
     {
@@ -44,8 +44,8 @@ inline void Renderer::draw([[maybe_unused]] const Common::Line &t_line, [[maybe_
 
 inline void Renderer::draw(const Common::LineSegment &t_line, const Common::Color &t_color, float t_thickness)
 {
-    const Vector2 start = mirrorY(t_line.start);
-    const Vector2 end   = mirrorY(t_line.end);
+    const Vector2 start = mirrorY(static_cast<Vector2>(t_line.start));
+    const Vector2 end   = mirrorY(static_cast<Vector2>(t_line.end));
 
     DrawLineEx(start, end, t_thickness, t_color);
 }
@@ -53,7 +53,7 @@ inline void Renderer::draw(const Common::LineSegment &t_line, const Common::Colo
 inline void Renderer::draw(const Common::Circle &t_circle, const Common::Color &t_color, bool t_is_filled,
                            float t_thickness)
 {
-    Vector2 center = mirrorY(t_circle.center);
+    Vector2 center = mirrorY(static_cast<Vector2>(t_circle.center));
 
     if (t_is_filled)
     {
@@ -68,10 +68,11 @@ inline void Renderer::draw(const Common::Circle &t_circle, const Common::Color &
 inline void Renderer::drawCircleSector(const Common::Circle &t_circle, const Common::Color &t_color,
                                        const float t_angle_start, const float t_angle_end, const bool t_is_filled)
 {
-    Vector2 center = mirrorY(t_circle.center);
+    Vector2 center = mirrorY(static_cast<Vector2>(t_circle.center));
 
-    Vector2 p1 = Vector2Add(center, Common::Angle::fromDeg(t_angle_start).toUnitVec() * t_circle.r);
-    Vector2 p2 = Vector2Add(center, Common::Angle::fromDeg(t_angle_end).toUnitVec() * t_circle.r);
+    Vector2 p1 =
+        Vector2Add(center, static_cast<Vector2>(Common::Angle::fromDeg(t_angle_start).toUnitVec() * t_circle.r));
+    Vector2 p2 = Vector2Add(center, static_cast<Vector2>(Common::Angle::fromDeg(t_angle_end).toUnitVec() * t_circle.r));
 
     if (t_is_filled)
     {
@@ -88,9 +89,9 @@ inline void Renderer::drawCircleSector(const Common::Circle &t_circle, const Com
 inline void Renderer::draw(const Common::Triangle &t_triangle, const Common::Color &t_color, bool t_is_filled,
                            [[maybe_unused]] float t_thickness)
 {
-    Vector2 v1 = mirrorY(t_triangle.corner[0]);
-    Vector2 v2 = mirrorY(t_triangle.corner[1]);
-    Vector2 v3 = mirrorY(t_triangle.corner[2]);
+    Vector2 v1 = mirrorY(static_cast<Vector2>(t_triangle.corner[0]));
+    Vector2 v2 = mirrorY(static_cast<Vector2>(t_triangle.corner[1]));
+    Vector2 v3 = mirrorY(static_cast<Vector2>(t_triangle.corner[2]));
 
     if (t_is_filled)
     {
@@ -106,9 +107,9 @@ inline void Renderer::draw(const Common::Triangle &t_triangle, const Common::Col
 inline void Renderer::draw(const Common::Vec2 &t_pos, const std::string &t_text, const Common::Color &t_color,
                            const float t_font_size)
 {
-    const Common::Vec2 text_size = MeasureTextEx(m_font, t_text.c_str(), t_font_size, 0.0f);
+    const Common::Vec2 text_size = Common::Vec2{MeasureTextEx(m_font, t_text.c_str(), t_font_size, 0.0f)};
 
-    const Vector2 pos = Vector2Subtract(mirrorY(t_pos), (text_size / 2.0f));
+    const Vector2 pos = Vector2Subtract(mirrorY(static_cast<Vector2>(t_pos)), static_cast<Vector2>((text_size / 2.0f)));
     DrawTextEx(m_font, t_text.c_str(), pos, t_font_size, 0., t_color);
 }
 } // namespace Tyr::Gui

@@ -8,11 +8,11 @@ set(HEADER_FILES
 	pch.h
 	app.h
 	renderer/renderer.h
-	renderer/draw.inl
+	renderer/draw_inl.h
 	menu/config_menu.h
 	menu/widget_menu.h
 	menu/demo_menu.h
-		menu/footer_menu.h
+	menu/footer_menu.h
 )
 
 set(SOURCE_FILES
@@ -21,15 +21,15 @@ set(SOURCE_FILES
 	menu/config_menu.cpp
 	menu/widget_menu.cpp
 	menu/demo_menu.cpp
-		menu/footer_menu.cpp
+	menu/footer_menu.cpp
 	renderer/ball.cpp
 	renderer/debug.cpp
 	renderer/field.cpp
 	renderer/renderer.cpp
 	menu/filter_tab.cpp
 	renderer/robot.cpp
-		renderer/info.cpp
-		menu/plot.cpp
+	renderer/info.cpp
+	menu/plot.cpp
 )
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})

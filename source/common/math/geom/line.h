@@ -8,22 +8,21 @@ struct Circle;
 
 struct Line
 {
-public:
     // ay + bx + c = 0
-    inline Line(const float t_a, const float t_b, const float t_c) : a(t_a), b(t_b), c(t_c)
+    Line(const float t_a, const float t_b, const float t_c) : a(t_a), b(t_b), c(t_c)
     {}
 
-    inline Line(const Protos::Immortals::Line &t_line) : Line(t_line.a(), t_line.b(), t_line.c())
+    explicit Line(const Protos::Immortals::Line &t_line) : Line(t_line.a(), t_line.b(), t_line.c())
     {}
 
-    inline void fillProto(Protos::Immortals::Line *const t_line) const
+    void fillProto(Protos::Immortals::Line *const t_line) const
     {
         t_line->set_a(a);
         t_line->set_b(b);
         t_line->set_c(c);
     }
 
-    inline static Line fromTwoPoints(Vec2 t_pos_a, Vec2 t_pos_b)
+    static Line fromTwoPoints(const Vec2 t_pos_a, const Vec2 t_pos_b)
     {
         const Vec2 d_pos = t_pos_b - t_pos_a;
 
@@ -46,22 +45,22 @@ public:
         return {a, b, c};
     }
 
-    inline static Line fromPointAndAngle(Vec2 t_pos, Angle t_ang)
+    static Line fromPointAndAngle(const Vec2 t_pos, const Angle t_ang)
     {
         return fromTwoPoints(t_pos, t_pos + t_ang.toUnitVec());
     }
 
-    inline static Line fromSegment(LineSegment segment)
+    static Line fromSegment(const LineSegment t_segment)
     {
-        return fromTwoPoints(segment.start, segment.end);
+        return fromTwoPoints(t_segment.start, t_segment.end);
     }
 
-    [[nodiscard]] inline float slope() const
+    [[nodiscard]] float slope() const
     {
         return -b / a;
     }
 
-    [[nodiscard]] inline float y(float t_x) const
+    [[nodiscard]] float y(const float t_x) const
     {
         if (almostEqual(a, 0.0))
         {
@@ -71,7 +70,7 @@ public:
         return -(b * t_x + c) / a;
     }
 
-    [[nodiscard]] inline float x(float t_y) const
+    [[nodiscard]] float x(const float t_y) const
     {
         if (almostEqual(b, 0.0))
         {
@@ -90,20 +89,20 @@ public:
 
     [[nodiscard]] std::vector<Vec2> intersect(const Circle &t_circle) const;
 
-    [[nodiscard]] inline Line tangentLine(Vec2 t_pos) const
+    [[nodiscard]] Line tangentLine(const Vec2 t_pos) const
     {
         return {b, -a, a * t_pos.x - b * t_pos.y};
     }
 
-    [[nodiscard]] inline Vec2 closestPoint(Vec2 t_pos) const
+    [[nodiscard]] Vec2 closestPoint(const Vec2 t_pos) const
     {
         const Line tangent = tangentLine(t_pos);
         return intersect(tangent).value();
     }
 
-    [[nodiscard]] inline float distanceTo(Vec2 t_pos) const
+    [[nodiscard]] float distanceTo(const Vec2 t_pos) const
     {
-        Vec2 close_point = this->closestPoint(t_pos);
+        const Vec2 close_point = this->closestPoint(t_pos);
         return close_point.distanceTo(t_pos);
     }
 

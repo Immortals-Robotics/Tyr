@@ -19,14 +19,14 @@ std::vector<Vec2> Circle::intersect(const Circle &t_other) const
     // We know a^2 + h^2 = r0^2 and b^2 + h^2 = r1^2 which then gives
     // a^2 + r1^2 - b^2 = r0^2 with d = a + b ==> a^2 + r1^2 - (d-a)^2 = r0^2
     // ==> r0^2 + d^2 - r1^2 / 2*d
-    float a = (r * r + d_mag * d_mag - t_other.r * t_other.r) / (2.0f * d_mag);
+    const float a = (r * r + d_mag * d_mag - t_other.r * t_other.r) / (2.0f * d_mag);
 
     // h is then a^2 + h^2 = r0^2 ==> h = sqrt( r0^2 - a^2 )
-    float arg = r * r - a * a;
-    float h   = arg > 0.0f ? sqrt(arg) : 0.0f;
+    const float arg = r * r - a * a;
+    const float h   = arg > 0.0f ? sqrt(arg) : 0.0f;
 
     // First calculate P2
-    Vec2 p2 = center + d_normal * a;
+    const Vec2 p2 = center + d_normal * a;
 
     const Vec2 point1 = {p2.x - h * d_normal.y, p2.y + h * d_normal.x};
 
@@ -109,25 +109,25 @@ float Circle::intersectionArea(const Circle &t_other) const
 
 bool Circle::isCircleCross(const Vec2 t_point1, const Vec2 t_point2) const
 {
-    float y1 = t_point1.y;
-    float x1 = t_point1.x;
+    const float y1 = t_point1.y;
+    const float x1 = t_point1.x;
 
-    float y2 = t_point2.y;
-    float x2 = t_point2.x;
+    const float y2 = t_point2.y;
+    const float x2 = t_point2.x;
 
     // general form of line equation is a * x + b * y + c = 0
-    float a = -(y2 - y1);
-    float b = (x2 - x1);
-    float c = -(a * x1 + b * y1);
+    const float a = -(y2 - y1);
+    const float b = (x2 - x1);
+    const float c = -(a * x1 + b * y1);
 
-    float p = abs(a * center.x + b * center.y + c) / (sqrt(a * a + b * b));
+    const float p = abs(a * center.x + b * center.y + c) / (sqrt(a * a + b * b));
 
     if (p > r)
         return false;
 
-    float v_a = -b;
-    float v_b = a;
-    float v_c = -v_b * center.y - v_a * center.x;
+    const float v_a = -b;
+    const float v_b = a;
+    const float v_c = -v_b * center.y - v_a * center.x;
 
     if (v_a * x1 + v_b * y1 + v_c >= 0 && v_a * x2 + v_b * y2 + v_c >= 0)
     {

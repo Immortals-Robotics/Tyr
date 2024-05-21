@@ -36,8 +36,8 @@ struct RawRobotState
         vision_id = t_robot.id();
         color     = (TeamColor) t_robot.color();
 
-        position = t_robot.position();
-        angle    = t_robot.angle();
+        position = Vec2{t_robot.position()};
+        angle    = Angle{t_robot.angle()};
     }
 
     void fillProto(Protos::Immortals::RawRobotState *const t_state) const
@@ -63,7 +63,7 @@ struct RawBallState
 
     RawBallState(const Protos::Immortals::RawBallState &t_ball)
     {
-        position = t_ball.position();
+        position = Vec2{t_ball.position()};
     }
 
     void fillProto(Protos::Immortals::RawBallState *const t_state) const
@@ -165,11 +165,11 @@ struct RobotState
         vision_id = t_robot.id();
         color     = (TeamColor) t_robot.color();
 
-        position = t_robot.position();
-        velocity = t_robot.velocity();
+        position = Vec2{t_robot.position()};
+        velocity = Vec2{t_robot.velocity()};
 
-        angle            = t_robot.angle();
-        angular_velocity = t_robot.angular_velocity();
+        angle            = Angle{t_robot.angle()};
+        angular_velocity = Angle{t_robot.angular_velocity()};
 
         seen_state         = (SeenState) t_robot.seen_state();
         out_for_substitute = t_robot.out_for_substitute();
@@ -202,8 +202,8 @@ struct BallState
 
     BallState(const Protos::Immortals::BallState &t_ball)
     {
-        position = t_ball.position();
-        velocity = t_ball.velocity();
+        position = Vec2{t_ball.position()};
+        velocity = Vec2{t_ball.velocity()};
 
         seen_state = (SeenState) t_ball.seen_state();
     }

@@ -24,7 +24,7 @@ void Referee::process()
         Common::logDebug("HAS POSITION. BALL TARGET POSITION IS: [{}, {}]", m_ssl_ref.designated_position().x(),
                          m_ssl_ref.designated_position().y());
 
-        m_state.place_ball_target = m_ssl_ref.designated_position();
+        m_state.place_ball_target = Common::Vec2{m_ssl_ref.designated_position()};
     }
 
     if (m_cmd_counter != m_ssl_ref.command_counter())
