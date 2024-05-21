@@ -1,5 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-identifier-naming"
 #include "footer_menu.h"
 
 namespace Tyr::Gui
@@ -64,8 +62,9 @@ void FooterMenu::draw(const Common::Debug::Wrapper                              
         ImGui::End();
     }
 
-    if(!m_is_plot_pinned) {
-        window_flags = ImGuiWindowFlags_NoCollapse;
+    if (!m_is_plot_pinned)
+    {
+        window_flags       = ImGuiWindowFlags_NoCollapse;
         m_window_condition = ImGuiCond_Once;
     }
 
@@ -81,7 +80,6 @@ void FooterMenu::draw(const Common::Debug::Wrapper                              
     }
     ImGui::SetNextWindowSize(m_plot_window_size, m_window_condition);
 
-
     if (ImGui::Begin("##Plot", nullptr, window_flags))
     {
         drawPlot(t_world, t_playback);
@@ -89,4 +87,3 @@ void FooterMenu::draw(const Common::Debug::Wrapper                              
     }
 }
 } // namespace Tyr::Gui
-#pragma clang diagnostic pop

@@ -18,7 +18,7 @@ private:
 
     Common::Timer m_timer;
 
-    int m_cmd_counter = -1;
+    unsigned int m_cmd_counter = 0;
 
     Protos::Ssl::Gc::Referee m_ssl_ref;
 

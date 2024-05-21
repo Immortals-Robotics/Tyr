@@ -29,7 +29,7 @@ bool UdpServer::send(const size_t t_size, const NetworkAddress &t_address)
 
     asio::error_code error;
 
-    const size_t m_sent_size = m_socket->send_to(asio::buffer(m_buffer, t_size), endpoint, 0, error);
+    m_socket->send_to(asio::buffer(m_buffer, t_size), endpoint, 0, error);
 
     if (error)
     {

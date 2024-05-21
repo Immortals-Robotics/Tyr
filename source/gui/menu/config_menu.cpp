@@ -11,23 +11,23 @@ ConfigMenu::ConfigMenu() : m_network_needs_update(InputCallbackType::None)
 {
     m_window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                      ImGuiWindowFlags_NoDecoration;
-    strcpy(m_vision_ip_text, Tyr::Common::setting().vision_address.ip.c_str());
-    strcpy(m_vision_port_text, std::to_string(Tyr::Common::setting().vision_address.port).c_str());
+    strcpy_s(m_vision_ip_text, Tyr::Common::setting().vision_address.ip.c_str());
+    strcpy_s(m_vision_port_text, std::to_string(Tyr::Common::setting().vision_address.port).c_str());
 
-    strcpy(m_referee_ip_text, Tyr::Common::setting().referee_address.ip.c_str());
-    strcpy(m_referee_port_text, std::to_string(Tyr::Common::setting().referee_address.port).c_str());
+    strcpy_s(m_referee_ip_text, Tyr::Common::setting().referee_address.ip.c_str());
+    strcpy_s(m_referee_port_text, std::to_string(Tyr::Common::setting().referee_address.port).c_str());
 
-    strcpy(m_sender_ip_text, Tyr::Common::setting().sender_address.ip.c_str());
-    strcpy(m_sender_port_text, std::to_string(Tyr::Common::setting().sender_address.port).c_str());
+    strcpy_s(m_sender_ip_text, Tyr::Common::setting().sender_address.ip.c_str());
+    strcpy_s(m_sender_port_text, std::to_string(Tyr::Common::setting().sender_address.port).c_str());
 
-    strcpy(m_strategy_ip_text, Tyr::Common::setting().strategy_address.ip.c_str());
-    strcpy(m_strategy_port_text, std::to_string(Tyr::Common::setting().strategy_address.port).c_str());
+    strcpy_s(m_strategy_ip_text, Tyr::Common::setting().strategy_address.ip.c_str());
+    strcpy_s(m_strategy_port_text, std::to_string(Tyr::Common::setting().strategy_address.port).c_str());
 
-    strcpy(m_tracker_ip_text, Tyr::Common::setting().tracker_address.ip.c_str());
-    strcpy(m_tracker_port_text, std::to_string(Tyr::Common::setting().tracker_address.port).c_str());
+    strcpy_s(m_tracker_ip_text, Tyr::Common::setting().tracker_address.ip.c_str());
+    strcpy_s(m_tracker_port_text, std::to_string(Tyr::Common::setting().tracker_address.port).c_str());
 
-    strcpy(m_grsim_ip_text, Tyr::Common::setting().grsim_address.ip.c_str());
-    strcpy(m_grsim_port_text, std::to_string(Tyr::Common::setting().grsim_address.port).c_str());
+    strcpy_s(m_grsim_ip_text, Tyr::Common::setting().grsim_address.ip.c_str());
+    strcpy_s(m_grsim_port_text, std::to_string(Tyr::Common::setting().grsim_address.port).c_str());
 
     std::to_chars(m_ball_merge_distance_text, &m_ball_merge_distance_text[9],
                   Tyr::Common::setting().ball_merge_distance);
@@ -58,44 +58,30 @@ int ConfigMenu::handleInputChange(ImGuiInputTextCallbackData *_data)
     return 0;
 }
 
-void ConfigMenu::setNetworkInput(std::string _data, InputCallbackType _inputType)
+void ConfigMenu::setNetworkInput(const std::string &_data, const InputCallbackType _inputType)
 {
-    try
+    if (m_type_input_text_map.contains(_inputType) && m_type_input_text_map.at(_inputType) != _data)
     {
-        if (_data != this->m_type_input_text_map.at(_inputType))
+        this->m_network_needs_update = _inputType;
+        if (_inputType == InputCallbackType::VISION_PORT || _inputType == InputCallbackType::SENDER_PORT ||
+            _inputType == InputCallbackType::STRATEGY_PORT || _inputType == InputCallbackType::REF_PORT ||
+            _inputType == InputCallbackType::GRSIM_PORT || _inputType == InputCallbackType::TRACKER_PORT)
         {
-            strcpy(this->m_type_input_text_map.at(_inputType), _data.c_str());
-            this->m_network_needs_update = _inputType;
-            if (_inputType == InputCallbackType::VISION_PORT || _inputType == InputCallbackType::SENDER_PORT ||
-                _inputType == InputCallbackType::STRATEGY_PORT || _inputType == InputCallbackType::REF_PORT ||
-                _inputType == InputCallbackType::GRSIM_PORT || _inputType == InputCallbackType::TRACKER_PORT)
-            {
-                Tyr::Common::setting().updateSetting(config_input_map.at(_inputType), std::stoi(_data));
-            }
-            else
-            {
-                Tyr::Common::setting().updateSetting(config_input_map.at(_inputType), _data);
-            }
-            Tyr::Common::Services::saveConfig();
+            strcpy_s(this->m_type_input_text_map.at(_inputType), 6, _data.c_str());
+            Tyr::Common::setting().updateSetting(config_input_map.at(_inputType), std::stoi(_data));
         }
-    }
-    catch (const std::out_of_range &e)
-    {
-        Tyr::Common::logError("Error: Input Key not found in the map");
+        else
+        {
+            strcpy_s(this->m_type_input_text_map.at(_inputType), 16, _data.c_str());
+            Tyr::Common::setting().updateSetting(config_input_map.at(_inputType), _data);
+        }
+        Tyr::Common::Services::saveConfig();
     }
 }
 
 std::string ConfigMenu::getNetworkParam(InputCallbackType _inputType)
 {
-    try
-    {
-        return this->m_type_input_text_map.at(_inputType);
-    }
-    catch (const std::out_of_range &e)
-    {
-        Tyr::Common::logError("Error: Input Key not found in the map");
-        return "";
-    }
+    return m_type_input_text_map.contains(_inputType) ? m_type_input_text_map.at(_inputType) : "";
 }
 
 void ConfigMenu::drawIpPortInput(const std::string _name, const int _id, char *_ip_text, char *_port_text,
@@ -267,7 +253,7 @@ void ConfigMenu::draw()
 {
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     auto main_window_height = GetScreenHeight();
-    auto main_window_width = GetScreenWidth();
+    auto main_window_width  = GetScreenWidth();
     if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
     {
         main_window_width = (main_window_height - 200.) / 0.77 + 650.;

@@ -53,7 +53,7 @@ void DemoMenu::draw()
             }
             ImGui::Spacing();
             ImGui::Spacing();
-            font->Scale = 1.8;
+            font->Scale = 1.8f;
             ImGui::PushFont(font);
             if (ImGui::Button("\uf04a", {40, 40}))
             {

@@ -7,9 +7,6 @@ void Ai::runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defe
     const float max_def_move_to_intercept = 400.0f;
     const float max_near_opp_dis          = 750.0f;
     const float max_ball_handler_opp_dis  = 400.0f;
-    const float max_shoot_blocker_dis     = 1500.0f;
-    const float shoot_blocker_r           = 200.0f;
-    const float max_fast_ball_spd         = 5000.0f;
     const float max_own_attacker_dis      = 400.0f;
 
     bool ballAriving      = false;
@@ -17,14 +14,13 @@ void Ai::runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defe
     bool interceptNear    = false;
     bool oppNear          = false;
     bool oppHasBall       = false;
-    bool oppGoalOpen      = false;
     bool ballMovingFast   = false;
     bool ownAttackHasBall = false;
     bool ballIsToGoal     = false;
 
     ballAriving = m_one_touch_detector[t_robot_num].IsArriving(40, 80);
 
-    Common::Vec2 oneTouchPos = calculatePassPos(t_robot_num, oppGoal(), m_own_robot[t_robot_num].state().position);
+    Common::Vec2 oneTouchPos = calculatePassPos(oppGoal(), m_own_robot[t_robot_num].state().position);
 
     if (oneTouchPos.distanceTo(t_target) < max_def_move_to_intercept)
     {

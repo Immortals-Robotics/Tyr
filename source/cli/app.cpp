@@ -139,9 +139,9 @@ void Application::aiEntry()
 
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
-        const bool world_received    = m_ai->receiveWorld();
-        const bool referee_received  = m_ai->receiveReferee();
-        const bool playbook_received = m_ai->receivePlayBook();
+        const bool world_received = m_ai->receiveWorld();
+        m_ai->receiveReferee();
+        m_ai->receivePlayBook();
 
         if (!world_received)
         {

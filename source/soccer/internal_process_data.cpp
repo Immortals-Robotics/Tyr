@@ -9,8 +9,6 @@ void Ai::internalProcessData()
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        bool halt_this_robot_for_now = false;
-
 // TODO: this is completely broken now
 #if 0
         if (m_ref_state.stop())

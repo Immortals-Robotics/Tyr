@@ -55,7 +55,7 @@ struct CommandsWrapper
 {
     Common::TimePoint time;
 
-    std::vector<Command> command;
+    std::vector<Command> commands;
 
     CommandsWrapper() = default;
 
@@ -63,15 +63,15 @@ struct CommandsWrapper
     {
         time = Common::TimePoint::fromMicroseconds(t_wrapper.time());
 
-        for (const auto &command : t_wrapper.command())
-            this->command.emplace_back(command);
+        for (const auto &pb_command : t_wrapper.command())
+            commands.emplace_back(pb_command);
     }
 
     void fillProto(Protos::Immortals::CommandsWrapper *const t_wrapper) const
     {
         t_wrapper->set_time(time.microseconds());
 
-        for (const auto &command : command)
+        for (const auto &command : commands)
             command.fillProto(t_wrapper->add_command());
     }
 };

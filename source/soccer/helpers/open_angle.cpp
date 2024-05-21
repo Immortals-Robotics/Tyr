@@ -4,10 +4,10 @@ namespace Tyr::Soccer
 {
 float normalizeAngleR(float angle) // radian
 {
-    while (angle > 3.1415)
-        angle -= 2 * 3.1415;
-    while (angle < -3.1415)
-        angle += 2 * 3.1415;
+    while (angle > 3.1415f)
+        angle -= 2 * 3.1415f;
+    while (angle < -3.1415f)
+        angle += 2 * 3.1415f;
 
     return (angle);
 }
@@ -28,7 +28,7 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 t_pos, int t_robot_num)
     float t1Angel      = atan2((t1.y - t_pos.y), (t1.x - t_pos.x));
     float t2Angel      = atan2((t2.y - t_pos.y), (t2.x - t_pos.x));
 
-    if (std::fabs(t1Angel - t2Angel) > 3.1415)
+    if (std::fabs(t1Angel - t2Angel) > 3.1415f)
         oops = 1;
 
     if (t1Angel > t2Angel)
@@ -88,13 +88,13 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 t_pos, int t_robot_num)
         if (oops)
         {
             if (dtmp[0] < 0)
-                dtmp[0] += 2 * 3.1415;
+                dtmp[0] += 2 * 3.1415f;
             if (dtmp[1] < 0)
-                dtmp[1] += 2 * 3.1415;
+                dtmp[1] += 2 * 3.1415f;
             if (ttmp[0] < 0)
-                ttmp[0] += 2 * 3.1415;
+                ttmp[0] += 2 * 3.1415f;
             if (ttmp[1] < 0)
-                ttmp[1] += 2 * 3.1415;
+                ttmp[1] += 2 * 3.1415f;
         }
 
         // No Free Angel
@@ -126,7 +126,7 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 t_pos, int t_robot_num)
     float step = (t2Angel - t1Angel) / 100.0f;
     if (oops)
     {
-        step += 2 * 3.1415 / 100.0;
+        step += 2 * 3.1415f / 100.0f;
     }
     bool freeAngel[100];
     for (int i = 0; i < 100; i++)
@@ -139,11 +139,11 @@ Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 t_pos, int t_robot_num)
             if (oops)
             {
                 if (dtmp[0] < 0)
-                    dtmp[0] += 2 * 3.1415;
+                    dtmp[0] += 2 * 3.1415f;
                 if (dtmp[1] < 0)
-                    dtmp[1] += 2 * 3.1415;
+                    dtmp[1] += 2 * 3.1415f;
                 if (ang < 0)
-                    ang += 2 * 3.1415;
+                    ang += 2 * 3.1415f;
             }
 
             if (ang >= dtmp[0] && ang < dtmp[1])

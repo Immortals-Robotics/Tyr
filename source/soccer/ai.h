@@ -25,7 +25,7 @@ private:
     Common::Timer  m_timer;
 
     using Play = void (Ai::*)();
-    Play m_current_play;
+    Play              m_current_play;
 
     Common::Angle m_chip_head;
 
@@ -63,8 +63,7 @@ private:
     bool         m_one_touch_type_used[Common::Setting::kMaxRobots];
 
     // Helpers
-    Common::Vec2 calculatePassPos(int t_robot_num, const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos,
-                                  float t_bar = 89.0f);
+    Common::Vec2 calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar = 89.0f);
     float        calculateRobotReachTime(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile);
     float        calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile);
 
@@ -142,10 +141,10 @@ private:
     void attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip, bool t_kiss, bool t_dribbler);
     void waitForPass(int t_robot_num, bool t_chip = false, const Common::Vec2 *t_target = nullptr,
                      Common::Vec2 *t_stat_pos = nullptr);
-    void waitForOmghi(int t_robot_num, bool t_chip = false);
-    void waitForGool(int t_robot_num, bool t_chip = false);
+    void waitForOmghi(int t_robot_num);
+    void waitForGool(int t_robot_num);
     void receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip = false);
-    void circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow, float t_precision,
+    void circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow,
                     float t_near_dis_override = -1.0f);
 
     bool m_gk_intercepting;

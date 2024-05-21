@@ -93,12 +93,12 @@ void Ai::setObstacles(int t_robot_num, const NavigationFlags t_flags)
 
     if (oppPenaltyBig)
     {
-        const float big_penalty_area_r      = Common::field().penalty_area_depth + bigPenaltyAddition;
-        const float big_penalty_area_w      = Common::field().penalty_area_width + bigPenaltyAddition;
-        const float penalty_area_half_width = big_penalty_area_w / 2.0f;
+        const float big_penalty_area_r          = Common::field().penalty_area_depth + bigPenaltyAddition;
+        const float big_penalty_area_w          = Common::field().penalty_area_width + bigPenaltyAddition;
+        const float big_penalty_area_half_width = big_penalty_area_w / 2.0f;
 
         const Common::Vec2 start{-m_side * (Common::field().width + penaltyAreaExtensionBehindGoal),
-                                 -(penalty_area_half_width + current_robot_radius)};
+                                 -(big_penalty_area_half_width + current_robot_radius)};
 
         const float w = m_side * (penaltyAreaExtensionBehindGoal + current_robot_radius + big_penalty_area_r);
         const float h = big_penalty_area_w + 2 * current_robot_radius;

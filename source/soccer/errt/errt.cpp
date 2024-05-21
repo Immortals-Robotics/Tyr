@@ -94,8 +94,8 @@ Common::Vec2 Planner::plan()
     {
         for (int i = 0; ((i < m_max_nodes) && (!isReached())); i++)
         {
-            Common::Vec2 r     = chooseTarget();
-            Node        *new_s = extend(m_tree.NearestNeighbour(r), r);
+            Common::Vec2 r = chooseTarget();
+            extend(m_tree.NearestNeighbour(r), r);
         }
 
         if ((isReached()) && (!g_obs_map.isInObstacle(final_state)) &&

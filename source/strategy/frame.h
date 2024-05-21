@@ -4,20 +4,21 @@
 
 namespace Tyr::Strategy
 {
-class Frame : public QMainWindow
+class Frame final : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit Frame(QWidget *parent = 0);
-    ~Frame() = default;
+    explicit Frame(QWidget *parent = nullptr);
+
+    ~Frame() override = default;
 
 protected:
-    void paintEvent(QPaintEvent *event);
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dragMoveEvent(QDragMoveEvent *event);
-    void dropEvent(QDropEvent *event);
-    void mousePressEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent *event) override;
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
 
 private:
     std::unique_ptr<Ui::Frame> m_frame;

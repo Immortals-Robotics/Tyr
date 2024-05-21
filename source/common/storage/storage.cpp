@@ -4,7 +4,7 @@
 
 namespace Tyr::Common
 {
-static constexpr std::string_view getErrorString(const int t_error)
+static constexpr std::string getErrorString(const int t_error)
 {
     switch (t_error)
     {
@@ -51,7 +51,9 @@ static constexpr std::string_view getErrorString(const int t_error)
     case MDB_BAD_DBI:
         return "MDB_BAD_DBI";
     default:
-        return std::strerror(t_error);
+        char buf[512];
+        strerror_s(buf, t_error);
+        return buf;
     }
 }
 

@@ -82,10 +82,10 @@ void Frame::update()
 
         // if(m_gui->current_robot == Robot::Attack)
         {
-            QVariant b = m_gui->strategy[m_gui->current_strategy]
-                             ->robot[m_gui->current_robot]
-                             .waypoint[m_gui->current_waypoint]
-                             ->tolerance;
+            b = m_gui->strategy[m_gui->current_strategy]
+                    ->robot[m_gui->current_robot]
+                    .waypoint[m_gui->current_waypoint]
+                    ->tolerance;
             m_frame->comboBox_8->setCurrentIndex(b.toInt());
             b = m_gui->strategy[m_gui->current_strategy]
                     ->robot[m_gui->current_robot]
@@ -122,19 +122,19 @@ void Frame::update()
     }
 }
 
-void Frame::paintEvent(QPaintEvent *event)
+void Frame::paintEvent([[maybe_unused]] QPaintEvent *event)
 {}
 
-void Frame::dragEnterEvent(QDragEnterEvent *event)
+void Frame::dragEnterEvent([[maybe_unused]] QDragEnterEvent *event)
 {}
 
-void Frame::dragMoveEvent(QDragMoveEvent *event)
+void Frame::dragMoveEvent([[maybe_unused]] QDragMoveEvent *event)
 {}
 
-void Frame::dropEvent(QDropEvent *event)
+void Frame::dropEvent([[maybe_unused]] QDropEvent *event)
 {}
 
-void Frame::mousePressEvent(QMouseEvent *event)
+void Frame::mousePressEvent([[maybe_unused]] QMouseEvent *event)
 {}
 
 void Frame::on_pushButton_clicked() // Add Strategy
@@ -248,7 +248,7 @@ void Frame::on_comboBox_3_currentIndexChanged(int index)
     }
 }
 
-void Frame::on_comboBox_2_currentIndexChanged(int index)
+void Frame::on_comboBox_2_currentIndexChanged([[maybe_unused]] int index)
 {
     m_gui->current_robot = (Robot::Type) m_frame->comboBox_2->currentIndex();
     m_frame->comboBox_6->setCurrentIndex(
@@ -373,8 +373,10 @@ void Frame::on_pushButton_3_clicked()
                     (Protos::Immortals::Waypoint_Type) m_gui->strategy[i]->robot[j].waypoint[k]->waypoint_type);
                 way->set_need_rrt(m_gui->strategy[i]->robot[j].waypoint[k]->need_rrt);
                 way->set_speed(m_gui->strategy[i]->robot[j].waypoint[k]->speed);
-                way->set_velocity_profile(
-                    (Protos::Immortals::Waypoint_VelocityProfile) m_gui->strategy[i]->robot[j].waypoint[k]->velocity_profile);
+                way->set_velocity_profile((Protos::Immortals::Waypoint_VelocityProfile) m_gui->strategy[i]
+                                              ->robot[j]
+                                              .waypoint[k]
+                                              ->velocity_profile);
                 way->set_tolerance(m_gui->strategy[i]->robot[j].waypoint[k]->tolerance);
                 way->set_time(m_gui->strategy[i]->robot[j].waypoint[k]->time);
             }

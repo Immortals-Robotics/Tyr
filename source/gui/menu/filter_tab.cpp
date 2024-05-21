@@ -1,6 +1,5 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-identifier-naming"
 #include "config_menu.h"
+
 namespace Tyr::Gui
 {
 void ConfigMenu::drawFilterTab()
@@ -103,4 +102,3 @@ void ConfigMenu::FilterTree::clear()
 }
 
 } // namespace Tyr::Gui
-#pragma clang diagnostic pop

@@ -106,7 +106,7 @@ bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
     return true;
 }
 
-Common::Vec2 Dss::GetRandomAcceleration(const Common::Vec2 &v, const float a_mag)
+Common::Vec2 Dss::GetRandomAcceleration(const float a_mag)
 {
     const Common::Angle rnd_angle     = Common::Angle::fromDeg(m_random.get(0.0f, 360.0f));
     const float         rnd_magnitude = m_random.get(0.0f, a_mag);
@@ -167,7 +167,7 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
 
         for (int iter_idx = 0; iter_idx < 100; ++iter_idx)
         {
-            const Common::Vec2 rnd_a_cmd = GetRandomAcceleration(state.velocity, target_a_cmd_mag);
+            const Common::Vec2 rnd_a_cmd = GetRandomAcceleration(target_a_cmd_mag);
 
             const float new_error = ComputeError(target_a_cmd, rnd_a_cmd);
             if (new_error >= error)

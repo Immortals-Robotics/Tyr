@@ -36,7 +36,8 @@ inline void Renderer::draw(const Common::Rect &t_rect, const Common::Color &t_co
     }
 }
 
-inline void Renderer::draw(const Common::Line &t_line, const Common::Color &t_color, float t_thickness)
+inline void Renderer::draw([[maybe_unused]] const Common::Line &t_line, [[maybe_unused]] const Common::Color &t_color,
+                           [[maybe_unused]] float t_thickness)
 {
     Common::logWarning("Line drawing is not implemented.");
 }
@@ -85,7 +86,7 @@ inline void Renderer::drawCircleSector(const Common::Circle &t_circle, const Com
 }
 
 inline void Renderer::draw(const Common::Triangle &t_triangle, const Common::Color &t_color, bool t_is_filled,
-                           float t_thickness)
+                           [[maybe_unused]] float t_thickness)
 {
     Vector2 v1 = mirrorY(t_triangle.corner[0]);
     Vector2 v2 = mirrorY(t_triangle.corner[1]);

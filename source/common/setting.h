@@ -52,10 +52,10 @@ struct RobotPhysicalStatus
     bool is_3D_printed   = false;
 };
 
-struct Setting : IConfig
+class Setting : IConfig
 {
 private:
-    Setting()  = default;
+     Setting() = default;
     ~Setting() = default;
 
     void        load(toml::table t_table) override;
@@ -63,7 +63,7 @@ private:
     friend struct Services;
 
 public:
-    Setting(const Setting &)            = delete;
+             Setting(const Setting &)   = delete;
     Setting &operator=(const Setting &) = delete;
 
     template <typename T>
@@ -153,8 +153,8 @@ public:
     float ang_gamma_reality    = 1;
     float ang_gamma_simulation = 1;
 
-    float one_touch_beta    = 0.4;  // Damping factor
-    float one_touch_gamma   = 0.14; // Reflect factor
+    float one_touch_beta    = 0.4f;  // Damping factor
+    float one_touch_gamma   = 0.14f; // Reflect factor
     float one_touch_shoot_k = 4000.0f;
 
     bool mark_in_stop = false;

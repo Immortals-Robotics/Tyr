@@ -61,8 +61,8 @@ struct Draw
             point->fillProto(t_draw->mutable_point()->mutable_pos());
         else if (auto line = std::get_if<Line>(&shape); line)
             line->fillProto(t_draw->mutable_line());
-        else if (auto line = std::get_if<LineSegment>(&shape); line)
-            line->fillProto(t_draw->mutable_line_segment());
+        else if (auto segment = std::get_if<LineSegment>(&shape); segment)
+            segment->fillProto(t_draw->mutable_line_segment());
         else if (auto rect = std::get_if<Rect>(&shape); rect)
             rect->fillProto(t_draw->mutable_rect());
         else if (auto circle = std::get_if<Circle>(&shape); circle)
@@ -73,4 +73,4 @@ struct Draw
             logWarning("Unsupported shape type: {}", shape.index());
     }
 };
-} // namespace Tyr::Common
+} // namespace Tyr::Common::Debug

@@ -48,7 +48,7 @@ public:
     std::vector<Vec2> intersect(const Circle &t_other) const;
     float             intersectionArea(const Circle &t_other) const;
 
-    bool isCircleCross(Vec2 t_point1, Vec2 t_point2, float t_r) const;
+    bool isCircleCross(Vec2 t_point1, Vec2 t_point2) const;
 
     Vec2  center;
     float r;

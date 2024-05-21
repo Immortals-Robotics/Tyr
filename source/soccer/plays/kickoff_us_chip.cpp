@@ -38,7 +38,7 @@ void Ai::kickoffUsChip()
     }
     else
     {
-        circleBall(m_attack, chip_target.angleWith(m_world_state.ball.position), 0, 0, 1.0f);
+        circleBall(m_attack, chip_target.angleWith(m_world_state.ball.position), 0, 0);
     }
 }
 } // namespace Tyr::Soccer

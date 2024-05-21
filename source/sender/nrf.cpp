@@ -84,7 +84,7 @@ bool Nrf::send(const CommandsWrapper &t_wrapper)
         return false;
     }
 
-    for (const auto &command : t_wrapper.command)
+    for (const auto &command : t_wrapper.commands)
         queueCommand(command);
 
     append_demo_data();

@@ -7,7 +7,6 @@ void Ai::mark(int t_robot_num, int t_opp, float t_dist)
     auto oppToBall    = (m_world_state.ball.position - m_world_state.opp_robot[t_opp].position).normalized();
     auto oppToGoal    = (ownGoal() - m_world_state.opp_robot[t_opp].position).normalized();
     auto oppToGoalDis = m_world_state.opp_robot[t_opp].position.distanceTo(ownGoal());
-    auto ballToOppDis = m_world_state.ball.position.distanceTo(m_world_state.opp_robot[t_opp].position);
     auto oneTouchDot  = oppToBall.dot(oppToGoal);
     if (oneTouchDot > 0 || oppToGoalDis < 2500)
     {

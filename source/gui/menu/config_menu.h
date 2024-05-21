@@ -95,7 +95,7 @@ public:
     ConfigMenu();
     ~ConfigMenu() = default;
     void feedDebug(const Common::Debug::Wrapper &t_wrapper);
-    void setNetworkInput(std::string _data, InputCallbackType _inputType);
+    void setNetworkInput(const std::string& _data, InputCallbackType _inputType);
 
     std::string       getNetworkParam(InputCallbackType _inputType);
     InputCallbackType isNetworkDataUpdated();

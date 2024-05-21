@@ -10,7 +10,7 @@ enum ball_circling_state
     kKick,
 };
 
-void Ai::circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow, float t_precision,
+void Ai::circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow,
                     float t_near_dis_override)
 {
     // t_tagret_angle -= 5;

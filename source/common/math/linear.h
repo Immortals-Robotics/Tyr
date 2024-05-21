@@ -60,7 +60,7 @@ public:
     {
         if (amoodi)
             return std::fabs(p.x - xinter);
-        return std::fabs(m_b * p.x - p.y + m_a) / sqrt(m_b * m_b + 1.0);
+        return std::fabs(m_b * p.x - p.y + m_a) / sqrt(m_b * m_b + 1.0f);
     }
 
     inline void chapeKon()

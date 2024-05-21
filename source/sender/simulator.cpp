@@ -46,7 +46,7 @@ bool Simulator::send(const CommandsWrapper &t_wrapper)
 {
     m_packet.Clear();
 
-    for (const auto &command : t_wrapper.command)
+    for (const auto &command : t_wrapper.commands)
         queueCommand(command);
 
     const Common::NetworkAddress &address = Common::setting().our_color == Common::TeamColor::Yellow

@@ -19,19 +19,34 @@ add_compile_options($<$<OR:$<BOOL:${ENABLE_SANITIZERS}>,$<CONFIG:Debug>>:-fsanit
 add_link_options($<$<OR:$<BOOL:${ENABLE_SANITIZERS}>,$<CONFIG:Debug>>:-fsanitize=address>)
 
 # undefined behavior sanitizer is not available on MSVC
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	add_compile_options("$<$<OR:$<BOOL:${ENABLE_SANITIZERS}>,$<CONFIG:Debug>>:-fno-omit-frame-pointer;-fsanitize=undefined>")
-	add_link_options("$<$<OR:$<BOOL:${ENABLE_SANITIZERS}>,$<CONFIG:Debug>>:-fno-omit-frame-pointer;-fsanitize=undefined>")
-endif()
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_compile_options("$<$<OR:$<BOOL:${ENABLE_SANITIZERS}>,$<CONFIG:Debug>>:-fno-omit-frame-pointer;-fsanitize=undefined>")
+    add_link_options("$<$<OR:$<BOOL:${ENABLE_SANITIZERS}>,$<CONFIG:Debug>>:-fno-omit-frame-pointer;-fsanitize=undefined>")
+endif ()
 
-if(${TRACE_BUILD_TIME})
-	add_compile_options(-ftime-trace)
-endif()
+# Set warning levels
+if (MSVC)
+    add_compile_options(/W4 /wd4244 /wd4267)
+else ()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+endif ()
+
+# And treat them as error
+set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
+
+if (${TRACE_BUILD_TIME})
+    add_compile_options(-ftime-trace)
+endif ()
+
+# enable utf-8 support in msvc
+if (MSVC)
+    add_compile_options(/utf-8)
+endif ()
 
 # enable multithreaded build in VS
-if(MSVC)
-	add_compile_options(/MP /utf-8)
-endif()
+if (MSVC)
+    add_compile_options(/MP)
+endif ()
 
 add_subdirectory(source/protos)
 add_subdirectory(source/common)

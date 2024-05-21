@@ -46,7 +46,7 @@ bool Grsim::send(const CommandsWrapper &t_wrapper)
 {
     m_packet.Clear();
 
-    for (const auto &command : t_wrapper.command)
+    for (const auto &command : t_wrapper.commands)
         queueCommand(command);
 
     m_packet.mutable_commands()->set_isteamyellow(Common::setting().our_color == Common::TeamColor::Yellow);

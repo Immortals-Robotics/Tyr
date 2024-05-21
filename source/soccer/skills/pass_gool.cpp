@@ -2,9 +2,9 @@
 
 namespace Tyr::Soccer
 {
-void Ai::waitForGool(int t_robot_num, bool t_chip)
+void Ai::waitForGool(int t_robot_num)
 {
-    Common::Vec2 pos = calculatePassPos(t_robot_num, oppGoal(), m_own_robot[t_robot_num].state().position, -1600);
+    Common::Vec2 pos = calculatePassPos(oppGoal(), m_own_robot[t_robot_num].state().position, -1600);
 
     m_own_robot[t_robot_num].face(oppGoal());
 

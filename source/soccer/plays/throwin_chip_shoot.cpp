@@ -22,11 +22,11 @@ void Ai::throwinChipShoot()
         circleBall(m_dmf,
                    Common::Vec2(oppGoal().x, Common::sign(m_world_state.ball.position.y) * 200.0f)
                        .angleWith(m_world_state.ball.position),
-                   0, 15, 1.0f);
+                   0, 15);
     }
     else
     {
-        circleBall(m_dmf, oppGoal().angleWith(m_world_state.ball.position), 0, 0, 1.0f);
+        circleBall(m_dmf, oppGoal().angleWith(m_world_state.ball.position), 0, 0);
     }
 
     m_own_robot[m_attack].face(oppGoal());

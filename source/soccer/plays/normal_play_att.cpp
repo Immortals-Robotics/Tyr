@@ -31,7 +31,6 @@ void Ai::normalPlayAtt()
     {
         float        ballReachTimeTmp = calculateBallRobotReachTime(m_attack, VelocityProfile::mamooli()) * 1.5;
         Common::Vec2 ballReachPlace   = predictBallForwardAI(ballReachTimeTmp);
-        float ballGoalDot = m_world_state.ball.velocity.normalized().dot((oppGoal() - ballReachPlace).normalized());
 
         OpenAngle openAngle = calculateOpenAngleToGoal(m_world_state.ball.position, m_attack);
 
@@ -69,21 +68,24 @@ void Ai::normalPlayAtt()
         if (openAngle.magnitude.deg() < 8 && (findKickerOpp(-1, 150.0f) == -1))
         {
 
-            Common::Angle passAngle = Common::Vec2(-m_side * 1700, Common::sign(-m_world_state.ball.position.y) * 1700.0f)
-                                          .angleWith(m_world_state.ball.position);
+            Common::Angle passAngle =
+                Common::Vec2(-m_side * 1700, Common::sign(-m_world_state.ball.position.y) * 1700.0f)
+                    .angleWith(m_world_state.ball.position);
             float chip_pow = 40;
 
             if (mid1Suitable)
             {
                 passAngle = m_own_robot[m_mid1].state().position.angleWith(m_world_state.ball.position);
-                chip_pow  = 50.f * m_own_robot[m_mid1].state().position.distanceTo(m_world_state.ball.position) / 4000.0f;
-                chip_pow  = std::min(50.f, chip_pow);
+                chip_pow =
+                    50.f * m_own_robot[m_mid1].state().position.distanceTo(m_world_state.ball.position) / 4000.0f;
+                chip_pow = std::min(50.f, chip_pow);
             }
             else if (mid2Suitable)
             {
                 passAngle = m_own_robot[m_mid2].state().position.angleWith(m_world_state.ball.position);
-                chip_pow  = 50.f * m_own_robot[m_mid2].state().position.distanceTo(m_world_state.ball.position) / 4000.0f;
-                chip_pow  = std::min(50.f, chip_pow);
+                chip_pow =
+                    50.f * m_own_robot[m_mid2].state().position.distanceTo(m_world_state.ball.position) / 4000.0f;
+                chip_pow = std::min(50.f, chip_pow);
             }
             else
             {

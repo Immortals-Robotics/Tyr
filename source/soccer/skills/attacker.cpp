@@ -99,7 +99,8 @@ void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip
 
     m_predicted_ball = m_world_state.ball.position;
 
-    float d = m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position.circleAroundPoint(t_angle, 200.0f));
+    float d = m_own_robot[t_robot_num].state().position.distanceTo(
+        m_world_state.ball.position.circleAroundPoint(t_angle, 200.0f));
     d += m_world_state.ball.position.distanceTo(m_world_state.ball.position.circleAroundPoint(t_angle, 200.0f));
     d -= 100;
 
@@ -114,13 +115,13 @@ void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip
 
     static bool passedBall = false;
 
-    float prepPredictMul = 0.15;
-    float goalPredictMul = 0.0;
+    float prepPredictMul = 0.15f;
+    float goalPredictMul = 0.0f;
 
     if (passedBall)
     {
-        prepPredictMul = 0.0;
-        goalPredictMul = -0.15;
+        prepPredictMul = 0.0f;
+        goalPredictMul = -0.15f;
     }
 
     Common::Vec2 ballToGoal = oppGoal() - m_world_state.ball.position;
@@ -150,7 +151,8 @@ void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip
 
     if (passedBall)
     {
-        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::gold(), false);
+        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::gold(),
+                             false);
     }
 
     if (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) < 400)
@@ -201,7 +203,8 @@ void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip
 
     if ((std::fabs(hehe.deg()) < tetta)) //|| ( m_circle_reached_behind_ball ) )
     {
-        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::red(), false);
+        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::red(),
+                             false);
         if ((t_kick) || (t_chip))
         {
             if (m_circle_reached_behind_ball)
@@ -249,16 +252,18 @@ void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip
                 }
             }
             else
-                navigate(t_robot_num,
-                         m_predicted_ball.circleAroundPoint(t_angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / tetta)),
-                         VelocityProfile::mamooli());
+                navigate(
+                    t_robot_num,
+                    m_predicted_ball.circleAroundPoint(t_angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / tetta)),
+                    VelocityProfile::mamooli());
         }
         else
             navigate(t_robot_num, m_predicted_ball.circleAroundPoint(t_angle + hehe * 0.0f, r));
     }
     else
     {
-        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::orange(), false);
+        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::orange(),
+                             false);
 
         hehe = m_predicted_ball.angleWith(m_own_robot[t_robot_num].state().position) +
                Common::Angle::fromDeg(Common::sign(hehe.deg()) * tetta);
@@ -268,12 +273,14 @@ void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip
             navigate(t_robot_num, m_predicted_ball.circleAroundPoint(hehe, r), VelocityProfile::kharaki());
     }
 
-    Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::violet(), false);
+    Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::violet(),
+                         false);
     Common::debug().draw(
         Common::LineSegment{
             m_own_robot[t_robot_num].state().position,
             m_own_robot[t_robot_num].state().position +
-                (m_own_robot[t_robot_num].target.position - m_own_robot[t_robot_num].state().position).normalized() * 1000.0f},
+                (m_own_robot[t_robot_num].target.position - m_own_robot[t_robot_num].state().position).normalized() *
+                    1000.0f},
         Common::Color::black());
 
     if ((t_kick > 0) || (t_chip > 0))

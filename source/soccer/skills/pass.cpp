@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-Common::Vec2 Ai::calculatePassPos(int t_robot_num, const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar)
+Common::Vec2 Ai::calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar)
 {
     Common::Line ball_line =
         Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());
@@ -24,7 +24,8 @@ Common::Vec2 Ai::calculatePassPos(int t_robot_num, const Common::Vec2 &t_target,
 
 void Ai::waitForPass(int t_robot_num, bool t_chip, const Common::Vec2 *t_target, Common::Vec2 *t_stat_pos)
 {
-    Common::Vec2 pos = calculatePassPos(t_robot_num, t_target == nullptr ? oppGoal() : *t_target,
+    Common::Vec2 pos =
+        calculatePassPos(t_target == nullptr ? oppGoal() : *t_target,
                          t_stat_pos == nullptr ? m_own_robot[t_robot_num].state().position : *t_stat_pos, 78);
 
     if (t_target == nullptr)
@@ -56,7 +57,7 @@ void Ai::waitForPass(int t_robot_num, bool t_chip, const Common::Vec2 *t_target,
         else
         {
             float vel_delta = m_world_state.ball.velocity.length() / 100.0f;
-            vel_delta *= 0.7;
+            vel_delta *= 0.7f;
             vel_delta = 60 - vel_delta;
             Common::logDebug("ball vel: {}", vel_delta);
             m_own_robot[t_robot_num].shoot(40);
