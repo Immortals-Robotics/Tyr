@@ -16,7 +16,7 @@ void Ai::calcIsDefending()
         m_is_defending = true;
     }
 
-    if (m_opp_restarted && m_timer.time() < 2.0)
+    if (m_opp_restarted && m_timer.time().seconds() < 2.0)
     {
         m_is_defending = true;
     }

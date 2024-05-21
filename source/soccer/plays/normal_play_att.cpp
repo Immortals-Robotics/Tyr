@@ -19,7 +19,7 @@ void Ai::normalPlayAtt()
     {
         m_own_robot[m_attack].face(oppGoal());
         navigate(m_attack, m_allaf_pos[m_attack], VelocityProfile::mamooli());
-        if (m_timer.time() > 2.5)
+        if (m_timer.time().seconds() > 2.5)
         {
             m_one_touch_type[m_attack] = OneTouchType::OneTouch;
         }

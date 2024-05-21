@@ -4,87 +4,81 @@ namespace Tyr::Gui
 {
 enum class LogState
 {
-    None = 0,
-    Record,
-    PlaybackPlay,
-    PlaybackPause
+    Live = 0,
+    Replay,
 };
 
 class DemoMenu
 {
 private:
     void demoHandler();
-    void initStorage();
     void analyzeDatabase();
-    void pushStartPoints(Common::Storage::Key t_ts);
 
-    struct Info
+    const char* kRecordButtonLive = "\uf28d";
+    const char* kRecordButtonReplay = "\uf111";
+
+    const char* m_record_button = kRecordButtonLive;
+
+    LogState m_log_state = LogState::Live;
+
+    Common::Timer m_timer;
+
+    struct Demo
     {
-        Common::Storage::Key start_ts;
-        Common::Storage::Key end_ts;
-        Common::Storage::Key current_ts;
-        Common::Storage::Key time_between_frames;
-        Info() = default;
+        Common::TimePoint start_time;
+        Common::TimePoint end_time;
+        std::string       name;
+
+        Demo() = default;
+
+        Demo(const Common::Storage::Key t_start_ts, const Common::Storage::Key t_end_ts)
+        {
+            start_time = Common::TimePoint::fromMicroseconds(t_start_ts);
+            end_time   = Common::TimePoint::fromMicroseconds(t_end_ts);
+            name       = fmt::format("{}", start_time);
+        }
+
+        inline Common::Duration length() const
+        {
+            return end_time - start_time;
+        }
     };
 
-    struct DebugDemo
+    inline const Demo &currentDemo() const
     {
-        Info                              info;
-        Protos::Immortals::Debug::Wrapper message;
-    };
+        return m_demos[m_selected_demo];
+    }
 
-    struct WorldSateFilteredDemo
-    {
-        Info                          info;
-        Protos::Immortals::WorldState message;
-    };
-
-    struct RefereeDemo
-    {
-        Info                            info;
-        Protos::Immortals::RefereeState message;
-    };
-
-    char     m_record_button[7] = "\uf111";
-    float    m_playback_time    = 0.;
-    float    m_playback_size    = 100.;
-    LogState m_log_state        = LogState::None;
-
-    Common::Storage::Key              m_play_time = 0;
-    Common::Storage::Key              m_real_time = 0;
-    std::vector<Common::Storage::Key> m_start_times;
-    std::vector<Common::Storage::Key> m_end_times;
-
-    int                       m_selected_demo = 0;
-    std::vector<const char *> m_demo_names;
+    std::vector<Demo> m_demos;
+    int               m_selected_demo = 0;
 
     Common::Storage m_debug_storage;
     Common::Storage m_world_filtered_storage;
     Common::Storage m_referee_storage;
 
-    DebugDemo             m_debug;
-    WorldSateFilteredDemo m_worldstate_filtered;
-    RefereeDemo           m_referee;
+    Protos::Immortals::Debug::Wrapper m_debug;
+    Protos::Immortals::WorldState     m_worldstate_filtered;
+    Protos::Immortals::RefereeState   m_referee;
 
 public:
-    DemoMenu() = default;
+    DemoMenu();
     ~DemoMenu();
     void     draw();
     LogState getState();
 
     const Protos::Immortals::Debug::Wrapper &debugWrapper() const
     {
-        return m_debug.message;
+        return m_debug;
     }
 
     const Protos::Immortals::WorldState &worldStateFiltered() const
     {
-        return m_worldstate_filtered.message;
+        return m_worldstate_filtered;
     }
 
     const Protos::Immortals::RefereeState &refereeState() const
     {
-        return m_referee.message;
+        return m_referee;
     }
 };
 

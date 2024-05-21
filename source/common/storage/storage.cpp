@@ -177,6 +177,7 @@ bool Storage::get(Key t_key, google::protobuf::MessageLite *t_message) const
     result = mdb_cursor_get(mdb_cursor, &mdb_key, &mdb_data, MDB_SET_RANGE);
     if (result == MDB_NOTFOUND)
     {
+        Common::logWarning("lmdb cursor get failed with: {}", getErrorString(result));
         return false;
     }
     else if (result != MDB_SUCCESS)
@@ -197,8 +198,7 @@ bool Storage::get(Key t_key, google::protobuf::MessageLite *t_message) const
     return true;
 }
 
-bool Storage::get(Key t_key, Key *t_first, Key *t_second, google::protobuf::MessageLite *t_message_first,
-                     google::protobuf::MessageLite *t_message_second) const
+bool Storage::closest(Key t_key, Key *t_closest) const
 {
     int result;
 
@@ -228,45 +228,82 @@ bool Storage::get(Key t_key, Key *t_first, Key *t_second, google::protobuf::Mess
     result = mdb_cursor_get(mdb_cursor, &mdb_key, &mdb_data, MDB_SET_RANGE);
     if (result == MDB_NOTFOUND)
     {
+        Common::logWarning("lmdb cursor get failed with: {}", getErrorString(result));
         return false;
     }
     else if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb get failed with: {}", getErrorString(result));
+        Common::logError("lmdb cursor get failed with: {}", getErrorString(result));
         return false;
     }
 
-    *t_first       = *(Key *) mdb_key.mv_data;
-    bool pb_result = t_message_first->ParseFromArray(mdb_data.mv_data, mdb_data.mv_size);
+    *t_closest = *(Key *) mdb_key.mv_data;
+
+    mdb_txn_abort(transaction);
+
+    return true;
+}
+
+bool Storage::next(Storage::Key t_key, Storage::Key *t_next) const
+{
+    int result;
+
+    MDB_txn *transaction;
+    result = mdb_txn_begin(s_env, nullptr, MDB_RDONLY, &transaction);
+    if (result != MDB_SUCCESS)
+    {
+        Common::logError("lmdb readonly transaction begin failed with: {}", getErrorString(result));
+        return false;
+    }
+
+    MDB_cursor *mdb_cursor;
+    result = mdb_cursor_open(transaction, m_dbi, &mdb_cursor);
+    if (result != MDB_SUCCESS)
+    {
+        Common::logError("lmdb cursor open failed with: {}", getErrorString(result));
+        return false;
+    }
+
+    MDB_val mdb_key{
+        .mv_size = sizeof(Key),
+        .mv_data = &t_key,
+    };
+    MDB_val mdb_data;
+
+    result = mdb_cursor_get(mdb_cursor, &mdb_key, &mdb_data, MDB_SET_RANGE);
+    if (result == MDB_NOTFOUND)
+    {
+        Common::logWarning("lmdb cursor get failed with: {}", getErrorString(result));
+        return false;
+    }
+    else if (result != MDB_SUCCESS)
+    {
+        Common::logError("lmdb cursor get failed with: {}", getErrorString(result));
+        return false;
+    }
 
     result = mdb_cursor_get(mdb_cursor, &mdb_key, &mdb_data, MDB_NEXT);
     if (result == MDB_NOTFOUND)
     {
+        Common::logWarning("lmdb cursor get failed with: {}", getErrorString(result));
         return false;
     }
     else if (result != MDB_SUCCESS)
     {
-        Common::logError("lmdb get failed with: {}", getErrorString(result));
+        Common::logError("lmdb cursor get failed with: {}", getErrorString(result));
         return false;
     }
 
-    *t_second = *(Key *) mdb_key.mv_data;
-    pb_result = t_message_second->ParseFromArray(mdb_data.mv_data, mdb_data.mv_size);
+    *t_next = *(Key *) mdb_key.mv_data;
+
     mdb_txn_abort(transaction);
-
-    if (!pb_result)
-    {
-        Common::logError("Failed to parse protobuf message with size {} from db", mdb_data.mv_size);
-        return false;
-    }
 
     return true;
 }
 
 unsigned long Storage::getBoundary(Key *t_first, Key *t_last) const
 {
-    int      result;
-    MDB_stat stat;
+    int result;
 
     MDB_txn *transaction;
     result = mdb_txn_begin(s_env, nullptr, 0, &transaction);
@@ -311,6 +348,7 @@ unsigned long Storage::getBoundary(Key *t_first, Key *t_last) const
     }
     *t_last = *(Key *) mdb_key.mv_data;
 
+    MDB_stat stat;
     result = mdb_stat(transaction, m_dbi, &stat);
     if (result != MDB_SUCCESS)
     {

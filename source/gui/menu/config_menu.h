@@ -1,5 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-identifier-naming"
 #pragma once
 
 namespace Tyr::Gui
@@ -179,5 +177,3 @@ public:
     void             executeCallback(std::string t_data);
 };
 } // namespace Tyr::Gui
-
-#pragma clang diagnostic pop

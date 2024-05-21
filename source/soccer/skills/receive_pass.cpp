@@ -6,16 +6,16 @@ void Ai::receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip)
 {
     const float contStrStaticTime = 1.0f;
 
-    if (m_timer.time() > 0.7)
+    if (m_timer.time().seconds() > 0.7)
     {
         m_chip_head.setDeg(200);
     }
     if (m_one_touch_type[t_robot_num] == OneTouchType::Allaf)
         t_static_pos = m_allaf_pos[t_robot_num];
-    if (m_one_touch_type[t_robot_num] == OneTouchType::OneTouch && m_timer.time() < contStrStaticTime)
+    if (m_one_touch_type[t_robot_num] == OneTouchType::OneTouch && m_timer.time().seconds() < contStrStaticTime)
         t_static_pos = m_allaf_pos[t_robot_num];
 
-    if (m_timer.time() > 2.5)
+    if (m_timer.time().seconds() > 2.5)
     {
         m_one_touch_type_used[t_robot_num] = true;
     }
@@ -55,7 +55,7 @@ void Ai::receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip)
         m_one_touch_type_used[t_robot_num] = true;
         if (m_one_touch_type[t_robot_num] == OneTouchType::OneTouch)
         {
-            if (m_timer.time() < contStrStaticTime)
+            if (m_timer.time().seconds() < contStrStaticTime)
                 waitForPass(t_robot_num, t_chip, nullptr, &t_static_pos);
             else
                 waitForPass(t_robot_num, t_chip);

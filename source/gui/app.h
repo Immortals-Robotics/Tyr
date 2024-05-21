@@ -61,7 +61,6 @@ private:
 
     Common::RefereeState m_referee_state;
 
-    Gui::LogState m_log_state = Gui::LogState::None;
     void receiveWorldStates();
     void receiveDebug();
     void receiveRefereeState();

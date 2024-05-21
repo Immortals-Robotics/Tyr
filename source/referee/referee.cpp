@@ -46,7 +46,7 @@ void Referee::process()
         Common::logDebug("m_cmd_counter: {}", m_ssl_ref.command_counter());
     }
 
-    m_state.time = std::chrono::system_clock::now();
+    m_state.time = Common::TimePoint::now();
     transition(m_ssl_ref.command());
 }
 
@@ -84,7 +84,7 @@ bool Referee::isKicked()
 
 void Referee::transition(const Protos::Ssl::Gc::Referee_Command ref_command)
 {
-    const bool ball_kicked = isKicked() || m_timer.time() > 5;
+    const bool ball_kicked = isKicked() || m_timer.time().seconds() > 5;
 
     if (ref_command == Protos::Ssl::Gc::Referee_Command_HALT)
     {
