@@ -2,27 +2,27 @@
 
 namespace Tyr::Common
 {
-Linear Linear::calculate(int n, float *x, float *y)
+Linear Linear::calculate(const int t_n, const float *t_x, const float *t_y)
 {
     // calculate the averages of arrays x and y
     float xa = 0;
     float ya = 0;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < t_n; i++)
     {
-        xa += x[i];
-        ya += y[i];
+        xa += t_x[i];
+        ya += t_y[i];
     }
-    xa /= n;
-    ya /= n;
+    xa /= t_n;
+    ya /= t_n;
 
     // calculate auxiliary sums
     float xx = 0;
     float yy = 0;
     float xy = 0;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < t_n; i++)
     {
-        float tmp_x = x[i] - xa;
-        float tmpy  = y[i] - ya;
+        const float tmp_x = t_x[i] - xa;
+        const float tmpy  = t_y[i] - ya;
 
         xx += tmp_x * tmp_x;
         yy += tmpy * tmpy;
@@ -34,16 +34,16 @@ Linear Linear::calculate(int n, float *x, float *y)
     // make sure slope is not infinite
     if (xx < 0.01)
     {
-        result.amoodi = true;
-        result.xinter = xa;
+        result.m_amoodi = true;
+        result.m_xinter = xa;
         return result;
     }
 
     result.m_b = xy / xx;
     if (std::fabs(result.m_b) > 50)
     {
-        result.amoodi = true;
-        result.xinter = xa;
+        result.m_amoodi = true;
+        result.m_xinter = xa;
         return result;
     }
 
