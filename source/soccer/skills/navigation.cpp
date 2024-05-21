@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::navigate(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile, const NavigationFlags t_flags)
+void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProfile t_profile, const NavigationFlags t_flags)
 {
     if (m_own_robot[t_robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         return;

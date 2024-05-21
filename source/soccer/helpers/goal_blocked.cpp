@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-bool Ai::goalBlocked(Common::Vec2 t_init_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r)
+bool Ai::goalBlocked(const Common::Vec2 t_init_pos, const float t_max_shoot_blocker_dis, const float t_shoot_blocker_r)
 {
     bool oppGoalOpen = true;
 

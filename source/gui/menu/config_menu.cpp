@@ -49,7 +49,7 @@ ConfigMenu::ConfigMenu() : m_network_needs_update(InputCallbackType::None)
 
 int ConfigMenu::handleInputChange(ImGuiInputTextCallbackData *_data)
 {
-    ConfigCallback *callback = ((ConfigCallback *) _data->UserData);
+    ConfigCallback *callback = static_cast<ConfigCallback *>(_data->UserData);
 
     if (std::regex_match(_data->Buf, callback->getRegex()))
     {
@@ -79,7 +79,7 @@ void ConfigMenu::setNetworkInput(const std::string &_data, const InputCallbackTy
     }
 }
 
-std::string ConfigMenu::getNetworkParam(InputCallbackType _inputType)
+std::string ConfigMenu::getNetworkParam(const InputCallbackType _inputType)
 {
     return m_type_input_text_map.contains(_inputType) ? m_type_input_text_map.at(_inputType) : "";
 }

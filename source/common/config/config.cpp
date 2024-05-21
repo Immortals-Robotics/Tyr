@@ -17,9 +17,9 @@ void ConfigReader::load()
     m_table = std::move(config);
 }
 
-void ConfigReader::save(toml::table t_table)
+void ConfigReader::save(const toml::table &t_table) const
 {
-    std::ofstream ofs(m_file_path.string());
+    std::ofstream ofs(m_file_path);
     ofs << t_table;
     ofs.close();
 }

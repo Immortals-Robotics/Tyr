@@ -8,7 +8,7 @@ Planner::Planner(const int t_max_nodes) : m_max_nodes(t_max_nodes), m_tree(t_max
     m_cached_waypoints.reserve(m_max_nodes);
 }
 
-void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
+void Planner::init(const Common::Vec2 init, const Common::Vec2 final, const float step)
 {
     init_state  = nearestFree(init);
     final_state = nearestFree(final);
@@ -20,7 +20,7 @@ void Planner::init(Common::Vec2 init, Common::Vec2 final, float step)
     m_started_in_obs = g_obs_map.isInObstacle(init);
 }
 
-Common::Vec2 Planner::nearestFree(Common::Vec2 state)
+Common::Vec2 Planner::nearestFree(const Common::Vec2 state)
 {
     const float acceptable_free_dis = 50.0f;
 
@@ -131,7 +131,7 @@ void Planner::optimize_tree()
     }
 }
 
-void Planner::draw(Common::Color t_color) const
+void Planner::draw(const Common::Color t_color) const
 {
     for (int i = 0; i < m_waypoints.size() - 1; i++)
     {

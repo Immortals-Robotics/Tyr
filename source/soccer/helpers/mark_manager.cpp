@@ -68,7 +68,7 @@ void Ai::markManager()
             def_count++;
         }
     }
-    int markings = std::min(def_count, (int) crunchingOpps.size());
+    int markings = std::min(def_count, static_cast<int>(crunchingOpps.size()));
 
     struct MarkFormation
     {

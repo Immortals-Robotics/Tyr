@@ -55,7 +55,7 @@ public:
 
         state = t_state.state();
         if (t_state.has_color())
-            color = (TeamColor) t_state.color();
+            color = static_cast<TeamColor>(t_state.color());
         place_ball_target = Common::Vec2{t_state.place_ball_target()};
         opp_gk            = t_state.opp_gk();
     }
@@ -66,14 +66,14 @@ public:
 
         t_state->set_state(state);
         if (color.has_value())
-            t_state->set_color((Protos::Immortals::TeamColor) color.value());
+            t_state->set_color(static_cast<Protos::Immortals::TeamColor>(color.value()));
         place_ball_target.fillProto(t_state->mutable_place_ball_target());
         t_state->set_opp_gk(opp_gk);
     }
 
     State get() const
     {
-        return (State) state;
+        return static_cast<State>(state);
     }
 
     bool our() const

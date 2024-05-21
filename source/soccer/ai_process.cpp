@@ -81,7 +81,7 @@ void Ai::process()
     }
     else
     {
-        Common::logWarning("Unhandled ref state: {}", (int) m_ref_state.get());
+        Common::logWarning("Unhandled ref state: {}", static_cast<int>(m_ref_state.get()));
         m_current_play = &Ai::stop;
     }
 

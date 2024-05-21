@@ -42,7 +42,7 @@ void Referee::process()
 
         m_timer.start();
 
-        Common::logDebug("command: {}", (int) m_ssl_ref.command());
+        Common::logDebug("command: {}", static_cast<int>(m_ssl_ref.command()));
         Common::logDebug("m_cmd_counter: {}", m_ssl_ref.command_counter());
     }
 

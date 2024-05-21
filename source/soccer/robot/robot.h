@@ -11,12 +11,12 @@ public:
     Robot(const Common::RobotState *t_state) : m_state(t_state)
     {}
 
-    inline const Common::RobotState &state() const
+    const Common::RobotState &state() const
     {
         return *m_state;
     }
 
-    inline void reset()
+    void reset()
     {
         m_shoot     = 0.0f;
         m_chip      = 0.0f;

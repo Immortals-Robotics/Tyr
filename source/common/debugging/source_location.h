@@ -12,21 +12,21 @@ struct SourceLocation
 
     SourceLocation() = default;
 
-    inline SourceLocation(const std::source_location &t_source)
+    explicit SourceLocation(const std::source_location &t_source)
     {
         file     = t_source.file_name();
         function = t_source.function_name();
         line     = t_source.line();
     }
 
-    inline SourceLocation(const spdlog::source_loc &t_source)
+    explicit SourceLocation(const spdlog::source_loc &t_source)
     {
         file     = t_source.filename;
         function = t_source.funcname;
         line     = t_source.line;
     }
 
-    inline SourceLocation(const Protos::Immortals::Debug::SourceLocation &t_source, const StringMap &t_strings)
+    SourceLocation(const Protos::Immortals::Debug::SourceLocation &t_source, const StringMap &t_strings)
     {
         file     = t_strings.at(t_source.file());
         function = t_strings.at(t_source.function());
@@ -48,4 +48,4 @@ struct SourceLocation
             t_strings->emplace(function_hash, std::string{function.data(), function.size()});
     }
 };
-} // namespace Tyr::Common
+} // namespace Tyr::Common::Debug

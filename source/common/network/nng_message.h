@@ -10,7 +10,7 @@ struct NngMessage
     {}
 
     NngMessage(const size_t t_size)
-        : NngMessage((char *) nng_alloc(t_size + sizeof(uint64_t)), t_size + sizeof(uint64_t))
+        : NngMessage(static_cast<char *>(nng_alloc(t_size + sizeof(uint64_t))), t_size + sizeof(uint64_t))
     {}
 
     ~NngMessage()

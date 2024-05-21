@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-float Ai::calculateOppThreat(int t_opp, bool t_restart)
+float Ai::calculateOppThreat(const int t_opp, const bool t_restart)
 {
     if (m_world_state.opp_robot[t_opp].seen_state == Common::SeenState::CompletelyOut)
         return -1;

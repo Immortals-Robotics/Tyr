@@ -20,32 +20,32 @@ struct Services
     static void saveConfig();
     static void shutdown();
 
-    inline static ConfigReader &configReader()
+    static ConfigReader &configReader()
     {
         return *s_configReader;
     }
 
-    inline static Setting &setting()
+    static Setting &setting()
     {
         return *s_setting;
     }
 
-    inline static Debug::Hub &debug()
+    static Debug::Hub &debug()
     {
         return *s_debug;
     }
 
-    inline static Logger &logger()
+    static Logger &logger()
     {
         return *s_logger;
     }
 
-    inline static Timer &global_timer()
+    static Timer &global_timer()
     {
         return *s_global_timer;
     }
 
-    inline static FieldState &field()
+    static FieldState &field()
     {
         return *s_field_state;
     }

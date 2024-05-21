@@ -3,16 +3,16 @@
 namespace Tyr::Gui
 {
 
-static void logCallback(const int msg_type, const char *const text, va_list args)
+static void logCallback(const int t_msg_type, const char *const t_text, const va_list t_args)
 {
     static constexpr int kBufferSize = 1024;
     char                 buffer[kBufferSize];
 
-    const int size = std::vsnprintf(buffer, kBufferSize, text, args);
+    const int size = std::vsnprintf(buffer, kBufferSize, t_text, t_args);
 
     const std::string_view formatted(buffer, size);
 
-    switch (msg_type)
+    switch (t_msg_type)
     {
     case LOG_TRACE:
         Common::logTrace("{}", formatted);
@@ -37,7 +37,7 @@ static void logCallback(const int msg_type, const char *const text, va_list args
     }
 }
 
-bool Application::initialize(const int width, const int height)
+bool Application::initialize(const int t_width, const int t_height)
 {
     if (!Common::Services::initialize())
     {
@@ -100,7 +100,7 @@ bool Application::initialize(const int width, const int height)
     SetTraceLogCallback(logCallback);
 
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
-    InitWindow(width, height, "Tyr");
+    InitWindow(t_width, t_height, "Tyr");
     SetTraceLogLevel(LOG_ALL);
 
     const std::filesystem::path icon_path = std::filesystem::path(DATA_DIR) / "immortals.png";
@@ -194,7 +194,7 @@ void Application::update()
         if (m_demo_menu->getState() == LogState::Live)
         {
             m_renderer->draw(m_referee_state, Common::field());
-            if (1)
+            if (true)
                 m_renderer->draw(m_world_state);
             else
                 m_renderer->draw(m_raw_world_state);
@@ -213,10 +213,11 @@ void Application::update()
         }
         else
         {
-            m_config_menu->feedDebug(m_demo_menu->debugWrapper());
-            m_renderer->draw(m_demo_menu->debugWrapper(), m_config_menu->nodeMap());
-            m_footer_menu->draw(m_demo_menu->debugWrapper(), m_config_menu->nodeMap(),
-                                m_demo_menu->worldStateFiltered(), true);
+            m_config_menu->feedDebug(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()));
+            m_renderer->draw(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()),
+                             m_config_menu->nodeMap());
+            m_footer_menu->draw(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()),
+                                m_config_menu->nodeMap(), m_demo_menu->worldStateFiltered(), true);
         }
 
         m_renderer->end();
@@ -271,7 +272,7 @@ void Application::receiveDebug()
         m_debug_wrapper = Common::Debug::Wrapper(pb_wrapper);
 }
 
-void Application::visionRawEntry()
+void Application::visionRawEntry() const
 {
     Common::Timer timer;
     timer.start();
@@ -294,7 +295,7 @@ void Application::visionRawEntry()
     }
 }
 
-void Application::visionFilteredEntry()
+void Application::visionFilteredEntry() const
 {
     Common::Timer timer;
     timer.start();
@@ -315,7 +316,7 @@ void Application::visionFilteredEntry()
     }
 }
 
-void Application::aiEntry()
+void Application::aiEntry() const
 {
     Common::Timer timer;
     timer.start();
@@ -342,7 +343,7 @@ void Application::aiEntry()
     }
 }
 
-void Application::senderEntry()
+void Application::senderEntry() const
 {
     Common::Timer timer;
     timer.start();
@@ -361,7 +362,7 @@ void Application::senderEntry()
     }
 }
 
-void Application::refereeEntry()
+void Application::refereeEntry() const
 {
     Common::Timer timer;
     timer.start();
@@ -382,17 +383,13 @@ void Application::refereeEntry()
     }
 }
 
-void Application::dumpEntry()
+void Application::dumpEntry() const
 {
-    Common::Timer timer;
-    timer.start();
-
     while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
         if (!m_dumper->process())
         {
             std::this_thread::sleep_for(std::chrono::microseconds(100));
-            continue;
         }
     }
 }

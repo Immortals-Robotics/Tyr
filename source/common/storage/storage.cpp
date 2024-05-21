@@ -239,7 +239,7 @@ bool Storage::closest(Key t_key, Key *t_closest) const
         return false;
     }
 
-    *t_closest = *(Key *) mdb_key.mv_data;
+    *t_closest = *static_cast<Key *>(mdb_key.mv_data);
 
     mdb_txn_abort(transaction);
 
@@ -296,7 +296,7 @@ bool Storage::next(Storage::Key t_key, Storage::Key *t_next) const
         return false;
     }
 
-    *t_next = *(Key *) mdb_key.mv_data;
+    *t_next = *static_cast<Key *>(mdb_key.mv_data);
 
     mdb_txn_abort(transaction);
 
@@ -336,7 +336,7 @@ unsigned long Storage::getBoundary(Key *t_first, Key *t_last) const
         return false;
     }
 
-    *t_first = *(Key *) mdb_key.mv_data;
+    *t_first = *static_cast<Key *>(mdb_key.mv_data);
 
     result = mdb_cursor_get(mdb_cursor, &mdb_key, &mdb_data, MDB_LAST);
     if (result == MDB_NOTFOUND)
@@ -348,7 +348,7 @@ unsigned long Storage::getBoundary(Key *t_first, Key *t_last) const
         Common::logError("lmdb get failed with: {}", getErrorString(result));
         return false;
     }
-    *t_last = *(Key *) mdb_key.mv_data;
+    *t_last = *static_cast<Key *>(mdb_key.mv_data);
 
     MDB_stat stat;
     result = mdb_stat(transaction, m_dbi, &stat);

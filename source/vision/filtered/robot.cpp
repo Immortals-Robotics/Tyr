@@ -14,7 +14,7 @@ void Filtered::processRobots()
 
 void Filtered::filterRobots(Common::TeamColor t_color)
 {
-    const int color_id = (int) t_color;
+    const int color_id = static_cast<int>(t_color);
 
     auto &raw_robots = t_color == Common::TeamColor::Yellow ? m_raw_state.yellow_robots : m_raw_state.blue_robots;
 
@@ -124,7 +124,7 @@ void Filtered::predictRobots()
 void Filtered::sendStates()
 {
     auto     &own_robots   = m_state.own_robot;
-    const int our_color_id = (int) Common::setting().our_color;
+    const int our_color_id = static_cast<int>(Common::setting().our_color);
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
@@ -159,7 +159,7 @@ void Filtered::sendStates()
 
     for (int i = 0; i < Common::Setting::kMaxRobots; i++)
     {
-        opp_robots[i].color     = (Common::TeamColor)(opp_color_id);
+        opp_robots[i].color     = static_cast<Common::TeamColor>(opp_color_id);
         opp_robots[i].vision_id = i;
 
         if (m_robot_not_seen[opp_color_id][i] == 0)

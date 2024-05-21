@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defend_target)
+void Ai::runningDef(const int t_robot_num, const Common::Vec2 t_target, Common::Vec2 *t_defend_target)
 {
     const float max_def_move_to_intercept = 400.0f;
     const float max_near_opp_dis          = 750.0f;

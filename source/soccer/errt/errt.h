@@ -39,7 +39,7 @@ private:
 
     Tree m_tree;
 
-    inline Common::Vec2 randomState()
+    Common::Vec2 randomState()
     {
         return Common::Vec2((m_random.get(-1.0f, 1.0f) * (Common::field().width + 250.0f)),
                             (m_random.get(-1.0f, 1.0f) * (Common::field().height + 250.0f)));
@@ -51,17 +51,17 @@ private:
     Node        *extend(Node *s, Common::Vec2 &target);
     void         setWayPoints();
 
-    inline Common::Vec2 getWayPoint(unsigned int i)
+    Common::Vec2 getWayPoint(const unsigned int i)
     {
         return m_waypoints[i];
     }
 
-    inline unsigned int getWayPointNum()
+    unsigned int getWayPointNum()
     {
         return m_waypoints.size();
     }
 
-    inline bool isReached()
+    bool isReached()
     {
         return final_state.distanceTo(m_tree.NearestNeighbour(final_state)->state) <= acceptable_dis;
     }
@@ -79,7 +79,7 @@ inline Common::Vec2 Planner::chooseTarget()
     }
     else if ((r <= goal_target_prob + waypoint_target_prob) && (m_cached_waypoints.size() > 0))
     {
-        const int idx = m_random.get(0, (int) m_cached_waypoints.size() - 1);
+        const int idx = m_random.get(0, static_cast<int>(m_cached_waypoints.size()) - 1);
         return m_cached_waypoints[idx];
     }
 

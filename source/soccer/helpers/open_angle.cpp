@@ -12,7 +12,7 @@ float normalizeAngleR(float angle) // radian
     return (angle);
 }
 
-Ai::OpenAngle Ai::calculateOpenAngleToGoal(Common::Vec2 t_pos, int t_robot_num)
+Ai::OpenAngle Ai::calculateOpenAngleToGoal(const Common::Vec2 t_pos, const int t_robot_num)
 {
     int  counter = 0;
     bool oops    = 0;

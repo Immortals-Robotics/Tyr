@@ -15,7 +15,7 @@ static float calculateRobotRadius(const Common::RobotState &state)
     return Common::field().robot_radius * (1.0f + extension_factor);
 }
 
-void Ai::setObstacles(int t_robot_num, const NavigationFlags t_flags)
+void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
 {
     const bool ourPenalty = t_robot_num != m_gk && !m_ref_state.ourPlaceBall();
     const bool oppPenalty = !m_ref_state.ourPlaceBall();
@@ -114,7 +114,7 @@ void Ai::setObstacles(int t_robot_num, const NavigationFlags t_flags)
 
         for (int i = 0; i < ball_obs_count; i++)
         {
-            const float        t        = (float) i / (float) ball_obs_count;
+            const float        t        = static_cast<float>(i) / static_cast<float>(ball_obs_count);
             const Common::Vec2 ball_obs = m_world_state.ball.position + ball_line * t;
             g_obs_map.addCircle({ball_obs, ballAreaRadius + current_robot_radius});
         }

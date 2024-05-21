@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-int Ai::findKickerOpp(int t_mask, float t_max_dis)
+int Ai::findKickerOpp(const int t_mask, const float t_max_dis)
 {
     float mdis  = t_max_dis;
     int   index = -1;

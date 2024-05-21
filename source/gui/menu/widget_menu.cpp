@@ -28,7 +28,7 @@ void WidgetMenu::drawJoystick()
 
     BeginTextureMode(m_joystick_texture);
     ClearBackground(BLACK);
-    Color transparent = {.r = 0, .g = 0, .b = 0, .a = 0};
+    const Color transparent = static_cast<Color>(Common::Color::blank());
 
     if (std::string(GetGamepadName(0)).find("Xbox") != std::string::npos)
     {
@@ -103,7 +103,8 @@ void WidgetMenu::drawJoystick()
     ImGui::Spacing();
     ImGui::Spacing();
     ImGui::Separator();
-    ImGui::Combo("Mode", (int *) &m_controller_mode, controller_choices, IM_ARRAYSIZE(controller_choices));
+    ImGui::Combo("Mode", reinterpret_cast<int *>(&m_controller_mode), controller_choices,
+                 IM_ARRAYSIZE(controller_choices));
 }
 
 void WidgetMenu::drawControllerTab()
@@ -112,7 +113,7 @@ void WidgetMenu::drawControllerTab()
     ImGui::Spacing();
     if (IsGamepadAvailable(0))
     {
-        ImGui::TextColored(Common::Color::green(), "Controller connected [%s]", GetGamepadName(0));
+        ImGui::TextColored(static_cast<ImVec4>(Common::Color::green()), "Controller connected [%s]", GetGamepadName(0));
 
         drawJoystick();
 
@@ -177,7 +178,7 @@ void WidgetMenu::drawControllerTab()
     }
     else
     {
-        ImGui::TextColored(Common::Color::red(), "No Controller connected");
+        ImGui::TextColored(static_cast<ImVec4>(Common::Color::red()), "No Controller connected");
         m_controller_mode = ControllerMode::Disabled;
     }
 }
@@ -207,10 +208,11 @@ void WidgetMenu::draw(const Common::Vec2 t_mouse_pos)
         m_clicked_mouse_pos = t_mouse_pos;
     }
 
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
+    const ImGuiWindowFlags window_flags =
+        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
 
-    auto main_window_width = GetScreenWidth();
-    auto main_window_height = GetScreenHeight();
+    int main_window_width  = GetScreenWidth();
+    int main_window_height = GetScreenHeight();
     if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
     {
         main_window_width = (main_window_height - 200.) / 0.77 + 650.;

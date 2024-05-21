@@ -8,7 +8,7 @@ struct VelocityProfile
     float max_dec;
     float max_acc;
 
-    inline static constexpr VelocityProfile sooski()
+    static constexpr VelocityProfile sooski()
     {
         return {
             .max_spd = 450.0f,
@@ -17,7 +17,7 @@ struct VelocityProfile
         };
     }
 
-    inline static constexpr VelocityProfile aroom()
+    static constexpr VelocityProfile aroom()
     {
         return {
             .max_spd = 900.0f,
@@ -26,7 +26,7 @@ struct VelocityProfile
         };
     }
 
-    inline static constexpr VelocityProfile mamooli()
+    static constexpr VelocityProfile mamooli()
     {
         return {
             .max_spd = 1800.0f,
@@ -35,7 +35,7 @@ struct VelocityProfile
         };
     }
 
-    inline static constexpr VelocityProfile kharaki()
+    static constexpr VelocityProfile kharaki()
     {
         return {
             .max_spd = 1800.0f,

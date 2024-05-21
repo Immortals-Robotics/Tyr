@@ -94,7 +94,7 @@ void BallTrajectory::calculate() const
 
     for (i = 0; i < m_ball_hist.size(); i += 1)
     {
-        Common::debug().draw(Common::Circle{m_ball_hist[i], 5.0f + 30.0f * (float(i) / float(m_ball_hist.size()))},
+        Common::debug().draw(Common::Circle{m_ball_hist[i], 5.0f + 30.0f * (static_cast<float>(i) / static_cast<float>(m_ball_hist.size()))},
                              Common::Color::red().transparent());
     }
 

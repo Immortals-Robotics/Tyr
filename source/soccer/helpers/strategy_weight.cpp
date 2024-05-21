@@ -16,7 +16,7 @@ int Ai::strategyWeight()
 
     float sigma_w = 0;
 
-    const Common::Vec2 sign_modifier{(float) m_side, Common::sign(-m_world_state.ball.position.y)};
+    const Common::Vec2 sign_modifier{static_cast<float>(m_side), Common::sign(-m_world_state.ball.position.y)};
 
     Common::logDebug("strategy:");
 

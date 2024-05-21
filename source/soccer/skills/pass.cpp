@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-Common::Vec2 Ai::calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar)
+Common::Vec2 Ai::calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, const float t_bar)
 {
     Common::Line ball_line =
         Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());
@@ -18,11 +18,11 @@ Common::Vec2 Ai::calculatePassPos(const Common::Vec2 &t_target, const Common::Ve
     // angleWithTarget = m_own_robot[t_robot_num].state().angle;
     Common::Vec2 ans  = ball_line.closestPoint(t_stat_pos + angleWithTarget.toUnitVec() * t_bar);
     Common::Vec2 fans = ans - angleWithTarget.toUnitVec() * t_bar;
-    Common::debug().draw(fans, Common::Color::dark_blue());
+    Common::debug().draw(fans, Common::Color::darkBlue());
     return fans;
 }
 
-void Ai::waitForPass(int t_robot_num, bool t_chip, const Common::Vec2 *t_target, Common::Vec2 *t_stat_pos)
+void Ai::waitForPass(const int t_robot_num, const bool t_chip, const Common::Vec2 *t_target, Common::Vec2 *t_stat_pos)
 {
     Common::Vec2 pos =
         calculatePassPos(t_target == nullptr ? oppGoal() : *t_target,

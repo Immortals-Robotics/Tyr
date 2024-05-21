@@ -104,7 +104,7 @@ void Ai::strategy()
     const Strategy &strategy = m_playbook.strategies[curr_str_id];
     Common::logInfo("STRATEGY: {}", strategy.name);
 
-    const Common::Vec2 sign_modifier{(float) m_side, Common::sign(-m_world_state.ball.position.y)};
+    const Common::Vec2 sign_modifier{static_cast<float>(m_side), Common::sign(-m_world_state.ball.position.y)};
 
     Common::logDebug("m_timer: {}", m_timer.time());
     if (m_timer.time().seconds() < 0.5)
@@ -112,7 +112,7 @@ void Ai::strategy()
         for (int i = 0; i < strategy.roles.size(); i++)
         {
             // FOR NOW: advance to the last step
-            step[i]    = std::max(0, (int) strategy.roles[i].path.size() - 2);
+            step[i]    = std::max(0, static_cast<int>(strategy.roles[i].path.size()) - 2);
             lastAdv[i] = m_timer.time().seconds();
             Common::logDebug("zeroed: {}", i);
         }
@@ -139,7 +139,7 @@ void Ai::strategy()
             {
                 if (m_timer.time().seconds() - lastAdv[i] > strategy.roles[i].path[step[i]].time * 0.1f)
                 {
-                    step[i]    = std::min((int) strategy.roles[i].path.size() - 1, step[i] + 1);
+                    step[i]    = std::min(static_cast<int>(strategy.roles[i].path.size()) - 1, step[i] + 1);
                     lastAdv[i] = m_timer.time().seconds();
                     Common::logDebug("stepped: {}    {}", i, step[i]);
                 }
@@ -150,7 +150,7 @@ void Ai::strategy()
                         .distanceTo(m_own_robot[*m_stm_to_ai_num[i]].state().position) <
                     strategy.roles[i].path[step[i]].tolerance)
                 {
-                    step[i]    = std::min((int) strategy.roles[i].path.size() - 1, step[i] + 1);
+                    step[i]    = std::min(static_cast<int>(strategy.roles[i].path.size()) - 1, step[i] + 1);
                     lastAdv[i] = m_timer.time().seconds();
                     Common::logDebug("stepped: {}    {}", i, step[i]);
                 }

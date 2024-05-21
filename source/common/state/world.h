@@ -34,7 +34,7 @@ struct RawRobotState
     RawRobotState(const Protos::Immortals::RawRobotState &t_robot)
     {
         vision_id = t_robot.id();
-        color     = (TeamColor) t_robot.color();
+        color     = static_cast<TeamColor>(t_robot.color());
 
         position = Vec2{t_robot.position()};
         angle    = Angle{t_robot.angle()};
@@ -43,7 +43,7 @@ struct RawRobotState
     void fillProto(Protos::Immortals::RawRobotState *const t_state) const
     {
         t_state->set_id(vision_id);
-        t_state->set_color((Protos::Immortals::TeamColor) color);
+        t_state->set_color(static_cast<Protos::Immortals::TeamColor>(color));
 
         position.fillProto(t_state->mutable_position());
         angle.fillProto(t_state->mutable_angle());
@@ -163,7 +163,7 @@ struct RobotState
     RobotState(const Protos::Immortals::RobotState &t_robot)
     {
         vision_id = t_robot.id();
-        color     = (TeamColor) t_robot.color();
+        color     = static_cast<TeamColor>(t_robot.color());
 
         position = Vec2{t_robot.position()};
         velocity = Vec2{t_robot.velocity()};
@@ -171,14 +171,14 @@ struct RobotState
         angle            = Angle{t_robot.angle()};
         angular_velocity = Angle{t_robot.angular_velocity()};
 
-        seen_state         = (SeenState) t_robot.seen_state();
+        seen_state         = static_cast<SeenState>(t_robot.seen_state());
         out_for_substitute = t_robot.out_for_substitute();
     }
 
     void fillProto(Protos::Immortals::RobotState *const t_robot) const
     {
         t_robot->set_id(vision_id);
-        t_robot->set_color((Protos::Immortals::TeamColor) color);
+        t_robot->set_color(static_cast<Protos::Immortals::TeamColor>(color));
 
         position.fillProto(t_robot->mutable_position());
         velocity.fillProto(t_robot->mutable_velocity());
@@ -186,7 +186,7 @@ struct RobotState
         angle.fillProto(t_robot->mutable_angle());
         angular_velocity.fillProto(t_robot->mutable_angular_velocity());
 
-        t_robot->set_seen_state((Protos::Immortals::SeenState) seen_state);
+        t_robot->set_seen_state(static_cast<Protos::Immortals::SeenState>(seen_state));
         t_robot->set_out_for_substitute(out_for_substitute);
     }
 };
@@ -205,7 +205,7 @@ struct BallState
         position = Vec2{t_ball.position()};
         velocity = Vec2{t_ball.velocity()};
 
-        seen_state = (SeenState) t_ball.seen_state();
+        seen_state = static_cast<SeenState>(t_ball.seen_state());
     }
 
     BallState(const Protos::Ssl::Vision::DetectionBall &t_ball)
@@ -219,10 +219,10 @@ struct BallState
         position.fillProto(t_ball->mutable_position());
         velocity.fillProto(t_ball->mutable_velocity());
 
-        t_ball->set_seen_state((Protos::Immortals::SeenState) seen_state);
+        t_ball->set_seen_state(static_cast<Protos::Immortals::SeenState>(seen_state));
     }
 
-    inline Common::Line line() const
+    Common::Line line() const
     {
         return Common::Line::fromPointAndAngle(position, velocity.toAngle());
     }

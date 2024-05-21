@@ -10,14 +10,14 @@ private:
     bool          m_is_plot_maximized = false;
     bool          m_is_plot_pinned    = true;
     std::string   m_plot_resize_icon  = "\uf31e";
-    std::string   m_plot_pin_icon = "\uf08d";
-    int           m_item;
-    int           m_id;
-    int           m_type;
-    int           m_plot_queue_size = 1000;
+    std::string   m_plot_pin_icon     = "\uf08d";
+    int           m_item              = 0;
+    int           m_id                = 0;
+    int           m_type              = 0;
+    int           m_plot_queue_size   = 1000;
     ImVec2        m_plot_window_size;
-    unsigned long m_last_ts;
-    ImGuiCond     m_window_condition;
+    unsigned long m_last_ts          = 0;
+    ImGuiCond     m_window_condition = 0;
 
     enum class PlotType
     {
@@ -52,14 +52,14 @@ private:
     void pushPlotData(const T &t_entity, const unsigned long &t_time, const bool &t_playback);
 
 public:
-    void        draw(const Common::Debug::Wrapper                                    &t_wrapper,
-                     const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map, const Common::WorldState &t_world,
-                     const bool &t_playback);
-    inline void clearPlot()
+    void draw(const Common::Debug::Wrapper                                    &t_wrapper,
+              const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map, const Common::WorldState &t_world,
+              const bool &t_playback);
+    void clearPlot()
     {
         m_plot_data.clear();
     }
-    FooterMenu();
+     FooterMenu();
     ~FooterMenu();
 };
 } // namespace Tyr::Gui

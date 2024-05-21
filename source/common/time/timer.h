@@ -8,19 +8,19 @@ namespace Tyr::Common
 class Timer
 {
 public:
-    inline void start()
+    void start()
     {
         m_start  = TimePoint::now();
         m_paused = false;
     }
 
-    inline void reset()
+    void reset()
     {
         start();
         pause();
     }
 
-    inline void pause()
+    void pause()
     {
         if (!m_paused)
         {
@@ -29,7 +29,7 @@ public:
         }
     }
 
-    inline void resume()
+    void resume()
     {
         if (m_paused)
         {
@@ -38,7 +38,7 @@ public:
         }
     }
 
-    inline bool paused() const
+    bool paused() const
     {
         return m_paused;
     }
@@ -51,19 +51,19 @@ public:
             m_start += time() - t_time;
     }
 
-    inline Duration time() const
+    Duration time() const
     {
         return m_paused ? m_time_when_paused : TimePoint::now() - m_start;
     }
 
-    inline Duration interval()
+    Duration interval()
     {
         const Duration duration = time();
         start();
         return duration;
     }
 
-    inline Duration intervalSmooth()
+    Duration intervalSmooth()
     {
         static constexpr double kAlpha = 0.1f;
 

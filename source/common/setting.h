@@ -28,7 +28,7 @@ struct NetworkAddress
     NetworkAddress(const std::string_view ip, const unsigned short port) : ip(ip), port(port)
     {}
 
-    void load(toml::node_view<const toml::node> t_node)
+    void load(const toml::node_view<const toml::node> t_node)
     {
         ip   = t_node["ip"].value_or(ip);
         port = t_node["port"].value_or(port);
@@ -39,7 +39,7 @@ struct NetworkAddress
 };
 
 template <typename Enum>
-void fillEnum(toml::node_view<const toml::node> t_node, Enum &t_enum)
+void fillEnum(const toml::node_view<const toml::node> t_node, Enum &t_enum)
 {
     t_enum = static_cast<Enum>(t_node.value_or(static_cast<int>(t_enum)));
 }

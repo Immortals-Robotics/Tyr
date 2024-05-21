@@ -12,7 +12,7 @@ namespace Tyr::Gui
 class Application
 {
 public:
-    bool initialize(int width = 1500, int height = 900);
+    bool initialize(int t_width = 1500, int t_height = 900);
     int  shutdown();
 
     void start();
@@ -65,13 +65,13 @@ private:
     void receiveDebug();
     void receiveRefereeState();
 
-    void visionRawEntry();
-    void visionFilteredEntry();
+    void visionRawEntry() const;
+    void visionFilteredEntry() const;
 
-    void aiEntry();
-    void senderEntry();
-    void refereeEntry();
+    void aiEntry() const;
+    void senderEntry() const;
+    void refereeEntry() const;
 
-    void dumpEntry();
+    void dumpEntry() const;
 };
 } // namespace Tyr::Gui

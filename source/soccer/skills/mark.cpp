@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::mark(int t_robot_num, int t_opp, float t_dist)
+void Ai::mark(const int t_robot_num, const int t_opp, const float t_dist)
 {
     auto oppToBall    = (m_world_state.ball.position - m_world_state.opp_robot[t_opp].position).normalized();
     auto oppToGoal    = (ownGoal() - m_world_state.opp_robot[t_opp].position).normalized();

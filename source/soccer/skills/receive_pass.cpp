@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip)
+void Ai::receivePass(const int t_robot_num, Common::Vec2 t_static_pos, const bool t_chip)
 {
     const float contStrStaticTime = 1.0f;
 

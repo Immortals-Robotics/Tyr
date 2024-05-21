@@ -46,8 +46,8 @@ void DemoMenu::draw()
             ImGui::PushFont(font);
 
             if (ImGui::Combo(
-                    "##DemoList", &m_selected_demo, [](void *user_data, int idx) -> const char *
-                    { return ((Demo *) user_data + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
+                    "##DemoList", &m_selected_demo, [](void *user_data, const int idx) -> const char *
+                    { return (static_cast<Demo *>(user_data) + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
             {
                 m_timer.reset();
             }

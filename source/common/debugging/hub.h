@@ -15,7 +15,8 @@ namespace Tyr::Common::Debug
 class Hub
 {
 public:
-    Hub(const Hub &)            = delete;
+    Hub(const Hub &) = delete;
+
     Hub &operator=(const Hub &) = delete;
 
     void flush()
@@ -39,11 +40,11 @@ public:
         m_server->send(m_wrapper.time, pb_wrapper);
     }
 
-    inline void draw(Vec2 t_pos, Color t_color = Color::black(), float t_thickness = 10.0f,
-                     std::source_location source = std::source_location::current())
+    void draw(Vec2 t_pos, const Color t_color = Color::black(), const float t_thickness = 10.0f,
+              const std::source_location &t_source = std::source_location::current())
     {
         Draw draw{};
-        draw.source    = source;
+        draw.source    = SourceLocation{t_source};
         draw.shape     = t_pos;
         draw.color     = t_color;
         draw.thickness = t_thickness;
@@ -51,11 +52,11 @@ public:
         this->draw(std::move(draw));
     }
 
-    inline void draw(const Line &t_line, Color t_color = Color::black(), float t_thickness = 10.0f,
-                     std::source_location source = std::source_location::current())
+    void draw(const Line &t_line, const Color t_color = Color::black(), const float t_thickness = 10.0f,
+              const std::source_location &t_source = std::source_location::current())
     {
         Draw draw{};
-        draw.source    = source;
+        draw.source    = SourceLocation{t_source};
         draw.shape     = t_line;
         draw.color     = t_color;
         draw.thickness = t_thickness;
@@ -63,11 +64,11 @@ public:
         this->draw(std::move(draw));
     }
 
-    inline void draw(const LineSegment &t_line, Color t_color = Color::black(), float t_thickness = 10.0f,
-                     std::source_location source = std::source_location::current())
+    void draw(const LineSegment &t_line, const Color t_color = Color::black(), const float t_thickness = 10.0f,
+              const std::source_location &t_source = std::source_location::current())
     {
         Draw draw{};
-        draw.source    = source;
+        draw.source    = SourceLocation{t_source};
         draw.shape     = t_line;
         draw.color     = t_color;
         draw.thickness = t_thickness;
@@ -75,11 +76,11 @@ public:
         this->draw(std::move(draw));
     }
 
-    inline void draw(const Rect &t_rect, Color t_color = Color::black(), bool t_filled = true,
-                     float t_thickness = 10.0f, std::source_location source = std::source_location::current())
+    void draw(const Rect &t_rect, const Color t_color = Color::black(), const bool t_filled = true,
+              const float t_thickness = 10.0f, const std::source_location &t_source = std::source_location::current())
     {
         Draw draw{};
-        draw.source    = source;
+        draw.source    = SourceLocation{t_source};
         draw.shape     = t_rect;
         draw.color     = t_color;
         draw.filled    = t_filled;
@@ -88,11 +89,11 @@ public:
         this->draw(std::move(draw));
     }
 
-    inline void draw(const Circle &t_circle, Color t_color = Color::black(), bool t_filled = true,
-                     float t_thickness = 10.0f, std::source_location source = std::source_location::current())
+    void draw(const Circle &t_circle, const Color t_color = Color::black(), const bool t_filled = true,
+              const float t_thickness = 10.0f, const std::source_location &t_source = std::source_location::current())
     {
         Draw draw{};
-        draw.source    = source;
+        draw.source    = SourceLocation{t_source};
         draw.shape     = t_circle;
         draw.color     = t_color;
         draw.filled    = t_filled;
@@ -101,11 +102,11 @@ public:
         this->draw(std::move(draw));
     }
 
-    inline void draw(const Triangle &t_triangle, Color t_color = Color::black(), bool t_filled = true,
-                     float t_thickness = 10.0f, std::source_location source = std::source_location::current())
+    void draw(const Triangle &t_triangle, const Color t_color = Color::black(), const bool t_filled = true,
+              const float t_thickness = 10.0f, const std::source_location &t_source = std::source_location::current())
     {
         Draw draw{};
-        draw.source    = source;
+        draw.source    = SourceLocation{t_source};
         draw.shape     = t_triangle;
         draw.color     = t_color;
         draw.filled    = t_filled;
@@ -114,14 +115,14 @@ public:
         this->draw(std::move(draw));
     }
 
-    inline void log(Log &&t_log)
+    void log(Log &&t_log)
     {
         m_log_mutex.lock();
         m_wrapper.logs.emplace_back(t_log);
         m_log_mutex.unlock();
     }
 
-    inline void draw(Draw &&t_draw)
+    void draw(Draw &&t_draw)
     {
         m_draw_mutex.lock();
         m_wrapper.draws.emplace_back(t_draw);
@@ -129,7 +130,7 @@ public:
     }
 
 private:
-    inline Hub()
+    Hub()
     {
         m_server = std::make_unique<NngServer>(setting().debug_url);
     }

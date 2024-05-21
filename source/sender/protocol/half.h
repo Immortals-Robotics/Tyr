@@ -14,7 +14,7 @@ uint16_t half_add( uint16_t arg0, uint16_t arg1 );
 uint16_t half_mul( uint16_t arg0, uint16_t arg1 );
 
 static inline uint16_t 
-half_sub( uint16_t ha, uint16_t hb ) 
+half_sub(const uint16_t ha, const uint16_t hb ) 
 {
   // (a-b) is the same as (a+(-b))
   return half_add( ha, hb ^ 0x8000 );

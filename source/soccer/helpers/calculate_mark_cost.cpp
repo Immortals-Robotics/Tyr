@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-float Ai::calculateMarkCost(int t_robot_num, int t_opp)
+float Ai::calculateMarkCost(const int t_robot_num, const int t_opp)
 {
     if (m_own_robot[t_robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         return -1;

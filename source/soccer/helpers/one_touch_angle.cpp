@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-Common::Angle Ai::calculateOneTouchAngle(int t_robot_num, Common::Vec2 t_one_touch_position)
+Common::Angle Ai::calculateOneTouchAngle(const int t_robot_num, const Common::Vec2 t_one_touch_position)
 {
     // t_one_touch_position = m_world_state.ball.position;
     float v0x, v0y;

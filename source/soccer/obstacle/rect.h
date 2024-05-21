@@ -11,12 +11,12 @@ public:
     RectObstacle(const Common::Rect t_rect) : m_rect(t_rect)
     {}
 
-    inline bool IsInObstacle(Common::Vec2 t_point) const
+    bool IsInObstacle(const Common::Vec2 t_point) const
     {
         return m_rect.inside(t_point);
     }
 
-    inline float NearestDistance(Common::Vec2 t_point) const
+    float NearestDistance(const Common::Vec2 t_point) const
     {
         if (IsInObstacle(t_point))
             return -1.0f;

@@ -82,9 +82,9 @@ private:
     void drawNetworkTab();
     void drawConfigTab();
     void drawFilterTab();
-    void drawIpPortInput(const std::string _name, const int _id, char *_ip_text, char *_port_text,
-                         ConfigCallback &_callback, const InputCallbackType _callback_type_ip,
-                         const InputCallbackType _callback_type_port);
+    void drawIpPortInput(std::string _name, int _id, char *_ip_text, char *_port_text,
+                         ConfigCallback &_callback,
+                         InputCallbackType _callback_type_ip, InputCallbackType _callback_type_port);
 
     static int handleInputChange(ImGuiInputTextCallbackData *_data);
 
@@ -108,7 +108,7 @@ public:
         std::string                              name;
         std::vector<std::unique_ptr<FilterNode>> children;
         bool                                     active = true;
-        void                                     addChild(const std::string t_child);
+        void                                     addChild(std::string t_child);
     };
 
     struct FilterTree
@@ -127,7 +127,7 @@ public:
         return m_node_map;
     }
 
-    static inline std::string extractFunctionName(std::string_view t_function_name)
+    static std::string extractFunctionName(const std::string_view t_function_name)
     {
         auto function_name = std::string(t_function_name);
         auto end_pos       = function_name.find_last_of('(');
@@ -142,7 +142,7 @@ public:
         return function_name;
     }
 
-    static inline bool applyFilter(Common::Debug::SourceLocation                        t_source,
+    static bool applyFilter(Common::Debug::SourceLocation                        t_source,
                                    const std::unordered_map<std::string, FilterNode *> &t_filter_node_map)
     {
         const std::filesystem::path file_path{t_source.file};
@@ -172,7 +172,7 @@ private:
 public:
     ConfigCallback(ConfigMenu *t_menu);
     ~ConfigCallback() = default;
-    void             setParams(const InputCallbackType t_type, const std::regex t_regex);
+    void             setParams(InputCallbackType t_type, std::regex t_regex);
     const std::regex getRegex();
     void             executeCallback(std::string t_data);
 };

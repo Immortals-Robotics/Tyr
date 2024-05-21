@@ -31,7 +31,7 @@ void FooterMenu::drawTerminal(const Common::Debug::Wrapper                      
                     fmt::format("[{:%a %H:%M:%S}] [{}] [{}:{}] {}", t_wrapper.time, line.levelName(),
                                 file_path.filename(), line.source.line, line.text);
 
-                ImGui::TextColored(line.color(), "%s", text.c_str());
+                ImGui::TextColored(static_cast<ImVec4>(line.color()), "%s", text.c_str());
             }
         }
         if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
@@ -44,8 +44,8 @@ void FooterMenu::draw(const Common::Debug::Wrapper                              
                       const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map,
                       const Common::WorldState &t_world, const bool &t_playback)
 {
-    auto main_window_height = GetScreenHeight();
-    auto main_window_width  = GetScreenWidth();
+    int main_window_height = GetScreenHeight();
+    int main_window_width  = GetScreenWidth();
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                                     ImGuiWindowFlags_NoDecoration;

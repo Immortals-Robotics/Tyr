@@ -65,7 +65,7 @@ void Nrf::queueCommand(const Command &command)
     appendData(data, data[1]);
 }
 
-void Nrf::appendData(unsigned char *data, int length)
+void Nrf::appendData(unsigned char *data, const int length)
 {
     auto buffer = commUDP->getBuffer();
 

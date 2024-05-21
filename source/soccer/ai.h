@@ -109,7 +109,7 @@ private:
     inline Common::Vec2        oppGoalPostTop() const;
     inline Common::Vec2        oppGoalPostBottom() const;
     inline Common::LineSegment oppGoalLine() const;
-    inline bool                isOut(Common::Vec2 t_point, const float t_margin = 0.0f) const;
+    inline bool                isOut(Common::Vec2 t_point, float t_margin = 0.0f) const;
 
     // Navigation
     enum NavigationFlags

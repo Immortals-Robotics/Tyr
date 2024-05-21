@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::waitForOmghi(int t_robot_num)
+void Ai::waitForOmghi(const int t_robot_num)
 {
     Common::Line ball_line =
         Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());

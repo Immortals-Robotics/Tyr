@@ -52,7 +52,7 @@ struct Waypoint
 
     Waypoint(const Protos::Immortals::Waypoint &t_waypoint)
     {
-        type     = (Type) t_waypoint.type();
+        type     = static_cast<Type>(t_waypoint.type());
         position = Common::Vec2(t_waypoint.x(), t_waypoint.y());
         need_rrt = t_waypoint.need_rrt();
         speed    = t_waypoint.speed();
@@ -100,7 +100,7 @@ struct Role
         for (const auto &waypoint : t_role.path())
             path.emplace_back(waypoint);
 
-        afterlife = (Afterlife) t_role.afterlife();
+        afterlife = static_cast<Afterlife>(t_role.afterlife());
     }
 };
 

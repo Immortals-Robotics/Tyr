@@ -14,7 +14,7 @@ public:
         return m_table;
     }
 
-    void save(toml::table t_table);
+    void save(const toml::table &t_table) const;
 
 private:
     std::filesystem::path m_file_path;

@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 int          lockAngleCounter = 0;
 int          elendil          = 0;
 Common::Vec2 Pelendil;
-Common::Vec2 Ai::predictBallForwardAI(float t_time_ahead)
+Common::Vec2 Ai::predictBallForwardAI(const float t_time_ahead)
 {
     Common::BallState _ball = m_world_state.ball;
     _ball.position.x /= 1000.0f;
@@ -22,7 +22,7 @@ Common::Vec2 Ai::predictBallForwardAI(float t_time_ahead)
     float xpos_vision = _ball.position.x;
     float ypos_vision = _ball.position.y;
 
-    float vball_vision = float(sqrt(vx_vision * vx_vision + vy_vision * vy_vision));
+    float vball_vision = static_cast<float>(sqrt(vx_vision * vx_vision + vy_vision * vy_vision));
 
     float t = t_time_ahead;
 
@@ -54,21 +54,21 @@ Common::Vec2 Ai::predictBallForwardAI(float t_time_ahead)
         _ball.position.y = (ypos_vision + dist * (vy_vision) / vball_vision);
     }
 
-    _ball.velocity.x *= (float) 1000.0;
-    _ball.velocity.y *= (float) 1000.0;
-    _ball.position.x *= (float) 1000.0;
-    _ball.position.y *= (float) 1000.0;
+    _ball.velocity.x *= static_cast<float>(1000.0);
+    _ball.velocity.y *= static_cast<float>(1000.0);
+    _ball.position.x *= static_cast<float>(1000.0);
+    _ball.position.y *= static_cast<float>(1000.0);
 
     return _ball.position;
 }
 
-float Ai::calculateRobotReachTime(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile)
+float Ai::calculateRobotReachTime(const int t_robot_num, const Common::Vec2 t_dest, const VelocityProfile t_profile)
 {
     const VelocityProfile vel_profile(t_profile);
     return m_own_robot[t_robot_num].state().position.distanceTo(t_dest) / (vel_profile.max_spd * 0.5);
 }
 
-float Ai::calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile)
+float Ai::calculateBallRobotReachTime(const int t_robot_num, const VelocityProfile t_profile)
 {
     static Common::MedianFilter<float, 5> predTFilt{};
 
@@ -89,7 +89,8 @@ float Ai::calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile
     return predTFilt.current();
 }
 
-void Ai::attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip, bool t_kiss, bool t_dribbler)
+void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, int t_kick, const int t_chip, const bool t_kiss,
+                  const bool t_dribbler)
 {
     // t_kick=100;
     if (m_ref_state.restart() && (t_chip > 0))
