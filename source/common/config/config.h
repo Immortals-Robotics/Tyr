@@ -25,7 +25,7 @@ private:
 struct IConfig
 {
 protected:
-    ~IConfig() = default;
+    virtual ~IConfig() = default;
 
 public:
     virtual void load(toml::table t_table) = 0;

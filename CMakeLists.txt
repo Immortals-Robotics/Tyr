@@ -26,9 +26,15 @@ endif ()
 
 # Set warning levels
 if (MSVC)
-    add_compile_options(/W4 /wd4244 /wd4267)
+    # level 4 as the base
+    add_compile_options(/W4)
+    # but without some annoying warnings
+    add_compile_options(/wd4244 /wd4267)
 else ()
+    # set the base
     add_compile_options(-Wall -Wextra -Wpedantic)
+    # and remove annoying warnings
+    add_compile_options(-Wno-error=sign-compare)
 endif ()
 
 # And treat them as error

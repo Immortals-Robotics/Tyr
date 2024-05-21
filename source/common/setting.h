@@ -52,11 +52,12 @@ struct RobotPhysicalStatus
     bool is_3D_printed   = false;
 };
 
-class Setting : IConfig
+class Setting final : IConfig
 {
 private:
-     Setting() = default;
-    ~Setting() = default;
+    Setting() = default;
+
+    ~Setting() override = default;
 
     void        load(toml::table t_table) override;
     toml::table m_config_table;
