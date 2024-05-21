@@ -11,29 +11,29 @@ struct Angle
 
     Angle() = default;
 
-    Angle(const Protos::Immortals::Angle &t_angle) : Angle(fromDeg(t_angle.deg()))
+    explicit Angle(const Protos::Immortals::Angle &t_angle) : Angle(fromDeg(t_angle.deg()))
     {}
 
-    inline void fillProto(Protos::Immortals::Angle *const t_angle) const
+    void fillProto(Protos::Immortals::Angle *const t_angle) const
     {
         t_angle->set_deg(deg());
     }
 
-    inline static Angle fromDeg(float deg)
+    static Angle fromDeg(const float t_deg)
     {
         Angle ang;
-        ang.setDeg(deg);
+        ang.setDeg(t_deg);
         return ang;
     }
 
-    inline static Angle fromRad(float rad)
+    static Angle fromRad(const float t_rad)
     {
         Angle ang;
-        ang.setRad(rad);
+        ang.setRad(t_rad);
         return ang;
     }
 
-    [[nodiscard]] inline static Angle fromVec(const Vec2 t_vec)
+    [[nodiscard]] static Angle fromVec(const Vec2 t_vec)
     {
         if (t_vec.y == 0.0 && t_vec.x == 0.0)
         {
@@ -48,59 +48,59 @@ struct Angle
         return ans;
     }
 
-    inline void setDeg(float deg)
+    void setDeg(const float t_deg)
     {
-        m_deg = deg;
+        m_deg = t_deg;
         normalize();
     }
 
-    inline void setRad(float rad)
+    void setRad(const float t_rad)
     {
-        setDeg(rad * kRad2Deg);
+        setDeg(t_rad * kRad2Deg);
     }
 
-    [[nodiscard]] inline float rad() const
+    [[nodiscard]] float rad() const
     {
         return m_deg * kDeg2Rad;
     }
 
-    [[nodiscard]] inline float deg() const
+    [[nodiscard]] float deg() const
     {
         return m_deg;
     }
 
-    [[nodiscard]] inline float deg360() const
+    [[nodiscard]] float deg360() const
     {
         return std::fmod(m_deg + 360.0f, 360.0f);
     }
 
-    [[nodiscard]] inline float sin() const
+    [[nodiscard]] float sin() const
     {
         return std::sin(rad());
     }
 
-    [[nodiscard]] inline float cos() const
+    [[nodiscard]] float cos() const
     {
         return std::cos(rad());
     }
 
-    [[nodiscard]] inline float tan() const
+    [[nodiscard]] float tan() const
     {
         return std::tan(rad());
     }
 
-    [[nodiscard]] inline Vec2 toUnitVec() const
+    [[nodiscard]] Vec2 toUnitVec() const
     {
         const float rad = this->rad();
         return {std::cos(rad), std::sin(rad)};
     }
 
-    [[nodiscard]] inline bool isBetween(Angle a, Angle b) const
+    [[nodiscard]] bool isBetween(const Angle t_a, const Angle t_b) const
     {
         // convert all angles to 0..360
         const float ang_360 = deg360();
-        const float a_360   = a.deg360();
-        const float b_360   = b.deg360();
+        const float a_360   = t_a.deg360();
+        const float b_360   = t_b.deg360();
 
         const float ang_min_360 = std::min(a_360, b_360);
         const float ang_max_360 = std::max(a_360, b_360);
@@ -108,60 +108,60 @@ struct Angle
         return ang_min_360 < ang_360 && ang_360 < ang_max_360;
     }
 
-    inline static Angle average(Angle a, Angle b)
+    static Angle average(const Angle t_a, const Angle t_b)
     {
-        const Vec2 average_vector = (a.toUnitVec() + b.toUnitVec()) / 2.0f;
+        const Vec2 average_vector = (t_a.toUnitVec() + t_b.toUnitVec()) / 2.0f;
         return average_vector.toAngle();
     }
 
-    inline Angle operator+(Angle ang) const
+    Angle operator+(const Angle t_ang) const
     {
-        return fromDeg(m_deg + ang.m_deg);
+        return fromDeg(m_deg + t_ang.m_deg);
     }
 
-    inline void operator+=(Angle ang)
+    void operator+=(const Angle t_ang)
     {
-        setDeg(m_deg + ang.m_deg);
+        setDeg(m_deg + t_ang.m_deg);
     }
 
-    inline Angle operator-(Angle ang) const
+    Angle operator-(const Angle t_ang) const
     {
-        return fromDeg(m_deg - ang.m_deg);
+        return fromDeg(m_deg - t_ang.m_deg);
     }
 
-    inline void operator-=(Angle ang)
+    void operator-=(const Angle t_ang)
     {
-        setDeg(m_deg - ang.m_deg);
+        setDeg(m_deg - t_ang.m_deg);
     }
 
-    inline bool operator<(Angle ang) const
+    bool operator<(const Angle t_ang) const
     {
-        return (ang - *this).deg() > 0;
+        return (t_ang - *this).deg() > 0;
     }
 
-    inline bool operator>(Angle ang) const
+    bool operator>(const Angle t_ang) const
     {
-        return (ang - *this).deg() < 0;
+        return (t_ang - *this).deg() < 0;
     }
 
-    inline Angle operator-() const
+    Angle operator-() const
     {
         return fromDeg(-m_deg);
     }
 
-    inline Angle operator*(float f) const
+    Angle operator*(const float t_f) const
     {
-        return fromDeg(m_deg * f);
+        return fromDeg(m_deg * t_f);
     }
 
-    inline Angle operator/(float f) const
+    Angle operator/(const float t_f) const
     {
-        return fromDeg(m_deg / f);
+        return fromDeg(m_deg / t_f);
     }
 
 private:
     // limits the angle to the range of -180 to 180
-    inline void normalize()
+    void normalize()
     {
         m_deg = std::remainder(m_deg, 360.0f);
     }
@@ -171,7 +171,7 @@ private:
 
 // Vec2 methods that depend on Angle
 
-[[nodiscard]] inline Vec2 Vec2::rotated(Angle t_ang) const
+[[nodiscard]] inline Vec2 Vec2::rotated(const Angle t_ang) const
 {
     const Angle rotated_angle = toAngle() + t_ang;
     return rotated_angle.toUnitVec() * length();
@@ -182,19 +182,19 @@ private:
     return Angle::fromVec(*this);
 }
 
-[[nodiscard]] inline Angle Vec2::angleWith(Vec2 t_v) const
+[[nodiscard]] inline Angle Vec2::angleWith(const Vec2 t_v) const
 {
     return (t_v - *this).toAngle();
 }
 
-[[nodiscard]] inline Angle Vec2::angleDiff(Vec2 t_v) const
+[[nodiscard]] inline Angle Vec2::angleDiff(const Vec2 t_v) const
 {
     return t_v.toAngle() - this->toAngle();
 }
 
-[[nodiscard]] inline Vec2 Vec2::circleAroundPoint(Angle angle, float radius) const
+[[nodiscard]] inline Vec2 Vec2::circleAroundPoint(const Angle t_angle, const float t_radius) const
 {
-    return *this + angle.toUnitVec() * radius;
+    return *this + t_angle.toUnitVec() * t_radius;
 }
 
 } // namespace Tyr::Common
@@ -202,7 +202,7 @@ private:
 template <>
 struct fmt::formatter<Tyr::Common::Angle> : fmt::formatter<std::string>
 {
-    auto format(Tyr::Common::Angle t_angle, format_context &t_ctx) const
+    auto format(const Tyr::Common::Angle t_angle, format_context &t_ctx) const
     {
         return fmt::format_to(t_ctx.out(), "{} deg", t_angle.deg());
     }

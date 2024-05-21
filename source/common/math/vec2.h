@@ -103,7 +103,7 @@ struct Vec2
         return ans;
     }
 
-    [[nodiscard]] inline Vec2 circleAroundPoint(Angle angle, float radius) const;
+    [[nodiscard]] inline Vec2 circleAroundPoint(Angle t_angle, float t_radius) const;
 
     [[nodiscard]] inline Vec2 operator+(Vec2 t_v) const
     {
