@@ -49,7 +49,6 @@ void DemoMenu::draw()
                     "##DemoList", &m_selected_demo, [](void *user_data, int idx) -> const char *
                     { return ((Demo *) user_data + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
             {
-                m_log_state = LogState::Replay;
                 m_timer.reset();
             }
             ImGui::Spacing();
