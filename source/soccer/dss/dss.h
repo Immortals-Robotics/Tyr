@@ -18,8 +18,6 @@ private:
 
     VelocityProfile m_profile;
 
-    const float max_dec_opp;
-
     const Common::WorldState *m_world;
 
     Common::Vec2 computed_motions[Common::Config::Common::kMaxRobots];
