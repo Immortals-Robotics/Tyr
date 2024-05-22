@@ -5,7 +5,7 @@
 
 namespace Tyr::Soccer
 {
-Dss::Dss(const Common::WorldState *const t_world, const float max_dec_opp) : max_dec_opp(max_dec_opp), m_world(t_world)
+Dss::Dss(const Common::WorldState *const t_world) : m_world(t_world)
 {}
 
 Common::Vec2 Dss::GetAccFromMotion(const int robot_num, const Common::Vec2 &motion)
@@ -26,10 +26,10 @@ Common::Vec2 Dss::GetMotionFromAcc(const int robot_num, const Common::Vec2 &acc)
 bool Dss::collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2 &cmd_a,
                            const Common::RobotState &state_b, const Common::Vec2 &cmd_b) const
 {
-    const Trajectory traj_a = Trajectory::MakeTrajectory(state_a, cmd_a, m_profile.max_dec,
-                                                         1.0f / Common::config().vision.vision_frame_rate);
-    const Trajectory traj_b = Trajectory::MakeTrajectory(state_b, cmd_b, m_profile.max_dec,
-                                                         1.0f / Common::config().vision.vision_frame_rate);
+    const Trajectory traj_a =
+        Trajectory::MakeTrajectory(state_a, cmd_a, m_profile.max_dec, 1.0f / Common::config().vision.vision_frame_rate);
+    const Trajectory traj_b =
+        Trajectory::MakeTrajectory(state_b, cmd_b, m_profile.max_dec, 1.0f / Common::config().vision.vision_frame_rate);
 
     return Parabolic::HaveOverlap(traj_a.acc, traj_b.acc, Common::field().robot_radius * 2.f) ||
            Parabolic::HaveOverlap(traj_a.dec, traj_b.dec, Common::field().robot_radius * 2.f) ||

@@ -23,7 +23,7 @@ Ai::Ai()
 
     m_cmd_server = std::make_unique<Common::NngServer>(Common::config().network.commands_url);
 
-    m_dss = std::make_unique<Dss>(&m_world_state, 1000.f);
+    m_dss = std::make_unique<Dss>(&m_world_state);
 
     m_current_play = &Ai::haltAll;
 

@@ -7,7 +7,7 @@ namespace Tyr::Soccer
 class Dss
 {
 public:
-    Dss(const Common::WorldState *t_world, float max_dec_opp);
+    Dss(const Common::WorldState *t_world);
 
     void Reset();
 
