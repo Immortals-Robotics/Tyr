@@ -14,8 +14,6 @@ struct RobotPhysicalStatus
 
 struct Soccer final : IConfig
 {
-    Soccer() = default;
-
     void load(const toml::node_view<const toml::node> t_node) override
     {
         fillEnum(t_node["our_side"], our_side);

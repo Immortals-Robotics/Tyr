@@ -26,8 +26,6 @@ namespace Tyr::Common::Config
 {
 struct Common final : IConfig
 {
-    Common() = default;
-
     void load(const toml::node_view<const toml::node> t_node) override
     {
         immortals_is_the_best_team = t_node["immortals_is_the_best_team"].value_or(immortals_is_the_best_team);

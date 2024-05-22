@@ -7,8 +7,6 @@ namespace Tyr::Common::Config
 {
 struct Network final : IConfig
 {
-    Network() = default;
-
     void load(const toml::node_view<const toml::node> t_node) override
     {
         tracker_address.load(t_node["tracker"]);

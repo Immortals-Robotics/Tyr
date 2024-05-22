@@ -17,7 +17,7 @@ private:
 
     ~Config() = default;
 
-    friend struct Services;
+    friend struct ::Tyr::Common::Services;
 
     File m_file;
 
