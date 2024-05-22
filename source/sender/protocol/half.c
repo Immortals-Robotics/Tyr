@@ -172,12 +172,6 @@ static inline uint16_t _uint16_neg(const uint16_t a)
     return (-a);
 }
 
-// Complement
-static inline uint16_t _uint16_not(const uint16_t a)
-{
-    return (~a);
-}
-
 // Decrement
 static inline uint16_t _uint16_dec(const uint16_t a)
 {
@@ -242,12 +236,6 @@ static inline uint16_t _uint16_andsrl(const uint16_t a, const uint16_t b, const 
 static inline uint16_t _uint16_srlm(const uint16_t a, const int sa, const uint16_t mask)
 {
     return ((a >> sa) & mask);
-}
-
-// Add then Mask
-static inline uint16_t _uint16_addm(const uint16_t a, const uint16_t b, const uint16_t mask)
-{
-    return ((a + b) & mask);
 }
 
 // Select on Sign bit
