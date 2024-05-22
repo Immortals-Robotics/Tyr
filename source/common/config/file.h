@@ -15,9 +15,9 @@ public:
         return m_table;
     }
 
-    [[nodiscard]] toml::table *mutableRoot()
+    [[nodiscard]] toml::table &root()
     {
-        return &m_table;
+        return m_table;
     }
 
 private:

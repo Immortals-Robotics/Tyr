@@ -42,6 +42,16 @@ public:
         m_file.save();
     }
 
+    const toml::table &root() const
+    {
+        return m_file.root();
+    }
+
+    toml::table &root()
+    {
+        return m_file.root();
+    }
+
     Common  common;
     Network network;
     Vision  vision;

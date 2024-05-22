@@ -4,7 +4,6 @@
 #include <cmath>
 #include <list>
 #include <mutex>
-#include <regex>
 #include <span>
 #include <string>
 #include <thread>

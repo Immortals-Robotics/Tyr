@@ -28,8 +28,6 @@ private:
     std::unique_ptr<DemoMenu>   m_demo_menu;
     std::unique_ptr<FooterMenu> m_footer_menu;
 
-    Common::NetworkAddress updated_address;
-
     std::atomic<bool> m_running = true;
 
     std::thread m_vision_raw_thread;

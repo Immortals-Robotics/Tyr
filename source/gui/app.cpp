@@ -225,15 +225,6 @@ void Application::update()
 
     m_config_menu->draw();
 
-    if (m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_PORT ||
-        m_config_menu->isNetworkDataUpdated() == InputCallbackType::VISION_IP)
-    {
-        updated_address.ip = m_config_menu->getNetworkParam(InputCallbackType::VISION_IP);
-        updated_address.port =
-            static_cast<unsigned short>(std::stoi(m_config_menu->getNetworkParam(InputCallbackType::VISION_PORT)));
-        m_config_menu->updateNetworkData();
-    }
-
     m_widget_menu->draw(m_renderer->mousePosition());
     m_demo_menu->draw();
     rlImGuiEnd();
