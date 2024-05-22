@@ -51,9 +51,24 @@ static constexpr std::string getErrorString(const int t_error)
     case MDB_BAD_DBI:
         return "MDB_BAD_DBI";
     default:
-        char buf[512];
-        strerror_s(buf, t_error);
-        return buf;
+        std::string buff(80, '\0');
+#ifdef _MSC_VER
+        if (strerror_s(buff.data(), buff.size(), t_error) != 0)
+        {
+            buff = "Unknown error";
+        }
+#elif defined(__APPLE__)
+        if (strerror_r(t_error, buff.data(), buff.size()) != 0)
+        {
+            buff = "Unknown error";
+        }
+#else
+        auto        p = strerror_r(t_error, buff.data(), buff.size());
+        std::string tmp(p, std::strlen(p));
+        std::swap(buff, tmp);
+#endif
+        buff.resize(buff.find('\0'));
+        return buff;
     }
 }
 

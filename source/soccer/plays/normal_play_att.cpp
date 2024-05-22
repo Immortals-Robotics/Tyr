@@ -29,9 +29,6 @@ void Ai::normalPlayAtt()
 
     else
     {
-        float        ballReachTimeTmp = calculateBallRobotReachTime(m_attack, VelocityProfile::mamooli()) * 1.5;
-        Common::Vec2 ballReachPlace   = predictBallForwardAI(ballReachTimeTmp);
-
         OpenAngle openAngle = calculateOpenAngleToGoal(m_world_state.ball.position, m_attack);
 
         bool mid1Reached = m_own_robot[m_mid1].state().velocity.length() < 500;

@@ -14,6 +14,7 @@
 #include <random>
 #include <source_location>
 #include <span>
+#include <string.h>
 #include <string_view>
 #include <unordered_map>
 #include <variant>

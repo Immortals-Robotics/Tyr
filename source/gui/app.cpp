@@ -3,7 +3,7 @@
 namespace Tyr::Gui
 {
 
-static void logCallback(const int t_msg_type, const char *const t_text, const va_list t_args)
+static void logCallback(const int t_msg_type, const char *const t_text, va_list t_args)
 {
     static constexpr int kBufferSize = 1024;
     char                 buffer[kBufferSize];

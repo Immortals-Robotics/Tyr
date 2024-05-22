@@ -4,8 +4,6 @@ namespace Tyr::Soccer
 {
 void Ai::process()
 {
-    static int PRCS_CNT = 0;
-
     internalProcessData();
 
     if (m_last_referee != m_ref_state.get())

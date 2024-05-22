@@ -116,15 +116,6 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, int t_kick
 
     static bool passedBall = false;
 
-    float prepPredictMul = 0.15f;
-    float goalPredictMul = 0.0f;
-
-    if (passedBall)
-    {
-        prepPredictMul = 0.0f;
-        goalPredictMul = -0.15f;
-    }
-
     Common::Vec2 ballToGoal = oppGoal() - m_world_state.ball.position;
     ballToGoal              = ballToGoal.normalized();
     float ballVelToGoalDot =
@@ -286,9 +277,6 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, int t_kick
 
     if ((t_kick > 0) || (t_chip > 0))
     {
-        Common::Vec2  tmpPos = m_own_robot[t_robot_num].state().position;
-        Common::Angle tmpAng = m_own_robot[t_robot_num].state().angle;
-
         if (std::fabs((m_own_robot[t_robot_num].target.angle - m_own_robot[t_robot_num].state().angle).deg()) < 40)
             lockAngleCounter++;
         else

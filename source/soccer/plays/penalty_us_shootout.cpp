@@ -2,8 +2,6 @@
 
 namespace Tyr::Soccer
 {
-static float t_nml;
-
 void Ai::penaltyUsShootout()
 {
     defHi(m_def, m_rw, m_lw, nullptr);

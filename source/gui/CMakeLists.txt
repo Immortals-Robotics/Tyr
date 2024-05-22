@@ -4,6 +4,7 @@ find_package(raylib CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(rlimgui CONFIG REQUIRED)
 find_package(implot CONFIG REQUIRED)
+
 set(HEADER_FILES
 	pch.h
 	app.h

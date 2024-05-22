@@ -5,7 +5,7 @@
 
 namespace Tyr::Soccer
 {
-Dss::Dss(const Common::WorldState *const t_world, const float max_dec_opp) : m_world(t_world), max_dec_opp(max_dec_opp)
+Dss::Dss(const Common::WorldState *const t_world, const float max_dec_opp) : max_dec_opp(max_dec_opp), m_world(t_world)
 {}
 
 Common::Vec2 Dss::GetAccFromMotion(const int robot_num, const Common::Vec2 &motion)
