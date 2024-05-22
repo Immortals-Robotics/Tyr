@@ -9,8 +9,7 @@ class Hub;
 
 namespace Config
 {
-class File;
-class Setting;
+class Config;
 } // namespace Config
 
 class Logger;
@@ -23,14 +22,9 @@ struct Services
     static bool initialize();
     static void shutdown();
 
-    static Config::File &configReader()
+    static Config::Config &config()
     {
-        return *s_configReader;
-    }
-
-    static Config::Setting &setting()
-    {
-        return *s_setting;
+        return *s_config;
     }
 
     static Debug::Hub &debug()
@@ -54,23 +48,17 @@ struct Services
     }
 
 private:
-    static inline Config::Setting *s_setting;
-    static inline Debug::Hub      *s_debug;
-    static inline Logger          *s_logger;
-    static inline Timer           *s_global_timer;
-    static inline Config::File    *s_configReader;
+    static inline Config::Config *s_config;
+    static inline Debug::Hub     *s_debug;
+    static inline Logger         *s_logger;
+    static inline Timer          *s_global_timer;
 
     static inline FieldState *s_field_state;
 };
 
-inline static Config::File &configReader()
+inline static Config::Config &config()
 {
-    return Services::configReader();
-}
-
-inline static Config::Setting &setting()
-{
-    return Services::setting();
+    return Services::config();
 }
 
 inline static Debug::Hub &debug()

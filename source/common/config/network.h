@@ -86,3 +86,12 @@ struct Network final : IConfig
     unsigned char nrf_frq; // TODO: unused
 };
 } // namespace Tyr::Common::Config
+
+template <>
+struct fmt::formatter<Tyr::Common::Config::Network::Address> : fmt::formatter<std::string>
+{
+    auto format(Tyr::Common::Config::Network::Address t_a, format_context &t_ctx) const
+    {
+        return fmt::format_to(t_ctx.out(), "{}:{}", t_a.ip, t_a.port);
+    }
+};

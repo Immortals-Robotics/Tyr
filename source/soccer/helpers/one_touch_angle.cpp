@@ -29,12 +29,12 @@ Common::Angle Ai::calculateOneTouchAngle(const int t_robot_num, const Common::Ve
     while (aa < 180 - 90 * Common::sign(goal.x))
     {
         float a = (aa / 180.0) * 3.14;
-        v1x     = Common::setting().soccer.one_touch_beta * (-sin(a) * v0x + cos(a) * v0y) * (-sin(a)) +
-              Common::setting().soccer.one_touch_shoot_k * cos(a) +
-              Common::setting().soccer.one_touch_gamma * (v0x - 2 * (v0x * cos(a) + v0y * sin(a)) * cos(a));
-        v1y = Common::setting().soccer.one_touch_beta * (-sin(a) * v0x + cos(a) * v0y) * (cos(a)) +
-              Common::setting().soccer.one_touch_shoot_k * sin(a) +
-              Common::setting().soccer.one_touch_gamma * (v0y - 2 * (v0x * cos(a) + v0y * sin(a)) * sin(a));
+        v1x     = Common::config().soccer.one_touch_beta * (-sin(a) * v0x + cos(a) * v0y) * (-sin(a)) +
+              Common::config().soccer.one_touch_shoot_k * cos(a) +
+              Common::config().soccer.one_touch_gamma * (v0x - 2 * (v0x * cos(a) + v0y * sin(a)) * cos(a));
+        v1y = Common::config().soccer.one_touch_beta * (-sin(a) * v0x + cos(a) * v0y) * (cos(a)) +
+              Common::config().soccer.one_touch_shoot_k * sin(a) +
+              Common::config().soccer.one_touch_gamma * (v0y - 2 * (v0x * cos(a) + v0y * sin(a)) * sin(a));
         float e = v1x * (-m_own_robot[t_robot_num].state().position.y + goal.y) +
                   v1y * (m_own_robot[t_robot_num].state().position.x - goal.x);
         if (std::fabs(e) < max)

@@ -6,13 +6,13 @@ Raw::Raw()
 {
     m_packet_received.fill(false);
 
-    m_client = std::make_unique<Common::UdpClient>(Common::setting().network.vision_address);
+    m_client = std::make_unique<Common::UdpClient>(Common::config().network.vision_address);
     if (!m_client->isConnected())
     {
         Common::logCritical("Failed to connect to Vision UDP");
     }
 
-    m_server = std::make_unique<Common::NngServer>(Common::setting().network.raw_world_state_url);
+    m_server = std::make_unique<Common::NngServer>(Common::config().network.raw_world_state_url);
 }
 
 void Raw::process()
@@ -20,7 +20,7 @@ void Raw::process()
     Protos::Ssl::Vision::DetectionFrame merged_frame;
     for (int i = 0; i < Common::Config::Vision::kCamCount; i++)
     {
-        if (Common::setting().vision.use_camera[i])
+        if (Common::config().vision.use_camera[i])
         {
             merged_frame.MergeFrom(m_d_frame[i]);
         }

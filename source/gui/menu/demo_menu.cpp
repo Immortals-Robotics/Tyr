@@ -3,9 +3,9 @@ namespace Tyr::Gui
 {
 DemoMenu::DemoMenu()
 {
-    m_debug_storage.open(Common::setting().network.debug_db);
-    m_world_filtered_storage.open(Common::setting().network.world_state_db);
-    m_referee_storage.open(Common::setting().network.referee_db);
+    m_debug_storage.open(Common::config().network.debug_db);
+    m_world_filtered_storage.open(Common::config().network.world_state_db);
+    m_referee_storage.open(Common::config().network.referee_db);
 }
 
 DemoMenu::~DemoMenu()

@@ -13,7 +13,7 @@ bool Raw::receive()
         {
             const int camera_id = packet.detection().camera_id();
 
-            if (Common::setting().vision.use_camera[camera_id] &&
+            if (Common::config().vision.use_camera[camera_id] &&
                 packet.detection().frame_number() != m_d_frame[camera_id].frame_number())
             {
                 Common::logTrace("Received camera {} frame {} with size {} from {}:{}", camera_id,
@@ -48,7 +48,7 @@ bool Raw::camsReady() const
 {
     for (int i = 0; i < Common::Config::Vision::kCamCount; i++)
     {
-        if (!m_packet_received[i] && Common::setting().vision.use_camera[i])
+        if (!m_packet_received[i] && Common::config().vision.use_camera[i])
         {
             return false;
         }

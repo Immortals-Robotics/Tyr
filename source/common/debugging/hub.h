@@ -132,7 +132,7 @@ public:
 private:
     Hub()
     {
-        m_server = std::make_unique<NngServer>(setting().network.debug_url);
+        m_server = std::make_unique<NngServer>(config().network.debug_url);
     }
 
     ~Hub() = default;

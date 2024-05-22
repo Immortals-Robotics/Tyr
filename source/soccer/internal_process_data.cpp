@@ -44,7 +44,7 @@ void Ai::internalProcessData()
         m_own_robot[i].reset();
     }
 
-    if (Common::setting().soccer.our_side == Common::TeamSide::Right)
+    if (Common::config().soccer.our_side == Common::TeamSide::Right)
         m_side = 1;
     else
         m_side = -1;

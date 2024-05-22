@@ -16,12 +16,12 @@ Ai::Ai()
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");
 
-    m_world_client = std::make_unique<Common::NngClient>(Common::setting().network.world_state_url);
-    m_ref_client   = std::make_unique<Common::NngClient>(Common::setting().network.referee_state_url);
+    m_world_client = std::make_unique<Common::NngClient>(Common::config().network.world_state_url);
+    m_ref_client   = std::make_unique<Common::NngClient>(Common::config().network.referee_state_url);
 
-    m_strategy_client = std::make_unique<Common::UdpClient>(Common::setting().network.strategy_address);
+    m_strategy_client = std::make_unique<Common::UdpClient>(Common::config().network.strategy_address);
 
-    m_cmd_server = std::make_unique<Common::NngServer>(Common::setting().network.commands_url);
+    m_cmd_server = std::make_unique<Common::NngServer>(Common::config().network.commands_url);
 
     m_dss = std::make_unique<Dss>(&m_world_state, 1000.f);
 

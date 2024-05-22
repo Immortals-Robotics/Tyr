@@ -18,8 +18,8 @@ Filtered::Filtered()
         }
     }
 
-    m_client = std::make_unique<Common::NngClient>(Common::setting().network.raw_world_state_url);
-    m_server = std::make_unique<Common::NngServer>(Common::setting().network.world_state_url);
+    m_client = std::make_unique<Common::NngClient>(Common::config().network.raw_world_state_url);
+    m_server = std::make_unique<Common::NngServer>(Common::config().network.world_state_url);
 }
 
 bool Filtered::receive()

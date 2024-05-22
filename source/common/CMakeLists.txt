@@ -21,7 +21,7 @@ set(HEADER_FILES
         config/common.h
         config/file.h
         config/network.h
-        config/setting.h
+        config/config.h
         config/soccer.h
         config/vision.h
 

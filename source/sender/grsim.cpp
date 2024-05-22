@@ -49,10 +49,10 @@ bool Grsim::send(const CommandsWrapper &t_wrapper)
     for (const auto &command : t_wrapper.commands)
         queueCommand(command);
 
-    m_packet.mutable_commands()->set_isteamyellow(Common::setting().common.our_color == Common::TeamColor::Yellow);
+    m_packet.mutable_commands()->set_isteamyellow(Common::config().common.our_color == Common::TeamColor::Yellow);
     m_packet.mutable_commands()->set_timestamp(0.0);
 
-    return m_socket->send(m_packet, Common::setting().network.grsim_address);
+    return m_socket->send(m_packet, Common::config().network.grsim_address);
 }
 
 } // namespace Tyr::Sender

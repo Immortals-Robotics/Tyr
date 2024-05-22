@@ -10,9 +10,9 @@ public:
     void load();
     void save() const;
 
-    [[nodiscard]] toml::node_view<const toml::node> root() const
+    [[nodiscard]] const toml::table &root() const
     {
-        return static_cast<toml::node_view<const toml::node>>(m_table);
+        return m_table;
     }
 
     [[nodiscard]] toml::table *mutableRoot()

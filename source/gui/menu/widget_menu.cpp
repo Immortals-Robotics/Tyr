@@ -127,7 +127,7 @@ void WidgetMenu::drawControllerTab()
                 refBroadcast(Protos::Ssl::Gc::Referee_Command_STOP);
                 break;
             case GAMEPAD_BUTTON_RIGHT_FACE_LEFT:
-                if (Common::setting().common.our_color == Common::TeamColor::Blue)
+                if (Common::config().common.our_color == Common::TeamColor::Blue)
                 {
                     refBroadcast(Protos::Ssl::Gc::Referee_Command_DIRECT_FREE_BLUE);
                 }
@@ -137,7 +137,7 @@ void WidgetMenu::drawControllerTab()
                 }
                 break;
             case GAMEPAD_BUTTON_RIGHT_FACE_UP:
-                if (Common::setting().common.our_color == Common::TeamColor::Blue)
+                if (Common::config().common.our_color == Common::TeamColor::Blue)
                 {
                     refBroadcast(Protos::Ssl::Gc::Referee_Command_PREPARE_KICKOFF_BLUE);
                 }
@@ -150,7 +150,7 @@ void WidgetMenu::drawControllerTab()
                 refBroadcast(Protos::Ssl::Gc::Referee_Command_HALT);
                 break;
             case GAMEPAD_BUTTON_MIDDLE_LEFT:
-                if (Common::setting().common.our_color == Common::TeamColor::Blue)
+                if (Common::config().common.our_color == Common::TeamColor::Blue)
                 {
                     refBroadcast(Protos::Ssl::Gc::Referee_Command_BALL_PLACEMENT_BLUE);
                 }
@@ -163,7 +163,7 @@ void WidgetMenu::drawControllerTab()
                 refBroadcast(Protos::Ssl::Gc::Referee_Command_NORMAL_START);
                 break;
             case GAMEPAD_BUTTON_LEFT_TRIGGER_1:
-                if (Common::setting().common.our_color == Common::TeamColor::Blue)
+                if (Common::config().common.our_color == Common::TeamColor::Blue)
                 {
                     refBroadcast(Protos::Ssl::Gc::Referee_Command_PREPARE_PENALTY_BLUE);
                 }
@@ -252,7 +252,7 @@ void WidgetMenu::refBroadcast(const Protos::Ssl::Gc::Referee_Command t_command)
         ref_packet.mutable_blue()->set_yellow_cards(0);
         ref_packet.mutable_blue()->set_timeouts(0);
         ref_packet.mutable_blue()->set_timeout_time(0);
-        ref_packet.mutable_blue()->set_goalkeeper(Common::setting().soccer.init_gk_id);
+        ref_packet.mutable_blue()->set_goalkeeper(Common::config().soccer.init_gk_id);
 
         ref_packet.mutable_yellow()->set_name("Immortals");
         ref_packet.mutable_yellow()->set_score(0);
@@ -260,9 +260,9 @@ void WidgetMenu::refBroadcast(const Protos::Ssl::Gc::Referee_Command t_command)
         ref_packet.mutable_yellow()->set_yellow_cards(0);
         ref_packet.mutable_yellow()->set_timeouts(0);
         ref_packet.mutable_yellow()->set_timeout_time(0);
-        ref_packet.mutable_yellow()->set_goalkeeper(Common::setting().soccer.init_gk_id);
+        ref_packet.mutable_yellow()->set_goalkeeper(Common::config().soccer.init_gk_id);
 
-        m_udp->send(ref_packet, Common::setting().network.referee_address);
+        m_udp->send(ref_packet, Common::config().network.referee_address);
 
         m_command_counter++;
         m_last_command = t_command;

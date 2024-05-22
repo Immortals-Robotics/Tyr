@@ -53,7 +53,7 @@ bool Application::initialize(const int t_width, const int t_height)
     }
 
     Common::logInfo(" Connecting to RefereeBox server at {} on port : {}",
-                    Common::setting().network.referee_address.port, Common::setting().network.referee_address.port);
+                    Common::config().network.referee_address.port, Common::config().network.referee_address.port);
     m_referee = std::make_unique<Referee::Referee>();
     if (m_referee->connect())
     {
@@ -65,8 +65,7 @@ bool Application::initialize(const int t_width, const int t_height)
         return false;
     }
 
-    Common::logInfo("Connecting to Vision server at {} on port: {}", Common::setting().network.vision_address.ip,
-                    Common::setting().network.vision_address.port);
+    Common::logInfo("Connecting to Vision server at {}", Common::config().network.vision_address);
     m_vision_raw = std::make_unique<Vision::Raw>();
     if (m_vision_raw->isConnected())
     {
@@ -87,15 +86,15 @@ bool Application::initialize(const int t_width, const int t_height)
     m_ai = std::make_unique<Soccer::Ai>();
 
     m_dumper = std::make_unique<Common::Dumper>();
-    m_dumper->addEntry(Common::setting().network.raw_world_state_url, Common::setting().network.raw_world_state_db);
-    m_dumper->addEntry(Common::setting().network.world_state_url, Common::setting().network.world_state_db);
-    m_dumper->addEntry(Common::setting().network.debug_url, Common::setting().network.debug_db);
-    m_dumper->addEntry(Common::setting().network.referee_state_url, Common::setting().network.referee_db);
+    m_dumper->addEntry(Common::config().network.raw_world_state_url, Common::config().network.raw_world_state_db);
+    m_dumper->addEntry(Common::config().network.world_state_url, Common::config().network.world_state_db);
+    m_dumper->addEntry(Common::config().network.debug_url, Common::config().network.debug_db);
+    m_dumper->addEntry(Common::config().network.referee_state_url, Common::config().network.referee_db);
 
-    m_world_client   = std::make_unique<Common::NngClient>(Common::setting().network.world_state_url);
-    m_raw_client     = std::make_unique<Common::NngClient>(Common::setting().network.raw_world_state_url);
-    m_debug_client   = std::make_unique<Common::NngClient>(Common::setting().network.debug_url);
-    m_referee_client = std::make_unique<Common::NngClient>(Common::setting().network.referee_state_url);
+    m_world_client   = std::make_unique<Common::NngClient>(Common::config().network.world_state_url);
+    m_raw_client     = std::make_unique<Common::NngClient>(Common::config().network.raw_world_state_url);
+    m_debug_client   = std::make_unique<Common::NngClient>(Common::config().network.debug_url);
+    m_referee_client = std::make_unique<Common::NngClient>(Common::config().network.referee_state_url);
 
     SetTraceLogCallback(logCallback);
 

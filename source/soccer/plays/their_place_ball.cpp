@@ -7,7 +7,7 @@ void Ai::theirPlaceBall()
     gkHi(m_gk);
     defHi(m_def, m_rw, m_lw, nullptr);
 
-    if (Common::setting().soccer.mark_in_stop)
+    if (Common::config().soccer.mark_in_stop)
     {
         markManager();
 

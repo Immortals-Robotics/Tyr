@@ -31,11 +31,8 @@ struct Common final : IConfig
     void load(const toml::node_view<const toml::node> t_node) override
     {
         immortals_is_the_best_team = t_node["immortals_is_the_best_team"].value_or(immortals_is_the_best_team);
-
         fillEnum(t_node["our_color"], our_color);
-
-        side_wall = t_node["side_wall"].value_or(side_wall);
-
+        side_wall    = t_node["side_wall"].value_or(side_wall);
         enable_debug = t_node["enable_debug"].value_or(enable_debug);
     }
 

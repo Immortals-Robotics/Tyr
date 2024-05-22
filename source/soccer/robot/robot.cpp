@@ -89,8 +89,8 @@ Common::Vec2 Robot::computeMotion(const VelocityProfile &profile)
 
     Common::Vec2 tmp_max_speed = diff.abs().normalized() * profile.max_spd;
 
-    const float acc = profile.max_acc / Common::setting().vision.vision_frame_rate;
-    const float dec = profile.max_dec / Common::setting().vision.vision_frame_rate;
+    const float acc = profile.max_acc / Common::config().vision.vision_frame_rate;
+    const float dec = profile.max_dec / Common::config().vision.vision_frame_rate;
 
     motion.x = pow(7.6f * dec * std::fabs(diff.x), 0.6f);
     motion.x *= Common::sign(diff.x);

@@ -5,8 +5,6 @@ File::File(const std::filesystem::path &t_file_name)
 {
     const std::filesystem::path data_dir(DATA_DIR);
     m_file_path = data_dir / t_file_name;
-
-    load();
 }
 
 void File::load()

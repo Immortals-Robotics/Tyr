@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../config/setting.h"
+#include "../config/config.h"
 #include "../time/time_point.h"
 
 namespace Tyr::Common

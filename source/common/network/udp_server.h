@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../config/setting.h"
+#include "../config/config.h"
 
 namespace Tyr::Common
 {

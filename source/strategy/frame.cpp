@@ -394,7 +394,7 @@ void Frame::on_pushButton_3_clicked()
     file.clear();
     file.write(str.data(), str.length());
     file.close();
-    m_udp->send(m_playBook, Common::setting().strategy_address);
+    m_udp->send(m_playBook, Common::config().network.strategy_address);
 }
 
 void Frame::on_pushButton_4_clicked()

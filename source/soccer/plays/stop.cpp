@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 void Ai::stop()
 {
-    if (Common::setting().soccer.mark_in_stop)
+    if (Common::config().soccer.mark_in_stop)
     {
         for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
         {
@@ -31,7 +31,7 @@ void Ai::stop()
     gkHi(m_gk);
     defHi(m_def, m_rw, m_lw, nullptr);
 
-    if (Common::setting().soccer.mark_in_stop)
+    if (Common::config().soccer.mark_in_stop)
     {
         markManager();
 
