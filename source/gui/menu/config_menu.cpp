@@ -14,14 +14,14 @@ void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
     {
         if (ImGui::TreeNode(t_key.c_str()))
         {
-            drawConfigTable(t_value.as_table());
+            drawConfigTable(*t_value.as_table());
             ImGui::TreePop();
         }
     }
     else if (t_value.is_array())
     {
         ImGui::SeparatorText(t_key.c_str());
-        drawConfigArray(t_value.as_array());
+        drawConfigArray(*t_value.as_array());
         ImGui::Separator();
         ImGui::Spacing();
     }
@@ -35,7 +35,29 @@ void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
     }
     else if (t_value.is_integer())
     {
-        m_configs_dirty |= ImGui::InputScalar(t_key.c_str(), ImGuiDataType_S64, &t_value.as_integer()->get());
+        // handle special cases
+        if (t_key == "our_side")
+        {
+            static constexpr std::array kEnums = {"Left", "Right"};
+            static_assert(static_cast<int>(Common::TeamSide::Left) == 0);
+            static_assert(static_cast<int>(Common::TeamSide::Right) == 1);
+
+            m_configs_dirty |= ImGui::Combo(t_key.c_str(), reinterpret_cast<int *>(&t_value.as_integer()->get()),
+                                            kEnums.data(), kEnums.size());
+        }
+        else if (t_key == "our_color")
+        {
+            static constexpr std::array kEnums = {"Blue", "Yellow"};
+            static_assert(static_cast<int>(Common::TeamColor::Blue) == 0);
+            static_assert(static_cast<int>(Common::TeamColor::Yellow) == 1);
+
+            m_configs_dirty |= ImGui::Combo(t_key.c_str(), reinterpret_cast<int *>(&t_value.as_integer()->get()),
+                                            kEnums.data(), kEnums.size());
+        }
+        else
+        {
+            m_configs_dirty |= ImGui::InputScalar(t_key.c_str(), ImGuiDataType_S64, &t_value.as_integer()->get());
+        }
     }
     else if (t_value.is_boolean())
     {
@@ -47,14 +69,14 @@ void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
     }
 }
 
-void ConfigMenu::drawConfigArray(toml::array *const t_array)
+void ConfigMenu::drawConfigArray(toml::array &t_array)
 {
-    t_array->for_each([this](const int idx, auto &&value) { drawConfigItem(std::to_string(idx), value); });
+    t_array.for_each([this](const int idx, auto &&value) { drawConfigItem(std::to_string(idx), value); });
 }
 
-void ConfigMenu::drawConfigTable(toml::table *const t_table)
+void ConfigMenu::drawConfigTable(toml::table &t_table)
 {
-    for (auto &&[key, value] : *t_table)
+    for (auto &&[key, value] : t_table)
     {
         drawConfigItem(std::string{key.str()}, value);
     }
@@ -62,7 +84,7 @@ void ConfigMenu::drawConfigTable(toml::table *const t_table)
 
 void ConfigMenu::drawConfigTab()
 {
-    drawConfigTable(&Common::config().root());
+    drawConfigTable(Common::config().root());
 
     if (m_configs_dirty)
     {

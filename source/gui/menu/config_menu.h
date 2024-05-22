@@ -12,8 +12,8 @@ private:
     void drawFilterTab();
 
     void drawConfigItem(const std::string &t_key, toml::node &t_value);
-    void drawConfigArray(toml::array *const t_array);
-    void drawConfigTable(toml::table *const t_table);
+    void drawConfigArray(toml::array &t_array);
+    void drawConfigTable(toml::table &t_table);
 
     template <typename T>
     void pushToFilters(const std::vector<T> &t_input);

@@ -43,7 +43,6 @@ struct Soccer final : IConfig
 
         if (auto *robot_physical_status_array = t_node["robot_physical_status"].as_array())
         {
-            logDebug("Array size of received robot_physical_status: {}", robot_physical_status_array->size());
             for (int i = 0; i < robot_physical_status_array->size(); i++)
             {
                 int id = t_node["robot_physical_status"][i]["id"].value_or(-1);
@@ -66,12 +65,6 @@ struct Soccer final : IConfig
                     t_node["robot_physical_status"][i]["has_chip_kick"].value_or(false);
                 robot_physical_status[id].is_3D_printed =
                     t_node["robot_physical_status"][i]["is_3D_printed"].value_or(false);
-
-                logDebug("Robot #{} status:", id);
-                logDebug(" -has_dribbler: {}", robot_physical_status[id].has_dribbler);
-                logDebug(" -has_direct_kick: {}", robot_physical_status[id].has_direct_kick);
-                logDebug(" -has_chip_kick: {}", robot_physical_status[id].has_chip_kick);
-                logDebug(" -is_3D_printed: {}", robot_physical_status[id].is_3D_printed);
             }
         }
     }
