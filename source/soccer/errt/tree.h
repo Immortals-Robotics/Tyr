@@ -51,7 +51,7 @@ public:
 
         float d   = std::numeric_limits<float>::max();
         int   ans = 0;
-        for (int i = 0; i < m_nodes.size(); i++)
+        for (size_t i = 0; i < m_nodes.size(); i++)
         {
             float tmp_d = s.distanceSquaredTo(m_nodes[i].state);
             if (tmp_d < d)
@@ -76,7 +76,7 @@ public:
 
     void draw(const Common::Color t_color = Common::Color::black().transparent()) const
     {
-        for (int i = 0; i < m_nodes.size(); i++)
+        for (size_t i = 0; i < m_nodes.size(); i++)
         {
             if (m_nodes[i].parent == nullptr)
             {

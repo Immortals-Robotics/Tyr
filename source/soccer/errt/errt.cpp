@@ -120,7 +120,7 @@ Common::Vec2 Planner::plan()
 
 void Planner::optimize_tree()
 {
-    for (int i = 0; i < m_waypoints.size() - 1; i++)
+    for (size_t i = 0; i < m_waypoints.size() - 1; i++)
     {
         if (g_obs_map.collisionDetect(m_waypoints[i], m_waypoints.back()) == false)
         {
@@ -133,7 +133,7 @@ void Planner::optimize_tree()
 
 void Planner::draw(const Common::Color t_color) const
 {
-    for (int i = 0; i < m_waypoints.size() - 1; i++)
+    for (size_t i = 0; i < m_waypoints.size() - 1; i++)
     {
         Common::debug().draw(Common::LineSegment{m_waypoints[i], m_waypoints[i + 1]}, t_color, 5.0f);
     }

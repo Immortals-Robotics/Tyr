@@ -41,7 +41,7 @@ struct Soccer final : IConfig
 
         if (auto *robot_physical_status_array = t_node["robot_physical_status"].as_array())
         {
-            for (int i = 0; i < robot_physical_status_array->size(); i++)
+            for (size_t i = 0; i < robot_physical_status_array->size(); i++)
             {
                 int id = t_node["robot_physical_status"][i]["id"].value_or(-1);
                 if (id == -1)

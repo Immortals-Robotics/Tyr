@@ -15,7 +15,7 @@ void Filtered::filterBalls()
     int   id  = std::numeric_limits<int>::max();
     float dis = std::numeric_limits<float>::max();
 
-    for (int i = 0; i < balls.size(); i++)
+    for (size_t i = 0; i < balls.size(); i++)
     {
         const float curr_dis = balls[i].position.distanceTo(m_last_raw_ball.position);
         if (curr_dis < dis)

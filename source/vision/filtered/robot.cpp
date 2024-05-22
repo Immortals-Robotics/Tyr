@@ -28,7 +28,7 @@ void Filtered::filterRobots(Common::TeamColor t_color)
         Common::Vec2 filt_vel{};
 
         bool found = false;
-        for (int j = 0; j < raw_robots.size(); j++)
+        for (size_t j = 0; j < raw_robots.size(); j++)
         {
             auto &raw_robot = raw_robots[j];
 
