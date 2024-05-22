@@ -35,6 +35,7 @@ set(HEADER_FILES
         logging/debug_sink.h
         logging/logging.h
         logging/macros.h
+
         math/angle.h
         math/helpers.h
         math/linear.h
@@ -47,15 +48,19 @@ set(HEADER_FILES
         math/geom/line.h
         math/geom/rect.h
         math/geom/triangle.h
+
+        network/address.h
         network/nng_client.h
         network/nng_server.h
         network/udp_client.h
         network/nng_message.h
         network/udp_server.h
+
         state/referee.h
         state/world.h
         storage/dumper.h
         storage/storage.h
+
         time/duration.h
         time/time_point.h
         time/timer.h)

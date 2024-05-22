@@ -1,28 +1,12 @@
 #pragma once
 
+#include "../network/address.h"
 #include "base.h"
 
 namespace Tyr::Common::Config
 {
 struct Network final : IConfig
 {
-    struct Address final : IConfig
-    {
-        Address() = default;
-
-        Address(const std::string_view ip, const unsigned short port) : ip(ip), port(port)
-        {}
-
-        void load(const toml::node_view<const toml::node> t_node) override
-        {
-            ip   = t_node["ip"].value_or(ip);
-            port = t_node["port"].value_or(port);
-        }
-
-        std::string    ip;
-        unsigned short port = 0;
-    };
-
     Network() = default;
 
     void load(const toml::node_view<const toml::node> t_node) override
@@ -51,24 +35,24 @@ struct Network final : IConfig
 
     static constexpr size_t kMaxUdpPacketSize = 1024 * 16; // TODO what should the size be really?
 
-    Address vision_address = {"224.5.23.2", 10006};
+    NetworkAddress vision_address = {"224.5.23.2", 10006};
 
-    Address tracker_address          = {"224.5.23.2", 10010};
-    Address vision_interface_address = {"127.0.0.1", 10067};
+    NetworkAddress tracker_address          = {"224.5.23.2", 10010};
+    NetworkAddress vision_interface_address = {"127.0.0.1", 10067};
 
-    Address referee_address = {"224.5.23.1", 10003};
+    NetworkAddress referee_address = {"224.5.23.1", 10003};
 
-    Address sender_address = {"224.5.92.5", 60005};
+    NetworkAddress sender_address = {"224.5.92.5", 60005};
 
-    Address commands_address = {"224.5.92.6", 60007};
+    NetworkAddress commands_address = {"224.5.92.6", 60007};
 
-    Address strategy_address = {"224.5.23.3", 60006};
+    NetworkAddress strategy_address = {"224.5.23.3", 60006};
 
-    Address grsim_address = {"127.0.0.1", 20011};
+    NetworkAddress grsim_address = {"127.0.0.1", 20011};
 
-    Address control_simulation_address      = {"127.0.0.1", 10300};
-    Address blue_robot_simulation_address   = {"127.0.0.1", 10301};
-    Address yellow_robot_simulation_address = {"127.0.0.1", 10302};
+    NetworkAddress control_simulation_address      = {"127.0.0.1", 10300};
+    NetworkAddress blue_robot_simulation_address   = {"127.0.0.1", 10301};
+    NetworkAddress yellow_robot_simulation_address = {"127.0.0.1", 10302};
 
     // NNG urls
     std::string raw_world_state_url = "inproc://raw_world_state";
@@ -86,12 +70,3 @@ struct Network final : IConfig
     unsigned char nrf_frq; // TODO: unused
 };
 } // namespace Tyr::Common::Config
-
-template <>
-struct fmt::formatter<Tyr::Common::Config::Network::Address> : fmt::formatter<std::string>
-{
-    auto format(Tyr::Common::Config::Network::Address t_a, format_context &t_ctx) const
-    {
-        return fmt::format_to(t_ctx.out(), "{}:{}", t_a.ip, t_a.port);
-    }
-};

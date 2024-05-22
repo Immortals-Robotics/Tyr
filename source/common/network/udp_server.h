@@ -10,19 +10,19 @@ public:
     UdpServer();
 
     // Serializes the protobuf message to the internal buffer and sends it
-    bool send(const google::protobuf::MessageLite &t_message, const Config::Network::Address &t_address);
+    bool send(const google::protobuf::MessageLite &t_message, const NetworkAddress &t_address);
 
     // Sends the first t_size bytes of the internal bugffer
-    bool send(size_t t_size, const Config::Network::Address &t_address);
+    bool send(size_t t_size, const NetworkAddress &t_address);
 
     std::span<char> getBuffer()
     {
         return m_buffer;
     }
 
-    [[nodiscard]] asio::ip::udp::endpoint getListenEndpoint() const
+    [[nodiscard]] NetworkAddress getListenEndpoint() const
     {
-        return m_listen_endpoint;
+        return NetworkAddress{m_listen_endpoint};
     }
 
 private:

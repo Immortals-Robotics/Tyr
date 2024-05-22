@@ -14,7 +14,7 @@ public:
 
     [[nodiscard]] bool camsReady() const;
 
-    void updateAddress(const Common::Config::Network::Address &t_address);
+    void updateAddress(const Common::NetworkAddress &t_address);
 
     bool isConnected() const
     {

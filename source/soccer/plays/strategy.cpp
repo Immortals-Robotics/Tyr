@@ -46,8 +46,7 @@ bool Ai::receivePlayBook()
         return false;
 
     const auto receive_endpoint = m_strategy_client->getLastReceiveEndpoint();
-    Common::logInfo("Received playbook from {} on port {}", receive_endpoint.address().to_string(),
-                    receive_endpoint.port());
+    Common::logInfo("Received playbook from {}", receive_endpoint);
 
     if (!setPlayBook(playbook))
         return false;
@@ -83,7 +82,7 @@ bool Ai::setPlayBook(const Protos::Immortals::PlayBook &t_playbook)
 
 int        step[Common::Config::Common::kMaxRobots]    = {};
 float      lastAdv[Common::Config::Common::kMaxRobots] = {};
-static int curr_str_id                          = -1;
+static int curr_str_id                                 = -1;
 
 bool receivers_reached = false;
 

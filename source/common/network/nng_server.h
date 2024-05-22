@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../config/config.h"
 #include "../time/time_point.h"
 #include "nng_message.h"
 

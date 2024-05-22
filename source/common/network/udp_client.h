@@ -7,22 +7,22 @@ namespace Tyr::Common
 class UdpClient
 {
 public:
-    explicit UdpClient(const Config::Network::Address &t_address);
+    explicit UdpClient(const NetworkAddress &t_address);
 
-    void updateAddress(const Config::Network::Address &t_address);
+    void updateAddress(const NetworkAddress &t_address);
 
     bool receive(google::protobuf::MessageLite *t_message);
 
     bool receiveRaw(std::span<char> *t_data);
 
-    [[nodiscard]] asio::ip::udp::endpoint getListenEndpoint() const
+    [[nodiscard]] NetworkAddress getListenEndpoint() const
     {
-        return m_listen_endpoint;
+        return NetworkAddress{m_listen_endpoint};
     }
 
-    [[nodiscard]] asio::ip::udp::endpoint getLastReceiveEndpoint() const
+    [[nodiscard]] NetworkAddress getLastReceiveEndpoint() const
     {
-        return m_last_receive_endpoint;
+        return NetworkAddress{m_last_receive_endpoint};
     }
 
     [[nodiscard]] asio::ip::address getAddress() const
