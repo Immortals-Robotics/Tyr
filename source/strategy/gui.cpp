@@ -37,12 +37,10 @@ void Gui::paintEvent([[maybe_unused]] QPaintEvent *event)
         int x1 = (((strategy[current_strategy]->min_x / 10.0) + 450) * 3.0 / 2);
         int x2 = (((strategy[current_strategy]->max_x / 10.0) + 450) * 3.0 / 2);
         int y1 = ((-(strategy[current_strategy]->min_y / 10.0) + 300) * 3.0 / 2);
-        int y2 = ((-(strategy[current_strategy]->max_y / 10.0) + 300) * 3.0 / 2);
 
         x1 += 106;
         x2 += 106;
         y1 += 45;
-        y2 += 45;
         m_painter.fillRect(x1, y1 - 10, (x2 - x1), 20, QColor(255, 0, 0, strategy[current_strategy]->weight * 20));
     }
 
