@@ -12,7 +12,7 @@ private:
     void drawFilterTab();
 
     void drawConfigItem(const std::string &t_key, toml::node &t_value);
-    void drawConfigArray(toml::array &t_array);
+    void drawConfigArray(toml::array &t_array, int t_columns = 0);
     void drawConfigTable(toml::table &t_table);
 
     template <typename T>

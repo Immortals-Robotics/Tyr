@@ -10,20 +10,36 @@ ConfigMenu::ConfigMenu()
 
 void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
 {
+    static int depth = 0;
+    depth++;
+
     if (t_value.is_table())
     {
-        if (ImGui::TreeNode(t_key.c_str()))
+        // only put root-level tables inside a tree node
+        const bool tree = depth == 1;
+
+        if (!tree || ImGui::TreeNode(t_key.c_str()))
         {
+            if (!tree)
+                ImGui::SeparatorText(t_key.c_str());
+
             drawConfigTable(*t_value.as_table());
-            ImGui::TreePop();
+
+            if (tree)
+                ImGui::TreePop();
         }
     }
     else if (t_value.is_array())
     {
-        ImGui::SeparatorText(t_key.c_str());
-        drawConfigArray(*t_value.as_array());
-        ImGui::Separator();
-        ImGui::Spacing();
+        int columns = 0;
+        if (t_key == "use_camera")
+            columns = 4;
+
+        if (ImGui::TreeNode(t_key.c_str()))
+        {
+            drawConfigArray(*t_value.as_array(), columns);
+            ImGui::TreePop();
+        }
     }
     else if (t_value.is_string())
     {
@@ -67,11 +83,25 @@ void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
     {
         Common::logWarning("Config item {} has unsupported config type: {}", t_key, (int) t_value.type());
     }
+
+    depth--;
 }
 
-void ConfigMenu::drawConfigArray(toml::array &t_array)
+void ConfigMenu::drawConfigArray(toml::array &t_array, const int t_columns)
 {
-    t_array.for_each([this](const int idx, auto &&value) { drawConfigItem(std::to_string(idx), value); });
+    if (t_columns == 0 || ImGui::BeginTable("array", t_columns))
+    {
+        t_array.for_each(
+            [this, t_columns](const int idx, auto &&value)
+            {
+                if (t_columns)
+                    ImGui::TableNextColumn();
+                drawConfigItem(std::to_string(idx), value);
+            });
+
+        if (t_columns)
+            ImGui::EndTable();
+    }
 }
 
 void ConfigMenu::drawConfigTable(toml::table &t_table)
