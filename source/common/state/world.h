@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../setting.h"
+#include "../config/setting.h"
 #include "../time/time_point.h"
 
 namespace Tyr::Common
@@ -290,16 +290,16 @@ struct WorldState
 
     BallState ball;
 
-    RobotState own_robot[Setting::kMaxRobots];
-    RobotState opp_robot[Setting::kMaxRobots];
+    RobotState own_robot[Config::Common::kMaxRobots];
+    RobotState opp_robot[Config::Common::kMaxRobots];
 
     WorldState()
     {
-        for (int i = 0; i < Setting::kMaxRobots; i++)
+        for (int i = 0; i < Config::Common::kMaxRobots; i++)
         {
             own_robot[i].vision_id = i;
         }
-        for (int i = 0; i < Setting::kMaxRobots; i++)
+        for (int i = 0; i < Config::Common::kMaxRobots; i++)
         {
             opp_robot[i].vision_id = i;
         }

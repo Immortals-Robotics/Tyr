@@ -12,13 +12,13 @@ Common::Vec2 Dss::GetAccFromMotion(const int robot_num, const Common::Vec2 &moti
 {
     const Common::RobotState &state = m_world->own_robot[robot_num];
 
-    return (motion - state.velocity) * Common::setting().vision_frame_rate;
+    return (motion - state.velocity) * Common::setting().vision.vision_frame_rate;
 }
 
 Common::Vec2 Dss::GetMotionFromAcc(const int robot_num, const Common::Vec2 &acc)
 {
     const Common::RobotState &state        = m_world->own_robot[robot_num];
-    const Common::Vec2        target_speed = state.velocity + (acc / Common::setting().vision_frame_rate);
+    const Common::Vec2        target_speed = state.velocity + (acc / Common::setting().vision.vision_frame_rate);
 
     return target_speed;
 }
@@ -26,10 +26,10 @@ Common::Vec2 Dss::GetMotionFromAcc(const int robot_num, const Common::Vec2 &acc)
 bool Dss::collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2 &cmd_a,
                            const Common::RobotState &state_b, const Common::Vec2 &cmd_b) const
 {
-    const Trajectory traj_a =
-        Trajectory::MakeTrajectory(state_a, cmd_a, m_profile.max_dec, 1.0f / Common::setting().vision_frame_rate);
-    const Trajectory traj_b =
-        Trajectory::MakeTrajectory(state_b, cmd_b, m_profile.max_dec, 1.0f / Common::setting().vision_frame_rate);
+    const Trajectory traj_a = Trajectory::MakeTrajectory(state_a, cmd_a, m_profile.max_dec,
+                                                         1.0f / Common::setting().vision.vision_frame_rate);
+    const Trajectory traj_b = Trajectory::MakeTrajectory(state_b, cmd_b, m_profile.max_dec,
+                                                         1.0f / Common::setting().vision.vision_frame_rate);
 
     return Parabolic::HaveOverlap(traj_a.acc, traj_b.acc, Common::field().robot_radius * 2.f) ||
            Parabolic::HaveOverlap(traj_a.dec, traj_b.dec, Common::field().robot_radius * 2.f) ||
@@ -40,8 +40,8 @@ bool Dss::collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2
 bool Dss::collisionWithOpp(const Common::RobotState &state_own, const Common::Vec2 &cmd_own,
                            const Common::RobotState &state_opp) const
 {
-    const Trajectory traj_own =
-        Trajectory::MakeTrajectory(state_own, cmd_own, m_profile.max_dec, 1.0f / Common::setting().vision_frame_rate);
+    const Trajectory traj_own = Trajectory::MakeTrajectory(state_own, cmd_own, m_profile.max_dec,
+                                                           1.0f / Common::setting().vision.vision_frame_rate);
     const Trajectory traj_opp = Trajectory::MakeOpponentTrajectory(state_opp, m_profile.max_dec);
 
     return Parabolic::HaveOverlap(traj_own.acc, traj_opp.dec, Common::field().robot_radius * 2.f) ||
@@ -53,7 +53,7 @@ bool Dss::collisionWithOpp(const Common::RobotState &state_own, const Common::Ve
 bool Dss::RobotHasStaticCollision(const Common::RobotState &state, const Common::Vec2 &cmd) const
 {
     const Trajectory traj =
-        Trajectory::MakeTrajectory(state, cmd, m_profile.max_dec, 1.0f / Common::setting().vision_frame_rate);
+        Trajectory::MakeTrajectory(state, cmd, m_profile.max_dec, 1.0f / Common::setting().vision.vision_frame_rate);
 
     return Parabolic::HasStaticOverlap(traj.acc) || Parabolic::HasStaticOverlap(traj.dec) ||
            Parabolic::HasStaticOverlap(traj.dec);
@@ -68,7 +68,7 @@ bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
         return false;
     }
 
-    for (int robot_idx = 0; robot_idx < Common::Setting::kMaxRobots; ++robot_idx)
+    for (int robot_idx = 0; robot_idx < Common::Config::Common::kMaxRobots; ++robot_idx)
     {
         if (robot_idx == robot_num)
         {
@@ -89,7 +89,7 @@ bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
         }
     }
 
-    for (int robot_idx = 0; robot_idx < Common::Setting::kMaxRobots; ++robot_idx)
+    for (int robot_idx = 0; robot_idx < Common::Config::Common::kMaxRobots; ++robot_idx)
     {
         const Common::RobotState &other_state = m_world->opp_robot[robot_idx];
         if (other_state.seen_state == Common::SeenState::CompletelyOut)
@@ -121,7 +121,7 @@ float Dss::ComputeError(const Common::Vec2 &target, const Common::Vec2 &current)
 
 void Dss::Reset()
 {
-    for (int robot_idx = 0; robot_idx < Common::Setting::kMaxRobots; ++robot_idx)
+    for (int robot_idx = 0; robot_idx < Common::Config::Common::kMaxRobots; ++robot_idx)
     {
         const Common::RobotState &state = m_world->own_robot[robot_idx];
 
@@ -132,7 +132,7 @@ void Dss::Reset()
         else
         {
             const float dec =
-                std::min(m_profile.max_dec, state.velocity.length() * Common::setting().vision_frame_rate);
+                std::min(m_profile.max_dec, state.velocity.length() * Common::setting().vision.vision_frame_rate);
             computed_motions[robot_idx] = state.velocity.normalized() * (-dec);
         }
     }
@@ -161,9 +161,10 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     }
     else
     {
-        const float dec = std::min(m_profile.max_dec, state.velocity.length() * Common::setting().vision_frame_rate);
-        a_cmd           = state.velocity.normalized() * (-dec);
-        float error     = ComputeError(target_a_cmd, a_cmd);
+        const float dec =
+            std::min(m_profile.max_dec, state.velocity.length() * Common::setting().vision.vision_frame_rate);
+        a_cmd       = state.velocity.normalized() * (-dec);
+        float error = ComputeError(target_a_cmd, a_cmd);
 
         for (int iter_idx = 0; iter_idx < 100; ++iter_idx)
         {

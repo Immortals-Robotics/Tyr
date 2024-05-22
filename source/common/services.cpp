@@ -1,8 +1,9 @@
 #include "services.h"
 
+#include "config/file.h"
+#include "config/setting.h"
 #include "debugging/hub.h"
 #include "logging/logging.h"
-#include "setting.h"
 #include "state/world.h"
 #include "storage/storage.h"
 #include "time/timer.h"
@@ -13,10 +14,10 @@ bool Services::initialize()
 {
     s_logger = new Logger();
 
-    s_configReader = new ConfigReader("config.toml");
+    s_configReader = new Config::File("config.toml");
 
-    s_setting = new Setting();
-    s_setting->load(s_configReader->getRoot());
+    s_setting = new Config::Setting();
+    s_setting->load(s_configReader->root());
 
     s_debug = new Debug::Hub();
 
@@ -33,11 +34,6 @@ bool Services::initialize()
     s_field_state = new FieldState();
 
     return true;
-}
-
-void Services::saveConfig()
-{
-    s_configReader->save(s_setting->getConfigTable());
 }
 
 void Services::shutdown()

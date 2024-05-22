@@ -22,7 +22,7 @@ private:
 
     const Common::WorldState *m_world;
 
-    Common::Vec2 computed_motions[Common::Setting::kMaxRobots];
+    Common::Vec2 computed_motions[Common::Config::Common::kMaxRobots];
 
     Common::Vec2 GetAccFromMotion(int robot_num, const Common::Vec2 &motion);
     Common::Vec2 GetMotionFromAcc(int robot_num, const Common::Vec2 &acc);

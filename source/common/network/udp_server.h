@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../setting.h"
+#include "../config/setting.h"
 
 namespace Tyr::Common
 {
@@ -10,10 +10,10 @@ public:
     UdpServer();
 
     // Serializes the protobuf message to the internal buffer and sends it
-    bool send(const google::protobuf::MessageLite &t_message, const NetworkAddress &t_address);
+    bool send(const google::protobuf::MessageLite &t_message, const Config::Network::Address &t_address);
 
     // Sends the first t_size bytes of the internal bugffer
-    bool send(size_t t_size, const NetworkAddress &t_address);
+    bool send(size_t t_size, const Config::Network::Address &t_address);
 
     std::span<char> getBuffer()
     {
@@ -31,6 +31,6 @@ private:
     std::unique_ptr<asio::io_context>      m_context;
     std::unique_ptr<asio::ip::udp::socket> m_socket;
 
-    std::array<char, Setting::kMaxUdpPacketSize> m_buffer = {};
+    std::array<char, Config::Network::kMaxUdpPacketSize> m_buffer = {};
 };
 } // namespace Tyr::Common

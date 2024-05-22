@@ -4,10 +4,10 @@ namespace Tyr::Referee
 {
 bool Referee::connect()
 {
-    m_ref_client   = std::make_unique<Common::UdpClient>(Common::setting().referee_address);
-    m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
+    m_ref_client   = std::make_unique<Common::UdpClient>(Common::setting().network.referee_address);
+    m_world_client = std::make_unique<Common::NngClient>(Common::setting().network.world_state_url);
 
-    m_server = std::make_unique<Common::NngServer>(Common::setting().referee_state_url);
+    m_server = std::make_unique<Common::NngServer>(Common::setting().network.referee_state_url);
 
     return isConnected();
 }
@@ -33,7 +33,7 @@ void Referee::process()
 
         m_last_placed_ball = m_world_state.ball.position;
 
-        if (Common::setting().our_color == Common::TeamColor::Blue)
+        if (Common::setting().common.our_color == Common::TeamColor::Blue)
             m_state.opp_gk = m_ssl_ref.yellow().goalkeeper();
         else
             m_state.opp_gk = m_ssl_ref.blue().goalkeeper();

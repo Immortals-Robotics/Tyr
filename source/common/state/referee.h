@@ -78,7 +78,7 @@ public:
 
     bool our() const
     {
-        return color == setting().our_color;
+        return color == setting().common.our_color;
     }
 
     std::string getString() const

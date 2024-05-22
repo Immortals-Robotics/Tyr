@@ -2,7 +2,7 @@
 
 namespace Tyr::Common
 {
-UdpClient::UdpClient(const NetworkAddress &t_address)
+UdpClient::UdpClient(const Config::Network::Address &t_address)
 {
     m_context = std::make_unique<asio::io_context>();
     m_socket  = std::make_unique<asio::ip::udp::socket>(*m_context);
@@ -10,7 +10,7 @@ UdpClient::UdpClient(const NetworkAddress &t_address)
     updateAddress(t_address);
 }
 
-void UdpClient::updateAddress(const NetworkAddress &t_address)
+void UdpClient::updateAddress(const Config::Network::Address &t_address)
 {
     if (m_socket->is_open())
     {

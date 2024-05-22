@@ -16,7 +16,7 @@ void Ai::kickoffTheirOneWall()
     int indexP = -1;
     int indexN = -1;
 
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         if ((std::fabs(m_world_state.opp_robot[i].position.x) < 1500) &&
             (std::fabs(m_world_state.opp_robot[i].position.y) > 600) &&

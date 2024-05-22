@@ -25,7 +25,7 @@ void Filtered::filterBalls()
         }
     }
 
-    if (dis < Common::setting().max_ball_2_frame_dist)
+    if (dis < Common::setting().vision.max_ball_2_frame_dist)
     {
         m_last_raw_ball = balls[id];
 
@@ -46,7 +46,7 @@ void Filtered::filterBalls()
     {
         m_ball_not_seen++;
 
-        if (m_ball_not_seen > Common::setting().max_ball_frame_not_seen)
+        if (m_ball_not_seen > Common::setting().vision.max_ball_frame_not_seen)
         {
             if (balls.size() > 0)
             {
@@ -82,7 +82,7 @@ void Filtered::predictBall()
     m_state.ball.velocity /= 1000.0f;
 
     float k       = 0.25f; // velocity derate every sec(units (m/s)/s)
-    float tsample = (float) 1.0f / (float) Common::setting().vision_frame_rate;
+    float tsample = (float) 1.0f / (float) Common::setting().vision.vision_frame_rate;
 
     float t;
     if (m_state.ball.seen_state == Common::SeenState::TemprolilyOut)

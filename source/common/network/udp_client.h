@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../setting.h"
+#include "../config/setting.h"
 
 namespace Tyr::Common
 {
 class UdpClient
 {
 public:
-    explicit UdpClient(const NetworkAddress &t_address);
+    explicit UdpClient(const Config::Network::Address &t_address);
 
-    void updateAddress(const NetworkAddress &t_address);
+    void updateAddress(const Config::Network::Address &t_address);
 
     bool receive(google::protobuf::MessageLite *t_message);
 
@@ -44,6 +44,6 @@ private:
     std::unique_ptr<asio::io_context>      m_context;
     std::unique_ptr<asio::ip::udp::socket> m_socket;
 
-    std::array<char, Setting::kMaxUdpPacketSize> m_buffer = {};
+    std::array<char, Config::Network::kMaxUdpPacketSize> m_buffer = {};
 };
 } // namespace Tyr::Common

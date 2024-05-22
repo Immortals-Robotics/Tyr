@@ -51,7 +51,7 @@ private:
 
     void manageAttRoles();
 
-    OneTouchDetector m_one_touch_detector[Common::Setting::kMaxRobots];
+    OneTouchDetector m_one_touch_detector[Common::Config::Common::kMaxRobots];
     enum class OneTouchType
     {
         OneTouch = 0,
@@ -59,8 +59,8 @@ private:
         Gool,
         Allaf,
     };
-    OneTouchType m_one_touch_type[Common::Setting::kMaxRobots];
-    bool         m_one_touch_type_used[Common::Setting::kMaxRobots];
+    OneTouchType m_one_touch_type[Common::Config::Common::kMaxRobots];
+    bool         m_one_touch_type_used[Common::Config::Common::kMaxRobots];
 
     // Helpers
     Common::Vec2 calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar = 89.0f);
@@ -125,7 +125,7 @@ private:
                   NavigationFlags t_flags = NavigationFlagsNone);
     void setObstacles(int t_robot_num, NavigationFlags t_flags = NavigationFlagsNone);
 
-    Planner              m_planner[Common::Setting::kMaxRobots];
+    Planner              m_planner[Common::Config::Common::kMaxRobots];
     std::unique_ptr<Dss> m_dss;
 
     // Skills
@@ -173,8 +173,8 @@ private:
     int strategyWeight();
 
     PlayBook     m_playbook;
-    int         *m_stm_to_ai_num[Common::Setting::kMaxRobots] = {};
-    Common::Vec2 m_allaf_pos[Common::Setting::kMaxRobots];
+    int         *m_stm_to_ai_num[Common::Config::Common::kMaxRobots] = {};
+    Common::Vec2 m_allaf_pos[Common::Config::Common::kMaxRobots];
 
     // FSM
     int m_func_state = 0;
@@ -183,7 +183,7 @@ private:
     void internalProcessData();
 
 public:
-    Robot m_own_robot[Common::Setting::kMaxRobots];
+    Robot m_own_robot[Common::Config::Common::kMaxRobots];
 
     Ai();
 

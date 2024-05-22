@@ -89,8 +89,7 @@ bool Nrf::send(const CommandsWrapper &t_wrapper)
 
     append_demo_data();
 
-    const bool result = commUDP->send(
-        buff_idx, Common::NetworkAddress{Common::setting().sender_address.ip, Common::setting().sender_address.port});
+    const bool result = commUDP->send(buff_idx, Common::setting().network.sender_address);
 
     if (!result)
     {

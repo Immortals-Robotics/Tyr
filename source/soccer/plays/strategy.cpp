@@ -81,8 +81,8 @@ bool Ai::setPlayBook(const Protos::Immortals::PlayBook &t_playbook)
     return true;
 }
 
-int        step[Common::Setting::kMaxRobots]    = {};
-float      lastAdv[Common::Setting::kMaxRobots] = {};
+int        step[Common::Config::Common::kMaxRobots]    = {};
+float      lastAdv[Common::Config::Common::kMaxRobots] = {};
 static int curr_str_id                          = -1;
 
 bool receivers_reached = false;

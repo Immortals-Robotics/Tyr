@@ -28,7 +28,7 @@ private:
     std::unique_ptr<DemoMenu>   m_demo_menu;
     std::unique_ptr<FooterMenu> m_footer_menu;
 
-    Common::NetworkAddress updated_address;
+    Common::Config::Network::Address updated_address;
 
     std::atomic<bool> m_running = true;
 

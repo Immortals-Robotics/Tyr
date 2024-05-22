@@ -32,7 +32,7 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
     }
 
     // own
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         if ((m_own_robot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != t_robot_num) &&
             (m_own_robot[i].state().vision_id != m_own_robot[t_robot_num].state().vision_id))
@@ -42,7 +42,7 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
     }
 
     // opp
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {

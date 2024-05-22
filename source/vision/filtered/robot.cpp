@@ -18,9 +18,9 @@ void Filtered::filterRobots(Common::TeamColor t_color)
 
     auto &raw_robots = t_color == Common::TeamColor::Yellow ? m_raw_state.yellow_robots : m_raw_state.blue_robots;
 
-    auto &robots = Common::setting().our_color == t_color ? m_state.own_robot : m_state.opp_robot;
+    auto &robots = Common::setting().common.our_color == t_color ? m_state.own_robot : m_state.opp_robot;
 
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         auto &robot = robots[i];
 
@@ -49,7 +49,7 @@ void Filtered::filterRobots(Common::TeamColor t_color)
                 filt_vel = m_robot_kalman[color_id][i].getVelocity();
 
                 m_angle_filter[color_id][i].add((raw_robot.angle - m_raw_angles[color_id][i]) *
-                                                Common::setting().vision_frame_rate);
+                                                Common::setting().vision.vision_frame_rate);
                 m_raw_angles[color_id][i] = raw_robot.angle;
 
                 robot.angular_velocity = m_angle_filter[color_id][i].current();
@@ -65,8 +65,8 @@ void Filtered::filterRobots(Common::TeamColor t_color)
         if (!found)
         {
             m_robot_not_seen[color_id][i]++;
-            if (m_robot_not_seen[color_id][i] >= Common::setting().max_robot_frame_not_seen + 1)
-                m_robot_not_seen[color_id][i] = Common::setting().max_robot_frame_not_seen + 1;
+            if (m_robot_not_seen[color_id][i] >= Common::setting().vision.max_robot_frame_not_seen + 1)
+                m_robot_not_seen[color_id][i] = Common::setting().vision.max_robot_frame_not_seen + 1;
 
             robot.angular_velocity.setDeg(0.0f);
         }
@@ -94,7 +94,7 @@ void Filtered::filterRobots(Common::TeamColor t_color)
 void Filtered::predictRobots()
 {
     auto &own_robots = m_state.own_robot;
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         if (own_robots[i].seen_state != Common::SeenState::Seen)
         {
@@ -114,7 +114,7 @@ void Filtered::predictRobots()
     }
 
     auto &opp_robots = m_state.opp_robot;
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         opp_robots[i].position += opp_robots[i].velocity / (kPredictSteps * 2.0f);
         opp_robots[i].angle += opp_robots[i].angular_velocity / (kPredictSteps * 4.0f);
@@ -124,18 +124,18 @@ void Filtered::predictRobots()
 void Filtered::sendStates()
 {
     auto     &own_robots   = m_state.own_robot;
-    const int our_color_id = static_cast<int>(Common::setting().our_color);
+    const int our_color_id = static_cast<int>(Common::setting().common.our_color);
 
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
-        own_robots[i].color     = Common::setting().our_color;
+        own_robots[i].color     = Common::setting().common.our_color;
         own_robots[i].vision_id = i;
 
         if (m_robot_not_seen[our_color_id][i] == 0)
         {
             own_robots[i].seen_state = Common::SeenState::Seen;
         }
-        else if (m_robot_not_seen[our_color_id][i] < Common::setting().max_robot_frame_not_seen)
+        else if (m_robot_not_seen[our_color_id][i] < Common::setting().vision.max_robot_frame_not_seen)
         {
             own_robots[i].seen_state = Common::SeenState::TemprolilyOut;
         }
@@ -157,7 +157,7 @@ void Filtered::sendStates()
     auto     &opp_robots   = m_state.opp_robot;
     const int opp_color_id = 1 - our_color_id;
 
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         opp_robots[i].color     = static_cast<Common::TeamColor>(opp_color_id);
         opp_robots[i].vision_id = i;
@@ -166,7 +166,7 @@ void Filtered::sendStates()
         {
             opp_robots[i].seen_state = Common::SeenState::Seen;
         }
-        else if (m_robot_not_seen[opp_color_id][i] < Common::setting().max_robot_frame_not_seen)
+        else if (m_robot_not_seen[opp_color_id][i] < Common::setting().vision.max_robot_frame_not_seen)
         {
             opp_robots[i].seen_state = Common::SeenState::TemprolilyOut;
         }

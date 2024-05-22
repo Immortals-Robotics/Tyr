@@ -6,7 +6,7 @@ int Ai::findNearestOpp(const Common::Vec2 t_pos, const int t_mask, const bool t_
 {
     float mdis  = std::numeric_limits<float>::max();
     int   index = -1;
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         if (i == t_mask)
             continue;

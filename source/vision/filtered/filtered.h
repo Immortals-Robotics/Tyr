@@ -44,11 +44,11 @@ private:
     FilteredObject       m_ball_kalman;
     int                  m_ball_not_seen = std::numeric_limits<int>::max() - 1;
 
-    FilteredObject m_robot_kalman[2][Common::Setting::kMaxRobots];
-    int            m_robot_not_seen[2][Common::Setting::kMaxRobots];
+    FilteredObject m_robot_kalman[2][Common::Config::Common::kMaxRobots];
+    int            m_robot_not_seen[2][Common::Config::Common::kMaxRobots];
 
-    Common::MedianFilter<Common::Angle> m_angle_filter[2][Common::Setting::kMaxRobots];
-    Common::Angle                       m_raw_angles[2][Common::Setting::kMaxRobots];
+    Common::MedianFilter<Common::Angle> m_angle_filter[2][Common::Config::Common::kMaxRobots];
+    Common::Angle                       m_raw_angles[2][Common::Config::Common::kMaxRobots];
 
     Common::RawWorldState m_raw_state;
     Common::WorldState    m_state;

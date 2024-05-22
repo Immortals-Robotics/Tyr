@@ -10,7 +10,7 @@ class Hub
 public:
     Hub()
     {
-        m_client = std::make_unique<Common::NngClient>(Common::setting().commands_url);
+        m_client = std::make_unique<Common::NngClient>(Common::setting().network.commands_url);
     }
 
     template <typename Sender, typename... Args>

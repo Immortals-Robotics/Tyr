@@ -13,7 +13,7 @@ bool Raw::receive()
         {
             const int camera_id = packet.detection().camera_id();
 
-            if (Common::setting().use_camera[camera_id] &&
+            if (Common::setting().vision.use_camera[camera_id] &&
                 packet.detection().frame_number() != m_d_frame[camera_id].frame_number())
             {
                 Common::logTrace("Received camera {} frame {} with size {} from {}:{}", camera_id,
@@ -39,16 +39,16 @@ bool Raw::receive()
     return false;
 }
 
-void Raw::updateAddress(const Common::NetworkAddress &t_address)
+void Raw::updateAddress(const Common::Config::Network::Address &t_address)
 {
     m_client->updateAddress(t_address);
 }
 
 bool Raw::camsReady() const
 {
-    for (int i = 0; i < Common::Setting::kCamCount; i++)
+    for (int i = 0; i < Common::Config::Vision::kCamCount; i++)
     {
-        if (!m_packet_received[i] && Common::setting().use_camera[i])
+        if (!m_packet_received[i] && Common::setting().vision.use_camera[i])
         {
             return false;
         }

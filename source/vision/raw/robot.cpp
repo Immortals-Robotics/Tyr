@@ -19,7 +19,7 @@ void Raw::mergeRobots(const Common::TeamColor t_color)
         for (int j = i + 1; j < num; j++)
         {
             if (robots[i].vision_id == robots[j].vision_id &&
-                robots[i].position.distanceTo(robots[j].position) < Common::setting().merge_distance)
+                robots[i].position.distanceTo(robots[j].position) < Common::setting().vision.merge_distance)
             {
                 robots[i].position = (robots[i].position + robots[j].position) / 2.0f;
                 robots[i].angle    = Common::Angle::average(robots[i].angle, robots[j].angle);

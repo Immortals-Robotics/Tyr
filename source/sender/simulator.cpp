@@ -49,9 +49,9 @@ bool Simulator::send(const CommandsWrapper &t_wrapper)
     for (const auto &command : t_wrapper.commands)
         queueCommand(command);
 
-    const Common::NetworkAddress &address = Common::setting().our_color == Common::TeamColor::Yellow
-                                                ? Common::setting().yellow_robot_simulation_address
-                                                : Common::setting().blue_robot_simulation_address;
+    const Common::Config::Network::Address &address = Common::setting().common.our_color == Common::TeamColor::Yellow
+                                                          ? Common::setting().network.yellow_robot_simulation_address
+                                                          : Common::setting().network.blue_robot_simulation_address;
     return m_socket->send(m_packet, address);
 }
 
