@@ -2,12 +2,6 @@
 
 namespace Tyr::Gui
 {
-ConfigMenu::ConfigMenu()
-{
-    m_window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                     ImGuiWindowFlags_NoDecoration;
-}
-
 void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
 {
     static int depth = 0;
@@ -153,8 +147,11 @@ void ConfigMenu::draw()
         main_window_width = (main_window_height - 200.) / 0.77 + 650.;
     }
 
+    const ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+                                   ImGuiWindowFlags_NoDecoration;
+
     ImGui::SetNextWindowSize(ImVec2(250., (main_window_width - 650.) * 0.77));
-    if (ImGui::Begin("Config", nullptr, m_window_flags))
+    if (ImGui::Begin("Config", nullptr, flags))
     {
         drawTabBar();
         ImGui::End();

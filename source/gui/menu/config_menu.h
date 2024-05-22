@@ -5,8 +5,6 @@ namespace Tyr::Gui
 class ConfigMenu
 {
 private:
-    ImGuiWindowFlags m_window_flags;
-
     void drawTabBar();
     void drawConfigTab();
     void drawFilterTab();
@@ -21,27 +19,38 @@ private:
     bool m_configs_dirty = false;
 
 public:
-         ConfigMenu();
-    ~    ConfigMenu() = default;
+     ConfigMenu() = default;
+    ~ConfigMenu() = default;
+
     void feedDebug(const Common::Debug::Wrapper &t_wrapper);
 
     void draw();
 
     struct FilterNode
     {
-                                                 FilterNode(std::string t_name);
+        explicit FilterNode(const std::string &t_name) : name(t_name)
+        {}
+
+        void addChild(const std::string &t_child);
+
         std::string                              name;
         std::vector<std::unique_ptr<FilterNode>> children;
         bool                                     active = true;
-        void                                     addChild(std::string t_child);
     };
 
     struct FilterTree
     {
-                                                 FilterTree() = default;
+        void clear()
+        {
+            nodes.clear();
+        }
+
+        void addNode(std::unique_ptr<FilterNode> t_node)
+        {
+            nodes.emplace_back(std::move(t_node));
+        }
+
         std::vector<std::unique_ptr<FilterNode>> nodes;
-        void                                     clear();
-        void                                     addNode(std::unique_ptr<FilterNode> t_node);
     };
 
     bool                                          m_all_filter = true;
@@ -49,7 +58,7 @@ public:
     FilterTree                                    m_filter_tree;
     std::unordered_map<std::string, FilterNode *> m_node_map;
 
-    const std::unordered_map<std::string, FilterNode *> nodeMap()
+    const std::unordered_map<std::string, FilterNode *> &nodeMap() const
     {
         return m_node_map;
     }
@@ -69,7 +78,7 @@ public:
         return function_name;
     }
 
-    static bool applyFilter(Common::Debug::SourceLocation                        t_source,
+    static bool applyFilter(const Common::Debug::SourceLocation                 &t_source,
                             const std::unordered_map<std::string, FilterNode *> &t_filter_node_map)
     {
         const std::filesystem::path file_path{t_source.file};
@@ -79,7 +88,7 @@ public:
         {
             for (const auto &function : t_filter_node_map.at(file_name)->children)
             {
-                if (ConfigMenu::extractFunctionName(t_source.function) == function->name && function->active)
+                if (extractFunctionName(t_source.function) == function->name && function->active)
                 {
                     draw = true;
                 }

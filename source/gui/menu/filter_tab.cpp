@@ -28,9 +28,9 @@ void ConfigMenu::drawFilterTab()
         {
             force_active = true;
         }
+        ImGui::Indent();
         for (const auto &child : node->children)
         {
-            ImGui::SetCursorPosX(30);
             if (force_active)
             {
                 child->active = node->active;
@@ -40,6 +40,7 @@ void ConfigMenu::drawFilterTab()
                 node->active = true;
             }
         }
+        ImGui::Unindent();
         ImGui::Separator();
         ImGui::Spacing();
     }
@@ -58,8 +59,7 @@ void ConfigMenu::pushToFilters(const std::vector<T> &t_input)
         const std::filesystem::path file_path{in.source.file};
         const std::string           filename = file_path.filename().string();
 
-        auto it = m_node_map.find(filename);
-        if (it == m_node_map.end())
+        if (!m_node_map.contains(filename))
         {
             auto node = std::make_unique<FilterNode>(filename);
 
@@ -78,27 +78,13 @@ void ConfigMenu::feedDebug(const Common::Debug::Wrapper &t_wrapper)
     pushToFilters(t_wrapper.draws);
 }
 
-ConfigMenu::FilterNode::FilterNode(std::string t_name) : name(t_name)
-{}
-
-void ConfigMenu::FilterNode::addChild(const std::string t_child)
+void ConfigMenu::FilterNode::addChild(const std::string &t_child)
 {
-    auto it = std::find_if(children.begin(), children.end(),
-                           [&t_child](const std::unique_ptr<FilterNode> &child) { return child->name == t_child; });
+    const auto it = std::find_if(children.begin(), children.end(), [&t_child](const std::unique_ptr<FilterNode> &child)
+                                 { return child->name == t_child; });
     if (it == children.end())
     {
         children.push_back(std::make_unique<FilterNode>(t_child));
     }
 }
-
-void ConfigMenu::FilterTree::addNode(std::unique_ptr<FilterNode> t_node)
-{
-    nodes.push_back(std::move(t_node));
-}
-
-void ConfigMenu::FilterTree::clear()
-{
-    nodes.clear();
-}
-
 } // namespace Tyr::Gui
