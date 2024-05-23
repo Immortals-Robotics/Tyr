@@ -4,7 +4,7 @@
 
 namespace Tyr::Common
 {
-static constexpr std::string getErrorString(const int t_error)
+static std::string getErrorString(const int t_error)
 {
     switch (t_error)
     {
