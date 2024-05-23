@@ -16,13 +16,12 @@ project(tyr)
 # Raylib's vcpkg port forces sanitizers to be on in debug,
 # we therefore need to force enable it in debug to avoid linking issues
 add_compile_options($<$<OR:$<BOOL:${ENABLE_SANITIZERS}>,$<CONFIG:Debug>>:-fsanitize=address>)
+add_link_options($<$<OR:$<BOOL:${ENABLE_SANITIZERS}>,$<CONFIG:Debug>>:-fsanitize=address>)
 
 # undefined behavior sanitizer is not available on MSVC
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_compile_options("$<$<OR:$<BOOL:${ENABLE_SANITIZERS}>,$<CONFIG:Debug>>:-fno-omit-frame-pointer;-fsanitize=undefined>")
     add_link_options("$<$<OR:$<BOOL:${ENABLE_SANITIZERS}>,$<CONFIG:Debug>>:-fno-omit-frame-pointer;-fsanitize=undefined>")
-
-    add_link_options($<$<OR:$<BOOL:${ENABLE_SANITIZERS}>,$<CONFIG:Debug>>:-fsanitize=address>)
 endif ()
 
 # Set warning levels
