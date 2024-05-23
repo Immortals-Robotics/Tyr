@@ -2,11 +2,11 @@
 
 namespace Tyr::Soccer
 {
-int Ai::findNearestOpp(Common::Vec2 t_pos, int t_mask, bool t_accept_near_ball)
+int Ai::findNearestOpp(const Common::Vec2 t_pos, const int t_mask, const bool t_accept_near_ball)
 {
     float mdis  = std::numeric_limits<float>::max();
     int   index = -1;
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         if (i == t_mask)
             continue;

@@ -2,12 +2,12 @@
 
 namespace Tyr::Soccer
 {
-bool Ai::goalBlocked(Common::Vec2 t_init_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r)
+bool Ai::goalBlocked(const Common::Vec2 t_init_pos, const float t_max_shoot_blocker_dis, const float t_shoot_blocker_r)
 {
     bool oppGoalOpen = true;
 
     Common::Line ballGoalLine = Common::Line::fromTwoPoints(oppGoal(), t_init_pos);
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         if (m_world_state.opp_robot[i].seen_state == Common::SeenState::CompletelyOut)
             continue;

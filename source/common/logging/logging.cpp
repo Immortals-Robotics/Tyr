@@ -30,10 +30,12 @@ Logger::Logger()
 
     spdlog::register_logger(m_logger);
 }
+
 Logger::~Logger()
 {
     flush();
 }
+
 void Logger::addDebugSink()
 {
     auto debug_sink = std::make_shared<DebugSinkMt>();

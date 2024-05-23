@@ -18,7 +18,7 @@ struct Wrapper
 
     Wrapper() = default;
 
-    Wrapper(const Protos::Immortals::Debug::Wrapper &t_wrapper)
+    explicit Wrapper(const Protos::Immortals::Debug::Wrapper &t_wrapper)
     {
         time = TimePoint::fromMicroseconds(t_wrapper.time());
 

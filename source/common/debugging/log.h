@@ -26,21 +26,21 @@ struct Log
 
     Log(const Protos::Immortals::Debug::Log &t_log, const StringMap &t_strings)
     {
-        level  = (Level) t_log.level();
+        level  = static_cast<Level>(t_log.level());
         source = SourceLocation{t_log.source(), t_strings};
         text   = t_log.text();
     }
 
-    Log(const spdlog::details::log_msg &t_msg)
+    explicit Log(const spdlog::details::log_msg &t_msg)
     {
-        level  = (Level) t_msg.level;
-        source = t_msg.source;
+        level  = static_cast<Level>(t_msg.level);
+        source = SourceLocation{t_msg.source};
         text   = {t_msg.payload.data(), t_msg.payload.size()};
     }
 
     void fillProto(Protos::Immortals::Debug::Log *t_log, StringMap *t_strings) const
     {
-        t_log->set_level((Protos::Immortals::Debug::Log_Level) level);
+        t_log->set_level(static_cast<Protos::Immortals::Debug::Log_Level>(level));
         source.fillProto(t_log->mutable_source(), t_strings);
         t_log->set_text(text);
     }
@@ -87,4 +87,4 @@ struct Log
         }
     }
 };
-} // namespace Tyr::Common
+} // namespace Tyr::Common::Debug

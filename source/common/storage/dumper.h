@@ -24,7 +24,7 @@ private:
         NngClient client;
         Storage   storage;
 
-        Entry(std::string_view t_url, std::string_view t_db) : client(t_url)
+        Entry(const std::string_view t_url, const std::string_view t_db) : client(t_url)
         {
             storage.open(t_db);
         }

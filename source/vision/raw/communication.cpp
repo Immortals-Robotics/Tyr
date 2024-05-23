@@ -13,12 +13,11 @@ bool Raw::receive()
         {
             const int camera_id = packet.detection().camera_id();
 
-            if (Common::setting().use_camera[camera_id] &&
+            if (Common::config().vision.use_camera[camera_id] &&
                 packet.detection().frame_number() != m_d_frame[camera_id].frame_number())
             {
-                Common::logTrace("Received camera {} frame {} with size {} from {}:{}", camera_id,
-                                 packet.detection().frame_number(), packet.ByteSizeLong(),
-                                 receive_endpoint.address().to_string(), receive_endpoint.port());
+                Common::logTrace("Received camera {} frame {} with size {} from {}", camera_id,
+                                 packet.detection().frame_number(), packet.ByteSizeLong(), receive_endpoint);
 
                 m_d_frame[camera_id]         = packet.detection();
                 m_packet_received[camera_id] = true;
@@ -27,8 +26,7 @@ bool Raw::receive()
 
         if (packet.has_geometry() && packet.geometry().has_field())
         {
-            Common::logTrace("Received field geometry from {}:{}", receive_endpoint.address().to_string(),
-                             receive_endpoint.port());
+            Common::logTrace("Received field geometry from {}", receive_endpoint);
 
             Common::field() = Common::FieldState{packet.geometry().field()};
         }
@@ -46,9 +44,9 @@ void Raw::updateAddress(const Common::NetworkAddress &t_address)
 
 bool Raw::camsReady() const
 {
-    for (int i = 0; i < Common::Setting::kCamCount; i++)
+    for (int i = 0; i < Common::Config::Vision::kCamCount; i++)
     {
-        if (!m_packet_received[i] && Common::setting().use_camera[i])
+        if (!m_packet_received[i] && Common::config().vision.use_camera[i])
         {
             return false;
         }

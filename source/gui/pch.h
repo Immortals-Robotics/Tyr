@@ -4,7 +4,6 @@
 #include <cmath>
 #include <list>
 #include <mutex>
-#include <regex>
 #include <span>
 #include <string>
 #include <thread>
@@ -18,5 +17,6 @@
 #include <raymath.h>
 
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <rlimgui/rlImGui.h>
 #include <implot.h>

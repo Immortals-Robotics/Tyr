@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::waitForOmghi(int t_robot_num, bool t_chip)
+void Ai::waitForOmghi(const int t_robot_num)
 {
     Common::Line ball_line =
         Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());
@@ -32,9 +32,10 @@ void Ai::waitForOmghi(int t_robot_num, bool t_chip)
     Common::Vec2 target = ans; // calculatePassPos(t_robot_num, 89);
 
     m_own_robot[t_robot_num].target.angle = calculateOneTouchAngle(t_robot_num, target);
-    m_own_robot[t_robot_num].face(Common::Vec2(oppGoal().x, -Common::sign(m_own_robot[t_robot_num].state().position.y) * 300));
+    m_own_robot[t_robot_num].face(
+        Common::Vec2(oppGoal().x, -Common::sign(m_own_robot[t_robot_num].state().position.y) * 300));
 
-    target = calculatePassPos(t_robot_num, oppGoal(), m_own_robot[t_robot_num].state().position, -200);
+    target = calculatePassPos(oppGoal(), m_own_robot[t_robot_num].state().position, -200);
 
     Common::logDebug("sBAR:    {}", sBAR);
     VelocityProfile profile = VelocityProfile::kharaki();

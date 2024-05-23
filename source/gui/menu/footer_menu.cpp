@@ -1,5 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-identifier-naming"
 #include "footer_menu.h"
 
 namespace Tyr::Gui
@@ -33,7 +31,7 @@ void FooterMenu::drawTerminal(const Common::Debug::Wrapper                      
                     fmt::format("[{:%a %H:%M:%S}] [{}] [{}:{}] {}", t_wrapper.time, line.levelName(),
                                 file_path.filename(), line.source.line, line.text);
 
-                ImGui::TextColored(line.color(), "%s", text.c_str());
+                ImGui::TextColored(static_cast<ImVec4>(line.color()), "%s", text.c_str());
             }
         }
         if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
@@ -46,8 +44,8 @@ void FooterMenu::draw(const Common::Debug::Wrapper                              
                       const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map,
                       const Common::WorldState &t_world, const bool &t_playback)
 {
-    auto main_window_height = GetScreenHeight();
-    auto main_window_width  = GetScreenWidth();
+    int main_window_height = GetScreenHeight();
+    int main_window_width  = GetScreenWidth();
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                                     ImGuiWindowFlags_NoDecoration;
@@ -64,8 +62,9 @@ void FooterMenu::draw(const Common::Debug::Wrapper                              
         ImGui::End();
     }
 
-    if(!m_is_plot_pinned) {
-        window_flags = ImGuiWindowFlags_NoCollapse;
+    if (!m_is_plot_pinned)
+    {
+        window_flags       = ImGuiWindowFlags_NoCollapse;
         m_window_condition = ImGuiCond_Once;
     }
 
@@ -81,7 +80,6 @@ void FooterMenu::draw(const Common::Debug::Wrapper                              
     }
     ImGui::SetNextWindowSize(m_plot_window_size, m_window_condition);
 
-
     if (ImGui::Begin("##Plot", nullptr, window_flags))
     {
         drawPlot(t_world, t_playback);
@@ -89,4 +87,3 @@ void FooterMenu::draw(const Common::Debug::Wrapper                              
     }
 }
 } // namespace Tyr::Gui
-#pragma clang diagnostic pop

@@ -42,7 +42,7 @@ inline Common::LineSegment Ai::oppGoalLine() const
     return {oppGoalPostBottom(), oppGoalPostTop()};
 }
 
-inline bool Ai::isOut(Common::Vec2 t_point, const float t_margin) const
+inline bool Ai::isOut(const Common::Vec2 t_point, const float t_margin) const
 {
     return std::fabs(t_point.x) > Common::field().width + t_margin ||
            std::fabs(t_point.y) > Common::field().height + t_margin;

@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip)
+void Ai::receivePass(const int t_robot_num, Common::Vec2 t_static_pos, const bool t_chip)
 {
     const float contStrStaticTime = 1.0f;
 
@@ -62,11 +62,11 @@ void Ai::receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip)
         }
         else if (m_one_touch_type[t_robot_num] == OneTouchType::Shirje)
         {
-            waitForOmghi(t_robot_num, t_chip);
+            waitForOmghi(t_robot_num);
         }
         else if (m_one_touch_type[t_robot_num] == OneTouchType::Gool)
         {
-            waitForGool(t_robot_num, t_chip);
+            waitForGool(t_robot_num);
         }
         else
         { // probably Allaf!!!

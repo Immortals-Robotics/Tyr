@@ -13,8 +13,8 @@ void Renderer::draw(const Common::Debug::Wrapper                                
                 this->draw(*point, draw.color, draw.thickness);
             else if (auto line = std::get_if<Common::Line>(&draw.shape); line)
                 this->draw(*line, draw.color, draw.thickness);
-            else if (auto line = std::get_if<Common::LineSegment>(&draw.shape); line)
-                this->draw(*line, draw.color, draw.thickness);
+            else if (auto segment = std::get_if<Common::LineSegment>(&draw.shape); segment)
+                this->draw(*segment, draw.color, draw.thickness);
             else if (auto rect = std::get_if<Common::Rect>(&draw.shape); rect)
                 this->draw(*rect, draw.color, draw.filled, draw.thickness);
             else if (auto circle = std::get_if<Common::Circle>(&draw.shape); circle)

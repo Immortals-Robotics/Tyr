@@ -17,8 +17,8 @@ bool Application::initialize()
         return false;
     }
 
-    Common::logInfo(" Connecting to RefereeBox server at {} on port : {}", Common::setting().referee_address.port,
-                    Common::setting().referee_address.port);
+    Common::logInfo(" Connecting to RefereeBox server at {} on port : {}",
+                    Common::config().network.referee_address.port, Common::config().network.referee_address.port);
     m_referee = std::make_unique<Referee::Referee>();
     if (m_referee->connect())
     {
@@ -30,8 +30,7 @@ bool Application::initialize()
         return false;
     }
 
-    Common::logInfo("Connecting to Vision server at {} on port: {}", Common::setting().vision_address.ip,
-                    Common::setting().vision_address.port);
+    Common::logInfo("Connecting to Vision server at {}", Common::config().network.vision_address);
     m_vision_raw = std::make_unique<Vision::Raw>();
     if (m_vision_raw->isConnected())
     {
@@ -52,9 +51,9 @@ bool Application::initialize()
     m_ai = std::make_unique<Soccer::Ai>();
 
     m_dumper = std::make_unique<Common::Dumper>();
-    m_dumper->addEntry(Common::setting().raw_world_state_url, Common::setting().raw_world_state_db);
-    m_dumper->addEntry(Common::setting().world_state_url, Common::setting().world_state_db);
-    m_dumper->addEntry(Common::setting().debug_url, Common::setting().debug_db);
+    m_dumper->addEntry(Common::config().network.raw_world_state_url, Common::config().network.raw_world_state_db);
+    m_dumper->addEntry(Common::config().network.world_state_url, Common::config().network.world_state_db);
+    m_dumper->addEntry(Common::config().network.debug_url, Common::config().network.debug_db);
 
     Common::logInfo(" Now it is time, lets rock...");
     return true;
@@ -139,9 +138,9 @@ void Application::aiEntry()
 
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
-        const bool world_received    = m_ai->receiveWorld();
-        const bool referee_received  = m_ai->receiveReferee();
-        const bool playbook_received = m_ai->receivePlayBook();
+        const bool world_received = m_ai->receiveWorld();
+        m_ai->receiveReferee();
+        m_ai->receivePlayBook();
 
         if (!world_received)
         {

@@ -16,14 +16,14 @@ Ai::Ai()
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");
 
-    m_world_client = std::make_unique<Common::NngClient>(Common::setting().world_state_url);
-    m_ref_client   = std::make_unique<Common::NngClient>(Common::setting().referee_state_url);
+    m_world_client = std::make_unique<Common::NngClient>(Common::config().network.world_state_url);
+    m_ref_client   = std::make_unique<Common::NngClient>(Common::config().network.referee_state_url);
 
-    m_strategy_client = std::make_unique<Common::UdpClient>(Common::setting().strategy_address);
+    m_strategy_client = std::make_unique<Common::UdpClient>(Common::config().network.strategy_address);
 
-    m_cmd_server = std::make_unique<Common::NngServer>(Common::setting().commands_url);
+    m_cmd_server = std::make_unique<Common::NngServer>(Common::config().network.commands_url);
 
-    m_dss = std::make_unique<Dss>(&m_world_state, 1000.f);
+    m_dss = std::make_unique<Dss>(&m_world_state);
 
     m_current_play = &Ai::haltAll;
 
@@ -52,7 +52,7 @@ Ai::Ai()
     m_stm_to_ai_num[6] = &m_rw;
     m_stm_to_ai_num[7] = &m_lw;
 
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         m_own_robot[i] = Robot(&m_world_state.own_robot[i]);
 
@@ -105,7 +105,7 @@ bool Ai::publishCommands() const
 
     pb_wrapper.set_time(time.microseconds());
 
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         m_own_robot[i].currentCommand().fillProto(pb_wrapper.add_command());
     }

@@ -14,7 +14,7 @@ void Raw::processBalls()
     {
         for (int j = i + 1; j < num; j++)
         {
-            if (balls[i].position.distanceTo(balls[j].position) < Common::setting().merge_distance)
+            if (balls[i].position.distanceTo(balls[j].position) < Common::config().vision.merge_distance)
             {
                 balls[i].position = (balls[i].position + balls[j].position) / 2.0f;
 

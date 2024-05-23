@@ -5,17 +5,18 @@
 
 namespace Tyr::Strategy
 {
-class Gui : public QWidget
+class Gui final : public QWidget
 {
     Q_OBJECT
 
 public:
-    Gui(QWidget *parent = 0);
-    ~Gui() = default;
+    explicit Gui(QWidget *parent = nullptr);
 
-    Strategy  *strategy[100];
-    int        strategy_counter = 0;
-    int        current_strategy = 0;
+    ~Gui() override = default;
+
+    Strategy *strategy[100];
+    int       strategy_counter = 0;
+    int       current_strategy = 0;
 
     Robot::Type current_robot    = Robot::GK;
     int         current_waypoint = 0;
@@ -30,16 +31,16 @@ public:
     int      sync_counter = 0;
 
 protected:
-    void paintEvent(QPaintEvent *event);
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dragMoveEvent(QDragMoveEvent *event);
-    void dropEvent(QDropEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *event);
+    void paintEvent(QPaintEvent *event) override;
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
-    QPainter painter;
+    QPainter m_painter;
 
 public slots:
 };

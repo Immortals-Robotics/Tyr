@@ -2,8 +2,6 @@
 
 namespace Tyr::Soccer
 {
-static float t_nml;
-
 void Ai::penaltyUsShootout()
 {
     defHi(m_def, m_rw, m_lw, nullptr);
@@ -24,12 +22,12 @@ void Ai::penaltyUsShootout()
     }
     else if (m_world_state.ball.position.distanceTo(oppGoal()) > 3000)
     {
-        circleBall(m_attack, oppGoal().angleWith(m_world_state.ball.position), 1, 0, 0);
+        circleBall(m_attack, oppGoal().angleWith(m_world_state.ball.position), 1, 0);
         Common::logInfo("step1 - Moving forward - waiting to get close to the opp goal");
     }
     else
     {
-        circleBall(m_attack, oppGoal().angleWith(m_world_state.ball.position), 60, 0, 0);
+        circleBall(m_attack, oppGoal().angleWith(m_world_state.ball.position), 60, 0);
         Common::logInfo("step2 - Kick in the goal!!!!");
     }
 }

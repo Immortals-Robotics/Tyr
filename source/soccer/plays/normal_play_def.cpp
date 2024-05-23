@@ -104,6 +104,6 @@ void Ai::normalPlayDef()
     }
 
     attacker(m_attack, shootAngle, shoot_pow, chip_pow, 0, 1);
-    // circleBall(m_attack, 90, 80, 0, 1.0f);
+    // circleBall(m_attack, 90, 80, 0);
 }
 } // namespace Tyr::Soccer

@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-float Ai::calculateSwitchToAttackerScore(int t_robot_num)
+float Ai::calculateSwitchToAttackerScore(const int t_robot_num)
 {
     if (m_own_robot[t_robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         return -1;

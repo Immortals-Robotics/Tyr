@@ -1,6 +1,6 @@
 #include "app.h"
 
-int main(int argc, char *argv[])
+int main()
 {
     Tyr::Gui::Application app{};
     app.initialize();

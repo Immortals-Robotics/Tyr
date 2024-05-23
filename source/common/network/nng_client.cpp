@@ -13,7 +13,7 @@ NngClient::NngClient(const std::string_view t_url)
     }
 
     // TODO: take filter as an input
-    result = nng_setopt(m_socket, NNG_OPT_SUB_SUBSCRIBE, "", 0);
+    result = nng_socket_set(m_socket, NNG_OPT_SUB_SUBSCRIBE, "", 0);
     if (result != 0)
     {
         logCritical("Failed to set nng socket subscribe filter: {}", nng_strerror(result));

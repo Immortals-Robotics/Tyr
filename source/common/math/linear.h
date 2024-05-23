@@ -20,61 +20,61 @@ namespace Tyr::Common
 class Linear
 {
 public:
-    [[nodiscard]] static Linear calculate(int n, float *x, float *y);
+    [[nodiscard]] static Linear calculate(int t_n, const float *t_x, const float *t_y);
 
     //! Evaluates the linear regression function at the given abscissa.
-    [[nodiscard]] inline float getValue(float x) const
+    [[nodiscard]] float getValue(const float t_x) const
     {
-        return m_a + m_b * x;
+        return m_a + m_b * t_x;
     }
 
     //! Returns the slope of the regression line
-    [[nodiscard]] inline float getSlope() const
+    [[nodiscard]] float getSlope() const
     {
         return m_b;
     }
 
     //! Returns the intercept on the Y axis of the regression line
-    [[nodiscard]] inline float getIntercept() const
+    [[nodiscard]] float getIntercept() const
     {
         return m_a;
     }
 
     //! Returns the linear regression coefficient
-    [[nodiscard]] inline float getCoefficient() const
+    [[nodiscard]] float getCoefficient() const
     {
         return m_coeff;
     }
 
-    [[nodiscard]] inline bool isAmoodi() const
+    [[nodiscard]] bool isAmoodi() const
     {
-        return amoodi;
+        return m_amoodi;
     }
 
-    [[nodiscard]] inline float getXIntercept() const
+    [[nodiscard]] float getXIntercept() const
     {
-        return xinter;
+        return m_xinter;
     }
 
-    [[nodiscard]] inline float getDisToPoint(Vec2 p) const
+    [[nodiscard]] float getDisToPoint(const Vec2 t_p) const
     {
-        if (amoodi)
-            return std::fabs(p.x - xinter);
-        return std::fabs(m_b * p.x - p.y + m_a) / sqrt(m_b * m_b + 1.0);
+        if (m_amoodi)
+            return std::fabs(t_p.x - m_xinter);
+        return std::fabs(m_b * t_p.x - t_p.y + m_a) / sqrt(m_b * m_b + 1.0f);
     }
 
-    inline void chapeKon()
+    void chapeKon()
     {
         m_a = -m_a / m_b;
         m_b = 1.0f / m_b;
     }
 
 private:
-    float m_a     = 0.0f;
-    float m_b     = 0.0f;
-    float m_coeff = 0.0f;
-    float xinter  = 0.0f;
+    float m_a      = 0.0f;
+    float m_b      = 0.0f;
+    float m_coeff  = 0.0f;
+    float m_xinter = 0.0f;
 
-    bool amoodi = false;
+    bool m_amoodi = false;
 };
 } // namespace Tyr::Common

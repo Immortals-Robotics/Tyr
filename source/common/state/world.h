@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../setting.h"
+#include "../config/config.h"
 #include "../time/time_point.h"
 
 namespace Tyr::Common
@@ -34,16 +34,16 @@ struct RawRobotState
     RawRobotState(const Protos::Immortals::RawRobotState &t_robot)
     {
         vision_id = t_robot.id();
-        color     = (TeamColor) t_robot.color();
+        color     = static_cast<TeamColor>(t_robot.color());
 
-        position = t_robot.position();
-        angle    = t_robot.angle();
+        position = Vec2{t_robot.position()};
+        angle    = Angle{t_robot.angle()};
     }
 
     void fillProto(Protos::Immortals::RawRobotState *const t_state) const
     {
         t_state->set_id(vision_id);
-        t_state->set_color((Protos::Immortals::TeamColor) color);
+        t_state->set_color(static_cast<Protos::Immortals::TeamColor>(color));
 
         position.fillProto(t_state->mutable_position());
         angle.fillProto(t_state->mutable_angle());
@@ -63,7 +63,7 @@ struct RawBallState
 
     RawBallState(const Protos::Immortals::RawBallState &t_ball)
     {
-        position = t_ball.position();
+        position = Vec2{t_ball.position()};
     }
 
     void fillProto(Protos::Immortals::RawBallState *const t_state) const
@@ -163,22 +163,22 @@ struct RobotState
     RobotState(const Protos::Immortals::RobotState &t_robot)
     {
         vision_id = t_robot.id();
-        color     = (TeamColor) t_robot.color();
+        color     = static_cast<TeamColor>(t_robot.color());
 
-        position = t_robot.position();
-        velocity = t_robot.velocity();
+        position = Vec2{t_robot.position()};
+        velocity = Vec2{t_robot.velocity()};
 
-        angle            = t_robot.angle();
-        angular_velocity = t_robot.angular_velocity();
+        angle            = Angle{t_robot.angle()};
+        angular_velocity = Angle{t_robot.angular_velocity()};
 
-        seen_state         = (SeenState) t_robot.seen_state();
+        seen_state         = static_cast<SeenState>(t_robot.seen_state());
         out_for_substitute = t_robot.out_for_substitute();
     }
 
     void fillProto(Protos::Immortals::RobotState *const t_robot) const
     {
         t_robot->set_id(vision_id);
-        t_robot->set_color((Protos::Immortals::TeamColor) color);
+        t_robot->set_color(static_cast<Protos::Immortals::TeamColor>(color));
 
         position.fillProto(t_robot->mutable_position());
         velocity.fillProto(t_robot->mutable_velocity());
@@ -186,7 +186,7 @@ struct RobotState
         angle.fillProto(t_robot->mutable_angle());
         angular_velocity.fillProto(t_robot->mutable_angular_velocity());
 
-        t_robot->set_seen_state((Protos::Immortals::SeenState) seen_state);
+        t_robot->set_seen_state(static_cast<Protos::Immortals::SeenState>(seen_state));
         t_robot->set_out_for_substitute(out_for_substitute);
     }
 };
@@ -202,10 +202,10 @@ struct BallState
 
     BallState(const Protos::Immortals::BallState &t_ball)
     {
-        position = t_ball.position();
-        velocity = t_ball.velocity();
+        position = Vec2{t_ball.position()};
+        velocity = Vec2{t_ball.velocity()};
 
-        seen_state = (SeenState) t_ball.seen_state();
+        seen_state = static_cast<SeenState>(t_ball.seen_state());
     }
 
     BallState(const Protos::Ssl::Vision::DetectionBall &t_ball)
@@ -219,10 +219,10 @@ struct BallState
         position.fillProto(t_ball->mutable_position());
         velocity.fillProto(t_ball->mutable_velocity());
 
-        t_ball->set_seen_state((Protos::Immortals::SeenState) seen_state);
+        t_ball->set_seen_state(static_cast<Protos::Immortals::SeenState>(seen_state));
     }
 
-    inline Common::Line line() const
+    Common::Line line() const
     {
         return Common::Line::fromPointAndAngle(position, velocity.toAngle());
     }
@@ -290,16 +290,16 @@ struct WorldState
 
     BallState ball;
 
-    RobotState own_robot[Setting::kMaxRobots];
-    RobotState opp_robot[Setting::kMaxRobots];
+    RobotState own_robot[Config::Common::kMaxRobots];
+    RobotState opp_robot[Config::Common::kMaxRobots];
 
     WorldState()
     {
-        for (int i = 0; i < Setting::kMaxRobots; i++)
+        for (int i = 0; i < Config::Common::kMaxRobots; i++)
         {
             own_robot[i].vision_id = i;
         }
-        for (int i = 0; i < Setting::kMaxRobots; i++)
+        for (int i = 0; i < Config::Common::kMaxRobots; i++)
         {
             opp_robot[i].vision_id = i;
         }

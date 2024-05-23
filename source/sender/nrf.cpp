@@ -65,7 +65,7 @@ void Nrf::queueCommand(const Command &command)
     appendData(data, data[1]);
 }
 
-void Nrf::appendData(unsigned char *data, int length)
+void Nrf::appendData(unsigned char *data, const int length)
 {
     auto buffer = commUDP->getBuffer();
 
@@ -84,13 +84,12 @@ bool Nrf::send(const CommandsWrapper &t_wrapper)
         return false;
     }
 
-    for (const auto &command : t_wrapper.command)
+    for (const auto &command : t_wrapper.commands)
         queueCommand(command);
 
     append_demo_data();
 
-    const bool result = commUDP->send(
-        buff_idx, Common::NetworkAddress{Common::setting().sender_address.ip, Common::setting().sender_address.port});
+    const bool result = commUDP->send(buff_idx, Common::config().network.sender_address);
 
     if (!result)
     {

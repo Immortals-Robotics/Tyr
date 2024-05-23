@@ -21,14 +21,14 @@ struct SyncPoint
 
 struct SyncData
 {
-    std::vector<SyncPoint> point;
+    std::vector<SyncPoint> points;
 
     SyncData() = default;
 
     SyncData(const Protos::Immortals::SyncData &t_data)
     {
         for (const auto &point : t_data.point())
-            this->point.emplace_back(point);
+            points.emplace_back(point);
     }
 };
 
@@ -52,7 +52,7 @@ struct Waypoint
 
     Waypoint(const Protos::Immortals::Waypoint &t_waypoint)
     {
-        type     = (Type) t_waypoint.type();
+        type     = static_cast<Type>(t_waypoint.type());
         position = Common::Vec2(t_waypoint.x(), t_waypoint.y());
         need_rrt = t_waypoint.need_rrt();
         speed    = t_waypoint.speed();
@@ -100,15 +100,15 @@ struct Role
         for (const auto &waypoint : t_role.path())
             path.emplace_back(waypoint);
 
-        afterlife = (Afterlife) t_role.afterlife();
+        afterlife = static_cast<Afterlife>(t_role.afterlife());
     }
 };
 
 struct Strategy
 {
     std::string           name;
-    std::vector<Role>     role;
-    std::vector<SyncData> sync;
+    std::vector<Role>     roles;
+    std::vector<SyncData> syncs;
     Common::Rect          area;
 
     Strategy() = default;
@@ -118,10 +118,10 @@ struct Strategy
         name = t_strategy.name();
 
         for (const auto &role : t_strategy.role())
-            this->role.emplace_back(role);
+            roles.emplace_back(role);
 
         for (const auto &data : t_strategy.sync())
-            sync.emplace_back(data);
+            syncs.emplace_back(data);
 
         area = Common::Rect{{t_strategy.min_x(), t_strategy.min_y()}, {t_strategy.max_x(), t_strategy.max_y()}};
     }
@@ -129,18 +129,18 @@ struct Strategy
 
 struct PlayBook
 {
-    std::vector<Strategy> strategy;
-    std::vector<float>    weight;
+    std::vector<Strategy> strategies;
+    std::vector<float>    weights;
 
     PlayBook() = default;
 
     PlayBook(const Protos::Immortals::PlayBook &t_playbook)
     {
         for (const auto &strategy : t_playbook.strategy())
-            this->strategy.emplace_back(strategy);
+            strategies.emplace_back(strategy);
 
         for (const float weight : t_playbook.weight())
-            this->weight.push_back(weight);
+            weights.push_back(weight);
     }
 };
 } // namespace Tyr::Soccer

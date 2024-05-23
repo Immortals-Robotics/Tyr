@@ -2,9 +2,9 @@
 
 namespace Tyr::Soccer
 {
-void Ai::mark2Goal(int t_robot_num, int t_opp, float t_dist)
+void Ai::mark2Goal(const int t_robot_num, const int t_opp, float t_dist)
 {
-    const float opp_predict_t = 0.15;
+    const float opp_predict_t = 0.15f;
     t_dist                    = std::min(1500.0f, t_dist);
 
     Common::Vec2 predictedOpp =

@@ -5,7 +5,7 @@ namespace Tyr::Vision
 class Raw
 {
 public:
-    Raw();
+     Raw();
     ~Raw() = default;
 
     bool receive();
@@ -32,9 +32,9 @@ private:
 
     Common::RawBallState m_last_raw_ball; // The last position of the locked ball
 
-    std::array<bool, Common::Setting::kCamCount> m_packet_received;
+    std::array<bool, Common::Config::Vision::kCamCount> m_packet_received;
 
-    Protos::Ssl::Vision::DetectionFrame m_d_frame[Common::Setting::kCamCount];
+    Protos::Ssl::Vision::DetectionFrame m_d_frame[Common::Config::Vision::kCamCount];
 
     Common::RawWorldState m_state;
 };

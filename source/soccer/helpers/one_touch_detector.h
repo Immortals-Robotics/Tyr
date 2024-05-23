@@ -17,11 +17,11 @@ public:
         hys = 0;
         BAR = 89.0;
     }
-    bool IsArriving(float angleTol = 40, float passAngleLimit = 80)
+    bool IsArriving(const float angleTol = 40, const float passAngleLimit = 80)
     {
         return IsArriving(Common::Vec2(-(*side) * Common::field().width, 0), angleTol, passAngleLimit);
     }
-    bool IsArriving(const Common::Vec2 &target, float angleTol, float passAngleLimit)
+    bool IsArriving(const Common::Vec2 &target, const float angleTol, const float passAngleLimit)
     {
         const float         ballDistBeforeStop = (ball->velocity.lengthSquared()) / 500.0f;
         const Common::Angle angleWithTarget    = rState->state().position.angleWith(target);

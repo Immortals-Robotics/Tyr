@@ -32,7 +32,7 @@ bool Ai::loadPlayBook(const std::filesystem::path &t_path)
     const bool result = setPlayBook(playbook);
 
     if (result)
-        Common::logInfo("Playbook file {} loaded with {} strategies", t_path, m_playbook.strategy.size());
+        Common::logInfo("Playbook file {} loaded with {} strategies", t_path, m_playbook.strategies.size());
     else
         Common::logCritical("Could not open strategy file {}", t_path);
 
@@ -46,8 +46,7 @@ bool Ai::receivePlayBook()
         return false;
 
     const auto receive_endpoint = m_strategy_client->getLastReceiveEndpoint();
-    Common::logInfo("Received playbook from {} on port {}", receive_endpoint.address().to_string(),
-                    receive_endpoint.port());
+    Common::logInfo("Received playbook from {}", receive_endpoint);
 
     if (!setPlayBook(playbook))
         return false;
@@ -72,18 +71,18 @@ bool Ai::setPlayBook(const Protos::Immortals::PlayBook &t_playbook)
 
     m_playbook = t_playbook;
 
-    for (int strategy_idx = 0; strategy_idx < m_playbook.strategy.size(); ++strategy_idx)
+    for (int strategy_idx = 0; strategy_idx < m_playbook.strategies.size(); ++strategy_idx)
     {
-        Common::logInfo("STRATEGY: {}, weight: {}", m_playbook.strategy[strategy_idx].name,
-                        m_playbook.weight[strategy_idx]);
+        Common::logInfo("STRATEGY: {}, weight: {}", m_playbook.strategies[strategy_idx].name,
+                        m_playbook.weights[strategy_idx]);
     }
 
     return true;
 }
 
-int        step[Common::Setting::kMaxRobots]    = {};
-float      lastAdv[Common::Setting::kMaxRobots] = {};
-static int curr_str_id                          = -1;
+int        step[Common::Config::Common::kMaxRobots]    = {};
+float      lastAdv[Common::Config::Common::kMaxRobots] = {};
+static int curr_str_id                                 = -1;
 
 bool receivers_reached = false;
 
@@ -101,56 +100,56 @@ void Ai::strategy()
         return;
     }
 
-    const Strategy &strategy = m_playbook.strategy[curr_str_id];
+    const Strategy &strategy = m_playbook.strategies[curr_str_id];
     Common::logInfo("STRATEGY: {}", strategy.name);
 
-    const Common::Vec2 sign_modifier{(float) m_side, Common::sign(-m_world_state.ball.position.y)};
+    const Common::Vec2 sign_modifier{static_cast<float>(m_side), Common::sign(-m_world_state.ball.position.y)};
 
     Common::logDebug("m_timer: {}", m_timer.time());
     if (m_timer.time().seconds() < 0.5)
     {
-        for (int i = 0; i < strategy.role.size(); i++)
+        for (int i = 0; i < strategy.roles.size(); i++)
         {
             // FOR NOW: advance to the last step
-            step[i]    = std::max(0, (int) strategy.role[i].path.size() - 2);
+            step[i]    = std::max(0, static_cast<int>(strategy.roles[i].path.size()) - 2);
             lastAdv[i] = m_timer.time().seconds();
             Common::logDebug("zeroed: {}", i);
         }
         Common::Angle passAngle = Common::Angle::fromDeg(90.0f - m_side * 90.0f);
-        circleBall(m_attack, passAngle, 0, 0, 1.0f);
+        circleBall(m_attack, passAngle, 0, 0);
         return;
     }
     else
     {
-        for (int i = 0; i < strategy.role.size(); i++)
+        for (int i = 0; i < strategy.roles.size(); i++)
         {
-            if (strategy.role[i].path.size() == 0)
+            if (strategy.roles[i].path.size() == 0)
                 continue;
 
-            if (step[i] >= strategy.role[i].path.size() - 1)
+            if (step[i] >= strategy.roles[i].path.size() - 1)
             {
-                step[i]    = strategy.role[i].path.size() - 1;
+                step[i]    = strategy.roles[i].path.size() - 1;
                 lastAdv[i] = m_timer.time().seconds();
                 Common::logDebug("zeroed: {}", i);
                 continue;
             }
 
-            if ((strategy.role[i].path[step[i]].type == Waypoint::Type::Time) || (*m_stm_to_ai_num[i] == m_attack))
+            if ((strategy.roles[i].path[step[i]].type == Waypoint::Type::Time) || (*m_stm_to_ai_num[i] == m_attack))
             {
-                if (m_timer.time().seconds() - lastAdv[i] > strategy.role[i].path[step[i]].time * 0.1f)
+                if (m_timer.time().seconds() - lastAdv[i] > strategy.roles[i].path[step[i]].time * 0.1f)
                 {
-                    step[i]    = std::min((int) strategy.role[i].path.size() - 1, step[i] + 1);
+                    step[i]    = std::min(static_cast<int>(strategy.roles[i].path.size()) - 1, step[i] + 1);
                     lastAdv[i] = m_timer.time().seconds();
                     Common::logDebug("stepped: {}    {}", i, step[i]);
                 }
             }
             else
             {
-                if ((strategy.role[i].path[step[i]].position * sign_modifier)
+                if ((strategy.roles[i].path[step[i]].position * sign_modifier)
                         .distanceTo(m_own_robot[*m_stm_to_ai_num[i]].state().position) <
-                    strategy.role[i].path[step[i]].tolerance)
+                    strategy.roles[i].path[step[i]].tolerance)
                 {
-                    step[i]    = std::min((int) strategy.role[i].path.size() - 1, step[i] + 1);
+                    step[i]    = std::min(static_cast<int>(strategy.roles[i].path.size()) - 1, step[i] + 1);
                     lastAdv[i] = m_timer.time().seconds();
                     Common::logDebug("stepped: {}    {}", i, step[i]);
                 }
@@ -160,13 +159,13 @@ void Ai::strategy()
 
     bool new_receivers_reached = true;
     defHi(m_def, m_rw, m_lw, nullptr);
-    for (int i = 0; i < strategy.role.size(); i++)
+    for (int i = 0; i < strategy.roles.size(); i++)
     {
         // if ((*m_stm_to_ai_num[i]==m_gk)||(*m_stm_to_ai_num[i]==m_def)) {
         //	continue;
         // }
 
-        if (strategy.role[i].path.size() == 0)
+        if (strategy.roles[i].path.size() == 0)
         {
             if (*m_stm_to_ai_num[i] == m_gk)
                 gkHi(m_gk);
@@ -183,70 +182,67 @@ void Ai::strategy()
             int shoot = 0;
             int chip  = 0;
 
-            if (strategy.role[i].path[step[i]].type == Waypoint::Type::Position)
+            if (strategy.roles[i].path[step[i]].type == Waypoint::Type::Position)
             {
-                shoot = strategy.role[i].path[step[i]].tolerance;
+                shoot = strategy.roles[i].path[step[i]].tolerance;
                 Common::logDebug("ATTACK: shoot: {}", shoot);
             }
             else
             {
-                chip = strategy.role[i].path[step[i]].tolerance;
+                chip = strategy.roles[i].path[step[i]].tolerance;
                 Common::logDebug("ATTACK: chip:{}", chip);
             }
 
-            if (step[i] == strategy.role[i].path.size() - 1 && receivers_reached && m_timer.time().seconds() > 3)
+            if (step[i] == strategy.roles[i].path.size() - 1 && receivers_reached && m_timer.time().seconds() > 3)
             {
                 Common::Angle passAngle =
-                    (strategy.role[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
+                    (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
                 float tmp_mult = 1; // TODO #11 remove this multiplier and fix that strategy maker
-                circleBall(*m_stm_to_ai_num[i], passAngle, shoot * tmp_mult, chip, 1.0f);
+                circleBall(*m_stm_to_ai_num[i], passAngle, shoot * tmp_mult, chip);
             }
-            else if (step[i] == strategy.role[i].path.size() - 2)
+            else if (step[i] == strategy.roles[i].path.size() - 2)
             {
                 Common::Angle passAngle =
-                    (strategy.role[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
-                circleBall(*m_stm_to_ai_num[i], passAngle, 0, 0, 1.0f, 140.0f);
+                    (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
+                circleBall(*m_stm_to_ai_num[i], passAngle, 0, 0, 140.0f);
             }
             else
             {
                 Common::Angle passAngle =
-                    (strategy.role[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
-                circleBall(*m_stm_to_ai_num[i], passAngle, 0, 0, 1.0f);
+                    (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
+                circleBall(*m_stm_to_ai_num[i], passAngle, 0, 0);
             }
         }
 
         else
         {
-            const VelocityProfile profile = strategy.role[i].path[step[i]].velocity_profile;
+            const VelocityProfile profile = strategy.roles[i].path[step[i]].velocity_profile;
 
-            if (step[i] != strategy.role[i].path.size() - 1)
+            if (step[i] != strategy.roles[i].path.size() - 1)
             {
                 m_own_robot[*m_stm_to_ai_num[i]].face(oppGoal());
-                navigate(*m_stm_to_ai_num[i], strategy.role[i].path[step[i]].position * sign_modifier, profile,
+                navigate(*m_stm_to_ai_num[i], strategy.roles[i].path[step[i]].position * sign_modifier, profile,
                          NavigationFlagsForceBallObstacle);
             }
             else
             {
-                receivePass(*m_stm_to_ai_num[i], strategy.role[i].path[step[i]].position * sign_modifier);
+                receivePass(*m_stm_to_ai_num[i], strategy.roles[i].path[step[i]].position * sign_modifier);
             }
         }
 
-        const float remainingDis = (strategy.role[i].path[step[i]].position * sign_modifier)
-                                       .distanceTo(m_own_robot[*m_stm_to_ai_num[i]].state().position);
-
-        switch (strategy.role[i].afterlife)
+        switch (strategy.roles[i].afterlife)
         {
         case Role::Afterlife::Gool:
             m_one_touch_type[*m_stm_to_ai_num[i]] = OneTouchType::Gool;
             break;
         case Role::Afterlife::OneTouch:
             m_one_touch_type[*m_stm_to_ai_num[i]] = OneTouchType::OneTouch;
-            if (strategy.role[i].path.size() == 0)
+            if (strategy.roles[i].path.size() == 0)
                 m_allaf_pos[*m_stm_to_ai_num[i]] = Common::Vec2();
             else
-                m_allaf_pos[*m_stm_to_ai_num[i]] = strategy.role[i].path.back().position * sign_modifier;
+                m_allaf_pos[*m_stm_to_ai_num[i]] = strategy.roles[i].path.back().position * sign_modifier;
 
-            if (step[i] != strategy.role[i].path.size() - 1)
+            if (step[i] != strategy.roles[i].path.size() - 1)
                 // if (i == m_dmf && remainingDis > 150)
                 new_receivers_reached = false;
             break;
@@ -261,10 +257,10 @@ void Ai::strategy()
             }
             else
             {
-                if (strategy.role[i].path.size() == 0)
+                if (strategy.roles[i].path.size() == 0)
                     m_allaf_pos[*m_stm_to_ai_num[i]] = Common::Vec2();
                 else
-                    m_allaf_pos[*m_stm_to_ai_num[i]] = strategy.role[i].path.back().position * sign_modifier;
+                    m_allaf_pos[*m_stm_to_ai_num[i]] = strategy.roles[i].path.back().position * sign_modifier;
             }
             break;
         default:

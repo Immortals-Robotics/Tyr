@@ -25,7 +25,7 @@ private:
     Common::Timer  m_timer;
 
     using Play = void (Ai::*)();
-    Play m_current_play;
+    Play              m_current_play;
 
     Common::Angle m_chip_head;
 
@@ -51,7 +51,7 @@ private:
 
     void manageAttRoles();
 
-    OneTouchDetector m_one_touch_detector[Common::Setting::kMaxRobots];
+    OneTouchDetector m_one_touch_detector[Common::Config::Common::kMaxRobots];
     enum class OneTouchType
     {
         OneTouch = 0,
@@ -59,12 +59,11 @@ private:
         Gool,
         Allaf,
     };
-    OneTouchType m_one_touch_type[Common::Setting::kMaxRobots];
-    bool         m_one_touch_type_used[Common::Setting::kMaxRobots];
+    OneTouchType m_one_touch_type[Common::Config::Common::kMaxRobots];
+    bool         m_one_touch_type_used[Common::Config::Common::kMaxRobots];
 
     // Helpers
-    Common::Vec2 calculatePassPos(int t_robot_num, const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos,
-                                  float t_bar = 89.0f);
+    Common::Vec2 calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar = 89.0f);
     float        calculateRobotReachTime(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile);
     float        calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile);
 
@@ -110,7 +109,7 @@ private:
     inline Common::Vec2        oppGoalPostTop() const;
     inline Common::Vec2        oppGoalPostBottom() const;
     inline Common::LineSegment oppGoalLine() const;
-    inline bool                isOut(Common::Vec2 t_point, const float t_margin = 0.0f) const;
+    inline bool                isOut(Common::Vec2 t_point, float t_margin = 0.0f) const;
 
     // Navigation
     enum NavigationFlags
@@ -126,7 +125,7 @@ private:
                   NavigationFlags t_flags = NavigationFlagsNone);
     void setObstacles(int t_robot_num, NavigationFlags t_flags = NavigationFlagsNone);
 
-    Planner              m_planner[Common::Setting::kMaxRobots];
+    Planner              m_planner[Common::Config::Common::kMaxRobots];
     std::unique_ptr<Dss> m_dss;
 
     // Skills
@@ -142,10 +141,10 @@ private:
     void attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip, bool t_kiss, bool t_dribbler);
     void waitForPass(int t_robot_num, bool t_chip = false, const Common::Vec2 *t_target = nullptr,
                      Common::Vec2 *t_stat_pos = nullptr);
-    void waitForOmghi(int t_robot_num, bool t_chip = false);
-    void waitForGool(int t_robot_num, bool t_chip = false);
+    void waitForOmghi(int t_robot_num);
+    void waitForGool(int t_robot_num);
     void receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip = false);
-    void circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow, float t_precision,
+    void circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow,
                     float t_near_dis_override = -1.0f);
 
     bool m_gk_intercepting;
@@ -174,8 +173,8 @@ private:
     int strategyWeight();
 
     PlayBook     m_playbook;
-    int         *m_stm_to_ai_num[Common::Setting::kMaxRobots] = {};
-    Common::Vec2 m_allaf_pos[Common::Setting::kMaxRobots];
+    int         *m_stm_to_ai_num[Common::Config::Common::kMaxRobots] = {};
+    Common::Vec2 m_allaf_pos[Common::Config::Common::kMaxRobots];
 
     // FSM
     int m_func_state = 0;
@@ -184,7 +183,7 @@ private:
     void internalProcessData();
 
 public:
-    Robot m_own_robot[Common::Setting::kMaxRobots];
+    Robot m_own_robot[Common::Config::Common::kMaxRobots];
 
     Ai();
 

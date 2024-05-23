@@ -16,10 +16,10 @@ Gui::Gui(QWidget *parent) : QWidget(parent)
 
 QColor col[7] = {QColor(15, 127, 127), Qt::black, Qt::yellow, Qt::red, Qt::blue, QColor(150, 0, 150)};
 
-void Gui::paintEvent(QPaintEvent *event)
+void Gui::paintEvent([[maybe_unused]] QPaintEvent *event)
 {
-    painter.begin(this);
-    painter.drawImage(0, 0, QImage(QString(DATA_DIR) + "/strategy-images/field.png"));
+    m_painter.begin(this);
+    m_painter.drawImage(0, 0, QImage(QString(DATA_DIR) + "/strategy-images/field.png"));
     // painter.drawImage(0,0,fieldGeometry);
     if (strategy_counter > 0)
     {
@@ -27,26 +27,24 @@ void Gui::paintEvent(QPaintEvent *event)
         {
             for (int i = 0; i < strategy[current_strategy]->robot[j].waypoint_counter - 1; i++)
             {
-                painter.setPen(col[j]);
-                painter.drawLine(strategy[current_strategy]->robot[j].waypoint[i]->x() + 12,
-                                 strategy[current_strategy]->robot[j].waypoint[i]->y() + 12,
-                                 strategy[current_strategy]->robot[j].waypoint[i + 1]->x() + 12,
-                                 strategy[current_strategy]->robot[j].waypoint[i + 1]->y() + 12);
+                m_painter.setPen(col[j]);
+                m_painter.drawLine(strategy[current_strategy]->robot[j].waypoint[i]->x() + 12,
+                                   strategy[current_strategy]->robot[j].waypoint[i]->y() + 12,
+                                   strategy[current_strategy]->robot[j].waypoint[i + 1]->x() + 12,
+                                   strategy[current_strategy]->robot[j].waypoint[i + 1]->y() + 12);
             }
         }
         int x1 = (((strategy[current_strategy]->min_x / 10.0) + 450) * 3.0 / 2);
         int x2 = (((strategy[current_strategy]->max_x / 10.0) + 450) * 3.0 / 2);
         int y1 = ((-(strategy[current_strategy]->min_y / 10.0) + 300) * 3.0 / 2);
-        int y2 = ((-(strategy[current_strategy]->max_y / 10.0) + 300) * 3.0 / 2);
 
         x1 += 106;
         x2 += 106;
         y1 += 45;
-        y2 += 45;
-        painter.fillRect(x1, y1 - 10, (x2 - x1), 20, QColor(255, 0, 0, strategy[current_strategy]->weight * 20));
+        m_painter.fillRect(x1, y1 - 10, (x2 - x1), 20, QColor(255, 0, 0, strategy[current_strategy]->weight * 20));
     }
 
-    painter.end();
+    m_painter.end();
 }
 
 void Gui::dragEnterEvent(QDragEnterEvent *event)
@@ -151,7 +149,7 @@ void Gui::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void Gui::keyReleaseEvent(QKeyEvent *event)
+void Gui::keyReleaseEvent([[maybe_unused]] QKeyEvent *event)
 {
     key_type = 0;
     key_sync = 0;
@@ -266,8 +264,9 @@ void Gui::mousePressEvent(QMouseEvent *event)
             }
         }
     }
-    QPixmap     pixmap = *child->pixmap();
-    QByteArray  itemData;
+    QPixmap    pixmap = child->pixmap(Qt::ReturnByValue);
+    QByteArray itemData;
+
     QDataStream dataStream(&itemData, QIODevice::WriteOnly);
     dataStream << pixmap << QPoint(event->pos() - child->pos());
     //! [1]
@@ -293,7 +292,9 @@ void Gui::mousePressEvent(QMouseEvent *event)
     child->setPixmap(tempPixmap);
 
     if (drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction) == Qt::MoveAction)
-        int y = 0; // child->close();
+    {
+        // child->close();
+    }
     else
     {
         child->show();

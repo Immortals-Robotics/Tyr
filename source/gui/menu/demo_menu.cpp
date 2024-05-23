@@ -3,9 +3,9 @@ namespace Tyr::Gui
 {
 DemoMenu::DemoMenu()
 {
-    m_debug_storage.open(Common::setting().debug_db);
-    m_world_filtered_storage.open(Common::setting().world_state_db);
-    m_referee_storage.open(Common::setting().referee_db);
+    m_debug_storage.open(Common::config().network.debug_db);
+    m_world_filtered_storage.open(Common::config().network.world_state_db);
+    m_referee_storage.open(Common::config().network.referee_db);
 }
 
 DemoMenu::~DemoMenu()
@@ -46,14 +46,14 @@ void DemoMenu::draw()
             ImGui::PushFont(font);
 
             if (ImGui::Combo(
-                    "##DemoList", &m_selected_demo, [](void *user_data, int idx) -> const char *
-                    { return ((Demo *) user_data + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
+                    "##DemoList", &m_selected_demo, [](void *user_data, const int idx) -> const char *
+                    { return (static_cast<Demo *>(user_data) + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
             {
                 m_timer.reset();
             }
             ImGui::Spacing();
             ImGui::Spacing();
-            font->Scale = 1.8;
+            font->Scale = 1.8f;
             ImGui::PushFont(font);
             if (ImGui::Button("\uf04a", {40, 40}))
             {

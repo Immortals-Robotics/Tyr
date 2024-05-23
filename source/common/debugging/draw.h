@@ -20,7 +20,7 @@ struct Draw
     Draw(const Protos::Immortals::Debug::Draw &t_draw, const StringMap &t_strings)
     {
         source    = SourceLocation{t_draw.source(), t_strings};
-        color     = t_draw.color();
+        color     = Color{t_draw.color()};
         filled    = t_draw.filled();
         thickness = t_draw.thickness();
 
@@ -45,7 +45,7 @@ struct Draw
             shape = Triangle{t_draw.triangle()};
             break;
         default:
-            logWarning("Unsupported shape type: {}", (int) t_draw.shape_case());
+            logWarning("Unsupported shape type: {}", static_cast<int>(t_draw.shape_case()));
             break;
         }
     }
@@ -57,20 +57,20 @@ struct Draw
         t_draw->set_filled(filled);
         t_draw->set_thickness(thickness);
 
-        if (auto point = std::get_if<Vec2>(&shape); point)
+        if (const auto point = std::get_if<Vec2>(&shape); point)
             point->fillProto(t_draw->mutable_point()->mutable_pos());
-        else if (auto line = std::get_if<Line>(&shape); line)
+        else if (const auto line = std::get_if<Line>(&shape); line)
             line->fillProto(t_draw->mutable_line());
-        else if (auto line = std::get_if<LineSegment>(&shape); line)
-            line->fillProto(t_draw->mutable_line_segment());
-        else if (auto rect = std::get_if<Rect>(&shape); rect)
+        else if (const auto segment = std::get_if<LineSegment>(&shape); segment)
+            segment->fillProto(t_draw->mutable_line_segment());
+        else if (const auto rect = std::get_if<Rect>(&shape); rect)
             rect->fillProto(t_draw->mutable_rect());
-        else if (auto circle = std::get_if<Circle>(&shape); circle)
+        else if (const auto circle = std::get_if<Circle>(&shape); circle)
             circle->fillProto(t_draw->mutable_circle());
-        else if (auto triangle = std::get_if<Triangle>(&shape); triangle)
+        else if (const auto triangle = std::get_if<Triangle>(&shape); triangle)
             triangle->fillProto(t_draw->mutable_triangle());
         else
             logWarning("Unsupported shape type: {}", shape.index());
     }
 };
-} // namespace Tyr::Common
+} // namespace Tyr::Common::Debug

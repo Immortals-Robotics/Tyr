@@ -15,7 +15,7 @@ static float calculateRobotRadius(const Common::RobotState &state)
     return Common::field().robot_radius * (1.0f + extension_factor);
 }
 
-void Ai::setObstacles(int t_robot_num, const NavigationFlags t_flags)
+void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
 {
     const bool ourPenalty = t_robot_num != m_gk && !m_ref_state.ourPlaceBall();
     const bool oppPenalty = !m_ref_state.ourPlaceBall();
@@ -32,7 +32,7 @@ void Ai::setObstacles(int t_robot_num, const NavigationFlags t_flags)
     }
 
     // own
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         if ((m_own_robot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != t_robot_num) &&
             (m_own_robot[i].state().vision_id != m_own_robot[t_robot_num].state().vision_id))
@@ -42,7 +42,7 @@ void Ai::setObstacles(int t_robot_num, const NavigationFlags t_flags)
     }
 
     // opp
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
@@ -93,12 +93,12 @@ void Ai::setObstacles(int t_robot_num, const NavigationFlags t_flags)
 
     if (oppPenaltyBig)
     {
-        const float big_penalty_area_r      = Common::field().penalty_area_depth + bigPenaltyAddition;
-        const float big_penalty_area_w      = Common::field().penalty_area_width + bigPenaltyAddition;
-        const float penalty_area_half_width = big_penalty_area_w / 2.0f;
+        const float big_penalty_area_r          = Common::field().penalty_area_depth + bigPenaltyAddition;
+        const float big_penalty_area_w          = Common::field().penalty_area_width + bigPenaltyAddition;
+        const float big_penalty_area_half_width = big_penalty_area_w / 2.0f;
 
         const Common::Vec2 start{-m_side * (Common::field().width + penaltyAreaExtensionBehindGoal),
-                                 -(penalty_area_half_width + current_robot_radius)};
+                                 -(big_penalty_area_half_width + current_robot_radius)};
 
         const float w = m_side * (penaltyAreaExtensionBehindGoal + current_robot_radius + big_penalty_area_r);
         const float h = big_penalty_area_w + 2 * current_robot_radius;
@@ -114,7 +114,7 @@ void Ai::setObstacles(int t_robot_num, const NavigationFlags t_flags)
 
         for (int i = 0; i < ball_obs_count; i++)
         {
-            const float        t        = (float) i / (float) ball_obs_count;
+            const float        t        = static_cast<float>(i) / static_cast<float>(ball_obs_count);
             const Common::Vec2 ball_obs = m_world_state.ball.position + ball_line * t;
             g_obs_map.addCircle({ball_obs, ballAreaRadius + current_robot_radius});
         }

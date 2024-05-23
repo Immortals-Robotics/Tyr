@@ -18,20 +18,20 @@ private:
 
     Common::Timer m_timer;
 
-    int m_cmd_counter = -1;
+    unsigned int m_cmd_counter = 0;
 
     Protos::Ssl::Gc::Referee m_ssl_ref;
 
     bool isKicked();
 
     // This is the state machine transition function
-    void transition(Protos::Ssl::Gc::Referee_Command ref_command);
+    void transition(Protos::Ssl::Gc::Referee_Command t_ref_command);
 
 public:
     Referee() = default;
 
     bool connect();
-    bool isConnected();
+    bool isConnected() const;
 
     bool receiveRef();
     bool receiveWorld();

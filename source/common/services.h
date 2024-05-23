@@ -7,67 +7,58 @@ namespace Debug
 class Hub;
 }
 
-class Setting;
+namespace Config
+{
+class Config;
+} // namespace Config
+
 class Logger;
 class Timer;
-class ConfigReader;
 
 struct FieldState;
 
 struct Services
 {
     static bool initialize();
-    static void saveConfig();
     static void shutdown();
 
-    inline static ConfigReader &configReader()
+    static Config::Config &config()
     {
-        return *s_configReader;
+        return *s_config;
     }
 
-    inline static Setting &setting()
-    {
-        return *s_setting;
-    }
-
-    inline static Debug::Hub &debug()
+    static Debug::Hub &debug()
     {
         return *s_debug;
     }
 
-    inline static Logger &logger()
+    static Logger &logger()
     {
         return *s_logger;
     }
 
-    inline static Timer &global_timer()
+    static Timer &global_timer()
     {
         return *s_global_timer;
     }
 
-    inline static FieldState &field()
+    static FieldState &field()
     {
         return *s_field_state;
     }
 
 private:
-    static inline Setting      *s_setting;
-    static inline Debug::Hub   *s_debug;
-    static inline Logger       *s_logger;
-    static inline Timer        *s_global_timer;
-    static inline ConfigReader *s_configReader;
+    static inline Config::Config *s_config;
+    static inline Debug::Hub     *s_debug;
+    static inline Logger         *s_logger;
+    static inline Timer          *s_global_timer;
 
     static inline FieldState *s_field_state;
 };
 
-inline static ConfigReader &configReader()
+inline static Config::Config &config()
 {
-    return Services::configReader();
-}
-
-inline static Setting &setting()
-{
-    return Services::setting();
+    return Services::config();
 }
 
 inline static Debug::Hub &debug()

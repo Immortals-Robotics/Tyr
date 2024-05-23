@@ -12,57 +12,59 @@ struct Vec2
     float y = 0.0f;
 
     Vec2() = default;
-    constexpr Vec2(float t_f) : Vec2(t_f, t_f)
-    {}
-    constexpr Vec2(float t_x, float t_y) : x(t_x), y(t_y)
+
+    explicit constexpr Vec2(const float t_f) : Vec2(t_f, t_f)
     {}
 
-    inline Vec2(const Protos::Immortals::Vec2 &t_v) : Vec2(t_v.x(), t_v.y())
+    constexpr Vec2(const float t_x, const float t_y) : x(t_x), y(t_y)
     {}
 
-    inline Vec2(const Protos::Ssl::Vector2 &t_v) : Vec2(t_v.x(), t_v.y())
+    explicit Vec2(const Protos::Immortals::Vec2 &t_v) : Vec2(t_v.x(), t_v.y())
     {}
 
-    inline Vec2(const ::Vector2 &t_v) : Vec2(t_v.x, t_v.y)
+    explicit Vec2(const Protos::Ssl::Vector2 &t_v) : Vec2(t_v.x(), t_v.y())
     {}
 
-    inline Vec2(const ::ImVec2 &t_v) : Vec2(t_v.x, t_v.y)
+    explicit Vec2(const ::Vector2 &t_v) : Vec2(t_v.x, t_v.y)
     {}
 
-    inline operator ::Vector2() const
+    explicit Vec2(const ::ImVec2 &t_v) : Vec2(t_v.x, t_v.y)
+    {}
+
+    explicit operator ::Vector2() const
     {
         return {.x = x, .y = y};
     }
 
-    inline operator ::ImVec2() const
+    explicit operator ::ImVec2() const
     {
         return {x, y};
     }
 
-    inline void fillProto(Protos::Immortals::Vec2 *const t_v) const
+    void fillProto(Protos::Immortals::Vec2 *const t_v) const
     {
         t_v->set_x(x);
         t_v->set_y(y);
     }
 
-    inline void fillProto(Protos::Ssl::Vector2 *const t_v) const
+    void fillProto(Protos::Ssl::Vector2 *const t_v) const
     {
         t_v->set_x(x);
         t_v->set_y(y);
     }
 
-    [[nodiscard]] inline Vec2 normalized() const
+    [[nodiscard]] Vec2 normalized() const
     {
         const float length = this->length();
 
         return length == 0.0 ? Vec2{0.0, 0.0} : *this / length;
     }
 
-    [[nodiscard]] inline float length() const
+    [[nodiscard]] float length() const
     {
         return sqrt(x * x + y * y);
     }
-    [[nodiscard]] inline float lengthSquared() const
+    [[nodiscard]] float lengthSquared() const
     {
         return x * x + y * y;
     }
@@ -71,17 +73,17 @@ struct Vec2
 
     [[nodiscard]] inline Angle toAngle() const;
 
-    [[nodiscard]] inline float dot(Vec2 t_v) const
+    [[nodiscard]] float dot(const Vec2 t_v) const
     {
         return x * t_v.x + y * t_v.y;
     }
 
-    [[nodiscard]] inline float distanceTo(Vec2 t_v) const
+    [[nodiscard]] float distanceTo(const Vec2 t_v) const
     {
         return (t_v - *this).length();
     }
 
-    [[nodiscard]] inline float distanceSquaredTo(Vec2 t_v) const
+    [[nodiscard]] float distanceSquaredTo(const Vec2 t_v) const
     {
         return (t_v - *this).lengthSquared();
     }
@@ -91,51 +93,52 @@ struct Vec2
     [[nodiscard]] inline Angle angleDiff(Vec2 t_v) const;
 
     // TODO: this should be replaced by line / circle usage
-    [[nodiscard]] inline Vec2 pointOnConnectingLine(Vec2 secondPoint, float distance) const
+    [[nodiscard]] Vec2 pointOnConnectingLine(const Vec2 t_second_point, const float t_distance) const
     {
-        float m = (secondPoint.y - y) / (secondPoint.x - x);
-        Vec2  ans;
-        if (secondPoint.x - x > 0)
-            ans.x = x + distance / std::sqrt(std::pow(m, 2.0f) + 1.0f);
+        const float m = (t_second_point.y - y) / (t_second_point.x - x);
+
+        Vec2 ans;
+        if (t_second_point.x - x > 0)
+            ans.x = x + t_distance / std::sqrt(std::pow(m, 2.0f) + 1.0f);
         else
-            ans.x = x - distance / std::sqrt(std::pow(m, 2.0f) + 1.0f);
+            ans.x = x - t_distance / std::sqrt(std::pow(m, 2.0f) + 1.0f);
         ans.y = y + m * (ans.x - x);
         return ans;
     }
 
-    [[nodiscard]] inline Vec2 circleAroundPoint(Angle angle, float radius) const;
+    [[nodiscard]] inline Vec2 circleAroundPoint(Angle t_angle, float t_radius) const;
 
-    [[nodiscard]] inline Vec2 operator+(Vec2 t_v) const
+    [[nodiscard]] Vec2 operator+(const Vec2 t_v) const
     {
         return Vec2{x + t_v.x, y + t_v.y};
     }
 
-    [[nodiscard]] inline Vec2 operator-(Vec2 t_v) const
+    [[nodiscard]] Vec2 operator-(const Vec2 t_v) const
     {
         return Vec2{x - t_v.x, y - t_v.y};
     }
 
-    [[nodiscard]] inline Vec2 operator*(Vec2 t_v) const
+    [[nodiscard]] Vec2 operator*(const Vec2 t_v) const
     {
         return Vec2{x * t_v.x, y * t_v.y};
     }
 
-    [[nodiscard]] inline Vec2 operator/(Vec2 t_v) const
+    [[nodiscard]] Vec2 operator/(const Vec2 t_v) const
     {
         return Vec2{x / t_v.x, y / t_v.y};
     }
 
-    [[nodiscard]] inline Vec2 operator*(float t_d) const
+    [[nodiscard]] Vec2 operator*(const float t_d) const
     {
         return Vec2{x * t_d, y * t_d};
     }
 
-    [[nodiscard]] inline Vec2 operator/(float t_d) const
+    [[nodiscard]] Vec2 operator/(const float t_d) const
     {
         return Vec2{x / t_d, y / t_d};
     }
 
-    inline Vec2 &operator+=(Vec2 t_v)
+    Vec2 &operator+=(const Vec2 t_v)
     {
         x += t_v.x;
         y += t_v.y;
@@ -143,7 +146,7 @@ struct Vec2
         return *this;
     }
 
-    inline Vec2 &operator-=(Vec2 t_v)
+    Vec2 &operator-=(const Vec2 t_v)
     {
         x -= t_v.x;
         y -= t_v.y;
@@ -151,7 +154,7 @@ struct Vec2
         return *this;
     }
 
-    inline Vec2 &operator*=(Vec2 t_v)
+    Vec2 &operator*=(const Vec2 t_v)
     {
         x *= t_v.x;
         y *= t_v.y;
@@ -159,7 +162,7 @@ struct Vec2
         return *this;
     }
 
-    inline Vec2 &operator/=(Vec2 t_v)
+    Vec2 &operator/=(const Vec2 t_v)
     {
         x /= t_v.x;
         y /= t_v.y;
@@ -167,7 +170,7 @@ struct Vec2
         return *this;
     }
 
-    inline Vec2 &operator*=(float t_d)
+    Vec2 &operator*=(const float t_d)
     {
         x *= t_d;
         y *= t_d;
@@ -175,7 +178,7 @@ struct Vec2
         return *this;
     }
 
-    inline Vec2 &operator/=(float t_d)
+    Vec2 &operator/=(const float t_d)
     {
         x /= t_d;
         y /= t_d;
@@ -183,42 +186,42 @@ struct Vec2
         return *this;
     }
 
-    [[nodiscard]] inline Vec2 operator-() const
+    [[nodiscard]] Vec2 operator-() const
     {
         return Vec2{-x, -y};
     }
 
-    [[nodiscard]] inline Vec2 operator+() const
+    [[nodiscard]] Vec2 operator+() const
     {
         return *this;
     }
 
-    [[nodiscard]] inline bool operator==(Vec2 t_v) const
+    [[nodiscard]] bool operator==(const Vec2 t_v) const
     {
         return almostEqual(x, t_v.x) && almostEqual(y, t_v.y);
     }
 
-    [[nodiscard]] inline bool operator!=(Vec2 t_v) const
+    [[nodiscard]] bool operator!=(const Vec2 t_v) const
     {
         return !(*this == t_v);
     }
 
-    [[nodiscard]] inline Vec2 xx() const
+    [[nodiscard]] Vec2 xx() const
     {
         return {x, x};
     }
 
-    [[nodiscard]] inline Vec2 yy() const
+    [[nodiscard]] Vec2 yy() const
     {
         return {y, y};
     }
 
-    [[nodiscard]] inline Vec2 yx() const
+    [[nodiscard]] Vec2 yx() const
     {
         return {y, x};
     }
 
-    [[nodiscard]] inline Vec2 abs() const
+    [[nodiscard]] Vec2 abs() const
     {
         return {std::abs(x), std::abs(y)};
     }

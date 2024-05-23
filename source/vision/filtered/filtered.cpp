@@ -11,15 +11,15 @@ Filtered::Filtered()
 
     for (int color_idx = 0; color_idx < 2; ++color_idx)
     {
-        for (int robot_idx = 0; robot_idx < Common::Setting::kMaxRobots; robot_idx++)
+        for (int robot_idx = 0; robot_idx < Common::Config::Common::kMaxRobots; robot_idx++)
         {
             m_robot_not_seen[color_idx][robot_idx] = std::numeric_limits<int>::max() - 1;
             m_robot_kalman[color_idx][robot_idx]   = FilteredObject{fast_filter_path, slow_filter_path};
         }
     }
 
-    m_client = std::make_unique<Common::NngClient>(Common::setting().raw_world_state_url);
-    m_server = std::make_unique<Common::NngServer>(Common::setting().world_state_url);
+    m_client = std::make_unique<Common::NngClient>(Common::config().network.raw_world_state_url);
+    m_server = std::make_unique<Common::NngServer>(Common::config().network.world_state_url);
 }
 
 bool Filtered::receive()

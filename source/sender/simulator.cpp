@@ -46,12 +46,12 @@ bool Simulator::send(const CommandsWrapper &t_wrapper)
 {
     m_packet.Clear();
 
-    for (const auto &command : t_wrapper.command)
+    for (const auto &command : t_wrapper.commands)
         queueCommand(command);
 
-    const Common::NetworkAddress &address = Common::setting().our_color == Common::TeamColor::Yellow
-                                                ? Common::setting().yellow_robot_simulation_address
-                                                : Common::setting().blue_robot_simulation_address;
+    const Common::NetworkAddress &address = Common::config().common.our_color == Common::TeamColor::Yellow
+                                                          ? Common::config().network.yellow_robot_simulation_address
+                                                          : Common::config().network.blue_robot_simulation_address;
     return m_socket->send(m_packet, address);
 }
 

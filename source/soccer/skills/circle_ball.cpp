@@ -10,8 +10,8 @@ enum ball_circling_state
     kKick,
 };
 
-void Ai::circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow, float t_precision,
-                    float t_near_dis_override)
+void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, const int t_shoot_pow,
+                    const int t_chip_pow, const float t_near_dis_override)
 {
     // t_tagret_angle -= 5;
     const float very_far_ball_dis = 600.0f;
@@ -24,13 +24,11 @@ void Ai::circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_p
     const int   near_to_kick_hys = 3;
     const float shmit_coeff      = 1.2f;
 
-    static ball_circling_state state         = kVeryFar;
-    static float               last_change_t = 0.0f;
-    static int                 hys_bank[4]   = {0, 0, 0, 0};
+    static ball_circling_state state       = kVeryFar;
+    static int                 hys_bank[4] = {0, 0, 0, 0};
     if (m_timer.time().seconds() < 0.1)
     {
-        state         = kVeryFar;
-        last_change_t = m_timer.time().seconds();
+        state       = kVeryFar;
         hys_bank[0] = hys_bank[1] = hys_bank[2] = hys_bank[3] = 0;
         halt(t_robot_num);
         return;
@@ -49,8 +47,7 @@ void Ai::circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_p
 
         if (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) < very_far_ball_dis)
         {
-            state         = kFar;
-            last_change_t = m_timer.time().seconds();
+            state = kFar;
         }
     }
     else if (state == kFar)
@@ -74,14 +71,12 @@ void Ai::circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_p
         }
         if (hys_bank[0] > far_to_near_hys)
         {
-            state         = kNear;
-            last_change_t = m_timer.time().seconds();
+            state = kNear;
         }
         else if (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) >
                  very_far_ball_dis * shmit_coeff)
         {
-            state         = kVeryFar;
-            last_change_t = m_timer.time().seconds();
+            state = kVeryFar;
         }
     }
     else if (state == kNear)
@@ -107,8 +102,7 @@ void Ai::circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_p
         if (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) >
             far_ball_dis * shmit_coeff)
         {
-            state         = kFar;
-            last_change_t = m_timer.time().seconds();
+            state = kFar;
         }
 
         if (std::fabs(deltaAngle.deg()) < near_angle_tol)
@@ -122,8 +116,7 @@ void Ai::circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_p
 
         if ((hys_bank[0] > near_to_kick_hys) && ((t_shoot_pow > 0) || (t_chip_pow > 0)))
         {
-            state         = kKick;
-            last_change_t = m_timer.time().seconds();
+            state = kKick;
         }
     }
 
@@ -144,8 +137,7 @@ void Ai::circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_p
         if (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) >
             near_ball_dis * shmit_coeff)
         {
-            state         = kFar;
-            last_change_t = m_timer.time().seconds();
+            state = kFar;
         }
     }
 }

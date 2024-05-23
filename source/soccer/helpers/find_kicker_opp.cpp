@@ -2,11 +2,11 @@
 
 namespace Tyr::Soccer
 {
-int Ai::findKickerOpp(int t_mask, float t_max_dis)
+int Ai::findKickerOpp(const int t_mask, const float t_max_dis)
 {
     float mdis  = t_max_dis;
     int   index = -1;
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         if (i == t_mask)
             continue;

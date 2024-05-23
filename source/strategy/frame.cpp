@@ -82,10 +82,10 @@ void Frame::update()
 
         // if(m_gui->current_robot == Robot::Attack)
         {
-            QVariant b = m_gui->strategy[m_gui->current_strategy]
-                             ->robot[m_gui->current_robot]
-                             .waypoint[m_gui->current_waypoint]
-                             ->tolerance;
+            b = m_gui->strategy[m_gui->current_strategy]
+                    ->robot[m_gui->current_robot]
+                    .waypoint[m_gui->current_waypoint]
+                    ->tolerance;
             m_frame->comboBox_8->setCurrentIndex(b.toInt());
             b = m_gui->strategy[m_gui->current_strategy]
                     ->robot[m_gui->current_robot]
@@ -122,19 +122,19 @@ void Frame::update()
     }
 }
 
-void Frame::paintEvent(QPaintEvent *event)
+void Frame::paintEvent([[maybe_unused]] QPaintEvent *event)
 {}
 
-void Frame::dragEnterEvent(QDragEnterEvent *event)
+void Frame::dragEnterEvent([[maybe_unused]] QDragEnterEvent *event)
 {}
 
-void Frame::dragMoveEvent(QDragMoveEvent *event)
+void Frame::dragMoveEvent([[maybe_unused]] QDragMoveEvent *event)
 {}
 
-void Frame::dropEvent(QDropEvent *event)
+void Frame::dropEvent([[maybe_unused]] QDropEvent *event)
 {}
 
-void Frame::mousePressEvent(QMouseEvent *event)
+void Frame::mousePressEvent([[maybe_unused]] QMouseEvent *event)
 {}
 
 void Frame::on_pushButton_clicked() // Add Strategy
@@ -164,7 +164,7 @@ void Frame::on_pushButton_clicked() // Add Strategy
     m_gui->strategy_counter++;
     m_frame->comboBox_3->setCurrentIndex(m_gui->strategy_counter - 1);
     m_gui->current_strategy = m_frame->comboBox_3->currentIndex();
-    m_gui->current_robot    = (Robot::Type) m_frame->comboBox_2->currentIndex();
+    m_gui->current_robot    = static_cast<Robot::Type>(m_frame->comboBox_2->currentIndex());
     m_gui->update();
     QVariant b = m_gui->strategy[m_gui->current_strategy]->getName();
     m_frame->lineEdit->setText(b.toString());
@@ -189,7 +189,7 @@ void Frame::on_pushButton_2_clicked()
         }
     }
     m_gui->current_strategy = m_frame->comboBox_3->currentIndex();
-    m_gui->current_robot    = (Robot::Type) m_frame->comboBox_2->currentIndex();
+    m_gui->current_robot    = static_cast<Robot::Type>(m_frame->comboBox_2->currentIndex());
     m_gui->update();
     QVariant b = m_gui->strategy[m_gui->current_strategy]->getName();
     m_frame->lineEdit->setText(b.toString());
@@ -205,7 +205,7 @@ void Frame::on_comboBox_3_currentIndexChanged(int index)
         }
     }
     m_gui->current_strategy = index;
-    m_gui->current_robot    = (Robot::Type) m_frame->comboBox_2->currentIndex();
+    m_gui->current_robot    = static_cast<Robot::Type>(m_frame->comboBox_2->currentIndex());
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < m_gui->strategy[m_gui->current_strategy]->robot[i].waypoint_counter; j++)
@@ -248,9 +248,9 @@ void Frame::on_comboBox_3_currentIndexChanged(int index)
     }
 }
 
-void Frame::on_comboBox_2_currentIndexChanged(int index)
+void Frame::on_comboBox_2_currentIndexChanged([[maybe_unused]] int index)
 {
-    m_gui->current_robot = (Robot::Type) m_frame->comboBox_2->currentIndex();
+    m_gui->current_robot = static_cast<Robot::Type>(m_frame->comboBox_2->currentIndex());
     m_frame->comboBox_6->setCurrentIndex(
         m_gui->strategy[m_gui->current_strategy]->robot[m_gui->current_robot].final_role);
     if (m_gui->current_robot == Robot::Attack)
@@ -265,7 +265,7 @@ void Frame::on_comboBox_2_currentIndexChanged(int index)
     }
 }
 
-void Frame::on_comboBox_4_currentIndexChanged(int index)
+void Frame::on_comboBox_4_currentIndexChanged(const int index)
 {
     m_gui->strategy[m_gui->current_strategy]
         ->robot[m_gui->current_robot]
@@ -312,7 +312,7 @@ void Frame::on_toolButton_clicked()
 //     m_gui->current_sync--;
 // }
 
-void Frame::on_comboBox_6_currentIndexChanged(int index)
+void Frame::on_comboBox_6_currentIndexChanged(const int index)
 {
     m_gui->strategy[m_gui->current_strategy]->robot[m_gui->current_robot].final_role = index;
 }
@@ -370,11 +370,12 @@ void Frame::on_pushButton_3_clicked()
                 way->set_x(xx);
                 way->set_y(yy);
                 way->set_type(
-                    (Protos::Immortals::Waypoint_Type) m_gui->strategy[i]->robot[j].waypoint[k]->waypoint_type);
+                    static_cast<Protos::Immortals::Waypoint_Type>(
+                    m_gui->strategy[i]->robot[j].waypoint[k]->waypoint_type));
                 way->set_need_rrt(m_gui->strategy[i]->robot[j].waypoint[k]->need_rrt);
                 way->set_speed(m_gui->strategy[i]->robot[j].waypoint[k]->speed);
-                way->set_velocity_profile(
-                    (Protos::Immortals::Waypoint_VelocityProfile) m_gui->strategy[i]->robot[j].waypoint[k]->velocity_profile);
+                way->set_velocity_profile(static_cast<Protos::Immortals::Waypoint_VelocityProfile>(
+                    m_gui->strategy[i]->robot[j].waypoint[k]->velocity_profile));
                 way->set_tolerance(m_gui->strategy[i]->robot[j].waypoint[k]->tolerance);
                 way->set_time(m_gui->strategy[i]->robot[j].waypoint[k]->time);
             }
@@ -393,7 +394,7 @@ void Frame::on_pushButton_3_clicked()
     file.clear();
     file.write(str.data(), str.length());
     file.close();
-    m_udp->send(m_playBook, Common::setting().strategy_address);
+    m_udp->send(m_playBook, Common::config().network.strategy_address);
 }
 
 void Frame::on_pushButton_4_clicked()
@@ -496,7 +497,7 @@ void Frame::on_pushButton_4_clicked()
     }
 }
 
-void Frame::on_comboBox_7_currentIndexChanged(int index)
+void Frame::on_comboBox_7_currentIndexChanged(const int index)
 {
     m_gui->strategy[m_gui->current_strategy]
         ->robot[m_gui->current_robot]
@@ -525,7 +526,7 @@ void Frame::on_lineEdit_4_returnPressed()
         b.toFloat();
 }
 
-void Frame::on_comboBox_5_currentIndexChanged(int index)
+void Frame::on_comboBox_5_currentIndexChanged(const int index)
 {
     if (index == 1)
         m_gui->strategy[m_gui->current_strategy]
@@ -546,7 +547,7 @@ void Frame::on_lineEdit_7_returnPressed()
         m_gui->strategy[m_gui->current_strategy]->weight = b.toInt();
 }
 
-void Frame::on_comboBox_8_currentIndexChanged(int index)
+void Frame::on_comboBox_8_currentIndexChanged(const int index)
 {
     if (m_gui->current_robot == Robot::Attack && m_gui->strategy_counter > 0)
     {
@@ -559,7 +560,7 @@ void Frame::on_comboBox_8_currentIndexChanged(int index)
     }
 }
 
-void Frame::on_comboBox_9_currentIndexChanged(int index)
+void Frame::on_comboBox_9_currentIndexChanged(const int index)
 {
     if (m_gui->current_robot == Robot::Attack && m_gui->strategy_counter > 0)
     {
@@ -662,7 +663,7 @@ void Frame::on_pushButton_5_clicked()
     }
     m_frame->comboBox_3->setCurrentIndex(m_gui->strategy_counter);
     m_gui->current_strategy = m_frame->comboBox_3->currentIndex();
-    m_gui->current_robot    = (Robot::Type) m_frame->comboBox_2->currentIndex();
+    m_gui->current_robot    = static_cast<Robot::Type>(m_frame->comboBox_2->currentIndex());
     m_gui->update();
     QVariant b = m_gui->strategy[m_gui->current_strategy]->getName();
     m_frame->lineEdit->setText(b.toString());

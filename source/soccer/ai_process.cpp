@@ -4,8 +4,6 @@ namespace Tyr::Soccer
 {
 void Ai::process()
 {
-    static int PRCS_CNT = 0;
-
     internalProcessData();
 
     if (m_last_referee != m_ref_state.get())
@@ -81,7 +79,7 @@ void Ai::process()
     }
     else
     {
-        Common::logWarning("Unhandled ref state: {}", (int) m_ref_state.get());
+        Common::logWarning("Unhandled ref state: {}", static_cast<int>(m_ref_state.get()));
         m_current_play = &Ai::stop;
     }
 
@@ -92,7 +90,7 @@ void Ai::process()
 
     (this->*m_current_play)();
 
-    for (int i = 0; i < Common::Setting::kMaxRobots; i++)
+    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         if (m_own_robot[i].state().seen_state == Common::SeenState::CompletelyOut)
         {

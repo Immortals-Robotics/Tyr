@@ -38,13 +38,13 @@ private:
             name       = fmt::format("{}", start_time);
         }
 
-        inline Common::Duration length() const
+        Common::Duration length() const
         {
             return end_time - start_time;
         }
     };
 
-    inline const Demo &currentDemo() const
+    const Demo &currentDemo() const
     {
         return m_demos[m_selected_demo];
     }

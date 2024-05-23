@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::defenceWall(int t_robot_num, bool t_kick_off)
+void Ai::defenceWall(const int t_robot_num, const bool t_kick_off)
 {
     float x     = -m_side * m_world_state.ball.position.x;
     float tetta = -0.000003f * x * x + 0.0016f * x + 90.0f;

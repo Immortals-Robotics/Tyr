@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../setting.h"
+#include "../config/config.h"
 
 namespace Tyr::Common
 {
@@ -15,14 +15,14 @@ public:
 
     bool receiveRaw(std::span<char> *t_data);
 
-    [[nodiscard]] asio::ip::udp::endpoint getListenEndpoint() const
+    [[nodiscard]] NetworkAddress getListenEndpoint() const
     {
-        return m_listen_endpoint;
+        return NetworkAddress{m_listen_endpoint};
     }
 
-    [[nodiscard]] asio::ip::udp::endpoint getLastReceiveEndpoint() const
+    [[nodiscard]] NetworkAddress getLastReceiveEndpoint() const
     {
-        return m_last_receive_endpoint;
+        return NetworkAddress{m_last_receive_endpoint};
     }
 
     [[nodiscard]] asio::ip::address getAddress() const
@@ -44,6 +44,6 @@ private:
     std::unique_ptr<asio::io_context>      m_context;
     std::unique_ptr<asio::ip::udp::socket> m_socket;
 
-    std::array<char, Setting::kMaxUdpPacketSize> m_buffer = {};
+    std::array<char, Config::Network::kMaxUdpPacketSize> m_buffer = {};
 };
 } // namespace Tyr::Common

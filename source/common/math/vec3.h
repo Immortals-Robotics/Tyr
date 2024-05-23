@@ -1,7 +1,5 @@
 #pragma once
 
-#include "helpers.h"
-
 namespace Tyr::Common
 {
 struct Angle;
@@ -9,87 +7,89 @@ struct Angle;
 struct Vec3
 {
     Vec3() = default;
-    inline constexpr Vec3(float t_f) : Vec3(t_f, t_f, t_f)
-    {}
-    inline constexpr Vec3(float t_x, float t_y, float t_z) : x(t_x), y(t_y), z(t_z)
+
+    explicit constexpr Vec3(const float t_f) : Vec3(t_f, t_f, t_f)
     {}
 
-    inline Vec3(const Protos::Immortals::Vec3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
+    constexpr Vec3(const float t_x, const float t_y, const float t_z) : x(t_x), y(t_y), z(t_z)
     {}
 
-    inline Vec3(const Protos::Ssl::Vector3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
+    explicit Vec3(const Protos::Immortals::Vec3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
     {}
 
-    inline Vec3(const ::Vector3 &t_v) : Vec3(t_v.x, t_v.y, t_v.z)
+    explicit Vec3(const Protos::Ssl::Vector3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
     {}
 
-    inline operator ::Vector3() const
+    explicit Vec3(const ::Vector3 &t_v) : Vec3(t_v.x, t_v.y, t_v.z)
+    {}
+
+    explicit operator ::Vector3() const
     {
         return {.x = x, .y = y, .z = z};
     }
 
-    inline void fillProto(Protos::Immortals::Vec3 *const t_v) const
+    void fillProto(Protos::Immortals::Vec3 *const t_v) const
     {
         t_v->set_x(x);
         t_v->set_y(y);
         t_v->set_z(z);
     }
 
-    inline void fillProto(Protos::Ssl::Vector3 *const t_v) const
+    void fillProto(Protos::Ssl::Vector3 *const t_v) const
     {
         t_v->set_x(x);
         t_v->set_y(y);
         t_v->set_z(z);
     }
 
-    [[nodiscard]] inline Vec3 normalized() const
+    [[nodiscard]] Vec3 normalized() const
     {
         const float length = this->length();
 
         return length == 0.0 ? Vec3{0.0, 0.0, 0.0} : *this / length;
     }
 
-    [[nodiscard]] inline float length() const
+    [[nodiscard]] float length() const
     {
         return sqrt(x * x + y * y + z * z);
     }
 
-    [[nodiscard]] inline float dot(Vec3 t_v)
+    [[nodiscard]] float dot(const Vec3 t_v) const
     {
         return x * t_v.x + y * t_v.y + z * t_v.z;
     }
 
-    [[nodiscard]] inline Vec3 operator+(Vec3 t_v) const
+    [[nodiscard]] Vec3 operator+(const Vec3 t_v) const
     {
         return Vec3{x + t_v.x, y + t_v.y, z + t_v.z};
     }
 
-    [[nodiscard]] inline Vec3 operator-(Vec3 t_v) const
+    [[nodiscard]] Vec3 operator-(const Vec3 t_v) const
     {
         return Vec3{x - t_v.x, y - t_v.y, z - t_v.z};
     }
 
-    [[nodiscard]] inline Vec3 operator*(Vec3 t_v) const
+    [[nodiscard]] Vec3 operator*(const Vec3 t_v) const
     {
         return Vec3{x * t_v.x, y * t_v.y, z * t_v.z};
     }
 
-    [[nodiscard]] inline Vec3 operator/(Vec3 t_v) const
+    [[nodiscard]] Vec3 operator/(const Vec3 t_v) const
     {
         return Vec3{x / t_v.x, y / t_v.y, z / t_v.z};
     }
 
-    [[nodiscard]] inline Vec3 operator*(float t_d) const
+    [[nodiscard]] Vec3 operator*(const float t_d) const
     {
         return Vec3{x * t_d, y * t_d, z * t_d};
     }
 
-    [[nodiscard]] inline Vec3 operator/(float t_d) const
+    [[nodiscard]] Vec3 operator/(const float t_d) const
     {
         return Vec3{x / t_d, y / t_d, z / t_d};
     }
 
-    inline Vec3 &operator+=(Vec3 t_v)
+    Vec3 &operator+=(const Vec3 t_v)
     {
         x += t_v.x;
         y += t_v.y;
@@ -98,7 +98,7 @@ struct Vec3
         return *this;
     }
 
-    inline Vec3 &operator-=(Vec3 t_v)
+    Vec3 &operator-=(const Vec3 t_v)
     {
         x -= t_v.x;
         y -= t_v.y;
@@ -107,7 +107,7 @@ struct Vec3
         return *this;
     }
 
-    inline Vec3 &operator*=(Vec3 t_v)
+    Vec3 &operator*=(const Vec3 t_v)
     {
         x *= t_v.x;
         y *= t_v.y;
@@ -116,7 +116,7 @@ struct Vec3
         return *this;
     }
 
-    inline Vec3 &operator/=(Vec3 t_v)
+    Vec3 &operator/=(const Vec3 t_v)
     {
         x /= t_v.x;
         y /= t_v.y;
@@ -125,7 +125,7 @@ struct Vec3
         return *this;
     }
 
-    inline Vec3 &operator*=(float t_d)
+    Vec3 &operator*=(const float t_d)
     {
         x *= t_d;
         y *= t_d;
@@ -134,7 +134,7 @@ struct Vec3
         return *this;
     }
 
-    inline Vec3 &operator/=(float t_d)
+    Vec3 &operator/=(const float t_d)
     {
         x /= t_d;
         y /= t_d;
@@ -143,12 +143,12 @@ struct Vec3
         return *this;
     }
 
-    [[nodiscard]] inline Vec3 operator-() const
+    [[nodiscard]] Vec3 operator-() const
     {
         return Vec3{-x, -y, -z};
     }
 
-    [[nodiscard]] inline Vec3 operator+() const
+    [[nodiscard]] Vec3 operator+() const
     {
         return *this;
     }

@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 static int my_hys = 0;
 
-void Ai::gkHi(int t_robot_num)
+void Ai::gkHi(const int t_robot_num)
 {
     m_gk_intercepting = false;
 
@@ -77,7 +77,7 @@ void Ai::gkHi(int t_robot_num)
     }
 }
 
-void Ai::gkShirje(int t_robot_num)
+void Ai::gkShirje(const int t_robot_num)
 {
     Common::logDebug("GK Shirje");
 

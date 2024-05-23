@@ -13,17 +13,17 @@ struct Node
 class Tree
 {
 public:
-    inline Tree(const size_t t_max_nodes)
+    Tree(const size_t t_max_nodes)
     {
         m_nodes.reserve(t_max_nodes);
     }
 
-    inline void reset()
+    void reset()
     {
         m_nodes.clear();
     }
 
-    inline Node *AddNode(const Common::Vec2 s, Node *const parent)
+    Node *AddNode(const Common::Vec2 s, Node *const parent)
     {
         if (m_nodes.size() < m_nodes.capacity())
         {
@@ -44,14 +44,14 @@ public:
         }
     }
 
-    inline Node *NearestNeighbour(const Common::Vec2 s)
+    Node *NearestNeighbour(const Common::Vec2 s)
     {
         if (m_nodes.empty())
             return nullptr;
 
         float d   = std::numeric_limits<float>::max();
         int   ans = 0;
-        for (int i = 0; i < m_nodes.size(); i++)
+        for (size_t i = 0; i < m_nodes.size(); i++)
         {
             float tmp_d = s.distanceSquaredTo(m_nodes[i].state);
             if (tmp_d < d)
@@ -64,19 +64,19 @@ public:
         return GetNode(ans);
     }
 
-    inline int tree_size()
+    int tree_size()
     {
         return m_nodes.size();
     }
 
-    inline Node *GetNode(int idx)
+    Node *GetNode(const int idx)
     {
         return &m_nodes[idx];
     }
 
     void draw(const Common::Color t_color = Common::Color::black().transparent()) const
     {
-        for (int i = 0; i < m_nodes.size(); i++)
+        for (size_t i = 0; i < m_nodes.size(); i++)
         {
             if (m_nodes[i].parent == nullptr)
             {

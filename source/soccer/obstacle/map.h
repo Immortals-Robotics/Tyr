@@ -14,14 +14,14 @@ private:
 public:
     ObstacleMap() = default;
 
-    inline void addCircle(Common::Circle t_circle)
+    void addCircle(Common::Circle t_circle)
     {
         m_circle_obstacles.emplace_back(t_circle);
 
         Common::debug().draw(t_circle, Common::Color::maroon().transparent(), false);
     }
 
-    inline void addRectangle(Common::Rect t_rect)
+    void addRectangle(Common::Rect t_rect)
     {
         m_rect_obstacles.emplace_back(t_rect);
 
@@ -31,9 +31,9 @@ public:
     bool  isInObstacle(Common::Vec2 t_point);
     float nearestDistance(Common::Vec2 t_point);
 
-    bool collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2);
+    bool collisionDetect(Common::Vec2 p1, Common::Vec2 p2);
 
-    inline void resetMap()
+    void resetMap()
     {
         m_circle_obstacles.clear();
         m_rect_obstacles.clear();

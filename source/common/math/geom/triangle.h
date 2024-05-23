@@ -4,7 +4,7 @@ namespace Tyr::Common
 {
 struct Triangle
 {
-    inline Triangle(const Vec2 t_corner_1, const Vec2 t_corner_2, const Vec2 t_corner_3)
+    Triangle(const Vec2 t_corner_1, const Vec2 t_corner_2, const Vec2 t_corner_3)
         : corner({t_corner_1, t_corner_2, t_corner_3})
     {
         // sort corners clockwise
@@ -16,11 +16,11 @@ struct Triangle
         }
     }
 
-    inline Triangle(const Protos::Immortals::Triangle &t_triangle)
-        : Triangle({t_triangle.corner(0), t_triangle.corner(1), t_triangle.corner(2)})
+    explicit Triangle(const Protos::Immortals::Triangle &t_triangle)
+        : Triangle({Vec2{t_triangle.corner(0)}, Vec2{t_triangle.corner(1)}, Vec2{t_triangle.corner(2)}})
     {}
 
-    inline void fillProto(Protos::Immortals::Triangle *const t_triangle) const
+    void fillProto(Protos::Immortals::Triangle *const t_triangle) const
     {
         t_triangle->clear_corner();
         corner[0].fillProto(t_triangle->add_corner());

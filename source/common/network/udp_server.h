@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../setting.h"
+#include "../config/config.h"
 
 namespace Tyr::Common
 {
@@ -20,9 +20,9 @@ public:
         return m_buffer;
     }
 
-    [[nodiscard]] asio::ip::udp::endpoint getListenEndpoint() const
+    [[nodiscard]] NetworkAddress getListenEndpoint() const
     {
-        return m_listen_endpoint;
+        return NetworkAddress{m_listen_endpoint};
     }
 
 private:
@@ -31,6 +31,6 @@ private:
     std::unique_ptr<asio::io_context>      m_context;
     std::unique_ptr<asio::ip::udp::socket> m_socket;
 
-    std::array<char, Setting::kMaxUdpPacketSize> m_buffer = {};
+    std::array<char, Config::Network::kMaxUdpPacketSize> m_buffer = {};
 };
 } // namespace Tyr::Common

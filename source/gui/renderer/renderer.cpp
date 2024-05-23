@@ -12,8 +12,8 @@ Renderer::Renderer()
 
 void Renderer::begin(const Common::FieldState &t_field)
 {
-    const Common::Vec2 window_pos  = ImGui::GetCursorScreenPos();
-    const Common::Vec2 window_size = ImGui::GetContentRegionAvail();
+    const Common::Vec2 window_pos  = Common::Vec2{ImGui::GetCursorScreenPos()};
+    const Common::Vec2 window_size = Common::Vec2{ImGui::GetContentRegionAvail()};
 
     const Common::Vec2 offset = window_pos + window_size / 2.0f;
 
@@ -24,11 +24,12 @@ void Renderer::begin(const Common::FieldState &t_field)
 
     const float zoom = window_size.x < window_size.y ? (ratio.x > ratio.y ? ratio.x : ratio.y)
                                                      : (ratio.x > ratio.y ? ratio.y : ratio.x);
-    m_camera = {
-        .offset   = offset,              // Offset from the target
-        .target   = Vector2{0.0f, 0.0f}, // Camera target (center of the screen)
-        .rotation = 0.0f,                // Camera rotation in degrees
-        .zoom     = zoom,                // Camera zoom (1.0f means no zoom)
+
+    m_camera = Camera2D{
+        .offset   = static_cast<Vector2>(offset), // Offset from the target
+        .target   = Vector2{0.0f, 0.0f},          // Camera target (center of the screen)
+        .rotation = 0.0f,                         // Camera rotation in degrees
+        .zoom     = zoom,                         // Camera zoom (1.0f means no zoom)
     };
 
     BeginMode2D(m_camera);
