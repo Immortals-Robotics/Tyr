@@ -1,20 +1,22 @@
 {
-	"dependencies": [
-		"vcpkg-pkgconfig-get-modules",
-		"asio",
-		"protobuf",
-		"tomlplusplus",
-		"spdlog",
-		{
-			"name": "imgui",
-			"features": ["docking-experimental"]
-		},
-		"raylib",
-		"rlimgui",
-		"lmdb",
-		"nng",
-		"xxhash",
-		"implot",
-		"qt5-base"
-	]
+  "dependencies": [
+    "vcpkg-pkgconfig-get-modules",
+    "asio",
+    "protobuf",
+    "tomlplusplus",
+    "spdlog",
+    {
+      "name": "imgui",
+      "features": [
+        "docking-experimental"
+      ]
+    },
+    "raylib",
+    "rlimgui",
+    "lmdb",
+    "nng",
+    "xxhash",
+    "implot",
+    "qt5-base"
+  ]
 }
