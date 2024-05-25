@@ -4,7 +4,6 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
-find_package(Protobuf CONFIG REQUIRED)
 
 set(HEADER_FILES
         pch.h
@@ -32,7 +31,6 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
         ${CMAKE_PROJECT_NAME}-common
         Qt5::Core Qt5::Widgets
-        protobuf::libprotobuf
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})

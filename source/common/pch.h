@@ -50,6 +50,10 @@
 
 #include <google/protobuf/message_lite.h>
 
+#include <protos/immortals/debug.pb.h>
+#include <protos/immortals/state.pb.h>
+#include <protos/ssl-vision/messages_robocup_ssl_wrapper.pb.h>
+
 #include "math/angle.h"
 #include "math/geom/circle.h"
 #include "math/geom/line.h"

@@ -8,3 +8,5 @@
 #include <map>
 #include <math.h>
 #include <stdlib.h>
+
+#include <protos/immortals/play_book.pb.h>

@@ -54,7 +54,6 @@ if (MSVC)
     add_compile_options(/MP)
 endif ()
 
-add_subdirectory(source/protos)
 add_subdirectory(source/common)
 add_subdirectory(source/vision)
 add_subdirectory(source/referee)

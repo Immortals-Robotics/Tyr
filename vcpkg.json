@@ -1,8 +1,8 @@
 {
   "dependencies": [
+    "immortals-protos",
     "vcpkg-pkgconfig-get-modules",
     "asio",
-    "protobuf",
     "tomlplusplus",
     "spdlog",
     {

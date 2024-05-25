@@ -25,4 +25,6 @@
 #include <QtGui>
 #include <QtWidgets/QApplication>
 
+#include <protos/immortals/play_book.pb.h>
+
 #include "ui_frame.h"
