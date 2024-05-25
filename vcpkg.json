@@ -1,21 +1,19 @@
 {
   "dependencies": [
-    "immortals-protos",
-    "vcpkg-pkgconfig-get-modules",
-    "asio",
-    "tomlplusplus",
-    "spdlog",
     {
-      "name": "imgui",
+      "name": "immortals-common",
       "features": [
-        "docking-experimental"
+        "udp",
+        "nng",
+        "storage",
+        "raylib",
+        "imgui",
+        "logging",
+        "config-file",
+        "debug"
       ]
     },
-    "raylib",
     "rlimgui",
-    "lmdb",
-    "nng",
-    "xxhash",
     "implot",
     "qt5-base"
   ]

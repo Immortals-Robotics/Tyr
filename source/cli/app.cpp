@@ -4,7 +4,9 @@ namespace Tyr::Cli
 {
 bool Application::initialize()
 {
-    if (!Common::Services::initialize())
+    const Common::Services::Params params{.t_config_path = std::filesystem::path{DATA_DIR} / "config.toml",
+                                          .t_db_path     = std::filesystem::path{LOG_DIR} / "db"};
+    if (!Common::Services::initialize(params))
     {
         return false;
     }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <common/common.h>
+using namespace Immortals;
+
 // These might be defined by raylib
 #ifdef YELLOW
 #undef YELLOW

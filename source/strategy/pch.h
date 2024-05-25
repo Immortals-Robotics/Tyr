@@ -1,5 +1,8 @@
 #pragma once
 
+#include <common/common.h>
+using namespace Immortals;
+
 #include <fstream>
 #include <iostream>
 #include <string>

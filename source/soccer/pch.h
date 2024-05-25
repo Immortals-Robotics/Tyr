@@ -1,5 +1,8 @@
 #pragma once
 
+#include <common/common.h>
+using namespace Immortals;
+
 #include <algorithm>
 #include <deque>
 #include <float.h>
