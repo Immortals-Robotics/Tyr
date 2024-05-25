@@ -39,7 +39,9 @@ static void logCallback(const int t_msg_type, const char *const t_text, va_list 
 
 bool Application::initialize(const int t_width, const int t_height)
 {
-    if (!Common::Services::initialize())
+    const Common::Services::Params params{.t_config_path = std::filesystem::path{DATA_DIR} / "config.toml",
+                                          .t_db_path     = std::filesystem::path{LOG_DIR} / "db"};
+    if (!Common::Services::initialize(params))
     {
         return false;
     }

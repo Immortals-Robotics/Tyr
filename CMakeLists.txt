@@ -4,7 +4,7 @@ set(USE_FOLDERS ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 option(USE_UNITY_BUILDS "Enable unity build to improve build times" OFF)
@@ -54,13 +54,14 @@ if (MSVC)
     add_compile_options(/MP)
 endif ()
 
-add_subdirectory(source/protos)
-add_subdirectory(source/common)
+# Set data paths
+add_compile_definitions(DATA_DIR="${CMAKE_SOURCE_DIR}/data")
+add_compile_definitions(LOG_DIR="${CMAKE_SOURCE_DIR}/log")
+
 add_subdirectory(source/vision)
 add_subdirectory(source/referee)
 add_subdirectory(source/sender)
 add_subdirectory(source/soccer)
-add_subdirectory(source/strategy)
 add_subdirectory(source/cli)
 add_subdirectory(source/gui)
 

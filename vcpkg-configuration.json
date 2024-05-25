@@ -1,6 +1,22 @@
 {
-	"$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg-configuration.schema.json",
-	"overlay-ports": [
-		"./vcpkg-ports"
-	]
+  "default-registry": {
+    "kind": "git",
+    "baseline": "5eba049322a6d394e6969d25adc8bea8eb1aa4f8",
+    "repository": "https://github.com/microsoft/vcpkg"
+  },
+  "registries": [
+    {
+      "kind": "git",
+      "repository": "https://github.com/Immortals-Robotics/vcpkg-registry",
+      "baseline": "76e6e8215968ca11cf28f3a74b92e9958802c569",
+      "packages": [
+        "homog2d",
+        "imgui",
+        "immortals-protos",
+        "immortals-common",
+        "rlimgui",
+        "vartypes"
+      ]
+    }
+  ]
 }
