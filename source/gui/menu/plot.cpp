@@ -30,11 +30,6 @@ void FooterMenu::pushPlotData(const T &t_entity, const unsigned long &t_time, co
 
 void FooterMenu::drawPlot(const Common::WorldState &t_world, const bool &t_playback)
 {
-    if (ImGui::Button(m_plot_pin_icon.c_str()))
-    {
-        m_is_plot_pinned ^= 1;
-    }
-    ImGui::SameLine();
     const char *item_choices[] = {"Our Robot", "Opp Robot", "Ball", "Custom 1", "Custom 2", "Custom 3"};
     ImGui::SetNextItemWidth(200);
     if (ImGui::Combo("##Item", &m_item, item_choices, IM_ARRAYSIZE(item_choices)))
@@ -63,21 +58,6 @@ void FooterMenu::drawPlot(const Common::WorldState &t_world, const bool &t_playb
             m_plot_data.clear();
         }
         ImGui::SameLine();
-    }
-
-    ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30);
-    if (ImGui::Button(m_plot_resize_icon.c_str()))
-    {
-        if (m_is_plot_maximized)
-        {
-            m_is_plot_maximized = false;
-            m_plot_resize_icon  = "\uf31e";
-        }
-        else
-        {
-            m_plot_resize_icon  = "\uf78c";
-            m_is_plot_maximized = true;
-        }
     }
     ImGui::Separator();
 
@@ -108,7 +88,7 @@ void FooterMenu::drawPlot(const Common::WorldState &t_world, const bool &t_playb
         break;
     }
 
-    if (ImPlot::BeginPlot("My Plot", ImVec2(-1, ImGui::GetWindowHeight() - 60.)), ImGuiCond_Always)
+    if (ImPlot::BeginPlot("My Plot", ImVec2(-1, ImGui::GetWindowHeight() - 60.), ImGuiCond_Always))
     {
 
         std::vector<double> times;

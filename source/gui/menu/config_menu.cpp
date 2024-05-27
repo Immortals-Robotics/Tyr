@@ -121,43 +121,4 @@ void ConfigMenu::drawConfigTab()
         m_configs_dirty = false;
     }
 }
-
-void ConfigMenu::drawTabBar()
-{
-    if (ImGui::BeginTabBar("Config tabs"))
-    {
-        if (ImGui::BeginTabItem("Config"))
-        {
-            drawConfigTab();
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Debug Filter"))
-        {
-            drawFilterTab();
-            ImGui::EndTabItem();
-        }
-        ImGui::EndTabBar();
-    }
-}
-
-void ConfigMenu::draw()
-{
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    auto main_window_height = GetScreenHeight();
-    auto main_window_width  = GetScreenWidth();
-    if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
-    {
-        main_window_width = (main_window_height - 200.) / 0.77 + 650.;
-    }
-
-    const ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                                   ImGuiWindowFlags_NoDecoration;
-
-    ImGui::SetNextWindowSize(ImVec2(250., (main_window_width - 650.) * 0.77));
-    if (ImGui::Begin("Config", nullptr, flags))
-    {
-        drawTabBar();
-        ImGui::End();
-    }
-}
 } // namespace Tyr::Gui

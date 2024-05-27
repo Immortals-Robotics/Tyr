@@ -15,12 +15,14 @@ public:
     WidgetMenu();
     ~WidgetMenu() = default;
 
-    void draw(Common::Vec2 t_mouse_pos);
+    void setMouseClickPos(const Common::Vec2 t_mouse_pos)
+    {
+        m_clicked_mouse_pos = t_mouse_pos;
+    }
 
-private:
-    void drawTabBar();
     void drawControllerTab();
 
+private:
     void refBroadcast(Protos::Ssl::Gc::Referee_Command t_command);
 
     void drawJoystick();

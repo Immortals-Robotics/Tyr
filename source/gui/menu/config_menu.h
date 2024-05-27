@@ -5,10 +5,6 @@ namespace Tyr::Gui
 class ConfigMenu
 {
 private:
-    void drawTabBar();
-    void drawConfigTab();
-    void drawFilterTab();
-
     void drawConfigItem(const std::string &t_key, toml::node &t_value);
     void drawConfigArray(toml::array &t_array, int t_columns = 0);
     void drawConfigTable(toml::table &t_table);
@@ -24,7 +20,8 @@ public:
 
     void feedDebug(const Common::Debug::Wrapper &t_wrapper);
 
-    void draw();
+    void drawConfigTab();
+    void drawFilterTab();
 
     struct FilterNode
     {

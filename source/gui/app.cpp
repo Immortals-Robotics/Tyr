@@ -111,6 +111,8 @@ bool Application::initialize(const int t_width, const int t_height)
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
+    ImGuiTheme::ApplyTheme(ImGuiTheme::ImGuiTheme_SoDark_AccentRed);
+
     m_renderer    = std::make_unique<Renderer>();
     m_config_menu = std::make_unique<ConfigMenu>();
     m_widget_menu = std::make_unique<WidgetMenu>();
@@ -167,27 +169,72 @@ void Application::update()
 
     rlImGuiBegin();
 
-    ImGuiWindowFlags renderer_window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
-                                             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration |
-                                             ImGuiWindowFlags_NoBackground;
-    int main_window_height = GetScreenHeight();
-    int main_window_width  = GetScreenWidth();
-    ImGui::SetNextWindowPos(ImVec2(250., 0.));
-    if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
+    m_root_dockspace = ImGui::DockSpaceOverViewport(nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
+    if (!m_layout_initialized)
     {
-        main_window_width = (main_window_height - 200.) / 0.77 + 650.;
+        resetLayout();
     }
 
-    ImGui::SetNextWindowSize(ImVec2(main_window_width - 650., (main_window_width - 650.) * 0.77));
-
-    bool opened = true;
-    if (!ImGui::Begin("Field", &opened, renderer_window_flags))
+    if (ImGui::Begin("Field"))
     {
-        ImGui::End();
+        // the actual draw happens at the end
     }
-    else
+    ImGui::End();
+
+    m_config_menu->feedDebug(debugWrapper());
+
+    if (ImGui::Begin("Log"))
     {
-        m_renderer->begin(Common::field());
+        m_footer_menu->drawTerminal(debugWrapper(), m_config_menu->nodeMap());
+    }
+    ImGui::End();
+
+    if (ImGui::Begin("Plot"))
+    {
+        m_footer_menu->drawPlot(worldState(), !live());
+    }
+    ImGui::End();
+
+    if (ImGui::Begin("Config"))
+    {
+        m_config_menu->drawConfigTab();
+    }
+    ImGui::End();
+
+    if (ImGui::Begin("Debug Filter"))
+    {
+        m_config_menu->drawFilterTab();
+    }
+    ImGui::End();
+
+    if (ImGui::IsMouseClicked(0))
+    {
+        m_widget_menu->setMouseClickPos(m_renderer->mousePosition());
+    }
+
+    if (ImGui::Begin("Gamepad"))
+    {
+        m_widget_menu->drawControllerTab();
+    }
+    ImGui::End();
+
+    m_demo_menu->update();
+    if (ImGui::Begin("Demo player"))
+    {
+        m_demo_menu->draw();
+    }
+    ImGui::End();
+
+    rlImGuiEnd();
+
+    // Draw field after imgui to appear on top
+    const ImGuiWindow *field_window = ImGui::FindWindowByName("Field");
+    if (!field_window->Hidden)
+    {
+        const Common::Rect field_rect{Common::Vec2{field_window->InnerRect.Min},
+                                      Common::Vec2{field_window->InnerRect.Max}};
+
+        m_renderer->begin(Common::field(), field_rect);
 
         m_renderer->draw(Common::field());
 
@@ -202,34 +249,22 @@ void Application::update()
         }
         else
         {
-            m_renderer->draw(m_demo_menu->worldStateFiltered());
+            m_renderer->draw(m_demo_menu->worldState());
             m_renderer->draw(m_demo_menu->refereeState(), Common::field());
         }
 
         if (m_demo_menu->getState() == LogState::Live)
         {
-            m_config_menu->feedDebug(m_debug_wrapper);
             m_renderer->draw(m_debug_wrapper, m_config_menu->nodeMap());
-            m_footer_menu->draw(m_debug_wrapper, m_config_menu->nodeMap(), m_world_state, false);
         }
         else
         {
-            m_config_menu->feedDebug(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()));
             m_renderer->draw(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()),
                              m_config_menu->nodeMap());
-            m_footer_menu->draw(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()),
-                                m_config_menu->nodeMap(), m_demo_menu->worldStateFiltered(), true);
         }
 
         m_renderer->end();
-        ImGui::End();
     }
-
-    m_config_menu->draw();
-
-    m_widget_menu->draw(m_renderer->mousePosition());
-    m_demo_menu->draw();
-    rlImGuiEnd();
 
     EndDrawing();
 }
@@ -237,6 +272,47 @@ void Application::update()
 bool Application::shouldClose() const
 {
     return WindowShouldClose();
+}
+
+void Application::resetLayout()
+{
+    m_layout_initialized = true;
+
+    ImGui::DockBuilderRemoveNode(m_root_dockspace);
+    ImGui::DockBuilderAddNode(m_root_dockspace, ImGuiDockNodeFlags_PassthruCentralNode |
+                                                    (ImGuiDockNodeFlags) ImGuiDockNodeFlags_DockSpace);
+    ImGui::DockBuilderSetNodeSize(m_root_dockspace, ImGui::GetMainViewport()->Size);
+
+    ImGuiID dockspace_main = m_root_dockspace;
+    ImGuiID dockspace_down =
+        ImGui::DockBuilderSplitNode(dockspace_main, ImGuiDir_Down, 0.25f, nullptr, &dockspace_main);
+
+    ImGuiID dockspace_right =
+        ImGui::DockBuilderSplitNode(dockspace_main, ImGuiDir_Right, 0.25f, nullptr, &dockspace_main);
+    ImGuiID dockspace_left =
+        ImGui::DockBuilderSplitNode(dockspace_main, ImGuiDir_Left, 0.25f, nullptr, &dockspace_main);
+
+    ImGuiID dockspace_right_top;
+    ImGuiID dockspace_right_down =
+        ImGui::DockBuilderSplitNode(dockspace_right, ImGuiDir_Down, 0.5f, nullptr, &dockspace_right_top);
+
+    ImGuiID dockspace_down_left;
+    ImGuiID dockspace_down_right =
+        ImGui::DockBuilderSplitNode(dockspace_down, ImGuiDir_Right, 0.5f, nullptr, &dockspace_down_left);
+
+    ImGui::DockBuilderDockWindow("Field", dockspace_main);
+
+    ImGui::DockBuilderDockWindow("Config", dockspace_left);
+    ImGui::DockBuilderDockWindow("Debug Filter", dockspace_left);
+
+    ImGui::DockBuilderDockWindow("Gamepad", dockspace_right_top);
+    ImGui::DockBuilderDockWindow("Demo player", dockspace_right_down);
+
+    ImGui::DockBuilderDockWindow("Log", dockspace_down_left);
+    ImGui::DockBuilderDockWindow("Plot", dockspace_down_right);
+
+    ImGui::DockBuilderFinish(m_root_dockspace);
+    m_layout_initialized = true;
 }
 
 void Application::receiveWorldStates()

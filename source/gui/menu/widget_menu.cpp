@@ -183,49 +183,6 @@ void WidgetMenu::drawControllerTab()
     }
 }
 
-void WidgetMenu::drawTabBar()
-{
-    if (ImGui::BeginTabBar("Config tabs"))
-    {
-        if (ImGui::BeginTabItem("Gamepad"))
-        {
-            drawControllerTab();
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Tab 2"))
-        {
-            ImGui::Text("This is tab 2.");
-            ImGui::EndTabItem();
-        }
-
-        ImGui::EndTabBar();
-    }
-}
-void WidgetMenu::draw(const Common::Vec2 t_mouse_pos)
-{
-    if (ImGui::IsMouseClicked(0))
-    {
-        m_clicked_mouse_pos = t_mouse_pos;
-    }
-
-    const ImGuiWindowFlags window_flags =
-        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
-
-    int main_window_width  = GetScreenWidth();
-    int main_window_height = GetScreenHeight();
-    if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
-    {
-        main_window_width = (main_window_height - 200.) / 0.77 + 650.;
-    }
-    ImGui::SetNextWindowPos(ImVec2(main_window_width - 400., 0));
-    ImGui::SetNextWindowSize(ImVec2(GetScreenWidth() - main_window_width + 400, 350.));
-    if (ImGui::Begin("Widgets", nullptr, window_flags))
-    {
-        drawTabBar();
-        ImGui::End();
-    }
-}
-
 void WidgetMenu::refBroadcast(const Protos::Ssl::Gc::Referee_Command t_command)
 {
     if (t_command != m_last_command)
