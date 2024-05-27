@@ -735,11 +735,11 @@ ImGuiStyle Cherry()
     return style;
 }
 
-ImGuiStyle Darcula(float rounding = 1.f, float hue = -1.f, float saturation_multiplier = 1.f,
+ImGuiStyle Dracula(float rounding = 1.f, float hue = -1.f, float saturation_multiplier = 1.f,
                    float value_multiplier_front = 1.f, float value_multiplier_bg = 1.f,
                    float alpha_bg_transparency = 1.f)
 {
-    // Darcula style by ice1000 from ImThemes
+    // Dracula style by ice1000 from ImThemes
     ImGuiStyle style;
 
     style.Colors[ImGuiCol_Text]         = ImVec4(0.7333333492279053f, 0.7333333492279053f, 0.7333333492279053f, 1.0f);
@@ -835,7 +835,7 @@ ImGuiStyle Darcula(float rounding = 1.f, float hue = -1.f, float saturation_mult
     return style;
 }
 
-ImGuiStyle DarculaDarker()
+ImGuiStyle DraculaDarker()
 {
     float rounding                         = 3.f;
     float hue                              = 0.61f;
@@ -844,7 +844,7 @@ ImGuiStyle DarculaDarker()
     float value_multiplier_front           = 0.981f;
     float value_multiplier_bg              = 0.585f;
 
-    ImGuiStyle style = Darcula(rounding, hue, saturation_multiplier, value_multiplier_front, value_multiplier_bg,
+    ImGuiStyle style = Dracula(rounding, hue, saturation_multiplier, value_multiplier_front, value_multiplier_bg,
                                alpha_multiplier_bg_transparency);
     ThemeTweakImpl::ApplyValueMultiplierFrameBg(style, 2.5f, style);
     style.Colors[ImGuiCol_Header]       = ThemeTweakImpl::_ColorValueMultiply(style.Colors[ImGuiCol_Header], 1.4f);
@@ -1006,8 +1006,8 @@ ThemeInfo gThemeInfos[] = {
     {ImGuiTheme_GrayVariations_Darker, "GrayVariations_Darker", ThemesImpl::ShadesOfGray(3.f, 1.136f, 0.865f)},
     {ImGuiTheme_MicrosoftStyle, "MicrosoftStyle", ThemesImpl::MicrosoftStyle()},
     {ImGuiTheme_Cherry, "Cherry", ThemesImpl::Cherry()},
-    {ImGuiTheme_Darcula, "Darcula", ThemesImpl::Darcula()},
-    {ImGuiTheme_DarculaDarker, "DarculaDarker", ThemesImpl::DarculaDarker()},
+    {ImGuiTheme_Dracula, "Dracula", ThemesImpl::Dracula()},
+    {ImGuiTheme_DraculaDarker, "DraculaDarker", ThemesImpl::DraculaDarker()},
     {ImGuiTheme_LightRounded, "LightRounded", ThemesImpl::LightRounded()},
     {ImGuiTheme_SoDark_AccentBlue, "SoDark_AccentBlue", ThemesImpl::SoDark(0.548f)},
     {ImGuiTheme_SoDark_AccentYellow, "SoDark_AccentYellow", ThemesImpl::SoDark(0.163f)},
@@ -1310,10 +1310,10 @@ ImGuiStyle ShadesOfGray(float rounding, float value_multiplier_front, float valu
     return ThemesImpl::ShadesOfGray(rounding, value_multiplier_front, value_multiplier_bg);
 }
 
-ImGuiStyle Darcula(float rounding, float hue, float saturation_multiplier, float value_multiplier_front,
+ImGuiStyle Dracula(float rounding, float hue, float saturation_multiplier, float value_multiplier_front,
                    float value_multiplier_bg, float alpha_bg_transparency)
 {
-    return ThemesImpl::Darcula(rounding, hue, saturation_multiplier, value_multiplier_front, value_multiplier_bg,
+    return ThemesImpl::Dracula(rounding, hue, saturation_multiplier, value_multiplier_front, value_multiplier_bg,
                                alpha_bg_transparency);
 }
 

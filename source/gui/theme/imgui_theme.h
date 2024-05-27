@@ -22,8 +22,8 @@ enum ImGuiTheme_
     ImGuiTheme_GrayVariations_Darker,
     ImGuiTheme_MicrosoftStyle,
     ImGuiTheme_Cherry,
-    ImGuiTheme_Darcula,
-    ImGuiTheme_DarculaDarker,
+    ImGuiTheme_Dracula,
+    ImGuiTheme_DraculaDarker,
     ImGuiTheme_LightRounded,
     ImGuiTheme_SoDark_AccentBlue,
     ImGuiTheme_SoDark_AccentYellow,
@@ -72,10 +72,10 @@ struct ImGuiThemeTweaks
 
 struct ImGuiTweakedTheme
 {
-    ImGuiTheme_      Theme  = ImGuiTheme_DarculaDarker;
+    ImGuiTheme_      Theme  = ImGuiTheme_DraculaDarker;
     ImGuiThemeTweaks Tweaks = ImGuiThemeTweaks();
 
-    ImGuiTweakedTheme(ImGuiTheme_ theme = ImGuiTheme_DarculaDarker, const ImGuiThemeTweaks &tweaks = ImGuiThemeTweaks())
+    ImGuiTweakedTheme(ImGuiTheme_ theme = ImGuiTheme_DraculaDarker, const ImGuiThemeTweaks &tweaks = ImGuiThemeTweaks())
         : Theme(theme), Tweaks(tweaks)
     {}
 };
@@ -110,7 +110,7 @@ bool ShowThemeTweakGui(ImGuiTweakedTheme *tweaked_theme);
 // Some tweakable themes
 ImGuiStyle SoDark(float hue);
 ImGuiStyle ShadesOfGray(float rounding = 0.f, float value_multiplier_front = 1.f, float value_multiplier_bg = 1.f);
-ImGuiStyle Darcula(float rounding = 1.f, float hue = -1.f, float saturation_multiplier = 1.f,
+ImGuiStyle Dracula(float rounding = 1.f, float hue = -1.f, float saturation_multiplier = 1.f,
                    float value_multiplier_front = 1.f, float value_multiplier_bg = 1.f,
                    float alpha_bg_transparency = 1.f);
 
