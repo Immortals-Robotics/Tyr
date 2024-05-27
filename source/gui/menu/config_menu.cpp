@@ -5,7 +5,9 @@ namespace Tyr::Gui
 void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
 {
     static int depth = 0;
+
     depth++;
+    ImGui::PushID(t_key.c_str());
 
     if (t_value.is_table())
     {
@@ -79,6 +81,7 @@ void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
     }
 
     depth--;
+    ImGui::PopID();
 }
 
 void ConfigMenu::drawConfigArray(toml::array &t_array, const int t_columns)
