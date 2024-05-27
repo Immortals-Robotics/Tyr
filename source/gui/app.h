@@ -22,6 +22,9 @@ public:
     bool shouldClose() const;
 
 private:
+    ImGuiID m_root_dockspace     = 0;
+    bool    m_layout_initialized = false;
+
     std::unique_ptr<Renderer>   m_renderer;
     std::unique_ptr<ConfigMenu> m_config_menu;
     std::unique_ptr<WidgetMenu> m_widget_menu;
@@ -59,6 +62,8 @@ private:
 
     Common::RefereeState m_referee_state;
 
+    void resetLayout();
+
     void receiveWorldStates();
     void receiveDebug();
     void receiveRefereeState();
@@ -71,5 +76,20 @@ private:
     void refereeEntry() const;
 
     void dumpEntry() const;
+
+    bool live() const
+    {
+        return m_demo_menu->getState() == LogState::Live;
+    }
+
+    const Common::WorldState &worldState() const
+    {
+        return live() ? m_world_state : m_demo_menu->worldState();
+    }
+
+    const Common::Debug::Wrapper &debugWrapper() const
+    {
+        return live() ? m_debug_wrapper : m_demo_menu->debugWrapper();
+    }
 };
 } // namespace Tyr::Gui

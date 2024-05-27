@@ -7,7 +7,7 @@ class Renderer
 public:
     Renderer();
 
-    void begin(const Common::FieldState &t_field);
+    void begin(const Common::FieldState &t_field, Common::Rect window_rect);
     void end();
 
     inline void draw(const Common::Vec2 &t_point, const Common::Color &t_color, float t_thickness = 10.0f) const;

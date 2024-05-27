@@ -11,13 +11,12 @@ enum class LogState
 class DemoMenu
 {
 private:
-    void demoHandler();
     void analyzeDatabase();
 
-    const char* kRecordButtonLive = "\uf28d";
-    const char* kRecordButtonReplay = "\uf111";
+    const char *kRecordButtonLive   = "\uf28d";
+    const char *kRecordButtonReplay = "\uf111";
 
-    const char* m_record_button = kRecordButtonLive;
+    const char *m_record_button = kRecordButtonLive;
 
     LogState m_log_state = LogState::Live;
 
@@ -56,27 +55,33 @@ private:
     Common::Storage m_world_filtered_storage;
     Common::Storage m_referee_storage;
 
-    Protos::Immortals::Debug::Wrapper m_debug;
-    Protos::Immortals::WorldState     m_worldstate_filtered;
-    Protos::Immortals::RefereeState   m_referee;
+    Common::Debug::Wrapper m_debug;
+    Common::WorldState     m_world_state;
+    Common::RefereeState   m_referee;
 
 public:
-    DemoMenu();
+     DemoMenu();
     ~DemoMenu();
-    void     draw();
-    LogState getState();
 
-    const Protos::Immortals::Debug::Wrapper &debugWrapper() const
+    void update();
+    void draw();
+
+    LogState getState() const
+    {
+        return m_log_state;
+    }
+
+    const Common::Debug::Wrapper &debugWrapper() const
     {
         return m_debug;
     }
 
-    const Protos::Immortals::WorldState &worldStateFiltered() const
+    const Common::WorldState &worldState() const
     {
-        return m_worldstate_filtered;
+        return m_world_state;
     }
 
-    const Protos::Immortals::RefereeState &refereeState() const
+    const Common::RefereeState &refereeState() const
     {
         return m_referee;
     }

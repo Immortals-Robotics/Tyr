@@ -17,155 +17,133 @@ DemoMenu::~DemoMenu()
 
 void DemoMenu::draw()
 {
-    auto main_window_height = GetScreenHeight();
-    auto main_window_width  = GetScreenWidth();
-
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                                    ImGuiWindowFlags_NoDecoration;
-    if (((main_window_width - 650.) * 0.77) >= main_window_height - 200.)
+    ImGuiIO &io   = ImGui::GetIO();
+    ImFont  *font = io.Fonts->Fonts[0]; // Change the index if you have multiple fonts and want a different one
+    font->Scale   = 2;
+    ImGui::PushFont(font);
+    if (ImGui::Button("\uf07c", {100, 40}))
     {
-        main_window_width = (main_window_height - 200.) / 0.77 + 650.;
+        analyzeDatabase();
     }
-    ImGui::SetNextWindowPos(ImVec2(main_window_width - 400., 350.));
-    ImGui::SetNextWindowSize(ImVec2(GetScreenWidth() - main_window_width + 400, 200.));
-    if (ImGui::Begin("Demo player", nullptr, window_flags))
+
+    if (!m_demos.empty())
     {
-        ImGuiIO &io   = ImGui::GetIO();
-        ImFont  *font = io.Fonts->Fonts[0]; // Change the index if you have multiple fonts and want a different one
-        font->Scale   = 2;
+        ImGui::SameLine();
+        font->Scale = 1;
         ImGui::PushFont(font);
-        if (ImGui::Button("\uf07c", {100, 40}))
+
+        if (ImGui::Combo(
+                "##DemoList", &m_selected_demo, [](void *user_data, const int idx) -> const char *
+                { return (static_cast<Demo *>(user_data) + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
         {
-            analyzeDatabase();
+            m_timer.reset();
         }
-
-        if (!m_demos.empty())
+        ImGui::Spacing();
+        ImGui::Spacing();
+        font->Scale = 1.8f;
+        ImGui::PushFont(font);
+        if (ImGui::Button("\uf04a", {40, 40}))
         {
-            ImGui::SameLine();
-            font->Scale = 1;
-            ImGui::PushFont(font);
-
-            if (ImGui::Combo(
-                    "##DemoList", &m_selected_demo, [](void *user_data, const int idx) -> const char *
-                    { return (static_cast<Demo *>(user_data) + idx)->name.c_str(); }, m_demos.data(), m_demos.size()))
+            if (m_log_state == LogState::Replay && m_timer.time() > Common::Duration::fromMilliseconds(100))
+            {
+                m_timer.setTime(m_timer.time() - Common::Duration::fromMilliseconds(100));
+            }
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("\uf04b", {40, 40}))
+        {
+            if (m_log_state == LogState::Replay)
+            {
+                m_timer.resume();
+            }
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("\uf04c", {40, 40}))
+        {
+            if (m_log_state == LogState::Replay)
+            {
+                m_timer.pause();
+            }
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("\uf04d", {40, 40}))
+        {
+            if (m_log_state == LogState::Replay)
             {
                 m_timer.reset();
             }
-            ImGui::Spacing();
-            ImGui::Spacing();
-            font->Scale = 1.8f;
-            ImGui::PushFont(font);
-            if (ImGui::Button("\uf04a", {40, 40}))
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("\uf04e", {40, 40}))
+        {
+            if (m_log_state == LogState::Replay)
             {
-                if (m_log_state == LogState::Replay && m_timer.time() > Common::Duration::fromMilliseconds(100))
-                {
-                    m_timer.setTime(m_timer.time() - Common::Duration::fromMilliseconds(100));
-                }
+                m_timer.setTime(m_timer.time() + Common::Duration::fromMilliseconds(100));
             }
-            ImGui::SameLine();
-            if (ImGui::Button("\uf04b", {40, 40}))
+        }
+        ImGui::SameLine();
+        ImGui::Spacing();
+        ImGui::SameLine();
+        if (ImGui::Button(m_record_button, {40, 40}))
+        {
+            if (m_log_state != LogState::Live)
             {
-                if (m_log_state == LogState::Replay)
-                {
-                    m_timer.resume();
-                }
+                m_log_state     = LogState::Live;
+                m_record_button = kRecordButtonLive;
+
+                m_timer.reset();
             }
-            ImGui::SameLine();
-            if (ImGui::Button("\uf04c", {40, 40}))
+            else
             {
-                if (m_log_state == LogState::Replay)
-                {
-                    m_timer.pause();
-                }
+                m_log_state     = LogState::Replay;
+                m_record_button = kRecordButtonReplay;
             }
-            ImGui::SameLine();
-            if (ImGui::Button("\uf04d", {40, 40}))
-            {
-                if (m_log_state == LogState::Replay)
-                {
-                    m_timer.reset();
-                }
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("\uf04e", {40, 40}))
-            {
-                if (m_log_state == LogState::Replay)
-                {
-                    m_timer.setTime(m_timer.time() + Common::Duration::fromMilliseconds(100));
-                }
-            }
-            ImGui::SameLine();
-            ImGui::Spacing();
-            ImGui::SameLine();
-            if (ImGui::Button(m_record_button, {40, 40}))
-            {
-                if (m_log_state != LogState::Live)
-                {
-                    m_log_state     = LogState::Live;
-                    m_record_button = kRecordButtonLive;
-
-                    m_timer.reset();
-                }
-                else
-                {
-                    m_log_state     = LogState::Replay;
-                    m_record_button = kRecordButtonReplay;
-                }
-            }
-
-            ImGui::Spacing();
-
-            font->Scale = 1;
-            ImGui::PushFont(font);
-
-            ImGui::Spacing();
-            ImGui::Spacing();
-            ImGui::Separator();
-            ImGui::Spacing();
-            ImGui::Spacing();
-
-            Common::Duration playback_time = m_timer.time();
-            float            playback_sec  = playback_time.seconds();
-
-            ImGui::SetNextItemWidth(390.);
-            if (ImGui::SliderFloat("##time", &playback_sec, 0.0f, currentDemo().length().seconds(), "%.3fs") &&
-                m_demos.size())
-            {
-                m_timer.setTime(Common::Duration::fromSeconds(playback_sec));
-            }
-            ImGui::Spacing();
-            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.7f, 0.25f, 0.3f, 1.0f));        // Dark frame background
-            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.7f, 0.35f, 0.4f, 1.0f)); // Darker when hovered
-            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(1.0f, 0.2f, 0.2f, 1.0f));   // Brighter red when active
-
-            ImGui::SetNextItemWidth(390.);
-
-            if (ImGui::DragFloat("##timescrol", &playback_sec, 0.01f, 0.0f, currentDemo().length().seconds(),
-                                 "Fine Control"))
-            {
-                m_timer.setTime(Common::Duration::fromSeconds(playback_sec));
-            }
-            ImGui::PopStyleColor(3);
-
-            ImGui::PopFont();
-            ImGui::PopFont();
-            ImGui::PopFont();
         }
 
-        ImGui::PopFont();
+        ImGui::Spacing();
+
         font->Scale = 1;
+        ImGui::PushFont(font);
 
-        ImGui::End();
+        ImGui::Spacing();
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
+        ImGui::Spacing();
+
+        Common::Duration playback_time = m_timer.time();
+        float            playback_sec  = playback_time.seconds();
+
+        ImGui::SetNextItemWidth(390.);
+        if (ImGui::SliderFloat("##time", &playback_sec, 0.0f, currentDemo().length().seconds(), "%.3fs") &&
+            m_demos.size())
+        {
+            m_timer.setTime(Common::Duration::fromSeconds(playback_sec));
+        }
+        ImGui::Spacing();
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.7f, 0.25f, 0.3f, 1.0f));        // Dark frame background
+        ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.7f, 0.35f, 0.4f, 1.0f)); // Darker when hovered
+        ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(1.0f, 0.2f, 0.2f, 1.0f));   // Brighter red when active
+
+        ImGui::SetNextItemWidth(390.);
+
+        if (ImGui::DragFloat("##timescrol", &playback_sec, 0.01f, 0.0f, currentDemo().length().seconds(),
+                             "Fine Control"))
+        {
+            m_timer.setTime(Common::Duration::fromSeconds(playback_sec));
+        }
+        ImGui::PopStyleColor(3);
+
+        ImGui::PopFont();
+        ImGui::PopFont();
+        ImGui::PopFont();
     }
-    demoHandler();
+
+    ImGui::PopFont();
+    font->Scale = 1;
 }
 
-LogState DemoMenu::getState()
-{
-    return m_log_state;
-}
-
-void DemoMenu::demoHandler()
+void DemoMenu::update()
 {
     if (m_log_state != LogState::Replay)
         return;
@@ -178,9 +156,17 @@ void DemoMenu::demoHandler()
 
     const Common::TimePoint playback_point = currentDemo().start_time + m_timer.time();
 
-    m_world_filtered_storage.get(playback_point.microseconds(), &m_worldstate_filtered);
-    m_debug_storage.get(playback_point.microseconds(), &m_debug);
-    m_referee_storage.get(playback_point.microseconds(), &m_referee);
+    Protos::Immortals::WorldState     pb_world_state;
+    Protos::Immortals::Debug::Wrapper pb_debug;
+    Protos::Immortals::RefereeState   pb_referee;
+
+    m_world_filtered_storage.get(playback_point.microseconds(), &pb_world_state);
+    m_debug_storage.get(playback_point.microseconds(), &pb_debug);
+    m_referee_storage.get(playback_point.microseconds(), &pb_referee);
+
+    m_world_state = pb_world_state;
+    m_debug       = static_cast<Common::Debug::Wrapper>(pb_debug);
+    m_referee     = pb_referee;
 }
 
 void DemoMenu::analyzeDatabase()
