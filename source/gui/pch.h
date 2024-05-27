@@ -1,22 +1,23 @@
 #pragma once
 
 #include <atomic>
+#include <charconv>
 #include <cmath>
+#include <cstdlib>
 #include <list>
 #include <mutex>
-#include <span>
-#include <string>
-#include <thread>
-#include <shared_mutex>
-#include <charconv>
 #include <optional>
 #include <queue>
-#include <cstdlib>
+#include <shared_mutex>
+#include <span>
+#include <stack>
+#include <string>
+#include <thread>
 
 #include <raylib.h>
 #include <raymath.h>
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
-#include <rlimgui/rlImGui.h>
 #include <implot.h>
+#include <rlimgui/rlImGui.h>

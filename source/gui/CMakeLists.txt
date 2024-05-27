@@ -6,29 +6,37 @@ find_package(implot CONFIG REQUIRED)
 set(HEADER_FILES
         pch.h
         app.h
-        renderer/renderer.h
-        renderer/draw_inl.h
+
         menu/config_menu.h
-        menu/widget_menu.h
         menu/demo_menu.h
         menu/footer_menu.h
+        menu/widget_menu.h
+
+        renderer/renderer.h
+        renderer/draw_inl.h
+
+        theme/imgui_theme.h
 )
 
 set(SOURCE_FILES
         main.cpp
         app.cpp
+
         menu/config_menu.cpp
-        menu/widget_menu.cpp
         menu/demo_menu.cpp
+        menu/filter_tab.cpp
         menu/footer_menu.cpp
+        menu/plot.cpp
+        menu/widget_menu.cpp
+
         renderer/ball.cpp
         renderer/debug.cpp
         renderer/field.cpp
-        renderer/renderer.cpp
-        menu/filter_tab.cpp
-        renderer/robot.cpp
         renderer/info.cpp
-        menu/plot.cpp
+        renderer/renderer.cpp
+        renderer/robot.cpp
+
+        theme/imgui_theme.cpp
 )
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
