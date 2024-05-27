@@ -21,3 +21,5 @@
 #include <imgui_stdlib.h>
 #include <implot.h>
 #include <rlimgui/rlImGui.h>
+
+#include "theme/imgui_theme.h"
