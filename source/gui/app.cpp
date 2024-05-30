@@ -113,11 +113,12 @@ bool Application::initialize(const int t_width, const int t_height)
 
     ImGuiTheme::ApplyTheme(ImGuiTheme::ImGuiTheme_SoDark_AccentRed);
 
-    m_renderer    = std::make_unique<Renderer>();
-    m_config_menu = std::make_unique<ConfigMenu>();
+    m_renderer        = std::make_unique<Renderer>();
+    m_config_menu     = std::make_unique<ConfigMenu>();
     m_controller_menu = std::make_unique<ControllerMenu>();
-    m_demo_menu   = std::make_unique<DemoMenu>();
-    m_footer_menu = std::make_unique<FooterMenu>();
+    m_demo_menu       = std::make_unique<DemoMenu>();
+    m_log_menu        = std::make_unique<LogMenu>();
+    m_plot_menu       = std::make_unique<PlotMenu>();
 
     Common::logInfo(" Now it is time, lets rock...");
     return true;
@@ -173,22 +174,12 @@ void Application::update()
     if (!m_layout_initialized)
     {
         resetLayout();
+        m_layout_initialized = true;
     }
 
-    if (ImGui::Begin("Timings", nullptr, ImGuiWindowFlags_NoDecoration))
+    if (ImGui::Begin("Status", nullptr, ImGuiWindowFlags_NoDecoration))
     {
-        static std::unordered_map<std::string, Common::MedianFilter<Common::Duration, 30>> interval_filters;
-        static std::unordered_map<std::string, Common::MedianFilter<Common::Duration, 30>> duration_filters;
-        for (const auto &[name, time] : debugWrapper().execution_times)
-        {
-            auto &interval_filter = interval_filters[name];
-            auto &duration_filter = duration_filters[name];
-            interval_filter.add(time.interval);
-            duration_filter.add(time.duration);
-
-            ImGui::Text("%s fps: %.2f, exec: %.2f", name.c_str(), 1.0f / interval_filter.current().seconds(),
-                        duration_filter.current().seconds() * 1000.0f);
-        }
+        m_status_bar->draw(debugWrapper());
     }
     ImGui::End();
 
@@ -202,13 +193,13 @@ void Application::update()
 
     if (ImGui::Begin("Log"))
     {
-        m_footer_menu->drawTerminal(debugWrapper(), m_config_menu->nodeMap());
+        m_log_menu->draw(debugWrapper(), m_config_menu->nodeMap());
     }
     ImGui::End();
 
     if (ImGui::Begin("Plot"))
     {
-        m_footer_menu->drawPlot(worldState(), !live());
+        m_plot_menu->drawPlot(worldState(), !live());
     }
     ImGui::End();
 
@@ -293,14 +284,16 @@ bool Application::shouldClose() const
 
 void Application::resetLayout()
 {
-    m_layout_initialized = true;
-
     ImGui::DockBuilderRemoveNode(m_root_dockspace);
     ImGui::DockBuilderAddNode(m_root_dockspace, ImGuiDockNodeFlags_PassthruCentralNode |
                                                     (ImGuiDockNodeFlags) ImGuiDockNodeFlags_DockSpace);
     ImGui::DockBuilderSetNodeSize(m_root_dockspace, ImGui::GetMainViewport()->Size);
 
     ImGuiID dockspace_main = m_root_dockspace;
+
+    ImGuiID dockspace_down_bar =
+        ImGui::DockBuilderSplitNode(dockspace_main, ImGuiDir_Down, 0.05f, nullptr, &dockspace_main);
+
     ImGuiID dockspace_down =
         ImGui::DockBuilderSplitNode(dockspace_main, ImGuiDir_Down, 0.25f, nullptr, &dockspace_main);
 
@@ -328,8 +321,12 @@ void Application::resetLayout()
     ImGui::DockBuilderDockWindow("Log", dockspace_down_left);
     ImGui::DockBuilderDockWindow("Plot", dockspace_down_right);
 
+    ImGui::DockBuilderGetNode(dockspace_down_bar)
+        ->SetLocalFlags(ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoResizeX | ImGuiDockNodeFlags_NoResizeY |
+                        ImGuiDockNodeFlags_NoDocking);
+    ImGui::DockBuilderDockWindow("Status", dockspace_down_bar);
+
     ImGui::DockBuilderFinish(m_root_dockspace);
-    m_layout_initialized = true;
 }
 
 void Application::receiveWorldStates()

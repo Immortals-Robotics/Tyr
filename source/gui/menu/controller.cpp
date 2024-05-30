@@ -1,4 +1,4 @@
-#include "controller_menu.h"
+#include "controller.h"
 
 namespace Tyr::Gui
 {

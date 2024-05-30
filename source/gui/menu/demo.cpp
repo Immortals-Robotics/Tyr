@@ -1,4 +1,4 @@
-#include "demo_menu.h"
+#include "demo.h"
 namespace Tyr::Gui
 {
 DemoMenu::DemoMenu()

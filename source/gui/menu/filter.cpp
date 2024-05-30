@@ -1,4 +1,4 @@
-#include "config_menu.h"
+#include "config.h"
 
 namespace Tyr::Gui
 {

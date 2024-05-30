@@ -24,7 +24,7 @@ private:
     };
 
     std::optional<Protos::Ssl::Gc::Referee_Command> refereeCommand() const;
-    void refereeUpdate();
+    void                                            refereeUpdate();
 
     void renderController();
 

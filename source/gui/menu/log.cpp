@@ -1,18 +1,9 @@
-#include "footer_menu.h"
+#include "log.h"
 
 namespace Tyr::Gui
 {
-FooterMenu::FooterMenu()
-{
-    ImPlot::CreateContext();
-}
-
-FooterMenu::~FooterMenu()
-{
-    ImPlot::DestroyContext();
-}
-void FooterMenu::drawTerminal(const Common::Debug::Wrapper                                    &t_wrapper,
-                              const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
+void LogMenu::draw(const Common::Debug::Wrapper                                    &t_wrapper,
+                   const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
 {
     const char *filter_choices[] = {"Trace - 0", "Debug - 1", "Info - 2", "Warning - 3", "Error - 4", "Critical - 5"};
 

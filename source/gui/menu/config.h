@@ -4,16 +4,6 @@ namespace Tyr::Gui
 {
 class ConfigMenu
 {
-private:
-    void drawConfigItem(const std::string &t_key, toml::node &t_value);
-    void drawConfigArray(toml::array &t_array, int t_columns = 0);
-    void drawConfigTable(toml::table &t_table);
-
-    template <typename T>
-    void pushToFilters(const std::vector<T> &t_input);
-
-    bool m_configs_dirty = false;
-
 public:
      ConfigMenu() = default;
     ~ConfigMenu() = default;
@@ -93,6 +83,16 @@ public:
         }
         return draw;
     }
+
+private:
+    void drawConfigItem(const std::string &t_key, toml::node &t_value);
+    void drawConfigArray(toml::array &t_array, int t_columns = 0);
+    void drawConfigTable(toml::table &t_table);
+
+    template <typename T>
+    void pushToFilters(const std::vector<T> &t_input);
+
+    bool m_configs_dirty = false;
 };
 
 } // namespace Tyr::Gui

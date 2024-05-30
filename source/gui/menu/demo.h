@@ -10,6 +10,33 @@ enum class LogState
 
 class DemoMenu
 {
+public:
+     DemoMenu();
+    ~DemoMenu();
+
+    void update();
+    void draw();
+
+    LogState getState() const
+    {
+        return m_log_state;
+    }
+
+    const Common::Debug::Wrapper &debugWrapper() const
+    {
+        return m_debug;
+    }
+
+    const Common::WorldState &worldState() const
+    {
+        return m_world_state;
+    }
+
+    const Common::RefereeState &refereeState() const
+    {
+        return m_referee;
+    }
+
 private:
     void analyzeDatabase();
 
@@ -58,33 +85,6 @@ private:
     Common::Debug::Wrapper m_debug;
     Common::WorldState     m_world_state;
     Common::RefereeState   m_referee;
-
-public:
-     DemoMenu();
-    ~DemoMenu();
-
-    void update();
-    void draw();
-
-    LogState getState() const
-    {
-        return m_log_state;
-    }
-
-    const Common::Debug::Wrapper &debugWrapper() const
-    {
-        return m_debug;
-    }
-
-    const Common::WorldState &worldState() const
-    {
-        return m_world_state;
-    }
-
-    const Common::RefereeState &refereeState() const
-    {
-        return m_referee;
-    }
 };
 
 } // namespace Tyr::Gui

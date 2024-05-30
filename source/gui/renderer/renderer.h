@@ -1,5 +1,5 @@
 #pragma once
-#include "../menu/config_menu.h"
+#include "../menu/config.h"
 namespace Tyr::Gui
 {
 class Renderer

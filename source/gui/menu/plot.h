@@ -1,16 +1,24 @@
 #pragma once
-#include "config_menu.h"
 
 namespace Tyr::Gui
 {
-class FooterMenu
+class PlotMenu
 {
+public:
+    void drawPlot(const Common::WorldState &t_world, const bool &t_playback);
+
+    void clearPlot()
+    {
+        m_plot_data.clear();
+    }
+     PlotMenu();
+    ~PlotMenu();
+
 private:
-    int           m_filter_level      = 0;
-    int           m_item              = 0;
-    int           m_id                = 0;
-    int           m_type              = 0;
-    int           m_plot_queue_size   = 1000;
+    int           m_item            = 0;
+    int           m_id              = 0;
+    int           m_type            = 0;
+    int           m_plot_queue_size = 1000;
     ImVec2        m_plot_window_size;
     unsigned long m_last_ts          = 0;
     ImGuiCond     m_window_condition = 0;
@@ -40,21 +48,7 @@ private:
 
     std::deque<PlotData> m_plot_data;
 
-
     template <typename T>
     void pushPlotData(const T &t_entity, const unsigned long &t_time, const bool &t_playback);
-
-public:
-    void drawTerminal(const Common::Debug::Wrapper                                    &t_wrapper,
-                      const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map);
-
-    void drawPlot(const Common::WorldState &t_world, const bool &t_playback);
-    
-    void clearPlot()
-    {
-        m_plot_data.clear();
-    }
-     FooterMenu();
-    ~FooterMenu();
 };
 } // namespace Tyr::Gui

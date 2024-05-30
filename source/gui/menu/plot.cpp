@@ -1,10 +1,19 @@
-#include "footer_menu.h"
+#include "plot.h"
 
 namespace Tyr::Gui
 {
+PlotMenu::PlotMenu()
+{
+    ImPlot::CreateContext();
+}
+
+PlotMenu::~PlotMenu()
+{
+    ImPlot::DestroyContext();
+}
 
 template <typename T>
-void FooterMenu::pushPlotData(const T &t_entity, const unsigned long &t_time, const bool &t_playback)
+void PlotMenu::pushPlotData(const T &t_entity, const unsigned long &t_time, const bool &t_playback)
 {
     if (m_last_ts == t_time)
     {
@@ -28,7 +37,7 @@ void FooterMenu::pushPlotData(const T &t_entity, const unsigned long &t_time, co
     }
 }
 
-void FooterMenu::drawPlot(const Common::WorldState &t_world, const bool &t_playback)
+void PlotMenu::drawPlot(const Common::WorldState &t_world, const bool &t_playback)
 {
     const char *item_choices[] = {"Our Robot", "Opp Robot", "Ball", "Custom 1", "Custom 2", "Custom 3"};
     ImGui::SetNextItemWidth(200);
