@@ -119,6 +119,7 @@ bool Application::initialize(const int t_width, const int t_height)
     m_demo_menu       = std::make_unique<DemoMenu>();
     m_log_menu        = std::make_unique<LogMenu>();
     m_plot_menu       = std::make_unique<PlotMenu>();
+    m_status_bar      = std::make_unique<StatusBar>();
 
     Common::logInfo(" Now it is time, lets rock...");
     return true;
@@ -356,9 +357,6 @@ void Application::receiveDebug()
 
 void Application::visionRawEntry() const
 {
-    Common::Timer timer;
-    timer.start();
-
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
         m_vision_raw->receive();
@@ -370,17 +368,14 @@ void Application::visionRawEntry() const
         }
 
         m_vision_raw->process();
-
         m_vision_raw->publish();
-
-        Common::logInfo("vision raw FPS: {:.2f}", 1.0 / timer.intervalSmooth().seconds());
     }
 }
 
 void Application::visionFilteredEntry() const
 {
-    Common::Timer timer;
-    timer.start();
+    Common::Timer interval_timer;
+    interval_timer.start();
 
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
@@ -390,11 +385,17 @@ void Application::visionFilteredEntry() const
             continue;
         }
 
-        m_vision_filtered->process();
+        Common::Timer duration_timer;
+        duration_timer.start();
 
+        m_vision_filtered->process();
         m_vision_filtered->publish();
 
-        Common::logInfo("vision filtered FPS: {:.2f}", 1.0 / timer.intervalSmooth().seconds());
+        Common::Debug::ExecutionTime execution_time;
+        execution_time.duration = duration_timer.time();
+        execution_time.interval = interval_timer.interval();
+
+        Common::debug().reportExecutionTime("vision", execution_time);
     }
 }
 
@@ -405,8 +406,6 @@ void Application::aiEntry() const
 
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
-        Common::Timer duration_timer;
-
         const bool world_received = m_ai->receiveWorld();
         m_ai->receiveReferee();
         m_ai->receivePlayBook();
@@ -417,10 +416,10 @@ void Application::aiEntry() const
             continue;
         }
 
+        Common::Timer duration_timer;
         duration_timer.start();
 
         m_ai->process();
-
         m_ai->publishCommands();
 
         Common::Debug::ExecutionTime execution_time;
@@ -435,9 +434,6 @@ void Application::aiEntry() const
 
 void Application::senderEntry() const
 {
-    Common::Timer timer;
-    timer.start();
-
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
         if (!m_sender_hub->receive())
@@ -447,16 +443,11 @@ void Application::senderEntry() const
         }
 
         m_sender_hub->send();
-
-        Common::logInfo("sender FPS: {:.2f}", 1.0 / timer.intervalSmooth().seconds());
     }
 }
 
 void Application::refereeEntry() const
 {
-    Common::Timer timer;
-    timer.start();
-
     while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
         const bool ref_received   = m_referee->receiveRef();
