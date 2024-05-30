@@ -164,9 +164,9 @@ void DemoMenu::update()
     m_debug_storage.get(playback_point.microseconds(), &pb_debug);
     m_referee_storage.get(playback_point.microseconds(), &pb_referee);
 
-    m_world_state = pb_world_state;
+    m_world_state = static_cast<Common::WorldState>(pb_world_state);
     m_debug       = static_cast<Common::Debug::Wrapper>(pb_debug);
-    m_referee     = pb_referee;
+    m_referee     = static_cast<Common::RefereeState>(pb_referee);
 }
 
 void DemoMenu::analyzeDatabase()

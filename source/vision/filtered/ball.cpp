@@ -31,10 +31,10 @@ void Filtered::filterBalls()
 
         if (m_ball_not_seen > 0)
         {
-            m_ball_kalman.initializePos(balls[id].position);
+            m_ball_kalman.initializePos(balls[id].position.xy());
         }
 
-        m_ball_kalman.updatePosition(balls[id].position);
+        m_ball_kalman.updatePosition(balls[id].position.xy());
         m_state.ball.position = m_ball_kalman.getPosition();
         m_state.ball.velocity = m_ball_kalman.getVelocity();
 
@@ -51,9 +51,9 @@ void Filtered::filterBalls()
             if (balls.size() > 0)
             {
                 m_last_raw_ball = balls[id];
-                m_ball_kalman.initializePos(balls[id].position);
+                m_ball_kalman.initializePos(balls[id].position.xy());
 
-                m_ball_kalman.updatePosition(balls[id].position);
+                m_ball_kalman.updatePosition(balls[id].position.xy());
                 m_state.ball.position = m_ball_kalman.getPosition();
                 m_state.ball.velocity = m_ball_kalman.getVelocity();
 
@@ -71,7 +71,7 @@ void Filtered::filterBalls()
         }
         else
         {
-            m_state.ball.seen_state = Common::SeenState::TemprolilyOut;
+            m_state.ball.seen_state = Common::SeenState::TemporarilyOut;
         }
     }
 }
@@ -85,7 +85,7 @@ void Filtered::predictBall()
     float tsample = (float) 1.0f / (float) Common::config().vision.vision_frame_rate;
 
     float t;
-    if (m_state.ball.seen_state == Common::SeenState::TemprolilyOut)
+    if (m_state.ball.seen_state == Common::SeenState::TemporarilyOut)
         t = tsample;
     else
         t = kPredictSteps * tsample;

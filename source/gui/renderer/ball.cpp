@@ -3,8 +3,9 @@ namespace Tyr::Gui
 {
 void Renderer::draw(const Common::RawBallState &t_ball)
 {
-    draw(Common::Circle{t_ball.position, Common::field().ball_radius}, Common::Color::orange(), true);
-    draw(Common::Circle{t_ball.position, Common::field().ball_radius + 10.0f}, Common::Color::black(), false, 1.0f);
+    draw(Common::Circle{t_ball.position.xy(), Common::field().ball_radius}, Common::Color::orange(), true);
+    draw(Common::Circle{t_ball.position.xy(), Common::field().ball_radius + 10.0f}, Common::Color::black(), false,
+         1.0f);
 }
 
 void Renderer::draw(const Common::BallState &t_ball)
@@ -15,7 +16,7 @@ void Renderer::draw(const Common::BallState &t_ball)
     auto outline_color = Common::Color::black();
     auto base_color    = Common::Color::orange();
 
-    if (t_ball.seen_state == Common::SeenState::TemprolilyOut)
+    if (t_ball.seen_state == Common::SeenState::TemporarilyOut)
     {
         base_color    = base_color.transparent();
         outline_color = outline_color.transparent();

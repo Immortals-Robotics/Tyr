@@ -32,7 +32,7 @@ void Filtered::filterRobots(Common::TeamColor t_color)
         {
             auto &raw_robot = raw_robots[j];
 
-            if (raw_robot.vision_id == i)
+            if (raw_robot.id == i)
             {
                 found = true;
 
@@ -137,7 +137,7 @@ void Filtered::sendStates()
         }
         else if (m_robot_not_seen[our_color_id][i] < Common::config().vision.max_robot_frame_not_seen)
         {
-            own_robots[i].seen_state = Common::SeenState::TemprolilyOut;
+            own_robots[i].seen_state = Common::SeenState::TemporarilyOut;
         }
         else
         {
@@ -168,7 +168,7 @@ void Filtered::sendStates()
         }
         else if (m_robot_not_seen[opp_color_id][i] < Common::config().vision.max_robot_frame_not_seen)
         {
-            opp_robots[i].seen_state = Common::SeenState::TemprolilyOut;
+            opp_robots[i].seen_state = Common::SeenState::TemporarilyOut;
         }
         else
         {

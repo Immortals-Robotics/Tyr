@@ -17,16 +17,15 @@ Raw::Raw()
 
 void Raw::process()
 {
-    Protos::Ssl::Vision::DetectionFrame merged_frame;
+    m_state.clear();
+
     for (int i = 0; i < Common::Config::Vision::kCamCount; i++)
     {
         if (Common::config().vision.use_camera[i])
         {
-            merged_frame.MergeFrom(m_d_frame[i]);
+            m_state.addFrame(m_d_frame[i]);
         }
     }
-
-    m_state = Common::RawWorldState(merged_frame);
 
     processBalls();
     processRobots();
