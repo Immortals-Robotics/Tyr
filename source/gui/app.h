@@ -25,11 +25,12 @@ private:
     ImGuiID m_root_dockspace     = 0;
     bool    m_layout_initialized = false;
 
-    std::unique_ptr<Renderer>   m_renderer;
-    std::unique_ptr<ConfigMenu> m_config_menu;
-    std::unique_ptr<ControllerMenu> m_widget_menu;
-    std::unique_ptr<DemoMenu>   m_demo_menu;
-    std::unique_ptr<FooterMenu> m_footer_menu;
+    std::unique_ptr<Renderer> m_renderer;
+
+    std::unique_ptr<ConfigMenu>     m_config_menu;
+    std::unique_ptr<ControllerMenu> m_controller_menu;
+    std::unique_ptr<DemoMenu>       m_demo_menu;
+    std::unique_ptr<FooterMenu>     m_footer_menu;
 
     std::atomic<bool> m_running = true;
 

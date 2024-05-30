@@ -115,7 +115,7 @@ bool Application::initialize(const int t_width, const int t_height)
 
     m_renderer    = std::make_unique<Renderer>();
     m_config_menu = std::make_unique<ConfigMenu>();
-    m_widget_menu = std::make_unique<ControllerMenu>();
+    m_controller_menu = std::make_unique<ControllerMenu>();
     m_demo_menu   = std::make_unique<DemoMenu>();
     m_footer_menu = std::make_unique<FooterMenu>();
 
@@ -226,12 +226,12 @@ void Application::update()
 
     if (ImGui::IsMouseClicked(0))
     {
-        m_widget_menu->setMouseClickPos(m_renderer->mousePosition());
+        m_controller_menu->setMouseClickPos(m_renderer->mousePosition());
     }
 
     if (ImGui::Begin("Gamepad"))
     {
-        m_widget_menu->drawControllerTab();
+        m_controller_menu->draw();
     }
     ImGui::End();
 

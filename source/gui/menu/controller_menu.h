@@ -2,17 +2,10 @@
 
 namespace Tyr::Gui
 {
-enum class ControllerMode
-{
-    Disabled = 0,
-    Referee,
-    Robot,
-};
-
 class ControllerMenu
 {
 public:
-    ControllerMenu();
+     ControllerMenu();
     ~ControllerMenu() = default;
 
     void setMouseClickPos(const Common::Vec2 t_mouse_pos)
@@ -20,24 +13,32 @@ public:
         m_clicked_mouse_pos = t_mouse_pos;
     }
 
-    void drawControllerTab();
+    void draw();
 
 private:
-    void refBroadcast(Protos::Ssl::Gc::Referee_Command t_command);
+    enum class Mode
+    {
+        Disabled = 0,
+        Referee,
+        Robot,
+    };
 
-    void drawJoystick();
+    std::optional<Protos::Ssl::Gc::Referee_Command> refereeCommand() const;
+    void refereeUpdate();
+
+    void renderController();
 
     // UDP socket for ref commands
     std::unique_ptr<Common::UdpServer> m_udp;
 
-    ControllerMode m_controller_mode = ControllerMode::Disabled;
+    Mode m_controller_mode = Mode::Disabled;
 
-    Protos::Ssl::Gc::Referee_Command m_last_command    = Protos::Ssl::Gc::Referee_Command_HALT;
-    uint32_t                         m_command_counter = 0;
+    Common::TeamColor m_referee_color;
+    uint32_t          m_command_counter = 0;
 
     Common::Vec2 m_clicked_mouse_pos = {0., 0.};
 
-    RenderTexture m_joystick_texture;
+    RenderTexture m_render_target;
     Texture2D     m_xbox_texture;
     Texture2D     m_ps5_texture;
 };
