@@ -9,14 +9,14 @@ void FilterMenu::draw()
         m_all_change = true;
         if (!m_all_filter)
         {
-            m_filter_tree.clear();
-            m_node_map.clear();
+            m_nodes.clear();
+            m_map.m_map.clear();
         }
     }
     ImGui::Spacing();
     ImGui::Separator();
     ImGui::Spacing();
-    for (const auto &node : m_filter_tree.nodes)
+    for (const auto &node : m_nodes)
     {
         auto force_active = false;
         if (m_all_change)
@@ -45,46 +45,44 @@ void FilterMenu::draw()
         ImGui::Spacing();
     }
 
-    if (m_filter_tree.nodes.size())
+    if (m_nodes.size())
     {
         m_all_change = false;
     }
 }
 
-template <typename T>
-void FilterMenu::pushToFilters(const std::vector<T> &t_input)
+void FilterMenu::pushToFilters(const Common::Debug::SourceLocation &t_source)
 {
-    for (const auto &in : t_input)
+    const std::filesystem::path file_path{t_source.file};
+    const std::string           filename = file_path.filename().string();
+
+    if (!m_map.m_map.contains(filename))
     {
-        const std::filesystem::path file_path{in.source.file};
-        const std::string           filename = file_path.filename().string();
+        auto node = std::make_unique<Node>(filename);
 
-        if (!m_node_map.contains(filename))
-        {
-            auto node = std::make_unique<FilterNode>(filename);
-
-            FilterNode *node_ptr = node.get();
-            m_filter_tree.addNode(std::move(node));
-            m_node_map[filename] = node_ptr;
-        }
-        auto function_name = FilterMenu::extractFunctionName(in.source.function);
-        m_node_map[filename]->addChild(function_name);
+        Node *node_ptr = node.get();
+        m_nodes.emplace_back(std::move(node));
+        m_map.m_map[filename] = node_ptr;
     }
+    auto function_name = FilterMenu::extractFunctionName(t_source.function);
+    m_map.m_map[filename]->addChild(function_name);
 }
 
 void FilterMenu::feedDebug(const Common::Debug::Wrapper &t_wrapper)
 {
-    pushToFilters(t_wrapper.logs);
-    pushToFilters(t_wrapper.draws);
+    for (const auto &log : t_wrapper.logs)
+        pushToFilters(log.source);
+    for (const auto &draw : t_wrapper.draws)
+        pushToFilters(draw.source);
 }
 
-void FilterMenu::FilterNode::addChild(const std::string &t_child)
+void FilterMenu::Node::addChild(const std::string &t_child)
 {
-    const auto it = std::find_if(children.begin(), children.end(), [&t_child](const std::unique_ptr<FilterNode> &child)
-                                 { return child->name == t_child; });
+    const auto it = std::find_if(children.begin(), children.end(),
+                                 [&t_child](const std::unique_ptr<Node> &child) { return child->name == t_child; });
     if (it == children.end())
     {
-        children.push_back(std::make_unique<FilterNode>(t_child));
+        children.push_back(std::make_unique<Node>(t_child));
     }
 }
 } // namespace Tyr::Gui

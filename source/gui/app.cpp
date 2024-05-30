@@ -195,7 +195,7 @@ void Application::update()
 
     if (ImGui::Begin("Log"))
     {
-        m_log_menu->draw(debugWrapper(), m_filter_menu->nodeMap());
+        m_log_menu->draw(debugWrapper(), m_filter_menu->map());
     }
     ImGui::End();
 
@@ -265,12 +265,12 @@ void Application::update()
 
         if (m_demo_menu->getState() == LogState::Live)
         {
-            m_renderer->draw(m_debug_wrapper, m_filter_menu->nodeMap());
+            m_renderer->draw(m_debug_wrapper, m_filter_menu->map());
         }
         else
         {
             m_renderer->draw(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()),
-                             m_filter_menu->nodeMap());
+                             m_filter_menu->map());
         }
 
         m_renderer->end();

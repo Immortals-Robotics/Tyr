@@ -12,42 +12,51 @@ public:
 
     void draw();
 
-    struct FilterNode
+    struct Node
     {
-        explicit FilterNode(const std::string &t_name) : name(t_name)
+        explicit Node(const std::string &t_name) : name(t_name)
         {}
 
         void addChild(const std::string &t_child);
 
-        std::string                              name;
-        std::vector<std::unique_ptr<FilterNode>> children;
-        bool                                     active = true;
+        std::string name;
+        bool        active = true;
+
+        std::vector<std::unique_ptr<Node>> children;
     };
 
-    struct FilterTree
+    struct Map
     {
-        void clear()
+        bool apply(const Common::Debug::SourceLocation &t_source) const
         {
-            nodes.clear();
+            const std::filesystem::path file_path{t_source.file};
+            const std::string           file_name = file_path.filename().string();
+            if (m_map.contains(file_name) && m_map.at(file_name)->active)
+            {
+                for (const auto &function : m_map.at(file_name)->children)
+                {
+                    if (extractFunctionName(t_source.function) == function->name && function->active)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
-        void addNode(std::unique_ptr<FilterNode> t_node)
-        {
-            nodes.emplace_back(std::move(t_node));
-        }
-
-        std::vector<std::unique_ptr<FilterNode>> nodes;
+    private:
+        friend class FilterMenu;
+        std::unordered_map<std::string, Node *> m_map;
     };
 
-    bool                                          m_all_filter = true;
-    bool                                          m_all_change = false;
-    FilterTree                                    m_filter_tree;
-    std::unordered_map<std::string, FilterNode *> m_node_map;
-
-    const std::unordered_map<std::string, FilterNode *> &nodeMap() const
+    const Map &map() const
     {
-        return m_node_map;
+        return m_map;
     }
+
+private:
+    void pushToFilters(const Common::Debug::SourceLocation &t_source);
 
     static std::string extractFunctionName(const std::string_view t_function_name)
     {
@@ -64,27 +73,10 @@ public:
         return function_name;
     }
 
-    static bool applyFilter(const Common::Debug::SourceLocation                 &t_source,
-                            const std::unordered_map<std::string, FilterNode *> &t_filter_node_map)
-    {
-        const std::filesystem::path file_path{t_source.file};
-        const std::string           file_name = file_path.filename().string();
-        auto                        draw      = false;
-        if (t_filter_node_map.find(file_name) != t_filter_node_map.end() && t_filter_node_map.at(file_name)->active)
-        {
-            for (const auto &function : t_filter_node_map.at(file_name)->children)
-            {
-                if (extractFunctionName(t_source.function) == function->name && function->active)
-                {
-                    draw = true;
-                }
-            }
-        }
-        return draw;
-    }
+    bool m_all_filter = true;
+    bool m_all_change = false;
 
-private:
-    template <typename T>
-    void pushToFilters(const std::vector<T> &t_input);
+    std::vector<std::unique_ptr<Node>> m_nodes;
+    Map                                m_map;
 };
 } // namespace Tyr::Gui

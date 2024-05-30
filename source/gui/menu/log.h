@@ -6,8 +6,7 @@ namespace Tyr::Gui
 class LogMenu
 {
 public:
-    void draw(const Common::Debug::Wrapper                                    &t_wrapper,
-              const std::unordered_map<std::string, FilterMenu::FilterNode *> &t_map);
+    void draw(const Common::Debug::Wrapper &t_wrapper, const FilterMenu::Map &t_map);
 
 private:
     int m_filter_level = 0;

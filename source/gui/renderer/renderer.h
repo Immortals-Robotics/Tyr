@@ -8,7 +8,7 @@ class Renderer
 public:
     Renderer();
 
-    void begin(const Common::FieldState &t_field, Common::Rect window_rect);
+    void begin(const Common::FieldState &t_field, Common::Rect t_window_rect);
     void end();
 
     inline void draw(const Common::Vec2 &t_point, const Common::Color &t_color, float t_thickness = 10.0f) const;
@@ -38,8 +38,7 @@ public:
 
     void draw(const Common::RefereeState &t_referee_state, const Common::FieldState &t_field);
 
-    void draw(const Common::Debug::Wrapper                                    &t_wrapper,
-              const std::unordered_map<std::string, FilterMenu::FilterNode *> &t_map);
+    void draw(const Common::Debug::Wrapper &t_wrapper, const FilterMenu::Map &t_map) const;
 
     Common::Vec2 mousePosition() const
     {
