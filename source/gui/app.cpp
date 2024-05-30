@@ -115,7 +115,7 @@ bool Application::initialize(const int t_width, const int t_height)
 
     m_renderer    = std::make_unique<Renderer>();
     m_config_menu = std::make_unique<ConfigMenu>();
-    m_widget_menu = std::make_unique<WidgetMenu>();
+    m_widget_menu = std::make_unique<ControllerMenu>();
     m_demo_menu   = std::make_unique<DemoMenu>();
     m_footer_menu = std::make_unique<FooterMenu>();
 
@@ -174,6 +174,23 @@ void Application::update()
     {
         resetLayout();
     }
+
+    if (ImGui::Begin("Timings", nullptr, ImGuiWindowFlags_NoDecoration))
+    {
+        static std::unordered_map<std::string, Common::MedianFilter<Common::Duration, 30>> interval_filters;
+        static std::unordered_map<std::string, Common::MedianFilter<Common::Duration, 30>> duration_filters;
+        for (const auto &[name, time] : debugWrapper().execution_times)
+        {
+            auto &interval_filter = interval_filters[name];
+            auto &duration_filter = duration_filters[name];
+            interval_filter.add(time.interval);
+            duration_filter.add(time.duration);
+
+            ImGui::Text("%s fps: %.2f, exec: %.2f", name.c_str(), 1.0f / interval_filter.current().seconds(),
+                        duration_filter.current().seconds() * 1000.0f);
+        }
+    }
+    ImGui::End();
 
     if (ImGui::Begin("Field"))
     {
@@ -386,11 +403,13 @@ void Application::visionFilteredEntry() const
 
 void Application::aiEntry() const
 {
-    Common::Timer timer;
-    timer.start();
+    Common::Timer interval_timer;
+    interval_timer.start();
 
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
+        Common::Timer duration_timer;
+
         const bool world_received = m_ai->receiveWorld();
         m_ai->receiveReferee();
         m_ai->receivePlayBook();
@@ -401,13 +420,19 @@ void Application::aiEntry() const
             continue;
         }
 
+        duration_timer.start();
+
         m_ai->process();
 
         m_ai->publishCommands();
 
-        Common::debug().flush();
+        Common::Debug::ExecutionTime execution_time;
+        execution_time.duration = duration_timer.time();
+        execution_time.interval = interval_timer.interval();
 
-        Common::logInfo("AI FPS: {:.2f}", 1.0 / timer.intervalSmooth().seconds());
+        Common::debug().reportExecutionTime("ai", execution_time);
+
+        Common::debug().flush();
     }
 }
 

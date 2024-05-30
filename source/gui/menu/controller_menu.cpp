@@ -1,8 +1,8 @@
-#include "widget_menu.h"
+#include "controller_menu.h"
 
 namespace Tyr::Gui
 {
-WidgetMenu::WidgetMenu()
+ControllerMenu::ControllerMenu()
 {
 #ifdef __APPLE__
     SetGamepadMappings("030000005e040000220b000017050000,Xbox Wireless "
@@ -22,7 +22,7 @@ WidgetMenu::WidgetMenu()
     m_ps5_texture  = LoadTexture(ps5_texture_dir.string().c_str());
 }
 
-void WidgetMenu::drawJoystick()
+void ControllerMenu::drawJoystick()
 {
     const char *controller_choices[] = {"Disable", "Referee", "Robot Control"};
 
@@ -107,7 +107,7 @@ void WidgetMenu::drawJoystick()
                  IM_ARRAYSIZE(controller_choices));
 }
 
-void WidgetMenu::drawControllerTab()
+void ControllerMenu::drawControllerTab()
 {
     ImGui::Spacing();
     ImGui::Spacing();
@@ -183,7 +183,7 @@ void WidgetMenu::drawControllerTab()
     }
 }
 
-void WidgetMenu::refBroadcast(const Protos::Ssl::Gc::Referee_Command t_command)
+void ControllerMenu::refBroadcast(const Protos::Ssl::Gc::Referee_Command t_command)
 {
     if (t_command != m_last_command)
     {

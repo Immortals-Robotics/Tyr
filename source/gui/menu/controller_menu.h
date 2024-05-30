@@ -9,11 +9,11 @@ enum class ControllerMode
     Robot,
 };
 
-class WidgetMenu
+class ControllerMenu
 {
 public:
-    WidgetMenu();
-    ~WidgetMenu() = default;
+    ControllerMenu();
+    ~ControllerMenu() = default;
 
     void setMouseClickPos(const Common::Vec2 t_mouse_pos)
     {

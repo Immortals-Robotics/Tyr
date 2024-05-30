@@ -8,9 +8,9 @@ set(HEADER_FILES
         app.h
 
         menu/config_menu.h
+        menu/controller_menu.h
         menu/demo_menu.h
         menu/footer_menu.h
-        menu/widget_menu.h
 
         renderer/renderer.h
         renderer/draw_inl.h
@@ -23,11 +23,11 @@ set(SOURCE_FILES
         app.cpp
 
         menu/config_menu.cpp
+        menu/controller_menu.cpp
         menu/demo_menu.cpp
         menu/filter_tab.cpp
         menu/footer_menu.cpp
         menu/plot.cpp
-        menu/widget_menu.cpp
 
         renderer/ball.cpp
         renderer/debug.cpp
