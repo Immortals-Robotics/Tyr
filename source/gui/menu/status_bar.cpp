@@ -4,9 +4,6 @@ namespace Tyr::Gui
 {
 void StatusBar::draw(const Common::Debug::Wrapper &t_wrapper)
 {
-    ImGui::Spacing();
-    ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, 3);
-
     for (const auto &[name, time] : t_wrapper.execution_times)
     {
         auto &interval_filter = m_interval_filters[name];

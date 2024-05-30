@@ -178,7 +178,7 @@ void Application::update()
         m_layout_initialized = true;
     }
 
-    if (ImGui::Begin("Status", nullptr, ImGuiWindowFlags_NoDecoration))
+    if (ImGui::Begin("Status"))
     {
         m_status_bar->draw(debugWrapper());
     }
@@ -293,7 +293,7 @@ void Application::resetLayout()
     ImGuiID dockspace_main = m_root_dockspace;
 
     ImGuiID dockspace_down_bar =
-        ImGui::DockBuilderSplitNode(dockspace_main, ImGuiDir_Down, 0.05f, nullptr, &dockspace_main);
+        ImGui::DockBuilderSplitNode(dockspace_main, ImGuiDir_Down, 0.035f, nullptr, &dockspace_main);
 
     ImGuiID dockspace_down =
         ImGui::DockBuilderSplitNode(dockspace_main, ImGuiDir_Down, 0.25f, nullptr, &dockspace_main);
