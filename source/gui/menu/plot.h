@@ -29,14 +29,29 @@ private:
         Ball     = 2,
     };
 
-    struct Data
-    {
-        Data(const Common::Vec2 &t_vec, const Common::TimePoint &t_time) : data(t_vec), time(t_time)
-        {}
+    void pushData(const Common::WorldState &t_state, const bool &t_playback);
 
-        Common::Vec2      data;
-        Common::TimePoint time;
-    };
+    std::pair<Common::Duration, Common::Vec2> data(const int t_idx) const
+    {
+        const Common::WorldState &state = m_data[t_idx];
+        Common::Vec2              data{};
+
+        switch (m_item)
+        {
+        case Item::OurRobot:
+            data = state.own_robot[m_id].velocity;
+            break;
+        case Item::OppRobot:
+            data = state.opp_robot[m_id].velocity;
+            break;
+        case Item::Ball:
+            data = state.ball.velocity;
+            break;
+        }
+
+        const Common::Duration time = state.time - m_data.at(0).time;
+        return {time, data};
+    }
 
     static constexpr int kPlotQueueSize = 1000;
 
@@ -46,8 +61,6 @@ private:
 
     Common::TimePoint m_last_time;
 
-    std::deque<Data> m_data;
-
-    void pushData(const Common::Vec2 &t_data, const Common::TimePoint &t_time, const bool &t_playback);
+    std::deque<Common::WorldState> m_data;
 };
 } // namespace Tyr::Gui
