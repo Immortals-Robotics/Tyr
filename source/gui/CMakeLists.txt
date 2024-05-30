@@ -10,6 +10,7 @@ set(HEADER_FILES
         menu/config.h
         menu/controller.h
         menu/demo.h
+        menu/filter.h
         menu/log.h
         menu/plot.h
         menu/status_bar.h

@@ -117,6 +117,7 @@ bool Application::initialize(const int t_width, const int t_height)
     m_config_menu     = std::make_unique<ConfigMenu>();
     m_controller_menu = std::make_unique<ControllerMenu>();
     m_demo_menu       = std::make_unique<DemoMenu>();
+    m_filter_menu     = std::make_unique<FilterMenu>();
     m_log_menu        = std::make_unique<LogMenu>();
     m_plot_menu       = std::make_unique<PlotMenu>();
     m_status_bar      = std::make_unique<StatusBar>();
@@ -190,11 +191,11 @@ void Application::update()
     }
     ImGui::End();
 
-    m_config_menu->feedDebug(debugWrapper());
+    m_filter_menu->feedDebug(debugWrapper());
 
     if (ImGui::Begin("Log"))
     {
-        m_log_menu->draw(debugWrapper(), m_config_menu->nodeMap());
+        m_log_menu->draw(debugWrapper(), m_filter_menu->nodeMap());
     }
     ImGui::End();
 
@@ -206,13 +207,13 @@ void Application::update()
 
     if (ImGui::Begin("Config"))
     {
-        m_config_menu->drawConfigTab();
+        m_config_menu->draw();
     }
     ImGui::End();
 
     if (ImGui::Begin("Debug Filter"))
     {
-        m_config_menu->drawFilterTab();
+        m_filter_menu->draw();
     }
     ImGui::End();
 
@@ -264,12 +265,12 @@ void Application::update()
 
         if (m_demo_menu->getState() == LogState::Live)
         {
-            m_renderer->draw(m_debug_wrapper, m_config_menu->nodeMap());
+            m_renderer->draw(m_debug_wrapper, m_filter_menu->nodeMap());
         }
         else
         {
             m_renderer->draw(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()),
-                             m_config_menu->nodeMap());
+                             m_filter_menu->nodeMap());
         }
 
         m_renderer->end();

@@ -1,8 +1,8 @@
-#include "config.h"
+#include "filter.h"
 
 namespace Tyr::Gui
 {
-void ConfigMenu::drawFilterTab()
+void FilterMenu::draw()
 {
     if (ImGui::Checkbox("All", &m_all_filter))
     {
@@ -52,7 +52,7 @@ void ConfigMenu::drawFilterTab()
 }
 
 template <typename T>
-void ConfigMenu::pushToFilters(const std::vector<T> &t_input)
+void FilterMenu::pushToFilters(const std::vector<T> &t_input)
 {
     for (const auto &in : t_input)
     {
@@ -67,18 +67,18 @@ void ConfigMenu::pushToFilters(const std::vector<T> &t_input)
             m_filter_tree.addNode(std::move(node));
             m_node_map[filename] = node_ptr;
         }
-        auto function_name = ConfigMenu::extractFunctionName(in.source.function);
+        auto function_name = FilterMenu::extractFunctionName(in.source.function);
         m_node_map[filename]->addChild(function_name);
     }
 }
 
-void ConfigMenu::feedDebug(const Common::Debug::Wrapper &t_wrapper)
+void FilterMenu::feedDebug(const Common::Debug::Wrapper &t_wrapper)
 {
     pushToFilters(t_wrapper.logs);
     pushToFilters(t_wrapper.draws);
 }
 
-void ConfigMenu::FilterNode::addChild(const std::string &t_child)
+void FilterMenu::FilterNode::addChild(const std::string &t_child)
 {
     const auto it = std::find_if(children.begin(), children.end(), [&t_child](const std::unique_ptr<FilterNode> &child)
                                  { return child->name == t_child; });

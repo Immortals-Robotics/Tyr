@@ -3,7 +3,7 @@
 namespace Tyr::Gui
 {
 void LogMenu::draw(const Common::Debug::Wrapper                                    &t_wrapper,
-                   const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map)
+                   const std::unordered_map<std::string, FilterMenu::FilterNode *> &t_map)
 {
     const char *filter_choices[] = {"Trace - 0", "Debug - 1", "Info - 2", "Warning - 3", "Error - 4", "Critical - 5"};
 
@@ -14,7 +14,7 @@ void LogMenu::draw(const Common::Debug::Wrapper                                 
     {
         for (const auto &line : t_wrapper.logs)
         {
-            if (static_cast<int>(line.level) >= m_filter_level && ConfigMenu::applyFilter(line.source, t_map))
+            if (static_cast<int>(line.level) >= m_filter_level && FilterMenu::applyFilter(line.source, t_map))
             {
                 const std::filesystem::path file_path{line.source.file};
 

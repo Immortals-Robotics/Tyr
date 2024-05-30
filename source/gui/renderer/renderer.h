@@ -1,5 +1,6 @@
 #pragma once
-#include "../menu/config.h"
+#include "../menu/filter.h"
+
 namespace Tyr::Gui
 {
 class Renderer
@@ -18,8 +19,7 @@ public:
     inline void drawCircleSector(const Common::Circle &t_circle, const Common::Color &t_color, float t_start_angle,
                                  float t_end_angle, bool t_is_filled) const;
     inline void draw(const Common::Line &t_line, const Common::Color &t_color, float t_thickness = 10.0f) const;
-    inline void draw(const Common::LineSegment &t_line, const Common::Color &t_color,
-                     float t_thickness = 10.0f) const;
+    inline void draw(const Common::LineSegment &t_line, const Common::Color &t_color, float t_thickness = 10.0f) const;
     inline void draw(const Common::Triangle &t_triangle, const Common::Color &t_color, bool t_is_filled = true,
                      float t_thickness = 10.0f) const;
 
@@ -39,7 +39,7 @@ public:
     void draw(const Common::RefereeState &t_referee_state, const Common::FieldState &t_field);
 
     void draw(const Common::Debug::Wrapper                                    &t_wrapper,
-              const std::unordered_map<std::string, ConfigMenu::FilterNode *> &t_map);
+              const std::unordered_map<std::string, FilterMenu::FilterNode *> &t_map);
 
     Common::Vec2 mousePosition() const
     {

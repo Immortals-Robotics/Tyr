@@ -109,7 +109,7 @@ void ConfigMenu::drawConfigTable(toml::table &t_table)
     }
 }
 
-void ConfigMenu::drawConfigTab()
+void ConfigMenu::draw()
 {
     drawConfigTable(Common::config().root());
 
