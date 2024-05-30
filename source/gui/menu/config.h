@@ -8,11 +8,11 @@ public:
     void draw();
 
 private:
-    void drawConfigItem(const std::string &t_key, toml::node &t_value);
-    void drawConfigArray(toml::array &t_array, int t_columns = 0);
-    void drawConfigTable(toml::table &t_table);
+    void drawItem(const std::string &t_key, toml::node &t_value);
+    void drawArray(toml::array &t_array, int t_columns = 0);
+    void drawTable(toml::table &t_table);
 
-    bool m_configs_dirty = false;
+    bool m_dirty = false;
 };
 
 } // namespace Tyr::Gui

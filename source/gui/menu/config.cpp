@@ -2,7 +2,7 @@
 
 namespace Tyr::Gui
 {
-void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
+void ConfigMenu::drawItem(const std::string &t_key, toml::node &t_value)
 {
     static int depth = 0;
 
@@ -19,7 +19,7 @@ void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
             if (!tree)
                 ImGui::SeparatorText(t_key.c_str());
 
-            drawConfigTable(*t_value.as_table());
+            drawTable(*t_value.as_table());
 
             if (tree)
                 ImGui::TreePop();
@@ -33,17 +33,17 @@ void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
 
         if (ImGui::TreeNode(t_key.c_str()))
         {
-            drawConfigArray(*t_value.as_array(), columns);
+            drawArray(*t_value.as_array(), columns);
             ImGui::TreePop();
         }
     }
     else if (t_value.is_string())
     {
-        m_configs_dirty |= ImGui::InputText(t_key.c_str(), &t_value.as_string()->get());
+        m_dirty |= ImGui::InputText(t_key.c_str(), &t_value.as_string()->get());
     }
     else if (t_value.is_floating_point())
     {
-        m_configs_dirty |= ImGui::InputScalar(t_key.c_str(), ImGuiDataType_Double, &t_value.as_floating_point()->get());
+        m_dirty |= ImGui::InputScalar(t_key.c_str(), ImGuiDataType_Double, &t_value.as_floating_point()->get());
     }
     else if (t_value.is_integer())
     {
@@ -54,7 +54,7 @@ void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
             static_assert(static_cast<int>(Common::TeamSide::Left) == 0);
             static_assert(static_cast<int>(Common::TeamSide::Right) == 1);
 
-            m_configs_dirty |= ImGui::Combo(t_key.c_str(), reinterpret_cast<int *>(&t_value.as_integer()->get()),
+            m_dirty |= ImGui::Combo(t_key.c_str(), reinterpret_cast<int *>(&t_value.as_integer()->get()),
                                             kEnums.data(), kEnums.size());
         }
         else if (t_key == "our_color")
@@ -63,17 +63,17 @@ void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
             static_assert(static_cast<int>(Common::TeamColor::Blue) == 0);
             static_assert(static_cast<int>(Common::TeamColor::Yellow) == 1);
 
-            m_configs_dirty |= ImGui::Combo(t_key.c_str(), reinterpret_cast<int *>(&t_value.as_integer()->get()),
+            m_dirty |= ImGui::Combo(t_key.c_str(), reinterpret_cast<int *>(&t_value.as_integer()->get()),
                                             kEnums.data(), kEnums.size());
         }
         else
         {
-            m_configs_dirty |= ImGui::InputScalar(t_key.c_str(), ImGuiDataType_S64, &t_value.as_integer()->get());
+            m_dirty |= ImGui::InputScalar(t_key.c_str(), ImGuiDataType_S64, &t_value.as_integer()->get());
         }
     }
     else if (t_value.is_boolean())
     {
-        m_configs_dirty |= ImGui::Checkbox(t_key.c_str(), &t_value.as_boolean()->get());
+        m_dirty |= ImGui::Checkbox(t_key.c_str(), &t_value.as_boolean()->get());
     }
     else
     {
@@ -84,7 +84,7 @@ void ConfigMenu::drawConfigItem(const std::string &t_key, toml::node &t_value)
     ImGui::PopID();
 }
 
-void ConfigMenu::drawConfigArray(toml::array &t_array, const int t_columns)
+void ConfigMenu::drawArray(toml::array &t_array, const int t_columns)
 {
     if (t_columns == 0 || ImGui::BeginTable("array", t_columns))
     {
@@ -93,7 +93,7 @@ void ConfigMenu::drawConfigArray(toml::array &t_array, const int t_columns)
             {
                 if (t_columns)
                     ImGui::TableNextColumn();
-                drawConfigItem(std::to_string(idx), value);
+                drawItem(std::to_string(idx), value);
             });
 
         if (t_columns)
@@ -101,24 +101,24 @@ void ConfigMenu::drawConfigArray(toml::array &t_array, const int t_columns)
     }
 }
 
-void ConfigMenu::drawConfigTable(toml::table &t_table)
+void ConfigMenu::drawTable(toml::table &t_table)
 {
     for (auto &&[key, value] : t_table)
     {
-        drawConfigItem(std::string{key.str()}, value);
+        drawItem(std::string{key.str()}, value);
     }
 }
 
 void ConfigMenu::draw()
 {
-    drawConfigTable(Common::config().root());
+    drawTable(Common::config().root());
 
-    if (m_configs_dirty)
+    if (m_dirty)
     {
         Common::Services::config().save();
         Common::Services::config().load();
 
-        m_configs_dirty = false;
+        m_dirty = false;
     }
 }
 } // namespace Tyr::Gui
