@@ -10,7 +10,7 @@ void Renderer::draw(const Common::RawRobotState &t_robot)
     drawCircleSector(Common::Circle{t_robot.position, Common::field().robot_radius}, base_color,
                      kRobotArcAngle - t_robot.angle.deg(), 360. - kRobotArcAngle - t_robot.angle.deg(), true);
 
-    draw(t_robot.position, std::to_string(t_robot.vision_id), text_color, 180);
+    draw(t_robot.position, std::to_string(t_robot.id), text_color, 180);
 }
 
 void Renderer::draw(const Common::RobotState &t_robot)
@@ -22,7 +22,7 @@ void Renderer::draw(const Common::RobotState &t_robot)
     auto base_color    = t_robot.color == Common::TeamColor::Yellow ? Common::Color::yellow() : Common::Color::blue();
     auto outline_color = Common::Color::black();
 
-    if (t_robot.seen_state == Common::SeenState::TemprolilyOut)
+    if (t_robot.seen_state == Common::SeenState::TemporarilyOut)
     {
         base_color    = base_color.transparent();
         text_color    = text_color.transparent();

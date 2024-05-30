@@ -24,11 +24,11 @@ bool Raw::receive()
             }
         }
 
-        if (packet.has_geometry() && packet.geometry().has_field())
+        if (packet.has_geometry())
         {
             Common::logTrace("Received field geometry from {}", receive_endpoint);
 
-            Common::field() = Common::FieldState{packet.geometry().field()};
+            Common::field() = Common::FieldState{packet.geometry()};
         }
 
         return true;
