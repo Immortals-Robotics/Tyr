@@ -1,122 +1,99 @@
-#include "footer_menu.h"
+#include "plot.h"
 
 namespace Tyr::Gui
 {
-
-template <typename T>
-void FooterMenu::pushPlotData(const T &t_entity, const unsigned long &t_time, const bool &t_playback)
+PlotMenu::PlotMenu()
 {
-    if (m_last_ts == t_time)
+    ImPlot::CreateContext();
+}
+
+PlotMenu::~PlotMenu()
+{
+    ImPlot::DestroyContext();
+}
+
+void PlotMenu::pushData(const Common::WorldState &t_state, const bool &t_playback)
+{
+    if (m_last_time == t_state.time)
     {
         return;
     }
-    if (std::abs(static_cast<long long>(t_time) - static_cast<long long>(m_last_ts)) > 200)
+
+    if (std::abs((t_state.time - m_last_time).seconds()) > 0.2f)
     {
-        m_plot_data.clear();
+        m_data.clear();
     }
-    auto data = PlotData(t_entity.velocity, t_time);
-    if (m_plot_data.size() == m_plot_queue_size)
+
+    if (m_data.size() >= kPlotQueueSize)
+        m_data.pop_front();
+    m_data.emplace_back(t_state);
+
+    m_last_time = t_state.time;
+
+    if (t_playback && m_data.size() > 1)
     {
-        m_plot_data.pop_front();
-    }
-    m_plot_data.push_back(data);
-    m_last_ts = t_time;
-    if (t_playback && m_plot_data.size() > 1)
-    {
-        std::sort(m_plot_data.begin(), m_plot_data.end(), [](const PlotData &t_first, const PlotData &t_second)
-                  { return t_first.timestamp < t_second.timestamp; });
+        std::sort(m_data.begin(), m_data.end(),
+                  [](const Common::WorldState &t_first, const Common::WorldState &t_second)
+                  { return t_first.time < t_second.time; });
     }
 }
 
-void FooterMenu::drawPlot(const Common::WorldState &t_world, const bool &t_playback)
+void PlotMenu::draw(const Common::WorldState &t_world, const bool &t_playback)
 {
-    const char *item_choices[] = {"Our Robot", "Opp Robot", "Ball", "Custom 1", "Custom 2", "Custom 3"};
-    ImGui::SetNextItemWidth(200);
-    if (ImGui::Combo("##Item", &m_item, item_choices, IM_ARRAYSIZE(item_choices)))
-    {
-        m_plot_data.clear();
-    }
-    ImGui::SameLine();
+    pushData(t_world, t_playback);
 
-    if (m_item < 2)
+    if (ImGui::BeginTable("plot-setting", 3, ImGuiTableFlags_BordersInnerV))
     {
-        const char *id_choices[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
-        ImGui::SetNextItemWidth(200);
-        if (ImGui::Combo("##m_id", &m_id, id_choices, IM_ARRAYSIZE(id_choices)))
+        const char *item_choices[] = {"Our Robot", "Opp Robot", "Ball"};
+
+        ImGui::TableNextColumn();
+        ImGui::Combo("Item", reinterpret_cast<int *>(&m_item), item_choices, IM_ARRAYSIZE(item_choices));
+
+        if (m_item == Item::OurRobot || m_item == Item::OppRobot)
         {
-            m_plot_data.clear();
-        }
-        ImGui::SameLine();
-    }
+            const char *id_choices[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
 
-    if (m_item < 3)
-    {
+            ImGui::TableNextColumn();
+            ImGui::Combo("ID", &m_id, id_choices, IM_ARRAYSIZE(id_choices));
+        }
+
         const char *data_choices[] = {"vel", "vel xy"};
-        ImGui::SetNextItemWidth(200);
-        if (ImGui::Combo("##m_fata", &m_type, data_choices, IM_ARRAYSIZE(data_choices)))
-        {
-            m_plot_data.clear();
-        }
-        ImGui::SameLine();
+
+        ImGui::TableNextColumn();
+        ImGui::Combo("Data", reinterpret_cast<int *>(&m_type), data_choices, IM_ARRAYSIZE(data_choices));
+
+        ImGui::EndTable();
     }
+
     ImGui::Separator();
 
-    switch (static_cast<PlotItems>(m_item))
+    if (ImPlot::BeginPlot("Plot", ImVec2(-1, ImGui::GetWindowHeight() - 60.), ImPlotFlags_NoTitle))
     {
-    case PlotItems::OurRobot:
-        for (const auto &robot : t_world.own_robot)
+        auto getter_x = [](const int t_idx, void *t_user_data)
         {
-            if (m_id == robot.vision_id)
-            {
-                pushPlotData(robot, t_world.time.milliseconds(), t_playback);
-            }
-        }
-        break;
-    case PlotItems::OppRobot:
-        for (const auto &robot : t_world.opp_robot)
+            const PlotMenu &menu = *static_cast<PlotMenu *>(t_user_data);
+
+            const auto [time, data] = menu.data(t_idx);
+            return ImPlotPoint(time.seconds(), data.x);
+        };
+
+        auto getter_y = [](const int t_idx, void *t_user_data)
         {
-            if (m_id == robot.vision_id)
-            {
-                pushPlotData(robot, t_world.time.milliseconds(), t_playback);
-            }
-        }
-        break;
-    case PlotItems::Ball:
-        pushPlotData(t_world.ball, t_world.time.milliseconds(), t_playback);
-        break;
-    default:
-        break;
-    }
+            const PlotMenu &menu = *static_cast<PlotMenu *>(t_user_data);
 
-    if (ImPlot::BeginPlot("My Plot", ImVec2(-1, ImGui::GetWindowHeight() - 60.), ImGuiCond_Always))
-    {
+            const auto [time, data] = menu.data(t_idx);
+            return ImPlotPoint(time.seconds(), data.y);
+        };
 
-        std::vector<double> times;
-        std::vector<double> x_values;
-        std::vector<double> y_values;
-
-        times.reserve(m_plot_data.size());
-        x_values.reserve(m_plot_data.size());
-        y_values.reserve(m_plot_data.size());
-
-        for (const auto &data : m_plot_data)
+        auto getter_len = [](const int t_idx, void *t_user_data)
         {
-            times.push_back(static_cast<double>(data.timestamp - m_plot_data.at(0).timestamp) / 1000.);
-            switch (static_cast<PlotType>(m_type))
-            {
-            case PlotType::Vel:
-                x_values.push_back(static_cast<double>(data.velocity.length()));
-                break;
-            default:
-                x_values.push_back(static_cast<double>(data.velocity.x));
-                y_values.push_back(static_cast<double>(data.velocity.y));
-                break;
-            }
-        }
-        //        ImPlot::Set
-        const ImPlotAxisFlags time_flag = ImPlotAxisFlags_None;
-        const ImPlotAxisFlags vel_flag  = ImPlotAxisFlags_AutoFit;
-        ImPlot::SetupAxes("time (s)", "Vel (mm/s)", time_flag, vel_flag);
+            const PlotMenu &menu = *static_cast<PlotMenu *>(t_user_data);
+
+            const auto [time, data] = menu.data(t_idx);
+            return ImPlotPoint(time.seconds(), data.length());
+        };
+
+        ImPlot::SetupAxes("time (s)", "Vel (mm/s)", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
         if (t_playback)
         {
             ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, INFINITY);
@@ -127,14 +104,14 @@ void FooterMenu::drawPlot(const Common::WorldState &t_world, const bool &t_playb
         }
         ImPlot::SetupAxisZoomConstraints(ImAxis_X1, 3., INFINITY);
 
-        switch (static_cast<PlotType>(m_type))
+        switch (m_type)
         {
-        case PlotType::XY:
-            ImPlot::PlotLine("Vel x", times.data(), x_values.data(), m_plot_data.size());
-            ImPlot::PlotLine("Vel y", times.data(), y_values.data(), m_plot_data.size());
+        case Type::XY:
+            ImPlot::PlotLineG("Vel x", getter_x, this, m_data.size());
+            ImPlot::PlotLineG("Vel y", getter_y, this, m_data.size());
             break;
-        case PlotType::Vel:
-            ImPlot::PlotLine("Vel", times.data(), x_values.data(), m_plot_data.size());
+        case Type::Vel:
+            ImPlot::PlotLineG("Vel", getter_len, this, m_data.size());
             break;
         default:
             break;

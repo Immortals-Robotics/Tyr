@@ -113,11 +113,14 @@ bool Application::initialize(const int t_width, const int t_height)
 
     ImGuiTheme::ApplyTheme(ImGuiTheme::ImGuiTheme_SoDark_AccentRed);
 
-    m_renderer    = std::make_unique<Renderer>();
-    m_config_menu = std::make_unique<ConfigMenu>();
-    m_widget_menu = std::make_unique<WidgetMenu>();
-    m_demo_menu   = std::make_unique<DemoMenu>();
-    m_footer_menu = std::make_unique<FooterMenu>();
+    m_renderer        = std::make_unique<Renderer>();
+    m_config_menu     = std::make_unique<ConfigMenu>();
+    m_controller_menu = std::make_unique<ControllerMenu>();
+    m_demo_menu       = std::make_unique<DemoMenu>();
+    m_filter_menu     = std::make_unique<FilterMenu>();
+    m_log_menu        = std::make_unique<LogMenu>();
+    m_plot_menu       = std::make_unique<PlotMenu>();
+    m_status_bar      = std::make_unique<StatusBar>();
 
     Common::logInfo(" Now it is time, lets rock...");
     return true;
@@ -173,7 +176,14 @@ void Application::update()
     if (!m_layout_initialized)
     {
         resetLayout();
+        m_layout_initialized = true;
     }
+
+    if (ImGui::Begin("Status"))
+    {
+        m_status_bar->draw(debugWrapper());
+    }
+    ImGui::End();
 
     if (ImGui::Begin("Field"))
     {
@@ -181,40 +191,40 @@ void Application::update()
     }
     ImGui::End();
 
-    m_config_menu->feedDebug(debugWrapper());
+    m_filter_menu->feedDebug(debugWrapper());
 
     if (ImGui::Begin("Log"))
     {
-        m_footer_menu->drawTerminal(debugWrapper(), m_config_menu->nodeMap());
+        m_log_menu->draw(debugWrapper(), m_filter_menu->map());
     }
     ImGui::End();
 
     if (ImGui::Begin("Plot"))
     {
-        m_footer_menu->drawPlot(worldState(), !live());
+        m_plot_menu->draw(worldState(), !live());
     }
     ImGui::End();
 
     if (ImGui::Begin("Config"))
     {
-        m_config_menu->drawConfigTab();
+        m_config_menu->draw();
     }
     ImGui::End();
 
     if (ImGui::Begin("Debug Filter"))
     {
-        m_config_menu->drawFilterTab();
+        m_filter_menu->draw();
     }
     ImGui::End();
 
     if (ImGui::IsMouseClicked(0))
     {
-        m_widget_menu->setMouseClickPos(m_renderer->mousePosition());
+        m_controller_menu->setMouseClickPos(m_renderer->mousePosition());
     }
 
     if (ImGui::Begin("Gamepad"))
     {
-        m_widget_menu->drawControllerTab();
+        m_controller_menu->draw();
     }
     ImGui::End();
 
@@ -255,12 +265,12 @@ void Application::update()
 
         if (m_demo_menu->getState() == LogState::Live)
         {
-            m_renderer->draw(m_debug_wrapper, m_config_menu->nodeMap());
+            m_renderer->draw(m_debug_wrapper, m_filter_menu->map());
         }
         else
         {
             m_renderer->draw(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()),
-                             m_config_menu->nodeMap());
+                             m_filter_menu->map());
         }
 
         m_renderer->end();
@@ -276,14 +286,16 @@ bool Application::shouldClose() const
 
 void Application::resetLayout()
 {
-    m_layout_initialized = true;
-
     ImGui::DockBuilderRemoveNode(m_root_dockspace);
     ImGui::DockBuilderAddNode(m_root_dockspace, ImGuiDockNodeFlags_PassthruCentralNode |
                                                     (ImGuiDockNodeFlags) ImGuiDockNodeFlags_DockSpace);
     ImGui::DockBuilderSetNodeSize(m_root_dockspace, ImGui::GetMainViewport()->Size);
 
     ImGuiID dockspace_main = m_root_dockspace;
+
+    ImGuiID dockspace_down_bar =
+        ImGui::DockBuilderSplitNode(dockspace_main, ImGuiDir_Down, 0.035f, nullptr, &dockspace_main);
+
     ImGuiID dockspace_down =
         ImGui::DockBuilderSplitNode(dockspace_main, ImGuiDir_Down, 0.25f, nullptr, &dockspace_main);
 
@@ -311,8 +323,12 @@ void Application::resetLayout()
     ImGui::DockBuilderDockWindow("Log", dockspace_down_left);
     ImGui::DockBuilderDockWindow("Plot", dockspace_down_right);
 
+    ImGui::DockBuilderGetNode(dockspace_down_bar)
+        ->SetLocalFlags(ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoResizeX | ImGuiDockNodeFlags_NoResizeY |
+                        ImGuiDockNodeFlags_NoDocking);
+    ImGui::DockBuilderDockWindow("Status", dockspace_down_bar);
+
     ImGui::DockBuilderFinish(m_root_dockspace);
-    m_layout_initialized = true;
 }
 
 void Application::receiveWorldStates()
@@ -342,9 +358,6 @@ void Application::receiveDebug()
 
 void Application::visionRawEntry() const
 {
-    Common::Timer timer;
-    timer.start();
-
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
         m_vision_raw->receive();
@@ -356,17 +369,14 @@ void Application::visionRawEntry() const
         }
 
         m_vision_raw->process();
-
         m_vision_raw->publish();
-
-        Common::logInfo("vision raw FPS: {:.2f}", 1.0 / timer.intervalSmooth().seconds());
     }
 }
 
 void Application::visionFilteredEntry() const
 {
-    Common::Timer timer;
-    timer.start();
+    Common::Timer interval_timer;
+    interval_timer.start();
 
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
@@ -376,18 +386,24 @@ void Application::visionFilteredEntry() const
             continue;
         }
 
-        m_vision_filtered->process();
+        Common::Timer duration_timer;
+        duration_timer.start();
 
+        m_vision_filtered->process();
         m_vision_filtered->publish();
 
-        Common::logInfo("vision filtered FPS: {:.2f}", 1.0 / timer.intervalSmooth().seconds());
+        Common::Debug::ExecutionTime execution_time;
+        execution_time.duration = duration_timer.time();
+        execution_time.interval = interval_timer.interval();
+
+        Common::debug().reportExecutionTime("vision", execution_time);
     }
 }
 
 void Application::aiEntry() const
 {
-    Common::Timer timer;
-    timer.start();
+    Common::Timer interval_timer;
+    interval_timer.start();
 
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
@@ -401,21 +417,24 @@ void Application::aiEntry() const
             continue;
         }
 
-        m_ai->process();
+        Common::Timer duration_timer;
+        duration_timer.start();
 
+        m_ai->process();
         m_ai->publishCommands();
 
-        Common::debug().flush();
+        Common::Debug::ExecutionTime execution_time;
+        execution_time.duration = duration_timer.time();
+        execution_time.interval = interval_timer.interval();
 
-        Common::logInfo("AI FPS: {:.2f}", 1.0 / timer.intervalSmooth().seconds());
+        Common::debug().reportExecutionTime("ai", execution_time);
+
+        Common::debug().flush();
     }
 }
 
 void Application::senderEntry() const
 {
-    Common::Timer timer;
-    timer.start();
-
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
         if (!m_sender_hub->receive())
@@ -425,16 +444,11 @@ void Application::senderEntry() const
         }
 
         m_sender_hub->send();
-
-        Common::logInfo("sender FPS: {:.2f}", 1.0 / timer.intervalSmooth().seconds());
     }
 }
 
 void Application::refereeEntry() const
 {
-    Common::Timer timer;
-    timer.start();
-
     while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
         const bool ref_received   = m_referee->receiveRef();

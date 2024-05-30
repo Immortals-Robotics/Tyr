@@ -10,16 +10,16 @@ Renderer::Renderer()
     m_font = LoadFont(font_path.string().c_str());
 }
 
-void Renderer::begin(const Common::FieldState &t_field, const Common::Rect window_rect)
+void Renderer::begin(const Common::FieldState &t_field, const Common::Rect t_window_rect)
 {
-    const Common::Vec2 offset = window_rect.min + window_rect.size() / 2.0f;
+    const Common::Vec2 offset = t_window_rect.min + t_window_rect.size() / 2.0f;
 
     const Common::Vec2 field_size = {t_field.width * 2.0f + 4.0f * t_field.boundary_width,
                                      t_field.height * 2.0f + 4.0f * t_field.boundary_width};
 
-    const Common::Vec2 ratio = window_rect.size() / field_size;
+    const Common::Vec2 ratio = t_window_rect.size() / field_size;
 
-    const float zoom = window_rect.size().x < window_rect.size().y ? (ratio.x > ratio.y ? ratio.x : ratio.y)
+    const float zoom = t_window_rect.size().x < t_window_rect.size().y ? (ratio.x > ratio.y ? ratio.x : ratio.y)
                                                                    : (ratio.x > ratio.y ? ratio.y : ratio.x);
 
     m_camera = Camera2D{
@@ -30,7 +30,7 @@ void Renderer::begin(const Common::FieldState &t_field, const Common::Rect windo
     };
 
     BeginMode2D(m_camera);
-    BeginScissorMode(window_rect.min.x, window_rect.min.y, window_rect.size().x, window_rect.size().y);
+    BeginScissorMode(t_window_rect.min.x, t_window_rect.min.y, t_window_rect.size().x, t_window_rect.size().y);
 }
 
 void Renderer::end()

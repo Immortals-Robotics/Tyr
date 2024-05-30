@@ -7,10 +7,13 @@ set(HEADER_FILES
         pch.h
         app.h
 
-        menu/config_menu.h
-        menu/demo_menu.h
-        menu/footer_menu.h
-        menu/widget_menu.h
+        menu/config.h
+        menu/controller.h
+        menu/demo.h
+        menu/filter.h
+        menu/log.h
+        menu/plot.h
+        menu/status_bar.h
 
         renderer/renderer.h
         renderer/draw_inl.h
@@ -22,12 +25,13 @@ set(SOURCE_FILES
         main.cpp
         app.cpp
 
-        menu/config_menu.cpp
-        menu/demo_menu.cpp
-        menu/filter_tab.cpp
-        menu/footer_menu.cpp
+        menu/config.cpp
+        menu/controller.cpp
+        menu/demo.cpp
+        menu/filter.cpp
+        menu/log.cpp
         menu/plot.cpp
-        menu/widget_menu.cpp
+        menu/status_bar.cpp
 
         renderer/ball.cpp
         renderer/debug.cpp

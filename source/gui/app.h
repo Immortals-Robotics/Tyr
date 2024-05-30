@@ -2,11 +2,16 @@
 
 #define ImmortalsIsTheBest true
 
-#include "menu/config_menu.h"
-#include "menu/demo_menu.h"
-#include "menu/footer_menu.h"
-#include "menu/widget_menu.h"
 #include "renderer/renderer.h"
+
+#include "menu/config.h"
+#include "menu/controller.h"
+#include "menu/demo.h"
+#include "menu/filter.h"
+#include "menu/log.h"
+#include "menu/plot.h"
+#include "menu/status_bar.h"
+
 namespace Tyr::Gui
 {
 class Application
@@ -25,11 +30,15 @@ private:
     ImGuiID m_root_dockspace     = 0;
     bool    m_layout_initialized = false;
 
-    std::unique_ptr<Renderer>   m_renderer;
-    std::unique_ptr<ConfigMenu> m_config_menu;
-    std::unique_ptr<WidgetMenu> m_widget_menu;
-    std::unique_ptr<DemoMenu>   m_demo_menu;
-    std::unique_ptr<FooterMenu> m_footer_menu;
+    std::unique_ptr<Renderer> m_renderer;
+
+    std::unique_ptr<ConfigMenu>     m_config_menu;
+    std::unique_ptr<ControllerMenu> m_controller_menu;
+    std::unique_ptr<DemoMenu>       m_demo_menu;
+    std::unique_ptr<FilterMenu>     m_filter_menu;
+    std::unique_ptr<LogMenu>        m_log_menu;
+    std::unique_ptr<PlotMenu>       m_plot_menu;
+    std::unique_ptr<StatusBar>      m_status_bar;
 
     std::atomic<bool> m_running = true;
 
