@@ -13,7 +13,6 @@ void StatusBar::draw(const Common::Debug::Wrapper &t_wrapper)
 
         ImGui::Bullet();
 
-
         ImGui::Text("%s [ fps: %.2f, exec: %.2f ]", name.c_str(), 1.0f / interval_filter.current().seconds(),
                     duration_filter.current().seconds() * 1000.0f);
 

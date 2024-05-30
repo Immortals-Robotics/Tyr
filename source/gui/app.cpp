@@ -201,7 +201,7 @@ void Application::update()
 
     if (ImGui::Begin("Plot"))
     {
-        m_plot_menu->drawPlot(worldState(), !live());
+        m_plot_menu->draw(worldState(), !live());
     }
     ImGui::End();
 
