@@ -28,7 +28,7 @@ bool Raw::receive()
         {
             Common::logTrace("Received field geometry from {}", receive_endpoint);
 
-            Common::field() = Common::FieldState{packet.geometry()};
+            Common::field().update(packet.geometry());
         }
 
         return true;
