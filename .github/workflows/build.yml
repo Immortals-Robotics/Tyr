@@ -31,8 +31,6 @@ jobs:
 
       - name: Install dependencies
         uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgGitCommitId: efd6a0692c9dc237d66210125c2678c9efec9e72
 
       - name: Run CMake and run vcpkg to build packages
         uses: lukka/run-cmake@v10
