@@ -134,6 +134,14 @@ void ControllerMenu::draw()
 
             ImGui::Combo("Color", reinterpret_cast<int *>(&m_referee_color), kEnums.data(), kEnums.size());
 
+            ImGui::Separator();
+
+            ImGui::InputScalar("GK Blue", ImGuiDataType_U32, &m_gk_blue);
+            m_gk_blue = std::clamp(m_gk_blue, 0u, Common::Config::Common::kMaxRobots);
+
+            ImGui::InputScalar("GK Yellow", ImGuiDataType_U32, &m_gk_yellow);
+            m_gk_yellow = std::clamp(m_gk_yellow, 0u, Common::Config::Common::kMaxRobots);
+
             refereeUpdate();
 
             ImGui::PopID();
@@ -206,7 +214,7 @@ void ControllerMenu::refereeUpdate()
     ref_packet.mutable_blue()->set_yellow_cards(0);
     ref_packet.mutable_blue()->set_timeouts(0);
     ref_packet.mutable_blue()->set_timeout_time(0);
-    ref_packet.mutable_blue()->set_goalkeeper(0);
+    ref_packet.mutable_blue()->set_goalkeeper(m_gk_blue);
 
     ref_packet.mutable_yellow()->set_name("Immortals");
     ref_packet.mutable_yellow()->set_score(0);
@@ -214,7 +222,7 @@ void ControllerMenu::refereeUpdate()
     ref_packet.mutable_yellow()->set_yellow_cards(0);
     ref_packet.mutable_yellow()->set_timeouts(0);
     ref_packet.mutable_yellow()->set_timeout_time(0);
-    ref_packet.mutable_yellow()->set_goalkeeper(0);
+    ref_packet.mutable_yellow()->set_goalkeeper(m_gk_yellow);
 
     m_udp->send(ref_packet, Common::config().network.referee_address);
 
