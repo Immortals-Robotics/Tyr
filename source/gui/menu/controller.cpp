@@ -206,6 +206,7 @@ void ControllerMenu::refereeUpdate()
     ref_packet.mutable_blue()->set_yellow_cards(0);
     ref_packet.mutable_blue()->set_timeouts(0);
     ref_packet.mutable_blue()->set_timeout_time(0);
+    ref_packet.mutable_blue()->set_goalkeeper(0);
 
     ref_packet.mutable_yellow()->set_name("Immortals");
     ref_packet.mutable_yellow()->set_score(0);
@@ -213,6 +214,7 @@ void ControllerMenu::refereeUpdate()
     ref_packet.mutable_yellow()->set_yellow_cards(0);
     ref_packet.mutable_yellow()->set_timeouts(0);
     ref_packet.mutable_yellow()->set_timeout_time(0);
+    ref_packet.mutable_yellow()->set_goalkeeper(0);
 
     m_udp->send(ref_packet, Common::config().network.referee_address);
 
