@@ -356,6 +356,8 @@ void Application::receiveDebug()
 
 void Application::visionRawEntry() const
 {
+    Common::Debug::setThreadName("VisionRaw");
+
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
         m_vision_raw->receive();
@@ -373,6 +375,8 @@ void Application::visionRawEntry() const
 
 void Application::visionFilteredEntry() const
 {
+    Common::Debug::setThreadName("VisionFiltered");
+
     Common::Timer interval_timer;
     interval_timer.start();
 
@@ -400,6 +404,8 @@ void Application::visionFilteredEntry() const
 
 void Application::aiEntry() const
 {
+    Common::Debug::setThreadName("Ai");
+
     Common::Timer interval_timer;
     interval_timer.start();
 
@@ -433,6 +439,8 @@ void Application::aiEntry() const
 
 void Application::senderEntry() const
 {
+    Common::Debug::setThreadName("Sender");
+
     while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
     {
         if (!m_sender_hub->receive())
@@ -447,6 +455,8 @@ void Application::senderEntry() const
 
 void Application::refereeEntry() const
 {
+    Common::Debug::setThreadName("Referee");
+
     while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
         const bool ref_received   = m_referee->receiveRef();
@@ -465,6 +475,8 @@ void Application::refereeEntry() const
 
 void Application::dumpEntry() const
 {
+    Common::Debug::setThreadName("Dump");
+
     while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
     {
         if (!m_dumper->process())
