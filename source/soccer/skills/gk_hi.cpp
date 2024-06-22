@@ -26,12 +26,12 @@ void Ai::gkHi(const int t_robot_num)
         (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) /
              m_world_state.ball.velocity.length() <
          3) &&
-        m_ref_state.gameOn())
+        m_ref_state.running())
     {
         gkShirje(t_robot_num);
         my_hys = 10;
     }
-    else if ((my_hys > 0) && m_ref_state.gameOn())
+    else if ((my_hys > 0) && m_ref_state.running())
     {
         gkShirje(t_robot_num);
         my_hys--;
@@ -55,7 +55,7 @@ void Ai::gkHi(const int t_robot_num)
         obs_map.addRectangle({start, w, h});
 
         if ((obs_map.isInObstacle(m_world_state.ball.position)) && (m_world_state.ball.velocity.length() < 1500) &&
-            m_ref_state.gameOn())
+            m_ref_state.running())
         {
             Common::logDebug("GK intercepting");
 

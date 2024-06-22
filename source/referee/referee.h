@@ -10,22 +10,18 @@ private:
 
     std::unique_ptr<Common::NngServer> m_server;
 
-    Common::WorldState   m_world_state;
-    Common::RefereeState m_state;
+    Common::WorldState     m_world_state;
+    Common::Referee::State m_state;
 
-    Common::Vec2 m_last_placed_ball;
-    int          m_move_hys; // For isKicked
-
-    Common::Timer m_timer;
-
-    unsigned int m_cmd_counter = 0;
+    Common::Vec2 m_last_ball_pos;
+    unsigned     m_move_hys;
 
     Protos::Ssl::Gc::Referee m_ssl_ref;
 
     bool isKicked();
 
     // This is the state machine transition function
-    void transition(Protos::Ssl::Gc::Referee_Command t_ref_command);
+    void transition();
 
 public:
     Referee() = default;

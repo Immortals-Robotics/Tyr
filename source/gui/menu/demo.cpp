@@ -158,7 +158,7 @@ void DemoMenu::update()
 
     Protos::Immortals::WorldState     pb_world_state;
     Protos::Immortals::Debug::Wrapper pb_debug;
-    Protos::Immortals::RefereeState   pb_referee;
+    Protos::Immortals::Referee::State pb_referee;
 
     m_world_filtered_storage.get(playback_point.microseconds(), &pb_world_state);
     m_debug_storage.get(playback_point.microseconds(), &pb_debug);
@@ -166,7 +166,7 @@ void DemoMenu::update()
 
     m_world_state = static_cast<Common::WorldState>(pb_world_state);
     m_debug       = static_cast<Common::Debug::Wrapper>(pb_debug);
-    m_referee     = static_cast<Common::RefereeState>(pb_referee);
+    m_referee     = static_cast<Common::Referee::State>(pb_referee);
 }
 
 void DemoMenu::analyzeDatabase()

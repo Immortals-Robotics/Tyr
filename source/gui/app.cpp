@@ -2,7 +2,6 @@
 
 namespace Tyr::Gui
 {
-
 static void logCallback(const int t_msg_type, const char *const t_text, va_list t_args)
 {
     static constexpr int kBufferSize = 1024;
@@ -269,8 +268,7 @@ void Application::update()
         }
         else
         {
-            m_renderer->draw(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()),
-                             m_filter_menu->map());
+            m_renderer->draw(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()), m_filter_menu->map());
         }
 
         m_renderer->end();
@@ -344,9 +342,9 @@ void Application::receiveWorldStates()
 
 void Application::receiveRefereeState()
 {
-    Protos::Immortals::RefereeState pb_raw_state;
+    Protos::Immortals::Referee::State pb_raw_state;
     if (m_referee_client->receive(&pb_raw_state, nullptr, true))
-        m_referee_state = Common::RefereeState(pb_raw_state);
+        m_referee_state = Common::Referee::State(pb_raw_state);
 }
 
 void Application::receiveDebug()

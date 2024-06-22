@@ -27,16 +27,6 @@ Ai::Ai()
 
     m_current_play = &Ai::haltAll;
 
-    m_gk_intercepting = false;
-
-    m_random_param = 0.0f;
-    m_target_str   = -1;
-
-    m_is_defending  = false;
-    m_opp_restarted = false;
-
-    m_last_referee = Common::RefereeState::STATE_GAME_OFF;
-
     m_mark_map[&m_dmf]  = -1;
     m_mark_map[&m_mid1] = -1;
     m_mark_map[&m_mid2] = -1;
@@ -66,11 +56,6 @@ Ai::Ai()
         m_allaf_pos[i] = Common::Vec2();
     }
 
-    m_chip_head = Common::Angle::fromDeg(200);
-
-    m_circle_reached_behind_ball = false;
-    m_predicted_ball             = Common::Vec2();
-
     const auto strategy_path = std::filesystem::path(DATA_DIR) / "strategy.ims";
     loadPlayBook(strategy_path);
 
@@ -89,11 +74,11 @@ bool Ai::receiveWorld()
 
 bool Ai::receiveReferee()
 {
-    Protos::Immortals::RefereeState pb_state;
+    Protos::Immortals::Referee::State pb_state;
     if (!m_ref_client->receive(&pb_state, nullptr, true))
         return false;
 
-    m_ref_state = Common::RefereeState(pb_state);
+    m_ref_state = static_cast<Common::Referee::State>(pb_state);
     return true;
 }
 
