@@ -32,7 +32,7 @@ public:
         return m_world_state;
     }
 
-    const Common::RefereeState &refereeState() const
+    const Common::Referee::State &refereeState() const
     {
         return m_referee;
     }
@@ -84,7 +84,7 @@ private:
 
     Common::Debug::Wrapper m_debug;
     Common::WorldState     m_world_state;
-    Common::RefereeState   m_referee;
+    Common::Referee::State m_referee;
 };
 
 } // namespace Tyr::Gui

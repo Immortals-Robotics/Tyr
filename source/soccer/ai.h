@@ -11,8 +11,8 @@ namespace Tyr::Soccer
 class Ai
 {
 private:
-    Common::WorldState   m_world_state;
-    Common::RefereeState m_ref_state;
+    Common::WorldState     m_world_state;
+    Common::Referee::State m_ref_state;
 
     std::unique_ptr<Common::NngClient> m_world_client;
     std::unique_ptr<Common::NngClient> m_ref_client;
@@ -27,15 +27,15 @@ private:
     using Play = void (Ai::*)();
     Play              m_current_play;
 
-    Common::Angle m_chip_head;
+    Common::Angle m_chip_head = Common::Angle::fromDeg(200);
 
-    float m_random_param;
-    int   m_target_str;
+    float m_random_param = 0.0f;
+    int   m_target_str   = -1;
 
-    int m_last_referee;
+    Common::Referee::GameState m_last_referee = Common::Referee::GameState::None;
 
-    bool m_is_defending;
-    bool m_opp_restarted;
+    bool m_is_defending  = false;
+    bool m_opp_restarted = false;
 
     int m_side;
 
@@ -77,7 +77,7 @@ private:
     std::map<int *, int> m_mark_map;
 
     Common::Vec2  m_predicted_ball;
-    bool          m_circle_reached_behind_ball;
+    bool          m_circle_reached_behind_ball = false;
     Common::Angle calculateOneTouchAngle(int t_robot_num, Common::Vec2 t_one_touch_position);
 
     struct OpenAngle
@@ -147,7 +147,7 @@ private:
     void circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow,
                     float t_near_dis_override = -1.0f);
 
-    bool m_gk_intercepting;
+    bool m_gk_intercepting = false;
 
     // Tactics
     void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target);

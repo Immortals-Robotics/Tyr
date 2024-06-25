@@ -36,7 +36,7 @@ public:
 
     void draw(const Common::FieldState &t_field);
 
-    void draw(const Common::RefereeState &t_referee_state, const Common::FieldState &t_field);
+    void draw(const Common::Referee::State &t_referee_state, const Common::FieldState &t_field);
 
     void draw(const Common::Debug::Wrapper &t_wrapper, const FilterMenu::Map &t_map) const;
 

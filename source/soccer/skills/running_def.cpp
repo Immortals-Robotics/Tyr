@@ -42,7 +42,7 @@ void Ai::runningDef(const int t_robot_num, const Common::Vec2 t_target, Common::
     Common::logDebug("m_gk_intercepting: {}", m_gk_intercepting);
 
     if ((interceptNear) && (!oppHasBall) && (!ballMovingFast) && (!ownAttackHasBall) && (!ballIsToGoal) &&
-        (!m_gk_intercepting) && m_ref_state.gameOn())
+        (!m_gk_intercepting) && m_ref_state.running())
     //    if(1)
     {
         Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");

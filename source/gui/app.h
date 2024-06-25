@@ -69,7 +69,7 @@ private:
 
     Common::Debug::Wrapper m_debug_wrapper;
 
-    Common::RefereeState m_referee_state;
+    Common::Referee::State m_referee_state;
 
     void resetLayout();
 

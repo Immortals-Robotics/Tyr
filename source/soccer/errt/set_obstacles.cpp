@@ -17,8 +17,8 @@ static float calculateRobotRadius(const Common::RobotState &state)
 
 void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
 {
-    const bool ourPenalty = t_robot_num != m_gk && !m_ref_state.ourPlaceBall();
-    const bool oppPenalty = !m_ref_state.ourPlaceBall();
+    const bool ourPenalty = t_robot_num != m_gk && !m_ref_state.ourBallPlacement();
+    const bool oppPenalty = !m_ref_state.ourBallPlacement();
 
     const bool oppPenaltyBig = m_ref_state.freeKick() || m_ref_state.stop();
 
@@ -107,9 +107,9 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
     }
 
     // avoid the line between the ball and the placement point
-    if (m_ref_state.theirPlaceBall())
+    if (m_ref_state.theirBallPlacement())
     {
-        const Common::Vec2 ball_line      = m_ref_state.place_ball_target - m_world_state.ball.position;
+        const Common::Vec2 ball_line      = m_ref_state.designated_position - m_world_state.ball.position;
         const int          ball_obs_count = std::ceil(ball_line.length() / (ballAreaRadius + current_robot_radius));
 
         for (int i = 0; i < ball_obs_count; i++)

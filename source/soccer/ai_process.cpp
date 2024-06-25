@@ -6,14 +6,14 @@ void Ai::process()
 {
     internalProcessData();
 
-    if (m_last_referee != m_ref_state.get())
+    if (m_last_referee != m_ref_state.state)
     {
         m_timer.start();
-        m_last_referee = m_ref_state.get();
+        m_last_referee = m_ref_state.state;
         m_random_param = m_random.get(0.0f, 1.0f);
         m_target_str   = strategyWeight();
-        m_func_state = 0;
-        m_func_count = 0;
+        m_func_state   = 0;
+        m_func_count   = 0;
     }
 
     if (m_ref_state.stop())
@@ -30,7 +30,7 @@ void Ai::process()
             m_current_play = &Ai::stop;
         }
     }
-    else if (m_ref_state.gameOn())
+    else if (m_ref_state.running())
     {
         m_current_play = &Ai::newNormalPlay;
     }
@@ -38,7 +38,7 @@ void Ai::process()
     {
         m_current_play = &Ai::kickoffUsChip;
     }
-    else if (m_ref_state.ourDirectKick() || m_ref_state.ourIndirectKick())
+    else if (m_ref_state.ourFreeKick())
     {
         if (m_target_str != -1)
         {
@@ -53,7 +53,7 @@ void Ai::process()
     {
         m_current_play = &Ai::penaltyUsShootout;
     }
-    else if (m_ref_state.ourPlaceBall())
+    else if (m_ref_state.ourBallPlacement())
     {
         m_current_play = &Ai::ourPlaceBall;
     }
@@ -69,17 +69,17 @@ void Ai::process()
     {
         m_current_play = &Ai::penaltyTheirSimple;
     }
-    else if (m_ref_state.theirPlaceBall())
+    else if (m_ref_state.theirBallPlacement())
     {
         m_current_play = &Ai::theirPlaceBall;
     }
-    else if (!m_ref_state.canMove())
+    else if (m_ref_state.halt() || m_ref_state.state == Common::Referee::GameState::None)
     {
         m_current_play = &Ai::haltAll;
     }
     else
     {
-        Common::logWarning("Unhandled ref state: {}", static_cast<int>(m_ref_state.get()));
+        Common::logWarning("Unhandled ref state: {}", m_ref_state);
         m_current_play = &Ai::stop;
     }
 
