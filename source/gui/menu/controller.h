@@ -40,7 +40,8 @@ private:
 
     uint32_t m_command_counter = 0;
 
-    Common::TeamColor m_referee_color = Immortals::Common::TeamColor::Blue;
+    Common::TeamColor m_referee_color = Common::TeamColor::Blue;
+    Common::TeamSide  m_our_side      = Common::TeamSide::Left;
     unsigned          m_gk_blue       = 0;
     unsigned          m_gk_yellow     = 0;
 

@@ -128,11 +128,19 @@ void ControllerMenu::draw()
             ImGui::SeparatorText("Referee");
             ImGui::PushID("ControllerReferee");
 
-            static constexpr std::array kEnums = {"Blue", "Yellow"};
-            static_assert(static_cast<int>(Common::TeamColor::Blue) == 0);
-            static_assert(static_cast<int>(Common::TeamColor::Yellow) == 1);
+            {
+                static constexpr std::array kEnums = {"Left", "Right"};
+                static_assert(static_cast<int>(Common::TeamSide::Left) == 0);
+                static_assert(static_cast<int>(Common::TeamSide::Right) == 1);
+                ImGui::Combo("Our side", reinterpret_cast<int *>(&m_our_side), kEnums.data(), kEnums.size());
+            }
 
-            ImGui::Combo("Color", reinterpret_cast<int *>(&m_referee_color), kEnums.data(), kEnums.size());
+            {
+                static constexpr std::array kEnums = {"Blue", "Yellow"};
+                static_assert(static_cast<int>(Common::TeamColor::Blue) == 0);
+                static_assert(static_cast<int>(Common::TeamColor::Yellow) == 1);
+                ImGui::Combo("Color", reinterpret_cast<int *>(&m_referee_color), kEnums.data(), kEnums.size());
+            }
 
             ImGui::Separator();
 
@@ -208,7 +216,7 @@ void ControllerMenu::refereeUpdate()
     ref_packet.set_command_counter(m_command_counter);
     ref_packet.set_stage(Protos::Ssl::Gc::Referee_Stage_NORMAL_FIRST_HALF);
 
-    ref_packet.mutable_blue()->set_name("Immortals");
+    ref_packet.mutable_blue()->set_name("Team Blue");
     ref_packet.mutable_blue()->set_score(0);
     ref_packet.mutable_blue()->set_red_cards(0);
     ref_packet.mutable_blue()->set_yellow_cards(0);
@@ -216,13 +224,18 @@ void ControllerMenu::refereeUpdate()
     ref_packet.mutable_blue()->set_timeout_time(0);
     ref_packet.mutable_blue()->set_goalkeeper(m_gk_blue);
 
-    ref_packet.mutable_yellow()->set_name("Immortals");
+    ref_packet.mutable_yellow()->set_name("Team Yellow");
     ref_packet.mutable_yellow()->set_score(0);
     ref_packet.mutable_yellow()->set_red_cards(0);
     ref_packet.mutable_yellow()->set_yellow_cards(0);
     ref_packet.mutable_yellow()->set_timeouts(0);
     ref_packet.mutable_yellow()->set_timeout_time(0);
     ref_packet.mutable_yellow()->set_goalkeeper(m_gk_yellow);
+
+    const bool blue_on_right = Common::config().common.our_color == Common::TeamColor::Blue
+                                   ? m_our_side == Common::TeamSide::Right
+                                   : m_our_side == Common::TeamSide::Left;
+    ref_packet.set_blue_team_on_positive_half(blue_on_right);
 
     m_udp->send(ref_packet, Common::config().network.referee_address);
 
