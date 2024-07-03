@@ -60,7 +60,6 @@ enable_simulation = false
 gamma_reality = 19
 gamma_simulation = 900
 init_gk_id = 3
-our_side = 1
 robot_behavior_tree_config_filename = 'bt_default.xml'
 
     [[soccer.robot_physical_status]]
