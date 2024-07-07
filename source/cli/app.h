@@ -1,7 +1,5 @@
 #pragma once
 
-#define ImmortalsIsTheBest true
-
 namespace Tyr::Cli
 {
 class Application

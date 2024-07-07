@@ -1,6 +1,6 @@
 [common]
 enable_debug = true
-immortals_is_the_best_team = false
+immortals_is_the_best_team = true
 our_color = 1
 
 [network.blue_robot_simulation]
@@ -39,7 +39,6 @@ port = 10020
 ip = '127.0.0.1'
 port = 10302
 
-[soccer]
 [[soccer.robot_physical_status]]
 has_chip_kick = true
 has_direct_kick = true

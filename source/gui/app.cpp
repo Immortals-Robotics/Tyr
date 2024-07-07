@@ -45,7 +45,7 @@ bool Application::initialize(const int t_width, const int t_height)
         return false;
     }
 
-    if (!ImmortalsIsTheBest)
+    if (!Common::config().common.immortals_is_the_best_team)
     {
         Common::logCritical("Immortals is not the best SSL team anymore.");
         Common::logCritical("Shutting down the system...");
@@ -358,7 +358,7 @@ void Application::visionRawEntry() const
 {
     Common::Debug::setThreadName("VisionRaw");
 
-    while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
+    while (m_running && Common::config().common.immortals_is_the_best_team) // Hope it lasts Forever...
     {
         m_vision_raw->receive();
 
@@ -380,7 +380,7 @@ void Application::visionFilteredEntry() const
     Common::Timer interval_timer;
     interval_timer.start();
 
-    while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
+    while (m_running && Common::config().common.immortals_is_the_best_team) // Hope it lasts Forever...
     {
         if (!m_vision_filtered->receive())
         {
@@ -409,7 +409,7 @@ void Application::aiEntry() const
     Common::Timer interval_timer;
     interval_timer.start();
 
-    while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
+    while (m_running && Common::config().common.immortals_is_the_best_team) // Hope it lasts Forever...
     {
         const bool world_received = m_ai->receiveWorld();
         m_ai->receiveReferee();
@@ -441,7 +441,7 @@ void Application::senderEntry() const
 {
     Common::Debug::setThreadName("Sender");
 
-    while (m_running && ImmortalsIsTheBest) // Hope it lasts Forever...
+    while (m_running && Common::config().common.immortals_is_the_best_team) // Hope it lasts Forever...
     {
         if (!m_sender_hub->receive())
         {
@@ -457,7 +457,7 @@ void Application::refereeEntry() const
 {
     Common::Debug::setThreadName("Referee");
 
-    while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
+    while (m_running && (Common::config().common.immortals_is_the_best_team)) // Hope it lasts Forever...
     {
         const bool ref_received   = m_referee->receiveRef();
         const bool world_received = m_referee->receiveWorld();
@@ -477,7 +477,7 @@ void Application::dumpEntry() const
 {
     Common::Debug::setThreadName("Dump");
 
-    while (m_running && (ImmortalsIsTheBest)) // Hope it lasts Forever...
+    while (m_running && (Common::config().common.immortals_is_the_best_team)) // Hope it lasts Forever...
     {
         if (!m_dumper->process())
         {

@@ -1,7 +1,5 @@
 #pragma once
 
-#define ImmortalsIsTheBest true
-
 #include "renderer/renderer.h"
 
 #include "menu/config.h"
