@@ -1,24 +1,15 @@
 [common]
 enable_debug = true
-immortals_is_the_best_team = false
+immortals_is_the_best_team = true
 our_color = 1
-side_wall = false
 
 [network.blue_robot_simulation]
 ip = '127.0.0.1'
 port = 10301
 
-[network.commands]
-ip = '224.5.92.6'
-port = 60007
-
 [network.control_simulation]
 ip = '127.0.0.1'
 port = 10300
-
-[network.debug]
-ip = '127.0.0.1'
-port = 10066
 
 [network.grsim]
 ip = '127.0.0.1'
@@ -44,135 +35,121 @@ port = 10099
 ip = '224.5.23.2'
 port = 10020
 
-[network.vision_interface]
-ip = '127.0.0.1'
-port = 10067
-
 [network.yellow_robot_simulation]
 ip = '127.0.0.1'
 port = 10302
 
-[soccer]
-ang_gamma_reality = 1
-ang_gamma_simulation = 1
-command_opp_robots = false
-enable_simulation = false
-gamma_reality = 19
-gamma_simulation = 900
-init_gk_id = 3
-robot_behavior_tree_config_filename = 'bt_default.xml'
+[[soccer.robot_physical_status]]
+has_chip_kick = true
+has_direct_kick = true
+has_dribbler = false
+id = 0
+is_3D_printed = false
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 0
-    is_3D_printed = false
+[[soccer.robot_physical_status]]
+has_chip_kick = true
+has_direct_kick = true
+has_dribbler = false
+id = 1
+is_3D_printed = false
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 1
-    is_3D_printed = false
+[[soccer.robot_physical_status]]
+has_chip_kick = false
+has_direct_kick = true
+has_dribbler = false
+id = 2
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = true
-    has_dribbler = false
-    id = 2
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = true
+has_direct_kick = true
+has_dribbler = false
+id = 3
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 3
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = true
+has_direct_kick = true
+has_dribbler = false
+id = 4
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 4
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = true
+has_direct_kick = true
+has_dribbler = false
+id = 5
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 5
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = true
+has_direct_kick = true
+has_dribbler = false
+id = 6
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 6
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = true
+has_direct_kick = true
+has_dribbler = false
+id = 7
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 7
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = false
+has_direct_kick = true
+has_dribbler = false
+id = 8
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = true
-    has_dribbler = false
-    id = 8
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = false
+has_direct_kick = true
+has_dribbler = false
+id = 9
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = true
-    has_dribbler = false
-    id = 9
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = false
+has_direct_kick = true
+has_dribbler = false
+id = 10
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = true
-    has_dribbler = false
-    id = 10
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = false
+has_direct_kick = true
+has_dribbler = false
+id = 11
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = true
-    has_dribbler = false
-    id = 11
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = true
+has_direct_kick = true
+has_dribbler = false
+id = 12
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 12
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = true
+has_direct_kick = true
+has_dribbler = false
+id = 13
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 13
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = true
+has_direct_kick = true
+has_dribbler = false
+id = 14
+is_3D_printed = true
 
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 14
-    is_3D_printed = true
-
-    [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
-    has_dribbler = false
-    id = 15
-    is_3D_printed = true
+[[soccer.robot_physical_status]]
+has_chip_kick = true
+has_direct_kick = true
+has_dribbler = false
+id = 15
+is_3D_printed = true
 
 [vision]
 ball_merge_distance = 70.0
@@ -182,6 +159,4 @@ max_ball_hist = 10
 max_robot_frame_not_seen = 120
 merge_distance = 70.0
 use_camera = [ true, true, true, true, false, false, false, false ]
-use_kalman_ang = false
-use_kalman_pos = true
 vision_frame_rate = 60.0
