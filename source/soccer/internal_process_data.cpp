@@ -7,11 +7,30 @@ void Ai::internalProcessData()
     m_ball_trajectory.update(m_world_state.ball);
     m_ball_trajectory.calculate();
 
-#if 1
     if (m_ref_state.stop())
     {
         for (int *id : ids)
         {
+            if (id == &m_gk)
+            {
+                const int new_gk_id = m_ref_state.ourInfo().gk_id;
+
+                if (new_gk_id != *id)
+                {
+                    const auto current_assignemt =
+                        std::find_if(ids.begin(), ids.end(), [new_gk_id](int *id) { return *id == new_gk_id; });
+
+                    if (current_assignemt != ids.end())
+                    {
+                        **current_assignemt = *id;
+                    }
+
+                    *id = new_gk_id;
+                }
+
+                continue;
+            }
+
             if (m_own_robot[*id].state().out_for_substitute)
             {
                 for (int j = 0; j < Common::Config::Common::kMaxRobots; j++)
@@ -32,8 +51,6 @@ void Ai::internalProcessData()
             }
         }
     }
-
-#endif
 
     for (Robot &robot : m_own_robot)
     {
