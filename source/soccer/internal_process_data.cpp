@@ -33,17 +33,16 @@ void Ai::internalProcessData()
 
             if (m_own_robot[*id].state().out_for_substitute)
             {
-                for (int j = 0; j < Common::Config::Common::kMaxRobots; j++)
+                for (const Common::RobotState &robot : m_world_state.own_robot)
                 {
-                    if ((m_world_state.own_robot[j].seen_state == Common::SeenState::Seen) &&
-                        std::fabs(m_world_state.own_robot[j].position.x) < Common::field().width &&
-                        std::fabs(m_world_state.own_robot[j].position.y) < Common::field().height)
+                    if (robot.seen_state == Common::SeenState::Seen && !isOut(robot.position, 20.0f))
                     {
-                        const bool taken = std::any_of(ids.begin(), ids.end(), [j](int *id) { return *id == j; });
+                        const bool taken =
+                            std::any_of(ids.begin(), ids.end(), [robot](int *id) { return *id == robot.vision_id; });
 
                         if (!taken)
                         {
-                            *id = j;
+                            *id = robot.vision_id;
                             break;
                         }
                     }
