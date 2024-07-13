@@ -4,36 +4,25 @@ namespace Tyr::Soccer
 {
 float Ai::calculateSwitchToAttackerScore(const int t_robot_num)
 {
-    if (t_robot_num == m_gk || t_robot_num == m_def || t_robot_num == m_attack)
+    if (t_robot_num == m_gk || t_robot_num == m_def)
         return -1;
 
     if (m_own_robot[t_robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         return -1;
 
     if (!m_is_defending && m_one_touch_detector[t_robot_num].IsArriving(45, 150))
-        return -1;
-
-    float currAttBallDis = m_own_robot[m_attack].state().position.distanceTo(m_world_state.ball.position);
-    if (m_own_robot[m_attack].state().seen_state == Common::SeenState::CompletelyOut)
-        currAttBallDis = std::numeric_limits<float>::max();
+        return 0;
 
     const float disToBall = m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position);
 
-    int marked_id = -1;
-    for (auto it = m_mark_map.begin(); it != m_mark_map.end(); ++it)
+    auto marked_opp = std::find_if(m_mark_map.begin(), m_mark_map.end(),
+                                   [&](const auto &pair) { return *pair.first == t_robot_num; });
+    if (m_is_defending && marked_opp != m_mark_map.end())
     {
-        if (*it->first == t_robot_num)
-        {
-            marked_id = it->second;
-            break;
-        }
-    }
+        const float oppDisToBall =
+            m_world_state.opp_robot[marked_opp->second].position.distanceTo(m_world_state.ball.position);
 
-    if (m_is_defending && marked_id != -1)
-    {
-        const float oppDisToBall = m_world_state.opp_robot[marked_id].position.distanceTo(m_world_state.ball.position);
-
-        if (oppDisToBall < 400 && disToBall < 400 && currAttBallDis > 600 && m_world_state.ball.velocity.length() < 500)
+        if (oppDisToBall < 400 && disToBall < 400 && m_world_state.ball.velocity.length() < 500)
         {
             return 0;
         }
@@ -43,12 +32,20 @@ float Ai::calculateSwitchToAttackerScore(const int t_robot_num)
         }
     }
 
-    if (disToBall > currAttBallDis - 500)
-        return 0;
-
-    float dis_score = (currAttBallDis - disToBall - 500) / 1000.0f;
+    float dis_score = 0.1f + (5000.0f - disToBall) / 5000.0f;
     dis_score       = std::clamp(dis_score, 0.0f, 1.0f);
 
-    return dis_score;
+    // check capabilities
+    const auto &physical_status = Common::config().soccer.robot_physical_status[t_robot_num];
+
+    float cap_score = 1.0f;
+    if (!physical_status.is_3D_printed)
+        cap_score *= 0.8f;
+    if (!physical_status.has_direct_kick)
+        cap_score *= 0.1f;
+    if (!physical_status.has_chip_kick)
+        cap_score *= 0.5f;
+
+    return dis_score * cap_score;
 }
 } // namespace Tyr::Soccer

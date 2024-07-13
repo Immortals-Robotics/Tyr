@@ -7,23 +7,23 @@ static constexpr int kRequiredHys      = 30;
 
 void Ai::manageAttRoles()
 {
-    // Check if the current attacker has lost the ball, before switching its role
-    if (m_own_robot[m_attack].state().position.distanceTo(m_world_state.ball.position) > 300)
-        attackerChangeHys++;
-    if (m_own_robot[m_attack].state().seen_state == Common::SeenState::CompletelyOut)
+    int *best_attack =
+        *std::max_element(ids.begin(), ids.end(), [&](int *lhs, int *rhs)
+                          { return calculateSwitchToAttackerScore(*lhs) < calculateSwitchToAttackerScore(*rhs); });
+
+    if (calculateSwitchToAttackerScore(m_attack) < 0.f)
+    {
         attackerChangeHys = kRequiredHys + 1;
+    }
+    else if (*best_attack != m_attack)
+    {
+        attackerChangeHys++;
+    }
 
     if (attackerChangeHys > kRequiredHys)
     {
-        int *best_attack =
-            *std::max_element(ids.begin(), ids.end(), [&](int *lhs, int *rhs)
-                              { return calculateSwitchToAttackerScore(*lhs) < calculateSwitchToAttackerScore(*rhs); });
-
-        if (calculateSwitchToAttackerScore(*best_attack) > 0.1f)
-        {
-            std::swap(m_attack, *best_attack);
-            attackerChangeHys = 0;
-        }
+        std::swap(m_attack, *best_attack);
+        attackerChangeHys = 0;
     }
 
     if (m_own_robot[m_mid1].state().position.y < m_own_robot[m_mid2].state().position.y)
