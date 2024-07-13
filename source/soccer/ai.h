@@ -49,6 +49,8 @@ private:
     int m_rw     = 6;
     int m_lw     = 7;
 
+    std::vector<int *> ids;
+
     void manageAttRoles();
 
     OneTouchDetector m_one_touch_detector[Common::Config::Common::kMaxRobots];
@@ -173,7 +175,6 @@ private:
     int strategyWeight();
 
     PlayBook     m_playbook;
-    int         *m_stm_to_ai_num[Common::Config::Common::kMaxRobots] = {};
     Common::Vec2 m_allaf_pos[Common::Config::Common::kMaxRobots];
 
     // FSM
