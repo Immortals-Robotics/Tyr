@@ -33,14 +33,7 @@ Ai::Ai()
     m_mark_map[&m_lw]   = -1;
     m_mark_map[&m_rw]   = -1;
 
-    m_stm_to_ai_num[0] = &m_gk;
-    m_stm_to_ai_num[1] = &m_def;
-    m_stm_to_ai_num[2] = &m_dmf;
-    m_stm_to_ai_num[3] = &m_mid2;
-    m_stm_to_ai_num[4] = &m_mid1;
-    m_stm_to_ai_num[5] = &m_attack;
-    m_stm_to_ai_num[6] = &m_rw;
-    m_stm_to_ai_num[7] = &m_lw;
+    ids = {&m_gk, &m_def, &m_dmf, &m_mid2, &m_mid1, &m_attack, &m_rw, &m_lw};
 
     for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
