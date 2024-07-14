@@ -50,7 +50,9 @@ void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common:
         }
     }
 
-    if (t_right_def_num != -1)
+    const bool right_def_marking = std::any_of(m_mark_map.begin(), m_mark_map.end(), [t_right_def_num](const auto &pair)
+                                               { return *pair.first == t_right_def_num && pair.second != -1; });
+    if (t_right_def_num != -1 && !right_def_marking)
     {
         // t_right_def_num
         if (alpha.deg() < -85.0)
@@ -84,7 +86,9 @@ void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common:
         }
     }
 
-    if (t_left_def_num != -1)
+    const bool left_def_marking = std::any_of(m_mark_map.begin(), m_mark_map.end(), [t_left_def_num](const auto &pair)
+                                              { return *pair.first == t_left_def_num && pair.second != -1; });
+    if (t_left_def_num != -1 && !left_def_marking)
     {
         // t_left_def_num
         if (alpha.deg() > 85.0)

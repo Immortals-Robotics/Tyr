@@ -100,7 +100,21 @@ private:
     Common::Vec2 predictBallForwardAI(float t_time_ahead);
     float        calculateOppThreat(int t_opp, bool t_restart = false);
     float        calculateMarkCost(int t_robot_num, int t_opp);
-    float        calculateSwitchToAttackerScore(int t_robot_num);
+
+    /**
+     * Calculates a score indicating the suitability of a robot for switching to the attacker role.
+     *
+     * This function evaluates the potential of a robot to become the attacker based on its current state,
+     * position relative to the ball, and specific capabilities. The score is a combination of distance to the
+     * ball and the robot's capabilities, adjusted by various conditions such as whether the robot is waiting
+     * for a pass or marking an opponent.
+     *
+     * @param t_robot_num The ID of the robot being evaluated.
+     * @return A float score representing the suitability of the robot for the attacker role.
+     * - -1: if the switch results in fatal error, ie. robot is the goalkeeper or is out of the game
+     * - [0:1]: switch is possible, a higher score indicates a more suitable candidate.
+     */
+    float calculateSwitchToAttackerScore(int t_robot_num);
 
     // Field helpers
     inline Common::Vec2        ownGoal() const;
@@ -156,7 +170,6 @@ private:
 
     // Plays
     void stop();
-    void stopDef();
     void newNormalPlay();
     void normalPlayDef();
     void normalPlayAtt();

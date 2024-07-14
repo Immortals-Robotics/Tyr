@@ -64,7 +64,6 @@ set(SOURCE_FILES
         plays/penalty_their_simple.cpp
         plays/penalty_us_shootout.cpp
         plays/place_ball.cpp
-        plays/stop_def.cpp
         plays/stop.cpp
         plays/strategy.cpp
         plays/their_place_ball.cpp

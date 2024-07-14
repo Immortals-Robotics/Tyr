@@ -6,17 +6,14 @@ void Ai::markManager()
 {
     if (!m_is_defending)
     {
-        for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
+        for (auto &pair : m_mark_map)
         {
-            m_mark_map[i->first] = -1;
+            pair.second = -1;
         }
         return;
     }
 
     const Common::Duration start_t = m_timer.time();
-
-    // if ( ( !t_restart ) && ( m_mark_map[&m_dmf] == -1 ) )
-    //	m_mark_map[&m_dmf] = findKickerOpp(-1);
 
     std::vector<std::pair<int, float>> crunchingOpps;
 
@@ -28,8 +25,9 @@ void Ai::markManager()
         crunchingOpps.push_back(std::make_pair(i, threat));
     }
 
-    sort(crunchingOpps.begin(), crunchingOpps.end(),
-         [](const std::pair<int, float> &a, const std::pair<int, float> &b) -> bool { return a.second > b.second; });
+    std::sort(crunchingOpps.begin(), crunchingOpps.end(),
+              [](const std::pair<int, float> &a, const std::pair<int, float> &b) -> bool
+              { return a.second > b.second; });
 
     Common::logDebug("Opps: {}", crunchingOpps.size());
     for (auto it = crunchingOpps.begin(); it != crunchingOpps.end(); ++it)
@@ -49,9 +47,9 @@ void Ai::markManager()
     {
         for (auto it2 = m_mark_map.begin(); it2 != m_mark_map.end(); ++it2)
         {
-            auto own  = *it2->first;
-            auto opp  = it->first;
-            auto cost = calculateMarkCost(own, opp);
+            const int   own  = *it2->first;
+            const int   opp  = it->first;
+            const float cost = calculateMarkCost(own, opp);
             if (cost < 0)
                 continue;
             mark_pairs.push_back(MarkPair{own, opp, cost});
@@ -60,20 +58,17 @@ void Ai::markManager()
             break;
     }
 
-    int def_count = 0;
-    for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
-    {
-        if (m_own_robot[*i->first].state().seen_state != Common::SeenState::CompletelyOut)
-        {
-            def_count++;
-        }
-    }
+    const int def_count =
+        std::count_if(m_mark_map.begin(), m_mark_map.end(), [this](const auto &pair)
+                      { return m_own_robot[*pair.first].state().seen_state != Common::SeenState::CompletelyOut; });
+
     int markings = std::min(def_count, static_cast<int>(crunchingOpps.size()));
 
     struct MarkFormation
     {
         std::vector<std::pair<int, int>> pairs;
         float                            TotalCost;
+
         MarkFormation()
         {
             pairs.reserve(5);
@@ -165,33 +160,27 @@ void Ai::markManager()
         }
     }
 
-    sort(valid_formations.begin(), valid_formations.end(),
-         [](const MarkFormation &a, const MarkFormation &b) -> bool
-         {
-             if (a.pairs.size() == b.pairs.size())
-             {
-                 return a.TotalCost < b.TotalCost;
-             }
-             else
-             {
-                 return a.pairs.size() > b.pairs.size();
-             }
-         });
-
     for (auto it = m_mark_map.begin(); it != m_mark_map.end(); ++it)
         m_mark_map[it->first] = -1;
 
-    if (!valid_formations.empty())
+    const auto best_formation = std::min_element(
+        valid_formations.begin(), valid_formations.end(), [](const MarkFormation &a, const MarkFormation &b) -> bool
+        { return a.pairs.size() == b.pairs.size() ? a.TotalCost < b.TotalCost : a.pairs.size() > b.pairs.size(); });
+
+    if (best_formation != valid_formations.end())
     {
-        auto best_pair = valid_formations[0].pairs;
-        for (auto it = best_pair.begin(); it != best_pair.end(); ++it)
+        Common::logDebug("mark formation with {} pairs and cost of {}", best_formation->pairs.size(),
+                         best_formation->TotalCost);
+
+        for (const auto &pair : best_formation->pairs)
         {
-            Common::logDebug(" XXXXXX {} : {}", it->first, it->second);
+            Common::logDebug(" mark pair {} : {}", pair.first, pair.second);
+
             for (auto it1 = m_mark_map.begin(); it1 != m_mark_map.end(); ++it1)
             {
-                if (*it1->first == it->first)
+                if (*it1->first == pair.first)
                 {
-                    it1->second = it->second;
+                    it1->second = pair.second;
                     break;
                 }
             }
@@ -200,6 +189,6 @@ void Ai::markManager()
 
     const Common::Duration end_t = m_timer.time();
 
-    Common::logDebug("markManager execution time: {}", (end_t - start_t));
+    Common::logTrace("markManager execution time: {}", (end_t - start_t));
 }
 } // namespace Tyr::Soccer

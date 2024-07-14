@@ -4,50 +4,49 @@ namespace Tyr::Soccer
 {
 float Ai::calculateSwitchToAttackerScore(const int t_robot_num)
 {
+    if (t_robot_num == m_gk)
+        return -1;
+
     if (m_own_robot[t_robot_num].state().seen_state == Common::SeenState::CompletelyOut)
         return -1;
 
-    if (t_robot_num != m_mid1 && t_robot_num != m_mid2)
-        return -1;
+    // Check if the robot is waiting for a pass and is in a suitable state to receive it
+    const bool pass_receiver_role = t_robot_num == m_mid1 || t_robot_num == m_mid2 || t_robot_num == m_dmf;
+    const bool one_touch_arriving = m_one_touch_detector[t_robot_num].IsArriving(45, 150);
+    if (!m_is_defending && pass_receiver_role && one_touch_arriving)
+        return 0;
 
-    if (!m_is_defending && m_one_touch_detector[t_robot_num].IsArriving(45, 150))
-        return -1;
+    const float disToBall = m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position);
 
-    float currAttBallDis = m_own_robot[m_attack].state().position.distanceTo(m_world_state.ball.position);
-
-    if (m_own_robot[m_attack].state().seen_state == Common::SeenState::CompletelyOut)
-        currAttBallDis = 20000;
-
-    int marked_id = -1;
-    for (auto it = m_mark_map.begin(); it != m_mark_map.end(); ++it)
+    // check if robot is marking an opponent
+    auto marked_opp = std::find_if(m_mark_map.begin(), m_mark_map.end(),
+                                   [&](const auto &pair) { return *pair.first == t_robot_num; });
+    if (m_is_defending && marked_opp != m_mark_map.end())
     {
-        if (*it->first == t_robot_num)
-        {
-            marked_id = it->second;
-            break;
-        }
-    }
+        const float oppDisToBall =
+            m_world_state.opp_robot[marked_opp->second].position.distanceTo(m_world_state.ball.position);
 
-    if (m_is_defending && marked_id != -1)
-    {
-        int opp = marked_id;
-        if ((m_world_state.opp_robot[opp].position.distanceTo(m_world_state.ball.position) < 400) &&
-            (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) < 400) &&
-            (currAttBallDis > 600) && (m_world_state.ball.velocity.length() < 500))
+        if (oppDisToBall > 400 || disToBall > 400 || m_world_state.ball.velocity.length() > 500)
         {
             return 0;
         }
-        else
-            return -1;
     }
 
-    float disToBall = m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position);
-    if (disToBall > currAttBallDis - 500)
-        return 0;
+    float dis_score = (5000.0f - disToBall) / 5000.0f;
+    dis_score       = std::clamp(dis_score, 0.1f, 1.0f);
 
-    float dis_score = (currAttBallDis - disToBall - 500) / 1000.0f;
-    dis_score       = std::min(1.0f, std::max(0.0f, dis_score));
+    // Calculate another score based on the robot's physical capabilities
+    const auto &physical_status = Common::config().soccer.robot_physical_status[t_robot_num];
 
-    return dis_score;
+    float caps_score = 1.0f;
+    if (!physical_status.is_3D_printed)
+        caps_score *= 0.8f;
+    if (!physical_status.has_direct_kick)
+        caps_score *= 0.1f;
+    if (!physical_status.has_chip_kick)
+        caps_score *= 0.5f;
+
+    // Return the combined score
+    return dis_score * caps_score;
 }
 } // namespace Tyr::Soccer
