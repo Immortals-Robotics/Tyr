@@ -50,6 +50,7 @@ void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common:
         }
     }
 
+    // TODO: skip if right def is marking an opponent
     if (t_right_def_num != -1)
     {
         // t_right_def_num
@@ -84,6 +85,7 @@ void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common:
         }
     }
 
+    // TODO: skip if left def is marking an opponent
     if (t_left_def_num != -1)
     {
         // t_left_def_num
