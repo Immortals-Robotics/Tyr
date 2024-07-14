@@ -6,11 +6,11 @@ void Ai::stop()
 {
     manageAttRoles();
 
-    gkHi(m_gk);
-    defHi(m_def, m_rw, m_lw, nullptr);
-
     m_is_defending = Common::config().soccer.mark_in_stop;
     markManager();
+
+    gkHi(m_gk);
+    defHi(m_def, m_rw, m_lw, nullptr);
 
     for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
     {
