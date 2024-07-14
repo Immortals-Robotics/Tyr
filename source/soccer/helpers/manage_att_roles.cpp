@@ -31,10 +31,5 @@ void Ai::manageAttRoles()
         std::swap(m_attack, *best_attack);
         attackerChangeHys = 0;
     }
-
-    if (m_own_robot[m_mid1].state().position.y < m_own_robot[m_mid2].state().position.y)
-    {
-        std::swap(m_mid1, m_mid2);
-    }
 }
 } // namespace Tyr::Soccer

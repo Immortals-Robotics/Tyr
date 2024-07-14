@@ -11,6 +11,11 @@ void Ai::normalPlayDef()
 
     manageAttRoles();
 
+    if (m_own_robot[m_mid1].state().position.y < m_own_robot[m_mid2].state().position.y)
+    {
+        std::swap(m_mid1, m_mid2);
+    }
+
     markManager();
 
     for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)

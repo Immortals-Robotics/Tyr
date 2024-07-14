@@ -35,8 +35,8 @@ void Ai::stop()
     if (def_formation)
     {
         static_poses[m_dmf]  = Common::Vec2(m_side * 4100, Common::sign(m_world_state.ball.position.y) * 1000.0f);
-        static_poses[m_mid1] = Common::Vec2(m_side * 4100, Common::sign(-m_world_state.ball.position.y) * 2000.0f + 1000.0f);
-        static_poses[m_mid2] = Common::Vec2(m_side * 4100, Common::sign(-m_world_state.ball.position.y) * 2000.0f - 1000.0f);
+        static_poses[m_mid1] = Common::Vec2(m_side * 4500, Common::sign(-m_world_state.ball.position.y) * 3000.0f);
+        static_poses[m_mid2] = Common::Vec2(m_side * 4100, Common::sign(-m_world_state.ball.position.y) * 1000.0f);
     }
     else
     {
