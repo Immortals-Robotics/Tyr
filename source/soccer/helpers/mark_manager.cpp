@@ -6,9 +6,9 @@ void Ai::markManager()
 {
     if (!m_is_defending)
     {
-        for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
+        for (auto &pair : m_mark_map)
         {
-            m_mark_map[i->first] = -1;
+            pair.second = -1;
         }
         return;
     }
@@ -25,8 +25,9 @@ void Ai::markManager()
         crunchingOpps.push_back(std::make_pair(i, threat));
     }
 
-    sort(crunchingOpps.begin(), crunchingOpps.end(),
-         [](const std::pair<int, float> &a, const std::pair<int, float> &b) -> bool { return a.second > b.second; });
+    std::sort(crunchingOpps.begin(), crunchingOpps.end(),
+              [](const std::pair<int, float> &a, const std::pair<int, float> &b) -> bool
+              { return a.second > b.second; });
 
     Common::logDebug("Opps: {}", crunchingOpps.size());
     for (auto it = crunchingOpps.begin(); it != crunchingOpps.end(); ++it)
@@ -57,21 +58,18 @@ void Ai::markManager()
             break;
     }
 
-    int def_count = 0;
-    for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
-    {
-        if (m_own_robot[*i->first].state().seen_state != Common::SeenState::CompletelyOut)
-        {
-            def_count++;
-        }
-    }
+    const int def_count =
+        std::count_if(m_mark_map.begin(), m_mark_map.end(), [this](const auto &pair)
+                      { return m_own_robot[*pair.first].state().seen_state != Common::SeenState::CompletelyOut; });
+
     int markings = std::min(def_count, static_cast<int>(crunchingOpps.size()));
 
     struct MarkFormation
     {
         std::vector<std::pair<int, int>> pairs;
         float                            TotalCost;
-                                         MarkFormation()
+
+        MarkFormation()
         {
             pairs.reserve(5);
             TotalCost = 0.0f;
@@ -162,34 +160,12 @@ void Ai::markManager()
         }
     }
 
-    sort(valid_formations.begin(), valid_formations.end(),
-         [](const MarkFormation &a, const MarkFormation &b) -> bool
-         {
-             if (a.pairs.size() == b.pairs.size())
-             {
-                 return a.TotalCost < b.TotalCost;
-             }
-             else
-             {
-                 return a.pairs.size() > b.pairs.size();
-             }
-         });
-
     for (auto it = m_mark_map.begin(); it != m_mark_map.end(); ++it)
         m_mark_map[it->first] = -1;
 
-    const auto best_formation = std::min_element(valid_formations.begin(), valid_formations.end(),
-                                                 [](const MarkFormation &a, const MarkFormation &b) -> bool
-                                                 {
-                                                     if (a.pairs.size() == b.pairs.size())
-                                                     {
-                                                         return a.TotalCost < b.TotalCost;
-                                                     }
-                                                     else
-                                                     {
-                                                         return a.pairs.size() > b.pairs.size();
-                                                     }
-                                                 });
+    const auto best_formation = std::min_element(
+        valid_formations.begin(), valid_formations.end(), [](const MarkFormation &a, const MarkFormation &b) -> bool
+        { return a.pairs.size() == b.pairs.size() ? a.TotalCost < b.TotalCost : a.pairs.size() > b.pairs.size(); });
 
     if (best_formation != valid_formations.end())
     {
