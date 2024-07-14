@@ -46,9 +46,9 @@ void Ai::markManager()
     {
         for (auto it2 = m_mark_map.begin(); it2 != m_mark_map.end(); ++it2)
         {
-            auto own  = *it2->first;
-            auto opp  = it->first;
-            auto cost = calculateMarkCost(own, opp);
+            const int   own  = *it2->first;
+            const int   opp  = it->first;
+            const float cost = calculateMarkCost(own, opp);
             if (cost < 0)
                 continue;
             mark_pairs.push_back(MarkPair{own, opp, cost});
@@ -71,7 +71,7 @@ void Ai::markManager()
     {
         std::vector<std::pair<int, int>> pairs;
         float                            TotalCost;
-        MarkFormation()
+                                         MarkFormation()
         {
             pairs.reserve(5);
             TotalCost = 0.0f;
@@ -178,17 +178,33 @@ void Ai::markManager()
     for (auto it = m_mark_map.begin(); it != m_mark_map.end(); ++it)
         m_mark_map[it->first] = -1;
 
-    if (!valid_formations.empty())
+    const auto best_formation = std::min_element(valid_formations.begin(), valid_formations.end(),
+                                                 [](const MarkFormation &a, const MarkFormation &b) -> bool
+                                                 {
+                                                     if (a.pairs.size() == b.pairs.size())
+                                                     {
+                                                         return a.TotalCost < b.TotalCost;
+                                                     }
+                                                     else
+                                                     {
+                                                         return a.pairs.size() > b.pairs.size();
+                                                     }
+                                                 });
+
+    if (best_formation != valid_formations.end())
     {
-        auto best_pair = valid_formations[0].pairs;
-        for (auto it = best_pair.begin(); it != best_pair.end(); ++it)
+        Common::logDebug("mark formation with {} pairs and cost of {}", best_formation->pairs.size(),
+                         best_formation->TotalCost);
+
+        for (const auto &pair : best_formation->pairs)
         {
-            Common::logDebug(" XXXXXX {} : {}", it->first, it->second);
+            Common::logDebug(" mark pair {} : {}", pair.first, pair.second);
+
             for (auto it1 = m_mark_map.begin(); it1 != m_mark_map.end(); ++it1)
             {
-                if (*it1->first == it->first)
+                if (*it1->first == pair.first)
                 {
-                    it1->second = it->second;
+                    it1->second = pair.second;
                     break;
                 }
             }
@@ -197,6 +213,6 @@ void Ai::markManager()
 
     const Common::Duration end_t = m_timer.time();
 
-    Common::logDebug("markManager execution time: {}", (end_t - start_t));
+    Common::logTrace("markManager execution time: {}", (end_t - start_t));
 }
 } // namespace Tyr::Soccer

@@ -29,10 +29,9 @@ float Ai::calculateMarkCost(const int t_robot_num, const int t_opp)
     cost_reach = std::clamp(cost_reach, 0.0f, 1.0f);
 
     static constexpr float kWeightStay  = 0.0f;
-    static constexpr float kWeightReach = 10.0f;
-    static constexpr float kWeightSum   = kWeightStay + kWeightReach;
+    static constexpr float kWeightReach = 1.0f;
 
-    const float cost = (kWeightStay * cost_stay + kWeightReach * cost_reach) / kWeightSum;
+    const float cost = kWeightStay * cost_stay + kWeightReach * cost_reach;
 
     return cost;
 }
