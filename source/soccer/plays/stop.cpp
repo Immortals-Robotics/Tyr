@@ -29,15 +29,29 @@ void Ai::stop()
         mark(own, opp, 500);
     }
 
-    const std::unordered_map<int, Common::Vec2> static_poses{
-        {m_dmf, m_world_state.ball.position.pointOnConnectingLine(
-                    ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f)},
-        {m_mid1, m_world_state.ball.position.circleAroundPoint(
-                     Common::Angle::fromDeg(-20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 650)},
-        {m_mid2, m_world_state.ball.position.circleAroundPoint(
-                     Common::Angle::fromDeg(20) + m_world_state.ball.position.angleWith(ownGoal()), 650)},
-        {m_attack,
-         m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 650)}};
+    const bool def_formation = m_side * m_world_state.ball.position.x > Common::field().width * 0.7f;
+
+    std::unordered_map<int, Common::Vec2> static_poses;
+    if (def_formation)
+    {
+        static_poses[m_dmf]  = Common::Vec2(m_side * 4100, Common::sign(m_world_state.ball.position.y) * 1000.0f);
+        static_poses[m_mid1] = Common::Vec2(m_side * 4100, Common::sign(-m_world_state.ball.position.y) * 2000.0f + 1000.0f);
+        static_poses[m_mid2] = Common::Vec2(m_side * 4100, Common::sign(-m_world_state.ball.position.y) * 2000.0f - 1000.0f);
+    }
+    else
+    {
+        static_poses[m_dmf] = m_world_state.ball.position.pointOnConnectingLine(
+            ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f);
+
+        static_poses[m_mid1] = m_world_state.ball.position.circleAroundPoint(
+            Common::Angle::fromDeg(-20.0f) + m_world_state.ball.position.angleWith(ownGoal()), 650);
+
+        static_poses[m_mid2] = m_world_state.ball.position.circleAroundPoint(
+            Common::Angle::fromDeg(20) + m_world_state.ball.position.angleWith(ownGoal()), 650);
+    }
+
+    static_poses[m_attack] =
+            m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 650);
 
     for (const auto static_pos : static_poses)
     {

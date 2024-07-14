@@ -170,7 +170,6 @@ private:
 
     // Plays
     void stop();
-    void stopDef();
     void newNormalPlay();
     void normalPlayDef();
     void normalPlayAtt();

@@ -21,14 +21,7 @@ void Ai::process()
         m_func_state = 0;
 
         m_opp_restarted = false;
-        if (m_side * m_world_state.ball.position.x > Common::field().width * 0.7f)
-        {
-            m_current_play = &Ai::stopDef;
-        }
-        else
-        {
-            m_current_play = &Ai::stop;
-        }
+        m_current_play  = &Ai::stop;
     }
     else if (m_ref_state.running())
     {

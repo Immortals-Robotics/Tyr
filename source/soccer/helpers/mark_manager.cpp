@@ -15,9 +15,6 @@ void Ai::markManager()
 
     const Common::Duration start_t = m_timer.time();
 
-    // if ( ( !t_restart ) && ( m_mark_map[&m_dmf] == -1 ) )
-    //	m_mark_map[&m_dmf] = findKickerOpp(-1);
-
     std::vector<std::pair<int, float>> crunchingOpps;
 
     for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
