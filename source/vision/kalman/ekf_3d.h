@@ -60,7 +60,7 @@ public:
                         auto normal_vec = robot.angle.toUnitVec();
 
                         auto v_n = t_ball.velocity.dot(normal_vec);
-                        auto v_t = (t_ball.velocity - (normal_vec * v_n)) * 0.1;
+                        auto v_t = (t_ball.velocity - (normal_vec * v_n)) * 0.1f;
                         /// damping factor
                         v_n                     = v_n * (1 - 0.98);
                         auto new_vel            = (normal_vec * v_n) * -1 + v_t;
