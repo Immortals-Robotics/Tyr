@@ -4,6 +4,9 @@
 [![File name check](https://github.com/Immortals-Robotics/Tyr/actions/workflows/file-name-check.yml/badge.svg)](https://github.com/Immortals-Robotics/Tyr/actions/workflows/file-name-check.yml)
 [![Typo check](https://github.com/Immortals-Robotics/Tyr/actions/workflows/typo-check.yml/badge.svg)](https://github.com/Immortals-Robotics/Tyr/actions/workflows/typo-check.yml)
 
+![Tyr GUI](doc/tyr-gui.png)
+
+
 ## Building
 ### Prerequisites
 * **CMake** (>3.25)
