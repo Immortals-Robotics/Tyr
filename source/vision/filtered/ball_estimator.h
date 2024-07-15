@@ -268,8 +268,8 @@ public:
 
         if (m_ball_records.size() < Common::config().vision.chip_min_records)
         {
-            return result;
             m_result_found = false;
+            return result;
         }
 
         auto solved_result = estimateWithOffset(0, ChipEstimator::getCameraPos(t_camera_id));
