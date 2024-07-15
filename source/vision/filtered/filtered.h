@@ -3,15 +3,17 @@
 #include "../kalman/ekf_3d.h"
 #include "../kalman/filtered_object.h"
 #include "ball_estimator.h"
+
 namespace Tyr::Vision
 {
 class Filtered
 {
 public:
-    Filtered();
+     Filtered();
     ~Filtered() = default;
 
-    bool receive();
+    bool receiveRaw();
+    bool receiveCmds();
     void process();
 
     bool publish() const;
@@ -42,7 +44,8 @@ private:
 
     static constexpr int kMaxHistDraw = 200;
 
-    std::unique_ptr<Common::NngClient> m_client;
+    std::unique_ptr<Common::NngClient> m_raw_client;
+    std::unique_ptr<Common::NngClient> m_cmd_client;
     std::unique_ptr<Common::NngServer> m_server;
 
     Common::RawBallState m_last_raw_ball; // The last position of the locked ball
@@ -54,6 +57,8 @@ private:
 
     Common::MedianFilter<Common::Angle> m_angle_filter[2][Common::Config::Common::kMaxRobots];
     Common::Angle                       m_raw_angles[2][Common::Config::Common::kMaxRobots];
+
+    std::unordered_map<int, Sender::Command> m_cmd_map;
 
     Common::RawWorldState m_raw_state;
     Common::WorldState    m_state;

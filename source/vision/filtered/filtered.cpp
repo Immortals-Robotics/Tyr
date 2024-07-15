@@ -18,7 +18,8 @@ Filtered::Filtered()
         }
     }
 
-    m_client          = std::make_unique<Common::NngClient>(Common::config().network.raw_world_state_url);
+    m_raw_client      = std::make_unique<Common::NngClient>(Common::config().network.raw_world_state_url);
+    m_cmd_client      = std::make_unique<Common::NngClient>(Common::config().network.commands_url);
     m_server          = std::make_unique<Common::NngServer>(Common::config().network.world_state_url);
     m_ball_ekf        = std::make_unique<Ekf3D>(1. / Common::config().vision.vision_frame_rate, 0.01);
     m_ball_ekf_future = std::make_unique<Ekf3D>(1. / Common::config().vision.vision_frame_rate, 0.01);
@@ -26,13 +27,29 @@ Filtered::Filtered()
     m_chip_estimator  = std::make_unique<ChipEstimator>();
 }
 
-bool Filtered::receive()
+bool Filtered::receiveRaw()
 {
     Protos::Immortals::RawWorldState pb_state;
-    if (!m_client->receive(&pb_state))
+    if (!m_raw_client->receive(&pb_state))
         return false;
 
     m_raw_state = Common::RawWorldState(pb_state);
+    return true;
+}
+
+bool Filtered::receiveCmds()
+{
+    Protos::Immortals::CommandsWrapper pb_wrapper;
+    if (!m_cmd_client->receive(&pb_wrapper))
+        return false;
+
+    m_cmd_map.clear();
+    const Sender::CommandsWrapper cmd_wrapper{Sender::CommandsWrapper(pb_wrapper)};
+    for (const auto &cmd : cmd_wrapper.commands)
+    {
+        m_cmd_map[cmd.vision_id] = cmd;
+    }
+
     return true;
 }
 
