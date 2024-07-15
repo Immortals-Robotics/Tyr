@@ -5,11 +5,11 @@ find_package(immortals-common CONFIG REQUIRED)
 
 set(HEADER_FILES
         pch.h
-		filtered/ball_estimator.h
+        filtered/ball_estimator.h
         filtered/filtered.h
         kalman/filtered_object.h
         raw/raw.h
-		kalman/ekf_3d.h)
+        kalman/ekf_3d.h)
 
 set(SOURCE_FILES
         filtered/ball.cpp
@@ -30,10 +30,14 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FIL
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
         immortals::common
-		Eigen3::Eigen)
+        ${CMAKE_PROJECT_NAME}-sender
+        Eigen3::Eigen)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})
 
+get_target_property(SENDER_PCHS ${CMAKE_PROJECT_NAME}-sender INTERFACE_PRECOMPILE_HEADERS)
+
 target_precompile_headers(${PROJECT_NAME}
+        PUBLIC ${SENDER_PCHS}
         PUBLIC pch.h
         INTERFACE ${HEADER_FILES})

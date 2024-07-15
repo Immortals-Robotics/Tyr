@@ -98,17 +98,14 @@ void Filtered::predictRobots()
     {
         if (own_robots[i].seen_state != Common::SeenState::Seen)
         {
-#if VISION_HAS_COMMANDS
-            own_robots[i].position += m_state.last_cmds[i][(int) m_state.last_cmds[i][10].x] / 54.f;
-#endif
+            own_robots[i].position += m_cmd_map[i].motion / 54.f;
         }
         else
         {
             for (int j = 0; j < 10; j++)
             {
-#if VISION_HAS_COMMANDS
-                own_robots[i].position += m_state.last_cmds[i][j] / 63.f;
-#endif
+                // TODO: this should iterate over the last 10 commands
+                own_robots[i].position += m_cmd_map[i].motion / 63.f;
             }
         }
     }

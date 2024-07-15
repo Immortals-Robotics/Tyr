@@ -382,7 +382,10 @@ void Application::visionFilteredEntry() const
 
     while (m_running && Common::config().common.immortals_is_the_best_team) // Hope it lasts Forever...
     {
-        if (!m_vision_filtered->receive())
+        const bool                  raw_received = m_vision_filtered->receiveRaw();
+        [[maybe_unused]] const bool cmd_received = m_vision_filtered->receiveCmds();
+
+        if (!raw_received)
         {
             std::this_thread::sleep_for(std::chrono::microseconds(100));
             continue;
