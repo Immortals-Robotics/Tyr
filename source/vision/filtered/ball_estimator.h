@@ -1,7 +1,5 @@
 #pragma once
-#include <common/common.h>
 
-using namespace Immortals;
 namespace Tyr::Vision
 {
 class KickDetector
