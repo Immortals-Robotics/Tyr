@@ -94,7 +94,7 @@ public:
                     auto v_t = t_ball.velocity - (normal_vec * v_n);
                     /// damping factor
                     v_n          = v_n * (1 - 0.9);
-                    v_t          = v_t * 0.4;
+                    v_t          = v_t * 0.4f;
                     auto new_vel = (normal_vec * v_n) * -1 + v_t;
 
                     predicted_ball.velocity = new_vel;
