@@ -1,7 +1,8 @@
 #pragma once
 
+#include "../kalman/ekf_3d.h"
 #include "../kalman/filtered_object.h"
-
+#include "ball_estimator.h"
 namespace Tyr::Vision
 {
 class Filtered
@@ -21,9 +22,11 @@ private:
     void predictRobots();
     void sendStates();
 
-    void processBalls();
-    void filterBalls();
+    void processBalls(const bool t_new_kalman);
+    void filterBalls(const bool t_new_kalman);
     void predictBall();
+    void newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen, const int &t_camera_id,
+                       const ChipEstimator::Ball3D &t_ball_3d);
 
 private:
     // TODO: move to settings
@@ -36,6 +39,8 @@ private:
     // If the filtering process yields velocities above these values, reset the filter state
     // All these are in metres/sec
     static constexpr float kRobotErrorVelocity = 4500.0f;
+
+    static constexpr int kMaxHistDraw = 200;
 
     std::unique_ptr<Common::NngClient> m_client;
     std::unique_ptr<Common::NngServer> m_server;
@@ -52,5 +57,12 @@ private:
 
     Common::RawWorldState m_raw_state;
     Common::WorldState    m_state;
+
+    std::unique_ptr<Ekf3D> m_ball_ekf;
+    std::unique_ptr<Ekf3D> m_ball_ekf_future;
+
+    std::unique_ptr<KickDetector>  m_kick_detector;
+    std::unique_ptr<ChipEstimator> m_chip_estimator;
+    std::deque<Common::Vec2>       m_ball_hist;
 };
 } // namespace Tyr::Vision

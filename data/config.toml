@@ -33,7 +33,7 @@ port = 10099
 
 [network.vision]
 ip = '224.5.23.2'
-port = 10020
+port = 10006
 
 [network.yellow_robot_simulation]
 ip = '127.0.0.1'
@@ -159,10 +159,17 @@ one_touch_shoot_k = 4000.0
 
 [vision]
 ball_merge_distance = 70.0
+camera_delay = 0.0
+chip_max_error = 300000.0
+chip_max_records = 200
+chip_max_vel_z = 7000.0
+chip_min_records = 3
+kick_threshold = 0.7
 max_ball_2_frame_dist = 1000.0
 max_ball_frame_not_seen = 120
 max_ball_hist = 10
 max_robot_frame_not_seen = 120
 merge_distance = 70.0
 use_camera = [ true, true, true, true, false, false, false, false ]
+use_new_ball_kalman = true
 vision_frame_rate = 60.0

@@ -1,12 +1,15 @@
 project(${CMAKE_PROJECT_NAME}-vision)
+find_package(Eigen3 CONFIG REQUIRED)
 
 find_package(immortals-common CONFIG REQUIRED)
 
 set(HEADER_FILES
         pch.h
+		filtered/ball_estimator.h
         filtered/filtered.h
         kalman/filtered_object.h
-        raw/raw.h)
+        raw/raw.h
+		kalman/ekf_3d.h)
 
 set(SOURCE_FILES
         filtered/ball.cpp
@@ -26,7 +29,8 @@ target_include_directories(${PROJECT_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FILES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-        immortals::common)
+        immortals::common
+		Eigen3::Eigen)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})
 
