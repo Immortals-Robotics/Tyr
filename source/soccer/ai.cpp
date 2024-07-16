@@ -130,7 +130,8 @@ bool Ai::publishState() const
     }
 
     state.random_param = m_random_param;
-    state.target_str   = m_target_str;
+    if (m_target_str != -1)
+        state.target_str = m_playbook.strategies.at(m_target_str).name;
 
     state.is_defending  = m_is_defending;
     state.opp_restarted = m_opp_restarted;
