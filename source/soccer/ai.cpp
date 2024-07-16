@@ -98,9 +98,24 @@ bool Ai::publishState() const
 
     state.time = Common::TimePoint::now();
 
+    state.robots[m_gk].role     = Common::Soccer::Role::Gk;
+    state.robots[m_def].role    = Common::Soccer::Role::Def;
+    state.robots[m_dmf].role    = Common::Soccer::Role::Dmf;
+    state.robots[m_mid2].role   = Common::Soccer::Role::Mid2;
+    state.robots[m_mid1].role   = Common::Soccer::Role::Mid1;
+    state.robots[m_attack].role = Common::Soccer::Role::Attack;
+    state.robots[m_rw].role     = Common::Soccer::Role::Rw;
+    state.robots[m_lw].role     = Common::Soccer::Role::Lw;
+
     for (unsigned robot_idx = 0; robot_idx < Common::Config::Common::kMaxRobots; robot_idx++)
     {
         state.robots[robot_idx].id = robot_idx;
+
+        if (m_world_state.own_robot[robot_idx].seen_state == Common::SeenState::CompletelyOut)
+        {
+            state.robots[robot_idx].role = Common::Soccer::Role::Unknown;
+            continue;
+        }
 
         state.robots[robot_idx].shoot    = m_own_robot[robot_idx].shoot();
         state.robots[robot_idx].chip     = m_own_robot[robot_idx].chip();
@@ -114,15 +129,6 @@ bool Ai::publishState() const
         // state.robots[robot_idx].one_touch_arriving = m_one_touch_detector[robot_idx].arriving;
         state.robots[robot_idx].one_touch_type_used = m_one_touch_type_used[robot_idx];
     }
-
-    state.robots[m_gk].role     = Common::Soccer::Role::Gk;
-    state.robots[m_def].role    = Common::Soccer::Role::Def;
-    state.robots[m_dmf].role    = Common::Soccer::Role::Dmf;
-    state.robots[m_mid2].role   = Common::Soccer::Role::Mid2;
-    state.robots[m_mid1].role   = Common::Soccer::Role::Mid1;
-    state.robots[m_attack].role = Common::Soccer::Role::Attack;
-    state.robots[m_rw].role     = Common::Soccer::Role::Rw;
-    state.robots[m_lw].role     = Common::Soccer::Role::Lw;
 
     for (const auto &[own, opp] : m_mark_map)
     {
