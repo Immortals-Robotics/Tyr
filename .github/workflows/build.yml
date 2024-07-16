@@ -31,6 +31,8 @@ jobs:
 
       - name: Install dependencies
         uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgConfigurationJsonGlob: "vcpkg-configuration.json"
 
       - name: Run CMake and run vcpkg to build packages
         uses: lukka/run-cmake@v10
