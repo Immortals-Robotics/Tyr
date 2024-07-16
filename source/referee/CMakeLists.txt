@@ -1,7 +1,5 @@
 project(${CMAKE_PROJECT_NAME}-referee)
 
-find_package(immortals-common CONFIG REQUIRED)
-
 set(HEADER_FILES
         pch.h
         referee.h)
