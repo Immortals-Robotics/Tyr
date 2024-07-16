@@ -21,7 +21,8 @@ Ai::Ai()
 
     m_strategy_client = std::make_unique<Common::UdpClient>(Common::config().network.strategy_address);
 
-    m_cmd_server = std::make_unique<Common::NngServer>(Common::config().network.commands_url);
+    m_cmd_server   = std::make_unique<Common::NngServer>(Common::config().network.commands_url);
+    m_state_server = std::make_unique<Common::NngServer>(Common::config().network.soccer_state_url);
 
     m_dss = std::make_unique<Dss>(&m_world_state);
 
@@ -89,5 +90,59 @@ bool Ai::publishCommands() const
     }
 
     return m_cmd_server->send(time, pb_wrapper);
+}
+
+bool Ai::publishState() const
+{
+    Common::Soccer::State state;
+
+    state.time = Common::TimePoint::now();
+
+    for (unsigned robot_idx = 0; robot_idx < Common::Config::Common::kMaxRobots; robot_idx++)
+    {
+        state.robots[robot_idx].id = robot_idx;
+
+        state.robots[robot_idx].shoot    = m_own_robot[robot_idx].shoot();
+        state.robots[robot_idx].chip     = m_own_robot[robot_idx].chip();
+        state.robots[robot_idx].dribbler = m_own_robot[robot_idx].dribbler();
+
+        state.robots[robot_idx].navigated = m_own_robot[robot_idx].navigated();
+        state.robots[robot_idx].halted    = m_own_robot[robot_idx].halted();
+
+        state.robots[robot_idx].one_touch_type = static_cast<Common::Soccer::OneTouchType>(m_one_touch_type[robot_idx]);
+        // TODO:
+        // state.robots[robot_idx].one_touch_arriving = m_one_touch_detector[robot_idx].arriving;
+        state.robots[robot_idx].one_touch_type_used = m_one_touch_type_used[robot_idx];
+    }
+
+    state.robots[m_gk].role     = Common::Soccer::Role::Gk;
+    state.robots[m_def].role    = Common::Soccer::Role::Def;
+    state.robots[m_dmf].role    = Common::Soccer::Role::Dmf;
+    state.robots[m_mid2].role   = Common::Soccer::Role::Mid2;
+    state.robots[m_mid1].role   = Common::Soccer::Role::Mid1;
+    state.robots[m_attack].role = Common::Soccer::Role::Attack;
+    state.robots[m_rw].role     = Common::Soccer::Role::Rw;
+    state.robots[m_lw].role     = Common::Soccer::Role::Lw;
+
+    for (const auto &[own, opp] : m_mark_map)
+    {
+        state.robots[*own].mark_target = opp;
+    }
+
+    state.random_param = m_random_param;
+    state.target_str   = m_target_str;
+
+    state.is_defending  = m_is_defending;
+    state.opp_restarted = m_opp_restarted;
+
+    state.gk_intercepting = m_gk_intercepting;
+
+    state.func_state = m_func_state;
+    state.func_count = m_func_count;
+
+    Protos::Immortals::Soccer::State pb_state;
+    state.fillProto(&pb_state);
+
+    return m_state_server->send(state.time, pb_state);
 }
 } // namespace Tyr::Soccer

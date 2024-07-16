@@ -20,6 +20,7 @@ private:
     std::unique_ptr<Common::UdpClient> m_strategy_client;
 
     std::unique_ptr<Common::NngServer> m_cmd_server;
+    std::unique_ptr<Common::NngServer> m_state_server;
 
     Common::Random m_random;
     Common::Timer  m_timer;
@@ -205,6 +206,7 @@ public:
     bool receiveReferee();
 
     bool publishCommands() const;
+    bool publishState() const;
 
     void process();
 

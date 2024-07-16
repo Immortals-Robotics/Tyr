@@ -428,7 +428,16 @@ void Application::aiEntry() const
         duration_timer.start();
 
         m_ai->process();
-        m_ai->publishCommands();
+
+        if (!m_ai->publishCommands())
+        {
+            Common::logWarning("Failed to publish commands");
+        }
+        
+        if (!m_ai->publishState())
+        {
+            Common::logWarning("Failed to publish state");
+        }
 
         Common::Debug::ExecutionTime execution_time;
         execution_time.duration = duration_timer.time();
