@@ -6,13 +6,15 @@ DemoMenu::DemoMenu()
     m_debug_storage.open(Common::config().network.debug_db);
     m_world_filtered_storage.open(Common::config().network.world_state_db);
     m_referee_storage.open(Common::config().network.referee_db);
+    m_soccer_storage.open(Common::config().network.soccer_db);
 }
 
 DemoMenu::~DemoMenu()
 {
     m_debug_storage.close();
-    m_referee_storage.close();
     m_world_filtered_storage.close();
+    m_referee_storage.close();
+    m_soccer_storage.close();
 }
 
 void DemoMenu::draw()
