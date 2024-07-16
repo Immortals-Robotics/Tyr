@@ -131,7 +131,7 @@ public:
         }
         // Predict state
         m_x = m_A * m_x;
-        getOptimalProcessNoise(t_delta_t, 0.1);
+        getOptimalProcessNoise(t_delta_t, 0.5);
         // Predict covariance
         m_P = m_A * m_P * m_A.transpose() + m_Q;
 
@@ -225,9 +225,9 @@ public:
         const auto      steps  = static_cast<int>(t_time / m_dt);
         Eigen::VectorXd x      = m_x;
         bool            impact = false;
+        Common::BallState ball;
         for (int i = 0; i < steps; i++)
         {
-            Common::BallState ball;
             x               = m_A * x;
             ball.position.x = x(0);
             ball.position.y = x(1);
@@ -238,7 +238,7 @@ public:
             {
                 x = Ekf3D::processCollisions(ball, t_own_robots, t_opp_robots);
             }
-            auto vel        = std::sqrt(x(2) * x(2) + x(3) * x(3));
+            auto vel = std::sqrt(x(2) * x(2) + x(3) * x(3));
             if (vel != 0.)
             {
                 x(2) = x(2) + t_friction_acceleration * m_dt * (x(2) / vel);
@@ -266,9 +266,9 @@ public:
                 }
             }
 
-            Common::debug().draw(Common::Circle{Common::Vec2(x(0), x(1)), 10}, Common::Color::black());
+            Common::debug().draw(Common::Circle{Common::Vec2(x(0), x(1)), 20}, Common::Color::blue());
         }
-        return Common::Vec3(x(0), x(1), m_predicted_height);
+        return Common::Vec3(ball.position.x, ball.position.y, m_predicted_height);
     }
 
     inline void init(Common::Vec2 t_pos)

@@ -5,6 +5,7 @@
 #include "helpers/ball_trajectory.h"
 #include "helpers/one_touch_detector.h"
 #include "plays/play_book.h"
+#include "../vision/kalman/ekf_3d.h"
 
 namespace Tyr::Soccer
 {
@@ -20,6 +21,8 @@ private:
     std::unique_ptr<Common::UdpClient> m_strategy_client;
 
     std::unique_ptr<Common::NngServer> m_cmd_server;
+
+    std::unique_ptr<Vision::Ekf3D> m_ball_predictor;
 
     Common::Random m_random;
     Common::Timer  m_timer;
@@ -98,6 +101,7 @@ private:
     bool         goalBlocked(Common::Vec2 t_init_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r);
     bool         attackFuckingAngle();
     Common::Vec2 predictBallForwardAI(float t_time_ahead);
+    Common::Vec2 predictBallForwardAINew(const float t_time_ahead);
     float        calculateOppThreat(int t_opp, bool t_restart = false);
     float        calculateMarkCost(int t_robot_num, int t_opp);
 
