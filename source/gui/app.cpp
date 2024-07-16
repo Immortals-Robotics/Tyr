@@ -303,6 +303,7 @@ void Application::resetLayout()
 
     ImGui::DockBuilderDockWindow("Field", dockspace_main);
 
+    ImGui::DockBuilderDockWindow("Soccer", dockspace_left);
     ImGui::DockBuilderDockWindow("Config", dockspace_left);
     ImGui::DockBuilderDockWindow("Debug Filter", dockspace_left);
 
