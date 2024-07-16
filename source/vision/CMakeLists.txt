@@ -1,8 +1,6 @@
 project(${CMAKE_PROJECT_NAME}-vision)
 find_package(Eigen3 CONFIG REQUIRED)
 
-find_package(immortals-common CONFIG REQUIRED)
-
 set(HEADER_FILES
         pch.h
         filtered/ball_estimator.h
