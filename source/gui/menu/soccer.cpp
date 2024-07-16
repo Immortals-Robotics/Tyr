@@ -6,17 +6,6 @@ void SoccerMenu::draw(const Common::Soccer::State &t_state)
 {
     ImGui::SeparatorText("Global");
     ImGui::Text(t_state.is_defending ? "Defending" : "Attacking");
-    ImGui::SameLine(0, 2.5f);
-    ImGui::Text(" | ");
-    ImGui::SameLine(0, 2.5f);
-    ImGui::Text("Rnd: %.2f", t_state.random_param);
-    if (!t_state.target_str.empty())
-    {
-        ImGui::SameLine(0, 2.5f);
-        ImGui::Text(" | ");
-        ImGui::SameLine(0, 2.5f);
-        ImGui::Text("str: %s", t_state.target_str.c_str());
-    }
     if (t_state.opp_restarted)
     {
         ImGui::SameLine(0, 2.5f);
@@ -30,6 +19,15 @@ void SoccerMenu::draw(const Common::Soccer::State &t_state)
         ImGui::Text(" | ");
         ImGui::SameLine(0, 2.5f);
         ImGui::Text("GK Intercepting");
+    }
+
+    ImGui::Text("Rnd: %.2f", t_state.random_param);
+    if (!t_state.target_str.empty())
+    {
+        ImGui::SameLine(0, 2.5f);
+        ImGui::Text(" | ");
+        ImGui::SameLine(0, 2.5f);
+        ImGui::Text("str: %s", t_state.target_str.c_str());
     }
 
     if (t_state.func_count > 0)
