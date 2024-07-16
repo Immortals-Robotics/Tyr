@@ -142,7 +142,7 @@ void Filtered::filterBalls(const bool t_new_kalman)
         {
             if (t_new_kalman)
             {
-                newKalmanBall(Common::Vec2(0, 0), false, balls[id].frame.camera_id);
+                newKalmanBall(Common::Vec2(0, 0), false, 0);
             }
             m_state.ball.seen_state = Common::SeenState::TemporarilyOut;
         }
