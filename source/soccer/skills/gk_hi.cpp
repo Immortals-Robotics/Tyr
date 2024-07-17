@@ -40,7 +40,7 @@ void Ai::gkHi(const int t_robot_num)
     else
     {
         my_hys = 0;
-
+        auto predicted_ball = predictBallForwardAINew(0.5);
         ObstacleMap obs_map;
 
         // our penalty area
@@ -54,10 +54,10 @@ void Ai::gkHi(const int t_robot_num)
         const float        h = Common::field().penalty_area_width + 2 * area_extension_size;
         const Common::Line goal_line =
             Common::Line::fromTwoPoints(ownGoal() - Common::Vec2(0, 1000), ownGoal() + Common::Vec2(0, 1000));
-        float      ball_position_effect = goal_line.distanceTo(m_world_state.ball.position);
-        const auto start_ang_effect     = 10.f;
+        float      ball_position_effect = goal_line.distanceTo(predicted_ball);
+        const auto start_ang_effect     = 40.f;
         const auto ball_angle =
-            std::min(std::max(0.f, std::fabs(((ownGoal() - m_world_state.ball.position).normalized().toAngle() -
+            std::min(std::max(0.f, std::fabs(((ownGoal() - predicted_ball).normalized().toAngle() -
                                               Common::Angle::fromDeg(m_side == -1 ? 180.f : 0.f))
                                                  .deg()) -
                                        (90.f - start_ang_effect)),
@@ -72,7 +72,7 @@ void Ai::gkHi(const int t_robot_num)
         Common::logError("ang {} pos {} pt {}", ball_angle, ball_ang_effect, penalty_area_half_width);
         obs_map.addRectangle({start, w, h});
 
-        if ((obs_map.isInObstacle(m_world_state.ball.position)) && (m_world_state.ball.velocity.length() < 1500) &&
+        if ((obs_map.isInObstacle(predicted_ball)) && (m_world_state.ball.velocity.length() < 1500) &&
             m_ref_state.running())
         {
             Common::logDebug("GK intercepting");
@@ -80,20 +80,20 @@ void Ai::gkHi(const int t_robot_num)
             m_gk_intercepting = true;
 
             attacker(t_robot_num,
-                     m_world_state.ball.position.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0,
+                     predicted_ball.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0,
                      80, 0, 0);
         }
         else
         {
             Common::Rect gk_target_rect{gk_target_area_start, gk_target_w, gk_target_h};
-            Common::Line ball_goal_line = Common::Line::fromTwoPoints(m_world_state.ball.position, ownGoal());
+            Common::Line ball_goal_line = Common::Line::fromTwoPoints(predicted_ball, ownGoal());
             auto         intersects     = gk_target_rect.intersection(ball_goal_line);
             Common::Vec2 gk_final_pos{ownGoal()};
             for (const auto &intersect : intersects)
             {
                 Common::debug().draw(intersect, Common::Color::blue());
-                if (intersect.distanceTo(m_world_state.ball.position) <
-                    gk_final_pos.distanceTo(m_world_state.ball.position))
+                if (intersect.distanceTo(predicted_ball) <
+                    gk_final_pos.distanceTo(predicted_ball))
                 {
                     gk_final_pos = intersect;
                 }
@@ -103,10 +103,14 @@ void Ai::gkHi(const int t_robot_num)
             float       speed_effect = slope * m_world_state.ball.velocity.length();
             speed_effect             = std::min(speed_effect, 0.9f);
             speed_effect             = std::max(speed_effect, 0.f);
-            Common::logError("speed {}", speed_effect);
             gk_final_pos -= (gk_final_pos - ownGoal()) * speed_effect;
             if (ball_angle > 0.f && (gk_final_pos - ownGoal()).length() > ball_ang_effect) {
-                gk_final_pos = (m_world_state.ball.position - ownGoal()).normalized()*ball_ang_effect + ownGoal();
+                gk_final_pos = (predicted_ball - ownGoal()).normalized()*ball_ang_effect + ownGoal();
+            }
+            Common::logError("final {} side {} un {}", gk_final_pos.x, m_side, ownGoal().x - (m_side * (Common::field().robot_radius + 20.f)));
+
+            if(std::fabs(gk_final_pos.x * m_side) >= std::fabs(ownGoal().x - (m_side * (Common::field().robot_radius + 20.f)))) {
+                gk_final_pos.x = ownGoal().x - (m_side * (Common::field().robot_radius + 20.f));
             }
             Common::debug().draw(ball_goal_line, Common::Color::red());
 

@@ -40,10 +40,10 @@ void Filtered::newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen,
     Common::Vec3 filtered_position, filtered_velocity;
     m_ball_ekf->getSate(&filtered_position, &filtered_velocity);
 
-    m_ball_ekf_future->process(position_3d, velocity_3d, t_seen, m_state.own_robot, m_state.opp_robot);
-
-    m_ball_ekf_future->getFutureState(10., m_state.own_robot, m_state.opp_robot,
-                                      900. * Common::field().ball_model_straight.acc_roll);
+//    m_ball_ekf_future->process(position_3d, velocity_3d, t_seen, m_state.own_robot, m_state.opp_robot);
+//
+//    m_ball_ekf_future->getFutureState(10., m_state.own_robot, m_state.opp_robot,
+//                                      900. * Common::field().ball_model_straight.acc_roll);
 
     Common::logError("acc roll {}", Common::field().ball_model_straight.acc_roll);
     m_state.ball.position = filtered_position.xy();
