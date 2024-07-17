@@ -11,6 +11,8 @@ using namespace Immortals;
 #include <map>
 #include <math.h>
 #include <stdlib.h>
+#include <Eigen/Dense>
+#include <numeric>
 
 #ifdef PI
 #undef PI

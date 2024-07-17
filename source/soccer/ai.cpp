@@ -24,6 +24,9 @@ Ai::Ai()
     m_cmd_server   = std::make_unique<Common::NngServer>(Common::config().network.commands_url);
     m_state_server = std::make_unique<Common::NngServer>(Common::config().network.soccer_state_url);
 
+    m_ball_predictor =
+        std::make_unique<Vision::Ekf3D>(1. / Common::config().vision.vision_frame_rate, Common::config().vision.camera_delay);
+
     m_dss = std::make_unique<Dss>(&m_world_state);
 
     m_current_play = &Ai::haltAll;
