@@ -9,14 +9,12 @@ void Ai::normalPlayDef()
     Common::debug().draw(Common::Triangle{ourgoal_p1, m_world_state.ball.position, ourgoal_p2},
                          Common::Color::blue().transparent(), true);
 
-    manageAttRoles();
-
-    if (m_own_robot[m_mid1].state().position.y < m_own_robot[m_mid2].state().position.y)
-    {
-        std::swap(m_mid1, m_mid2);
-    }
-
-    markManager();
+    m_assignments.clear();
+    createGkAssignment();
+    createDefAssignments();
+    createMidAssignments();
+    createAttackAssignment();
+    assignRoles();
 
     for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
     {

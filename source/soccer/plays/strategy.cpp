@@ -88,6 +88,15 @@ bool receivers_reached = false;
 
 void Ai::strategy()
 {
+    m_is_defending = false;
+
+    m_assignments.clear();
+    createGkAssignment();
+    createDefAssignments();
+    createMidAssignments();
+    createAttackAssignment();
+
+    assignRoles();
     if (m_timer.time().seconds() < 0.5)
     {
         curr_str_id       = m_target_str;

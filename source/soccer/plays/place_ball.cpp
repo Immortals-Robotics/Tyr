@@ -6,6 +6,15 @@ namespace Tyr::Soccer
 {
 void Ai::ourPlaceBall()
 {
+    m_is_defending = false;
+
+    m_assignments.clear();
+    createGkAssignment();
+    createDefAssignments();
+    createMidAssignments();
+    createAttackAssignment();
+    assignRoles();
+
     gkHi(m_gk);
     defHi(m_def1, m_def2, nullptr);
 

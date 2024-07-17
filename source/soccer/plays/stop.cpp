@@ -9,7 +9,7 @@ void Ai::stop()
     m_assignments.clear();
     createGkAssignment();
     createDefAssignments();
-    createMarkAssignments();
+    createMidAssignments();
     createAttackAssignment();
     assignRoles();
 

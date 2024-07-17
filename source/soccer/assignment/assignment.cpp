@@ -4,6 +4,7 @@ namespace Tyr::Soccer
 {
 void Ai::assignRoles()
 {
+    assignRolesInternal(Assignment::Priority::Rules);
     assignRolesInternal(Assignment::Priority::Max);
     assignRolesInternal(Assignment::Priority::High);
     assignRolesInternal(Assignment::Priority::Medium);

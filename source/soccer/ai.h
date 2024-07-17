@@ -213,6 +213,7 @@ private:
             Medium,
             High,
             Max,
+            Rules,
         };
 
         Priority priority = Priority::None;
@@ -261,8 +262,10 @@ private:
     void createGkAssignment();
     void createDefAssignments();
     void createAttackAssignment();
-    void createMarkAssignments();
-    void createStaticAssignment(Common::Vec2 t_pos, int *t_role, Assignment::Priority t_priority);
+    void createMidAssignments();
+
+    // this uses the last target position as the target point
+    void createStaticAssignment(int *t_role, Assignment::Priority t_priority);
 
     std::vector<Assignment> m_assignments;
 
