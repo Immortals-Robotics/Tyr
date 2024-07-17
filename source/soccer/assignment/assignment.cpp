@@ -37,15 +37,32 @@ void Ai::assignRolesInternal(std::vector<Assignment> *const t_assignments, const
         source.push_back(u);
     }
 
+    std::unordered_map<int, int> dst_to_assignment_map;
     dest.reserve(t_assignments->size());
     for (int i = 0; i < t_assignments->size(); i++)
     {
+        const Assignment &assignment = (*t_assignments)[i];
+
+        // Skip assignments that are not of the correct priority
+        if (assignment.priority != t_priority)
+            continue;
+
+        // Skip assignments that have already been assigned
+        if (assignment.new_assignee != -1)
+            continue;
+
+        dst_to_assignment_map[dest.size()] = i;
+
         Node u    = graph.addNode();
         supply[u] = -1;
         dest.push_back(u);
     }
 
-    IntArcMap cost_map(graph);
+    // Skip if there are no assignments to be made
+    if (dest.empty())
+        return;
+
+    DoubleArcMap cost_map(graph);
 
     for (int src_idx = 0; src_idx < source.size(); src_idx++)
     {
@@ -63,15 +80,8 @@ void Ai::assignRolesInternal(std::vector<Assignment> *const t_assignments, const
 
         for (int dst_idx = 0; dst_idx < dest.size(); dst_idx++)
         {
-            const Assignment &assignment = (*t_assignments)[dst_idx];
-
-            // Skip assignments that are not of the correct priority
-            if (assignment.priority != t_priority)
-                continue;
-
-            // Skip assignments that have already been assigned
-            if (assignment.new_assignee != -1)
-                continue;
+            const int         assignment_idx = dst_to_assignment_map[dst_idx];
+            const Assignment &assignment     = (*t_assignments)[assignment_idx];
 
             const float cost = assignment.cost_function(robot_idx, assignment);
 
@@ -87,17 +97,21 @@ void Ai::assignRolesInternal(std::vector<Assignment> *const t_assignments, const
     }
 
     // Run NetworkSimplex algorithm with "LEQ" supply type
-    typedef NetworkSimplex<SmartDigraph> NS;
-    NS                                   ns(graph);
+    using NS = NetworkSimplex<SmartDigraph, int, float>;
+    NS ns(graph);
     ns.supplyType(NS::LEQ);
     ns.costMap(cost_map).supplyMap(supply);
     NS::ProblemType result = ns.run();
 
-    // Print results
+    if (result == NS::OPTIMAL)
+    {
+        Common::logDebug("Priority {}, optimal flow found, total cost: {}", (int) t_priority, ns.totalCost());
+    }
+    else
+    {
+        Common::logWarning("Priority {}, optimal flow not found, total cost: {}", (int) t_priority, ns.totalCost());
+    }
 
-    Common::logDebug("Priority {}, optimal flow found: {}", (int) t_priority, result == NS::OPTIMAL ? "yes" : "no");
-    Common::logDebug("Total cost: {}", ns.totalCost());
-    Common::logDebug("Used arcs:");
     for (ArcIt a(graph); a != INVALID; ++a)
     {
         if (ns.flow(a) > 0)
@@ -105,14 +119,16 @@ void Ai::assignRolesInternal(std::vector<Assignment> *const t_assignments, const
             const int src_idx = graph.id(graph.source(a));
             const int dst_idx = graph.id(graph.target(a)) - source.size();
 
-            const int   robot_idx  = src_idx;
-            Assignment &assignment = (*t_assignments)[dst_idx];
+            const int   robot_idx      = src_idx;
+            const int   assignment_idx = dst_to_assignment_map[dst_idx];
+            Assignment &assignment     = (*t_assignments)[assignment_idx];
+
+            const float cost = cost_map[a];
 
             assignment.new_assignee    = robot_idx;
-            assignment.assignment_cost = cost_map[a];
+            assignment.assignment_cost = cost;
 
-            Common::logDebug("Robot: {}, Assignment: {}, ID: {}, cost: {}", robot_idx, assignment.current_assignee,
-                             graph.id(a), cost_map[a]);
+            Common::logTrace("Robot: {}, Assignment: {}, cost: {}", robot_idx, assignment.current_assignee, cost);
         }
     }
 }
