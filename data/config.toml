@@ -1,7 +1,7 @@
 [common]
 enable_debug = true
 immortals_is_the_best_team = true
-our_color = 1
+our_color = 0
 
 [network.blue_robot_simulation]
 ip = '127.0.0.1'
@@ -40,9 +40,12 @@ ip = '127.0.0.1'
 port = 10302
 
 [soccer]
-mark_in_stop = false
-one_touch_beta = 0.4
-one_touch_gamma = 0.14
+def_prediction_time = 0.5
+def_tight_start_angle = 50.0
+gk_tight_start_angle = 15.0
+mark_in_stop = true
+one_touch_beta = 0.40000000000000002
+one_touch_gamma = 0.14000000000000001
 one_touch_shoot_k = 4000.0
 
     [[soccer.robot_physical_status]]
@@ -81,15 +84,15 @@ one_touch_shoot_k = 4000.0
     is_3D_printed = true
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
+    has_chip_kick = false
+    has_direct_kick = false
     has_dribbler = false
     id = 5
     is_3D_printed = true
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
+    has_chip_kick = false
+    has_direct_kick = false
     has_dribbler = false
     id = 6
     is_3D_printed = true
@@ -164,12 +167,12 @@ chip_max_error = 300000.0
 chip_max_records = 200
 chip_max_vel_z = 7000.0
 chip_min_records = 3
-kick_threshold = 0.7
+kick_threshold = 0.69999999999999996
 max_ball_2_frame_dist = 1000.0
-max_ball_frame_not_seen = 120
+max_ball_frame_not_seen = 30
 max_ball_hist = 10
 max_robot_frame_not_seen = 120
 merge_distance = 70.0
-use_camera = [ true, true, true, true, false, false, false, false ]
+use_camera = [ true, true, false, false, false, false, false, false ]
 use_new_ball_kalman = true
 vision_frame_rate = 60.0

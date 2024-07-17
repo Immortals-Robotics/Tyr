@@ -40,7 +40,7 @@ void Ai::gkHi(const int t_robot_num)
     else
     {
         my_hys = 0;
-        auto predicted_ball = predictBallForwardAINew(0.5);
+        auto predicted_ball = predictBallForwardAINew(Common::config().soccer.def_prediction_time);
         ObstacleMap obs_map;
 
         // our penalty area
@@ -55,7 +55,7 @@ void Ai::gkHi(const int t_robot_num)
         const Common::Line goal_line =
             Common::Line::fromTwoPoints(ownGoal() - Common::Vec2(0, 1000), ownGoal() + Common::Vec2(0, 1000));
         float      ball_position_effect = goal_line.distanceTo(predicted_ball);
-        const auto start_ang_effect     = 40.f;
+        const auto start_ang_effect     = Common::config().soccer.gk_tight_start_angle;
         const auto ball_angle =
             std::min(std::max(0.f, std::fabs(((ownGoal() - predicted_ball).normalized().toAngle() -
                                               Common::Angle::fromDeg(m_side == -1 ? 180.f : 0.f))
