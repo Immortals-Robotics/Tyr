@@ -26,7 +26,12 @@ void Ai::assignRolesInternal(std::vector<Assignment> *const t_assignments, const
     for (const auto &assignment : *t_assignments)
     {
         if (assignment.new_assignee != -1)
+        {
+            if (assigned.contains(assignment.new_assignee))
+                Common::logWarning("Robot {} is assigned to multiple roles", assignment.new_assignee);
+
             assigned.insert(assignment.new_assignee);
+        }
     }
 
     source.reserve(Common::Config::Common::kMaxRobots);
@@ -128,7 +133,8 @@ void Ai::assignRolesInternal(std::vector<Assignment> *const t_assignments, const
             assignment.new_assignee    = robot_idx;
             assignment.assignment_cost = cost;
 
-            Common::logTrace("Robot: {}, Assignment: {}, cost: {}", robot_idx, assignment.current_assignee, cost);
+            Common::logTrace("Robot: {} (old: {}), Assignment: {}, cost: {}", robot_idx, assignment.currentAssignee(),
+                             assignment_idx, cost);
         }
     }
 }

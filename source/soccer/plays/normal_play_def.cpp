@@ -23,7 +23,7 @@ void Ai::normalPlayDef()
         int opp = i->second;
         int own = *i->first;
 
-        if (m_one_touch_detector[own].IsArriving())
+        if (m_one_touch_detector[own].isArriving())
         {
             waitForPass(own, false);
         }

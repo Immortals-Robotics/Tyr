@@ -14,7 +14,7 @@ void Ai::mark(const int t_robot_num, const int t_opp, const float t_dist)
     }
     else
     {
-        if (m_one_touch_detector[t_robot_num].IsArriving(20))
+        if (m_one_touch_detector[t_robot_num].isArriving(20))
         {
             waitForPass(t_robot_num, false);
         }

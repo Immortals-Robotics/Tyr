@@ -5,7 +5,6 @@
 #include "helpers/ball_trajectory.h"
 #include "helpers/one_touch_detector.h"
 #include "plays/play_book.h"
-#include "../vision/kalman/ekf_3d.h"
 
 namespace Tyr::Soccer
 {
@@ -172,7 +171,7 @@ private:
 
     // Tactics
     void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target);
-    void defShirje(const int t_def_1,const int t_def_2);
+    void defShirje(const int t_def_1, const int t_def_2);
 
     // Plays
     void stop();
@@ -215,10 +214,13 @@ private:
 
         Priority priority = Priority::None;
 
-        int current_assignee = -1;
-
         // pointer to m_def, m_dmf, m_mid1, m_mid2, m_attack, m_lw, m_rw, m_gk
         int *role = nullptr;
+
+        int currentAssignee() const
+        {
+            return role == nullptr ? -1 : *role;
+        }
 
         // The following are used to compute the cost of the assignment
 
@@ -246,6 +248,12 @@ private:
     void assignRoles(std::vector<Assignment> *t_assignments);
 
     void assignRolesInternal(std::vector<Assignment> *t_assignments, Assignment::Priority t_priority);
+
+    // cost functions
+    float gkRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
+    float staticRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
+    float markRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
+    float attackRoleCost(int t_robot_idx, const Assignment &t_assignment);
 
 public:
     Robot m_own_robot[Common::Config::Common::kMaxRobots];
