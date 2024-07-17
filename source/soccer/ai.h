@@ -171,6 +171,7 @@ private:
 
     // Tactics
     void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target);
+    void defShirje(const int t_def_1,const int t_def_2);
 
     // Plays
     void stop();

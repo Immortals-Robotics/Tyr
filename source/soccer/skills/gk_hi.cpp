@@ -69,7 +69,7 @@ void Ai::gkHi(const int t_robot_num)
             -m_side * std::min((Common::field().penalty_area_depth - area_notch), ball_position_effect);
         const float        gk_target_h = Common::field().penalty_area_width - 2 * area_notch;
         const Common::Vec2 gk_target_area_start{ownGoal().x, -(penalty_area_half_width - area_notch)};
-        Common::logError("ang {} pos {} pt {}", ball_angle, ball_ang_effect, penalty_area_half_width);
+        Common::logDebug("ang {} pos {} pt {}", ball_angle, ball_ang_effect, penalty_area_half_width);
         obs_map.addRectangle({start, w, h});
 
         if ((obs_map.isInObstacle(predicted_ball)) && (m_world_state.ball.velocity.length() < 1500) &&
@@ -97,9 +97,9 @@ void Ai::gkHi(const int t_robot_num)
                 {
                     gk_final_pos = intersect;
                 }
-                Common::logError("x y : {}", intersect.x, intersect.y);
+                Common::logDebug("x y : {}", intersect.x, intersect.y);
             }
-            const float slope        = 0.0001538461538;
+            const float slope        = 0.0001538461538f;
             float       speed_effect = slope * m_world_state.ball.velocity.length();
             speed_effect             = std::min(speed_effect, 0.9f);
             speed_effect             = std::max(speed_effect, 0.f);
@@ -107,7 +107,7 @@ void Ai::gkHi(const int t_robot_num)
             if (ball_angle > 0.f && (gk_final_pos - ownGoal()).length() > ball_ang_effect) {
                 gk_final_pos = (predicted_ball - ownGoal()).normalized()*ball_ang_effect + ownGoal();
             }
-            Common::logError("final {} side {} un {}", gk_final_pos.x, m_side, ownGoal().x - (m_side * (Common::field().robot_radius + 20.f)));
+            Common::logDebug("final {} side {} un {}", gk_final_pos.x, m_side, ownGoal().x - (m_side * (Common::field().robot_radius + 20.f)));
 
             if(std::fabs(gk_final_pos.x * m_side) >= std::fabs(ownGoal().x - (m_side * (Common::field().robot_radius + 20.f)))) {
                 gk_final_pos.x = ownGoal().x - (m_side * (Common::field().robot_radius + 20.f));
