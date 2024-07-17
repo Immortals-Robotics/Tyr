@@ -2,20 +2,20 @@
 
 namespace Tyr::Soccer
 {
-float Ai::attackRoleCost(const int t_robot_idx, const Assignment &t_assignment)
+int Ai::attackRoleCost(const int t_robot_idx, const Assignment &t_assignment)
 {
     // Check if the robot is waiting for a pass and is in a suitable state to receive it
     const bool pass_receiver_role = t_robot_idx == m_mid1 || t_robot_idx == m_mid2 || t_robot_idx == m_mid5;
     const bool one_touch_arriving = m_one_touch_detector[t_robot_idx].isArriving(45, 150);
     if (!m_is_defending && pass_receiver_role && one_touch_arriving)
-        return std::numeric_limits<float>::max();
+        return -1;
 
     const float dis_to_ball = m_own_robot[t_robot_idx].state().position.distanceTo(m_world_state.ball.position);
 
     // check if robot is marking an opponent
     float mark_score = 1.0f;
-    auto marked_opp = std::find_if(m_mark_map.begin(), m_mark_map.end(),
-                                   [&](const auto &pair) { return *pair.first == t_robot_idx; });
+    auto  marked_opp = std::find_if(m_mark_map.begin(), m_mark_map.end(),
+                                    [&](const auto &pair) { return *pair.first == t_robot_idx; });
     if (m_is_defending && marked_opp != m_mark_map.end())
     {
         const float oppDisToBall =
@@ -48,8 +48,8 @@ float Ai::attackRoleCost(const int t_robot_idx, const Assignment &t_assignment)
     // TODO: add a check for the robot's current role
 
     // Return the combined cost
-    (void)mark_score;
-    const float cost = 1.0f / (dis_score * caps_score);
+    (void) mark_score;
+    const int cost = 1000.0f * (2.f - dis_score * caps_score);
     return cost;
 }
 } // namespace Tyr::Soccer

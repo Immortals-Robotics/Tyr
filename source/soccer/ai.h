@@ -240,22 +240,22 @@ private:
         bool needs_chip  = false;
 
         // cost function
-        using CostFunction         = std::function<float(int, const Assignment &)>;
+        using CostFunction         = std::function<int(int, const Assignment &)>;
         CostFunction cost_function = nullptr;
 
         // this is the result of the assignment
-        int   new_assignee    = -1;
-        float assignment_cost = 0.0f;
+        int new_assignee    = -1;
+        int assignment_cost = 0;
     };
 
     void assignRoles();
     void assignRolesInternal(Assignment::Priority t_priority);
 
     // cost functions
-    float gkRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
-    float staticRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
-    float markRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
-    float attackRoleCost(int t_robot_idx, const Assignment &t_assignment);
+    int gkRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
+    int staticRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
+    int markRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
+    int attackRoleCost(int t_robot_idx, const Assignment &t_assignment);
 
     // assignment creators
     void createGkAssignment();

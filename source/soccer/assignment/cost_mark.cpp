@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-float Ai::markRoleCost(const int t_robot_idx, const Assignment &t_assignment) const
+int Ai::markRoleCost(const int t_robot_idx, const Assignment &t_assignment) const
 {
     const Common::RobotState &own_robot = m_own_robot[t_robot_idx].state();
     const Common::RobotState &opp_robot = m_world_state.opp_robot[t_assignment.target_idx];
@@ -31,7 +31,7 @@ float Ai::markRoleCost(const int t_robot_idx, const Assignment &t_assignment) co
     static constexpr float kWeightStay  = 0.0f;
     static constexpr float kWeightReach = 1.0f;
 
-    const float cost = kWeightStay * cost_stay + kWeightReach * cost_reach;
+    const float cost = 10000.0f * kWeightStay * cost_stay + kWeightReach * cost_reach;
 
     return cost;
 }

@@ -24,7 +24,8 @@ void Ai::assignRoles()
         {
             const int unavailable_robot = unavailable_robots.front();
             unavailable_robots.pop();
-            Common::logWarning("Assignment not made for priority {}, assigning unavailable robot {}", (int) assignment.priority, unavailable_robot);
+            Common::logWarning("Assignment not made for priority {}, assigning unavailable robot {}",
+                               (int) assignment.priority, unavailable_robot);
 
             assignment.new_assignee = unavailable_robot;
         }
@@ -111,7 +112,7 @@ void Ai::assignRolesInternal(const Assignment::Priority t_priority)
             const int         assignment_idx = dst_to_assignment_map[dst_idx];
             const Assignment &assignment     = m_assignments[assignment_idx];
 
-            const float cost = assignment.cost_function(robot_idx, assignment);
+            const int cost = assignment.cost_function(robot_idx, assignment);
 
             if (cost < 0)
                 continue;
@@ -125,7 +126,7 @@ void Ai::assignRolesInternal(const Assignment::Priority t_priority)
     }
 
     // Run NetworkSimplex algorithm with "LEQ" supply type
-    using NS = NetworkSimplex<SmartDigraph, int, float>;
+    using NS = NetworkSimplex<SmartDigraph>;
     NS ns(graph);
     ns.supplyType(NS::LEQ);
     ns.costMap(cost_map).supplyMap(supply);
@@ -151,7 +152,7 @@ void Ai::assignRolesInternal(const Assignment::Priority t_priority)
             const int   assignment_idx = dst_to_assignment_map[dst_idx];
             Assignment &assignment     = m_assignments[assignment_idx];
 
-            const float cost = cost_map[a];
+            const int cost = cost_map[a];
 
             assignment.new_assignee    = robot_idx;
             assignment.assignment_cost = cost;

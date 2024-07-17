@@ -36,25 +36,27 @@ void Ai::createMarkAssignments()
     int marker_idx = 0;
     for (auto &mark_map_entry : m_mark_map)
     {
-        const int opp_idx = crunchingOpps[marker_idx].first;
-        mark_map_entry.second = opp_idx;
-
         Assignment assignment{};
 
         assignment.role = mark_map_entry.first;
 
         if (marker_idx < crunchingOpps.size())
         {
+            const int opp_idx     = crunchingOpps[marker_idx].first;
+            mark_map_entry.second = opp_idx;
+
             assignment.priority      = Assignment::Priority::Medium;
             assignment.cost_function = std::bind(&Ai::markRoleCost, this, std::placeholders::_1, std::placeholders::_2);
             assignment.target_idx    = crunchingOpps[marker_idx].first;
         }
         else
         {
-            assignment.priority    = Assignment::Priority::Low;
-            assignment.cost_function = std::bind(&Ai::staticRoleCost, this, std::placeholders::_1, std::placeholders::_2);
+            mark_map_entry.second = -1;
+            assignment.priority   = Assignment::Priority::Low;
+            assignment.cost_function =
+                std::bind(&Ai::staticRoleCost, this, std::placeholders::_1, std::placeholders::_2);
             // TODO: static position for markers
-            assignment.target_point    = Common::Vec2{};
+            assignment.target_point = Common::Vec2{};
         }
 
         m_assignments.push_back(assignment);
