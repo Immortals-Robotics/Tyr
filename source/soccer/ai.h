@@ -197,6 +197,51 @@ private:
 
     void internalProcessData();
 
+    struct Assignment
+    {
+        enum class Priority
+        {
+            None = 0,
+            Low,
+            Medium,
+            High,
+            Max,
+        };
+
+        Priority priority = Priority::None;
+
+        int current_assignee = -1;
+
+        // pointer to m_def, m_dmf, m_mid1, m_mid2, m_attack, m_lw, m_rw, m_gk
+        int *role = nullptr;
+
+        // The following are used to compute the cost of the assignment
+
+        // either the target that robot should go to
+        // or a point that the target will be closest to
+        // ie. the position of the opp that robot should mark
+        // or ball position for the attacker
+        Common::Vec2 target_point;
+
+        // the index of the target robot that the robot should mark
+        int target_idx;
+
+        bool needs_shoot = false;
+        bool needs_chip  = false;
+
+        // cost function
+        using CostFunction         = std::function<float(int, const Assignment &)>;
+        CostFunction cost_function = nullptr;
+
+        // this is the result of the assignment
+        int   new_assignee    = -1;
+        float assignment_cost = 0.0f;
+    };
+
+    void assignRoles(std::vector<Assignment> *t_assignments);
+
+    void assignRolesInternal(std::vector<Assignment> *t_assignments, Assignment::Priority t_priority);
+
 public:
     Robot m_own_robot[Common::Config::Common::kMaxRobots];
 

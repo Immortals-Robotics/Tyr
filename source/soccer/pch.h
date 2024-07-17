@@ -12,4 +12,10 @@ using namespace Immortals;
 #include <math.h>
 #include <stdlib.h>
 
+#ifdef PI
+#undef PI
+#endif
+#include <lemon/smart_graph.h>
+#include <lemon/network_simplex.h>
+
 #include <protos/immortals/play_book.pb.h>
