@@ -5,10 +5,10 @@ namespace Tyr::Soccer
 void Ai::kickoffTheirOneWall()
 {
     gkHi(m_gk);
-    defHi(m_def, m_rw, m_lw, nullptr);
+    defHi(m_def1, m_def2, nullptr);
 
-    m_own_robot[m_dmf].face(m_world_state.ball.position);
-    navigate(m_dmf,
+    m_own_robot[m_mid5].face(m_world_state.ball.position);
+    navigate(m_mid5,
              m_world_state.ball.position.pointOnConnectingLine(
                  ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 2.0f),
              VelocityProfile::mamooli());

@@ -2,15 +2,38 @@
 
 namespace Tyr::Soccer
 {
-void Ai::assignRoles(std::vector<Assignment> *const t_assignments)
+void Ai::assignRoles()
 {
-    assignRolesInternal(t_assignments, Assignment::Priority::Max);
-    assignRolesInternal(t_assignments, Assignment::Priority::High);
-    assignRolesInternal(t_assignments, Assignment::Priority::Medium);
-    assignRolesInternal(t_assignments, Assignment::Priority::Low);
+    assignRolesInternal(Assignment::Priority::Max);
+    assignRolesInternal(Assignment::Priority::High);
+    assignRolesInternal(Assignment::Priority::Medium);
+    assignRolesInternal(Assignment::Priority::Low);
+
+    // Fill unfilled assignments with an unavailable robot
+    // to avoid having -1 in any role
+    std::queue<int> unavailable_robots;
+    for (int idx = 0; idx < Common::Config::Common::kMaxRobots; idx++)
+    {
+        if (m_world_state.own_robot[idx].seen_state == Common::SeenState::CompletelyOut)
+            unavailable_robots.push(idx);
+    }
+
+    for (Assignment &assignment : m_assignments)
+    {
+        if (assignment.new_assignee == -1)
+        {
+            const int unavailable_robot = unavailable_robots.front();
+            unavailable_robots.pop();
+            Common::logWarning("Assignment not made for priority {}, assigning unavailable robot {}", (int) assignment.priority, unavailable_robot);
+
+            assignment.new_assignee = unavailable_robot;
+        }
+
+        *assignment.role = assignment.new_assignee;
+    }
 }
 
-void Ai::assignRolesInternal(std::vector<Assignment> *const t_assignments, const Assignment::Priority t_priority)
+void Ai::assignRolesInternal(const Assignment::Priority t_priority)
 {
     using namespace lemon;
     DIGRAPH_TYPEDEFS(SmartDigraph);
@@ -23,7 +46,7 @@ void Ai::assignRolesInternal(std::vector<Assignment> *const t_assignments, const
     std::vector<Node> dest;
 
     std::set<int> assigned;
-    for (const auto &assignment : *t_assignments)
+    for (const auto &assignment : m_assignments)
     {
         if (assignment.new_assignee != -1)
         {
@@ -43,10 +66,10 @@ void Ai::assignRolesInternal(std::vector<Assignment> *const t_assignments, const
     }
 
     std::unordered_map<int, int> dst_to_assignment_map;
-    dest.reserve(t_assignments->size());
-    for (int i = 0; i < t_assignments->size(); i++)
+    dest.reserve(m_assignments.size());
+    for (int i = 0; i < m_assignments.size(); i++)
     {
-        const Assignment &assignment = (*t_assignments)[i];
+        const Assignment &assignment = m_assignments[i];
 
         // Skip assignments that are not of the correct priority
         if (assignment.priority != t_priority)
@@ -86,7 +109,7 @@ void Ai::assignRolesInternal(std::vector<Assignment> *const t_assignments, const
         for (int dst_idx = 0; dst_idx < dest.size(); dst_idx++)
         {
             const int         assignment_idx = dst_to_assignment_map[dst_idx];
-            const Assignment &assignment     = (*t_assignments)[assignment_idx];
+            const Assignment &assignment     = m_assignments[assignment_idx];
 
             const float cost = assignment.cost_function(robot_idx, assignment);
 
@@ -126,7 +149,7 @@ void Ai::assignRolesInternal(std::vector<Assignment> *const t_assignments, const
 
             const int   robot_idx      = src_idx;
             const int   assignment_idx = dst_to_assignment_map[dst_idx];
-            Assignment &assignment     = (*t_assignments)[assignment_idx];
+            Assignment &assignment     = m_assignments[assignment_idx];
 
             const float cost = cost_map[a];
 

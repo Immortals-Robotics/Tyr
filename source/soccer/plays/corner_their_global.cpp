@@ -9,19 +9,19 @@ void Ai::cornerTheirGlobal()
         m_own_robot[m_gk].target.angle = Common::Angle::fromDeg((1 + m_side) * 90.0f);
         navigate(m_gk, Common::Vec2(m_side * (Common::field().width - 100), 0), VelocityProfile::mamooli());
 
-        defHi(m_def, m_rw, m_lw, nullptr);
+        defHi(m_def1, m_def2, nullptr);
     }
     else
     {
         gkHi(m_gk);
-        defHi(m_def, m_rw, m_lw, nullptr);
+        defHi(m_def1, m_def2, nullptr);
     }
 
     m_is_defending = true;
     defenceWall(m_attack, false);
 
     std::map<int, Common::Vec2> static_pos;
-    static_pos[m_dmf]  = Common::Vec2(m_side * 3500, -Common::sign(m_world_state.ball.position.y) * 1100.0f);
+    static_pos[m_mid5]  = Common::Vec2(m_side * 3500, -Common::sign(m_world_state.ball.position.y) * 1100.0f);
     static_pos[m_mid1] = Common::Vec2(m_side * 3200, 600);
     static_pos[m_mid2] = Common::Vec2(m_side * 3200, 0);
 

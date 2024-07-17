@@ -29,12 +29,16 @@ void Ai::penaltyTheirSimple()
 
         navigate(m_gk, Common::Vec2(m_side * penalty_x, gkp_y), VelocityProfile::kharaki());
     }
-    navigate(m_lw, Common::Vec2(-m_side * 4300, 500), VelocityProfile::aroom());
-    navigate(m_rw, Common::Vec2(-m_side * 4300, -500), VelocityProfile::aroom());
-    navigate(m_def, Common::Vec2(-m_side * 4300, 800), VelocityProfile::aroom());
-    navigate(m_dmf, Common::Vec2(-m_side * 4300, -800), VelocityProfile::aroom());
-    navigate(m_mid1, Common::Vec2(-m_side * 4300, -1500), VelocityProfile::aroom());
-    navigate(m_mid2, Common::Vec2(-m_side * 4300, 1500), VelocityProfile::aroom());
+
+    navigate(m_def1, Common::Vec2(-m_side * 4300, 800), VelocityProfile::aroom());
+    navigate(m_def2, Common::Vec2(-m_side * 4300, -500), VelocityProfile::aroom());
+
+    navigate(m_mid1, Common::Vec2(-m_side * 4300, -800), VelocityProfile::aroom());
+    navigate(m_mid2, Common::Vec2(-m_side * 4300, -1500), VelocityProfile::aroom());
+    navigate(m_mid3, Common::Vec2(-m_side * 4300, 1500), VelocityProfile::aroom());
+    navigate(m_mid4, Common::Vec2(-m_side * 4300, 500), VelocityProfile::aroom());
+    // TODO: navigate other robots
+
     navigate(m_attack, Common::Vec2(-m_side * 4300, 0), VelocityProfile::aroom());
 }
 } // namespace Tyr::Soccer

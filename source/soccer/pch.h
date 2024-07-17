@@ -4,6 +4,7 @@
 using namespace Immortals;
 
 #include <algorithm>
+#include <queue>
 #include <deque>
 #include <float.h>
 #include <fstream>

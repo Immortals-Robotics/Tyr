@@ -157,7 +157,7 @@ void Ai::strategy()
     }
 
     bool new_receivers_reached = true;
-    defHi(m_def, m_rw, m_lw, nullptr);
+    defHi(m_def1, m_def2, nullptr);
     for (int i = 0; i < strategy.roles.size(); i++)
     {
         // if ((*ids[i]==m_gk)||(*ids[i]==m_def)) {
@@ -168,7 +168,7 @@ void Ai::strategy()
         {
             if (*ids[i] == m_gk)
                 gkHi(m_gk);
-            else if (*ids[i] == m_def && *ids[i] == m_lw && *ids[i] == m_rw) // No need to halt these guys
+            else if (*ids[i] == m_def1 && *ids[i] == m_def2) // No need to halt these guys
                 continue;
             else
                 halt(*ids[i]);

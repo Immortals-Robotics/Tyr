@@ -36,9 +36,9 @@ void Ai::normalPlayDef()
 
                 m_own_robot[own].face(oppGoal());
 
-                if (own == m_dmf)
+                if (own == m_mid5)
                 {
-                    navigate(m_dmf, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 1800),
+                    navigate(m_mid5, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 1800),
                              VelocityProfile::mamooli());
                 }
                 else if (own == m_mid1)

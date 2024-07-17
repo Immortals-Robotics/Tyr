@@ -4,29 +4,26 @@ namespace Tyr::Soccer
 {
 static int hys_dive = 0, hys_select = 0;
 
-void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target)
+void Ai::defHi(int t_def1_num, int t_def2_num, Common::Vec2 *t_defend_target)
 {
-    (void) t_left_def_num;
-
     auto predicted_ball = predictBallForwardAINew(Common::config().soccer.def_prediction_time);
-    if (t_defend_target != NULL)
+    if (t_defend_target != nullptr)
     {
         predicted_ball = *t_defend_target;
     }
 
-    if ((ballIsGoaling()) && m_ref_state.running())
+    if (ballIsGoaling() && m_ref_state.running())
     {
-        defShirje(t_robot_num, t_right_def_num);
+        defShirje(t_def1_num, t_def2_num);
         hys_dive = 10;
     }
-    else if ((hys_dive > 0) && m_ref_state.running())
+    else if (hys_dive > 0 && m_ref_state.running())
     {
-        defShirje(t_robot_num, t_right_def_num);
+        defShirje(t_def1_num, t_def2_num);
         hys_dive--;
     }
     else
     {
-
         float area_extension_size = predicted_ball.distanceTo(ownGoal()) * 0.6 - Common::field().penalty_area_depth;
         area_extension_size       = std::min(1800.f, area_extension_size);
         area_extension_size       = std::max(Common::field().robot_radius, area_extension_size);
@@ -45,7 +42,6 @@ void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common:
             std::min(std::max(0.f, std::fabs(ball_angle.deg()) - (90.f - start_ang_effect)), start_ang_effect) *
             (ball_angle.deg() >= 0.f ? 1.f : -1.f);
 
-
         Common::Line line_1 =
             Common::Line::fromTwoPoints(predicted_ball, ownGoal() + Common::Vec2(0, Common::field().goal_width / 2));
         Common::Line line_2 =
@@ -58,10 +54,15 @@ void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common:
                 Common::Angle::fromDeg((90.f - start_ang_effect) * (ball_angle.deg() >= 0.f ? 1.f : -1.f)).toUnitVec() *
                     (predicted_ball.distanceTo(ownGoal())) * (m_side);
 
-            if(ball_angle_corrected * m_side >= 0.f) {
-                line_1 = Common::Line::fromTwoPoints(limit_ball, ownGoal() + Common::Vec2(0, Common::field().goal_width / 2));
-            } else {
-                line_2 = Common::Line::fromTwoPoints(limit_ball, ownGoal() + Common::Vec2(0, Common::field().goal_width / 2));
+            if (ball_angle_corrected * m_side >= 0.f)
+            {
+                line_1 = Common::Line::fromTwoPoints(limit_ball,
+                                                     ownGoal() + Common::Vec2(0, Common::field().goal_width / 2));
+            }
+            else
+            {
+                line_2 = Common::Line::fromTwoPoints(limit_ball,
+                                                     ownGoal() + Common::Vec2(0, Common::field().goal_width / 2));
             }
             Common::debug().draw(limit_ball, Common::Color::red());
         }
@@ -99,8 +100,6 @@ void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common:
             }
         }
 
-
-
         const auto tangent_line_1 = line_1.tangentLine(final_pos_1);
         const auto tangent_line_2 = line_2.tangentLine(final_pos_2);
 
@@ -115,16 +114,16 @@ void Ai::defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common:
         {
             final_pos_2 = final_pos_2 + (mid_point_2.value() - final_pos_2).normalized() * Common::field().robot_radius;
         }
-        //
+
         Common::debug().draw(final_pos_1, Common::Color::red());
         Common::debug().draw(final_pos_2, Common::Color::yellow());
 
         Common::debug().draw(virtual_defense_area, Common::Color::blue(), false);
 
-        m_own_robot[t_robot_num].face(final_pos_1 + (final_pos_1 - ownGoal()).normalized() * 10000.);
-        navigate(t_robot_num, final_pos_1, VelocityProfile::mamooli());
-        m_own_robot[t_right_def_num].face(final_pos_2 + (final_pos_2 - ownGoal()).normalized() * 10000.);
-        navigate(t_right_def_num, final_pos_2, VelocityProfile::mamooli());
+        m_own_robot[t_def1_num].face(final_pos_1 + (final_pos_1 - ownGoal()).normalized() * 10000.);
+        navigate(t_def1_num, final_pos_1, VelocityProfile::mamooli());
+        m_own_robot[t_def2_num].face(final_pos_2 + (final_pos_2 - ownGoal()).normalized() * 10000.);
+        navigate(t_def2_num, final_pos_2, VelocityProfile::mamooli());
     }
 }
 

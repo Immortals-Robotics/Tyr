@@ -44,13 +44,16 @@ private:
 
     // Roles
     int m_gk     = 0;
-    int m_def    = 1;
-    int m_dmf    = 2;
-    int m_mid2   = 3;
-    int m_mid1   = 4;
-    int m_attack = 5;
-    int m_rw     = 6;
-    int m_lw     = 7;
+    int m_def1   = 1;
+    int m_def2   = 2;
+    int m_mid1   = 3;
+    int m_mid2   = 4;
+    int m_mid3   = 5;
+    int m_mid4   = 6;
+    int m_mid5   = 7;
+    int m_mid6   = 8;
+    int m_mid7   = 9;
+    int m_attack = 10;
 
     std::vector<int *> ids;
 
@@ -170,7 +173,7 @@ private:
     bool m_gk_intercepting = false;
 
     // Tactics
-    void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target);
+    void defHi(int t_def1_num, int t_def2_num, Common::Vec2 *t_defend_target);
     void defShirje(const int t_def_1, const int t_def_2);
 
     // Plays
@@ -214,7 +217,7 @@ private:
 
         Priority priority = Priority::None;
 
-        // pointer to m_def, m_dmf, m_mid1, m_mid2, m_attack, m_lw, m_rw, m_gk
+        // pointer to m_gk, m_defn, m_midn, m_attack
         int *role = nullptr;
 
         int currentAssignee() const
@@ -245,15 +248,23 @@ private:
         float assignment_cost = 0.0f;
     };
 
-    void assignRoles(std::vector<Assignment> *t_assignments);
-
-    void assignRolesInternal(std::vector<Assignment> *t_assignments, Assignment::Priority t_priority);
+    void assignRoles();
+    void assignRolesInternal(Assignment::Priority t_priority);
 
     // cost functions
     float gkRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
     float staticRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
     float markRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
     float attackRoleCost(int t_robot_idx, const Assignment &t_assignment);
+
+    // assignment creators
+    void createGkAssignment();
+    void createDefAssignments();
+    void createAttackAssignment();
+    void createMarkAssignments();
+    void createStaticAssignment(Common::Vec2 t_pos, int *t_role, Assignment::Priority t_priority);
+
+    std::vector<Assignment> m_assignments;
 
 public:
     Robot m_own_robot[Common::Config::Common::kMaxRobots];

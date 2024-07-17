@@ -18,7 +18,7 @@ void Ai::normalPlayAtt()
         std::swap(m_mid1, m_mid2);
     }
 
-    receivePass(m_dmf, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 2500));
+    receivePass(m_mid5, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 2500));
 
     if (m_one_touch_type[m_attack] == OneTouchType::Allaf)
     {

@@ -30,10 +30,17 @@ set(SOURCE_FILES
         internal_process_data.cpp
 
         assignment/assignment.cpp
+
         assignment/cost_attack.cpp
         assignment/cost_gk.cpp
         assignment/cost_mark.cpp
         assignment/cost_static.cpp
+
+        assignment/create_attack.cpp
+        assignment/create_defs.cpp
+        assignment/create_gk.cpp
+        assignment/create_marks.cpp
+        assignment/create_static.cpp
 
         dss/dss.cpp
         dss/parabolic.cpp
