@@ -131,7 +131,7 @@ public:
         }
         // Predict state
         m_x = m_A * m_x;
-        getOptimalProcessNoise(t_delta_t, 0.7);
+        getOptimalProcessNoise(t_delta_t, 0.5);
         // Predict covariance
         m_P = m_A * m_P * m_A.transpose() + m_Q;
 
@@ -219,14 +219,15 @@ public:
     }
 
     //// Have to come after process
-    inline Common::Vec3 getFutureState(const int &t_steps, const Common::RobotState t_own_robots[],
-                                       const Common::RobotState t_opp_robots[])
+    inline Common::Vec3 getFutureState(const float &t_time, const Common::RobotState t_own_robots[],
+                                       const Common::RobotState t_opp_robots[], const float &t_friction_acceleration)
     {
-        Eigen::VectorXd x = m_x;
-        bool impact = false;
-        for (int i = 0; i < t_steps; i++)
+        const auto      steps  = static_cast<int>(t_time / m_dt);
+        Eigen::VectorXd x      = m_x;
+        bool            impact = false;
+        Common::BallState ball;
+        for (int i = 0; i < steps; i++)
         {
-            Common::BallState ball;
             x               = m_A * x;
             ball.position.x = x(0);
             ball.position.y = x(1);
@@ -236,6 +237,18 @@ public:
             if (m_predicted_height < 150.)
             {
                 x = Ekf3D::processCollisions(ball, t_own_robots, t_opp_robots);
+            }
+            auto vel = std::sqrt(x(2) * x(2) + x(3) * x(3));
+            if (vel != 0.)
+            {
+                x(2) = x(2) + t_friction_acceleration * m_dt * (x(2) / vel);
+                x(3) = x(3) + t_friction_acceleration * m_dt * (x(3) / vel);
+                vel  = std::sqrt(x(2) * x(2) + x(3) * x(3));
+            }
+            if (vel < 0.001)
+            {
+                x(2) = 0;
+                x(3) = 0;
             }
             if (m_predicted_height > 0)
             {
@@ -253,9 +266,9 @@ public:
                 }
             }
 
-            Common::debug().draw(Common::Circle{Common::Vec2(x(0), x(1)), 10}, Common::Color::black());
+            Common::debug().draw(Common::Circle{Common::Vec2(x(0), x(1)), 20}, Common::Color::blue());
         }
-        return Common::Vec3(x(0), x(1), m_predicted_height);
+        return Common::Vec3(ball.position.x, ball.position.y, m_predicted_height);
     }
 
     inline void init(Common::Vec2 t_pos)

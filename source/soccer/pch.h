@@ -11,5 +11,7 @@ using namespace Immortals;
 #include <map>
 #include <math.h>
 #include <stdlib.h>
+#include <Eigen/Dense>
+#include <numeric>
 
 #include <protos/immortals/play_book.pb.h>

@@ -124,7 +124,7 @@ public:
         if (kick_detected &&
             (m_ball_records.back().ball.distanceTo(m_candidate_robot.center) >
              m_ball_records.front().ball.distanceTo(m_candidate_robot.center)) &&
-            velocities.back().length() > 500.)
+            velocities.back().length() > 400.)
         {
             kick = Kick(m_candidate_kick_pos, velocities.back(), m_candidate_robot.angle, m_ball_records.front().time,
                         true);
@@ -266,12 +266,13 @@ public:
 
         if (m_ball_records.size() < Common::config().vision.chip_min_records)
         {
-            m_result_found = false;
+             m_result_found = false;
             return result;
         }
 
         auto solved_result = estimateWithOffset(0, ChipEstimator::getCameraPos(t_camera_id));
         auto vel           = solved_result.x;
+        Common::logError("vel z {} error {} ", vel.z(), solved_result.l1_error);
 
         if ((solved_result.l1_error == -1000000 || vel.z() < 100. ||
              vel.z() > Common::config().vision.chip_max_vel_z) &&
