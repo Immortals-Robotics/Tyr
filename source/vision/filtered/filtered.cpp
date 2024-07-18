@@ -47,7 +47,10 @@ bool Filtered::receiveCmds()
     const Sender::CommandsWrapper cmd_wrapper{Sender::CommandsWrapper(pb_wrapper)};
     for (const auto &cmd : cmd_wrapper.commands)
     {
-        m_cmd_map[cmd.vision_id] = cmd;
+        CommandHistory& history = m_cmd_map[cmd.vision_id];
+        if (history.size() >= kMaxHist)
+            history.pop_front();
+        history.push_back(cmd);
     }
 
     return true;

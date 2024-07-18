@@ -58,7 +58,9 @@ private:
     Common::MedianFilter<Common::Angle> m_angle_filter[2][Common::Config::Common::kMaxRobots];
     Common::Angle                       m_raw_angles[2][Common::Config::Common::kMaxRobots];
 
-    std::unordered_map<int, Sender::Command> m_cmd_map;
+    static constexpr size_t kMaxHist = 6;
+    using CommandHistory = std::deque<Sender::Command>;
+    std::unordered_map<int, CommandHistory> m_cmd_map;
 
     Common::RawWorldState m_raw_state;
     Common::WorldState    m_state;
