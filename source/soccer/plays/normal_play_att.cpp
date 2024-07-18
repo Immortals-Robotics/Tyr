@@ -60,7 +60,7 @@ void Ai::normalPlayAtt()
         }
 
         Common::logDebug("open angle: {}", openAngle.magnitude.deg());
-        if (openAngle.magnitude.deg() < 8 && (findKickerOpp(-1, 150.0f) == -1))
+        if (openAngle.magnitude.deg() < 8 && (findKickerOpp(-1, 500.0f) == -1) && (mid1Suitable || mid2Suitable))
         {
 
             Common::Angle passAngle =
