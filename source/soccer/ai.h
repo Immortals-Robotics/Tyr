@@ -265,7 +265,7 @@ private:
     void createMidAssignments();
 
     // this uses the last target position as the target point
-    void createStaticAssignment(int *t_role, Assignment::Priority t_priority);
+    void createStaticAssignment(int *t_role, Assignment::Priority t_priority, bool t_shoot = false, bool t_chip = false);
 
     std::vector<Assignment> m_assignments;
 
