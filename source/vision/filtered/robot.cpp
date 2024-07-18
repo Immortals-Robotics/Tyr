@@ -96,16 +96,28 @@ void Filtered::predictRobots()
     auto &own_robots = m_state.own_robot;
     for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
-        if (own_robots[i].seen_state != Common::SeenState::Seen)
+        Common::RobotState &robot = own_robots[i];
+
+        const CommandHistory& history = m_cmd_map[i];
+
+        if (history.empty())
         {
-            own_robots[i].position += m_cmd_map[i].motion / 54.f;
+            Common::logWarning("No command history for robot {}", i);
+            robot.position += robot.velocity / (kPredictSteps * 2.0f);
         }
         else
         {
-            for (int j = 0; j < 10; j++)
+            if (robot.seen_state != Common::SeenState::Seen)
             {
-                // TODO: this should iterate over the last 10 commands
-                own_robots[i].position += m_cmd_map[i].motion / 63.f;
+                const Sender::Command& last_cmd = history.back();
+                robot.position += last_cmd.motion / 8.5f;
+            }
+            else
+            {
+                for (const auto& cmd : history)
+                {
+                    robot.position += cmd.motion / 10.f;
+                }
             }
         }
     }
@@ -113,8 +125,9 @@ void Filtered::predictRobots()
     auto &opp_robots = m_state.opp_robot;
     for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
-        opp_robots[i].position += opp_robots[i].velocity / (kPredictSteps * 2.0f);
-        opp_robots[i].angle += opp_robots[i].angular_velocity / (kPredictSteps * 4.0f);
+        Common::RobotState &robot = opp_robots[i];
+        robot.position += robot.velocity / (kPredictSteps * 2.0f);
+        robot.angle += robot.angular_velocity / (kPredictSteps * 4.0f);
     }
 }
 
