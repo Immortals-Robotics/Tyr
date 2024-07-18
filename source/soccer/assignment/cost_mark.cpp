@@ -31,7 +31,7 @@ int Ai::markRoleCost(const int t_robot_idx, const Assignment &t_assignment) cons
     static constexpr float kWeightStay  = 0.0f;
     static constexpr float kWeightReach = 1.0f;
 
-    const float cost = 10000.0f * kWeightStay * cost_stay + kWeightReach * cost_reach;
+    const float cost = 10000.0f * (kWeightStay * cost_stay + kWeightReach * cost_reach);
 
     return cost;
 }
