@@ -45,7 +45,7 @@ int Ai::attackRoleCost(const int t_robot_idx, const Assignment &t_assignment)
     if (!physical_status.has_chip_kick && t_assignment.needs_chip)
         caps_score *= 0.5f;
 
-    const float role_score = t_robot_idx == m_attack ? 1.0f : 0.9f;
+    const float role_score = t_robot_idx == m_attack ? 1.0f : 0.95f;
 
     // Return the combined cost
     (void) mark_score;
