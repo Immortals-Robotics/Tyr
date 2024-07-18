@@ -39,7 +39,7 @@ set(SOURCE_FILES
         assignment/create_attack.cpp
         assignment/create_defs.cpp
         assignment/create_gk.cpp
-        assignment/create_marks.cpp
+        assignment/create_mids.cpp
         assignment/create_static.cpp
 
         dss/dss.cpp
