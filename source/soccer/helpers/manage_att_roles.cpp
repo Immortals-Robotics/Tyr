@@ -10,7 +10,7 @@ void Ai::manageAttRoles()
     const int required_hys_frames = kChangeHysSeconds * Common::config().vision.vision_frame_rate;
 
     int *best_attack =
-        *std::max_element(ids.begin(), ids.end(), [&](int *lhs, int *rhs)
+        *std::max_element(m_ids.begin(), m_ids.end(), [&](int *lhs, int *rhs)
                           { return calculateSwitchToAttackerScore(*lhs) < calculateSwitchToAttackerScore(*rhs); });
 
     const float current_attack_score = calculateSwitchToAttackerScore(m_attack);

@@ -55,7 +55,8 @@ private:
     int m_mid7   = 9;
     int m_attack = 10;
 
-    std::vector<int *> ids;
+    std::vector<int *> m_ids;
+    std::vector<int *> m_strategy_ids;
 
     void manageAttRoles();
 
