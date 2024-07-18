@@ -24,8 +24,9 @@ void Ai::defHi(int t_def1_num, int t_def2_num, Common::Vec2 *t_defend_target)
     }
     else
     {
-        float area_extension_size = predicted_ball.distanceTo(ownGoal()) * 0.6 - Common::field().penalty_area_depth;
-        area_extension_size       = std::min(1800.f, area_extension_size);
+
+        float area_extension_size = predicted_ball.distanceTo(ownGoal()) * 0.7 - Common::field().penalty_area_depth;
+        area_extension_size       = std::min(1100.f, area_extension_size);
         area_extension_size       = std::max(Common::field().robot_radius, area_extension_size);
         const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
@@ -135,8 +136,7 @@ void Ai::defShirje(const int t_def_1, const int t_def_2)
     Common::Vec2 one_touch_2  = ball_line.closestPoint(m_own_robot[t_def_2].state().position);
     int          dive_def_num = 2;
     if (one_touch_1.distanceTo(m_own_robot[t_def_1].state().position) <
-            one_touch_2.distanceTo(m_own_robot[t_def_2].state().position) &&
-        hys_select == 0)
+            one_touch_2.distanceTo(m_own_robot[t_def_2].state().position))
     {
         dive_def_num = 1;
         hys_select   = 10;
@@ -152,7 +152,7 @@ void Ai::defShirje(const int t_def_1, const int t_def_2)
         const Common::Line tangent            = ball_line.tangentLine(one_touch_1);
         const Common::Vec2 nearest_to_tangent = tangent.closestPoint(m_own_robot[t_def_2].state().position);
         one_touch_2 =
-            one_touch_1 + (nearest_to_tangent - one_touch_1).normalized() * Common::field().robot_radius * 2.f;
+            one_touch_1 + (nearest_to_tangent - one_touch_1).normalized() * (Common::field().robot_radius * 2.f);
     }
     else
     {
@@ -161,8 +161,12 @@ void Ai::defShirje(const int t_def_1, const int t_def_2)
         const Common::Line tangent            = ball_line.tangentLine(one_touch_2);
         const Common::Vec2 nearest_to_tangent = tangent.closestPoint(m_own_robot[t_def_1].state().position);
         one_touch_1 =
-            one_touch_2 + (nearest_to_tangent - one_touch_2).normalized() * Common::field().robot_radius * 2.f;
+            one_touch_2 + (nearest_to_tangent - one_touch_2).normalized() * (Common::field().robot_radius * 2.f);
     }
+
+    Common::debug().draw(Common::Circle{one_touch_1, 50}, Common::Color::yellow());
+    Common::debug().draw(Common::Circle{one_touch_2, 50}, Common::Color::yellow());
+
     navigate(t_def_1, one_touch_1, VelocityProfile::kharaki());
     navigate(t_def_2, one_touch_2, VelocityProfile::kharaki());
 }

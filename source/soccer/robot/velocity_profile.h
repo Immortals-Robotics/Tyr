@@ -29,18 +29,18 @@ struct VelocityProfile
     static constexpr VelocityProfile mamooli()
     {
         return {
-            .max_spd = 1800.0f,
-            .max_dec = 4050.5f,
-            .max_acc = 2700.0f,
+            .max_spd = 3800.0f,
+            .max_dec = 4850.5f,
+            .max_acc = 3100.0f,
         };
     }
 
     static constexpr VelocityProfile kharaki()
     {
         return {
-            .max_spd = 1800.0f,
-            .max_dec = 4860.0f,
-            .max_acc = 3510.0f,
+            .max_spd = 3800.0f,
+            .max_dec = 5860.0f,
+            .max_acc = 3910.0f,
         };
     }
 };
