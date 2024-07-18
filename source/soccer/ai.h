@@ -84,6 +84,7 @@ private:
 
     void                 markManager();
     std::map<int *, int> m_mark_map;
+    std::vector<int*> m_prioritized_mids;
 
     Common::Vec2  m_predicted_ball;
     bool          m_circle_reached_behind_ball = false;

@@ -27,35 +27,58 @@ void Ai::createMidAssignments()
         }
     }
 
-    int marker_idx = 0;
-    for (auto &mark_map_entry : m_mark_map)
-    {
-        int *const role         = mark_map_entry.first;
-        const bool actual_robot = (role == &m_mid1 || role == &m_mid2 || role == &m_mid5);
+    // Find the number of available mids
 
-        if (marker_idx < crunchingOpps.size())
+    int available_robots = 0;
+    for (const Common::RobotState &robot : m_world_state.own_robot)
+    {
+        if (robot.seen_state != Common::SeenState::CompletelyOut)
+            ++available_robots;
+    }
+
+    // this assumes that we always have exactly 4 non-mid robots
+    // gk, def1, def2, attack
+    const int mid_robots = available_robots - 4;
+
+    for (int mid_idx = 0; mid_idx < m_prioritized_mids.size(); ++mid_idx)
+    {
+        int *const role = m_prioritized_mids[mid_idx];
+
+        if (mid_idx >= mid_robots)
         {
-            const int opp_idx     = crunchingOpps[marker_idx].first;
-            mark_map_entry.second = opp_idx;
+            m_mark_map[role] = -1;
+            createStaticAssignment(role, Assignment::Priority::None);
+            continue;
+        }
+
+        if (mid_idx < crunchingOpps.size())
+        {
+            const int opp_idx = crunchingOpps[mid_idx].first;
+            m_mark_map[role]  = opp_idx;
 
             Assignment assignment{};
 
-            assignment.role          = mark_map_entry.first;
-            assignment.priority      = actual_robot ? Assignment::Priority::Medium : Assignment::Priority::None;
+            assignment.role          = role;
+            assignment.priority      = Assignment::Priority::Medium;
             assignment.cost_function = std::bind(&Ai::markRoleCost, this, std::placeholders::_1, std::placeholders::_2);
-            assignment.target_idx    = crunchingOpps[marker_idx].first;
+            assignment.target_idx    = opp_idx;
 
             m_assignments.push_back(assignment);
         }
         else
         {
-            mark_map_entry.second = -1;
+            m_mark_map[role] = -1;
 
-            createStaticAssignment(mark_map_entry.first,
-                                   actual_robot ? Assignment::Priority::Low : Assignment::Priority::None);
+            const bool shoot = !m_is_defending;
+            const bool chip  = !m_is_defending && role == &m_mid5;
+
+            createStaticAssignment(role, Assignment::Priority::Low, shoot, chip);
         }
-
-        ++marker_idx;
     }
+
+    createStaticAssignment(&m_mid3, Assignment::Priority::None);
+    createStaticAssignment(&m_mid4, Assignment::Priority::None);
+    createStaticAssignment(&m_mid6, Assignment::Priority::None);
+    createStaticAssignment(&m_mid7, Assignment::Priority::None);
 }
 } // namespace Tyr::Soccer

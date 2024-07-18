@@ -38,6 +38,10 @@ Ai::Ai()
     m_mark_map[&m_mid5] = -1;
     m_mark_map[&m_mid6] = -1;
     m_mark_map[&m_mid7] = -1;
+
+    m_prioritized_mids.push_back(&m_mid5);
+    m_prioritized_mids.push_back(&m_mid1);
+    m_prioritized_mids.push_back(&m_mid2);
     
     m_ids = {&m_gk, &m_def1, &m_def2, &m_mid1, &m_mid2, &m_mid3, &m_mid4, &m_mid5, &m_mid6, &m_mid7, &m_attack};
     m_strategy_ids = {&m_gk, &m_def1, &m_mid5, &m_mid1, &m_mid2, &m_attack, &m_def2, &m_mid3, &m_mid4, &m_mid6, &m_mid7};
