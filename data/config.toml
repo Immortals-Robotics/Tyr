@@ -65,7 +65,7 @@ one_touch_shoot_k = 4000.0
     is_3D_printed = false
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = false
+    has_chip_kick = true
     has_direct_kick = true
     has_dribbler = false
     id = 2
@@ -86,15 +86,15 @@ one_touch_shoot_k = 4000.0
     is_3D_printed = true
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = false
+    has_chip_kick = true
+    has_direct_kick = true
     has_dribbler = false
     id = 5
     is_3D_printed = true
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = false
+    has_chip_kick = true
+    has_direct_kick = true
     has_dribbler = false
     id = 6
     is_3D_printed = true
@@ -108,24 +108,24 @@ one_touch_shoot_k = 4000.0
 
     [[soccer.robot_physical_status]]
     has_chip_kick = false
-    has_direct_kick = true
+    has_direct_kick = false
     has_dribbler = false
     id = 8
     is_3D_printed = true
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
+    has_chip_kick = false
+    has_direct_kick = false
     has_dribbler = false
     id = 9
     is_3D_printed = false
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
+    has_chip_kick = false
+    has_direct_kick = false
     has_dribbler = false
     id = 10
-    is_3D_printed = false
+    is_3D_printed = true
 
     [[soccer.robot_physical_status]]
     has_chip_kick = false
@@ -177,4 +177,4 @@ max_robot_frame_not_seen = 120
 merge_distance = 70.0
 use_camera = [ false, true, false, false, false, false, false, false ]
 use_new_ball_kalman = true
-vision_frame_rate = 60.0
+vision_frame_rate = 70.0

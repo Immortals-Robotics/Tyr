@@ -11,14 +11,7 @@ void Ai::normalPlayAtt()
     Common::debug().draw(Common::Triangle{oppgoal_p1, m_world_state.ball.position, oppgoal_p2},
                          Common::Color::red().transparent(), true);
 
-    manageAttRoles(); // sets the m_mid1, m_mid2, m_attack
-
-    if (m_own_robot[m_mid1].state().position.y < m_own_robot[m_mid2].state().position.y)
-    {
-        std::swap(m_mid1, m_mid2);
-    }
-
-    receivePass(m_dmf, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 2500));
+    receivePass(m_mid5, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 2500));
 
     if (m_one_touch_type[m_attack] == OneTouchType::Allaf)
     {
@@ -67,7 +60,7 @@ void Ai::normalPlayAtt()
         }
 
         Common::logDebug("open angle: {}", openAngle.magnitude.deg());
-        if (openAngle.magnitude.deg() < 8 && (findKickerOpp(-1, 150.0f) == -1))
+        if (openAngle.magnitude.deg() < 8 && (findKickerOpp(-1, 500.0f) == -1) && (mid1Suitable || mid2Suitable))
         {
 
             Common::Angle passAngle =

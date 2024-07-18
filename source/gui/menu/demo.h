@@ -34,7 +34,12 @@ public:
 
     const Common::Referee::State &refereeState() const
     {
-        return m_referee;
+        return m_referee_state;
+    }
+
+    const Common::Soccer::State &soccerState() const
+    {
+        return m_soccer_state;
     }
 
 private:
@@ -81,10 +86,12 @@ private:
     Common::Storage m_debug_storage;
     Common::Storage m_world_filtered_storage;
     Common::Storage m_referee_storage;
+    Common::Storage m_soccer_storage;
 
     Common::Debug::Wrapper m_debug;
     Common::WorldState     m_world_state;
-    Common::Referee::State m_referee;
+    Common::Referee::State m_referee_state;
+    Common::Soccer::State  m_soccer_state;
 };
 
 } // namespace Tyr::Gui

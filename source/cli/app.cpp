@@ -56,6 +56,8 @@ bool Application::initialize()
     m_dumper->addEntry(Common::config().network.raw_world_state_url, Common::config().network.raw_world_state_db);
     m_dumper->addEntry(Common::config().network.world_state_url, Common::config().network.world_state_db);
     m_dumper->addEntry(Common::config().network.debug_url, Common::config().network.debug_db);
+    m_dumper->addEntry(Common::config().network.referee_state_url, Common::config().network.referee_db);
+    m_dumper->addEntry(Common::config().network.soccer_state_url, Common::config().network.soccer_db);
 
     Common::logInfo(" Now it is time, lets rock...");
     return true;

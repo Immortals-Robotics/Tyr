@@ -6,11 +6,18 @@ Common::Timer activeShootTimer_omid;
 
 void Ai::newNormalPlay()
 {
+    calcIsDefending();
+
+    m_assignments.clear();
+    createGkAssignment();
+    createDefAssignments();
+    createMidAssignments();
+    createAttackAssignment();
+    assignRoles();
+
     gkHi(m_gk);
 
-    defHi(m_def, m_rw, m_lw, nullptr);
-
-    calcIsDefending();
+    defHi(m_def1, m_def2, nullptr);
 
     if (m_is_defending)
     {

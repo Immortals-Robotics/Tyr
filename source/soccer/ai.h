@@ -5,7 +5,6 @@
 #include "helpers/ball_trajectory.h"
 #include "helpers/one_touch_detector.h"
 #include "plays/play_book.h"
-#include "../vision/kalman/ekf_3d.h"
 
 namespace Tyr::Soccer
 {
@@ -21,6 +20,7 @@ private:
     std::unique_ptr<Common::UdpClient> m_strategy_client;
 
     std::unique_ptr<Common::NngServer> m_cmd_server;
+    std::unique_ptr<Common::NngServer> m_state_server;
 
     std::unique_ptr<Vision::Ekf3D> m_ball_predictor;
 
@@ -44,15 +44,19 @@ private:
 
     // Roles
     int m_gk     = 0;
-    int m_def    = 1;
-    int m_dmf    = 2;
-    int m_mid2   = 3;
-    int m_mid1   = 4;
-    int m_attack = 5;
-    int m_rw     = 6;
-    int m_lw     = 7;
+    int m_def1   = 1;
+    int m_def2   = 2;
+    int m_mid1   = 3;
+    int m_mid2   = 4;
+    int m_mid3   = 5;
+    int m_mid4   = 6;
+    int m_mid5   = 7;
+    int m_mid6   = 8;
+    int m_mid7   = 9;
+    int m_attack = 10;
 
-    std::vector<int *> ids;
+    std::vector<int *> m_ids;
+    std::vector<int *> m_strategy_ids;
 
     void manageAttRoles();
 
@@ -80,6 +84,7 @@ private:
 
     void                 markManager();
     std::map<int *, int> m_mark_map;
+    std::vector<int*> m_prioritized_mids;
 
     Common::Vec2  m_predicted_ball;
     bool          m_circle_reached_behind_ball = false;
@@ -170,8 +175,8 @@ private:
     bool m_gk_intercepting = false;
 
     // Tactics
-    void defHi(int t_robot_num, int t_right_def_num, int t_left_def_num, Common::Vec2 *t_defend_target);
-    void defShirje(const int t_def_1,const int t_def_2);
+    void defHi(int t_def1_num, int t_def2_num, Common::Vec2 *t_defend_target);
+    void defShirje(const int t_def_1, const int t_def_2);
 
     // Plays
     void stop();
@@ -201,6 +206,71 @@ private:
 
     void internalProcessData();
 
+    struct Assignment
+    {
+        enum class Priority
+        {
+            None = 0,
+            Low,
+            Medium,
+            High,
+            Max,
+            Rules,
+        };
+
+        Priority priority = Priority::None;
+
+        // pointer to m_gk, m_defn, m_midn, m_attack
+        int *role = nullptr;
+
+        int currentAssignee() const
+        {
+            return role == nullptr ? -1 : *role;
+        }
+
+        // The following are used to compute the cost of the assignment
+
+        // either the target that robot should go to
+        // or a point that the target will be closest to
+        // ie. the position of the opp that robot should mark
+        // or ball position for the attacker
+        Common::Vec2 target_point;
+
+        // the index of the target robot that the robot should mark
+        int target_idx;
+
+        bool needs_shoot = false;
+        bool needs_chip  = false;
+
+        // cost function
+        using CostFunction         = std::function<int(int, const Assignment &)>;
+        CostFunction cost_function = nullptr;
+
+        // this is the result of the assignment
+        int new_assignee    = -1;
+        int assignment_cost = 0;
+    };
+
+    void assignRoles();
+    void assignRolesInternal(Assignment::Priority t_priority);
+
+    // cost functions
+    int gkRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
+    int staticRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
+    int markRoleCost(int t_robot_idx, const Assignment &t_assignment) const;
+    int attackRoleCost(int t_robot_idx, const Assignment &t_assignment);
+
+    // assignment creators
+    void createGkAssignment();
+    void createDefAssignments();
+    void createAttackAssignment();
+    void createMidAssignments();
+
+    // this uses the last target position as the target point
+    void createStaticAssignment(int *t_role, Assignment::Priority t_priority, bool t_shoot = false, bool t_chip = false);
+
+    std::vector<Assignment> m_assignments;
+
 public:
     Robot m_own_robot[Common::Config::Common::kMaxRobots];
 
@@ -210,6 +280,7 @@ public:
     bool receiveReferee();
 
     bool publishCommands() const;
+    bool publishState() const;
 
     void process();
 

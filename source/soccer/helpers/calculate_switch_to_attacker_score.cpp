@@ -11,8 +11,8 @@ float Ai::calculateSwitchToAttackerScore(const int t_robot_num)
         return -1;
 
     // Check if the robot is waiting for a pass and is in a suitable state to receive it
-    const bool pass_receiver_role = t_robot_num == m_mid1 || t_robot_num == m_mid2 || t_robot_num == m_dmf;
-    const bool one_touch_arriving = m_one_touch_detector[t_robot_num].IsArriving(45, 150);
+    const bool pass_receiver_role = t_robot_num == m_mid1 || t_robot_num == m_mid2 || t_robot_num == m_mid5;
+    const bool one_touch_arriving = m_one_touch_detector[t_robot_num].isArriving(45, 150);
     if (!m_is_defending && pass_receiver_role && one_touch_arriving)
         return 0;
 

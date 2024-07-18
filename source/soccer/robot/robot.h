@@ -33,6 +33,21 @@ public:
     void move(Common::Vec2 motion);
     void halt();
 
+    [[nodiscard]] float shoot() const
+    {
+        return m_shoot;
+    }
+
+    [[nodiscard]] float chip() const
+    {
+        return m_chip;
+    }
+
+    [[nodiscard]] float dribbler() const
+    {
+        return m_dribbler;
+    }
+
     [[nodiscard]] bool navigated() const
     {
         return m_navigated;

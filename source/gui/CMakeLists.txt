@@ -13,6 +13,7 @@ set(HEADER_FILES
         menu/filter.h
         menu/log.h
         menu/plot.h
+        menu/soccer.h
         menu/status_bar.h
 
         renderer/renderer.h
@@ -31,6 +32,7 @@ set(SOURCE_FILES
         menu/filter.cpp
         menu/log.cpp
         menu/plot.cpp
+        menu/soccer.cpp
         menu/status_bar.cpp
 
         renderer/ball.cpp

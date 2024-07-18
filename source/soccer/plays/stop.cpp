@@ -4,13 +4,17 @@ namespace Tyr::Soccer
 {
 void Ai::stop()
 {
-    manageAttRoles();
-
     m_is_defending = Common::config().soccer.mark_in_stop;
-    markManager();
+
+    m_assignments.clear();
+    createGkAssignment();
+    createDefAssignments();
+    createMidAssignments();
+    createAttackAssignment();
+    assignRoles();
 
     gkHi(m_gk);
-    defHi(m_def, m_rw, m_lw, nullptr);
+    defHi(m_def1, m_def2, nullptr);
 
     for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
     {
@@ -34,13 +38,13 @@ void Ai::stop()
     std::unordered_map<int, Common::Vec2> static_poses;
     if (def_formation)
     {
-        static_poses[m_dmf]  = Common::Vec2(m_side * 4100, Common::sign(m_world_state.ball.position.y) * 1000.0f);
+        static_poses[m_mid5]  = Common::Vec2(m_side * 4100, Common::sign(m_world_state.ball.position.y) * 1000.0f);
         static_poses[m_mid1] = Common::Vec2(m_side * 4500, Common::sign(-m_world_state.ball.position.y) * 3000.0f);
         static_poses[m_mid2] = Common::Vec2(m_side * 4100, Common::sign(-m_world_state.ball.position.y) * 1000.0f);
     }
     else
     {
-        static_poses[m_dmf] = m_world_state.ball.position.pointOnConnectingLine(
+        static_poses[m_mid5] = m_world_state.ball.position.pointOnConnectingLine(
             ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f);
 
         static_poses[m_mid1] = m_world_state.ball.position.circleAroundPoint(

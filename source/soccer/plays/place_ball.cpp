@@ -6,8 +6,20 @@ namespace Tyr::Soccer
 {
 void Ai::ourPlaceBall()
 {
+    // TODO: fix this
+#if 0
+     m_is_defending = false;
+
+    m_assignments.clear();
+    createGkAssignment();
+    createDefAssignments();
+    createMidAssignments();
+    createAttackAssignment();
+    assignRoles();
+#endif
+
     gkHi(m_gk);
-    defHi(m_def, m_rw, m_lw, nullptr);
+    defHi(m_def1, m_def2, nullptr);
 
     static Common::Angle move_angle, temp_opp_ang;
     if (m_world_state.ball.position.distanceTo(m_ref_state.designated_position) > 100)
@@ -125,15 +137,15 @@ void Ai::ourPlaceBall()
             m_func_count = 0;
         }
 
-        m_own_robot[m_dmf].target.angle = move_angle;
+        m_own_robot[m_mid5].target.angle = move_angle;
 
-        navigate(m_dmf, m_ref_state.designated_position.circleAroundPoint(temp_opp_ang, 250), VelocityProfile::aroom(),
+        navigate(m_mid5, m_ref_state.designated_position.circleAroundPoint(temp_opp_ang, 250), VelocityProfile::aroom(),
                  NavigationFlagsForceBallSmallObstacle);
 
         circleBall(m_attack, move_angle, 0, 0);
         Common::logDebug(":::{}", m_own_robot[m_attack].state().velocity.length());
-        Common::logDebug("", m_own_robot[m_dmf].state().velocity.length());
-        if (m_own_robot[m_attack].state().velocity.length() < 20 && m_own_robot[m_dmf].state().velocity.length() < 20)
+        Common::logDebug("", m_own_robot[m_mid5].state().velocity.length());
+        if (m_own_robot[m_attack].state().velocity.length() < 20 && m_own_robot[m_mid5].state().velocity.length() < 20)
         {
             m_func_count++;
         }
@@ -147,7 +159,7 @@ void Ai::ourPlaceBall()
     else if (m_func_state == 1)
     {
         circleBall(m_attack, move_angle, 18, 0);
-        waitForPass(m_dmf, false, &m_own_robot[m_attack].state().position);
+        waitForPass(m_mid5, false, &m_own_robot[m_attack].state().position);
 
         if (last_state_ball_pos.distanceTo(m_world_state.ball.position) > 400)
         { // TODO added this TEST IT with the kicker on (already tested without the kicker)
@@ -166,7 +178,7 @@ void Ai::ourPlaceBall()
     }
     else if (m_func_state == 2)
     {
-        waitForPass(m_dmf, false, &m_own_robot[m_attack].state().position);
+        waitForPass(m_mid5, false, &m_own_robot[m_attack].state().position);
 
         if (temp_time.time().seconds() > 2)
         {
@@ -184,18 +196,18 @@ void Ai::ourPlaceBall()
         if (std::fabs((m_own_robot[m_attack].target.angle - move_angle).deg()) > 90)
             std::swap(move_angle, temp_opp_ang);
         m_own_robot[m_attack].target.angle = move_angle;
-        m_own_robot[m_dmf].target.angle    = temp_opp_ang;
+        m_own_robot[m_mid5].target.angle   = temp_opp_ang;
 
         navigate(m_attack, m_world_state.ball.position.circleAroundPoint(temp_opp_ang, 250), VelocityProfile::aroom(),
                  NavigationFlagsForceBallSmallObstacle);
 
-        navigate(m_dmf, m_world_state.ball.position.circleAroundPoint(move_angle, 250), VelocityProfile::aroom(),
+        navigate(m_mid5, m_world_state.ball.position.circleAroundPoint(move_angle, 250), VelocityProfile::aroom(),
                  NavigationFlagsForceBallSmallObstacle);
 
         if (m_world_state.ball.position.circleAroundPoint(temp_opp_ang, 250)
                     .distanceTo(m_own_robot[m_attack].state().position) < 100 &&
             m_world_state.ball.position.circleAroundPoint(move_angle, 250)
-                    .distanceTo(m_own_robot[m_dmf].state().position) < 100 &&
+                    .distanceTo(m_own_robot[m_mid5].state().position) < 100 &&
             m_world_state.ball.velocity.length() < 10)
         {
 
@@ -214,14 +226,14 @@ void Ai::ourPlaceBall()
             std::swap(move_angle, temp_opp_ang);
 
         m_own_robot[m_attack].target.angle = move_angle;
-        m_own_robot[m_dmf].target.angle    = temp_opp_ang;
+        m_own_robot[m_mid5].target.angle   = temp_opp_ang;
         navigate(m_attack, t_pos.circleAroundPoint(temp_opp_ang, 75), VelocityProfile::sooski(),
                  NavigationFlagsForceNoObstacles);
 
-        navigate(m_dmf, t_pos.circleAroundPoint(move_angle, 75), VelocityProfile::sooski(),
+        navigate(m_mid5, t_pos.circleAroundPoint(move_angle, 75), VelocityProfile::sooski(),
                  NavigationFlagsForceNoObstacles);
 
-        bool ball_has_slipt = ((m_own_robot[m_attack].state().position + m_own_robot[m_dmf].state().position) / 2)
+        bool ball_has_slipt = ((m_own_robot[m_attack].state().position + m_own_robot[m_mid5].state().position) / 2)
                                   .distanceTo(m_world_state.ball.position) > 300;
 
         if (m_world_state.ball.seen_state == Common::SeenState::Seen && ball_has_slipt)
@@ -231,7 +243,7 @@ void Ai::ourPlaceBall()
         }
 
         if (t_pos.circleAroundPoint(temp_opp_ang, 75).distanceTo(m_own_robot[m_attack].state().position) < 40 &&
-            t_pos.circleAroundPoint(move_angle, 75).distanceTo(m_own_robot[m_dmf].state().position) < 40)
+            t_pos.circleAroundPoint(move_angle, 75).distanceTo(m_own_robot[m_mid5].state().position) < 40)
         {
             m_func_count++;
         }
@@ -246,15 +258,15 @@ void Ai::ourPlaceBall()
     else if (m_func_state == 5)
     {
         m_own_robot[m_attack].target.angle = t_ang;
-        m_own_robot[m_dmf].target.angle    = t_opp_ang;
+        m_own_robot[m_mid5].target.angle   = t_opp_ang;
 
         navigate(m_attack, m_ref_state.designated_position.circleAroundPoint(t_opp_ang, 75), VelocityProfile::sooski(),
                  NavigationFlagsForceNoObstacles);
 
-        navigate(m_dmf, m_ref_state.designated_position.circleAroundPoint(t_ang, 75), VelocityProfile::sooski(),
+        navigate(m_mid5, m_ref_state.designated_position.circleAroundPoint(t_ang, 75), VelocityProfile::sooski(),
                  NavigationFlagsForceNoObstacles);
 
-        bool ball_has_slipt = ((m_own_robot[m_attack].state().position + m_own_robot[m_dmf].state().position) / 2)
+        bool ball_has_slipt = ((m_own_robot[m_attack].state().position + m_own_robot[m_mid5].state().position) / 2)
                                   .distanceTo(m_world_state.ball.position) > 300;
 
         if (m_world_state.ball.seen_state == Common::SeenState::Seen && ball_has_slipt)
@@ -266,7 +278,7 @@ void Ai::ourPlaceBall()
         if (m_ref_state.designated_position.circleAroundPoint(t_opp_ang, 75)
                     .distanceTo(m_own_robot[m_attack].state().position) < 40 &&
             m_ref_state.designated_position.circleAroundPoint(t_ang, 75).distanceTo(
-                m_own_robot[m_dmf].state().position) < 40)
+                m_own_robot[m_mid5].state().position) < 40)
         {
             m_func_count++;
         }
@@ -279,7 +291,7 @@ void Ai::ourPlaceBall()
     else if (m_func_state == 6)
     {
         m_own_robot[m_attack].target.angle = t_ang;
-        m_own_robot[m_dmf].target.angle    = t_opp_ang;
+        m_own_robot[m_mid5].target.angle   = t_opp_ang;
         Common::Vec2 target1               = m_ref_state.designated_position.circleAroundPoint(t_opp_ang, 550);
 #if 0
         if (isOut(target1))
@@ -296,18 +308,18 @@ void Ai::ourPlaceBall()
 #if 0
         if (isOut(target1))
         {
-            navigate(m_dmf, Common::Vec2(), VelocityProfile::sooski());
+            navigate(m_mid5, Common::Vec2(), VelocityProfile::sooski());
         }
         else
 #endif
         {
-            navigate(m_dmf, target2, VelocityProfile::sooski(), NavigationFlagsForceNoObstacles);
+            navigate(m_mid5, target2, VelocityProfile::sooski(), NavigationFlagsForceNoObstacles);
         }
 
         if (m_ref_state.designated_position.circleAroundPoint(t_opp_ang, 550)
                     .distanceTo(m_own_robot[m_attack].state().position) < 40 &&
             m_ref_state.designated_position.circleAroundPoint(t_ang, 550)
-                    .distanceTo(m_own_robot[m_dmf].state().position) < 40)
+                    .distanceTo(m_own_robot[m_mid5].state().position) < 40)
         {
             m_func_count++;
         }
@@ -330,8 +342,8 @@ void Ai::ourPlaceBall()
         m_own_robot[m_attack].face(m_world_state.ball.position); // TODO test this
         navigate(m_attack, m_ref_state.designated_position.circleAroundPoint(t_opp_ang, 550), VelocityProfile::sooski(),
                  NavigationFlagsForceBallObstacle);
-        m_own_robot[m_dmf].face(m_world_state.ball.position);
-        navigate(m_dmf, m_ref_state.designated_position.circleAroundPoint(t_ang, 550), VelocityProfile::sooski(),
+        m_own_robot[m_mid5].face(m_world_state.ball.position);
+        navigate(m_mid5, m_ref_state.designated_position.circleAroundPoint(t_ang, 550), VelocityProfile::sooski(),
                  NavigationFlagsForceBallObstacle);
 
         bool success = m_ref_state.designated_position.distanceTo(m_world_state.ball.position) < 100.0;

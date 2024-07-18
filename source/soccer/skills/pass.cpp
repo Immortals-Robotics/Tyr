@@ -8,11 +8,14 @@ Common::Vec2 Ai::calculatePassPos(const Common::Vec2 &t_target, const Common::Ve
         Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());
     // Common::Line ball_line ( 1.0 , -m_ball_line.getSlope() , -m_ball_line.getIntercept() );
 
+    // TODO: this is broken
+#if 0
     if (m_chip_head.deg() < 180)
     {
         ball_line = Common::Line::fromPointAndAngle(m_world_state.ball.position, m_chip_head);
         Common::logDebug("calcing with static head: {}", m_chip_head);
     }
+#endif
 
     Common::Angle angleWithTarget = t_stat_pos.angleWith(t_target);
     // angleWithTarget = m_own_robot[t_robot_num].state().angle;

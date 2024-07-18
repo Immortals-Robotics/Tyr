@@ -91,11 +91,13 @@ bool Application::initialize(const int t_width, const int t_height)
     m_dumper->addEntry(Common::config().network.world_state_url, Common::config().network.world_state_db);
     m_dumper->addEntry(Common::config().network.debug_url, Common::config().network.debug_db);
     m_dumper->addEntry(Common::config().network.referee_state_url, Common::config().network.referee_db);
+    m_dumper->addEntry(Common::config().network.soccer_state_url, Common::config().network.soccer_db);
 
     m_world_client   = std::make_unique<Common::NngClient>(Common::config().network.world_state_url);
     m_raw_client     = std::make_unique<Common::NngClient>(Common::config().network.raw_world_state_url);
     m_debug_client   = std::make_unique<Common::NngClient>(Common::config().network.debug_url);
     m_referee_client = std::make_unique<Common::NngClient>(Common::config().network.referee_state_url);
+    m_soccer_client  = std::make_unique<Common::NngClient>(Common::config().network.soccer_state_url);
 
     SetTraceLogCallback(logCallback);
 
@@ -113,6 +115,7 @@ bool Application::initialize(const int t_width, const int t_height)
     ImGuiTheme::ApplyTheme(ImGuiTheme::ImGuiTheme_SoDark_AccentRed);
 
     m_renderer        = std::make_unique<Renderer>();
+    m_soccer_menu     = std::make_unique<SoccerMenu>();
     m_config_menu     = std::make_unique<ConfigMenu>();
     m_controller_menu = std::make_unique<ControllerMenu>();
     m_demo_menu       = std::make_unique<DemoMenu>();
@@ -165,6 +168,7 @@ void Application::update()
     receiveWorldStates();
     receiveDebug();
     receiveRefereeState();
+    receiveSoccerState();
 
     BeginDrawing();
     ClearBackground(DARKGRAY);
@@ -201,6 +205,12 @@ void Application::update()
     if (ImGui::Begin("Plot"))
     {
         m_plot_menu->draw(worldState(), !live());
+    }
+    ImGui::End();
+
+    if (ImGui::Begin("Soccer"))
+    {
+        m_soccer_menu->draw(soccerState());
     }
     ImGui::End();
 
@@ -247,29 +257,10 @@ void Application::update()
 
         m_renderer->draw(Common::field());
 
-        // TODO(mhmd): add an option for this
-        if (m_demo_menu->getState() == LogState::Live)
-        {
-            m_renderer->draw(m_referee_state, Common::field());
-            if (true)
-                m_renderer->draw(m_world_state);
-            else
-                m_renderer->draw(m_raw_world_state);
-        }
-        else
-        {
-            m_renderer->draw(m_demo_menu->worldState());
-            m_renderer->draw(m_demo_menu->refereeState(), Common::field());
-        }
+        m_renderer->draw(refereeState(), Common::field());
+        m_renderer->draw(worldState());
 
-        if (m_demo_menu->getState() == LogState::Live)
-        {
-            m_renderer->draw(m_debug_wrapper, m_filter_menu->map());
-        }
-        else
-        {
-            m_renderer->draw(static_cast<Common::Debug::Wrapper>(m_demo_menu->debugWrapper()), m_filter_menu->map());
-        }
+        m_renderer->draw(debugWrapper(), m_filter_menu->map());
 
         m_renderer->end();
     }
@@ -312,6 +303,7 @@ void Application::resetLayout()
 
     ImGui::DockBuilderDockWindow("Field", dockspace_main);
 
+    ImGui::DockBuilderDockWindow("Soccer", dockspace_left);
     ImGui::DockBuilderDockWindow("Config", dockspace_left);
     ImGui::DockBuilderDockWindow("Debug Filter", dockspace_left);
 
@@ -342,9 +334,16 @@ void Application::receiveWorldStates()
 
 void Application::receiveRefereeState()
 {
-    Protos::Immortals::Referee::State pb_raw_state;
-    if (m_referee_client->receive(&pb_raw_state, nullptr, true))
-        m_referee_state = Common::Referee::State(pb_raw_state);
+    Protos::Immortals::Referee::State pb_state;
+    if (m_referee_client->receive(&pb_state, nullptr, true))
+        m_referee_state = Common::Referee::State(pb_state);
+}
+
+void Application::receiveSoccerState()
+{
+    Protos::Immortals::Soccer::State pb_state;
+    if (m_soccer_client->receive(&pb_state, nullptr, true))
+        m_soccer_state = Common::Soccer::State(pb_state);
 }
 
 void Application::receiveDebug()
@@ -428,7 +427,16 @@ void Application::aiEntry() const
         duration_timer.start();
 
         m_ai->process();
-        m_ai->publishCommands();
+
+        if (!m_ai->publishCommands())
+        {
+            Common::logWarning("Failed to publish commands");
+        }
+
+        if (!m_ai->publishState())
+        {
+            Common::logWarning("Failed to publish state");
+        }
 
         Common::Debug::ExecutionTime execution_time;
         execution_time.duration = duration_timer.time();

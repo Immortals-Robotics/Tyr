@@ -18,6 +18,7 @@
     "xxhash",
     "rlimgui",
     "implot",
-    "eigen3"
+    "eigen3",
+    "liblemon"
 	]
 }

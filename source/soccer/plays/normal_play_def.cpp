@@ -9,21 +9,19 @@ void Ai::normalPlayDef()
     Common::debug().draw(Common::Triangle{ourgoal_p1, m_world_state.ball.position, ourgoal_p2},
                          Common::Color::blue().transparent(), true);
 
-    manageAttRoles();
-
-    if (m_own_robot[m_mid1].state().position.y < m_own_robot[m_mid2].state().position.y)
-    {
-        std::swap(m_mid1, m_mid2);
-    }
-
-    markManager();
+    m_assignments.clear();
+    createGkAssignment();
+    createDefAssignments();
+    createMidAssignments();
+    createAttackAssignment();
+    assignRoles();
 
     for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
     {
         int opp = i->second;
         int own = *i->first;
 
-        if (m_one_touch_detector[own].IsArriving())
+        if (m_one_touch_detector[own].isArriving())
         {
             waitForPass(own, false);
         }
@@ -36,9 +34,9 @@ void Ai::normalPlayDef()
 
                 m_own_robot[own].face(oppGoal());
 
-                if (own == m_dmf)
+                if (own == m_mid5)
                 {
-                    navigate(m_dmf, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 1800),
+                    navigate(m_mid5, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 1800),
                              VelocityProfile::mamooli());
                 }
                 else if (own == m_mid1)
@@ -91,7 +89,7 @@ void Ai::normalPlayDef()
 
     // chip the ball out if in a dangerous position
 #if 1
-    if (attackFuckingAngle() && kicker_opp != -1)
+    if (kicker_opp != -1)
     {
         shootAngle = m_world_state.ball.position.angleWith(ownGoal());
         shoot_pow  = 1;
@@ -99,6 +97,7 @@ void Ai::normalPlayDef()
     }
 #endif
 
+#if 0
     if (kicker_opp != -1)
     {
         Common::logDebug("in m_def we trust");
@@ -107,6 +106,7 @@ void Ai::normalPlayDef()
         shoot_pow  = 1;
         chip_pow   = 0;
     }
+#endif
 
     attacker(m_attack, shootAngle, shoot_pow, chip_pow, 0, 1);
     // circleBall(m_attack, 90, 80, 0);

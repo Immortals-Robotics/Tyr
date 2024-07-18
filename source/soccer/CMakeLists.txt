@@ -1,5 +1,7 @@
 project(${CMAKE_PROJECT_NAME}-soccer)
 
+find_package(LEMON CONFIG REQUIRED)
+
 set(HEADER_FILES
         pch.h
         ai.h
@@ -26,6 +28,19 @@ set(SOURCE_FILES
         ai.cpp
         ai_process.cpp
         internal_process_data.cpp
+
+        assignment/assignment.cpp
+
+        assignment/cost_attack.cpp
+        assignment/cost_gk.cpp
+        assignment/cost_mark.cpp
+        assignment/cost_static.cpp
+
+        assignment/create_attack.cpp
+        assignment/create_defs.cpp
+        assignment/create_gk.cpp
+        assignment/create_mids.cpp
+        assignment/create_static.cpp
 
         dss/dss.cpp
         dss/parabolic.cpp
@@ -93,7 +108,8 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FIL
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
         immortals::common
-        ${CMAKE_PROJECT_NAME}-sender)
+        ${CMAKE_PROJECT_NAME}-sender
+        unofficial::lemon::lemon)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})
 

@@ -49,9 +49,11 @@ void Ai::receivePass(const int t_robot_num, Common::Vec2 t_static_pos, const boo
     distCoeff       = std::max(0.8f, distCoeff);
     distCoeff       = std::min(1.2f, distCoeff);
 
-    if ((m_one_touch_detector[t_robot_num].IsArriving(angleTol, maxBallAngle)) &&
+    if ((m_one_touch_detector[t_robot_num].isArriving(angleTol, maxBallAngle)) &&
         (m_one_touch_type[t_robot_num] != OneTouchType::Allaf))
     {
+        Common::logDebug("robot {} one touch detected", t_robot_num);
+
         m_one_touch_type_used[t_robot_num] = true;
         if (m_one_touch_type[t_robot_num] == OneTouchType::OneTouch)
         {

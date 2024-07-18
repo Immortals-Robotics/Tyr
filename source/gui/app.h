@@ -8,6 +8,7 @@
 #include "menu/filter.h"
 #include "menu/log.h"
 #include "menu/plot.h"
+#include "menu/soccer.h"
 #include "menu/status_bar.h"
 
 namespace Tyr::Gui
@@ -30,6 +31,7 @@ private:
 
     std::unique_ptr<Renderer> m_renderer;
 
+    std::unique_ptr<SoccerMenu>     m_soccer_menu;
     std::unique_ptr<ConfigMenu>     m_config_menu;
     std::unique_ptr<ControllerMenu> m_controller_menu;
     std::unique_ptr<DemoMenu>       m_demo_menu;
@@ -61,19 +63,20 @@ private:
     std::unique_ptr<Common::NngClient> m_raw_client;
     std::unique_ptr<Common::NngClient> m_debug_client;
     std::unique_ptr<Common::NngClient> m_referee_client;
+    std::unique_ptr<Common::NngClient> m_soccer_client;
 
-    Common::WorldState    m_world_state;
-    Common::RawWorldState m_raw_world_state;
-
+    Common::WorldState     m_world_state;
+    Common::RawWorldState  m_raw_world_state;
     Common::Debug::Wrapper m_debug_wrapper;
-
     Common::Referee::State m_referee_state;
+    Common::Soccer::State  m_soccer_state;
 
     void resetLayout();
 
     void receiveWorldStates();
     void receiveDebug();
     void receiveRefereeState();
+    void receiveSoccerState();
 
     void visionRawEntry() const;
     void visionFilteredEntry() const;
@@ -97,6 +100,16 @@ private:
     const Common::Debug::Wrapper &debugWrapper() const
     {
         return live() ? m_debug_wrapper : m_demo_menu->debugWrapper();
+    }
+
+    const Common::Referee::State &refereeState() const
+    {
+        return live() ? m_referee_state : m_demo_menu->refereeState();
+    }
+
+    const Common::Soccer::State &soccerState() const
+    {
+        return live() ? m_soccer_state : m_demo_menu->soccerState();
     }
 };
 } // namespace Tyr::Gui

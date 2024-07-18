@@ -5,23 +5,19 @@ namespace Tyr::Soccer
 class OneTouchDetector
 {
 public:
-    int                hys;
-    Robot             *rState;
-    Common::BallState *ball;
-    int               *side;
+    int                hys    = 0;
+    Robot             *rState = nullptr;
+    Common::BallState *ball   = nullptr;
+    int               *side   = nullptr;
 
-    float BAR;
+    float BAR = 89.0f;
 
-    OneTouchDetector()
+    bool isArriving(const float angleTol = 40, const float passAngleLimit = 80)
     {
-        hys = 0;
-        BAR = 89.0;
+        return isArriving(Common::Vec2(-(*side) * Common::field().width, 0), angleTol, passAngleLimit);
     }
-    bool IsArriving(const float angleTol = 40, const float passAngleLimit = 80)
-    {
-        return IsArriving(Common::Vec2(-(*side) * Common::field().width, 0), angleTol, passAngleLimit);
-    }
-    bool IsArriving(const Common::Vec2 &target, const float angleTol, const float passAngleLimit)
+
+    bool isArriving(const Common::Vec2 &target, const float angleTol, const float passAngleLimit)
     {
         const float         ballDistBeforeStop = (ball->velocity.lengthSquared()) / 500.0f;
         const Common::Angle angleWithTarget    = rState->state().position.angleWith(target);

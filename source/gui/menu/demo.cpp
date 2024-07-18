@@ -6,13 +6,15 @@ DemoMenu::DemoMenu()
     m_debug_storage.open(Common::config().network.debug_db);
     m_world_filtered_storage.open(Common::config().network.world_state_db);
     m_referee_storage.open(Common::config().network.referee_db);
+    m_soccer_storage.open(Common::config().network.soccer_db);
 }
 
 DemoMenu::~DemoMenu()
 {
     m_debug_storage.close();
-    m_referee_storage.close();
     m_world_filtered_storage.close();
+    m_referee_storage.close();
+    m_soccer_storage.close();
 }
 
 void DemoMenu::draw()
@@ -159,14 +161,17 @@ void DemoMenu::update()
     Protos::Immortals::WorldState     pb_world_state;
     Protos::Immortals::Debug::Wrapper pb_debug;
     Protos::Immortals::Referee::State pb_referee;
+    Protos::Immortals::Soccer::State  pb_soccer;
 
     m_world_filtered_storage.get(playback_point.microseconds(), &pb_world_state);
     m_debug_storage.get(playback_point.microseconds(), &pb_debug);
     m_referee_storage.get(playback_point.microseconds(), &pb_referee);
+    m_soccer_storage.get(playback_point.microseconds(), &pb_soccer);
 
-    m_world_state = static_cast<Common::WorldState>(pb_world_state);
-    m_debug       = static_cast<Common::Debug::Wrapper>(pb_debug);
-    m_referee     = static_cast<Common::Referee::State>(pb_referee);
+    m_world_state   = static_cast<Common::WorldState>(pb_world_state);
+    m_debug         = static_cast<Common::Debug::Wrapper>(pb_debug);
+    m_referee_state = static_cast<Common::Referee::State>(pb_referee);
+    m_soccer_state  = static_cast<Common::Soccer::State>(pb_soccer);
 }
 
 void DemoMenu::analyzeDatabase()

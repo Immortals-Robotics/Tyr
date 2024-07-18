@@ -100,6 +100,19 @@ void Ai::strategy()
         return;
     }
 
+    m_is_defending = false;
+
+    m_assignments.clear();
+    createGkAssignment();
+    createDefAssignments();
+    createMidAssignments();
+    createAttackAssignment();
+
+    assignRoles();
+
+    gkHi(m_gk);
+    defHi(m_def1, m_def2, nullptr);
+
     const Strategy &strategy = m_playbook.strategies[curr_str_id];
     Common::logInfo("STRATEGY: {}", strategy.name);
 
@@ -134,7 +147,7 @@ void Ai::strategy()
                 continue;
             }
 
-            if ((strategy.roles[i].path[step[i]].type == Waypoint::Type::Time) || (*ids[i] == m_attack))
+            if ((strategy.roles[i].path[step[i]].type == Waypoint::Type::Time) || (*m_strategy_ids[i] == m_attack))
             {
                 if (m_timer.time().seconds() - lastAdv[i] > strategy.roles[i].path[step[i]].time * 0.1f)
                 {
@@ -146,7 +159,7 @@ void Ai::strategy()
             else
             {
                 if ((strategy.roles[i].path[step[i]].position * sign_modifier)
-                        .distanceTo(m_own_robot[*ids[i]].state().position) < strategy.roles[i].path[step[i]].tolerance)
+                        .distanceTo(m_own_robot[*m_strategy_ids[i]].state().position) < strategy.roles[i].path[step[i]].tolerance)
                 {
                     step[i]    = std::min(static_cast<int>(strategy.roles[i].path.size()) - 1, step[i] + 1);
                     lastAdv[i] = m_timer.time().seconds();
@@ -157,25 +170,19 @@ void Ai::strategy()
     }
 
     bool new_receivers_reached = true;
-    defHi(m_def, m_rw, m_lw, nullptr);
+
     for (int i = 0; i < strategy.roles.size(); i++)
     {
-        // if ((*ids[i]==m_gk)||(*ids[i]==m_def)) {
-        //	continue;
-        // }
+        if (*m_strategy_ids[i] == m_gk || *m_strategy_ids[i] == m_def1 || *m_strategy_ids[i] == m_def2)
+            continue;
 
         if (strategy.roles[i].path.size() == 0)
         {
-            if (*ids[i] == m_gk)
-                gkHi(m_gk);
-            else if (*ids[i] == m_def && *ids[i] == m_lw && *ids[i] == m_rw) // No need to halt these guys
-                continue;
-            else
-                halt(*ids[i]);
+            halt(*m_strategy_ids[i]);
             continue;
         }
 
-        else if (*ids[i] == m_attack)
+        if (*m_strategy_ids[i] == m_attack)
         {
             int shoot = 0;
             int chip  = 0;
@@ -196,73 +203,72 @@ void Ai::strategy()
                 Common::Angle passAngle =
                     (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
                 float tmp_mult = 1; // TODO #11 remove this multiplier and fix that strategy maker
-                circleBall(*ids[i], passAngle, shoot * tmp_mult, chip);
+                circleBall(*m_strategy_ids[i], passAngle, shoot * tmp_mult, chip);
             }
             else if (step[i] == strategy.roles[i].path.size() - 2)
             {
                 Common::Angle passAngle =
                     (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
-                circleBall(*ids[i], passAngle, 0, 0, 140.0f);
+                circleBall(*m_strategy_ids[i], passAngle, 0, 0, 140.0f);
             }
             else
             {
                 Common::Angle passAngle =
                     (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
-                circleBall(*ids[i], passAngle, 0, 0);
+                circleBall(*m_strategy_ids[i], passAngle, 0, 0);
             }
         }
-
         else
         {
             const VelocityProfile profile = strategy.roles[i].path[step[i]].velocity_profile;
 
             if (step[i] != strategy.roles[i].path.size() - 1)
             {
-                m_own_robot[*ids[i]].face(oppGoal());
-                navigate(*ids[i], strategy.roles[i].path[step[i]].position * sign_modifier, profile,
+                m_own_robot[*m_strategy_ids[i]].face(oppGoal());
+                navigate(*m_strategy_ids[i], strategy.roles[i].path[step[i]].position * sign_modifier, profile,
                          NavigationFlagsForceBallObstacle);
             }
             else
             {
-                receivePass(*ids[i], strategy.roles[i].path[step[i]].position * sign_modifier);
+                receivePass(*m_strategy_ids[i], strategy.roles[i].path[step[i]].position * sign_modifier);
             }
         }
 
         switch (strategy.roles[i].afterlife)
         {
         case Role::Afterlife::Gool:
-            m_one_touch_type[*ids[i]] = OneTouchType::Gool;
+            m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::Gool;
             break;
         case Role::Afterlife::OneTouch:
-            m_one_touch_type[*ids[i]] = OneTouchType::OneTouch;
+            m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::OneTouch;
             if (strategy.roles[i].path.size() == 0)
-                m_allaf_pos[*ids[i]] = Common::Vec2();
+                m_allaf_pos[*m_strategy_ids[i]] = Common::Vec2();
             else
-                m_allaf_pos[*ids[i]] = strategy.roles[i].path.back().position * sign_modifier;
+                m_allaf_pos[*m_strategy_ids[i]] = strategy.roles[i].path.back().position * sign_modifier;
 
             if (step[i] != strategy.roles[i].path.size() - 1)
                 // if (i == m_dmf && remainingDis > 150)
                 new_receivers_reached = false;
             break;
         case Role::Afterlife::Shirje:
-            m_one_touch_type[*ids[i]] = OneTouchType::Shirje;
+            m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::Shirje;
             break;
         case Role::Afterlife::Allaf:
-            m_one_touch_type[*ids[i]] = OneTouchType::Allaf;
-            if (*ids[i] == m_attack)
+            m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::Allaf;
+            if (*m_strategy_ids[i] == m_attack)
             {
-                m_allaf_pos[*ids[i]] = m_world_state.ball.position;
+                m_allaf_pos[*m_strategy_ids[i]] = m_world_state.ball.position;
             }
             else
             {
                 if (strategy.roles[i].path.size() == 0)
-                    m_allaf_pos[*ids[i]] = Common::Vec2();
+                    m_allaf_pos[*m_strategy_ids[i]] = Common::Vec2();
                 else
-                    m_allaf_pos[*ids[i]] = strategy.roles[i].path.back().position * sign_modifier;
+                    m_allaf_pos[*m_strategy_ids[i]] = strategy.roles[i].path.back().position * sign_modifier;
             }
             break;
         default:
-            m_one_touch_type[*ids[i]] = OneTouchType::OneTouch;
+            m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::OneTouch;
             break;
         }
     }
