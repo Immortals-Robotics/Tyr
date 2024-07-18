@@ -89,7 +89,7 @@ void Ai::normalPlayDef()
 
     // chip the ball out if in a dangerous position
 #if 1
-    if (attackFuckingAngle() && kicker_opp != -1)
+    if (kicker_opp != -1)
     {
         shootAngle = m_world_state.ball.position.angleWith(ownGoal());
         shoot_pow  = 1;
@@ -97,6 +97,7 @@ void Ai::normalPlayDef()
     }
 #endif
 
+#if 0
     if (kicker_opp != -1)
     {
         Common::logDebug("in m_def we trust");
@@ -105,6 +106,7 @@ void Ai::normalPlayDef()
         shoot_pow  = 1;
         chip_pow   = 0;
     }
+#endif
 
     attacker(m_attack, shootAngle, shoot_pow, chip_pow, 0, 1);
     // circleBall(m_attack, 90, 80, 0);
