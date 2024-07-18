@@ -23,18 +23,6 @@ void Ai::theirPlaceBall()
                      ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
                  VelocityProfile::aroom());
 
-        m_own_robot[m_def2].face(m_world_state.ball.position);
-        navigate(m_def2,
-                 Common::Vec2(0, -100) + m_world_state.ball.position.pointOnConnectingLine(
-                                             ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
-                 VelocityProfile::aroom());
-
-        m_own_robot[m_mid3].face(m_world_state.ball.position);
-        navigate(m_mid3,
-                 Common::Vec2(0, 100) + m_world_state.ball.position.pointOnConnectingLine(
-                                            ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
-                 VelocityProfile::aroom());
-
         m_own_robot[m_mid2].face(m_world_state.ball.position);
         navigate(m_mid2,
                  m_world_state.ball.position.circleAroundPoint(
