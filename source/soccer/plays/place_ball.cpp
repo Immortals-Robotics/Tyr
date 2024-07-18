@@ -6,7 +6,9 @@ namespace Tyr::Soccer
 {
 void Ai::ourPlaceBall()
 {
-    m_is_defending = false;
+    // TODO: fix this
+#if 0
+     m_is_defending = false;
 
     m_assignments.clear();
     createGkAssignment();
@@ -14,6 +16,7 @@ void Ai::ourPlaceBall()
     createMidAssignments();
     createAttackAssignment();
     assignRoles();
+#endif
 
     gkHi(m_gk);
     defHi(m_def1, m_def2, nullptr);
@@ -193,7 +196,7 @@ void Ai::ourPlaceBall()
         if (std::fabs((m_own_robot[m_attack].target.angle - move_angle).deg()) > 90)
             std::swap(move_angle, temp_opp_ang);
         m_own_robot[m_attack].target.angle = move_angle;
-        m_own_robot[m_mid5].target.angle    = temp_opp_ang;
+        m_own_robot[m_mid5].target.angle   = temp_opp_ang;
 
         navigate(m_attack, m_world_state.ball.position.circleAroundPoint(temp_opp_ang, 250), VelocityProfile::aroom(),
                  NavigationFlagsForceBallSmallObstacle);
@@ -223,7 +226,7 @@ void Ai::ourPlaceBall()
             std::swap(move_angle, temp_opp_ang);
 
         m_own_robot[m_attack].target.angle = move_angle;
-        m_own_robot[m_mid5].target.angle    = temp_opp_ang;
+        m_own_robot[m_mid5].target.angle   = temp_opp_ang;
         navigate(m_attack, t_pos.circleAroundPoint(temp_opp_ang, 75), VelocityProfile::sooski(),
                  NavigationFlagsForceNoObstacles);
 
@@ -255,7 +258,7 @@ void Ai::ourPlaceBall()
     else if (m_func_state == 5)
     {
         m_own_robot[m_attack].target.angle = t_ang;
-        m_own_robot[m_mid5].target.angle    = t_opp_ang;
+        m_own_robot[m_mid5].target.angle   = t_opp_ang;
 
         navigate(m_attack, m_ref_state.designated_position.circleAroundPoint(t_opp_ang, 75), VelocityProfile::sooski(),
                  NavigationFlagsForceNoObstacles);
@@ -288,7 +291,7 @@ void Ai::ourPlaceBall()
     else if (m_func_state == 6)
     {
         m_own_robot[m_attack].target.angle = t_ang;
-        m_own_robot[m_mid5].target.angle    = t_opp_ang;
+        m_own_robot[m_mid5].target.angle   = t_opp_ang;
         Common::Vec2 target1               = m_ref_state.designated_position.circleAroundPoint(t_opp_ang, 550);
 #if 0
         if (isOut(target1))
