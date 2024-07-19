@@ -51,6 +51,26 @@ one_touch_beta = 0.40000000000000002
 one_touch_gamma = 0.14000000000000001
 one_touch_shoot_k = 4000.0
 
+    [soccer.velocity_profile.aroom]
+    acceleration = 2160.0
+    deceleration = 2700.0
+    speed = 900.0
+
+    [soccer.velocity_profile.kharaki]
+    acceleration = 3910.0
+    deceleration = 5860.0
+    speed = 3800.0
+
+    [soccer.velocity_profile.mamooli]
+    acceleration = 3100.0
+    deceleration = 4850.0
+    speed = 3800.0
+
+    [soccer.velocity_profile.sooski]
+    acceleration = 1620.0
+    deceleration = 2700.0
+    speed = 450.0
+
     [[soccer.robot_physical_status]]
     has_chip_kick = true
     has_direct_kick = true

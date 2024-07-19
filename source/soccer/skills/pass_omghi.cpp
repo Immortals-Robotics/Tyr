@@ -39,7 +39,7 @@ void Ai::waitForOmghi(const int t_robot_num)
 
     Common::logDebug("sBAR:    {}", sBAR);
     VelocityProfile profile = VelocityProfile::kharaki();
-    profile.max_spd         = sBAR * 45.0f;
+    profile.speed         = sBAR * 45.0f;
 
     navigate(t_robot_num, target, profile);
 

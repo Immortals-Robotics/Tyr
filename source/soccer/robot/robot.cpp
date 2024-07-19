@@ -58,7 +58,7 @@ static float getCalibratedShootPow(float raw_shoot, const Common::Vec2 &coeffs)
 
 void Robot::shoot(const float pow)
 {
-    m_shoot = getCalibratedShootPow(1.5f * pow, shoot_coeffs[state().vision_id]);
+    m_shoot = getCalibratedShootPow(0.9f * pow, shoot_coeffs[state().vision_id]);
 }
 void Robot::chip(const float pow)
 {
@@ -87,10 +87,10 @@ Common::Vec2 Robot::computeMotion(const VelocityProfile &profile)
 
     Common::Vec2 diff = target.position - state().position;
 
-    Common::Vec2 tmp_max_speed = diff.abs().normalized() * profile.max_spd;
+    Common::Vec2 tmp_max_speed = diff.abs().normalized() * profile.speed;
 
-    const float acc = profile.max_acc / Common::config().vision.vision_frame_rate;
-    const float dec = profile.max_dec / Common::config().vision.vision_frame_rate;
+    const float acc = profile.acceleration / Common::config().vision.vision_frame_rate;
+    const float dec = profile.deceleration / Common::config().vision.vision_frame_rate;
 
     motion.x = pow(7.6f * dec * std::fabs(diff.x), 0.6f);
     motion.x *= Common::sign(diff.x);

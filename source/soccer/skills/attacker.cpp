@@ -79,7 +79,7 @@ Common::Vec2 Ai::predictBallForwardAI(const float t_time_ahead)
 float Ai::calculateRobotReachTime(const int t_robot_num, const Common::Vec2 t_dest, const VelocityProfile t_profile)
 {
     const VelocityProfile vel_profile(t_profile);
-    return m_own_robot[t_robot_num].state().position.distanceTo(t_dest) / (vel_profile.max_spd * 0.5);
+    return m_own_robot[t_robot_num].state().position.distanceTo(t_dest) / (vel_profile.speed * 0.5);
 }
 
 float Ai::calculateBallRobotReachTime(const int t_robot_num, const VelocityProfile t_profile)
