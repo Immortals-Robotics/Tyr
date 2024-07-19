@@ -24,6 +24,9 @@ void Ai::staticZoneScore(Zone &t_zone) const
         if (robot.seen_state == Common::SeenState::CompletelyOut)
             continue;
 
+        if (robot.vision_id != m_attack && robot.vision_id != m_def1 && robot.vision_id != m_def2)
+            continue;
+
         if (t_zone.rect.inside(robot.position))
             ++robots_inside;
     }
