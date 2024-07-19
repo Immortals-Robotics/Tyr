@@ -97,7 +97,11 @@ set(SOURCE_FILES
         skills/running_def.cpp
         skills/attacker.cpp
 
-        robot/robot.cpp)
+        robot/robot.cpp
+
+        zone/pos_attack.cpp
+        zone/pos_defence.cpp
+        zone/zone.cpp)
 
 add_library(${PROJECT_NAME}
         ${SOURCE_FILES} ${HEADER_FILES})

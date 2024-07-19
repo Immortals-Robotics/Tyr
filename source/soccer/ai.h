@@ -78,13 +78,35 @@ private:
 
     BallTrajectory m_ball_trajectory;
 
+    // static pos for mids
+    struct Zone
+    {
+        static constexpr float kZoneWidth  = 2000.0f;
+        static constexpr float kZoneHeight = 3000.0f;
+
+        Common::Rect rect;
+
+        Common::Vec2 best_pos;
+        float        score;
+    };
+
+    std::vector<Zone> m_zones;
+    std::vector<const Zone*> m_sorted_zones;
+
+    std::unordered_map<int *, Common::Vec2> m_mids_static_pos;
+
+    void staticZoneScore(Zone &t_zone) const;
+
+    float staticPosScoreDefence(Common::Vec2 t_pos) const;
+    float staticPosScoreAttack(Common::Vec2 t_pos) const;
+
     // boz ha
 
     void calcIsDefending();
 
     void                 markManager();
     std::map<int *, int> m_mark_map;
-    std::vector<int*> m_prioritized_mids;
+    std::vector<int *>   m_prioritized_mids;
 
     Common::Vec2  m_predicted_ball;
     bool          m_circle_reached_behind_ball = false;
@@ -134,6 +156,8 @@ private:
     inline Common::Vec2        oppGoalPostTop() const;
     inline Common::Vec2        oppGoalPostBottom() const;
     inline Common::LineSegment oppGoalLine() const;
+    inline Common::Rect        ownPenaltyArea() const;
+    inline Common::Rect        oppPenaltyArea() const;
     inline bool                isOut(Common::Vec2 t_point, float t_margin = 0.0f) const;
 
     // Navigation
@@ -267,7 +291,8 @@ private:
     void createMidAssignments();
 
     // this uses the last target position as the target point
-    void createStaticAssignment(int *t_role, Assignment::Priority t_priority, bool t_shoot = false, bool t_chip = false);
+    void createStaticAssignment(int *t_role, Assignment::Priority t_priority, bool t_shoot = false,
+                                bool t_chip = false);
 
     std::vector<Assignment> m_assignments;
 

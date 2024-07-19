@@ -42,6 +42,30 @@ inline Common::LineSegment Ai::oppGoalLine() const
     return {oppGoalPostBottom(), oppGoalPostTop()};
 }
 
+inline Common::Rect Ai::ownPenaltyArea() const
+{
+    const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
+
+    const Common::Vec2 start{m_side * Common::field().width, -penalty_area_half_width};
+
+    const float w = -m_side * Common::field().penalty_area_depth;
+    const float h = Common::field().penalty_area_width;
+
+    return {start, w, h};
+}
+
+inline Common::Rect Ai::oppPenaltyArea() const
+{
+    const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
+
+    const Common::Vec2 start{-m_side * Common::field().width, -penalty_area_half_width};
+
+    const float w = m_side * Common::field().penalty_area_depth;
+    const float h = Common::field().penalty_area_width;
+
+    return {start, w, h};
+}
+
 inline bool Ai::isOut(const Common::Vec2 t_point, const float t_margin) const
 {
     return std::fabs(t_point.x) > Common::field().width + t_margin ||
