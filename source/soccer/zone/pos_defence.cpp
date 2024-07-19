@@ -4,10 +4,6 @@ namespace Tyr::Soccer
 {
 float Ai::staticPosScoreDefence(const Common::Vec2 t_pos) const
 {
-    if (t_pos.x * m_side < 1000 &&
-        std::fabs(t_pos.x - m_world_state.ball.position.x) > 3000)
-        return -1;
-
     float oppDisToGoal = t_pos.distanceTo(ownGoal());
 
     Common::Angle t1Angel = t_pos.angleWith(ownGoalPostBottom());
