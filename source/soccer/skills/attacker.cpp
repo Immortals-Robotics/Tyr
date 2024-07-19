@@ -2,9 +2,8 @@
 
 namespace Tyr::Soccer
 {
-int          lockAngleCounter = 0;
-int          elendil          = 0;
-Common::Vec2 Pelendil;
+int lockAngleCounter = 0;
+int elendil          = 0;
 
 Common::Vec2 Ai::predictBallForwardAINew(const float t_time_ahead)
 {
@@ -103,9 +102,13 @@ float Ai::calculateBallRobotReachTime(const int t_robot_num, const VelocityProfi
     return predTFilt.current();
 }
 
-void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, float t_kick, const int t_chip, const bool t_kiss,
-                  const bool t_dribbler)
+void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const float t_kick, const int t_chip,
+                  const bool t_kiss, const bool t_dribbler)
 {
+    Common::debug().draw(
+        Common::LineSegment{m_world_state.ball.position, m_world_state.ball.position + t_angle.toUnitVec() * 1000.0f},
+        Common::Color::blue());
+
     // t_kick=100;
     if (m_ref_state.restart() && (t_chip > 0))
     {
@@ -187,7 +190,7 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, float t_ki
         else
         {
             r     = 400.0f;
-            tetta = 32.0f;
+            tetta = 45.0f;
             // if ( !passedBall )
             //	r *= 1.5;
         }
@@ -204,8 +207,10 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, float t_ki
     else
         m_own_robot[t_robot_num].target.angle = t_angle - Common::Angle::fromDeg(180.0f);
 
-    Common::Angle hehe = m_predicted_ball.angleWith(m_own_robot[t_robot_num].state().position);
-    hehe               = t_angle - hehe;
+    // move the ball forward a bit to compensate for the over predict we do on our robots
+    const Common::Vec2 ball_moved_towards_target = m_predicted_ball - t_angle.toUnitVec() * 100.0f;
+    Common::Angle      hehe = ball_moved_towards_target.angleWith(m_own_robot[t_robot_num].state().position);
+    hehe                    = t_angle - hehe;
 
     if ((std::fabs(hehe.deg()) < tetta)) //|| ( m_circle_reached_behind_ball ) )
     {
@@ -219,8 +224,11 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, float t_ki
                 Common::Vec2 targetPoint;
                 if (!m_ref_state.restart())
                 {
-                    targetPoint = m_predicted_ball.circleAroundPoint(
-                        t_angle, std::min((r / 1.6f), std::fabs(hehe.deg()) * 320.0f / (tetta * 1.2f)));
+                    float normalized_hehe = std::fabs(hehe.deg()) / tetta;
+                    normalized_hehe       = std::pow(normalized_hehe, 0.3f);
+                    targetPoint = m_predicted_ball.circleAroundPoint(t_angle, std::min(r, normalized_hehe * 265.0f));
+
+                    targetPoint -= t_angle.toUnitVec() * (1.0f - std::pow(normalized_hehe, 0.5f)) * 400.0f;
                 }
                 else
                 {
@@ -228,34 +236,36 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, float t_ki
                         t_angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / (tetta)));
                 }
 
+                Common::debug().draw(targetPoint, Common::Color::maroon());
+
                 Common::logDebug("elendil: {}", elendil);
                 Common::Angle hehe2 = m_predicted_ball.angleWith(m_own_robot[t_robot_num].state().position);
                 hehe2               = t_angle - hehe2;
-                bool el             = ((hehe2.deg() < 5) &&
+                Common::logDebug("hehe2: {}", hehe2.deg());
+
+                const bool el_in             = ((std::abs(hehe2.deg()) < 5.0f) &&
                            (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) < 100));
-                if (el || (elendil > 0))
+                const bool el_out = ((std::abs(hehe2.deg()) > 10.0f) &&
+                               (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) > 200));
+
+                if (el_in)
+                    elendil = 30;
+                if (el_out)
+                    elendil = 0;
+
+                if (elendil > 0)
                 {
-
-                    targetPoint.x -= 150.0 * t_angle.cos();
-                    targetPoint.y -= 150.0 * t_angle.sin();
-                    targetPoint.x /= 1;
-                    targetPoint.y /= 1;
-
-                    Pelendil = targetPoint;
-
                     elendil--;
-                    if (el)
-                    {
-                        elendil = 30;
-                    }
-                    navigate(t_robot_num, Pelendil, VelocityProfile::kharaki());
+                    // extend towards the shoot target
+                    //targetPoint -= t_angle.toUnitVec() * 200.0f;
                 }
                 else
                 {
-                    targetPoint = (targetPoint * 3.0f) - m_own_robot[t_robot_num].state().position;
-                    targetPoint /= 2.0f;
-                    navigate(t_robot_num, targetPoint, VelocityProfile::kharaki());
+                    // extend towards the point behind the ball
+                    // targetPoint += (targetPoint - m_own_robot[t_robot_num].state().position) / 2.0f;
                 }
+
+                navigate(t_robot_num, targetPoint, VelocityProfile::kharaki());
             }
             else
                 navigate(
