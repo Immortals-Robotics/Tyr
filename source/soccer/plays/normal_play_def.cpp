@@ -56,7 +56,7 @@ void Ai::normalPlayDef()
     }
     else if (!goalBlocked(m_world_state.ball.position, 3000, 130))
     {
-        shoot_pow = 50 - m_own_robot[m_attack].state().velocity.length() * 0.005f;
+        shoot_pow = 6500.f;
         chip_pow  = 0;
     }
     else

@@ -45,7 +45,7 @@ void Ai::ourPlaceBall()
 
     if (m_func_state == -2)
     {
-        circleBall(m_attack, outFieldAng, 24, 0);
+        circleBall(m_attack, outFieldAng, 2000.0f, 0);
 
         // TODO: transition when m_dmf fits behind the ball
         if (last_state_ball_pos.distanceTo(m_world_state.ball.position) > 400)
@@ -155,7 +155,7 @@ void Ai::ourPlaceBall()
     }
     else if (m_func_state == 1)
     {
-        circleBall(m_attack, move_angle, 18, 0);
+        circleBall(m_attack, move_angle, 1500.0f, 0);
         waitForPass(m_mid5, false, &m_own_robot[m_attack].state().position);
 
         if (last_state_ball_pos.distanceTo(m_world_state.ball.position) > 400)

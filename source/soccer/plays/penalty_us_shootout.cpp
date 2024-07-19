@@ -17,7 +17,7 @@ void Ai::penaltyUsShootout()
 
     if (!m_ref_state.canKickBall())
     {
-        // TODO: get behind the ball
+        circleBall(m_attack, oppGoal().angleWith(m_world_state.ball.position), 0, 0);
         Common::logInfo("step0 - Waiting for permission");
     }
     else if (m_world_state.ball.position.distanceTo(oppGoal()) > 3000)
@@ -27,7 +27,7 @@ void Ai::penaltyUsShootout()
     }
     else
     {
-        circleBall(m_attack, oppGoal().angleWith(m_world_state.ball.position), 60, 0);
+        circleBall(m_attack, oppGoal().angleWith(m_world_state.ball.position), 6000.0f, 0);
         Common::logInfo("step2 - Kick in the goal!!!!");
     }
 }
