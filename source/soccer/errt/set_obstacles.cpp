@@ -18,7 +18,7 @@ static float calculateRobotRadius(const Common::RobotState &state)
 void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
 {
     const bool ourPenalty = t_robot_num != m_gk && !m_ref_state.ourBallPlacement();
-    const bool oppPenalty = !m_ref_state.ourBallPlacement();
+    const bool oppPenalty = !m_ref_state.ballPlacement();
 
     const bool oppPenaltyBig = m_ref_state.freeKick() || m_ref_state.stop();
 
@@ -28,6 +28,7 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
 
     if (t_flags & NavigationFlagsForceNoObstacles)
     {
+        Common::logWarning("Robot {} is navigating with no obstacles", t_robot_num);
         return;
     }
 
