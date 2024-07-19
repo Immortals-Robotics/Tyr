@@ -19,7 +19,7 @@ bool Referee::isConnected() const
 
 void Referee::process()
 {
-    Common::Referee::State old_state = m_state;
+    const Common::Referee::State old_state = m_state;
 
     m_state = static_cast<Common::Referee::State>(m_ssl_ref);
 
@@ -40,7 +40,7 @@ void Referee::process()
 
     transition();
 
-    if (old_state.state != m_state.state)
+    if (old_state.state != m_state.state || old_state.ready != m_state.ready)
     {
         m_state.time         = Common::TimePoint::now();
         m_state.last_command = command;
@@ -79,7 +79,8 @@ bool Referee::isKicked()
 void Referee::transition()
 {
     // TODO: this 5s should be based on restart type and division A/B
-    const Common::Duration timeout = Common::Duration::fromSeconds(5.0f);
+    // ideally get this from GC's time left
+    const Common::Duration timeout = Common::Duration::fromSeconds(10.0f);
     const Common::Duration elapsed = Common::TimePoint::now() - m_state.time;
 
     const bool ball_kicked = isKicked() || elapsed > timeout;
