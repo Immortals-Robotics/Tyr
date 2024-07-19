@@ -16,8 +16,8 @@ ip = '127.0.0.1'
 port = 20011
 
 [network.referee]
-ip = '224.5.23.19'
-port = 10003
+ip = '224.5.23.23'
+port = 10004
 
 [network.sender]
 ip = '224.5.92.5'
@@ -32,24 +32,26 @@ ip = '224.5.23.2'
 port = 10099
 
 [network.vision]
-ip = '224.5.23.2'
-port = 10006
+ip = '224.5.23.22'
+port = 10020
 
 [network.yellow_robot_simulation]
 ip = '127.0.0.1'
 port = 10302
 
 [soccer]
+def_ball_distance_coef = 0.69999999999999996
+def_max_extension_area = 1100.0
 def_prediction_time = 0.5
 def_tight_start_angle = 30.0
 gk_tight_start_angle = 15.0
-def_max_extension_area = 1100.0
-def_ball_distance_coef = 0.7
 mark_distance = 200.0
 mark_in_stop = true
 one_touch_beta = 0.40000000000000002
 one_touch_gamma = 0.14000000000000001
 one_touch_shoot_k = 4000.0
+kick_tune_coef = 1.0
+chip_tune_coef = 2.5
 
     [soccer.velocity_profile.aroom]
     acceleration = 2160.0
@@ -196,6 +198,6 @@ max_ball_frame_not_seen = 30
 max_ball_hist = 10
 max_robot_frame_not_seen = 120
 merge_distance = 70.0
-use_camera = [ false, true, false, false, false, false, false, false ]
+use_camera = [ true, true, true, true, false, false, false, false ]
 use_new_ball_kalman = true
 vision_frame_rate = 70.0

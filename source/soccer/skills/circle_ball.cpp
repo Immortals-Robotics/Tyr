@@ -10,7 +10,7 @@ enum ball_circling_state
     kKick,
 };
 
-void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, const int t_shoot_pow,
+void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, float t_shoot_pow,
                     const int t_chip_pow, const float t_near_dis_override)
 {
     // t_tagret_angle -= 5;
@@ -114,7 +114,7 @@ void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, c
             hys_bank[0] = 0;
         }
 
-        if ((hys_bank[0] > near_to_kick_hys) && ((t_shoot_pow > 0) || (t_chip_pow > 0)))
+        if ((hys_bank[0] > near_to_kick_hys) && ((t_shoot_pow > 0.f) || (t_chip_pow > 0)))
         {
             state = kKick;
         }
@@ -129,7 +129,7 @@ void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, c
         }
         m_own_robot[t_robot_num].target.angle = t_tagret_angle + Common::Angle::fromDeg(180.0f);
         navigate(t_robot_num, m_world_state.ball.position, VelocityProfile::aroom());
-        if (t_shoot_pow > 0)
+        if (t_shoot_pow > 0.f)
             m_own_robot[t_robot_num].shoot(t_shoot_pow);
         if (t_chip_pow > 0)
             m_own_robot[t_robot_num].chip(t_chip_pow);

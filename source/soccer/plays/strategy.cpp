@@ -202,8 +202,7 @@ void Ai::strategy()
             {
                 Common::Angle passAngle =
                     (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
-                float tmp_mult = 1; // TODO #11 remove this multiplier and fix that strategy maker
-                circleBall(*m_strategy_ids[i], passAngle, shoot * tmp_mult, chip);
+                circleBall(*m_strategy_ids[i], passAngle, shoot, chip);
             }
             else if (step[i] == strategy.roles[i].path.size() - 2)
             {
