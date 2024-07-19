@@ -40,13 +40,13 @@ void Ai::kickoffTheirOneWall()
     {
         m_own_robot[m_mid5].face(oppGoal());
         navigate(m_mid5, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
-                             ownGoal(), (std::fabs(m_world_state.opp_robot[indexN].position.x) + 14) * 1.5));
+                             ownGoal(), (std::fabs(m_world_state.opp_robot[indexN].position.x) + 140) * 2.5));
     }
     if (indexP != -1)
     {
         m_own_robot[m_mid1].face(oppGoal());
         navigate(m_mid1, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
-                             ownGoal(), (std::fabs(m_world_state.opp_robot[indexP].position.x) + 14) * 1.5));
+                             ownGoal(), (std::fabs(m_world_state.opp_robot[indexP].position.x) + 140) * 2.5));
     }
 
     int zone_idx = 0;
