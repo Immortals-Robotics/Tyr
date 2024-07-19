@@ -103,7 +103,7 @@ float Ai::calculateBallRobotReachTime(const int t_robot_num, const VelocityProfi
     return predTFilt.current();
 }
 
-void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, int t_kick, const int t_chip, const bool t_kiss,
+void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, float t_kick, const int t_chip, const bool t_kiss,
                   const bool t_dribbler)
 {
     // t_kick=100;
@@ -211,7 +211,7 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, int t_kick
     {
         Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::red(),
                              false);
-        if ((t_kick) || (t_chip))
+        if ((t_kick > 0.f) || (t_chip))
         {
             if (m_circle_reached_behind_ball)
             {
@@ -289,7 +289,7 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, int t_kick
                     1000.0f},
         Common::Color::black());
 
-    if ((t_kick > 0) || (t_chip > 0))
+    if ((t_kick > 0.f) || (t_chip > 0))
     {
         if (std::fabs((m_own_robot[t_robot_num].target.angle - m_own_robot[t_robot_num].state().angle).deg()) < 40)
             lockAngleCounter++;
@@ -301,9 +301,8 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, int t_kick
             // if ( t_chip )
             m_own_robot[t_robot_num].chip(t_chip);
             // else
-            t_kick          = std::min(80, t_kick);
-            float vel_delta = m_own_robot[t_robot_num].state().velocity.length() / 100.0f;
-            vel_delta       = std::min(40.0f, vel_delta);
+            float vel_delta = m_own_robot[t_robot_num].state().velocity.length(); // convert to m/s
+            vel_delta       = std::min(4000.0f, vel_delta);
             vel_delta       = t_kick - vel_delta;
             m_own_robot[t_robot_num].shoot(t_kick);
         }

@@ -25,7 +25,7 @@ void Simulator::queueCommand(const Command &command)
 
     if (command.shoot > 0)
     {
-        proto_command->set_kick_speed(command.shoot / 10.f);
+        proto_command->set_kick_speed(command.shoot / 1000.f);
         proto_command->set_kick_angle(0.0f);
     }
     else if (command.chip > 0)

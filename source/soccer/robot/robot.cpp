@@ -2,67 +2,13 @@
 
 namespace Tyr::Soccer
 {
-static Common::Vec2 shoot_coeffs[Common::Config::Common::kMaxRobots] = {
-    {1.00000f, 0.73206f}, //  0
-    {0.82018f, 1.11406f}, //  1
-    {1.26071f, 1.78897f}, //  2
-    {1.17022f, 0.48340f}, //  3
-    {2.00936f, 2.68694f}, //  4
-    {0.60648f, 1.36073f}, //  5
-    {1.01955f, 1.86147f}, //  6
-    {0.60648f, 1.36073f}, //  7
-    {1.0f, 0.0f},         //  8*
-    {1.0f, 0.0f},         //  9*
-    {1.0f, 0.0f},         // 10*
-    {1.0f, 0.0f},         // 11*
-    {1.0f, 0.0f},         // 12*
-    {1.0f, 0.0f},         // 13*
-    {1.0f, 0.0f},         // 14*
-    {1.0f, 0.0f},         // 15*
-};
-
-static Common::Vec2 chip_coeffs[Common::Config::Common::kMaxRobots] = {
-    {1.00000f, 2.32507f}, //  0
-    {0.77461f, 2.81861f}, //  1
-    {1.69062f, 1.54292f}, //  2
-    {0.90561f, 3.13007f}, //  3
-    {1.01367f, 1.74667f}, //  4
-    {1.01367f, 1.74667f}, //  5
-    {1.45657f, 1.18770f}, //  6
-    {1.01367f, 1.74667f}, //  7
-    {1.0f, 0.0f},         //  8*
-    {1.0f, 0.0f},         //  9*
-    {1.0f, 0.0f},         // 10*
-    {1.0f, 0.0f},         // 11*
-    {1.0f, 0.0f},         // 12*
-    {1.0f, 0.0f},         // 13*
-    {1.0f, 0.0f},         // 14*
-    {1.0f, 0.0f},         // 15*
-};
-
-static float getCalibratedShootPow(float raw_shoot, const Common::Vec2 &coeffs)
-{
-    if (raw_shoot <= 0)
-    {
-        return 0;
-    }
-
-    raw_shoot = std::clamp(raw_shoot, 0.0f, 150.0f);
-
-    float calib_shoot = coeffs.x * raw_shoot + coeffs.y;
-
-    calib_shoot = std::clamp(calib_shoot, 0.0f, 100.0f);
-
-    return calib_shoot;
-}
-
 void Robot::shoot(const float pow)
 {
-    m_shoot = getCalibratedShootPow(1.5f * pow, shoot_coeffs[state().vision_id]);
+    m_shoot = pow;
 }
 void Robot::chip(const float pow)
 {
-    m_chip = getCalibratedShootPow(2.5f * pow, chip_coeffs[state().vision_id]);
+    m_chip = pow;
 }
 
 void Robot::dribble(const float pow)

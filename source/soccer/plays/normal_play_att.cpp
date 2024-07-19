@@ -88,16 +88,17 @@ void Ai::normalPlayAtt()
             Common::Angle shootAngle;
             shootAngle = Common::Angle::fromDeg(180.0f) + openAngle.center;
 
-            float shoot_pow = 50 - m_own_robot[m_attack].state().velocity.length() * 0.005;
+            float shoot_pow = 6500.f; // 6.5m/s
 
+            // TODO: calibrate this
             if (m_own_robot[m_attack].state().position.distanceTo(m_world_state.ball.position) > 400)
             {
-                shoot_pow = 1;
+                shoot_pow = 1.f;
                 activeShootTimer.start();
             }
             else if (goalBlocked(m_world_state.ball.position, 200, 90))
             {
-                shoot_pow = 1;
+                shoot_pow = 1.f;
             }
 
             attacker(m_attack, shootAngle, shoot_pow, 0, 0, 0);

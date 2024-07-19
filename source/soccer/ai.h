@@ -188,13 +188,13 @@ private:
     void gkHi(int t_robot_num);
     void runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
     void defenceWall(int t_robot_num, bool t_kick_off = false);
-    void attacker(int t_robot_num, Common::Angle t_angle, int t_kick, int t_chip, bool t_kiss, bool t_dribbler);
+    void attacker(int t_robot_num, Common::Angle t_angle, float t_kick, int t_chip, bool t_kiss, bool t_dribbler);
     void waitForPass(int t_robot_num, bool t_chip = false, const Common::Vec2 *t_target = nullptr,
                      Common::Vec2 *t_stat_pos = nullptr);
     void waitForOmghi(int t_robot_num);
     void waitForGool(int t_robot_num);
     void receivePass(int t_robot_num, Common::Vec2 t_static_pos, bool t_chip = false);
-    void circleBall(int t_robot_num, Common::Angle t_tagret_angle, int t_shoot_pow, int t_chip_pow,
+    void circleBall(int t_robot_num, Common::Angle t_tagret_angle, float t_shoot_pow, int t_chip_pow,
                     float t_near_dis_override = -1.0f);
 
     bool m_gk_intercepting = false;
