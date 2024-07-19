@@ -37,7 +37,7 @@ void Ai::normalPlayDef()
         }
         else
         {
-            mark(own, opp, 500);
+            mark(own, opp, Common::config().soccer.mark_distance);
         }
     }
 

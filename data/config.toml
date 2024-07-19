@@ -45,6 +45,7 @@ def_tight_start_angle = 30.0
 gk_tight_start_angle = 15.0
 def_max_extension_area = 1100.0
 def_ball_distance_coef = 0.7
+mark_distance = 200.0
 mark_in_stop = true
 one_touch_beta = 0.40000000000000002
 one_touch_gamma = 0.14000000000000001
