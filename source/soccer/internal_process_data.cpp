@@ -30,10 +30,13 @@ void Ai::internalProcessData()
 
         m_sorted_zones.push_back(&zone);
 
-        Common::Color color = Common::Color::lerp(Common::Color::black(), Common::Color::blue(), zone.score);
-        color.a             = 0.9f;
+        if (!Common::almostEqual(zone.score, 0.0f))
+        {
+            Common::Color color = Common::Color::lerp(Common::Color::black(), Common::Color::blue(), zone.score);
+            color.a             = 0.5f;
 
-        Common::debug().draw(zone.rect, color, true);
+            Common::debug().draw(zone.rect, color, true);
+        }
     }
 
     std::sort(m_sorted_zones.begin(), m_sorted_zones.end(),
