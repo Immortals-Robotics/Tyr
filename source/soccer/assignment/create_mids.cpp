@@ -73,7 +73,11 @@ void Ai::createMidAssignments()
             const bool shoot = !m_is_defending;
             const bool chip  = !m_is_defending && role == &m_mid5;
 
-            createStaticAssignment(role, Assignment::Priority::Low, shoot, chip);
+            const bool important_dmf = role == &m_mid5 && (m_ref_state.ourBallPlacement() || m_ref_state.ourFreeKick());
+            const Assignment::Priority priority =
+                important_dmf ? Assignment::Priority::High : Assignment::Priority::Low;
+
+            createStaticAssignment(role, priority, shoot, chip);
         }
     }
 }

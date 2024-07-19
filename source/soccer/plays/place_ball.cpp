@@ -8,17 +8,12 @@ void Ai::ourPlaceBall()
 {
     calcIsDefending();
 
-    // TODO: fix this
-#if 0
-     m_is_defending = false;
-
     m_assignments.clear();
     createGkAssignment();
     createDefAssignments();
     createMidAssignments();
     createAttackAssignment();
     assignRoles();
-#endif
 
     gkHi(m_gk);
     defHi(m_def1, m_def2, nullptr);
@@ -367,4 +362,5 @@ void Ai::ourPlaceBall()
 
     Common::debug().draw(m_ref_state.designated_position, Common::Color::red(), 20.0f);
 }
+
 } // namespace Tyr::Soccer
