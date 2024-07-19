@@ -6,7 +6,8 @@ void Ai::createMidAssignments()
 {
     std::vector<std::pair<int, float>> crunchingOpps;
 
-    if (m_is_defending)
+    const bool state_needs_marks = m_ref_state.stop() || m_ref_state.running() || m_ref_state.theirFreeKick();
+    if (m_is_defending && state_needs_marks)
     {
         for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
         {
@@ -75,10 +76,5 @@ void Ai::createMidAssignments()
             createStaticAssignment(role, Assignment::Priority::Low, shoot, chip);
         }
     }
-
-    createStaticAssignment(&m_mid3, Assignment::Priority::None);
-    createStaticAssignment(&m_mid4, Assignment::Priority::None);
-    createStaticAssignment(&m_mid6, Assignment::Priority::None);
-    createStaticAssignment(&m_mid7, Assignment::Priority::None);
 }
 } // namespace Tyr::Soccer

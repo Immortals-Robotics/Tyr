@@ -11,12 +11,17 @@ void Ai::normalPlayAtt()
     Common::debug().draw(Common::Triangle{oppgoal_p1, m_world_state.ball.position, oppgoal_p2},
                          Common::Color::red().transparent(), true);
 
-    receivePass(m_mid5, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 2500));
+    int zone_idx = 0;
+    for (const auto &mid : m_prioritized_mids)
+    {
+        receivePass(*mid, m_sorted_zones[zone_idx]->best_pos);
+        ++zone_idx;
+    }
 
-    if (m_one_touch_type[m_attack] == OneTouchType::Allaf)
+    if (m_one_touch_type[m_attack] == OneTouchType::Allaf && m_allaf_pos.contains(&m_attack))
     {
         m_own_robot[m_attack].face(oppGoal());
-        navigate(m_attack, m_allaf_pos[m_attack], VelocityProfile::mamooli());
+        navigate(m_attack, m_allaf_pos[&m_attack], VelocityProfile::mamooli());
         if (m_timer.time().seconds() > 2.5)
         {
             m_one_touch_type[m_attack] = OneTouchType::OneTouch;
@@ -29,57 +34,44 @@ void Ai::normalPlayAtt()
     {
         OpenAngle openAngle = calculateOpenAngleToGoal(m_world_state.ball.position, m_attack);
 
-        bool mid1Reached = m_own_robot[m_mid1].state().velocity.length() < 500;
-        bool mid2Reached = m_own_robot[m_mid2].state().velocity.length() < 500;
-
-        bool mid1DisOk = m_own_robot[m_mid1].state().position.distanceTo(m_world_state.ball.position) > 2000;
-        bool mid2DisOk = m_own_robot[m_mid2].state().position.distanceTo(m_world_state.ball.position) > 2000;
-
-        bool mid1PassAngleOk = (m_own_robot[m_mid1].state().position - m_world_state.ball.position)
-                                   .normalized()
-                                   .dot((ownGoal() - m_world_state.ball.position).normalized()) < 0.75f;
-
-        bool mid2PassAngleOk = (m_own_robot[m_mid2].state().position - m_world_state.ball.position)
-                                   .normalized()
-                                   .dot((ownGoal() - m_world_state.ball.position).normalized()) < 0.75f;
-
-        Common::logDebug("pass angle ok m_mid1 : {}, m_mid2: {}", mid1PassAngleOk, mid2PassAngleOk);
-
-        bool mid1Seen = m_own_robot[m_mid1].state().seen_state != Common::SeenState::CompletelyOut;
-        bool mid2Seen = m_own_robot[m_mid2].state().seen_state != Common::SeenState::CompletelyOut;
-
-        bool mid1Suitable = mid1Seen && mid1Reached && mid1DisOk && mid1PassAngleOk;
-        bool mid2Suitable = mid2Seen && mid2Reached && mid2DisOk && mid2PassAngleOk;
-
-        if (mid1Suitable && mid2Suitable)
+        int *suitable_mid = nullptr;
+        for (const auto &mid : m_prioritized_mids)
         {
-            if (-m_side * m_own_robot[m_mid1].state().position.x > -m_side * m_own_robot[m_mid2].state().position.x)
-                mid2Suitable = false;
-            else
-                mid1Suitable = false;
+            const Robot &robot = m_own_robot[*mid];
+            // const bool reached = robot.state().velocity.length() < 500;
+            const bool reached = robot.state().position.distanceTo(robot.target.position) < 500;
+
+            const bool dis_ok = robot.state().position.distanceTo(m_world_state.ball.position) > 2000;
+
+            const bool pass_angle_ok = (robot.state().position - m_world_state.ball.position)
+                                           .normalized()
+                                           .dot((ownGoal() - m_world_state.ball.position).normalized()) < 0.75f;
+
+            Common::logDebug("mid {} pass angle ok: {}", *mid, pass_angle_ok);
+
+            const bool seen = robot.state().seen_state != Common::SeenState::CompletelyOut;
+
+            const bool suitable = seen && reached && dis_ok && pass_angle_ok;
+            if (suitable)
+            {
+                suitable_mid = mid;
+                break;
+            }
         }
 
         Common::logDebug("open angle: {}", openAngle.magnitude.deg());
-        if (openAngle.magnitude.deg() < 8 && (findKickerOpp(-1, 500.0f) == -1) && (mid1Suitable || mid2Suitable))
+        if (openAngle.magnitude.deg() < 8 && (findKickerOpp(-1, 500.0f) == -1) && (suitable_mid != nullptr))
         {
-
             Common::Angle passAngle =
                 Common::Vec2(-m_side * 1700, Common::sign(-m_world_state.ball.position.y) * 1700.0f)
                     .angleWith(m_world_state.ball.position);
             float chip_pow = 40;
 
-            if (mid1Suitable)
+            if (suitable_mid)
             {
-                passAngle = m_own_robot[m_mid1].state().position.angleWith(m_world_state.ball.position);
-                chip_pow =
-                    50.f * m_own_robot[m_mid1].state().position.distanceTo(m_world_state.ball.position) / 4000.0f;
-                chip_pow = std::min(50.f, chip_pow);
-            }
-            else if (mid2Suitable)
-            {
-                passAngle = m_own_robot[m_mid2].state().position.angleWith(m_world_state.ball.position);
-                chip_pow =
-                    50.f * m_own_robot[m_mid2].state().position.distanceTo(m_world_state.ball.position) / 4000.0f;
+                passAngle = m_own_robot[*suitable_mid].state().position.angleWith(m_world_state.ball.position);
+                chip_pow  = 50.f * m_own_robot[*suitable_mid].state().position.distanceTo(m_world_state.ball.position) /
+                           4000.0f;
                 chip_pow = std::min(50.f, chip_pow);
             }
             else
@@ -87,6 +79,7 @@ void Ai::normalPlayAtt()
                 passAngle = oppGoal().angleWith(m_world_state.ball.position);
                 chip_pow  = 0;
             }
+
             attacker(m_attack, passAngle, 0, chip_pow, 0, 1);
         }
         else
@@ -109,24 +102,6 @@ void Ai::normalPlayAtt()
 
             attacker(m_attack, shootAngle, shoot_pow, 0, 0, 0);
         }
-    }
-
-    if (m_world_state.ball.position.y > 600)
-    {
-        receivePass(m_mid1, Common::Vec2(-m_side * 250, 0));
-    }
-    else
-    {
-        receivePass(m_mid1, Common::Vec2(-m_side * (Common::field().width - 800), Common::field().height - 800));
-    }
-
-    if (m_world_state.ball.position.y < -600)
-    {
-        receivePass(m_mid2, Common::Vec2(-m_side * 250, 0));
-    }
-    else
-    {
-        receivePass(m_mid2, Common::Vec2(-m_side * (Common::field().width - 800), -Common::field().height + 800));
     }
 }
 } // namespace Tyr::Soccer

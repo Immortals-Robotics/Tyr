@@ -9,55 +9,35 @@ void Ai::normalPlayDef()
     Common::debug().draw(Common::Triangle{ourgoal_p1, m_world_state.ball.position, ourgoal_p2},
                          Common::Color::blue().transparent(), true);
 
-    m_assignments.clear();
-    createGkAssignment();
-    createDefAssignments();
-    createMidAssignments();
-    createAttackAssignment();
-    assignRoles();
-
-    for (std::map<int *, int>::const_iterator i = m_mark_map.begin(); i != m_mark_map.end(); ++i)
+    int zone_idx = 0;
+    for (int mid_idx = 0; mid_idx < m_prioritized_mids.size(); ++mid_idx)
     {
+        int *const role = m_prioritized_mids[mid_idx];
+        auto i = m_mark_map.find(role);
         int opp = i->second;
         int own = *i->first;
+
+        if (m_own_robot[own].navigated())
+        {
+            Common::logWarning("robot {} is already navigated before marking opp {}", own, opp);
+            continue;
+        }
 
         if (m_one_touch_detector[own].isArriving())
         {
             waitForPass(own, false);
         }
+        else if (opp == -1)
+        {
+            Common::Vec2 static_pos = m_sorted_zones[zone_idx]->best_pos;
+            ++zone_idx;
+            m_own_robot[own].face(m_world_state.ball.position);
+            navigate(own, static_pos, VelocityProfile::mamooli());
+            m_own_robot[own].shoot(0);
+        }
         else
         {
-
-            if (opp == -1)
-            {
-                int oppAttacker = findKickerOpp(-1);
-
-                m_own_robot[own].face(oppGoal());
-
-                if (own == m_mid5)
-                {
-                    navigate(m_mid5, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 1800),
-                             VelocityProfile::mamooli());
-                }
-                else if (own == m_mid1)
-                {
-                    if (oppAttacker != -1)
-                        mark2Goal(own, oppAttacker, 500);
-                    else
-                        navigate(own, Common::Vec2(m_world_state.ball.position.x, 1000), VelocityProfile::mamooli());
-                }
-                else if (own == m_mid2)
-                {
-                    if (oppAttacker != -1)
-                        mark2Goal(own, oppAttacker, 500);
-                    else
-                        navigate(own, Common::Vec2(m_world_state.ball.position.x, -1000), VelocityProfile::mamooli());
-                }
-            }
-            else
-            {
-                mark(own, opp, 500);
-            }
+            mark(own, opp, 500);
         }
     }
 

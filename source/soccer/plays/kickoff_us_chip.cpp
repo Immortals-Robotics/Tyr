@@ -38,6 +38,17 @@ void Ai::kickoffUsChip()
     navigate(m_mid1, Common::Vec2(m_world_state.ball.position.x + m_side * 150, -(Common::field().height - 300)),
              VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
 
+    int zone_idx = 0;
+    for (const auto& mid : m_prioritized_mids)
+    {
+        if (m_own_robot[*mid].navigated())
+            continue;
+
+        m_own_robot[*mid].face(m_world_state.ball.position);
+        navigate(*mid, m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli());
+        ++zone_idx;
+    }
+
     Common::Vec2 chip_target = Common::Vec2(-m_side * 2000, 0);
     Common::logDebug("can kick ball: {}", m_ref_state.canKickBall());
     if (m_ref_state.canKickBall())

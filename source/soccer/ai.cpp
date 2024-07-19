@@ -31,6 +31,24 @@ Ai::Ai()
 
     m_current_play = &Ai::haltAll;
 
+    // create zones
+    const unsigned zone_count_x = 2 * (Common::field().width / Zone::kZoneWidth);
+    const unsigned zone_count_y = 2 * (Common::field().height / Zone::kZoneHeight);
+
+    for (unsigned i = 0; i < zone_count_x; i++)
+    {
+        for (unsigned j = 0; j < zone_count_y; j++)
+        {
+            const Common::Vec2 field_min = Common::Vec2(-Common::field().width, -Common::field().height);
+            const Common::Vec2 zone_min  = field_min + Common::Vec2(i * Zone::kZoneWidth, j * Zone::kZoneHeight);
+
+            Zone zone{};
+
+            zone.rect = Common::Rect(zone_min, Zone::kZoneWidth, Zone::kZoneHeight);
+            m_zones.push_back(zone);
+        }
+    }
+
     m_mark_map[&m_mid1] = -1;
     m_mark_map[&m_mid2] = -1;
     m_mark_map[&m_mid3] = -1;
@@ -42,9 +60,14 @@ Ai::Ai()
     m_prioritized_mids.push_back(&m_mid5);
     m_prioritized_mids.push_back(&m_mid1);
     m_prioritized_mids.push_back(&m_mid2);
-    
+    m_prioritized_mids.push_back(&m_mid3);
+    m_prioritized_mids.push_back(&m_mid4);
+    m_prioritized_mids.push_back(&m_mid6);
+    m_prioritized_mids.push_back(&m_mid7);
+
     m_ids = {&m_gk, &m_def1, &m_def2, &m_mid1, &m_mid2, &m_mid3, &m_mid4, &m_mid5, &m_mid6, &m_mid7, &m_attack};
-    m_strategy_ids = {&m_gk, &m_def1, &m_mid5, &m_mid1, &m_mid2, &m_attack, &m_def2, &m_mid3, &m_mid4, &m_mid6, &m_mid7};
+    m_strategy_ids = {&m_gk,   &m_def1, &m_mid5, &m_mid1, &m_mid2, &m_attack,
+                      &m_def2, &m_mid3, &m_mid4, &m_mid6, &m_mid7};
 
     for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
@@ -56,8 +79,6 @@ Ai::Ai()
 
         m_one_touch_type[i]      = OneTouchType::OneTouch;
         m_one_touch_type_used[i] = false;
-
-        m_allaf_pos[i] = Common::Vec2();
     }
 
     const auto strategy_path = std::filesystem::path(DATA_DIR) / "strategy.ims";

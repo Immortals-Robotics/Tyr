@@ -241,10 +241,7 @@ void Ai::strategy()
             break;
         case Role::Afterlife::OneTouch:
             m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::OneTouch;
-            if (strategy.roles[i].path.size() == 0)
-                m_allaf_pos[*m_strategy_ids[i]] = Common::Vec2();
-            else
-                m_allaf_pos[*m_strategy_ids[i]] = strategy.roles[i].path.back().position * sign_modifier;
+            m_allaf_pos[m_strategy_ids[i]] = strategy.roles[i].path.back().position * sign_modifier;
 
             if (step[i] != strategy.roles[i].path.size() - 1)
                 // if (i == m_dmf && remainingDis > 150)
@@ -257,20 +254,28 @@ void Ai::strategy()
             m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::Allaf;
             if (*m_strategy_ids[i] == m_attack)
             {
-                m_allaf_pos[*m_strategy_ids[i]] = m_world_state.ball.position;
+                m_allaf_pos[m_strategy_ids[i]] = m_world_state.ball.position;
             }
             else
             {
-                if (strategy.roles[i].path.size() == 0)
-                    m_allaf_pos[*m_strategy_ids[i]] = Common::Vec2();
-                else
-                    m_allaf_pos[*m_strategy_ids[i]] = strategy.roles[i].path.back().position * sign_modifier;
+                m_allaf_pos[m_strategy_ids[i]] = strategy.roles[i].path.back().position * sign_modifier;
             }
             break;
         default:
             m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::OneTouch;
             break;
         }
+    }
+    
+    int zone_idx = 0;
+    for (const auto& mid : m_prioritized_mids)
+    {
+        if (m_own_robot[*mid].navigated())
+            continue;
+
+        m_own_robot[*mid].face(m_world_state.ball.position);
+        navigate(*mid, m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli());
+        ++zone_idx;
     }
 
     receivers_reached = new_receivers_reached || m_timer.time().seconds() > 4.5;
