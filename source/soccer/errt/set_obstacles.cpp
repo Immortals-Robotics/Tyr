@@ -7,7 +7,9 @@ static constexpr float ballAreaRadius = 550.0f;
 // We allow errt points to be 250 mm outside the field,
 // so set this to some higher value
 static constexpr float penaltyAreaExtensionBehindGoal = 300.0f;
-static constexpr float bigPenaltyAddition             = 300.0f;
+
+// This is 200 mm in the rules, but we add some extra to avoid
+static constexpr float bigPenaltyAddition = 220.0f;
 
 static float calculateRobotRadius(const Common::RobotState &state)
 {
@@ -95,7 +97,7 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
     if (oppPenaltyBig)
     {
         const float big_penalty_area_r          = Common::field().penalty_area_depth + bigPenaltyAddition;
-        const float big_penalty_area_w          = Common::field().penalty_area_width + bigPenaltyAddition;
+        const float big_penalty_area_w          = Common::field().penalty_area_width + 2.0f * bigPenaltyAddition;
         const float big_penalty_area_half_width = big_penalty_area_w / 2.0f;
 
         const Common::Vec2 start{-m_side * (Common::field().width + penaltyAreaExtensionBehindGoal),
