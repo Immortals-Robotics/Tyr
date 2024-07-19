@@ -266,6 +266,17 @@ void Ai::strategy()
             break;
         }
     }
+    
+    int zone_idx = 0;
+    for (const auto& mid : m_prioritized_mids)
+    {
+        if (m_own_robot[*mid].navigated())
+            continue;
+
+        m_own_robot[*mid].face(m_world_state.ball.position);
+        navigate(*mid, m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli());
+        ++zone_idx;
+    }
 
     receivers_reached = new_receivers_reached || m_timer.time().seconds() > 4.5;
 }
