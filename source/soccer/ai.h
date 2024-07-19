@@ -90,8 +90,8 @@ private:
         float        score;
     };
 
-    std::vector<Zone> m_zones;
-    std::vector<const Zone*> m_sorted_zones;
+    std::vector<Zone>         m_zones;
+    std::vector<const Zone *> m_sorted_zones;
 
     std::unordered_map<int *, Common::Vec2> m_mids_static_pos;
 
@@ -104,7 +104,8 @@ private:
 
     void calcIsDefending();
 
-    void                 markManager();
+    void markManager();
+
     std::map<int *, int> m_mark_map;
     std::vector<int *>   m_prioritized_mids;
 
@@ -221,8 +222,8 @@ private:
     // Strategy
     int strategyWeight();
 
-    PlayBook     m_playbook;
-    std::unordered_map<int*, Common::Vec2> m_allaf_pos;
+    PlayBook                                m_playbook;
+    std::unordered_map<int *, Common::Vec2> m_allaf_pos;
 
     // FSM
     int m_func_state = 0;
