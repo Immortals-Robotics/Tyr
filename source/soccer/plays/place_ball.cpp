@@ -6,6 +6,8 @@ namespace Tyr::Soccer
 {
 void Ai::ourPlaceBall()
 {
+    calcIsDefending();
+
     // TODO: fix this
 #if 0
      m_is_defending = false;
@@ -21,6 +23,17 @@ void Ai::ourPlaceBall()
     gkHi(m_gk);
     defHi(m_def1, m_def2, nullptr);
 
+    int zone_idx = 0;
+    for (const auto &mid : m_prioritized_mids)
+    {
+        if (mid == &m_mid5)
+            continue;
+
+        m_own_robot[*mid].face(m_world_state.ball.position);
+        navigate(*mid, m_sorted_zones[zone_idx]->best_pos, VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
+        ++zone_idx;
+    }
+
     static Common::Angle move_angle, temp_opp_ang;
     if (m_world_state.ball.position.distanceTo(m_ref_state.designated_position) > 100)
     {
@@ -34,17 +47,6 @@ void Ai::ourPlaceBall()
 
     static Common::Angle outFieldAng;
     static Common::Vec2  last_state_ball_pos;
-
-    m_own_robot[m_mid1].face(m_world_state.ball.position);
-    navigate(m_mid1,
-             m_world_state.ball.position.pointOnConnectingLine(
-                 ownGoal(), m_world_state.ball.position.distanceTo(ownGoal()) / 3.0f),
-             VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
-
-    m_own_robot[m_mid2].face(m_world_state.ball.position);
-    navigate(m_mid2,
-             m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 1090),
-             VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
 
     if (m_func_state == -2)
     {

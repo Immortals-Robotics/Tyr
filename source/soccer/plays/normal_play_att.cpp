@@ -11,9 +11,12 @@ void Ai::normalPlayAtt()
     Common::debug().draw(Common::Triangle{oppgoal_p1, m_world_state.ball.position, oppgoal_p2},
                          Common::Color::red().transparent(), true);
 
-    receivePass(m_mid5, m_sorted_zones[0]->best_pos);
-    receivePass(m_mid1, m_sorted_zones[1]->best_pos);
-    receivePass(m_mid2, m_sorted_zones[2]->best_pos);
+    int zone_idx = 0;
+    for (const auto &mid : m_prioritized_mids)
+    {
+        receivePass(*mid, m_sorted_zones[zone_idx]->best_pos);
+        ++zone_idx;
+    }
 
     if (m_one_touch_type[m_attack] == OneTouchType::Allaf && m_allaf_pos.contains(&m_attack))
     {
@@ -76,7 +79,7 @@ void Ai::normalPlayAtt()
                 passAngle = oppGoal().angleWith(m_world_state.ball.position);
                 chip_pow  = 0;
             }
-            
+
             attacker(m_attack, passAngle, 0, chip_pow, 0, 1);
         }
         else
