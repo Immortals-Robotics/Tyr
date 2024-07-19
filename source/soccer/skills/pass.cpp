@@ -63,7 +63,8 @@ void Ai::waitForPass(const int t_robot_num, const bool t_chip, const Common::Vec
             vel_delta *= 0.7f;
             vel_delta = 60 - vel_delta;
             Common::logDebug("ball vel: {}", vel_delta);
-            m_own_robot[t_robot_num].shoot(40);
+            //TODO: calc pass speed
+            m_own_robot[t_robot_num].shoot(4000.f);
         }
     }
     else
@@ -73,7 +74,7 @@ void Ai::waitForPass(const int t_robot_num, const bool t_chip, const Common::Vec
             m_own_robot[t_robot_num].chip(0);
         }
         else
-            m_own_robot[t_robot_num].shoot(0);
+            m_own_robot[t_robot_num].shoot(0.f);
     }
 }
 } // namespace Tyr::Soccer

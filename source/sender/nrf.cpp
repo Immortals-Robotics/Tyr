@@ -4,6 +4,61 @@
 
 namespace Tyr::Sender
 {
+
+static Common::Vec2 shoot_coeffs[Common::Config::Common::kMaxRobots] = {
+    {4.45f, 2.59f}, //  0
+    {4.48f, 2.6f}, //  1
+    {3.42f, 3.43f}, //  2
+    {6.22f, -0.43f}, //  3
+    {9.74f, 12.8f}, //  4
+    {4.46f, 2.66f}, //  5
+    {9.74f, 12.8f}, //  6
+    {4.02f, 3.38f}, //  7
+    {1.0f, 0.0f},         //  8*
+    {1.0f, 0.0f},         //  9*
+    {1.0f, 0.0f},         // 10*
+    {1.0f, 0.0f},         // 11*
+    {1.0f, 0.0f},         // 12*
+    {1.0f, 0.0f},         // 13*
+    {1.0f, 0.0f},         // 14*
+    {1.0f, 0.0f},         // 15*
+};
+
+static Common::Vec2 chip_coeffs[Common::Config::Common::kMaxRobots] = {
+    {1.00000f, 2.32507f}, //  0
+    {0.77461f, 2.81861f}, //  1
+    {1.69062f, 1.54292f}, //  2
+    {0.90561f, 3.13007f}, //  3
+    {1.01367f, 1.74667f}, //  4
+    {1.01367f, 1.74667f}, //  5
+    {1.45657f, 1.18770f}, //  6
+    {1.01367f, 1.74667f}, //  7
+    {1.0f, 0.0f},         //  8*
+    {1.0f, 0.0f},         //  9*
+    {1.0f, 0.0f},         // 10*
+    {1.0f, 0.0f},         // 11*
+    {1.0f, 0.0f},         // 12*
+    {1.0f, 0.0f},         // 13*
+    {1.0f, 0.0f},         // 14*
+    {1.0f, 0.0f},         // 15*
+};
+
+static float getCalibratedShootPow(float t_raw_shoot, const Common::Vec2 &t_coeffs)
+{
+    if (t_raw_shoot <= 0)
+    {
+        return 0;
+    }
+
+    t_raw_shoot = std::clamp(t_raw_shoot, 0.0f, 6500.f) / 1000.f;
+
+    float calib_shoot = t_coeffs.x * t_raw_shoot + t_coeffs.y;
+
+    calib_shoot = std::clamp(calib_shoot, 0.0f, 100.0f);
+
+    return calib_shoot;
+}
+
 Nrf::Nrf() : Base()
 {
     commUDP = std::make_shared<Common::UdpServer>();
@@ -47,13 +102,14 @@ void Nrf::queueCommand(const Command &command)
         convert_float_to_2x_buff(data + 9, command.current_angle.deg());
         if (command.shoot > 0)
         {
+            getCalibratedShootPow(Common::config().soccer.kick_tune_coef * command.shoot, shoot_coeffs[command.vision_id]);
             data[11] = command.shoot;
             data[12] = 0x00;
         }
         else if (command.chip > 0)
         {
             data[11] = 0x00;
-            data[12] = command.chip;
+            data[12] = getCalibratedShootPow(Common::config().soccer.chip_tune_coef * command.chip, chip_coeffs[command.vision_id]);
         }
         else
         {

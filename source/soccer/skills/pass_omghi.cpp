@@ -43,7 +43,8 @@ void Ai::waitForOmghi(const int t_robot_num)
 
     navigate(t_robot_num, target, profile);
 
-    m_own_robot[t_robot_num].shoot(100);
+    // TODO: What is this number
+    m_own_robot[t_robot_num].shoot(6500.f);
     m_own_robot[t_robot_num].dribble(15);
 }
 } // namespace Tyr::Soccer
