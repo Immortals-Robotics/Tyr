@@ -16,15 +16,16 @@ void Ai::throwinChipShoot()
     gkHi(m_gk);
     defHi(m_def1, m_def2, nullptr);
 
-    m_own_robot[m_mid2].face(m_world_state.ball.position);
-    navigate(m_mid2, Common::Vec2(-m_side * 1500, Common::sign(m_world_state.ball.position.y) * 2500.0f),
-             VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
-    m_one_touch_type[m_mid2] = OneTouchType::Shirje;
+    int zone_idx = 0;
+    for (const auto &mid : m_prioritized_mids)
+    {
+        if (mid == &m_mid5)
+            continue;
 
-    m_own_robot[m_mid1].face(m_world_state.ball.position);
-    navigate(m_mid1, Common::Vec2(-m_side * 3500, Common::sign(m_world_state.ball.position.y) * 2500.0f),
-             VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
-    m_one_touch_type[m_mid1] = OneTouchType::Shirje;
+        m_own_robot[*mid].face(m_world_state.ball.position);
+        navigate(*mid, m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
+        ++zone_idx;
+    }
 
     if (m_timer.time().seconds() > 4)
     {
