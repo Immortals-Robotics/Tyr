@@ -173,14 +173,8 @@ void Ai::strategy()
 
     for (int i = 0; i < strategy.roles.size(); i++)
     {
-        if (*m_strategy_ids[i] == m_gk || *m_strategy_ids[i] == m_def1 || *m_strategy_ids[i] == m_def2)
-            continue;
-
         if (strategy.roles[i].path.size() == 0)
-        {
-            halt(*m_strategy_ids[i]);
             continue;
-        }
 
         if (*m_strategy_ids[i] == m_attack)
         {
