@@ -76,10 +76,5 @@ void Ai::createMidAssignments()
             createStaticAssignment(role, Assignment::Priority::Low, shoot, chip);
         }
     }
-
-    createStaticAssignment(&m_mid3, Assignment::Priority::None);
-    createStaticAssignment(&m_mid4, Assignment::Priority::None);
-    createStaticAssignment(&m_mid6, Assignment::Priority::None);
-    createStaticAssignment(&m_mid7, Assignment::Priority::None);
 }
 } // namespace Tyr::Soccer

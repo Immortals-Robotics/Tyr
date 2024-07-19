@@ -40,7 +40,7 @@ Ai::Ai()
         for (unsigned j = 0; j < zone_count_y; j++)
         {
             const Common::Vec2 field_min = Common::Vec2(-Common::field().width, -Common::field().height);
-            const Common::Vec2 zone_min = field_min + Common::Vec2(i * Zone::kZoneWidth, j * Zone::kZoneHeight);
+            const Common::Vec2 zone_min  = field_min + Common::Vec2(i * Zone::kZoneWidth, j * Zone::kZoneHeight);
 
             Zone zone{};
 
@@ -60,6 +60,10 @@ Ai::Ai()
     m_prioritized_mids.push_back(&m_mid5);
     m_prioritized_mids.push_back(&m_mid1);
     m_prioritized_mids.push_back(&m_mid2);
+    m_prioritized_mids.push_back(&m_mid3);
+    m_prioritized_mids.push_back(&m_mid4);
+    m_prioritized_mids.push_back(&m_mid6);
+    m_prioritized_mids.push_back(&m_mid7);
 
     m_ids = {&m_gk, &m_def1, &m_def2, &m_mid1, &m_mid2, &m_mid3, &m_mid4, &m_mid5, &m_mid6, &m_mid7, &m_attack};
     m_strategy_ids = {&m_gk,   &m_def1, &m_mid5, &m_mid1, &m_mid2, &m_attack,
