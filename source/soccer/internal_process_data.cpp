@@ -17,6 +17,9 @@ void Ai::internalProcessData()
     else
         m_side = -1;
 
+    if (m_ref_state.stop() || m_ref_state.halt())
+        m_allaf_pos.clear();
+
     for (auto &zone : m_zones)
     {
         staticZoneScore(zone);

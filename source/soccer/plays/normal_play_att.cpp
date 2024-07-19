@@ -11,12 +11,14 @@ void Ai::normalPlayAtt()
     Common::debug().draw(Common::Triangle{oppgoal_p1, m_world_state.ball.position, oppgoal_p2},
                          Common::Color::red().transparent(), true);
 
-    receivePass(m_mid5, m_world_state.ball.position.pointOnConnectingLine(ownGoal(), 2500));
+    receivePass(m_mid5, m_sorted_zones[0]->best_pos);
+    receivePass(m_mid1, m_sorted_zones[1]->best_pos);
+    receivePass(m_mid2, m_sorted_zones[2]->best_pos);
 
-    if (m_one_touch_type[m_attack] == OneTouchType::Allaf)
+    if (m_one_touch_type[m_attack] == OneTouchType::Allaf && m_allaf_pos.contains(&m_attack))
     {
         m_own_robot[m_attack].face(oppGoal());
-        navigate(m_attack, m_allaf_pos[m_attack], VelocityProfile::mamooli());
+        navigate(m_attack, m_allaf_pos[&m_attack], VelocityProfile::mamooli());
         if (m_timer.time().seconds() > 2.5)
         {
             m_one_touch_type[m_attack] = OneTouchType::OneTouch;
@@ -109,24 +111,6 @@ void Ai::normalPlayAtt()
 
             attacker(m_attack, shootAngle, shoot_pow, 0, 0, 0);
         }
-    }
-
-    if (m_world_state.ball.position.y > 600)
-    {
-        receivePass(m_mid1, Common::Vec2(-m_side * 250, 0));
-    }
-    else
-    {
-        receivePass(m_mid1, Common::Vec2(-m_side * (Common::field().width - 800), Common::field().height - 800));
-    }
-
-    if (m_world_state.ball.position.y < -600)
-    {
-        receivePass(m_mid2, Common::Vec2(-m_side * 250, 0));
-    }
-    else
-    {
-        receivePass(m_mid2, Common::Vec2(-m_side * (Common::field().width - 800), -Common::field().height + 800));
     }
 }
 } // namespace Tyr::Soccer

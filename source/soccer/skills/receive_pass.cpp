@@ -10,10 +10,14 @@ void Ai::receivePass(const int t_robot_num, Common::Vec2 t_static_pos, const boo
     {
         m_chip_head.setDeg(200);
     }
-    if (m_one_touch_type[t_robot_num] == OneTouchType::Allaf)
-        t_static_pos = m_allaf_pos[t_robot_num];
-    if (m_one_touch_type[t_robot_num] == OneTouchType::OneTouch && m_timer.time().seconds() < contStrStaticTime)
-        t_static_pos = m_allaf_pos[t_robot_num];
+
+    const auto &allaf_pos = std::find_if(m_allaf_pos.begin(), m_allaf_pos.end(),
+                                         [t_robot_num](const auto &entry) { return *entry.first == t_robot_num; });
+
+    if (m_one_touch_type[t_robot_num] == OneTouchType::Allaf && allaf_pos != m_allaf_pos.end())
+        t_static_pos = allaf_pos->second;
+    if (m_one_touch_type[t_robot_num] == OneTouchType::OneTouch && m_timer.time().seconds() < contStrStaticTime && allaf_pos != m_allaf_pos.end())
+        t_static_pos = allaf_pos->second;
 
     if (m_timer.time().seconds() > 2.5)
     {

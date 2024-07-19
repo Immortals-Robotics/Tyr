@@ -18,7 +18,6 @@ void Ai::stop()
     defHi(m_def1, m_def2, nullptr);
 
     int zone_idx = 0;
-
     for (int mid_idx = 0; mid_idx < m_prioritized_mids.size(); ++mid_idx)
     {
         int *const role = m_prioritized_mids[mid_idx];

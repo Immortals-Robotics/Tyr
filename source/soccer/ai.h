@@ -222,7 +222,7 @@ private:
     int strategyWeight();
 
     PlayBook     m_playbook;
-    Common::Vec2 m_allaf_pos[Common::Config::Common::kMaxRobots];
+    std::unordered_map<int*, Common::Vec2> m_allaf_pos;
 
     // FSM
     int m_func_state = 0;

@@ -75,8 +75,6 @@ Ai::Ai()
 
         m_one_touch_type[i]      = OneTouchType::OneTouch;
         m_one_touch_type_used[i] = false;
-
-        m_allaf_pos[i] = Common::Vec2();
     }
 
     const auto strategy_path = std::filesystem::path(DATA_DIR) / "strategy.ims";
