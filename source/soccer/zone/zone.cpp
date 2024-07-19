@@ -18,6 +18,10 @@ void Ai::staticZoneScore(Zone &t_zone) const
         return;
     }
 
+    // Skip zones that are on opp half during kick off
+    if (m_ref_state.kickoff() && m_side * t_zone.rect.center().x < 0)
+        return;
+
     int robots_inside = 0;
     for (const auto &robot : m_world_state.own_robot)
     {

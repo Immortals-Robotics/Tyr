@@ -9,13 +9,6 @@ void Ai::normalPlayDef()
     Common::debug().draw(Common::Triangle{ourgoal_p1, m_world_state.ball.position, ourgoal_p2},
                          Common::Color::blue().transparent(), true);
 
-    m_assignments.clear();
-    createGkAssignment();
-    createDefAssignments();
-    createMidAssignments();
-    createAttackAssignment();
-    assignRoles();
-
     int zone_idx = 0;
     for (int mid_idx = 0; mid_idx < m_prioritized_mids.size(); ++mid_idx)
     {
