@@ -152,7 +152,7 @@ chip_tune_coef = 2.5
 
     [[soccer.robot_physical_status]]
     has_chip_kick = false
-    has_direct_kick = true
+    has_direct_kick = false
     has_dribbler = false
     id = 11
     is_3D_printed = true
