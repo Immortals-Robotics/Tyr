@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#define USE_CONTINUOS_ELENDIL 1
+
 namespace Tyr::Soccer
 {
 int lockAngleCounter = 0;
@@ -228,7 +230,9 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const floa
                     normalized_hehe       = std::pow(normalized_hehe, 0.3f);
                     targetPoint = m_predicted_ball.circleAroundPoint(t_angle, std::min(r, normalized_hehe * 265.0f));
 
+#if USE_CONTINUOS_ELENDIL
                     targetPoint -= t_angle.toUnitVec() * (1.0f - std::pow(normalized_hehe, 0.5f)) * 400.0f;
+#endif
                 }
                 else
                 {
@@ -236,6 +240,8 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const floa
                         t_angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / (tetta)));
                 }
 
+                // This part extends the target point towards the goal
+#if !USE_CONTINUOS_ELENDIL
                 Common::debug().draw(targetPoint, Common::Color::maroon());
 
                 Common::logDebug("elendil: {}", elendil);
@@ -257,13 +263,14 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const floa
                 {
                     elendil--;
                     // extend towards the shoot target
-                    //targetPoint -= t_angle.toUnitVec() * 200.0f;
+                    targetPoint -= t_angle.toUnitVec() * 200.0f;
                 }
                 else
                 {
                     // extend towards the point behind the ball
                     // targetPoint += (targetPoint - m_own_robot[t_robot_num].state().position) / 2.0f;
                 }
+#endif
 
                 navigate(t_robot_num, targetPoint, VelocityProfile::kharaki());
             }
