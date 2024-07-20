@@ -6,22 +6,22 @@ namespace Tyr::Sender
 {
 
 static Common::Vec2 shoot_coeffs[Common::Config::Common::kMaxRobots] = {
-    {4.45f, 2.59f}, //  0
-    {4.48f, 2.6f}, //  1
-    {3.42f, 3.43f}, //  2
+    {4.45f, 2.59f},  //  0
+    {4.48f, 2.6f},   //  1
+    {3.42f, 3.43f},  //  2
     {6.22f, -0.43f}, //  3
-    {9.74f, 12.8f}, //  4
-    {4.46f, 2.66f}, //  5
-    {9.74f, 12.8f}, //  6
-    {4.02f, 3.38f}, //  7
-    {1.0f, 0.0f},         //  8*
-    {1.0f, 0.0f},         //  9*
-    {1.0f, 0.0f},         // 10*
-    {1.0f, 0.0f},         // 11*
-    {1.0f, 0.0f},         // 12*
-    {1.0f, 0.0f},         // 13*
-    {1.0f, 0.0f},         // 14*
-    {1.0f, 0.0f},         // 15*
+    {9.74f, 12.8f},  //  4
+    {4.46f, 2.66f},  //  5
+    {9.74f, 12.8f},  //  6
+    {4.02f, 3.38f},  //  7
+    {1.0f, 0.0f},    //  8*
+    {1.0f, 0.0f},    //  9*
+    {1.0f, 0.0f},    // 10*
+    {1.0f, 0.0f},    // 11*
+    {1.0f, 0.0f},    // 12*
+    {1.0f, 0.0f},    // 13*
+    {1.0f, 0.0f},    // 14*
+    {1.0f, 0.0f},    // 15*
 };
 
 static Common::Vec2 chip_coeffs[Common::Config::Common::kMaxRobots] = {
@@ -102,8 +102,9 @@ void Nrf::queueCommand(const Command &command)
         convert_float_to_2x_buff(data + 9, command.current_angle.deg());
         if (command.shoot > 0)
         {
-            getCalibratedShootPow(Common::config().soccer.kick_tune_coef * command.shoot, shoot_coeffs[command.vision_id]);
-            data[11] = command.shoot;
+
+            data[11] = static_cast<unsigned char> (getCalibratedShootPow(Common::config().soccer.kick_tune_coef * command.shoot,
+                                             shoot_coeffs[command.vision_id]));
             data[12] = 0x00;
         }
         else if (command.chip > 0)
