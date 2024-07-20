@@ -15,7 +15,7 @@ void Planner::init(const Common::Vec2 init, const Common::Vec2 final, const floa
     m_step_size = step;
 
     m_tree.reset();
-    m_tree.AddNode(init_state, nullptr);
+    m_tree.addNode(init_state, nullptr);
 
     m_started_in_obs = g_obs_map.isInObstacle(init);
 }
@@ -62,14 +62,14 @@ Node *Planner::extend(Node *s, Common::Vec2 &target)
     if (g_obs_map.collisionDetect(new_state, s->state))
         return nullptr;
 
-    return m_tree.AddNode(new_state, s);
+    return m_tree.addNode(new_state, s);
 }
 
 void Planner::setWayPoints()
 {
     m_waypoints.clear();
 
-    Node *n = m_tree.NearestNeighbour(final_state);
+    Node *n = m_tree.nearestNeighbour(final_state);
     m_waypoints.push_back(n->state);
 
     while (n->parent)
@@ -85,28 +85,34 @@ void Planner::setWayPoints()
 
 Common::Vec2 Planner::plan()
 {
+    if (m_cached_waypoints.empty())
+    {
+        Common::logWarning("cached waypoints are empty");
+    }
+
     // return final_state;
     if (!g_obs_map.collisionDetect(init_state, final_state))
     {
-        m_tree.AddNode(final_state, m_tree.NearestNeighbour(final_state));
+        // TODO: slice the path so that the cache contains valid waypoints
+        m_tree.addNode(final_state, m_tree.nearestNeighbour(final_state));
     }
     else
     {
         for (int i = 0; ((i < m_max_nodes) && (!isReached())); i++)
         {
             Common::Vec2 r = chooseTarget();
-            extend(m_tree.NearestNeighbour(r), r);
+            extend(m_tree.nearestNeighbour(r), r);
         }
 
         if ((isReached()) && (!g_obs_map.isInObstacle(final_state)) &&
-            (final_state.distanceTo(m_tree.NearestNeighbour(final_state)->state) > 1))
+            (final_state.distanceTo(m_tree.nearestNeighbour(final_state)->state) > 1))
         {
-            m_tree.AddNode(final_state, m_tree.NearestNeighbour(final_state));
+            m_tree.addNode(final_state, m_tree.nearestNeighbour(final_state));
         }
     }
 
     setWayPoints();
-    optimize_tree();
+    optimizeTree();
 
     if (m_started_in_obs || m_waypoints.size() <= 1)
     {
@@ -118,7 +124,7 @@ Common::Vec2 Planner::plan()
     }
 }
 
-void Planner::optimize_tree()
+void Planner::optimizeTree()
 {
     for (size_t i = 0; i < m_waypoints.size() - 1; i++)
     {
