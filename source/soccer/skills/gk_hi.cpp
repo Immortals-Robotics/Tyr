@@ -81,7 +81,7 @@ void Ai::gkHi(const int t_robot_num)
 
             attacker(t_robot_num,
                      predicted_ball.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0,
-                     80, 0, 0);
+                     20, 0, 0);
         }
         else
         {
