@@ -113,7 +113,6 @@ void Nrf::queueCommand(const Command &command)
 
             data[11] = 0x00;
             data[12] = static_cast<unsigned char>(calibrated_chip);
-            ;
         }
         else
         {

@@ -70,6 +70,8 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
     float ball_radius = 0.0f;
     if ((t_flags & NavigationFlagsForceBallObstacle) || !m_ref_state.allowedNearBall())
         ball_radius = ballAreaRadius;
+    else if (m_ref_state.ourBallPlacement() && t_robot_num != m_attack && t_robot_num != m_mid5)
+        ball_radius = ballAreaRadius;
     else if (t_flags & NavigationFlagsForceBallMediumObstacle)
         ball_radius = 230.0f;
     else if (t_flags & NavigationFlagsForceBallSmallObstacle)
