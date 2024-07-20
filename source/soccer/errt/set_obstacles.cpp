@@ -64,7 +64,8 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
         {
             // Don't extend opp robots if we're the attacker
             const float radius = t_robot_num == m_attack ? Common::field().robot_radius
-                ? calculateOtherRadius(m_own_robot[t_robot_num].state(), m_world_state.opp_robot[i]);
+                                                         : calculateOtherRadius(m_own_robot[t_robot_num].state(),
+                                                                                m_world_state.opp_robot[i]);
 
             g_obs_map.addCircle({m_world_state.opp_robot[i].position, radius + current_robot_radius});
         }
