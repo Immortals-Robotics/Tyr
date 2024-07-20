@@ -188,7 +188,7 @@ private:
     void gkHi(int t_robot_num);
     void runningDef(int t_robot_num, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
     void defenceWall(int t_robot_num, bool t_kick_off = false);
-    void attacker(int t_robot_num, Common::Angle t_angle, float t_kick, int t_chip, bool t_kiss, bool t_dribbler);
+    void attacker(int t_robot_num, Common::Angle t_angle, float t_kick, int t_chip, bool t_kiss, bool t_dribbler, bool precise = false);
     void waitForPass(int t_robot_num, bool t_chip = false, const Common::Vec2 *t_target = nullptr,
                      Common::Vec2 *t_stat_pos = nullptr);
     void waitForOmghi(int t_robot_num);

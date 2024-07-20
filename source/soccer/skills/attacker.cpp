@@ -1,7 +1,5 @@
 #include "../ai.h"
 
-#define USE_CONTINUOS_ELENDIL 1
-
 namespace Tyr::Soccer
 {
 int lockAngleCounter = 0;
@@ -105,7 +103,7 @@ float Ai::calculateBallRobotReachTime(const int t_robot_num, const VelocityProfi
 }
 
 void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const float t_kick, const int t_chip,
-                  const bool t_kiss, const bool t_dribbler)
+                  const bool t_kiss, const bool t_dribbler, const bool precise)
 {
     Common::debug().draw(
         Common::LineSegment{m_world_state.ball.position, m_world_state.ball.position + t_angle.toUnitVec() * 1000.0f},
@@ -230,9 +228,10 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const floa
                     normalized_hehe       = std::pow(normalized_hehe, 0.3f);
                     targetPoint = m_predicted_ball.circleAroundPoint(t_angle, std::min(r, normalized_hehe * 265.0f));
 
-#if USE_CONTINUOS_ELENDIL
-                    targetPoint -= t_angle.toUnitVec() * (1.0f - std::pow(normalized_hehe, 0.5f)) * 400.0f;
-#endif
+                    if (!precise)
+                    {
+                        targetPoint -= t_angle.toUnitVec() * (1.0f - std::pow(normalized_hehe, 0.5f)) * 400.0f;
+                    }
                 }
                 else
                 {
@@ -241,36 +240,39 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const floa
                 }
 
                 // This part extends the target point towards the goal
-#if !USE_CONTINUOS_ELENDIL
-                Common::debug().draw(targetPoint, Common::Color::maroon());
-
-                Common::logDebug("elendil: {}", elendil);
-                Common::Angle hehe2 = m_predicted_ball.angleWith(m_own_robot[t_robot_num].state().position);
-                hehe2               = t_angle - hehe2;
-                Common::logDebug("hehe2: {}", hehe2.deg());
-
-                const bool el_in             = ((std::abs(hehe2.deg()) < 5.0f) &&
-                           (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) < 100));
-                const bool el_out = ((std::abs(hehe2.deg()) > 10.0f) &&
-                               (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) > 200));
-
-                if (el_in)
-                    elendil = 30;
-                if (el_out)
-                    elendil = 0;
-
-                if (elendil > 0)
+                if (precise)
                 {
-                    elendil--;
-                    // extend towards the shoot target
-                    targetPoint -= t_angle.toUnitVec() * 200.0f;
+                    Common::debug().draw(targetPoint, Common::Color::maroon());
+
+                    Common::logDebug("elendil: {}", elendil);
+                    Common::Angle hehe2 = m_predicted_ball.angleWith(m_own_robot[t_robot_num].state().position);
+                    hehe2               = t_angle - hehe2;
+                    Common::logDebug("hehe2: {}", hehe2.deg());
+
+                    const bool el_in =
+                        ((std::abs(hehe2.deg()) < 5.0f) &&
+                         (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) < 100));
+                    const bool el_out =
+                        ((std::abs(hehe2.deg()) > 10.0f) &&
+                         (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) > 200));
+
+                    if (el_in)
+                        elendil = 30;
+                    if (el_out)
+                        elendil = 0;
+
+                    if (elendil > 0)
+                    {
+                        elendil--;
+                        // extend towards the shoot target
+                        targetPoint -= t_angle.toUnitVec() * 200.0f;
+                    }
+                    else
+                    {
+                        // extend towards the point behind the ball
+                        // targetPoint += (targetPoint - m_own_robot[t_robot_num].state().position) / 2.0f;
+                    }
                 }
-                else
-                {
-                    // extend towards the point behind the ball
-                    // targetPoint += (targetPoint - m_own_robot[t_robot_num].state().position) / 2.0f;
-                }
-#endif
 
                 navigate(t_robot_num, targetPoint, VelocityProfile::kharaki());
             }

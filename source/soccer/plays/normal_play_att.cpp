@@ -87,7 +87,7 @@ void Ai::normalPlayAtt()
                 chip_pow  = 0;
             }
 
-            attacker(m_attack, passAngle, 0, chip_pow, 0, 1);
+            attacker(m_attack, passAngle, 0, chip_pow, 0, 1, true);
         }
         else
         {
