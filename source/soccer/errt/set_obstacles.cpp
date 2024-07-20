@@ -2,6 +2,7 @@
 
 namespace Tyr::Soccer
 {
+// This is 500 mm in the rules, but we add some extra to avoid
 static constexpr float ballAreaRadius = 550.0f;
 
 // We allow errt points to be 250 mm outside the field,
@@ -51,7 +52,7 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
         if ((m_own_robot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != t_robot_num) &&
             (m_own_robot[i].state().vision_id != m_own_robot[t_robot_num].state().vision_id))
         {
-            const float radius = calculateOtherRadius(m_own_robot[t_robot_num].state(), m_own_robot[i].state());
+            const float radius = calculateRobotRadius(m_own_robot[t_robot_num].state());
             g_obs_map.addCircle({m_own_robot[i].state().position, current_robot_radius + radius});
         }
     }
@@ -61,7 +62,9 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            const float radius = calculateOtherRadius(m_own_robot[t_robot_num].state(), m_world_state.opp_robot[i]);
+            // Don't extend opp robots if we're the attacker
+            const float radius = t_robot_num == m_attack ? Common::field().robot_radius
+                ? calculateOtherRadius(m_own_robot[t_robot_num].state(), m_world_state.opp_robot[i]);
 
             g_obs_map.addCircle({m_world_state.opp_robot[i].position, radius + current_robot_radius});
         }
