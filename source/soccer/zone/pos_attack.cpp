@@ -4,6 +4,16 @@ namespace Tyr::Soccer
 {
 float Ai::staticPosScoreAttack(const Common::Vec2 t_pos) const
 {
+    // Reject if blocks the attack's shot on goal
+    const Common::Line pos_ball_line = Common::Line::fromTwoPoints(m_world_state.ball.position, t_pos);
+    const Common::Line goal_line = Common::Line::fromSegment(oppGoalLine());
+    const auto goal_inter = pos_ball_line.intersect(goal_line);
+
+    const float dot = (t_pos - m_world_state.ball.position).normalized().dot((oppGoal() - m_world_state.ball.position).normalized());
+
+    if (dot > 0 && goal_inter.has_value() && std::abs(goal_inter.value().y) < Common::field().goal_width / 2.0f)
+        return 0.0f;
+
     float oppDisToGoal = t_pos.distanceTo(oppGoal());
 
     Common::Angle t1Angel = t_pos.angleWith(oppGoalPostBottom());
@@ -23,9 +33,6 @@ float Ai::staticPosScoreAttack(const Common::Vec2 t_pos) const
         score_goal_dis = 1.0f - pow(std::max(0.0f, (oppDisToGoal - 3000.0f) / 3000.0f), 0.5f);
 
     float ballToOppDis = m_world_state.ball.position.distanceTo(t_pos);
-
-    if (ballToOppDis < 400)
-        return -1;
 
     float score_ball_dis;
     if (ballToOppDis < 2000)
@@ -52,7 +59,9 @@ float Ai::staticPosScoreAttack(const Common::Vec2 t_pos) const
     auto final_score_one_touch  = score_one_touch_angle * std::min(score_ball_dis * score_goal_dis, score_open_angle);
     auto final_score_turn_shoot = std::min(score_ball_dis * score_goal_dis, score_open_angle);
 
-    auto score = std::max(final_score_one_touch, final_score_turn_shoot);
+
+
+    const float score = std::max(final_score_one_touch, final_score_turn_shoot);
 
     return score;
 }
