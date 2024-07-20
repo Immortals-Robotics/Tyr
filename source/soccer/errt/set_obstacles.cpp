@@ -17,6 +17,17 @@ static float calculateRobotRadius(const Common::RobotState &state)
     return Common::field().robot_radius * (1.0f + extension_factor);
 }
 
+static float calculateOtherRadius(const Common::RobotState &t_current, const Common::RobotState &t_other)
+{
+    static constexpr float kMaxExtension             = 150.0f;
+    static constexpr float kSpeedToReachMaxExtension = 1500.0f;
+
+    const Common::Vec2 velocity_diff = t_current.velocity - t_other.velocity;
+    const float        extension =
+        std::clamp(velocity_diff.length() * kMaxExtension / kSpeedToReachMaxExtension, 0.0f, kMaxExtension);
+    return Common::field().robot_radius + extension;
+}
+
 void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
 {
     const bool ourPenalty = t_robot_num != m_gk && !m_ref_state.ourBallPlacement();
@@ -40,7 +51,8 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
         if ((m_own_robot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != t_robot_num) &&
             (m_own_robot[i].state().vision_id != m_own_robot[t_robot_num].state().vision_id))
         {
-            g_obs_map.addCircle({m_own_robot[i].state().position, current_robot_radius + Common::field().robot_radius});
+            const float radius = calculateOtherRadius(m_own_robot[t_robot_num].state(), m_own_robot[i].state());
+            g_obs_map.addCircle({m_own_robot[i].state().position, current_robot_radius + radius});
         }
     }
 
@@ -49,7 +61,7 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            const float radius = calculateRobotRadius(m_world_state.opp_robot[i]);
+            const float radius = calculateOtherRadius(m_own_robot[t_robot_num].state(), m_world_state.opp_robot[i]);
 
             g_obs_map.addCircle({m_world_state.opp_robot[i].position, radius + current_robot_radius});
         }
