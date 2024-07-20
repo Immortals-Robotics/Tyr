@@ -64,7 +64,7 @@ void Ai::waitForPass(const int t_robot_num, const bool t_chip, const Common::Vec
             vel_delta = 60 - vel_delta;
             Common::logDebug("ball vel: {}", vel_delta);
             //TODO: calc pass speed
-            m_own_robot[t_robot_num].shoot(4000.f);
+            m_own_robot[t_robot_num].shoot(6000.f);
         }
     }
     else

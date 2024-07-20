@@ -183,7 +183,7 @@ void Ai::strategy()
 
             if (strategy.roles[i].path[step[i]].type == Waypoint::Type::Position)
             {
-                shoot = strategy.roles[i].path[step[i]].tolerance;
+                shoot = strategy.roles[i].path[step[i]].tolerance * 100.0f;
                 Common::logDebug("ATTACK: shoot: {}", shoot);
             }
             else

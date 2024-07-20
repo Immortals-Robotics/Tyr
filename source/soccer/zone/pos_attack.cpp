@@ -56,7 +56,12 @@ float Ai::staticPosScoreAttack(const Common::Vec2 t_pos) const
     score_open_angle      = std::min(1.0f, std::max(0.0f, score_open_angle));
     score_one_touch_angle = std::min(1.0f, std::max(0.0f, score_one_touch_angle));
 
-    auto final_score_one_touch  = score_one_touch_angle * std::min(score_ball_dis * score_goal_dis, score_open_angle);
+    const bool pass_angle_ok = (t_pos - m_world_state.ball.position)
+                                           .normalized()
+                                           .dot((ownGoal() - m_world_state.ball.position).normalized()) < 0.85f;
+    const float own_goal_angle_score = pass_angle_ok ? 1.0f : 0.0f;
+
+    auto final_score_one_touch  = own_goal_angle_score * score_one_touch_angle * std::min(score_ball_dis * score_goal_dis, score_open_angle);
     auto final_score_turn_shoot = std::min(score_ball_dis * score_goal_dis, score_open_angle);
 
 

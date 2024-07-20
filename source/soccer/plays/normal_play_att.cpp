@@ -45,7 +45,7 @@ void Ai::normalPlayAtt()
 
             const bool pass_angle_ok = (robot.state().position - m_world_state.ball.position)
                                            .normalized()
-                                           .dot((ownGoal() - m_world_state.ball.position).normalized()) < 0.75f;
+                                           .dot((ownGoal() - m_world_state.ball.position).normalized()) < 0.85f;
 
             Common::logDebug("mid {} pass angle ok: {}", *mid, pass_angle_ok);
 
@@ -60,7 +60,14 @@ void Ai::normalPlayAtt()
         }
 
         Common::logDebug("open angle: {}", openAngle.magnitude.deg());
-        if (openAngle.magnitude.deg() < 8 && (findKickerOpp(-1, 500.0f) == -1) && (suitable_mid != nullptr))
+
+        static bool ball_is_stationary    = false;
+        const float speed_threshold = ball_is_stationary ? 750.0f : 250.0f;
+        ball_is_stationary = m_world_state.ball.velocity.length() < speed_threshold;
+
+        const bool opp_attacker_in_range = findKickerOpp(-1, 1000.0f) != -1;
+
+        if (openAngle.magnitude.deg() < 8 && ball_is_stationary && !opp_attacker_in_range && (suitable_mid != nullptr))
         {
             Common::Angle passAngle =
                 Common::Vec2(-m_side * 1700, Common::sign(-m_world_state.ball.position.y) * 1700.0f)
@@ -70,9 +77,9 @@ void Ai::normalPlayAtt()
             if (suitable_mid)
             {
                 passAngle = m_own_robot[*suitable_mid].state().position.angleWith(m_world_state.ball.position);
-                chip_pow  = 50.f * m_own_robot[*suitable_mid].state().position.distanceTo(m_world_state.ball.position) /
-                           4000.0f;
-                chip_pow = std::min(50.f, chip_pow);
+                chip_pow  = 15.f * m_own_robot[*suitable_mid].state().position.distanceTo(m_world_state.ball.position) /
+                           8000.0f;
+                chip_pow = std::min(15.f, chip_pow);
             }
             else
             {
