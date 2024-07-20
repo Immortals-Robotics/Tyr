@@ -4,11 +4,11 @@ namespace Tyr::Soccer
 {
 void Robot::shoot(const float pow)
 {
-    m_shoot = pow;
+    m_shoot = pow * Common::config().soccer.kick_tune_coef;
 }
 void Robot::chip(const float pow)
 {
-    m_chip = pow;
+    m_chip = pow * Common::config().soccer.chip_tune_coef;
 }
 
 void Robot::dribble(const float pow)
