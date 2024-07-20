@@ -8,12 +8,14 @@ void Ai::ourPlaceBall()
 {
     calcIsDefending();
 
+#if 0
     m_assignments.clear();
     createGkAssignment();
     createDefAssignments();
     createMidAssignments();
     createAttackAssignment();
     assignRoles();
+#endif
 
     gkHi(m_gk);
     defHi(m_def1, m_def2, nullptr);
