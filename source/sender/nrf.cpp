@@ -50,8 +50,6 @@ static float getCalibratedShootPow(float t_raw_shoot, const Common::Vec2 &t_coef
         return 0;
     }
 
-    t_raw_shoot = std::clamp(t_raw_shoot, 0.0f, 6500.f) / 1000.f;
-
     float calib_shoot = t_coeffs.x * t_raw_shoot + t_coeffs.y;
 
     calib_shoot = std::clamp(calib_shoot, 0.0f, 100.0f);
@@ -102,15 +100,19 @@ void Nrf::queueCommand(const Command &command)
         convert_float_to_2x_buff(data + 9, command.current_angle.deg());
         if (command.shoot > 0)
         {
+            const float raw_shoot        = std::clamp(command.shoot, 0.0f, 6500.f) / 1000.f;
+            const float calibrated_shoot = getCalibratedShootPow(raw_shoot, shoot_coeffs[command.vision_id]);
 
-            data[11] = static_cast<unsigned char> (getCalibratedShootPow(Common::config().soccer.kick_tune_coef * command.shoot,
-                                             shoot_coeffs[command.vision_id]));
+            data[11] = static_cast<unsigned char>(calibrated_shoot);
             data[12] = 0x00;
         }
         else if (command.chip > 0)
         {
+            const float raw_chip        = std::clamp(command.chip, 0.0f, 150.f);
+            const float calibrated_chip = getCalibratedShootPow(raw_chip, chip_coeffs[command.vision_id]);
+
             data[11] = 0x00;
-            data[12] = getCalibratedShootPow(Common::config().soccer.chip_tune_coef * command.chip, chip_coeffs[command.vision_id]);
+            data[12] = static_cast<unsigned char>(calibrated_chip);
         }
         else
         {

@@ -4,44 +4,34 @@ namespace Tyr::Soccer
 {
 struct VelocityProfile
 {
-    float max_spd;
-    float max_dec;
-    float max_acc;
+    float speed = 0.0f;
+    float deceleration = 0.0f;
+    float acceleration = 0.0f;
 
-    static constexpr VelocityProfile sooski()
+    VelocityProfile() = default;
+
+    explicit VelocityProfile(const Common::Config::VelocityProfile &config)
+        : speed(config.speed), deceleration(config.deceleration), acceleration(config.acceleration)
+    {}
+
+    static VelocityProfile sooski()
     {
-        return {
-            .max_spd = 450.0f,
-            .max_dec = 2700.0f,
-            .max_acc = 1620.0f,
-        };
+        return VelocityProfile{Common::config().soccer.velocity_profile_sooski};
     }
 
-    static constexpr VelocityProfile aroom()
+    static VelocityProfile aroom()
     {
-        return {
-            .max_spd = 900.0f,
-            .max_dec = 2700.0f,
-            .max_acc = 2160.0f,
-        };
+        return VelocityProfile{Common::config().soccer.velocity_profile_aroom};
     }
 
-    static constexpr VelocityProfile mamooli()
+    static VelocityProfile mamooli()
     {
-        return {
-            .max_spd = 3800.0f,
-            .max_dec = 4850.5f,
-            .max_acc = 3100.0f,
-        };
+        return VelocityProfile{Common::config().soccer.velocity_profile_mamooli};
     }
 
-    static constexpr VelocityProfile kharaki()
+    static VelocityProfile kharaki()
     {
-        return {
-            .max_spd = 3800.0f,
-            .max_dec = 5860.0f,
-            .max_acc = 3910.0f,
-        };
+        return VelocityProfile{Common::config().soccer.velocity_profile_kharaki};
     }
 };
 

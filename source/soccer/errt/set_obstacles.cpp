@@ -2,12 +2,15 @@
 
 namespace Tyr::Soccer
 {
+// This is 500 mm in the rules, but we add some extra to avoid
 static constexpr float ballAreaRadius = 550.0f;
 
 // We allow errt points to be 250 mm outside the field,
 // so set this to some higher value
 static constexpr float penaltyAreaExtensionBehindGoal = 300.0f;
-static constexpr float bigPenaltyAddition             = 300.0f;
+
+// This is 200 mm in the rules, but we add some extra to avoid
+static constexpr float bigPenaltyAddition = 220.0f;
 
 static float calculateRobotRadius(const Common::RobotState &state)
 {
@@ -15,10 +18,21 @@ static float calculateRobotRadius(const Common::RobotState &state)
     return Common::field().robot_radius * (1.0f + extension_factor);
 }
 
+static float calculateOtherRadius(const Common::RobotState &t_current, const Common::RobotState &t_other)
+{
+    static constexpr float kMaxExtension             = 150.0f;
+    static constexpr float kSpeedToReachMaxExtension = 1500.0f;
+
+    const Common::Vec2 velocity_diff = t_current.velocity - t_other.velocity;
+    const float        extension =
+        std::clamp(velocity_diff.length() * kMaxExtension / kSpeedToReachMaxExtension, 0.0f, kMaxExtension);
+    return Common::field().robot_radius + extension;
+}
+
 void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
 {
     const bool ourPenalty = t_robot_num != m_gk && !m_ref_state.ourBallPlacement();
-    const bool oppPenalty = !m_ref_state.ourBallPlacement();
+    const bool oppPenalty = !m_ref_state.ballPlacement();
 
     const bool oppPenaltyBig = m_ref_state.freeKick() || m_ref_state.stop();
 
@@ -28,6 +42,7 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
 
     if (t_flags & NavigationFlagsForceNoObstacles)
     {
+        Common::logWarning("Robot {} is navigating with no obstacles", t_robot_num);
         return;
     }
 
@@ -37,7 +52,8 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
         if ((m_own_robot[i].state().seen_state != Common::SeenState::CompletelyOut) && (i != t_robot_num) &&
             (m_own_robot[i].state().vision_id != m_own_robot[t_robot_num].state().vision_id))
         {
-            g_obs_map.addCircle({m_own_robot[i].state().position, current_robot_radius + Common::field().robot_radius});
+            const float radius = calculateRobotRadius(m_own_robot[t_robot_num].state());
+            g_obs_map.addCircle({m_own_robot[i].state().position, current_robot_radius + radius});
         }
     }
 
@@ -46,7 +62,10 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            const float radius = calculateRobotRadius(m_world_state.opp_robot[i]);
+            // Don't extend opp robots if we're the attacker
+            const float radius = t_robot_num == m_attack ? Common::field().robot_radius
+                                                         : calculateOtherRadius(m_own_robot[t_robot_num].state(),
+                                                                                m_world_state.opp_robot[i]);
 
             g_obs_map.addCircle({m_world_state.opp_robot[i].position, radius + current_robot_radius});
         }
@@ -54,6 +73,8 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
 
     float ball_radius = 0.0f;
     if ((t_flags & NavigationFlagsForceBallObstacle) || !m_ref_state.allowedNearBall())
+        ball_radius = ballAreaRadius;
+    else if (m_ref_state.ourBallPlacement() && t_robot_num != m_attack && t_robot_num != m_mid5)
         ball_radius = ballAreaRadius;
     else if (t_flags & NavigationFlagsForceBallMediumObstacle)
         ball_radius = 230.0f;
@@ -94,7 +115,7 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
     if (oppPenaltyBig)
     {
         const float big_penalty_area_r          = Common::field().penalty_area_depth + bigPenaltyAddition;
-        const float big_penalty_area_w          = Common::field().penalty_area_width + bigPenaltyAddition;
+        const float big_penalty_area_w          = Common::field().penalty_area_width + 2.0f * bigPenaltyAddition;
         const float big_penalty_area_half_width = big_penalty_area_w / 2.0f;
 
         const Common::Vec2 start{-m_side * (Common::field().width + penaltyAreaExtensionBehindGoal),

@@ -4,11 +4,11 @@ namespace Tyr::Soccer
 {
 void Robot::shoot(const float pow)
 {
-    m_shoot = pow;
+    m_shoot = pow * Common::config().soccer.kick_tune_coef;
 }
 void Robot::chip(const float pow)
 {
-    m_chip = pow;
+    m_chip = pow * Common::config().soccer.chip_tune_coef;
 }
 
 void Robot::dribble(const float pow)
@@ -33,10 +33,10 @@ Common::Vec2 Robot::computeMotion(const VelocityProfile &profile)
 
     Common::Vec2 diff = target.position - state().position;
 
-    Common::Vec2 tmp_max_speed = diff.abs().normalized() * profile.max_spd;
+    Common::Vec2 tmp_max_speed = diff.abs().normalized() * profile.speed;
 
-    const float acc = profile.max_acc / Common::config().vision.vision_frame_rate;
-    const float dec = profile.max_dec / Common::config().vision.vision_frame_rate;
+    const float acc = profile.acceleration / Common::config().vision.vision_frame_rate;
+    const float dec = profile.deceleration / Common::config().vision.vision_frame_rate;
 
     motion.x = pow(7.6f * dec * std::fabs(diff.x), 0.6f);
     motion.x *= Common::sign(diff.x);

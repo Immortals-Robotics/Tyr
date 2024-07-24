@@ -12,13 +12,13 @@ struct Command
     Common::Angle current_angle;
     Common::Angle target_angle;
 
-    int shoot    = 0;
-    int chip     = 0;
-    int dribbler = 0;
+    float shoot    = 0;
+    float chip     = 0;
+    float dribbler = 0;
 
     Command() = default;
 
-    Command(const Protos::Immortals::Command &t_command)
+    explicit Command(const Protos::Immortals::Command &t_command)
     {
         vision_id = t_command.vision_id();
 

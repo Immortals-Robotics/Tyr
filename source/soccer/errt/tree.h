@@ -13,7 +13,7 @@ struct Node
 class Tree
 {
 public:
-    Tree(const size_t t_max_nodes)
+    explicit Tree(const size_t t_max_nodes)
     {
         m_nodes.reserve(t_max_nodes);
     }
@@ -23,7 +23,7 @@ public:
         m_nodes.clear();
     }
 
-    Node *AddNode(const Common::Vec2 s, Node *const parent)
+    Node *addNode(const Common::Vec2 s, Node *const parent)
     {
         if (m_nodes.size() < m_nodes.capacity())
         {
@@ -44,7 +44,7 @@ public:
         }
     }
 
-    Node *NearestNeighbour(const Common::Vec2 s)
+    Node *nearestNeighbour(const Common::Vec2 s)
     {
         if (m_nodes.empty())
             return nullptr;
@@ -61,15 +61,15 @@ public:
             }
         }
 
-        return GetNode(ans);
+        return getNode(ans);
     }
 
-    int tree_size()
+    int size() const
     {
         return m_nodes.size();
     }
 
-    Node *GetNode(const int idx)
+    Node *getNode(const int idx)
     {
         return &m_nodes[idx];
     }

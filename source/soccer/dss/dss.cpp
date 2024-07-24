@@ -27,9 +27,9 @@ bool Dss::collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2
                            const Common::RobotState &state_b, const Common::Vec2 &cmd_b) const
 {
     const Trajectory traj_a =
-        Trajectory::MakeTrajectory(state_a, cmd_a, m_profile.max_dec, 1.0f / Common::config().vision.vision_frame_rate);
+        Trajectory::MakeTrajectory(state_a, cmd_a, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
     const Trajectory traj_b =
-        Trajectory::MakeTrajectory(state_b, cmd_b, m_profile.max_dec, 1.0f / Common::config().vision.vision_frame_rate);
+        Trajectory::MakeTrajectory(state_b, cmd_b, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
 
     return Parabolic::HaveOverlap(traj_a.acc, traj_b.acc, Common::field().robot_radius * 2.f) ||
            Parabolic::HaveOverlap(traj_a.dec, traj_b.dec, Common::field().robot_radius * 2.f) ||
@@ -40,9 +40,9 @@ bool Dss::collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2
 bool Dss::collisionWithOpp(const Common::RobotState &state_own, const Common::Vec2 &cmd_own,
                            const Common::RobotState &state_opp) const
 {
-    const Trajectory traj_own = Trajectory::MakeTrajectory(state_own, cmd_own, m_profile.max_dec,
+    const Trajectory traj_own = Trajectory::MakeTrajectory(state_own, cmd_own, m_profile.deceleration,
                                                            1.0f / Common::config().vision.vision_frame_rate);
-    const Trajectory traj_opp = Trajectory::MakeOpponentTrajectory(state_opp, m_profile.max_dec);
+    const Trajectory traj_opp = Trajectory::MakeOpponentTrajectory(state_opp, m_profile.deceleration);
 
     return Parabolic::HaveOverlap(traj_own.acc, traj_opp.dec, Common::field().robot_radius * 2.f) ||
            Parabolic::HaveOverlap(traj_own.dec, traj_opp.dec, Common::field().robot_radius * 2.f) ||
@@ -53,7 +53,7 @@ bool Dss::collisionWithOpp(const Common::RobotState &state_own, const Common::Ve
 bool Dss::RobotHasStaticCollision(const Common::RobotState &state, const Common::Vec2 &cmd) const
 {
     const Trajectory traj =
-        Trajectory::MakeTrajectory(state, cmd, m_profile.max_dec, 1.0f / Common::config().vision.vision_frame_rate);
+        Trajectory::MakeTrajectory(state, cmd, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
 
     return Parabolic::HasStaticOverlap(traj.acc) || Parabolic::HasStaticOverlap(traj.dec) ||
            Parabolic::HasStaticOverlap(traj.dec);
@@ -132,7 +132,7 @@ void Dss::Reset()
         else
         {
             const float dec =
-                std::min(m_profile.max_dec, state.velocity.length() * Common::config().vision.vision_frame_rate);
+                std::min(m_profile.deceleration, state.velocity.length() * Common::config().vision.vision_frame_rate);
             computed_motions[robot_idx] = state.velocity.normalized() * (-dec);
         }
     }
@@ -144,7 +144,7 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     // TODO: in simulation setting a lower dec compared
     // to motion plan results in better avoidance.
     // Verify on the real field
-    m_profile.max_dec /= 2.0f;
+    m_profile.deceleration /= 2.0f;
 
     const Common::Vec2        target_a_cmd     = GetAccFromMotion(robot_num, motion);
     const float               target_a_cmd_mag = target_a_cmd.length();
@@ -162,7 +162,7 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     else
     {
         const float dec =
-            std::min(m_profile.max_dec, state.velocity.length() * Common::config().vision.vision_frame_rate);
+            std::min(m_profile.deceleration, state.velocity.length() * Common::config().vision.vision_frame_rate);
         a_cmd       = state.velocity.normalized() * (-dec);
         float error = ComputeError(target_a_cmd, a_cmd);
 

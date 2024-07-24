@@ -14,7 +14,7 @@ int Ai::staticRoleCost(const int t_robot_idx, const Assignment &t_assignment) co
     if (t_assignment.needs_chip != physical_status.has_chip_kick)
         caps_cost += 5000;
 
-    int switch_cost = t_robot_idx == *t_assignment.role ? 0 : 500;
+    int switch_cost = t_robot_idx == *t_assignment.role ? 0 : 200;
 
     return dis_cost + caps_cost + switch_cost;
 }
