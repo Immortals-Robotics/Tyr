@@ -1,4 +1,4 @@
-#include "../ai.h"
+#include "../../ai.h"
 
 namespace Tyr::Soccer
 {

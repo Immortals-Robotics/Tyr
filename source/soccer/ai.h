@@ -1,7 +1,7 @@
 #pragma once
 
-#include "dss/dss.h"
-#include "errt/errt.h"
+#include "navigation/dss/dss.h"
+#include "navigation/errt/errt.h"
 #include "helpers/ball_trajectory.h"
 #include "helpers/one_touch_detector.h"
 #include "plays/play_book.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../robot/robot.h"
+#include "../../robot/robot.h"
 
 namespace Tyr::Soccer
 {

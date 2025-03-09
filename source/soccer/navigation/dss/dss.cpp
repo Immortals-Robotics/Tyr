@@ -1,7 +1,7 @@
 #include "dss.h"
 
 #include "../obstacle/map.h"
-#include "trajectory.h"
+#include "../trajectory/trajectory.h"
 
 namespace Tyr::Soccer
 {

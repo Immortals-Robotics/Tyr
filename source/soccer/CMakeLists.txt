@@ -6,15 +6,14 @@ set(HEADER_FILES
         pch.h
         ai.h
 
-        dss/dss.h
-        dss/parabolic.h
-        dss/trajectory.h
-        errt/errt.h
-        errt/tree.h
-
-        obstacle/circle.h
-        obstacle/map.h
-        obstacle/rect.h
+        navigation/errt/errt.h
+        navigation/errt/tree.h
+        navigation/dss/dss.h
+        navigation/obstacle/circle.h
+        navigation/obstacle/map.h
+        navigation/obstacle/rect.h
+        navigation/trajectory/parabolic.h
+        navigation/trajectory/trajectory.h
 
         plays/play_book.h
 
@@ -42,13 +41,12 @@ set(SOURCE_FILES
         assignment/create_mids.cpp
         assignment/create_static.cpp
 
-        dss/dss.cpp
-        dss/parabolic.cpp
-        dss/trajectory.cpp
-        errt/errt.cpp
-        errt/set_obstacles.cpp
-
-        obstacle/map.cpp
+        navigation/errt/errt.cpp
+        navigation/errt/set_obstacles.cpp
+        navigation/dss/dss.cpp
+        navigation/obstacle/map.cpp
+        navigation/trajectory/parabolic.cpp
+        navigation/trajectory/trajectory.cpp
 
         helpers/attack_fucking_angle.cpp
         helpers/ball_is_goaling.cpp
