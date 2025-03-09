@@ -2,9 +2,7 @@
 
 namespace Tyr::Soccer
 {
-ObstacleMap g_obs_map{};
-
-bool ObstacleMap::isInObstacle(const Common::Vec2 t_p)
+bool ObstacleMap::isInObstacle(const Common::Vec2 t_p) const
 {
     const float field_margin = Common::field().boundary_width - Common::field().robot_radius;
     if (std::fabs(t_p.x) > Common::field().width + field_margin ||
@@ -28,7 +26,7 @@ bool ObstacleMap::isInObstacle(const Common::Vec2 t_p)
     return false;
 }
 
-float ObstacleMap::nearestDistance(const Common::Vec2 t_p)
+float ObstacleMap::nearestDistance(const Common::Vec2 t_p) const
 {
     float dis = std::numeric_limits<float>::max();
 
@@ -53,7 +51,7 @@ float ObstacleMap::nearestDistance(const Common::Vec2 t_p)
     return dis;
 }
 
-bool ObstacleMap::collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2)
+bool ObstacleMap::collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2) const
 {
     static constexpr float kStepSize = 50.0f;
 

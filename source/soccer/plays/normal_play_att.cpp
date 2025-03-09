@@ -62,7 +62,7 @@ void Ai::normalPlayAtt()
         Common::logDebug("open angle: {}", openAngle.magnitude.deg());
 
         static bool ball_is_stationary    = false;
-        const float speed_threshold = ball_is_stationary ? 750.0f : 250.0f;
+        float speed_threshold = ball_is_stationary ? 750.0f : 250.0f;
         ball_is_stationary = m_world_state.ball.velocity.length() < speed_threshold;
 
         const bool opp_attacker_in_range = findKickerOpp(-1, 1000.0f) != -1;
@@ -94,7 +94,7 @@ void Ai::normalPlayAtt()
             Common::Angle shootAngle;
 
             static bool intersecting    = false;
-            const float speed_threshold = intersecting ? 500.0f : 1000.0f;
+            speed_threshold = intersecting ? 500.0f : 1000.0f;
 
             const float ball_dir_goal_dot =
                 m_world_state.ball.velocity.normalized().dot((oppGoal() - m_world_state.ball.position).normalized());

@@ -55,8 +55,8 @@ bool Dss::RobotHasStaticCollision(const Common::RobotState &state, const Common:
     const Trajectory traj =
         Trajectory::MakeTrajectory(state, cmd, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
 
-    return Parabolic::HasStaticOverlap(traj.acc) || Parabolic::HasStaticOverlap(traj.dec) ||
-           Parabolic::HasStaticOverlap(traj.dec);
+    return Parabolic::HasStaticOverlap(traj.acc, *m_map) || Parabolic::HasStaticOverlap(traj.dec, *m_map) ||
+           Parabolic::HasStaticOverlap(traj.dec, *m_map);
 }
 
 bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
@@ -151,7 +151,7 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     Common::Vec2              a_cmd;
     const Common::RobotState &state = m_world->own_robot[robot_num];
 
-    if (state.seen_state == Common::SeenState::CompletelyOut || g_obs_map.isInObstacle(state.position))
+    if (state.seen_state == Common::SeenState::CompletelyOut || m_map->isInObstacle(state.position))
     {
         a_cmd = target_a_cmd;
     }

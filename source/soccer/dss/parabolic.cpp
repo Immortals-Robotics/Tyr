@@ -32,7 +32,7 @@ bool Parabolic::HaveOverlap(const Parabolic &a, const Parabolic &b, const float 
     return false;
 }
 
-bool Parabolic::HasStaticOverlap(const Parabolic &a)
+bool Parabolic::HasStaticOverlap(const Parabolic &a, const ObstacleMap &map)
 {
     const float t0 = a.t0;
     const float t1 = a.t1;
@@ -53,7 +53,7 @@ bool Parabolic::HasStaticOverlap(const Parabolic &a)
     {
         const float        t = check_t[t_idx];
         const Common::Vec2 p = a.Evaluate(t);
-        if (g_obs_map.isInObstacle(p))
+        if (map.isInObstacle(p))
         {
             return true;
         }

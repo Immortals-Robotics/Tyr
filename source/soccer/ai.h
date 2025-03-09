@@ -175,6 +175,7 @@ private:
                   NavigationFlags t_flags = NavigationFlagsNone);
     void setObstacles(int t_robot_num, NavigationFlags t_flags = NavigationFlagsNone);
 
+    ObstacleMap          m_obsMap[Common::Config::Common::kMaxRobots];
     Planner              m_planner[Common::Config::Common::kMaxRobots];
     std::unique_ptr<Dss> m_dss;
 

@@ -28,10 +28,10 @@ public:
         Common::debug().draw(t_rect, Common::Color::maroon().transparent(), false);
     }
 
-    bool  isInObstacle(Common::Vec2 t_point);
-    float nearestDistance(Common::Vec2 t_point);
+    bool  isInObstacle(Common::Vec2 t_point) const;
+    float nearestDistance(Common::Vec2 t_point) const;
 
-    bool collisionDetect(Common::Vec2 p1, Common::Vec2 p2);
+    bool collisionDetect(Common::Vec2 p1, Common::Vec2 p2) const;
 
     void resetMap()
     {
@@ -39,7 +39,5 @@ public:
         m_rect_obstacles.clear();
     }
 };
-
-extern ObstacleMap g_obs_map;
 
 } // namespace Tyr::Soccer

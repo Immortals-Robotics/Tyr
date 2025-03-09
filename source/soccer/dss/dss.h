@@ -4,16 +4,27 @@
 
 namespace Tyr::Soccer
 {
+class ObstacleMap;
+}
+namespace Tyr::Soccer
+{
 class Dss
 {
 public:
-    Dss(const Common::WorldState *t_world);
+    explicit Dss(const Common::WorldState *t_world);
 
     void Reset();
+
+    void setObstacleMap(const ObstacleMap* const t_map)
+    {
+        m_map = t_map;
+    }
 
     Common::Vec2 ComputeSafeMotion(int robot_num, const Common::Vec2 &motion, const VelocityProfile &t_profile);
 
 private:
+    const ObstacleMap* m_map = nullptr;
+
     Common::Random m_random;
 
     VelocityProfile m_profile;

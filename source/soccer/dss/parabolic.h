@@ -2,6 +2,7 @@
 
 namespace Tyr::Soccer
 {
+class ObstacleMap;
 class Parabolic
 {
 private:
@@ -17,7 +18,7 @@ public:
     float t1;
 
     static bool HaveOverlap(const Parabolic &a, const Parabolic &b, float r);
-    static bool HasStaticOverlap(const Parabolic &a);
+    static bool HasStaticOverlap(const Parabolic &a, const ObstacleMap &map);
 
     Common::Vec2 Evaluate(float t) const;
     Common::Vec2 EvaluateDerivative(float t) const;

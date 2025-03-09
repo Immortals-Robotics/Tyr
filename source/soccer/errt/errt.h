@@ -8,16 +8,21 @@ namespace Tyr::Soccer
 class Planner
 {
 public:
-     Planner(int t_max_nodes = 2000);
+     Planner(int t_max_nodes = 2000, float t_step = 90.f);
     ~Planner() = default;
 
-    void init(Common::Vec2 init, Common::Vec2 final, float step);
-
-    Common::Vec2 plan();
+    Common::Vec2 plan(Common::Vec2 init, Common::Vec2 final);
 
     void draw(Common::Color t_color = Common::Color::black().transparent()) const;
 
+    void setObstacleMap(const ObstacleMap* const t_map)
+    {
+        m_map = t_map;
+    }
+
 private:
+    const ObstacleMap* m_map = nullptr;
+
     Common::Vec2 init_state;
     Common::Vec2 final_state;
 
