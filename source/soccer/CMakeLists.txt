@@ -12,7 +12,7 @@ set(HEADER_FILES
         navigation/obstacle/circle.h
         navigation/obstacle/map.h
         navigation/obstacle/rect.h
-        navigation/trajectory/parabolic.h
+        navigation/trajectory/trajectory_piece.h
         navigation/trajectory/trajectory.h
 
         plays/play_book.h
@@ -45,7 +45,7 @@ set(SOURCE_FILES
         navigation/errt/set_obstacles.cpp
         navigation/dss/dss.cpp
         navigation/obstacle/map.cpp
-        navigation/trajectory/parabolic.cpp
+        navigation/trajectory/trajectory_piece.cpp
         navigation/trajectory/trajectory.cpp
 
         helpers/attack_fucking_angle.cpp

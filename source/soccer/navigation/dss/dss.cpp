@@ -31,10 +31,10 @@ bool Dss::collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2
     const Trajectory traj_b =
         Trajectory::MakeTrajectory(state_b, cmd_b, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
 
-    return Parabolic::HaveOverlap(traj_a.acc, traj_b.acc, Common::field().robot_radius * 2.f) ||
-           Parabolic::HaveOverlap(traj_a.dec, traj_b.dec, Common::field().robot_radius * 2.f) ||
-           Parabolic::HaveOverlap(traj_a.dec, traj_b.stopped, Common::field().robot_radius * 2.f) ||
-           Parabolic::HaveOverlap(traj_a.stopped, traj_b.dec, Common::field().robot_radius * 2.f);
+    return traj_a.acc.hasCollision(traj_b.acc, Common::field().robot_radius * 2.f) ||
+           traj_a.dec.hasCollision(traj_b.dec, Common::field().robot_radius * 2.f) ||
+           traj_a.dec.hasCollision(traj_b.stopped, Common::field().robot_radius * 2.f) ||
+           traj_a.stopped.hasCollision(traj_b.dec, Common::field().robot_radius * 2.f);
 }
 
 bool Dss::collisionWithOpp(const Common::RobotState &state_own, const Common::Vec2 &cmd_own,
@@ -44,10 +44,10 @@ bool Dss::collisionWithOpp(const Common::RobotState &state_own, const Common::Ve
                                                            1.0f / Common::config().vision.vision_frame_rate);
     const Trajectory traj_opp = Trajectory::MakeOpponentTrajectory(state_opp, m_profile.deceleration);
 
-    return Parabolic::HaveOverlap(traj_own.acc, traj_opp.dec, Common::field().robot_radius * 2.f) ||
-           Parabolic::HaveOverlap(traj_own.dec, traj_opp.dec, Common::field().robot_radius * 2.f) ||
-           Parabolic::HaveOverlap(traj_own.dec, traj_opp.stopped, Common::field().robot_radius * 2.f) ||
-           Parabolic::HaveOverlap(traj_own.stopped, traj_opp.dec, Common::field().robot_radius * 2.f);
+    return traj_own.acc.hasCollision(traj_opp.dec, Common::field().robot_radius * 2.f) ||
+           traj_own.dec.hasCollision(traj_opp.dec, Common::field().robot_radius * 2.f) ||
+           traj_own.dec.hasCollision(traj_opp.stopped, Common::field().robot_radius * 2.f) ||
+           traj_own.stopped.hasCollision(traj_opp.dec, Common::field().robot_radius * 2.f);
 }
 
 bool Dss::RobotHasStaticCollision(const Common::RobotState &state, const Common::Vec2 &cmd) const
@@ -55,8 +55,7 @@ bool Dss::RobotHasStaticCollision(const Common::RobotState &state, const Common:
     const Trajectory traj =
         Trajectory::MakeTrajectory(state, cmd, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
 
-    return Parabolic::HasStaticOverlap(traj.acc, *m_map) || Parabolic::HasStaticOverlap(traj.dec, *m_map) ||
-           Parabolic::HasStaticOverlap(traj.dec, *m_map);
+    return traj.acc.hasCollision(*m_map) || traj.dec.hasCollision(*m_map);
 }
 
 bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
