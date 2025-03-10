@@ -1,7 +1,7 @@
 #pragma once
 
-#include "state.h"
 #include "control.h"
+#include "state.h"
 
 namespace Tyr::Vision
 {
