@@ -3,6 +3,8 @@
 namespace Tyr::Soccer
 {
 class ObstacleMap;
+
+// defines a constant-acceleration piece of trajectory
 class TrajectoryPiece
 {
 private:
@@ -39,6 +41,26 @@ public:
     {
         const float dt = t - m_t_start;
         return m_v_start + m_acc * dt;
+    }
+
+    inline Common::Vec2 getAcceleration() const
+    {
+        return m_acc;
+    }
+
+    inline float getStartTime() const
+    {
+        return m_t_start;
+    }
+
+    inline float getEndTime() const
+    {
+        return m_t_end;
+    }
+
+    inline float getDuration() const
+    {
+        return m_t_end - m_t_start;
     }
 
     bool hasCollision(const ObstacleMap &map) const;

@@ -27,35 +27,29 @@ bool Dss::collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2
                            const Common::RobotState &state_b, const Common::Vec2 &cmd_b) const
 {
     const Trajectory traj_a =
-        Trajectory::MakeTrajectory(state_a, cmd_a, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
+        Trajectory::MakeDssTrajectory(state_a, cmd_a, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
     const Trajectory traj_b =
-        Trajectory::MakeTrajectory(state_b, cmd_b, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
+        Trajectory::MakeDssTrajectory(state_b, cmd_b, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
 
-    return traj_a.acc.hasCollision(traj_b.acc, Common::field().robot_radius * 2.f) ||
-           traj_a.dec.hasCollision(traj_b.dec, Common::field().robot_radius * 2.f) ||
-           traj_a.dec.hasCollision(traj_b.stopped, Common::field().robot_radius * 2.f) ||
-           traj_a.stopped.hasCollision(traj_b.dec, Common::field().robot_radius * 2.f);
+    return traj_a.hasCollision(traj_b, Common::field().robot_radius * 2.f);
 }
 
 bool Dss::collisionWithOpp(const Common::RobotState &state_own, const Common::Vec2 &cmd_own,
                            const Common::RobotState &state_opp) const
 {
-    const Trajectory traj_own = Trajectory::MakeTrajectory(state_own, cmd_own, m_profile.deceleration,
+    const Trajectory traj_own = Trajectory::MakeDssTrajectory(state_own, cmd_own, m_profile.deceleration,
                                                            1.0f / Common::config().vision.vision_frame_rate);
-    const Trajectory traj_opp = Trajectory::MakeOpponentTrajectory(state_opp, m_profile.deceleration);
+    const Trajectory traj_opp = Trajectory::MakeOpponentDssTrajectory(state_opp, m_profile.deceleration);
 
-    return traj_own.acc.hasCollision(traj_opp.dec, Common::field().robot_radius * 2.f) ||
-           traj_own.dec.hasCollision(traj_opp.dec, Common::field().robot_radius * 2.f) ||
-           traj_own.dec.hasCollision(traj_opp.stopped, Common::field().robot_radius * 2.f) ||
-           traj_own.stopped.hasCollision(traj_opp.dec, Common::field().robot_radius * 2.f);
+    return traj_own.hasCollision(traj_opp, Common::field().robot_radius * 2.f);
 }
 
 bool Dss::RobotHasStaticCollision(const Common::RobotState &state, const Common::Vec2 &cmd) const
 {
     const Trajectory traj =
-        Trajectory::MakeTrajectory(state, cmd, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
+        Trajectory::MakeDssTrajectory(state, cmd, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
 
-    return traj.acc.hasCollision(*m_map) || traj.dec.hasCollision(*m_map);
+    return traj.hasCollision(*m_map);
 }
 
 bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
