@@ -2,10 +2,10 @@
 
 namespace Tyr::Vision::Filter
 {
-class PositionMeasurement : public Kalman::Vector<float, 2>
+class BallState : public Kalman::Vector<float, 2>
 {
 public:
-    KALMAN_VECTOR(PositionMeasurement, float, 2)
+    KALMAN_VECTOR(BallState, float, 2)
 
     static constexpr size_t X = 0;
     static constexpr size_t Y = 1;

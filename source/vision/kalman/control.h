@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Tyr::Vision
+namespace Tyr::Vision::Filter
 {
 /**
  * @brief System control-input vector-type for an omnidirectional 3DOF planar robot

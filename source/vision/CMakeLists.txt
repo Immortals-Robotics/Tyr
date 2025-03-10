@@ -8,13 +8,15 @@ set(HEADER_FILES
         filtered/ball_estimator.h
         filtered/filtered.h
         kalman/control.h
-        kalman/state.h
-        kalman/system_model.h
+        kalman/filtered_object.h
         kalman/measurement/orientation.h
         kalman/measurement/orientation_model.h
         kalman/measurement/position.h
         kalman/measurement/position_model.h
-        kalman/filtered_object.h
+        kalman/state/ball.h
+        kalman/state/robot.h
+        kalman/system_model/controlled_robot.h
+        kalman/system_model/robot.h
         raw/raw.h
         kalman/ekf_3d.h)
 
