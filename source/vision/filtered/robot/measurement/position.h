@@ -8,16 +8,15 @@ class PositionMeasurement : public Kalman::Vector<float, 2>
 public:
     KALMAN_VECTOR(PositionMeasurement, float, 2)
 
-    //! Distance to landmark 1
-    static constexpr size_t D1 = 0;
+    //! X-position
+    static constexpr size_t X = 0;
+    //! Y-Position
+    static constexpr size_t Y = 1;
 
-    //! Distance to landmark 2
-    static constexpr size_t D2 = 1;
+    float x()       const { return (*this)[ X ]; }
+    float y()       const { return (*this)[ Y ]; }
 
-    float d1()       const { return (*this)[ D1 ]; }
-    float d2()       const { return (*this)[ D2 ]; }
-
-    float& d1()      { return (*this)[ D1 ]; }
-    float& d2()      { return (*this)[ D2 ]; }
+    float& x()      { return (*this)[ X ]; }
+    float& y()      { return (*this)[ Y ]; }
 };
 } // namespace Tyr::Vision

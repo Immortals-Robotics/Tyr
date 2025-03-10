@@ -2,7 +2,7 @@
 
 namespace Tyr::Vision
 {
-// @brief Measurement vector measuring an orientation (i.e. by using a compass)
+// @brief Measurement vector measuring an orientation
 class OrientationMeasurement : public Kalman::Vector<float, 1>
 {
 public:
