@@ -36,17 +36,12 @@ public:
         //! Predicted state vector after transition
         State x_;
 
-        // New orientation given by old orientation plus orientation change
-        auto newOrientation = x.theta() + u.dtheta();
-        // Re-scale orientation to [-pi/2 to +pi/2]
+        // Update position using control input velocities
+        x_.x() = x.x() + u.vx();
+        x_.y() = x.y() + u.vy();
 
-        x_.theta() = newOrientation;
-
-        // New x-position given by old x-position plus change in x-direction
-        // Change in x-direction is given by the cosine of the (new) orientation
-        // times the velocity
-        x_.x() = x.x() + std::cos( newOrientation ) * u.v();
-        x_.y() = x.y() + std::sin( newOrientation ) * u.v();
+        // Update orientation
+        x_.theta() = x.theta() + u.dtheta();
 
         // Return transitioned state vector
         return x_;
@@ -75,13 +70,9 @@ protected:
 
         // partial derivative of x.x() w.r.t. x.x()
         this->F( State::X, State::X ) = 1;
-        // partial derivative of x.x() w.r.t. x.theta()
-        this->F( State::X, State::THETA ) = -std::sin( x.theta() + u.dtheta() ) * u.v();
 
         // partial derivative of x.y() w.r.t. x.y()
         this->F( State::Y, State::Y ) = 1;
-        // partial derivative of x.y() w.r.t. x.theta()
-        this->F( State::Y, State::THETA ) = std::cos( x.theta() + u.dtheta() ) * u.v();
 
         // partial derivative of x.theta() w.r.t. x.theta()
         this->F( State::THETA, State::THETA ) = 1;

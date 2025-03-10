@@ -2,27 +2,31 @@
 
 namespace Tyr::Vision
 {
-// TODO: this doesn't apply to a omni-directional robot
-
-// @brief System control-input vector-type for a 3DOF planar robot
-//
-// This is the system control-input of a very simple planar robot that
-// can control the velocity in its current direction as well as the
-// change in direction.
-class Control : public Kalman::Vector<float, 2>
+/**
+ * @brief System control-input vector-type for an omnidirectional 3DOF planar robot
+ *
+ * The control inputs are now independent velocities in x and y directions
+ * and the change in orientation (`dtheta`).
+ *
+ */
+class Control : public Kalman::Vector<float, 3>
 {
 public:
-    KALMAN_VECTOR(Control, float, 2)
+    KALMAN_VECTOR(Control, float, 3)
 
-    //! Velocity
-    static constexpr size_t V = 0;
-    //! Angular Rate (Orientation-change)
-    static constexpr size_t DTHETA = 1;
+    //! Velocity in X direction
+    static constexpr size_t VX = 0;
+    //! Velocity in Y direction
+    static constexpr size_t VY = 1;
+    //! Angular Rate (Orientation change)
+    static constexpr size_t DTHETA = 2;
 
-    float v()       const { return (*this)[ V ]; }
+    float vx()      const { return (*this)[ VX ]; }
+    float vy()      const { return (*this)[ VY ]; }
     float dtheta()  const { return (*this)[ DTHETA ]; }
 
-    float& v()      { return (*this)[ V ]; }
+    float& vx()     { return (*this)[ VX ]; }
+    float& vy()     { return (*this)[ VY ]; }
     float& dtheta() { return (*this)[ DTHETA ]; }
 };
 } // namespace Tyr::Vision
