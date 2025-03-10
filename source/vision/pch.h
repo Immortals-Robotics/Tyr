@@ -10,3 +10,8 @@ using namespace Immortals;
 #include <math.h>
 #include <numeric>
 #include <Eigen/Dense>
+
+#include <kalman/Matrix.hpp>
+#include <kalman/LinearizedSystemModel.hpp>
+#include <kalman/ExtendedKalmanFilter.hpp>
+#include <kalman/UnscentedKalmanFilter.hpp>

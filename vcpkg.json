@@ -19,6 +19,6 @@
     "rlimgui",
     "implot",
     "eigen3",
-    "liblemon"
+    "kalman"
 	]
 }
