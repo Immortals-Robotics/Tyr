@@ -27,9 +27,9 @@ bool Dss::collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2
                            const Common::RobotState &state_b, const Common::Vec2 &cmd_b) const
 {
     const Trajectory traj_a =
-        Trajectory::MakeDssTrajectory(state_a, cmd_a, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
+        Trajectory::makeDssTrajectory(state_a, cmd_a, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
     const Trajectory traj_b =
-        Trajectory::MakeDssTrajectory(state_b, cmd_b, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
+        Trajectory::makeDssTrajectory(state_b, cmd_b, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
 
     return traj_a.hasCollision(traj_b, Common::field().robot_radius * 2.f);
 }
@@ -37,9 +37,9 @@ bool Dss::collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2
 bool Dss::collisionWithOpp(const Common::RobotState &state_own, const Common::Vec2 &cmd_own,
                            const Common::RobotState &state_opp) const
 {
-    const Trajectory traj_own = Trajectory::MakeDssTrajectory(state_own, cmd_own, m_profile.deceleration,
+    const Trajectory traj_own = Trajectory::makeDssTrajectory(state_own, cmd_own, m_profile.deceleration,
                                                            1.0f / Common::config().vision.vision_frame_rate);
-    const Trajectory traj_opp = Trajectory::MakeOpponentDssTrajectory(state_opp, m_profile.deceleration);
+    const Trajectory traj_opp = Trajectory::makeOpponentDssTrajectory(state_opp, m_profile.deceleration);
 
     return traj_own.hasCollision(traj_opp, Common::field().robot_radius * 2.f);
 }
@@ -47,7 +47,7 @@ bool Dss::collisionWithOpp(const Common::RobotState &state_own, const Common::Ve
 bool Dss::RobotHasStaticCollision(const Common::RobotState &state, const Common::Vec2 &cmd) const
 {
     const Trajectory traj =
-        Trajectory::MakeDssTrajectory(state, cmd, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
+        Trajectory::makeDssTrajectory(state, cmd, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
 
     return traj.hasCollision(*m_map);
 }

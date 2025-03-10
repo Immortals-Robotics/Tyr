@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-Trajectory Trajectory::MakeDssTrajectory(const Common::RobotState &state, const Common::Vec2 &a_acc, const float a_dec,
+Trajectory Trajectory::makeDssTrajectory(const Common::RobotState &state, const Common::Vec2 &a_acc, const float a_dec,
                                       const float a_dt)
 {
     Trajectory trajectory;
@@ -34,7 +34,7 @@ Trajectory Trajectory::MakeDssTrajectory(const Common::RobotState &state, const 
     return trajectory;
 }
 
-Trajectory Trajectory::MakeOpponentDssTrajectory(const Common::RobotState &state, const float a_dec)
+Trajectory Trajectory::makeOpponentDssTrajectory(const Common::RobotState &state, const float a_dec)
 {
     Trajectory trajectory;
 

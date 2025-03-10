@@ -4,6 +4,8 @@
 
 namespace Tyr::Soccer
 {
+struct VelocityProfile;
+
 class Trajectory
 {
 private:
@@ -34,12 +36,14 @@ public:
     // 1- accelerating with a_acc for a_dt
     // 2- decelerating with a_dec until full stop
     // 3- being at full stop till the end of time (literally)
-    static Trajectory MakeDssTrajectory(const Common::RobotState &state, const Common::Vec2 &a_acc, float a_dec, float a_dt);
+    static Trajectory makeDssTrajectory(const Common::RobotState &state, const Common::Vec2 &a_acc, float a_dec, float a_dt);
 
     // makes a trajectory that consists of:
     // 1- decelerating with a_dec until full stop
     // 2- being at full stop till the end of time (literally)
-    static Trajectory MakeOpponentDssTrajectory(const Common::RobotState &state, float a_dec);
+    static Trajectory makeOpponentDssTrajectory(const Common::RobotState &state, float a_dec);
+
+    static Trajectory makeRobotTrajectory(Common::Vec2 p0, Common::Vec2 v0, Common::Vec2 target, const VelocityProfile &profile);
 
     void addPiece(const TrajectoryPiece &piece)
     {

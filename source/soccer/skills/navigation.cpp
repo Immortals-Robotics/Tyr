@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "../navigation/trajectory/trajectory.h"
+
 namespace Tyr::Soccer
 {
 void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProfile t_profile, const NavigationFlags t_flags)
@@ -29,7 +31,11 @@ void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProf
     m_planner[t_robot_num].draw();
 
     robot.target.position = target;
-    Common::Vec2 motion_cmd = robot.computeMotion(t_profile);
+
+    const Trajectory trajectory = Trajectory::makeRobotTrajectory(robot.state().position, robot.currentMotion(), target, t_profile);
+
+    const float dt = 1.f / Common::config().vision.vision_frame_rate;
+    Common::Vec2 motion_cmd = trajectory.getVelocity(dt);
 
     if (!(t_flags & NavigationFlagsForceNoObstacles))
     {

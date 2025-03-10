@@ -58,8 +58,6 @@ public:
         return m_halted;
     }
 
-    [[nodiscard]] Common::Vec2 computeMotion(const VelocityProfile &profile) const;
-
     [[nodiscard]] Common::Vec2    currentMotion() const;
     [[nodiscard]] Sender::Command currentCommand() const;
 
