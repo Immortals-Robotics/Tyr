@@ -7,15 +7,6 @@ class RobotState : public Kalman::Vector<float, 5>
 public:
     KALMAN_VECTOR(RobotState, float, 5)
 
-    explicit RobotState(const Common::Vec2 t_pos, const Common::Angle t_angle)
-    {
-        x() = t_pos.x;
-        y() = t_pos.y;
-        vx() = 0.f;
-        vy() = 0.f;
-        theta() = t_angle.deg();
-    }
-
     static constexpr size_t X = 0;
     static constexpr size_t Y = 1;
     static constexpr size_t VX = 2;

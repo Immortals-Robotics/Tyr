@@ -5,14 +5,10 @@
 
 namespace Tyr::Vision::Filter
 {
-class OrientationMeasurementModel : public Kalman::LinearizedMeasurementModel<RobotState, OrientationMeasurement>
+class OrientationMeasurementModel : public Kalman::MeasurementModel<RobotState, OrientationMeasurement, Kalman::SquareRootBase>
 {
 public:
-    OrientationMeasurementModel()
-    {
-        this->H.setIdentity();
-        this->V.setIdentity();
-    }
+    OrientationMeasurementModel() = default;
 
     OrientationMeasurement h(const RobotState &x) const override
     {
