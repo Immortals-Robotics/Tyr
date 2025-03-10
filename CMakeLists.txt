@@ -44,14 +44,13 @@ if (${TRACE_BUILD_TIME})
     add_compile_options(-ftime-trace)
 endif ()
 
-# enable utf-8 support in msvc
-if (MSVC)
-    add_compile_options(/utf-8)
-endif ()
 
-# enable multithreaded build in VS
 if (MSVC)
-    add_compile_options(/MP)
+    add_compile_options(
+            /utf-8  # enable utf-8 support
+            /MP     # enable multithreaded build in VS
+            /bigobj # use big obj to fix exceeding object file limits.
+    )
 endif ()
 
 # Set data paths

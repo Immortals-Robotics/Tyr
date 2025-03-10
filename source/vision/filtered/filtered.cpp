@@ -4,17 +4,11 @@ namespace Tyr::Vision
 {
 Filtered::Filtered()
 {
-    const std::filesystem::path fast_filter_path = std::filesystem::path{DATA_DIR} / "ball_filter_fast.txt";
-    const std::filesystem::path slow_filter_path = std::filesystem::path{DATA_DIR} / "ball_filter_slow.txt";
-
-    m_ball_kalman = FilteredObject{fast_filter_path, slow_filter_path};
-
     for (int color_idx = 0; color_idx < 2; ++color_idx)
     {
         for (int robot_idx = 0; robot_idx < Common::Config::Common::kMaxRobots; robot_idx++)
         {
             m_robot_not_seen[color_idx][robot_idx] = std::numeric_limits<int>::max() - 1;
-            m_robot_kalman[color_idx][robot_idx]   = FilteredObject{fast_filter_path, slow_filter_path};
         }
     }
 

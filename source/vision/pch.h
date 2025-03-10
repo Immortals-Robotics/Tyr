@@ -13,5 +13,5 @@ using namespace Immortals;
 
 #include <kalman/Matrix.hpp>
 #include <kalman/LinearizedSystemModel.hpp>
-#include <kalman/ExtendedKalmanFilter.hpp>
-#include <kalman/UnscentedKalmanFilter.hpp>
+#include <kalman/LinearizedMeasurementModel.hpp>
+#include <kalman/SquareRootUnscentedKalmanFilter.hpp>

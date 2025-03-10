@@ -24,7 +24,6 @@ set(SOURCE_FILES
         filtered/ball.cpp
         filtered/filtered.cpp
         filtered/robot.cpp
-        kalman/filtered_object.cpp
         raw/ball.cpp
         raw/communication.cpp
         raw/robot.cpp
@@ -34,7 +33,7 @@ add_library(${PROJECT_NAME}
         ${SOURCE_FILES} ${HEADER_FILES})
 
 target_include_directories(${PROJECT_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
-target_include_directories(${PROJECT_NAME} PRIVATE ${KALMAN_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${KALMAN_INCLUDE_DIRS})
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FILES})
 
