@@ -2,22 +2,15 @@
 
 namespace Tyr::Soccer
 {
-Trajectory Trajectory::makeDssTrajectory(const Common::RobotState &state, const Common::Vec2 &a_acc, const float a_dec,
-                                      const float a_dt)
+Trajectory Trajectory::makeDssTrajectory(const TrajectoryPiece& cmd_piece, const float a_dec)
 {
     Trajectory trajectory;
 
-    const Common::Vec2 p0 = state.position;
-    const Common::Vec2 v0 = state.velocity;
-    const Common::Vec2 a0 = a_acc;
+    trajectory.addPiece(cmd_piece);
 
-    const float t1 = a_dt;
-
-    const TrajectoryPiece piece_acc {a0, v0, p0, 0.f, t1};
-    trajectory.addPiece(piece_acc);
-
-    const Common::Vec2 p1 = piece_acc.getPosition(t1);
-    const Common::Vec2 v1 = piece_acc.getVelocity(t1);
+    const float t1 = cmd_piece.getEndTime();
+    const Common::Vec2 p1 = cmd_piece.getPosition(t1);
+    const Common::Vec2 v1 = cmd_piece.getVelocity(t1);
     const Common::Vec2 a1 = v1.normalized() * (-a_dec);
 
     const float dec_dt = v1.length() / a_dec;
@@ -34,12 +27,13 @@ Trajectory Trajectory::makeDssTrajectory(const Common::RobotState &state, const 
     return trajectory;
 }
 
-Trajectory Trajectory::makeOpponentDssTrajectory(const Common::RobotState &state, const float a_dec)
+Trajectory Trajectory::makeStopDssTrajectory(const TrajectoryPiece& cmd_piece, const float a_dec)
 {
     Trajectory trajectory;
 
-    const Common::Vec2 p1 = state.position;
-    const Common::Vec2 v1 = state.velocity;
+    const float t1 = cmd_piece.getStartTime();
+    const Common::Vec2 p1 = cmd_piece.getPosition(t1);
+    const Common::Vec2 v1 = cmd_piece.getVelocity(t1);
     const Common::Vec2 a1 = v1.normalized() * (-a_dec);
 
     const float dec_dt = v1.length() / a_dec;

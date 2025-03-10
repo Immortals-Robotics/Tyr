@@ -35,14 +35,15 @@ void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProf
     const Trajectory trajectory = Trajectory::makeRobotTrajectory(robot.state().position, robot.currentMotion(), target, t_profile);
 
     const float dt = 1.f / Common::config().vision.vision_frame_rate;
-    Common::Vec2 motion_cmd = trajectory.getVelocity(dt);
+    TrajectoryPiece commandPiece = trajectory.getCommandPiece(dt);
 
     if (!(t_flags & NavigationFlagsForceNoObstacles))
     {
         m_dss->setObstacleMap(&m_obsMap[t_robot_num]);
-        motion_cmd = m_dss->ComputeSafeMotion(t_robot_num, motion_cmd, t_profile);
+        commandPiece = m_dss->ComputeSafeMotion(t_robot_num, commandPiece, t_profile);
     }
 
+    Common::Vec2 motion_cmd = commandPiece.getVelocity(dt);
     robot.move(motion_cmd);
 }
 } // namespace Tyr::Soccer

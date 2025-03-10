@@ -1,13 +1,12 @@
 #pragma once
 
+#include "../trajectory/trajectory_piece.h"
 #include "../../robot/robot.h"
 
 namespace Tyr::Soccer
 {
 class ObstacleMap;
-}
-namespace Tyr::Soccer
-{
+
 class Dss
 {
 public:
@@ -20,7 +19,7 @@ public:
         m_map = t_map;
     }
 
-    Common::Vec2 ComputeSafeMotion(int robot_num, const Common::Vec2 &motion, const VelocityProfile &t_profile);
+    TrajectoryPiece ComputeSafeMotion(int robot_num, const TrajectoryPiece &cmd, const VelocityProfile &t_profile);
 
 private:
     const ObstacleMap* m_map = nullptr;
@@ -31,21 +30,18 @@ private:
 
     const Common::WorldState *m_world;
 
-    Common::Vec2 computed_motions[Common::Config::Common::kMaxRobots];
+    TrajectoryPiece cached_motions[Common::Config::Common::kMaxRobots];
 
-    Common::Vec2 GetAccFromMotion(int robot_num, const Common::Vec2 &motion);
-    Common::Vec2 GetMotionFromAcc(int robot_num, const Common::Vec2 &acc);
+    bool collisionWithOwn(const TrajectoryPiece &cmd_a,
+                          const TrajectoryPiece &cmd_b) const;
 
-    bool collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2 &cmd_a,
-                          const Common::RobotState &state_b, const Common::Vec2 &cmd_b) const;
-
-    bool collisionWithOpp(const Common::RobotState &state_own, const Common::Vec2 &cmd_own,
+    bool collisionWithOpp(const TrajectoryPiece &cmd_own,
                           const Common::RobotState &state_opp) const;
 
-    bool RobotHasStaticCollision(const Common::RobotState &state, const Common::Vec2 &cmd) const;
+    bool RobotHasStaticCollision(const TrajectoryPiece &cmd) const;
 
-    bool         IsAccSafe(int robot_num, const Common::Vec2 &cmd);
-    Common::Vec2 GetRandomAcceleration(float a_mag);
-    static float ComputeError(const Common::Vec2 &target, const Common::Vec2 &current);
+    bool         isSafe(int robot_num, const TrajectoryPiece &cmd);
+    TrajectoryPiece GetRandomAcceleration(const TrajectoryPiece &original);
+    static float ComputeError(const TrajectoryPiece &target, const TrajectoryPiece &current);
 };
 } // namespace Tyr::Soccer

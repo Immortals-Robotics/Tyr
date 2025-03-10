@@ -31,6 +31,8 @@ public:
         : m_acc(acc), m_v_start(v_start), m_p_start(p_start), m_t_start(t_start), m_t_end(t_end)
     {}
 
+    static TrajectoryPiece makeOppPiece(const Common::RobotState& state);
+
     inline Common::Vec2 getPosition(const float t) const
     {
         const float dt = t - m_t_start;
@@ -41,6 +43,11 @@ public:
     {
         const float dt = t - m_t_start;
         return m_v_start + m_acc * dt;
+    }
+
+    inline void setAcceleration(const Common::Vec2 acc)
+    {
+        m_acc = acc;
     }
 
     inline Common::Vec2 getAcceleration() const

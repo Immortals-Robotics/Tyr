@@ -8,55 +8,35 @@ namespace Tyr::Soccer
 Dss::Dss(const Common::WorldState *const t_world) : m_world(t_world)
 {}
 
-Common::Vec2 Dss::GetAccFromMotion(const int robot_num, const Common::Vec2 &motion)
+bool Dss::collisionWithOwn(const TrajectoryPiece &cmd_a,
+                           const TrajectoryPiece &cmd_b) const
 {
-    const Common::RobotState &state = m_world->own_robot[robot_num];
-
-    return (motion - state.velocity) * Common::config().vision.vision_frame_rate;
-}
-
-Common::Vec2 Dss::GetMotionFromAcc(const int robot_num, const Common::Vec2 &acc)
-{
-    const Common::RobotState &state        = m_world->own_robot[robot_num];
-    const Common::Vec2        target_speed = state.velocity + (acc / Common::config().vision.vision_frame_rate);
-
-    return target_speed;
-}
-
-bool Dss::collisionWithOwn(const Common::RobotState &state_a, const Common::Vec2 &cmd_a,
-                           const Common::RobotState &state_b, const Common::Vec2 &cmd_b) const
-{
-    const Trajectory traj_a =
-        Trajectory::makeDssTrajectory(state_a, cmd_a, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
-    const Trajectory traj_b =
-        Trajectory::makeDssTrajectory(state_b, cmd_b, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
+    const Trajectory traj_a = Trajectory::makeDssTrajectory(cmd_a, m_profile.deceleration);
+    const Trajectory traj_b = Trajectory::makeDssTrajectory(cmd_b, m_profile.deceleration);
 
     return traj_a.hasCollision(traj_b, Common::field().robot_radius * 2.f);
 }
 
-bool Dss::collisionWithOpp(const Common::RobotState &state_own, const Common::Vec2 &cmd_own,
+bool Dss::collisionWithOpp(const TrajectoryPiece &cmd_own,
                            const Common::RobotState &state_opp) const
 {
-    const Trajectory traj_own = Trajectory::makeDssTrajectory(state_own, cmd_own, m_profile.deceleration,
-                                                           1.0f / Common::config().vision.vision_frame_rate);
-    const Trajectory traj_opp = Trajectory::makeOpponentDssTrajectory(state_opp, m_profile.deceleration);
+    const Trajectory traj_own = Trajectory::makeDssTrajectory(cmd_own, m_profile.deceleration);
+    const Trajectory traj_opp = Trajectory::makeStopDssTrajectory(TrajectoryPiece::makeOppPiece(state_opp), m_profile.deceleration);
 
     return traj_own.hasCollision(traj_opp, Common::field().robot_radius * 2.f);
 }
 
-bool Dss::RobotHasStaticCollision(const Common::RobotState &state, const Common::Vec2 &cmd) const
+bool Dss::RobotHasStaticCollision(const TrajectoryPiece &cmd) const
 {
     const Trajectory traj =
-        Trajectory::makeDssTrajectory(state, cmd, m_profile.deceleration, 1.0f / Common::config().vision.vision_frame_rate);
+        Trajectory::makeDssTrajectory(cmd, m_profile.deceleration);
 
     return traj.hasCollision(*m_map);
 }
 
-bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
+bool Dss::isSafe(const int robot_num, const TrajectoryPiece &cmd)
 {
-    const Common::RobotState &state = m_world->own_robot[robot_num];
-
-    if (RobotHasStaticCollision(state, cmd))
+    if (RobotHasStaticCollision(cmd))
     {
         return false;
     }
@@ -74,9 +54,9 @@ bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
             continue;
         }
 
-        const Common::Vec2 &other_cmd = computed_motions[robot_idx];
+        const TrajectoryPiece &other_cmd = cached_motions[robot_idx];
 
-        if (collisionWithOwn(state, cmd, other_state, other_cmd))
+        if (collisionWithOwn(cmd, other_cmd))
         {
             return false;
         }
@@ -90,7 +70,7 @@ bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
             continue;
         }
 
-        if (collisionWithOpp(state, cmd, other_state))
+        if (collisionWithOpp(cmd, other_state))
         {
             return false;
         }
@@ -99,39 +79,35 @@ bool Dss::IsAccSafe(const int robot_num, const Common::Vec2 &cmd)
     return true;
 }
 
-Common::Vec2 Dss::GetRandomAcceleration(const float a_mag)
+TrajectoryPiece Dss::GetRandomAcceleration(const TrajectoryPiece &original)
 {
+    const float a_mag = original.getAcceleration().length();
     const Common::Angle rnd_angle     = Common::Angle::fromDeg(m_random.get(0.0f, 360.0f));
     const float         rnd_magnitude = m_random.get(0.0f, a_mag);
 
-    return rnd_angle.toUnitVec() * rnd_magnitude;
+    const Common::Vec2 acc = rnd_angle.toUnitVec() * rnd_magnitude;
+
+    TrajectoryPiece random = original;
+    random.setAcceleration(acc);
+    return random;
 }
 
-float Dss::ComputeError(const Common::Vec2 &target, const Common::Vec2 &current)
+float Dss::ComputeError(const TrajectoryPiece &target, const TrajectoryPiece &current)
 {
-    return target.distanceTo(current);
+    const Common::Vec2 a0_current = current.getAcceleration();
+    const Common::Vec2 a0_target = target.getAcceleration();
+    return a0_target.distanceTo(a0_current);
 }
 
 void Dss::Reset()
 {
     for (int robot_idx = 0; robot_idx < Common::Config::Common::kMaxRobots; ++robot_idx)
     {
-        const Common::RobotState &state = m_world->own_robot[robot_idx];
-
-        if (state.seen_state == Common::SeenState::CompletelyOut)
-        {
-            computed_motions[robot_idx] = Common::Vec2();
-        }
-        else
-        {
-            const float dec =
-                std::min(m_profile.deceleration, state.velocity.length() * Common::config().vision.vision_frame_rate);
-            computed_motions[robot_idx] = state.velocity.normalized() * (-dec);
-        }
+        cached_motions[robot_idx] = {};
     }
 }
 
-Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &motion, const VelocityProfile &t_profile)
+TrajectoryPiece Dss::ComputeSafeMotion(const int robot_num, const TrajectoryPiece &cmd, const VelocityProfile &t_profile)
 {
     m_profile = t_profile;
     // TODO: in simulation setting a lower dec compared
@@ -139,55 +115,51 @@ Common::Vec2 Dss::ComputeSafeMotion(const int robot_num, const Common::Vec2 &mot
     // Verify on the real field
     m_profile.deceleration /= 2.0f;
 
-    const Common::Vec2        target_a_cmd     = GetAccFromMotion(robot_num, motion);
-    const float               target_a_cmd_mag = target_a_cmd.length();
-    Common::Vec2              a_cmd;
+    TrajectoryPiece result;
+
     const Common::RobotState &state = m_world->own_robot[robot_num];
 
-    if (state.seen_state == Common::SeenState::CompletelyOut || m_map->isInObstacle(state.position))
+    if (state.seen_state == Common::SeenState::CompletelyOut ||
+        m_map->isInObstacle(state.position) ||
+        isSafe(robot_num, cmd))
     {
-        a_cmd = target_a_cmd;
-    }
-    else if (IsAccSafe(robot_num, target_a_cmd))
-    {
-        a_cmd = target_a_cmd;
+        result = cmd;
     }
     else
     {
-        const float dec =
-            std::min(m_profile.deceleration, state.velocity.length() * Common::config().vision.vision_frame_rate);
-        a_cmd       = state.velocity.normalized() * (-dec);
-        float error = ComputeError(target_a_cmd, a_cmd);
+        const float dt = 1.f / Common::config().vision.vision_frame_rate;
+        result = Trajectory::makeStopDssTrajectory(cmd, m_profile.deceleration).getCommandPiece(dt);
+        float error = ComputeError(cmd, result);
 
         for (int iter_idx = 0; iter_idx < 100; ++iter_idx)
         {
-            const Common::Vec2 rnd_a_cmd = GetRandomAcceleration(target_a_cmd_mag);
+            const TrajectoryPiece rnd_cmd = GetRandomAcceleration(cmd);
 
-            const float new_error = ComputeError(target_a_cmd, rnd_a_cmd);
+            const float new_error = ComputeError(cmd, rnd_cmd);
             if (new_error >= error)
             {
                 continue;
             }
 
-            if (!IsAccSafe(robot_num, rnd_a_cmd))
+            if (!isSafe(robot_num, rnd_cmd))
             {
                 continue;
             }
 
-            a_cmd = rnd_a_cmd;
+            result = rnd_cmd;
             error = new_error;
         }
     }
 
-    const float error = ComputeError(target_a_cmd, a_cmd);
+    const float error = ComputeError(cmd, result);
     if (error > 0 && state.seen_state != Common::SeenState::CompletelyOut)
     {
         Common::debug().draw(Common::Circle{state.position, Common::field().robot_radius}, Common::Color::magenta(),
                              false, 30.f);
         Common::logDebug("dss changed motion: {}, error: {}", state.vision_id, error);
     }
-    computed_motions[robot_num]    = a_cmd;
-    const Common::Vec2 safe_motion = GetMotionFromAcc(robot_num, a_cmd);
-    return safe_motion;
+
+    cached_motions[robot_num]    = result;
+    return result;
 }
 } // namespace Tyr::Soccer
