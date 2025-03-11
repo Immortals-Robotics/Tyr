@@ -46,6 +46,8 @@ public:
         orientationMeasurementNoise(Filter::OrientationMeasurement::THETA_COS,Filter::OrientationMeasurement::THETA_COS) = 0.0003f;    // θ variance in sin(rad)² (about 1°)²
         orientationMeasurementNoise(Filter::OrientationMeasurement::THETA_SIN,Filter::OrientationMeasurement::THETA_SIN) = 0.0003f;    // θ variance in sin(rad)² (about 1°)²
         m_orientation_model.setCovariance(orientationMeasurementNoise);
+
+        reset({},{});
     }
 
     // Initialize the position whenever it is lost and re-found. Use this for the first initial state too.
@@ -80,8 +82,10 @@ public:
         m_kalman.init(robot_state);
     }
 
-    // ticks the kalman, should be called before update
-    void tick()
+    // propagated the state forward in time
+    // this needs to be called every frame no matter if new data is available or not
+    // if new vision data is available, it should be provided via update
+    void predict()
     {
         m_kalman.predict(m_system_model);
     }

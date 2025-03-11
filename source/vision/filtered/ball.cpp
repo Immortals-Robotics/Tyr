@@ -60,14 +60,14 @@ void Filtered::newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen,
 
 void Filtered::filterBalls(const bool t_new_kalman)
 {
-    auto &balls = m_raw_state.balls;
+    const auto &raw_balls = m_raw_state.balls;
 
-    int             id  = std::numeric_limits<int>::max();
-    float           dis = std::numeric_limits<float>::max();
-
-    for (size_t i = 0; i < balls.size(); i++)
+    // find the closest ball to last known ball
+    int   id  = -1;
+    float dis = std::numeric_limits<float>::max();
+    for (size_t i = 0; i < raw_balls.size(); i++)
     {
-        const float curr_dis = balls[i].position.distanceTo(m_last_raw_ball.position);
+        const float curr_dis = raw_balls[i].position.distanceTo(m_last_raw_ball.position);
         if (curr_dis < dis)
         {
             dis = curr_dis;
@@ -75,81 +75,69 @@ void Filtered::filterBalls(const bool t_new_kalman)
         }
     }
 
-    if (dis < Common::config().vision.max_ball_2_frame_dist)
+    const bool ball_found = id >= 0;
+    const bool ball_changed = dis > Common::config().vision.max_ball_2_frame_dist;
+
+    if (!t_new_kalman)
     {
-        if (m_ball_not_seen > 0)
+        m_ball_kalman.predict();
+    }
+
+    if (ball_found)
+    {
+        const Common::RawBallState& raw_ball = raw_balls[id];
+
+        if (ball_changed ||
+            m_state.ball.seen_state == Common::SeenState::CompletelyOut)
         {
             if (t_new_kalman)
             {
-                m_ball_ekf->init(balls[id].position.xy());
+                m_ball_ekf->init(raw_ball.position.xy());
             }
             else
             {
-                m_ball_kalman.reset(balls[id].position.xy());
+                m_ball_kalman.reset(raw_ball.position.xy());
             }
         }
 
         if (t_new_kalman)
         {
             ChipEstimator::Ball3D ball_3d = m_chip_estimator->getBall3D(
-            balls[id].position.xy(), balls[id].frame.camera_id, m_raw_state.time, m_state.own_robot, m_state.opp_robot);
+            raw_ball.position.xy(), raw_ball.frame.camera_id, m_raw_state.time, m_state.own_robot, m_state.opp_robot);
 
-            newKalmanBall(balls[id].position.xy(), true, balls[id].frame.camera_id, ball_3d);
+            newKalmanBall(raw_ball.position.xy(), true, raw_ball.frame.camera_id, ball_3d);
         }
         else
         {
-            m_ball_kalman.update(balls[id].position.xy());
-            m_state.ball.position = m_ball_kalman.getPosition();
-            m_state.ball.velocity = m_ball_kalman.getVelocity();
+            m_ball_kalman.update(raw_ball.position.xy());
         }
-        m_ball_not_seen         = 0;
-        m_state.ball.seen_state = Common::SeenState::Seen;
 
-        m_last_raw_ball = balls[id];
+        m_ball_not_seen = 0;
+
+        m_last_raw_ball = raw_ball;
     }
-
     else
     {
         m_ball_not_seen++;
+    }
 
-        if (m_ball_not_seen > Common::config().vision.max_ball_frame_not_seen)
-        {
-            if (balls.size() > 0)
-            {
-                m_last_raw_ball = balls[id];
-                if (t_new_kalman)
-                {
-                    m_ball_ekf->init(balls[id].position.xy());
-                    newKalmanBall(balls[id].position.xy(), true, balls[id].frame.camera_id);
-                }
-                else
-                {
-                    m_ball_kalman.reset(balls[id].position.xy());
+    if (m_ball_not_seen == 0)
+    {
+        m_state.ball.seen_state = Common::SeenState::Seen;
+    }
+    else if (m_ball_not_seen < Common::config().vision.max_ball_frame_not_seen)
+    {
+        m_state.ball.seen_state = Common::SeenState::TemporarilyOut;
+    }
+    else
+    {
+        m_state.ball.seen_state = Common::SeenState::CompletelyOut;
+    }
 
-                    m_ball_kalman.update(balls[id].position.xy());
-                    m_state.ball.position = m_ball_kalman.getPosition();
-                    m_state.ball.velocity = m_ball_kalman.getVelocity();
-                }
-                m_ball_not_seen         = 0;
-                m_state.ball.seen_state = Common::SeenState::Seen;
-            }
-            else
-            {
-                m_state.ball.velocity = Common::Vec2{};
-
-                m_last_raw_ball = Common::RawBallState();
-
-                m_state.ball.seen_state = Common::SeenState::CompletelyOut;
-            }
-        }
-        else
-        {
-            if (t_new_kalman)
-            {
-                newKalmanBall(Common::Vec2(0, 0), false, 0);
-            }
-            m_state.ball.seen_state = Common::SeenState::TemporarilyOut;
-        }
+    if (!t_new_kalman)
+    {
+        m_state.ball.position = m_ball_kalman.getPosition();
+        m_state.ball.velocity = m_ball_kalman.getVelocity();
     }
 }
 

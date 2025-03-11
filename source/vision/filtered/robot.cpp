@@ -25,7 +25,7 @@ void Filtered::filterRobots(Common::TeamColor t_color)
         auto &robot = robots[i];
         TrackedRobot& kalman = m_robot_kalman[color_id][i];
 
-        kalman.tick();
+        kalman.predict();
 
         bool found = false;
         for (size_t j = 0; j < raw_robots.size(); j++)

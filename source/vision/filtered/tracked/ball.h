@@ -31,6 +31,8 @@ public:
         measurementNoise(Filter::PositionMeasurement::X,Filter::PositionMeasurement::X) = 1.0;    // x variance in mm² (1mm)²
         measurementNoise(Filter::PositionMeasurement::Y,Filter::PositionMeasurement::Y) = 1.0;    // y variance in mm² (1mm)²
         m_position_model.setCovariance(measurementNoise);
+
+        reset({});
     }
 
     // Initialize the position whenever it is lost and re-found. Use this for the first initial state too.
@@ -55,11 +57,17 @@ public:
         m_kalman.init(state);
     }
 
+    // propagated the state forward in time
+    // this needs to be called every frame no matter if new data is available or not
+    // if new vision data is available, it should be provided via update
+    void predict()
+    {
+        m_kalman.predict(m_system_model);
+    }
+
     //  update the internal state using known vision data
     void update(const Common::Vec2 t_pos)
     {
-        m_kalman.predict(m_system_model);
-
         Filter::PositionMeasurement pos_measurement{t_pos};
         m_kalman.update(m_position_model, pos_measurement);
     }
