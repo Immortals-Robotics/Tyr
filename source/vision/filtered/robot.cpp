@@ -27,29 +27,19 @@ void Filtered::filterRobots(Common::TeamColor t_color)
 
         kalman.predict();
 
-        bool found = false;
         for (size_t j = 0; j < raw_robots.size(); j++)
         {
             const auto &raw_robot = raw_robots[j];
 
             if (raw_robot.id == i)
             {
-                found = true;
-
                 if (robot.seen_state == Common::SeenState::CompletelyOut)
                 {
                     kalman.reset(raw_robot.position, raw_robot.angle);
                 }
 
-                m_robot_not_seen[color_id][i] = 0;
-
                 kalman.update(raw_robot.position, raw_robot.angle);
             }
-        }
-
-        if (!found)
-        {
-            m_robot_not_seen[color_id][i] = std::min(m_robot_not_seen[color_id][i] + 1, Common::config().vision.max_robot_frame_not_seen + 1);
         }
 
         robot.position = kalman.state().position();
@@ -109,11 +99,11 @@ void Filtered::sendStates()
         own_robots[i].color     = Common::config().common.our_color;
         own_robots[i].vision_id = i;
 
-        if (m_robot_not_seen[our_color_id][i] == 0)
+        if (m_tracked_robot[our_color_id][i].notSeen() == 0)
         {
             own_robots[i].seen_state = Common::SeenState::Seen;
         }
-        else if (m_robot_not_seen[our_color_id][i] < Common::config().vision.max_robot_frame_not_seen)
+        else if (m_tracked_robot[our_color_id][i].notSeen() < Common::config().vision.max_robot_frame_not_seen)
         {
             own_robots[i].seen_state = Common::SeenState::TemporarilyOut;
         }
@@ -122,7 +112,7 @@ void Filtered::sendStates()
             own_robots[i].seen_state = Common::SeenState::CompletelyOut;
         }
 
-        if (m_robot_not_seen[our_color_id][i] < kMaxRobotSubstitute)
+        if (m_tracked_robot[our_color_id][i].notSeen() < kMaxRobotSubstitute)
         {
             own_robots[i].out_for_substitute = false;
         }
@@ -140,11 +130,11 @@ void Filtered::sendStates()
         opp_robots[i].color     = static_cast<Common::TeamColor>(opp_color_id);
         opp_robots[i].vision_id = i;
 
-        if (m_robot_not_seen[opp_color_id][i] == 0)
+        if (m_tracked_robot[opp_color_id][i].notSeen() == 0)
         {
             opp_robots[i].seen_state = Common::SeenState::Seen;
         }
-        else if (m_robot_not_seen[opp_color_id][i] < Common::config().vision.max_robot_frame_not_seen)
+        else if (m_tracked_robot[opp_color_id][i].notSeen() < Common::config().vision.max_robot_frame_not_seen)
         {
             opp_robots[i].seen_state = Common::SeenState::TemporarilyOut;
         }

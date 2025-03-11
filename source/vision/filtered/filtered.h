@@ -44,10 +44,8 @@ private:
     std::unique_ptr<Common::NngServer> m_server;
 
     TrackedBall m_tracked_ball;
-    int         m_ball_not_seen = std::numeric_limits<int>::max() - 1;
 
     TrackedRobot m_tracked_robot[2][Common::Config::Common::kMaxRobots];
-    int          m_robot_not_seen[2][Common::Config::Common::kMaxRobots];
 
     static constexpr size_t kMaxHist = 7;
     using CommandHistory = std::deque<Sender::Command>;

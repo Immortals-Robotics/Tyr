@@ -4,14 +4,6 @@ namespace Tyr::Vision
 {
 Filtered::Filtered()
 {
-    for (int color_idx = 0; color_idx < 2; ++color_idx)
-    {
-        for (int robot_idx = 0; robot_idx < Common::Config::Common::kMaxRobots; robot_idx++)
-        {
-            m_robot_not_seen[color_idx][robot_idx] = std::numeric_limits<int>::max() - 1;
-        }
-    }
-
     m_raw_client      = std::make_unique<Common::NngClient>(Common::config().network.raw_world_state_url);
     m_cmd_client      = std::make_unique<Common::NngClient>(Common::config().network.commands_url);
     m_server          = std::make_unique<Common::NngServer>(Common::config().network.world_state_url);

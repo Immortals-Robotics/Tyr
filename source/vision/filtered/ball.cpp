@@ -115,19 +115,13 @@ void Filtered::filterBalls(const bool t_new_kalman)
                 m_tracked_ball.update(raw_ball.position.xy());
             }
         }
-
-        m_ball_not_seen = 0;
-    }
-    else
-    {
-        m_ball_not_seen = std::min(m_ball_not_seen + 1, Common::config().vision.max_ball_frame_not_seen + 1);
     }
 
-    if (m_ball_not_seen == 0)
+    if (m_tracked_ball.notSeen() == 0)
     {
         m_state.ball.seen_state = Common::SeenState::Seen;
     }
-    else if (m_ball_not_seen < Common::config().vision.max_ball_frame_not_seen)
+    else if (m_tracked_ball.notSeen() < Common::config().vision.max_ball_frame_not_seen)
     {
         m_state.ball.seen_state = Common::SeenState::TemporarilyOut;
     }
