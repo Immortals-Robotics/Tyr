@@ -37,13 +37,6 @@ private:
     static constexpr float kPredictSteps       = 7.0f;
     static constexpr int   kMaxRobotSubstitute = 60;
 
-    // Don't add prediction to Ball or Opponents if both velocities are below this threshold
-    static constexpr float kIgnorePrediction = 0.045f;
-
-    // If the filtering process yields velocities above these values, reset the filter state
-    // All these are in metres/sec
-    static constexpr float kRobotErrorVelocity = 4500.0f;
-
     static constexpr int kMaxHistDraw = 200;
 
     std::unique_ptr<Common::NngClient> m_raw_client;

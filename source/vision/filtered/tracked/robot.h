@@ -80,11 +80,15 @@ public:
         m_kalman.init(robot_state);
     }
 
+    // ticks the kalman, should be called before update
+    void tick()
+    {
+        m_kalman.predict(m_system_model);
+    }
+
     //  update the internal state using known vision data
     void update(const Common::Vec2 t_pos, const Common::Angle t_angle)
     {
-        m_kalman.predict(m_system_model);
-
         Filter::PositionMeasurement pos_measurement{t_pos};
         m_kalman.update(m_position_model, pos_measurement);
 

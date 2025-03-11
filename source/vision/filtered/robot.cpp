@@ -23,22 +23,20 @@ void Filtered::filterRobots(Common::TeamColor t_color)
     for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         auto &robot = robots[i];
+        TrackedRobot& kalman = m_robot_kalman[color_id][i];
 
-        Common::Vec2 filt_pos{};
-        Common::Vec2 filt_vel{};
+        kalman.tick();
 
         bool found = false;
         for (size_t j = 0; j < raw_robots.size(); j++)
         {
-            auto &raw_robot = raw_robots[j];
+            const auto &raw_robot = raw_robots[j];
 
             if (raw_robot.id == i)
             {
                 found = true;
 
-                TrackedRobot& kalman = m_robot_kalman[color_id][i];
-
-                if (m_robot_not_seen[color_id][i] > 0)
+                if (robot.seen_state == Common::SeenState::CompletelyOut)
                 {
                     kalman.reset(raw_robot.position, raw_robot.angle);
                 }
@@ -46,46 +44,19 @@ void Filtered::filterRobots(Common::TeamColor t_color)
                 m_robot_not_seen[color_id][i] = 0;
 
                 kalman.update(raw_robot.position, raw_robot.angle);
-
-                filt_pos = kalman.getPosition();
-                filt_vel = kalman.getVelocity();
-
-                robot.angle = kalman.getAngle();
-                robot.angular_velocity =  kalman.getAngularVelocity();
-
-
-                // Make sure our filtered velocities are reasonable
-                if (std::fabs(robot.angular_velocity.deg()) < 20.0f)
-                    robot.angular_velocity.setDeg(0.0f);
             }
         }
 
         if (!found)
         {
-            m_robot_not_seen[color_id][i]++;
-            if (m_robot_not_seen[color_id][i] >= Common::config().vision.max_robot_frame_not_seen + 1)
-                m_robot_not_seen[color_id][i] = Common::config().vision.max_robot_frame_not_seen + 1;
-
-            robot.angular_velocity.setDeg(0.0f);
+            m_robot_not_seen[color_id][i] = std::min(m_robot_not_seen[color_id][i] + 1, Common::config().vision.max_robot_frame_not_seen + 1);
         }
 
-        else
-        {
-            robot.position = filt_pos;
-            robot.velocity = filt_vel;
+        robot.position = kalman.getPosition();
+        robot.velocity = kalman.getVelocity();
 
-            // Make sure our filtered velocities are reasonable
-            if ((robot.velocity.length()) > kRobotErrorVelocity)
-            {
-                robot.velocity.x = 0.0f;
-                robot.velocity.y = 0.0f;
-            }
-
-            if (std::fabs(robot.velocity.x) < kIgnorePrediction * 2.0f)
-                robot.velocity.x = 0.0f;
-            if (std::fabs(robot.velocity.y) < kIgnorePrediction * 2.0f)
-                robot.velocity.y = 0.0f;
-        }
+        robot.angle = kalman.getAngle();
+        robot.angular_velocity =  kalman.getAngularVelocity();
     }
 }
 
