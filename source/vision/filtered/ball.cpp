@@ -143,38 +143,27 @@ void Filtered::filterBalls(const bool t_new_kalman)
 
 void Filtered::predictBall()
 {
-    m_state.ball.position /= 1000.0f;
-    m_state.ball.velocity /= 1000.0f;
+    // TODO: move these to the ball system model
 
-    float k       = 0.25f; // velocity derate every sec(units (m/s)/s)
-    float tsample = (float) 1.0f / (float) Common::config().vision.vision_frame_rate;
-
-    float t;
-    if (m_state.ball.seen_state == Common::SeenState::TemporarilyOut)
-        t = tsample;
-    else
-        t = kPredictSteps * tsample;
-
-    float dist       = m_state.ball.velocity.length() * t - k * (t * t) / 2.0f;
-    float vball_pred = m_state.ball.velocity.length() - k * t;
-
-    // if speed turns out to be negative..it means that ball has stopped, so calculate that amount of
-    // distance traveled
-    if (vball_pred < 0)
+    // can't predict stationary balls
+    if (m_state.ball.velocity.length() == 0.0f)
     {
-        vball_pred = 0.0f;
-        dist       = m_state.ball.velocity.lengthSquared() * k / 2.0f;
-        // i.e the ball has stopped, so take a newer vision data for the prediction
+        return;
     }
 
-    if (m_state.ball.velocity.length() > 0)
-    {
-        m_state.ball.velocity = m_state.ball.velocity.normalized() * vball_pred;
-        m_state.ball.position += m_state.ball.velocity.normalized() * dist;
-    }
+    const float k  = 700.f; // ball deceleration (mm/s2)
+    const Common::Vec2 deceleration = -m_state.ball.velocity.normalized() * k;
 
-    m_state.ball.velocity *= 1000.0f;
-    m_state.ball.position *= 1000.0f;
+    const float time_to_stop = m_state.ball.velocity.length() / k;
+
+    float dt = 1.0f / Common::config().vision.vision_frame_rate;
+    const float prediction_time = std::min(time_to_stop, kPredictSteps * dt);
+
+    Common::Vec2 predicted_velocity = m_state.ball.velocity + deceleration * prediction_time;
+    const Common::Vec2 displacement = (m_state.ball.velocity + predicted_velocity) * (0.5f * prediction_time);
+
+    m_state.ball.velocity = predicted_velocity;
+    m_state.ball.position += displacement;
 }
 
 } // namespace Tyr::Vision
