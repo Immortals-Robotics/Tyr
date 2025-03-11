@@ -24,7 +24,8 @@ public:
         x_.vy() = u.vy();
 
         // Update orientation separately
-        x_.theta() = x.theta() + u.dtheta() * dt;
+        // TODO:
+        //x_.theta() = x.theta() + u.dtheta() * dt;
 
         return x_;
     }

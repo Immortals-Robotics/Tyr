@@ -26,7 +26,8 @@ public:
         processNoise(Filter::RobotState::VY,Filter::RobotState::VY) = 2000.0f * dt;  // vy variance (mm²/s²)
 
         // Orientation variance
-        processNoise(Filter::RobotState::THETA,Filter::RobotState::THETA) = 100.0f * dt;   // θ variance (degrees²)
+        processNoise(Filter::RobotState::THETA_COS,Filter::RobotState::THETA_COS) = 0.03f * dt;   // θ variance (sin(degrees)²)
+        processNoise(Filter::RobotState::THETA_SIN,Filter::RobotState::THETA_SIN) = 0.03f * dt;   // θ variance (sin(degrees)²)
         m_system_model.setCovariance(processNoise);
 
         // measurement noise covariance
@@ -38,7 +39,8 @@ public:
 
         Kalman::Covariance<Filter::OrientationMeasurement> orientationMeasurementNoise{};
         orientationMeasurementNoise.setZero();
-        orientationMeasurementNoise(Filter::OrientationMeasurement::THETA,Filter::OrientationMeasurement::THETA) = 1.0;    // θ variance in degrees² (about 1°)²
+        orientationMeasurementNoise(Filter::OrientationMeasurement::THETA_COS,Filter::OrientationMeasurement::THETA_COS) = 0.0003f;    // θ variance in sin(rad)² (about 1°)²
+        orientationMeasurementNoise(Filter::OrientationMeasurement::THETA_SIN,Filter::OrientationMeasurement::THETA_SIN) = 0.0003f;    // θ variance in sin(rad)² (about 1°)²
         m_orientation_model.setCovariance(orientationMeasurementNoise);
     }
 
@@ -58,14 +60,16 @@ public:
         initialStateCovariance(Filter::RobotState::VY,Filter::RobotState::VY) = 1000.0;  // vy variance (mm²/s²)
 
         // Initial orientation uncertainty
-        initialStateCovariance(Filter::RobotState::THETA,Filter::RobotState::THETA) = 25.0;   // θ variance (degrees²)
+        initialStateCovariance(Filter::RobotState::THETA_COS,Filter::RobotState::THETA_COS) = 0.01f;   // θ variance (sin(degrees)²)
+        initialStateCovariance(Filter::RobotState::THETA_SIN,Filter::RobotState::THETA_SIN) = 0.01f;   // θ variance (sin(degrees)²)
 
         m_kalman.setCovariance(initialStateCovariance);
 
         Filter::RobotState robot_state{};
         robot_state.x() = t_pos.x;
         robot_state.y() = t_pos.y;
-        robot_state.theta() = t_angle.deg();
+        robot_state.theta_cos() = t_angle.cos();
+        robot_state.theta_sin() = t_angle.sin();
         m_kalman.init(robot_state);
     }
 
@@ -96,7 +100,7 @@ public:
     Common::Angle getAngle() const
     {
         const Filter::RobotState& state = m_kalman.getState();
-        return Common::Angle::fromDeg(state.theta());
+        return Common::Angle::fromVec({state.theta_cos(), state.theta_sin()});
     }
 
     Common::Angle getAngularVelocity() const

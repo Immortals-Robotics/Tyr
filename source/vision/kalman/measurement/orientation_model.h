@@ -14,13 +14,15 @@ public:
         this->V.setIdentity();
 
         this->H.setZero();
-        this->H(OrientationMeasurement::THETA, RobotState::THETA) = 1.0;
+        this->H(OrientationMeasurement::THETA_COS, RobotState::THETA_COS) = 1.f;
+        this->H(OrientationMeasurement::THETA_SIN, RobotState::THETA_SIN) = 1.f;
     }
 
     OrientationMeasurement h(const RobotState &x) const override
     {
-        OrientationMeasurement measurement;
-        measurement.theta() = x.theta();
+        OrientationMeasurement measurement{};
+        measurement.theta_cos() = x.theta_cos();
+        measurement.theta_sin() = x.theta_sin();
         return measurement;
     }
 };

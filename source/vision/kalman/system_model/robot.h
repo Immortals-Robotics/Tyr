@@ -26,7 +26,8 @@ public:
         x_.vy() = x.vy();
 
         // Orientation remains unchanged (no control over it)
-        x_.theta() = x.theta();
+        x_.theta_cos() = x.theta_cos();
+        x_.theta_sin() = x.theta_sin();
 
         return x_;
     }
@@ -56,7 +57,8 @@ public:
         this->F(RobotState::VY, RobotState::VY) = 1;
 
         // Orientation updates (remains unchanged)
-        this->F(RobotState::THETA, RobotState::THETA) = 1;
+        this->F(RobotState::THETA_COS, RobotState::THETA_COS) = 1;
+        this->F(RobotState::THETA_SIN, RobotState::THETA_SIN) = 1;
 
         // W = df/dw (Jacobian of state transition w.r.t. noise)
         this->W.setIdentity();
