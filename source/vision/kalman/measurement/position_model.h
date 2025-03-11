@@ -5,12 +5,21 @@
 
 namespace Tyr::Vision::Filter
 {
-class PositionMeasurementModel : public Kalman::MeasurementModel<RobotState, PositionMeasurement, Kalman::SquareRootBase>
+template<typename State>
+class PositionMeasurementModel : public Kalman::LinearizedMeasurementModel<State, PositionMeasurement>
 {
 public:
-    PositionMeasurementModel() = default;
+    PositionMeasurementModel()
+    {
+        // note: these are only used in linear kalmans (extended)
+        this->V.setIdentity();
 
-    PositionMeasurement h(const RobotState &x) const override
+        this->H.setZero();
+        this->H(PositionMeasurement::X, RobotState::X) = 1.0;
+        this->H(PositionMeasurement::Y, RobotState::Y) = 1.0;
+    }
+
+    PositionMeasurement h(const State &x) const override
     {
         PositionMeasurement measurement;
 

@@ -1,19 +1,18 @@
 #pragma once
 
-#include "../state/robot.h"
+#include "../state/ball.h"
 
 namespace Tyr::Vision::Filter
 {
-class RobotSystemModel : public Kalman::LinearizedSystemModel<RobotState>
+class BallSystemModel : public Kalman::LinearizedSystemModel<BallState>
 {
 public:
-
-    RobotState f(const RobotState &x, const Control &u) const override
+    BallState f(const BallState &x, const Control &u) const override
     {
         (void)u;
 
         //! Predicted state vector after transition
-        RobotState x_;
+        BallState x_;
 
         const float dt = 1.f / Common::config().vision.vision_frame_rate;
 
@@ -25,14 +24,11 @@ public:
         x_.vx() = x.vx();
         x_.vy() = x.vy();
 
-        // Orientation remains unchanged (no control over it)
-        x_.theta() = x.theta();
-
         return x_;
     }
 
     // note: these are only used in linear kalmans (extended)
-    void updateJacobians( const RobotState& x, const Control& u )override
+    void updateJacobians( const BallState& x, const Control& u )override
     {
         (void)x;
         (void)u;
@@ -44,19 +40,16 @@ public:
         this->F.setZero();
 
         // Position updates w.r.t. position (identity)
-        this->F(RobotState::X, RobotState::X) = 1;
-        this->F(RobotState::Y, RobotState::Y) = 1;
+        this->F(BallState::X, BallState::X) = 1;
+        this->F(BallState::Y, BallState::Y) = 1;
 
         // Position updates w.r.t. velocity (dt factor)
-        this->F(RobotState::X, RobotState::VX) = dt;
-        this->F(RobotState::Y, RobotState::VY) = dt;
+        this->F(BallState::X, BallState::VX) = dt;
+        this->F(BallState::Y, BallState::VY) = dt;
 
         // Velocity updates
-        this->F(RobotState::VX, RobotState::VX) = 1;
-        this->F(RobotState::VY, RobotState::VY) = 1;
-
-        // Orientation updates (remains unchanged)
-        this->F(RobotState::THETA, RobotState::THETA) = 1;
+        this->F(BallState::VX, BallState::VX) = 1;
+        this->F(BallState::VY, BallState::VY) = 1;
 
         // W = df/dw (Jacobian of state transition w.r.t. noise)
         this->W.setIdentity();

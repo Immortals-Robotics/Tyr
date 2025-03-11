@@ -1,8 +1,10 @@
 #pragma once
 
 #include "../kalman/ekf_3d.h"
-#include "../kalman/filtered_object.h"
 #include "ball_estimator.h"
+
+#include "tracked/ball.h"
+#include "tracked/robot.h"
 
 namespace Tyr::Vision
 {
@@ -49,14 +51,11 @@ private:
     std::unique_ptr<Common::NngServer> m_server;
 
     Common::RawBallState m_last_raw_ball; // The last position of the locked ball
-    FilteredObject       m_ball_kalman;
+    TrackedBall          m_ball_kalman;
     int                  m_ball_not_seen = std::numeric_limits<int>::max() - 1;
 
-    FilteredObject m_robot_kalman[2][Common::Config::Common::kMaxRobots];
-    int            m_robot_not_seen[2][Common::Config::Common::kMaxRobots];
-
-    Common::MedianFilter<Common::Angle> m_angle_filter[2][Common::Config::Common::kMaxRobots];
-    Common::Angle                       m_raw_angles[2][Common::Config::Common::kMaxRobots];
+    TrackedRobot m_robot_kalman[2][Common::Config::Common::kMaxRobots];
+    int          m_robot_not_seen[2][Common::Config::Common::kMaxRobots];
 
     static constexpr size_t kMaxHist = 7;
     using CommandHistory = std::deque<Sender::Command>;

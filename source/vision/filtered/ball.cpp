@@ -64,7 +64,6 @@ void Filtered::filterBalls(const bool t_new_kalman)
 
     int             id  = std::numeric_limits<int>::max();
     float           dis = std::numeric_limits<float>::max();
-    Eigen::VectorXd z(2);
 
     for (size_t i = 0; i < balls.size(); i++)
     {
@@ -78,35 +77,35 @@ void Filtered::filterBalls(const bool t_new_kalman)
 
     if (dis < Common::config().vision.max_ball_2_frame_dist)
     {
-        ChipEstimator::Ball3D ball_3d = m_chip_estimator->getBall3D(
-            balls[id].position.xy(), balls[id].frame.camera_id, m_raw_state.time, m_state.own_robot, m_state.opp_robot);
-        m_last_raw_ball = balls[id];
-        z << balls[id].position.x, balls[id].position.y;
         if (m_ball_not_seen > 0)
         {
-
             if (t_new_kalman)
             {
                 m_ball_ekf->init(balls[id].position.xy());
             }
             else
             {
-                m_ball_kalman.initializePos(balls[id].position.xy());
+                m_ball_kalman.reset(balls[id].position.xy());
             }
         }
 
         if (t_new_kalman)
         {
+            ChipEstimator::Ball3D ball_3d = m_chip_estimator->getBall3D(
+            balls[id].position.xy(), balls[id].frame.camera_id, m_raw_state.time, m_state.own_robot, m_state.opp_robot);
+
             newKalmanBall(balls[id].position.xy(), true, balls[id].frame.camera_id, ball_3d);
         }
         else
         {
-            m_ball_kalman.updatePosition(balls[id].position.xy());
+            m_ball_kalman.update(balls[id].position.xy());
             m_state.ball.position = m_ball_kalman.getPosition();
             m_state.ball.velocity = m_ball_kalman.getVelocity();
         }
         m_ball_not_seen         = 0;
         m_state.ball.seen_state = Common::SeenState::Seen;
+
+        m_last_raw_ball = balls[id];
     }
 
     else
@@ -125,9 +124,9 @@ void Filtered::filterBalls(const bool t_new_kalman)
                 }
                 else
                 {
-                    m_ball_kalman.initializePos(balls[id].position.xy());
+                    m_ball_kalman.reset(balls[id].position.xy());
 
-                    m_ball_kalman.updatePosition(balls[id].position.xy());
+                    m_ball_kalman.update(balls[id].position.xy());
                     m_state.ball.position = m_ball_kalman.getPosition();
                     m_state.ball.velocity = m_ball_kalman.getVelocity();
                 }

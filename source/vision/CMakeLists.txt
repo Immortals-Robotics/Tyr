@@ -7,18 +7,22 @@ set(HEADER_FILES
         pch.h
         filtered/ball_estimator.h
         filtered/filtered.h
+        filtered/tracked/ball.h
+        filtered/tracked/robot.h
+
+        kalman/ekf_3d.h
         kalman/control.h
-        kalman/filtered_object.h
         kalman/measurement/orientation.h
         kalman/measurement/orientation_model.h
         kalman/measurement/position.h
         kalman/measurement/position_model.h
         kalman/state/ball.h
         kalman/state/robot.h
+        kalman/system_model/ball.h
         kalman/system_model/controlled_robot.h
         kalman/system_model/robot.h
-        raw/raw.h
-        kalman/ekf_3d.h)
+
+        raw/raw.h)
 
 set(SOURCE_FILES
         filtered/ball.cpp

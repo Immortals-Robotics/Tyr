@@ -36,25 +36,23 @@ void Filtered::filterRobots(Common::TeamColor t_color)
             {
                 found = true;
 
+                TrackedRobot& kalman = m_robot_kalman[color_id][i];
+
                 if (m_robot_not_seen[color_id][i] > 0)
                 {
-                    m_robot_kalman[color_id][i].initializePos(raw_robot.position);
-                    m_angle_filter[color_id][i].reset();
+                    kalman.reset(raw_robot.position, raw_robot.angle);
                 }
 
                 m_robot_not_seen[color_id][i] = 0;
 
-                m_robot_kalman[color_id][i].updatePosition(raw_robot.position);
-                filt_pos = m_robot_kalman[color_id][i].getPosition();
-                filt_vel = m_robot_kalman[color_id][i].getVelocity();
+                kalman.update(raw_robot.position, raw_robot.angle);
 
-                m_angle_filter[color_id][i].add((raw_robot.angle - m_raw_angles[color_id][i]) *
-                                                Common::config().vision.vision_frame_rate);
-                m_raw_angles[color_id][i] = raw_robot.angle;
+                filt_pos = kalman.getPosition();
+                filt_vel = kalman.getVelocity();
 
-                robot.angular_velocity = m_angle_filter[color_id][i].current();
+                robot.angle = kalman.getAngle();
+                robot.angular_velocity =  kalman.getAngularVelocity();
 
-                robot.angle = raw_robot.angle;
 
                 // Make sure our filtered velocities are reasonable
                 if (std::fabs(robot.angular_velocity.deg()) < 20.0f)
