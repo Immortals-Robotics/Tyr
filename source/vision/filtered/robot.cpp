@@ -72,20 +72,20 @@ void Filtered::predictRobots()
         if (history.empty())
         {
             Common::logWarning("No command history for robot {}", i);
-            robot.position += robot.velocity / (kPredictSteps * 2.0f);
+            robot.position += robot.velocity * (kPredictTime / 2.0f);
         }
         else
         {
             if (robot.seen_state != Common::SeenState::Seen)
             {
                 const Sender::Command& last_cmd = history.back();
-                robot.position += last_cmd.motion / 8.5f;
+                robot.position += last_cmd.motion * kPredictTime;
             }
             else
             {
                 for (const auto& cmd : history)
                 {
-                    robot.position += cmd.motion / 10.f;
+                    robot.position += cmd.motion * (kPredictTime * 0.83f);
                 }
             }
         }
@@ -95,8 +95,8 @@ void Filtered::predictRobots()
     for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         Common::RobotState &robot = opp_robots[i];
-        robot.position += robot.velocity / (kPredictSteps * 2.0f);
-        robot.angle += robot.angular_velocity / (kPredictSteps * 4.0f);
+        robot.position += robot.velocity * kPredictTime;
+        robot.angle += robot.angular_velocity * kPredictTime;
     }
 }
 

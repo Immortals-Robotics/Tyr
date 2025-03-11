@@ -34,7 +34,7 @@ private:
 
 private:
     // TODO: move to settings
-    static constexpr float kPredictSteps       = 7.0f;
+    static constexpr float kPredictTime        = 0.12f; // 120 ms
     static constexpr int   kMaxRobotSubstitute = 60;
 
     static constexpr int kMaxHistDraw = 200;

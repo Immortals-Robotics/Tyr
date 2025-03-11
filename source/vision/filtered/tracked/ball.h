@@ -28,8 +28,8 @@ public:
         // measurement noise covariance
         Kalman::Covariance<Filter::PositionMeasurement> measurementNoise{};
         measurementNoise.setZero();
-        measurementNoise(Filter::PositionMeasurement::X,Filter::PositionMeasurement::X) = 1.0;    // x variance in mm² (1mm)²
-        measurementNoise(Filter::PositionMeasurement::Y,Filter::PositionMeasurement::Y) = 1.0;    // y variance in mm² (1mm)²
+        measurementNoise(Filter::PositionMeasurement::X,Filter::PositionMeasurement::X) = 4.0;    // x variance in mm²
+        measurementNoise(Filter::PositionMeasurement::Y,Filter::PositionMeasurement::Y) = 4.0;    // y variance in mm²
         m_position_model.setCovariance(measurementNoise);
 
         reset({});

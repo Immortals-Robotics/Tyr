@@ -156,8 +156,7 @@ void Filtered::predictBall()
 
     const float time_to_stop = m_state.ball.velocity.length() / k;
 
-    float dt = 1.0f / Common::config().vision.vision_frame_rate;
-    const float prediction_time = std::min(time_to_stop, kPredictSteps * dt);
+    const float prediction_time = std::min(time_to_stop, kPredictTime);
 
     Common::Vec2 predicted_velocity = m_state.ball.velocity + deceleration * prediction_time;
     const Common::Vec2 displacement = (m_state.ball.velocity + predicted_velocity) * (0.5f * prediction_time);
