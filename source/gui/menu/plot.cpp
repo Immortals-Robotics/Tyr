@@ -57,7 +57,7 @@ void PlotMenu::draw(const Common::WorldState &t_world, const bool &t_playback)
             ImGui::Combo("ID", &m_id, id_choices, IM_ARRAYSIZE(id_choices));
         }
 
-        const char *data_choices[] = {"vel", "vel xy", "angle"};
+        const char *data_choices[] = {"Velocity", "Velocity XY", "Angle", "Angular Velocity"};
 
         ImGui::TableNextColumn();
         ImGui::Combo("Data", reinterpret_cast<int *>(&m_type), data_choices, IM_ARRAYSIZE(data_choices));
@@ -101,19 +101,29 @@ void PlotMenu::draw(const Common::WorldState &t_world, const bool &t_playback)
             return ImPlotPoint(time.seconds(), data.deg());
         };
 
+        auto getter_angular_velocity = [](const int t_idx, void *t_user_data)
+        {
+            const PlotMenu &menu = *static_cast<PlotMenu *>(t_user_data);
+
+            const auto [time, data] = menu.angularVelocity(t_idx);
+            return ImPlotPoint(time.seconds(), data.deg());
+        };
+
         switch (m_type)
         {
         case Type::Velocity:
         case Type::VelocityXY:
-            ImPlot::SetupAxes("time (s)", "Vel (mm/s)", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+            ImPlot::SetupAxes("s", "mm/s", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
             break;
         case Type::Angle:
-            ImPlot::SetupAxes("time (s)", "Angle (deg)", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+            ImPlot::SetupAxes("s", "deg", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+            break;
+        case Type::AngularVelocity:
+            ImPlot::SetupAxes("s", "deg/s", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
             break;
         default:
             break;
         }
-
 
         if (t_playback)
         {
@@ -128,14 +138,17 @@ void PlotMenu::draw(const Common::WorldState &t_world, const bool &t_playback)
         switch (m_type)
         {
         case Type::Velocity:
-            ImPlot::PlotLineG("Vel", getter_len, this, m_data.size());
+            ImPlot::PlotLineG("Velocity", getter_len, this, m_data.size());
             break;
         case Type::VelocityXY:
-            ImPlot::PlotLineG("Vel x", getter_x, this, m_data.size());
-            ImPlot::PlotLineG("Vel y", getter_y, this, m_data.size());
+            ImPlot::PlotLineG("Velocity x", getter_x, this, m_data.size());
+            ImPlot::PlotLineG("Velocity y", getter_y, this, m_data.size());
             break;
         case Type::Angle:
             ImPlot::PlotLineG("Angle", getter_angle, this, m_data.size());
+            break;
+        case Type::AngularVelocity:
+            ImPlot::PlotLineG("Angular Velocity", getter_angular_velocity, this, m_data.size());
             break;
         default:
             break;

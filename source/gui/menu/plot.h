@@ -21,6 +21,7 @@ private:
         Velocity = 0,
         VelocityXY  = 1,
         Angle = 2,
+        AngularVelocity = 3,
     };
 
     enum class Item
@@ -66,6 +67,25 @@ private:
             break;
         case Item::OppRobot:
             data = state.opp_robot[m_id].angle;
+            break;
+        }
+
+        const Common::Duration time = state.time - m_data.at(0).time;
+        return {time, data};
+    }
+
+    std::pair<Common::Duration, Common::Angle> angularVelocity(const int t_idx) const
+    {
+        const Common::WorldState &state = m_data[t_idx];
+        Common::Angle              data{};
+
+        switch (m_item)
+        {
+        case Item::OurRobot:
+            data = state.own_robot[m_id].angular_velocity;
+            break;
+        case Item::OppRobot:
+            data = state.opp_robot[m_id].angular_velocity;
             break;
         }
 

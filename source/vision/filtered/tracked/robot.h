@@ -28,6 +28,10 @@ public:
         // Orientation variance
         processNoise(Filter::RobotState::THETA_COS,Filter::RobotState::THETA_COS) = 0.03f * dt;   // θ variance (sin(degrees)²)
         processNoise(Filter::RobotState::THETA_SIN,Filter::RobotState::THETA_SIN) = 0.03f * dt;   // θ variance (sin(degrees)²)
+
+        // Orientation velocity variance
+        processNoise(Filter::RobotState::OMEGA,Filter::RobotState::OMEGA) = 0.3f * dt;   // θ variance ((rad/s)²)
+
         m_system_model.setCovariance(processNoise);
 
         // measurement noise covariance
@@ -62,6 +66,9 @@ public:
         // Initial orientation uncertainty
         initialStateCovariance(Filter::RobotState::THETA_COS,Filter::RobotState::THETA_COS) = 0.01f;   // θ variance (sin(degrees)²)
         initialStateCovariance(Filter::RobotState::THETA_SIN,Filter::RobotState::THETA_SIN) = 0.01f;   // θ variance (sin(degrees)²)
+
+        // Initial orientation velocity uncertainty
+        initialStateCovariance(Filter::RobotState::OMEGA,Filter::RobotState::OMEGA) = 0.1f;   // θ variance (sin(degrees)²)
 
         m_kalman.setCovariance(initialStateCovariance);
 
@@ -105,8 +112,8 @@ public:
 
     Common::Angle getAngularVelocity() const
     {
-        // TODO:
-        return {};
+        const Filter::RobotState& state = m_kalman.getState();
+        return Common::Angle::fromRad(state.omega());
     }
 
 private:

@@ -25,9 +25,12 @@ public:
         x_.vx() = x.vx();
         x_.vy() = x.vy();
 
-        // Orientation remains unchanged (no control over it)
-        x_.theta_cos() = x.theta_cos();
-        x_.theta_sin() = x.theta_sin();
+        // Orientation update based on omega
+        x_.theta_cos() = x.theta_cos() + x.omega() * (-x.theta_sin()) * dt;
+        x_.theta_sin() = x.theta_sin() + x.omega() * x.theta_cos() * dt;
+
+        // Omega remains unchanged (assuming constant velocity model)
+        x_.omega() = x.omega();
 
         return x_;
     }
@@ -59,6 +62,17 @@ public:
         // Orientation updates (remains unchanged)
         this->F(RobotState::THETA_COS, RobotState::THETA_COS) = 1;
         this->F(RobotState::THETA_SIN, RobotState::THETA_SIN) = 1;
+
+        // Orientation components w.r.t each-other
+        this->F(RobotState::THETA_COS, RobotState::THETA_SIN) = -x.omega() * dt;
+        this->F(RobotState::THETA_SIN, RobotState::THETA_COS) = x.omega() * dt;
+
+        // Orientation updates w.r.t. omega (dt factor)
+        this->F(RobotState::THETA_COS, RobotState::OMEGA) = -x.theta_sin() * dt;
+        this->F(RobotState::THETA_SIN, RobotState::OMEGA) = x.theta_cos() * dt;
+
+        // Omega updates
+        this->F(RobotState::OMEGA, RobotState::OMEGA) = 1;
 
         // W = df/dw (Jacobian of state transition w.r.t. noise)
         this->W.setIdentity();
