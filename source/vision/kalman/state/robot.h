@@ -30,5 +30,48 @@ public:
     float& theta_cos() { return (*this)[ THETA_COS ]; }
     float& theta_sin() { return (*this)[ THETA_SIN ]; }
     float& omega()     { return (*this)[ OMEGA ]; }
+
+    Common::Vec2 position() const
+    {
+        return {x(), y()};
+    }
+
+    Common::Vec2 velocity() const
+    {
+        return {vx(), vy()};
+    }
+
+    Common::Angle angle() const
+    {
+        return Common::Angle::fromVec({theta_cos(), theta_sin()});
+    }
+
+    Common::Angle angularVelocity() const
+    {
+        return Common::Angle::fromRad(omega());
+    }
+
+    void setPosition(const Common::Vec2& position)
+    {
+        x() = position.x;
+        y() = position.y;
+    }
+
+    void setVelocity(const Common::Vec2& velocity)
+    {
+        vx() = velocity.x;
+        vy() = velocity.y;
+    }
+
+    void setAngle(const Common::Angle& angle)
+    {
+        theta_cos() = angle.cos();
+        theta_sin() = angle.sin();
+    }
+
+    void setAngularVelocity(const Common::Angle& angularVelocity)
+    {
+        omega() = angularVelocity.rad();
+    }
 };
 } // namespace Tyr::Vision

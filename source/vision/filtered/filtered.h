@@ -43,10 +43,10 @@ private:
     std::unique_ptr<Common::NngClient> m_cmd_client;
     std::unique_ptr<Common::NngServer> m_server;
 
-    TrackedBall m_ball_kalman;
+    TrackedBall m_tracked_ball;
     int         m_ball_not_seen = std::numeric_limits<int>::max() - 1;
 
-    TrackedRobot m_robot_kalman[2][Common::Config::Common::kMaxRobots];
+    TrackedRobot m_tracked_robot[2][Common::Config::Common::kMaxRobots];
     int          m_robot_not_seen[2][Common::Config::Common::kMaxRobots];
 
     static constexpr size_t kMaxHist = 7;

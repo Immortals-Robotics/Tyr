@@ -63,7 +63,7 @@ void Filtered::filterBalls(const bool t_new_kalman)
     const auto &raw_balls = m_raw_state.balls;
 
     // find the closest ball to last known ball
-    const Common::Vec2 last_ball_position = m_ball_kalman.getPosition();
+    const Common::Vec2 last_ball_position = m_tracked_ball.state().position();
     int   id  = -1;
     float dis = std::numeric_limits<float>::max();
     for (size_t i = 0; i < raw_balls.size(); i++)
@@ -78,7 +78,7 @@ void Filtered::filterBalls(const bool t_new_kalman)
 
     if (!t_new_kalman)
     {
-        m_ball_kalman.predict();
+        m_tracked_ball.predict();
     }
 
     const bool any_ball_found = id >= 0;
@@ -98,7 +98,7 @@ void Filtered::filterBalls(const bool t_new_kalman)
             }
             else
             {
-                m_ball_kalman.reset(raw_ball.position.xy());
+                m_tracked_ball.reset(raw_ball.position.xy());
             }
         }
         else if (current_ball_found)
@@ -112,7 +112,7 @@ void Filtered::filterBalls(const bool t_new_kalman)
             }
             else
             {
-                m_ball_kalman.update(raw_ball.position.xy());
+                m_tracked_ball.update(raw_ball.position.xy());
             }
         }
 
@@ -138,33 +138,17 @@ void Filtered::filterBalls(const bool t_new_kalman)
 
     if (!t_new_kalman)
     {
-        m_state.ball.position = m_ball_kalman.getPosition();
-        m_state.ball.velocity = m_ball_kalman.getVelocity();
+        m_state.ball.position = m_tracked_ball.state().position();
+        m_state.ball.velocity = m_tracked_ball.state().velocity();
     }
 }
 
 void Filtered::predictBall()
 {
-    // TODO: move these to the ball system model
+    const Filter::BallState predicted_state = m_tracked_ball.predict(kPredictTime);
 
-    // can't predict stationary balls
-    if (m_state.ball.velocity.length() == 0.0f)
-    {
-        return;
-    }
-
-    const float k  = 700.f; // ball deceleration (mm/s2)
-    const Common::Vec2 deceleration = -m_state.ball.velocity.normalized() * k;
-
-    const float time_to_stop = m_state.ball.velocity.length() / k;
-
-    const float prediction_time = std::min(time_to_stop, kPredictTime);
-
-    Common::Vec2 predicted_velocity = m_state.ball.velocity + deceleration * prediction_time;
-    const Common::Vec2 displacement = (m_state.ball.velocity + predicted_velocity) * (0.5f * prediction_time);
-
-    m_state.ball.velocity = predicted_velocity;
-    m_state.ball.position += displacement;
+    m_state.ball.position = predicted_state.position();
+    m_state.ball.velocity = predicted_state.velocity();
 }
 
 } // namespace Tyr::Vision

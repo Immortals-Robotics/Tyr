@@ -23,7 +23,7 @@ void Filtered::filterRobots(Common::TeamColor t_color)
     for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
         auto &robot = robots[i];
-        TrackedRobot& kalman = m_robot_kalman[color_id][i];
+        TrackedRobot& kalman = m_tracked_robot[color_id][i];
 
         kalman.predict();
 
@@ -52,11 +52,10 @@ void Filtered::filterRobots(Common::TeamColor t_color)
             m_robot_not_seen[color_id][i] = std::min(m_robot_not_seen[color_id][i] + 1, Common::config().vision.max_robot_frame_not_seen + 1);
         }
 
-        robot.position = kalman.getPosition();
-        robot.velocity = kalman.getVelocity();
-
-        robot.angle = kalman.getAngle();
-        robot.angular_velocity =  kalman.getAngularVelocity();
+        robot.position = kalman.state().position();
+        robot.velocity = kalman.state().velocity();
+        robot.angle = kalman.state().angle();
+        robot.angular_velocity =  kalman.state().angularVelocity();
     }
 }
 

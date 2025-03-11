@@ -21,5 +21,27 @@ public:
     float& y()      { return (*this)[ Y ]; }
     float& vx()      { return (*this)[ VX ]; }
     float& vy()      { return (*this)[ VY ]; }
+
+    Common::Vec2 position() const
+    {
+        return {x(), y()};
+    }
+
+    Common::Vec2 velocity() const
+    {
+        return {vx(), vy()};
+    }
+
+    void setPosition(const Common::Vec2& position)
+    {
+        x() = position.x;
+        y() = position.y;
+    }
+
+    void setVelocity(const Common::Vec2& velocity)
+    {
+        vx() = velocity.x;
+        vy() = velocity.y;
+    }
 };
 } // namespace Tyr::Vision

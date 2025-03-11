@@ -7,25 +7,25 @@ namespace Tyr::Vision::Filter
 class BallSystemModel : public Kalman::LinearizedSystemModel<BallState>
 {
 public:
-    BallState f(const BallState &x, const Control &u) const override
+    BallState f(const BallState &state, const Control &u) const override
     {
         (void)u;
 
         //! Predicted state vector after transition
-        BallState x_;
-        x_.setZero();
+        BallState new_state{};
+        new_state.setZero();
 
         const float dt = 1.f / Common::config().vision.vision_frame_rate;
 
         // Position update based on velocity
-        x_.x() = x.x() + x.vx() * dt;
-        x_.y() = x.y() + x.vy() * dt;
+        new_state.x() = state.x() + state.vx() * dt;
+        new_state.y() = state.y() + state.vy() * dt;
 
         // Velocity remains unchanged (assuming constant velocity model)
-        x_.vx() = x.vx();
-        x_.vy() = x.vy();
+        new_state.vx() = state.vx();
+        new_state.vy() = state.vy();
 
-        return x_;
+        return new_state;
     }
 
     // note: these are only used in linear kalmans (extended)

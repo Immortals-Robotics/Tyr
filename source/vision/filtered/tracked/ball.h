@@ -53,8 +53,7 @@ public:
 
         Filter::BallState state{};
         state.setZero();
-        state.x() = t_pos.x;
-        state.y() = t_pos.y;
+        state.setPosition(t_pos);
         m_kalman.init(state);
     }
 
@@ -73,16 +72,48 @@ public:
         m_kalman.update(m_position_model, pos_measurement);
     }
 
-    Common::Vec2 getPosition() const
+    // predicts the state in dt s in the future
+    // this is similar to system-model's f function
+    Filter::BallState predict(const float dt) const
     {
+        // TODO: move these to the ball system model
+
         const Filter::BallState& state = m_kalman.getState();
-        return {state.x(), state.y()};
+        const Common::Vec2 position {state.x(), state.y()};
+        const Common::Vec2 velocity {state.vx(), state.vy()};
+
+        // can't predict stationary balls
+        if (Common::almostEqual(velocity.length(), 0.0f))
+        {
+            return state;
+        }
+
+        // TODO: add acceleration to the state vector and let kalman compute it
+        const float k  = 700.f; // ball deceleration (mm/s2)
+        const Common::Vec2 deceleration = -velocity.normalized() * k;
+
+        const float time_to_stop = velocity.length() / k;
+
+        const float prediction_time = std::min(time_to_stop, dt);
+
+        const Common::Vec2 predicted_velocity = velocity + deceleration * prediction_time;
+        const Common::Vec2 displacement       = (velocity + predicted_velocity) * (0.5f * prediction_time);
+
+        const Common::Vec2 predicted_position = position + displacement;
+
+        Filter::BallState predicted_state{};
+        predicted_state.setZero();
+        predicted_state.x() = predicted_position.x;
+        predicted_state.y() = predicted_position.y;
+        predicted_state.vx() = predicted_velocity.x;
+        predicted_state.vy() = predicted_velocity.y;
+
+        return predicted_state;
     }
 
-    Common::Vec2 getVelocity() const
+    const Filter::BallState& state() const
     {
-        const Filter::BallState& state = m_kalman.getState();
-        return {state.vx(), state.vy()};
+        return m_kalman.getState();
     }
 
 private:

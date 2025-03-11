@@ -76,10 +76,8 @@ public:
 
         Filter::RobotState robot_state{};
         robot_state.setZero();
-        robot_state.x() = t_pos.x;
-        robot_state.y() = t_pos.y;
-        robot_state.theta_cos() = t_angle.cos();
-        robot_state.theta_sin() = t_angle.sin();
+        robot_state.setPosition(t_pos);
+        robot_state.setAngle(t_angle);
         m_kalman.init(robot_state);
     }
 
@@ -101,28 +99,9 @@ public:
         m_kalman.update(m_orientation_model, orientation_measurement);
     }
 
-    Common::Vec2 getPosition() const
+    const Filter::RobotState& state() const
     {
-        const Filter::RobotState& state = m_kalman.getState();
-        return {state.x(), state.y()};
-    }
-
-    Common::Vec2 getVelocity() const
-    {
-        const Filter::RobotState& state = m_kalman.getState();
-        return {state.vx(), state.vy()};
-    }
-
-    Common::Angle getAngle() const
-    {
-        const Filter::RobotState& state = m_kalman.getState();
-        return Common::Angle::fromVec({state.theta_cos(), state.theta_sin()});
-    }
-
-    Common::Angle getAngularVelocity() const
-    {
-        const Filter::RobotState& state = m_kalman.getState();
-        return Common::Angle::fromRad(state.omega());
+        return m_kalman.getState();
     }
 
 private:
