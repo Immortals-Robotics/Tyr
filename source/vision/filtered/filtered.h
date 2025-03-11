@@ -43,9 +43,8 @@ private:
     std::unique_ptr<Common::NngClient> m_cmd_client;
     std::unique_ptr<Common::NngServer> m_server;
 
-    Common::RawBallState m_last_raw_ball; // The last position of the locked ball
-    TrackedBall          m_ball_kalman;
-    int                  m_ball_not_seen = std::numeric_limits<int>::max() - 1;
+    TrackedBall m_ball_kalman;
+    int         m_ball_not_seen = std::numeric_limits<int>::max() - 1;
 
     TrackedRobot m_robot_kalman[2][Common::Config::Common::kMaxRobots];
     int          m_robot_not_seen[2][Common::Config::Common::kMaxRobots];

@@ -63,11 +63,12 @@ void Filtered::filterBalls(const bool t_new_kalman)
     const auto &raw_balls = m_raw_state.balls;
 
     // find the closest ball to last known ball
+    const Common::Vec2 last_ball_position = m_ball_kalman.getPosition();
     int   id  = -1;
     float dis = std::numeric_limits<float>::max();
     for (size_t i = 0; i < raw_balls.size(); i++)
     {
-        const float curr_dis = raw_balls[i].position.distanceTo(m_last_raw_ball.position);
+        const float curr_dis = raw_balls[i].position.xy().distanceTo(last_ball_position);
         if (curr_dis < dis)
         {
             dis = curr_dis;
@@ -75,20 +76,21 @@ void Filtered::filterBalls(const bool t_new_kalman)
         }
     }
 
-    const bool ball_found = id >= 0;
-    const bool ball_changed = dis > Common::config().vision.max_ball_2_frame_dist;
-
     if (!t_new_kalman)
     {
         m_ball_kalman.predict();
     }
 
-    if (ball_found)
+    const bool any_ball_found = id >= 0;
+
+    const bool current_ball_found = any_ball_found && dis < Common::config().vision.max_ball_2_frame_dist;
+    const bool should_switch_ball = any_ball_found && !current_ball_found && m_state.ball.seen_state == Common::SeenState::CompletelyOut;
+
+    if (current_ball_found || should_switch_ball)
     {
         const Common::RawBallState& raw_ball = raw_balls[id];
 
-        if (ball_changed ||
-            m_state.ball.seen_state == Common::SeenState::CompletelyOut)
+        if (should_switch_ball)
         {
             if (t_new_kalman)
             {
@@ -99,26 +101,26 @@ void Filtered::filterBalls(const bool t_new_kalman)
                 m_ball_kalman.reset(raw_ball.position.xy());
             }
         }
-
-        if (t_new_kalman)
+        else if (current_ball_found)
         {
-            ChipEstimator::Ball3D ball_3d = m_chip_estimator->getBall3D(
-            raw_ball.position.xy(), raw_ball.frame.camera_id, m_raw_state.time, m_state.own_robot, m_state.opp_robot);
+            if (t_new_kalman)
+            {
+                ChipEstimator::Ball3D ball_3d = m_chip_estimator->getBall3D(
+                raw_ball.position.xy(), raw_ball.frame.camera_id, m_raw_state.time, m_state.own_robot, m_state.opp_robot);
 
-            newKalmanBall(raw_ball.position.xy(), true, raw_ball.frame.camera_id, ball_3d);
-        }
-        else
-        {
-            m_ball_kalman.update(raw_ball.position.xy());
+                newKalmanBall(raw_ball.position.xy(), true, raw_ball.frame.camera_id, ball_3d);
+            }
+            else
+            {
+                m_ball_kalman.update(raw_ball.position.xy());
+            }
         }
 
         m_ball_not_seen = 0;
-
-        m_last_raw_ball = raw_ball;
     }
     else
     {
-        m_ball_not_seen++;
+        m_ball_not_seen = std::min(m_ball_not_seen + 1, Common::config().vision.max_ball_frame_not_seen + 1);
     }
 
     if (m_ball_not_seen == 0)
