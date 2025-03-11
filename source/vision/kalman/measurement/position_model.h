@@ -22,6 +22,7 @@ public:
     PositionMeasurement h(const State &x) const override
     {
         PositionMeasurement measurement;
+        measurement.setZero();
 
         measurement.x() = x.x();
         measurement.y() = x.y();

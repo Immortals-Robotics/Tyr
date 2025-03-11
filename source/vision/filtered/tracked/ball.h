@@ -52,6 +52,7 @@ public:
         m_kalman.setCovariance(initialStateCovariance);
 
         Filter::BallState state{};
+        state.setZero();
         state.x() = t_pos.x;
         state.y() = t_pos.y;
         m_kalman.init(state);

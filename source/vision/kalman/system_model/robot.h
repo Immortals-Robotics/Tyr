@@ -8,31 +8,32 @@ class RobotSystemModel : public Kalman::LinearizedSystemModel<RobotState>
 {
 public:
 
-    RobotState f(const RobotState &x, const Control &u) const override
+    RobotState f(const RobotState &state, const Control &control) const override
     {
-        (void)u;
+        (void)control;
 
         //! Predicted state vector after transition
-        RobotState x_;
+        RobotState next_state{};
+        next_state.setZero();
 
         const float dt = 1.f / Common::config().vision.vision_frame_rate;
 
         // Position update based on velocity
-        x_.x() = x.x() + x.vx() * dt;
-        x_.y() = x.y() + x.vy() * dt;
+        next_state.x() = state.x() + state.vx() * dt;
+        next_state.y() = state.y() + state.vy() * dt;
 
         // Velocity remains unchanged (assuming constant velocity model)
-        x_.vx() = x.vx();
-        x_.vy() = x.vy();
+        next_state.vx() = state.vx();
+        next_state.vy() = state.vy();
 
         // Orientation update based on omega
-        x_.theta_cos() = x.theta_cos() + x.omega() * (-x.theta_sin()) * dt;
-        x_.theta_sin() = x.theta_sin() + x.omega() * x.theta_cos() * dt;
+        next_state.theta_cos() = state.theta_cos() + state.omega() * (-state.theta_sin()) * dt;
+        next_state.theta_sin() = state.theta_sin() + state.omega() * state.theta_cos() * dt;
 
         // Omega remains unchanged (assuming constant velocity model)
-        x_.omega() = x.omega();
+        next_state.omega() = state.omega();
 
-        return x_;
+        return next_state;
     }
 
     // note: these are only used in linear kalmans (extended)

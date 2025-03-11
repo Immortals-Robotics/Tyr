@@ -9,6 +9,7 @@ public:
 
     explicit PositionMeasurement(const Common::Vec2 t_pos)
     {
+        setZero();
         x() = t_pos.x;
         y() = t_pos.y;
     }

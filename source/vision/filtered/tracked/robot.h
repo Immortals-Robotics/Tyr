@@ -75,6 +75,7 @@ public:
         m_kalman.setCovariance(initialStateCovariance);
 
         Filter::RobotState robot_state{};
+        robot_state.setZero();
         robot_state.x() = t_pos.x;
         robot_state.y() = t_pos.y;
         robot_state.theta_cos() = t_angle.cos();

@@ -21,6 +21,7 @@ public:
     OrientationMeasurement h(const RobotState &x) const override
     {
         OrientationMeasurement measurement{};
+        measurement.setZero();
         measurement.theta_cos() = x.theta_cos();
         measurement.theta_sin() = x.theta_sin();
         return measurement;

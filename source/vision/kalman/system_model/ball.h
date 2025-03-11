@@ -13,6 +13,7 @@ public:
 
         //! Predicted state vector after transition
         BallState x_;
+        x_.setZero();
 
         const float dt = 1.f / Common::config().vision.vision_frame_rate;
 

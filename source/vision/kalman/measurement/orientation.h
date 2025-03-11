@@ -9,6 +9,7 @@ public:
 
     explicit OrientationMeasurement(const Common::Angle t_angle)
     {
+        setZero();
         theta_cos() = t_angle.cos();
         theta_sin() = t_angle.sin();
     }
