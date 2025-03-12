@@ -11,7 +11,7 @@ namespace Tyr::Vision
 class Filtered
 {
 public:
-     Filtered();
+    Filtered();
     ~Filtered() = default;
 
     bool receiveRaw();
@@ -43,7 +43,7 @@ private:
     TrackedRobot m_tracked_robot[2][Common::Config::Common::kMaxRobots];
 
     static constexpr size_t kMaxHist = 7;
-    using CommandHistory = std::deque<Sender::Command>;
+    using CommandHistory             = std::deque<Sender::Command>;
     std::unordered_map<int, CommandHistory> m_cmd_map;
 
     Common::RawWorldState m_raw_state;

@@ -86,22 +86,29 @@ void Filtered::processBalls()
         }
         else if (current_ball_found)
         {
-            ChipEstimator::Ball3D ball_3d =
-                m_chip_estimator->getBall3D(raw_ball.position.xy(), raw_ball.frame.camera_id, m_raw_state.time,
-                                            m_state.own_robot, m_state.opp_robot);
-            if (ball_3d.position.z > 0.f)
+            if (Common::config().vision.use_ball_3d)
             {
-                const auto real_pos = ChipEstimator::projectToGround(
-                    Common::Vec3(ball_3d.position.x, ball_3d.position.y, ball_3d.position.z),
-                    ChipEstimator::getCameraPos(raw_ball.frame.camera_id));
-                ball_3d.position = Common::Vec3(real_pos.x, real_pos.y, ball_3d.position.z);
+                ChipEstimator::Ball3D ball_3d =
+                    m_chip_estimator->getBall3D(raw_ball.position.xy(), raw_ball.frame.camera_id, m_raw_state.time,
+                                                m_state.own_robot, m_state.opp_robot);
+                if (ball_3d.position.z > 0.f)
+                {
+                    const auto real_pos = ChipEstimator::projectToGround(
+                        Common::Vec3(ball_3d.position.x, ball_3d.position.y, ball_3d.position.z),
+                        ChipEstimator::getCameraPos(raw_ball.frame.camera_id));
+                    ball_3d.position = Common::Vec3(real_pos.x, real_pos.y, ball_3d.position.z);
+                }
+
+                Common::debug().draw(
+                    Common::Circle(ball_3d.position.xy(), Common::field().ball_radius + ball_3d.position.z / 10),
+                    Common::Color::red());
+
+                m_tracked_ball.update(ball_3d.position.xy());
             }
-
-            Common::debug().draw(
-                Common::Circle(ball_3d.position.xy(), Common::field().ball_radius + ball_3d.position.z / 10),
-                Common::Color::red());
-
-            m_tracked_ball.update(ball_3d.position.xy());
+            else
+            {
+                m_tracked_ball.update(raw_ball.position.xy());
+            }
         }
     }
 
