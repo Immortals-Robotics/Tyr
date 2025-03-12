@@ -1,4 +1,4 @@
-#include "trajectory.h"
+#include "trajectory_2d.h"
 
 #include "../../robot/velocity_profile.h"
 
@@ -47,7 +47,7 @@ static float computeMotion1D(const float v0, const float delta, const float acc,
     return result;
 }
 
-Trajectory Trajectory::makeRobotTrajectory(const Common::Vec2 p0, const Common::Vec2 v0, const Common::Vec2 target, const VelocityProfile &profile)
+Trajectory2D Trajectory2D::makeRobotTrajectory(const Common::Vec2 p0, const Common::Vec2 v0, const Common::Vec2 target, const VelocityProfile &profile)
 {
     const Common::Vec2 delta = target - p0;
     const Common::Vec2 tmp_max_speed = delta.abs().normalized() * profile.speed;
@@ -63,8 +63,13 @@ Trajectory Trajectory::makeRobotTrajectory(const Common::Vec2 p0, const Common::
 
     Common::Vec2 a0 = (v1 - v0) / dt;
 
-    const TrajectoryPiece piece {a0, v0, p0, 0.f, dt};
-    Trajectory trajectory;
+    TrajectoryPiece2D piece{};
+    piece.acc = a0;
+    piece.v_start = v0;
+    piece.p_start = p0;
+    piece.t_end = dt;
+
+    Trajectory2D trajectory;
     trajectory.addPiece(piece);
 
     return trajectory;

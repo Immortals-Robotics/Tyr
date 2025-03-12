@@ -1,6 +1,7 @@
 #include "../ai.h"
 
-#include "../navigation/trajectory/trajectory.h"
+#include "../navigation/trajectory/trajectory_2d.h"
+#include "../navigation/trajectory/trajectory_2d_xy.h"
 
 namespace Tyr::Soccer
 {
@@ -32,18 +33,18 @@ void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProf
 
     robot.target.position = target;
 
-    const Trajectory trajectory = Trajectory::makeRobotTrajectory(robot.state().position, robot.currentMotion(), target, t_profile);
-
+    //const Trajectory2D trajectory = Trajectory2D::makeRobotTrajectory(robot.state().position, robot.currentMotion(), target, t_profile);
+    const Trajectory2DXY trajectory = Trajectory2DXY::makeBangBangTrajectory(robot.state().position, robot.currentMotion(), target, t_profile);
     const float dt = 1.f / Common::config().vision.vision_frame_rate;
-    TrajectoryPiece commandPiece = trajectory.getCommandPiece(dt);
+    TrajectoryPiece2D command_piece = trajectory.getCommandPiece(dt);
 
     if (!(t_flags & NavigationFlagsForceNoObstacles))
     {
         m_dss->setObstacleMap(&m_obsMap[t_robot_num]);
-        commandPiece = m_dss->ComputeSafeMotion(t_robot_num, commandPiece, t_profile);
+        command_piece = m_dss->ComputeSafeMotion(t_robot_num, command_piece, t_profile);
     }
 
-    Common::Vec2 motion_cmd = commandPiece.getVelocity(dt);
+    Common::Vec2 motion_cmd = command_piece.getVelocity(dt);
     robot.move(motion_cmd);
 }
 } // namespace Tyr::Soccer

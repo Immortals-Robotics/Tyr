@@ -1,6 +1,6 @@
 #include "robot.h"
 
-#include "../navigation/trajectory/trajectory.h"
+#include "../navigation/trajectory/trajectory_2d.h"
 
 namespace Tyr::Soccer
 {

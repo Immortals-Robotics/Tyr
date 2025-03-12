@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../trajectory/trajectory_piece.h"
 #include "../../robot/robot.h"
+#include "../trajectory/piece/piece_2d.h"
 
 namespace Tyr::Soccer
 {
@@ -19,7 +19,7 @@ public:
         m_map = t_map;
     }
 
-    TrajectoryPiece ComputeSafeMotion(int robot_num, const TrajectoryPiece &cmd, const VelocityProfile &t_profile);
+    TrajectoryPiece2D ComputeSafeMotion(int robot_num, const TrajectoryPiece2D &cmd, const VelocityProfile &t_profile);
 
 private:
     const ObstacleMap* m_map = nullptr;
@@ -30,18 +30,18 @@ private:
 
     const Common::WorldState *m_world;
 
-    TrajectoryPiece cached_motions[Common::Config::Common::kMaxRobots];
+    TrajectoryPiece2D cached_motions[Common::Config::Common::kMaxRobots];
 
-    bool collisionWithOwn(const TrajectoryPiece &cmd_a,
-                          const TrajectoryPiece &cmd_b) const;
+    bool collisionWithOwn(const TrajectoryPiece2D &cmd_a,
+                          const TrajectoryPiece2D &cmd_b) const;
 
-    bool collisionWithOpp(const TrajectoryPiece &cmd_own,
+    bool collisionWithOpp(const TrajectoryPiece2D &cmd_own,
                           const Common::RobotState &state_opp) const;
 
-    bool RobotHasStaticCollision(const TrajectoryPiece &cmd) const;
+    bool RobotHasStaticCollision(const TrajectoryPiece2D &cmd) const;
 
-    bool         isSafe(int robot_num, const TrajectoryPiece &cmd);
-    TrajectoryPiece GetRandomAcceleration(const TrajectoryPiece &original);
-    static float ComputeError(const TrajectoryPiece &target, const TrajectoryPiece &current);
+    bool         isSafe(int robot_num, const TrajectoryPiece2D &cmd);
+    TrajectoryPiece2D GetRandomAcceleration(const TrajectoryPiece2D &original);
+    static float ComputeError(const TrajectoryPiece2D &target, const TrajectoryPiece2D &current);
 };
 } // namespace Tyr::Soccer

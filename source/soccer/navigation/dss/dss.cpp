@@ -1,40 +1,40 @@
 #include "dss.h"
 
 #include "../obstacle/map.h"
-#include "../trajectory/trajectory.h"
+#include "../trajectory/trajectory_2d.h"
 
 namespace Tyr::Soccer
 {
 Dss::Dss(const Common::WorldState *const t_world) : m_world(t_world)
 {}
 
-bool Dss::collisionWithOwn(const TrajectoryPiece &cmd_a,
-                           const TrajectoryPiece &cmd_b) const
+bool Dss::collisionWithOwn(const TrajectoryPiece2D &cmd_a,
+                           const TrajectoryPiece2D &cmd_b) const
 {
-    const Trajectory traj_a = Trajectory::makeDssTrajectory(cmd_a, m_profile.deceleration);
-    const Trajectory traj_b = Trajectory::makeDssTrajectory(cmd_b, m_profile.deceleration);
+    const Trajectory2D traj_a = Trajectory2D::makeDssTrajectory(cmd_a, m_profile.deceleration);
+    const Trajectory2D traj_b = Trajectory2D::makeDssTrajectory(cmd_b, m_profile.deceleration);
 
     return traj_a.hasCollision(traj_b, Common::field().robot_radius * 2.f);
 }
 
-bool Dss::collisionWithOpp(const TrajectoryPiece &cmd_own,
+bool Dss::collisionWithOpp(const TrajectoryPiece2D &cmd_own,
                            const Common::RobotState &state_opp) const
 {
-    const Trajectory traj_own = Trajectory::makeDssTrajectory(cmd_own, m_profile.deceleration);
-    const Trajectory traj_opp = Trajectory::makeStopDssTrajectory(TrajectoryPiece::makeOppPiece(state_opp), m_profile.deceleration);
+    const Trajectory2D traj_own = Trajectory2D::makeDssTrajectory(cmd_own, m_profile.deceleration);
+    const Trajectory2D traj_opp = Trajectory2D::makeStopDssTrajectory(TrajectoryPiece2D::makeOppPiece(state_opp), m_profile.deceleration);
 
     return traj_own.hasCollision(traj_opp, Common::field().robot_radius * 2.f);
 }
 
-bool Dss::RobotHasStaticCollision(const TrajectoryPiece &cmd) const
+bool Dss::RobotHasStaticCollision(const TrajectoryPiece2D &cmd) const
 {
-    const Trajectory traj =
-        Trajectory::makeDssTrajectory(cmd, m_profile.deceleration);
+    const Trajectory2D traj =
+        Trajectory2D::makeDssTrajectory(cmd, m_profile.deceleration);
 
     return traj.hasCollision(*m_map);
 }
 
-bool Dss::isSafe(const int robot_num, const TrajectoryPiece &cmd)
+bool Dss::isSafe(const int robot_num, const TrajectoryPiece2D &cmd)
 {
     if (RobotHasStaticCollision(cmd))
     {
@@ -54,7 +54,7 @@ bool Dss::isSafe(const int robot_num, const TrajectoryPiece &cmd)
             continue;
         }
 
-        const TrajectoryPiece &other_cmd = cached_motions[robot_idx];
+        const TrajectoryPiece2D &other_cmd = cached_motions[robot_idx];
 
         if (collisionWithOwn(cmd, other_cmd))
         {
@@ -79,23 +79,23 @@ bool Dss::isSafe(const int robot_num, const TrajectoryPiece &cmd)
     return true;
 }
 
-TrajectoryPiece Dss::GetRandomAcceleration(const TrajectoryPiece &original)
+TrajectoryPiece2D Dss::GetRandomAcceleration(const TrajectoryPiece2D &original)
 {
-    const float a_mag = original.getAcceleration().length();
+    const float a_mag = original.acc.length();
     const Common::Angle rnd_angle     = Common::Angle::fromDeg(m_random.get(0.0f, 360.0f));
     const float         rnd_magnitude = m_random.get(0.0f, a_mag);
 
     const Common::Vec2 acc = rnd_angle.toUnitVec() * rnd_magnitude;
 
-    TrajectoryPiece random = original;
-    random.setAcceleration(acc);
+    TrajectoryPiece2D random = original;
+    random.acc = acc;
     return random;
 }
 
-float Dss::ComputeError(const TrajectoryPiece &target, const TrajectoryPiece &current)
+float Dss::ComputeError(const TrajectoryPiece2D &target, const TrajectoryPiece2D &current)
 {
-    const Common::Vec2 a0_current = current.getAcceleration();
-    const Common::Vec2 a0_target = target.getAcceleration();
+    const Common::Vec2 a0_current = current.acc;
+    const Common::Vec2 a0_target = target.acc;
     return a0_target.distanceTo(a0_current);
 }
 
@@ -107,7 +107,7 @@ void Dss::Reset()
     }
 }
 
-TrajectoryPiece Dss::ComputeSafeMotion(const int robot_num, const TrajectoryPiece &cmd, const VelocityProfile &t_profile)
+TrajectoryPiece2D Dss::ComputeSafeMotion(const int robot_num, const TrajectoryPiece2D &cmd, const VelocityProfile &t_profile)
 {
     m_profile = t_profile;
     // TODO: in simulation setting a lower dec compared
@@ -115,7 +115,7 @@ TrajectoryPiece Dss::ComputeSafeMotion(const int robot_num, const TrajectoryPiec
     // Verify on the real field
     m_profile.deceleration /= 2.0f;
 
-    TrajectoryPiece result;
+    TrajectoryPiece2D result;
 
     const Common::RobotState &state = m_world->own_robot[robot_num];
 
@@ -128,12 +128,12 @@ TrajectoryPiece Dss::ComputeSafeMotion(const int robot_num, const TrajectoryPiec
     else
     {
         const float dt = 1.f / Common::config().vision.vision_frame_rate;
-        result = Trajectory::makeStopDssTrajectory(cmd, m_profile.deceleration).getCommandPiece(dt);
+        result = Trajectory2D::makeStopDssTrajectory(cmd, m_profile.deceleration).getCommandPiece(dt);
         float error = ComputeError(cmd, result);
 
         for (int iter_idx = 0; iter_idx < 100; ++iter_idx)
         {
-            const TrajectoryPiece rnd_cmd = GetRandomAcceleration(cmd);
+            const TrajectoryPiece2D rnd_cmd = GetRandomAcceleration(cmd);
 
             const float new_error = ComputeError(cmd, rnd_cmd);
             if (new_error >= error)
