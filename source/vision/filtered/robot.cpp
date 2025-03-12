@@ -2,147 +2,89 @@
 
 namespace Tyr::Vision
 {
-void Filtered::processRobots()
-{
-    filterRobots(Common::TeamColor::Yellow);
-    filterRobots(Common::TeamColor::Blue);
-
-    predictRobots();
-
-    sendStates();
-}
-
-void Filtered::filterRobots(Common::TeamColor t_color)
+void Filtered::processRobots(const Common::TeamColor t_color)
 {
     const int color_id = static_cast<int>(t_color);
 
-    auto &raw_robots = t_color == Common::TeamColor::Yellow ? m_raw_state.yellow_robots : m_raw_state.blue_robots;
+    auto &raw_robots = t_color == Common::TeamColor::Yellow
+        ? m_raw_state.yellow_robots
+        : m_raw_state.blue_robots;
 
-    auto &robots = Common::config().common.our_color == t_color ? m_state.own_robot : m_state.opp_robot;
+    const bool own = Common::config().common.our_color == t_color;
 
-    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
+    auto &robots = own
+        ? m_state.own_robot
+        : m_state.opp_robot;
+
+    for (int id = 0; id < Common::Config::Common::kMaxRobots; id++)
     {
-        auto &robot = robots[i];
-        TrackedRobot& kalman = m_tracked_robot[color_id][i];
+        auto &robot = robots[id];
 
-        kalman.predict();
+        robot.color     = t_color;
+        robot.vision_id = id;
 
-        for (size_t j = 0; j < raw_robots.size(); j++)
+        TrackedRobot& tracked_robot = m_tracked_robot[color_id][id];
+
+        tracked_robot.predict();
+
+        // find the corresponding raw robot
+        int raw_robot_id = -1;
+        for (size_t raw_id = 0; raw_id < raw_robots.size(); raw_id++)
         {
-            const auto &raw_robot = raw_robots[j];
+            const auto &raw_robot = raw_robots[raw_id];
 
-            if (raw_robot.id == i)
+            if (raw_robot.id == id)
             {
-                if (robot.seen_state == Common::SeenState::CompletelyOut)
-                {
-                    kalman.reset(raw_robot.position, raw_robot.angle);
-                }
-
-                kalman.update(raw_robot.position, raw_robot.angle);
+                raw_robot_id = raw_id;
+                break;
             }
         }
 
-        robot.position = kalman.state().position();
-        robot.velocity = kalman.state().velocity();
-        robot.angle = kalman.state().angle();
-        robot.angular_velocity =  kalman.state().angularVelocity();
-    }
-}
-
-void Filtered::predictRobots()
-{
-    auto &own_robots = m_state.own_robot;
-    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
-    {
-        Common::RobotState &robot = own_robots[i];
-
-        const CommandHistory& history = m_cmd_map[i];
-
-        if (history.empty())
+        // and update the kalman based on it
+        if (raw_robot_id != -1)
         {
-            Common::logWarning("No command history for robot {}", i);
-            robot.position += robot.velocity * (kPredictTime / 2.0f);
-        }
-        else
-        {
-            if (robot.seen_state != Common::SeenState::Seen)
+            const auto &raw_robot = raw_robots[raw_robot_id];
+
+            if (robot.seen_state == Common::SeenState::CompletelyOut)
             {
-                const Sender::Command& last_cmd = history.back();
-                robot.position += last_cmd.motion * kPredictTime;
+                tracked_robot.reset(raw_robot.position, raw_robot.angle);
             }
-            else
-            {
-                for (const auto& cmd : history)
-                {
-                    robot.position += cmd.motion * (kPredictTime * 0.83f);
-                }
-            }
+
+            tracked_robot.update(raw_robot.position, raw_robot.angle);
         }
-    }
 
-    auto &opp_robots = m_state.opp_robot;
-    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
-    {
-        Common::RobotState &robot = opp_robots[i];
-        robot.position += robot.velocity * kPredictTime;
-        robot.angle += robot.angular_velocity * kPredictTime;
-    }
-}
+        // predict
+        const Filter::RobotState predicted_state = own
+            ? tracked_robot.predictOwn(kPredictTime, m_cmd_map[id])
+            : tracked_robot.predictOpp(kPredictTime);
 
-void Filtered::sendStates()
-{
-    auto     &own_robots   = m_state.own_robot;
-    const int our_color_id = static_cast<int>(Common::config().common.our_color);
+        // fill the robot state based on kalman
+        robot.position = predicted_state.position();
+        robot.velocity = predicted_state.velocity();
+        robot.angle = predicted_state.angle();
+        robot.angular_velocity =  predicted_state.angularVelocity();
 
-    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
-    {
-        own_robots[i].color     = Common::config().common.our_color;
-        own_robots[i].vision_id = i;
-
-        if (m_tracked_robot[our_color_id][i].notSeen() == 0)
+        if (tracked_robot.notSeen() == 0)
         {
-            own_robots[i].seen_state = Common::SeenState::Seen;
+            robot.seen_state = Common::SeenState::Seen;
         }
-        else if (m_tracked_robot[our_color_id][i].notSeen() < Common::config().vision.max_robot_frame_not_seen)
+        else if (tracked_robot.notSeen() < Common::config().vision.max_robot_frame_not_seen)
         {
-            own_robots[i].seen_state = Common::SeenState::TemporarilyOut;
+            robot.seen_state = Common::SeenState::TemporarilyOut;
         }
         else
         {
-            own_robots[i].seen_state = Common::SeenState::CompletelyOut;
+            robot.seen_state = Common::SeenState::CompletelyOut;
         }
 
-        if (m_tracked_robot[our_color_id][i].notSeen() < kMaxRobotSubstitute)
+        if (tracked_robot.notSeen() < kMaxRobotSubstitute)
         {
-            own_robots[i].out_for_substitute = false;
+            robot.out_for_substitute = false;
         }
         else
         {
-            own_robots[i].out_for_substitute = true;
-        }
-    }
-
-    auto     &opp_robots   = m_state.opp_robot;
-    const int opp_color_id = 1 - our_color_id;
-
-    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
-    {
-        opp_robots[i].color     = static_cast<Common::TeamColor>(opp_color_id);
-        opp_robots[i].vision_id = i;
-
-        if (m_tracked_robot[opp_color_id][i].notSeen() == 0)
-        {
-            opp_robots[i].seen_state = Common::SeenState::Seen;
-        }
-        else if (m_tracked_robot[opp_color_id][i].notSeen() < Common::config().vision.max_robot_frame_not_seen)
-        {
-            opp_robots[i].seen_state = Common::SeenState::TemporarilyOut;
-        }
-        else
-        {
-            opp_robots[i].seen_state = Common::SeenState::CompletelyOut;
+            robot.out_for_substitute = true;
         }
     }
 }
-
 } // namespace Tyr::Vision

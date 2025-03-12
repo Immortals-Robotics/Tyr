@@ -107,6 +107,39 @@ public:
         m_not_seen = 0;
     }
 
+    Filter::RobotState predictOwn(const float dt, const std::deque<Sender::Command>& history) const
+    {
+        Common::Vec2 position = state().position();
+
+        if (history.empty())
+        {
+            position += state().velocity() * (dt / 2.0f);
+        }
+        else
+        {
+            const Sender::Command& last_cmd = history.back();
+            position += last_cmd.motion * dt;
+        }
+
+        Filter::RobotState predicted_state = state();
+        predicted_state.setPosition(position);
+        return predicted_state;
+    }
+
+    Filter::RobotState predictOpp(const float dt) const
+    {
+        Common::Vec2 position = state().position();
+        Common::Angle angle = state().angle();
+
+        position += state().velocity() * dt;
+        angle += state().angularVelocity() * dt;
+
+        Filter::RobotState predicted_state = state();
+        predicted_state.setPosition(position);
+        predicted_state.setAngle(angle);
+        return predicted_state;
+    }
+
     const Filter::RobotState& state() const
     {
         return m_kalman.getState();

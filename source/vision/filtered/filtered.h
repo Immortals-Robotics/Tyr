@@ -21,14 +21,9 @@ public:
     bool publish() const;
 
 private:
-    void processRobots();
-    void filterRobots(Common::TeamColor t_color);
-    void predictRobots();
-    void sendStates();
+    void processRobots(Common::TeamColor t_color);
 
-    void processBalls(const bool t_new_kalman);
-    void filterBalls(const bool t_new_kalman);
-    void predictBall();
+    void processBalls(bool t_new_kalman);
     void newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen, const int &t_camera_id,
                        const ChipEstimator::Ball3D &t_ball_3d);
 

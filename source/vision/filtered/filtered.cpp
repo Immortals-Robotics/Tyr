@@ -45,7 +45,9 @@ bool Filtered::receiveCmds()
 void Filtered::process()
 {
     processBalls(Common::config().vision.use_new_ball_kalman);
-    processRobots();
+
+    processRobots(Common::TeamColor::Yellow);
+    processRobots(Common::TeamColor::Blue);
 
     m_state.time = Common::TimePoint::now();
 }

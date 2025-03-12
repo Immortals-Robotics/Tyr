@@ -86,14 +86,13 @@ public:
     {
         // TODO: move these to the ball system model
 
-        const Filter::BallState& state = m_kalman.getState();
-        const Common::Vec2 position {state.x(), state.y()};
-        const Common::Vec2 velocity {state.vx(), state.vy()};
+        const Common::Vec2 position = state().position();
+        const Common::Vec2 velocity = state().velocity();
 
         // can't predict stationary balls
         if (Common::almostEqual(velocity.length(), 0.0f))
         {
-            return state;
+            return state();
         }
 
         // TODO: add acceleration to the state vector and let kalman compute it
@@ -109,13 +108,9 @@ public:
 
         const Common::Vec2 predicted_position = position + displacement;
 
-        Filter::BallState predicted_state{};
-        predicted_state.setZero();
-        predicted_state.x() = predicted_position.x;
-        predicted_state.y() = predicted_position.y;
-        predicted_state.vx() = predicted_velocity.x;
-        predicted_state.vy() = predicted_velocity.y;
-
+        Filter::BallState predicted_state = state();
+        predicted_state.setPosition(predicted_position);
+        predicted_state.setVelocity(predicted_velocity);
         return predicted_state;
     }
 

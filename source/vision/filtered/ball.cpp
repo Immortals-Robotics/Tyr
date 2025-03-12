@@ -3,15 +3,6 @@
 namespace Tyr::Vision
 {
 
-void Filtered::processBalls(const bool t_new_kalman)
-{
-    filterBalls(t_new_kalman);
-    if (!t_new_kalman)
-    {
-        predictBall();
-    }
-}
-
 void Filtered::newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen, const int &t_camera_id,
                              const ChipEstimator::Ball3D &t_ball_3d = ChipEstimator::Ball3D{Common::Vec2(0, 0)})
 {
@@ -58,7 +49,7 @@ void Filtered::newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen,
                          Common::Color::red());
 }
 
-void Filtered::filterBalls(const bool t_new_kalman)
+void Filtered::processBalls(const bool t_new_kalman)
 {
     const auto &raw_balls = m_raw_state.balls;
 
@@ -117,6 +108,17 @@ void Filtered::filterBalls(const bool t_new_kalman)
         }
     }
 
+    if (!t_new_kalman)
+    {
+        const Filter::BallState predicted_state = m_tracked_ball.predict(kPredictTime);
+
+        m_state.ball.position = predicted_state.position();
+        m_state.ball.velocity = predicted_state.velocity();
+
+        m_state.ball.position = m_tracked_ball.state().position();
+        m_state.ball.velocity = m_tracked_ball.state().velocity();
+    }
+
     if (m_tracked_ball.notSeen() == 0)
     {
         m_state.ball.seen_state = Common::SeenState::Seen;
@@ -129,20 +131,5 @@ void Filtered::filterBalls(const bool t_new_kalman)
     {
         m_state.ball.seen_state = Common::SeenState::CompletelyOut;
     }
-
-    if (!t_new_kalman)
-    {
-        m_state.ball.position = m_tracked_ball.state().position();
-        m_state.ball.velocity = m_tracked_ball.state().velocity();
-    }
 }
-
-void Filtered::predictBall()
-{
-    const Filter::BallState predicted_state = m_tracked_ball.predict(kPredictTime);
-
-    m_state.ball.position = predicted_state.position();
-    m_state.ball.velocity = predicted_state.velocity();
-}
-
 } // namespace Tyr::Vision
