@@ -252,6 +252,8 @@ public:
             m_kick          = kick;
             m_kick_position << kick.position.x, kick.position.y;
         }
+
+        // TODO: mhmd, .end is not accessible
         if (m_ball_records.size() > 1 && (m_ball_records.back().ball - (*(m_ball_records.end())).ball).length() < 20.)
         {
             reset();

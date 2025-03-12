@@ -45,8 +45,9 @@ set(SOURCE_FILES
         navigation/errt/set_obstacles.cpp
         navigation/dss/dss.cpp
         navigation/obstacle/map.cpp
-        navigation/trajectory/trajectory_piece.cpp
         navigation/trajectory/trajectory.cpp
+        navigation/trajectory/trajectory_immortals.cpp
+        navigation/trajectory/trajectory_piece.cpp
 
         helpers/attack_fucking_angle.cpp
         helpers/ball_is_goaling.cpp
