@@ -23,7 +23,7 @@ public:
 private:
     void processRobots(Common::TeamColor t_color);
 
-    void processBalls(bool t_new_kalman);
+    void processBalls();
     void newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen, const int &t_camera_id,
                        const ChipEstimator::Ball3D &t_ball_3d);
 
