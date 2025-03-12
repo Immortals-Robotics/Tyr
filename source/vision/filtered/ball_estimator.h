@@ -71,7 +71,7 @@ public:
 
             for (auto const &robot : robots)
             {
-                if (robot.canKick(t_ball_position))
+                if (robot.canKick(t_ball_position, Common::config().vision.kicker_depth))
                 {
                     m_candidate_kick_pos = t_ball_position;
                     m_candidate_robot    = robot;
@@ -156,7 +156,7 @@ public:
         double          l1_error;
         double          t_offset;
         ChipSolveResult(Eigen::VectorXd t_x, double t_l1_error, double t_offset)
-            : x(t_x), l1_error(t_l1_error), t_offset(t_offset){};
+            : x(t_x), l1_error(t_l1_error), t_offset(t_offset) {};
     };
 
     struct Ball3D
@@ -209,8 +209,8 @@ public:
         }
         else
         {
-            auto dummy = Eigen::VectorXd(1);
-            dummy << -100000;
+            auto dummy = Eigen::VectorXd(3);
+            dummy << -100000, -100000, -100000;
             return ChipSolveResult(dummy, -1000000, -1000000);
         }
     }
@@ -229,6 +229,49 @@ public:
         double scale = t_ball_pos.z / t_camera_pos.z;
         return Common::Vec2((t_camera_pos.x - t_ball_pos.x) * scale + t_ball_pos.x,
                             (t_camera_pos.y - t_ball_pos.y) * scale + t_ball_pos.y);
+    }
+
+    // Find the optimal time offset using iterative method
+    inline ChipSolveResult findOptimalTimeOffset(const Common::Vec3 &t_camera_pos)
+    {
+        if (m_ball_records.size() < Common::config().vision.chip_min_records)
+        {
+            auto dummy = Eigen::VectorXd(3);
+            dummy << -100000, -100000, -100000;
+            return ChipSolveResult(dummy, -1000000, -1000000);
+        }
+
+        // Start with initial offset value
+        double t_off = 0.05;
+        double inc   = t_off / 2;
+
+        // Iteratively refine the offset
+        while (inc > 1e-3)
+        {
+            auto result_neg = estimateWithOffset(t_off - 1e-5, t_camera_pos);
+            auto result_pos = estimateWithOffset(t_off + 1e-5, t_camera_pos);
+
+            if (result_neg.l1_error == -1000000 || result_pos.l1_error == -1000000)
+            {
+                auto dummy = Eigen::VectorXd(3);
+                dummy << -100000, -100000, -100000;
+                return ChipSolveResult(dummy, -1000000, -1000000);
+            }
+
+            if (result_neg.l1_error > result_pos.l1_error)
+            {
+                t_off += inc;
+            }
+            else
+            {
+                t_off -= inc;
+            }
+
+            inc /= 2;
+        }
+
+        // Return the best result with the optimized offset
+        return estimateWithOffset(t_off, t_camera_pos);
     }
 
     inline Ball3D getBall3D(const Common::Vec2 &t_ball_position, const int &t_camera_id,
@@ -253,8 +296,8 @@ public:
             m_kick_position << kick.position.x, kick.position.y;
         }
 
-        // TODO: mhmd, .end is not accessible
-        if (m_ball_records.size() > 1 && (m_ball_records.back().ball - (*(m_ball_records.end())).ball).length() < 20.)
+        if (m_ball_records.size() > 1 &&
+            (m_ball_records.back().ball - m_ball_records[m_ball_records.size() - 2].ball).length() < 20.)
         {
             reset();
         }
@@ -268,13 +311,15 @@ public:
 
         if (m_ball_records.size() < Common::config().vision.chip_min_records)
         {
-             m_result_found = false;
+            m_result_found = false;
             return result;
         }
 
-        auto solved_result = estimateWithOffset(0, ChipEstimator::getCameraPos(t_camera_id));
+        // Use the optimized time offset approach instead of fixed offset
+        auto solved_result = findOptimalTimeOffset(ChipEstimator::getCameraPos(t_camera_id));
         auto vel           = solved_result.x;
-        Common::logError("vel z {} error {} ", vel.z(), solved_result.l1_error);
+
+        Common::logError("vel z {} error {} offset {}", vel.z(), solved_result.l1_error, solved_result.t_offset);
 
         if ((solved_result.l1_error == -1000000 || vel.z() < 100. ||
              vel.z() > Common::config().vision.chip_max_vel_z) &&
