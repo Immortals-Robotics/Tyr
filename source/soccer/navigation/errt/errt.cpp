@@ -3,8 +3,8 @@
 namespace Tyr::Soccer
 {
 Planner::Planner(const int t_max_nodes, const float t_step)
-    : m_max_nodes(t_max_nodes)
-    , m_step_size(t_step)
+    : m_step_size(t_step)
+    , m_max_nodes(t_max_nodes)
     , m_tree(t_max_nodes)
 {
     m_waypoints.reserve(m_max_nodes);

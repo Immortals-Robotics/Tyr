@@ -68,6 +68,8 @@ private:
         case Item::OppRobot:
             data = state.opp_robot[m_id].angle;
             break;
+        default:
+            break;
         }
 
         const Common::Duration time = state.time - m_data.at(0).time;
@@ -87,6 +89,8 @@ private:
         case Item::OppRobot:
             data = state.opp_robot[m_id].angular_velocity;
             break;
+        default:
+                break;
         }
 
         const Common::Duration time = state.time - m_data.at(0).time;
