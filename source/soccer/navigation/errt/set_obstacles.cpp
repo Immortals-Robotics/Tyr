@@ -14,7 +14,7 @@ static constexpr float bigPenaltyAddition = 220.0f;
 
 static float calculateRobotRadius(const Common::RobotState &state)
 {
-    const float extension_factor = std::min(1.0f, state.velocity.length() / 10000.0f);
+    const float extension_factor = std::max(0.0f, (state.velocity.length() - 1000.0f) / 9000.0f);
     return Common::field().robot_radius * (1.0f + extension_factor);
 }
 
@@ -23,15 +23,18 @@ static float calculateOtherRadius(const Common::RobotState &t_current, const Com
     static constexpr float kMaxExtension             = 150.0f;
     static constexpr float kSpeedToReachMaxExtension = 1500.0f;
 
-    const Common::Vec2 velocity_diff = t_current.velocity - t_other.velocity;
-    const float        extension =
-        std::clamp(velocity_diff.length() * kMaxExtension / kSpeedToReachMaxExtension, 0.0f, kMaxExtension);
+    const Common::Vec2 velocity_diff           = t_other.velocity - t_current.velocity;
+    const Common::Vec2 connection_vector       = (t_other.position - t_current.position).normalized();
+    const float        velocity_dot_connection = velocity_diff.dot(connection_vector) - 1000.0f;
+
+    const float extension =
+        std::clamp(velocity_dot_connection * kMaxExtension / kSpeedToReachMaxExtension, 0.0f, kMaxExtension);
     return Common::field().robot_radius + extension;
 }
 
 void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
 {
-    ObstacleMap& map = m_obsMap[t_robot_num];
+    ObstacleMap &map = m_obsMap[t_robot_num];
 
     const bool ourPenalty = t_robot_num != m_gk && !m_ref_state.ourBallPlacement();
     const bool oppPenalty = !m_ref_state.ballPlacement();
@@ -68,7 +71,6 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
             const float radius = t_robot_num == m_attack ? Common::field().robot_radius
                                                          : calculateOtherRadius(m_own_robot[t_robot_num].state(),
                                                                                 m_world_state.opp_robot[i]);
-
             map.add({m_world_state.opp_robot[i].position, radius + current_robot_radius});
         }
     }
