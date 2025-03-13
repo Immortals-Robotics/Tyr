@@ -201,5 +201,4 @@ max_robot_frame_not_seen = 120
 merge_distance = 70.0
 use_ball_3d = true
 use_camera = [ true, true, true, true, false, false, false, false ]
-use_new_ball_kalman = false
 vision_frame_rate = 70.0

@@ -20,17 +20,12 @@ void Filtered::newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen,
     Common::Vec3 position_3d(t_position.x, t_position.y, 0);
     Common::Vec3 velocity_3d = t_ball_3d.velocity;
 
-// TODO: fix 3d estimator
-#if 1
     if (t_ball_3d.position.z > 0)
     {
         auto real_pos = ChipEstimator::projectToGround(Common::Vec3(t_position.x, t_position.y, t_ball_3d.position.z),
                                                        ChipEstimator::getCameraPos(t_camera_id));
         position_3d   = Common::Vec3(real_pos.x, real_pos.y, t_ball_3d.position.z);
     }
-#else
-    (void) t_camera_id;
-#endif
 
     m_ball_ekf->process(position_3d, velocity_3d, t_seen, m_state.own_robot, m_state.opp_robot);
 
