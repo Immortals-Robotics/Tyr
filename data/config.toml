@@ -17,11 +17,11 @@ port = 20011
 
 [network.referee]
 ip = '224.5.23.23'
-port = 10004
+port = 10048
 
 [network.sender]
-ip = '224.5.92.5'
-port = 60005
+ip = '224.5.92.9'
+port = 60090
 
 [network.strategy]
 ip = '224.5.23.3'
@@ -193,7 +193,7 @@ chip_max_records = 200
 chip_max_vel_z = 7000.0
 chip_min_records = 5
 kick_threshold = 0.69999999999999996
-kicker_depth = 190.0
+kicker_depth = 200.0
 max_ball_2_frame_dist = 1000.0
 max_ball_frame_not_seen = 30
 max_ball_hist = 10
