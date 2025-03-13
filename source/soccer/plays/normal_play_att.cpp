@@ -93,26 +93,11 @@ void Ai::normalPlayAtt()
         {
             Common::Angle shootAngle;
 
-            static bool intersecting    = false;
-            speed_threshold = intersecting ? 500.0f : 1000.0f;
-
-            const float ball_dir_goal_dot =
-                m_world_state.ball.velocity.normalized().dot((oppGoal() - m_world_state.ball.position).normalized());
-            if (m_world_state.ball.velocity.length() < speed_threshold || std::abs(ball_dir_goal_dot) > 0.75f)
-            {
-                intersecting = false;
-
                 // target the goal center if the open angle is too small
                 if (openAngle.magnitude.deg() > 5.0f)
                     shootAngle = Common::Angle::fromDeg(180.0f) + openAngle.center;
                 else
                     shootAngle = (m_world_state.ball.position - oppGoal()).toAngle();
-            }
-            else
-            {
-                intersecting = true;
-                shootAngle   = m_world_state.ball.velocity.toAngle();
-            }
 
             float shoot_pow = 6500.f; // 6.5m/s
 
@@ -125,10 +110,6 @@ void Ai::normalPlayAtt()
             else if (goalBlocked(m_world_state.ball.position, 200, 90))
             {
                 shoot_pow = 1.f;
-            }
-            else if (intersecting)
-            {
-                shoot_pow = 1.0f;
             }
 
             attacker(m_attack, shootAngle, shoot_pow, 0, 0, 0);

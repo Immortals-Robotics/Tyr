@@ -4,9 +4,9 @@ namespace Tyr::Soccer
 {
 bool ObstacleMap::inside(const Common::Vec2 t_p) const
 {
-    const float field_margin = Common::field().boundary_width - Common::field().robot_radius;
-    if (std::fabs(t_p.x) > Common::field().width + field_margin ||
-        std::fabs(t_p.y) > Common::field().height + field_margin)
+    const float margin = Common::field().boundary_width - Common::field().robot_radius + 10.f;
+    if (std::fabs(t_p.x) > Common::field().width + margin ||
+        std::fabs(t_p.y) > Common::field().height + margin)
     {
         return true;
     }

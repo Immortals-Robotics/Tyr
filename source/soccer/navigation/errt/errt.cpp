@@ -11,9 +11,17 @@ Planner::Planner(const int t_max_nodes, const float t_step)
     m_cached_waypoints.reserve(m_max_nodes);
 }
 
-Common::Vec2 Planner::nearestFree(const Common::Vec2 state)
+Common::Vec2 Planner::nearestFree(Common::Vec2 state)
 {
     const float acceptable_free_dis = 50.0f;
+
+    // clamp the position to be inside the field
+    const float margin = Common::field().boundary_width - Common::field().robot_radius;
+    if (std::fabs(state.x) > Common::field().width + margin)
+        state.x = Common::sign(state.x) * (Common::field().width + margin);
+
+    if (std::fabs(state.y) > Common::field().height + margin)
+        state.y = Common::sign(state.y) * (Common::field().height + margin);
 
     if (!m_map->inside(state))
         return state;

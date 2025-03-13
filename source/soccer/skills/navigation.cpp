@@ -23,11 +23,14 @@ void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProf
         Common::debug().draw(t_dest);
 
     Common::Vec2 target = m_planner[t_robot_num].plan(robot.state().position, t_dest);
-    if (std::fabs(target.x) > Common::field().width + Common::field().boundary_width)
-        target.x = Common::sign(target.x) * (Common::field().width + Common::field().boundary_width);
 
-    if (std::fabs(target.y) > Common::field().height + Common::field().boundary_width)
-        target.y = Common::sign(target.y) * (Common::field().height + Common::field().boundary_width);
+    const float margin = Common::field().boundary_width - Common::field().robot_radius;
+
+    if (std::fabs(target.x) > Common::field().width + margin)
+        target.x = Common::sign(target.x) * (Common::field().width + margin);
+
+    if (std::fabs(target.y) > Common::field().height + margin)
+        target.y = Common::sign(target.y) * (Common::field().height + margin);
 
     m_planner[t_robot_num].draw();
 

@@ -46,8 +46,9 @@ private:
 
     Common::Vec2 randomState()
     {
-        return Common::Vec2((m_random.get(-1.0f, 1.0f) * (Common::field().width + Common::field().boundary_width)),
-                            (m_random.get(-1.0f, 1.0f) * (Common::field().height + Common::field().boundary_width)));
+        const float margin = Common::field().boundary_width - Common::field().robot_radius;
+        return Common::Vec2((m_random.get(-1.0f, 1.0f) * (Common::field().width + margin)),
+                            (m_random.get(-1.0f, 1.0f) * (Common::field().height + margin)));
     }
 
     Common::Vec2 nearestFree(Common::Vec2 state);
