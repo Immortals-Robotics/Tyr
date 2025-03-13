@@ -42,7 +42,7 @@ private:
 
     TrackedRobot m_tracked_robot[2][Common::Config::Common::kMaxRobots];
 
-    static constexpr size_t kMaxHist = 7;
+    static constexpr size_t kMaxHist = 100;
     using CommandHistory = std::deque<Sender::Command>;
     std::unordered_map<int, CommandHistory> m_cmd_map;
 

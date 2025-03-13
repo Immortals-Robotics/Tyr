@@ -111,14 +111,21 @@ public:
     {
         Common::Vec2 position = state().position();
 
-        if (history.empty())
+        const float vision_dt = 1.0f/ Common::config().vision.vision_frame_rate;
+        const int history_use_count = std::floor(dt / vision_dt);
+
+        // not enough commands in the history
+        if (history_use_count == 0 || history.size() < history_use_count)
         {
-            position += state().velocity() * (dt / 2.0f);
+            position += state().velocity() * dt;
         }
         else
         {
-            const Sender::Command& last_cmd = history.back();
-            position += last_cmd.motion * dt;
+            for (int i = 0; i <history_use_count; i++)
+            {
+                const Sender::Command& cmd = *(history.end() - (i + 1));
+                position += cmd.motion * vision_dt * 1.0f;
+            }
         }
 
         Filter::RobotState predicted_state = state();

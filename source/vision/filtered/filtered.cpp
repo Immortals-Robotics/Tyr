@@ -29,7 +29,6 @@ bool Filtered::receiveCmds()
     if (!m_cmd_client->receive(&pb_wrapper))
         return false;
 
-    m_cmd_map.clear();
     const Sender::CommandsWrapper cmd_wrapper{Sender::CommandsWrapper(pb_wrapper)};
     for (const auto &cmd : cmd_wrapper.commands)
     {
