@@ -105,6 +105,9 @@ bool Application::initialize(const int t_width, const int t_height)
     InitWindow(t_width, t_height, "Tyr");
     SetTraceLogLevel(LOG_ALL);
 
+    // disable exit when escape key is pressed
+    SetExitKey(0);
+
     const std::filesystem::path icon_path = std::filesystem::path(DATA_DIR) / "immortals.png";
     SetWindowIcon(LoadImage(icon_path.string().c_str()));
 
