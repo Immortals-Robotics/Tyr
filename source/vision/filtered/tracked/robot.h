@@ -124,7 +124,7 @@ public:
             for (int i = 0; i <history_use_count; i++)
             {
                 const Sender::Command& cmd = *(history.end() - (i + 1));
-                position += cmd.motion * vision_dt * 1.0f;
+                position += cmd.motion * vision_dt;
             }
         }
 

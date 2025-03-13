@@ -11,8 +11,8 @@ Dss::Dss(const Common::WorldState *const t_world) : m_world(t_world)
 bool Dss::collisionWithOwn(const TrajectoryPiece2D &cmd_a,
                            const TrajectoryPiece2D &cmd_b) const
 {
-    const Trajectory2D traj_a = Trajectory2D::makeDssTrajectory(cmd_a, m_profile.deceleration);
-    const Trajectory2D traj_b = Trajectory2D::makeDssTrajectory(cmd_b, m_profile.deceleration);
+    const Trajectory2D traj_a = Trajectory2D::makeDssTrajectory(cmd_a, m_profile.acceleration);
+    const Trajectory2D traj_b = Trajectory2D::makeDssTrajectory(cmd_b, m_profile.acceleration);
 
     return traj_a.hasCollision(traj_b, Common::field().robot_radius * 2.f);
 }
@@ -20,8 +20,8 @@ bool Dss::collisionWithOwn(const TrajectoryPiece2D &cmd_a,
 bool Dss::collisionWithOpp(const TrajectoryPiece2D &cmd_own,
                            const Common::RobotState &state_opp) const
 {
-    const Trajectory2D traj_own = Trajectory2D::makeDssTrajectory(cmd_own, m_profile.deceleration);
-    const Trajectory2D traj_opp = Trajectory2D::makeStopDssTrajectory(TrajectoryPiece2D::makeOppPiece(state_opp), m_profile.deceleration);
+    const Trajectory2D traj_own = Trajectory2D::makeDssTrajectory(cmd_own, m_profile.acceleration);
+    const Trajectory2D traj_opp = Trajectory2D::makeStopDssTrajectory(TrajectoryPiece2D::makeOppPiece(state_opp), m_profile.acceleration);
 
     return traj_own.hasCollision(traj_opp, Common::field().robot_radius * 2.f);
 }
@@ -29,7 +29,7 @@ bool Dss::collisionWithOpp(const TrajectoryPiece2D &cmd_own,
 bool Dss::RobotHasStaticCollision(const TrajectoryPiece2D &cmd) const
 {
     const Trajectory2D traj =
-        Trajectory2D::makeDssTrajectory(cmd, m_profile.deceleration);
+        Trajectory2D::makeDssTrajectory(cmd, m_profile.acceleration);
 
     return traj.hasCollision(*m_map);
 }
@@ -113,7 +113,7 @@ TrajectoryPiece2D Dss::ComputeSafeMotion(const int robot_num, const TrajectoryPi
     // TODO: in simulation setting a lower dec compared
     // to motion plan results in better avoidance.
     // Verify on the real field
-    m_profile.deceleration /= 2.0f;
+    m_profile.acceleration /= 2.0f;
 
     TrajectoryPiece2D result;
 
@@ -128,7 +128,7 @@ TrajectoryPiece2D Dss::ComputeSafeMotion(const int robot_num, const TrajectoryPi
     else
     {
         const float dt = 1.f / Common::config().vision.vision_frame_rate;
-        result = Trajectory2D::makeStopDssTrajectory(cmd, m_profile.deceleration).getCommandPiece(dt);
+        result = Trajectory2D::makeStopDssTrajectory(cmd, m_profile.acceleration).getCommandPiece(dt);
         float error = ComputeError(cmd, result);
 
         for (int iter_idx = 0; iter_idx < 100; ++iter_idx)

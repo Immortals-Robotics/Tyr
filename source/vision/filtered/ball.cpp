@@ -107,7 +107,7 @@ void Filtered::processBalls()
         }
     }
 
-    const Filter::BallState predicted_state = m_tracked_ball.predict(kPredictTime);
+    const Filter::BallState predicted_state = m_tracked_ball.predict(Common::config().vision.predict_time);
 
     m_state.ball.position = predicted_state.position();
     m_state.ball.velocity = predicted_state.velocity();

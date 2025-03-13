@@ -4,11 +4,11 @@
 
 namespace Tyr::Soccer
 {
-static float computeMotion1D(const float v0, const float delta, const float acc, const float dec, const float max_speed)
+static float computeMotion1D(const float v0, const float delta, const float acc, const float max_speed)
 {
     float result = 0.f;
 
-    result = pow(7.6f * dec * std::fabs(delta), 0.6f);
+    result = pow(7.6f * acc * std::fabs(delta), 0.6f);
     result *= Common::sign(delta);
     if (std::fabs(delta) < 5)
         result = 0.0f;
@@ -16,8 +16,8 @@ static float computeMotion1D(const float v0, const float delta, const float acc,
     if (result * v0 <= 0)
     {
         float tmp = result == 0.0f
-            ? v0 - dec * Common::sign(v0)
-            : v0 + dec * Common::sign(result);
+            ? v0 - acc * Common::sign(v0)
+            : v0 + acc * Common::sign(result);
 
         if (tmp * result > 0)
         {
@@ -34,13 +34,13 @@ static float computeMotion1D(const float v0, const float delta, const float acc,
         {
             result = (std::fabs(v0) + acc) * Common::sign(result);
         }
-        else if (std::fabs(result) < std::fabs(v0) - dec)
+        else if (std::fabs(result) < std::fabs(v0) - acc)
         {
-            result = (std::fabs(v0) - dec) * Common::sign(result);
+            result = (std::fabs(v0) - acc) * Common::sign(result);
         }
         if (std::fabs(result) > max_speed)
         {
-            result = std::max(std::fabs(v0) - dec, std::fabs(max_speed)) * Common::sign(result);
+            result = std::max(std::fabs(v0) - acc, std::fabs(max_speed)) * Common::sign(result);
         }
     }
 
@@ -54,11 +54,10 @@ Trajectory2D Trajectory2D::makeRobotTrajectory(const Common::Vec2 p0, const Comm
 
     const float dt = 1.f / Common::config().vision.vision_frame_rate;
     const float acc = profile.acceleration * dt;
-    const float dec = profile.deceleration * dt;
 
     const Common::Vec2 v1 {
-        computeMotion1D(v0.x, delta.x, acc, dec, tmp_max_speed.x),
-        computeMotion1D(v0.y, delta.y, acc, dec, tmp_max_speed.y)
+        computeMotion1D(v0.x, delta.x, acc, tmp_max_speed.x),
+        computeMotion1D(v0.y, delta.y, acc, tmp_max_speed.y)
     };
 
     Common::Vec2 a0 = (v1 - v0) / dt;

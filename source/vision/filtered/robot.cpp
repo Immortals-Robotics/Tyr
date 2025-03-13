@@ -55,8 +55,8 @@ void Filtered::processRobots(const Common::TeamColor t_color)
 
         // predict
         const Filter::RobotState predicted_state = own
-            ? tracked_robot.predictOwn(kPredictTime, m_cmd_map[id])
-            : tracked_robot.predictOpp(kPredictTime);
+            ? tracked_robot.predictOwn(Common::config().vision.predict_time, m_cmd_map[id])
+            : tracked_robot.predictOpp(Common::config().vision.predict_time);
 
         // fill the robot state based on kalman
         robot.position = predicted_state.position();
