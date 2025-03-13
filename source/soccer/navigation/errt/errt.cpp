@@ -15,7 +15,7 @@ Common::Vec2 Planner::nearestFree(const Common::Vec2 state)
 {
     const float acceptable_free_dis = 50.0f;
 
-    if (!m_map->isInObstacle(state))
+    if (!m_map->inside(state))
         return state;
 
     Common::Vec2 ans    = state;
@@ -25,7 +25,7 @@ Common::Vec2 Planner::nearestFree(const Common::Vec2 state)
     {
         Common::Vec2 newRndPoint = randomState();
         const float  tmp_d       = state.distanceSquaredTo(newRndPoint);
-        if (!m_map->isInObstacle(newRndPoint) && tmp_d < minDis)
+        if (!m_map->inside(newRndPoint) && tmp_d < minDis)
         {
             ans    = newRndPoint;
             minDis = tmp_d;
@@ -47,7 +47,7 @@ Node *Planner::extend(Node *s, Common::Vec2 &target)
     Common::Vec2 new_state = s->state + step_vec;
 
     // collision check
-    if (m_map->isInObstacle(new_state))
+    if (m_map->inside(new_state))
         return nullptr;
 
     if (m_map->collisionDetect(new_state, s->state))
@@ -82,7 +82,7 @@ Common::Vec2 Planner::plan(const Common::Vec2 init, const Common::Vec2 final)
     m_tree.reset();
     m_tree.addNode(init_state, nullptr);
 
-    m_started_in_obs = m_map->isInObstacle(init);
+    m_started_in_obs = m_map->inside(init);
 
     if (m_cached_waypoints.empty())
     {
@@ -103,7 +103,7 @@ Common::Vec2 Planner::plan(const Common::Vec2 init, const Common::Vec2 final)
             extend(m_tree.nearestNeighbour(r), r);
         }
 
-        if ((isReached()) && (!m_map->isInObstacle(final_state)) &&
+        if ((isReached()) && (!m_map->inside(final_state)) &&
             (final_state.distanceTo(m_tree.nearestNeighbour(final_state)->state) > 1))
         {
             m_tree.addNode(final_state, m_tree.nearestNeighbour(final_state));

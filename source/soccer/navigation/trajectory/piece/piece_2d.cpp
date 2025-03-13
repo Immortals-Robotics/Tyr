@@ -38,9 +38,9 @@ bool TrajectoryPiece2D::hasCollision(const ObstacleMap &map) const
 
     // TODO: this is horrible :/
     return
-        map.isInObstacle(getPosition(t_start)) ||
-        map.isInObstacle(getPosition(t_end)) ||
-        map.isInObstacle(getPosition((t_start + t_end) / 2.f));
+        map.inside(getPosition(t_start)) ||
+        map.inside(getPosition(t_end)) ||
+        map.inside(getPosition((t_start + t_end) / 2.f));
 }
 
 bool TrajectoryPiece2D::hasCollision(const TrajectoryPiece2D &other, const float r, const float t) const

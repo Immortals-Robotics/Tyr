@@ -120,7 +120,7 @@ TrajectoryPiece2D Dss::ComputeSafeMotion(const int robot_num, const TrajectoryPi
     const Common::RobotState &state = m_world->own_robot[robot_num];
 
     if (state.seen_state == Common::SeenState::CompletelyOut ||
-        m_map->isInObstacle(state.position) ||
+        m_map->inside(state.position) ||
         isSafe(robot_num, cmd))
     {
         result = cmd;

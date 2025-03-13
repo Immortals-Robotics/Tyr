@@ -11,14 +11,14 @@ public:
     RectObstacle(const Common::Rect t_rect) : m_rect(t_rect)
     {}
 
-    bool IsInObstacle(const Common::Vec2 t_point) const
+    bool inside(const Common::Vec2 t_point) const
     {
         return m_rect.inside(t_point);
     }
 
-    float NearestDistance(const Common::Vec2 t_point) const
+    float distance(const Common::Vec2 t_point) const
     {
-        if (IsInObstacle(t_point))
+        if (inside(t_point))
             return -1.0f;
 
         if ((t_point.x > m_rect.min.x) && (t_point.x < m_rect.max.x))
