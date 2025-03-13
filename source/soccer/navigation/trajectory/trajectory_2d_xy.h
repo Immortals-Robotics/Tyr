@@ -19,8 +19,6 @@ public:
 
     static Trajectory2DXY makeBangBangTrajectory(Common::Vec2 p0, Common::Vec2 v0, Common::Vec2 target, const VelocityProfile &profile);
 
-
-
     // generates a piece to be sent to the robot for a control period of dt
     TrajectoryPiece2D getCommandPiece(const float dt) const
     {
@@ -74,6 +72,14 @@ public:
         // TODO: implement
         (void) map;
         return false;
+    }
+
+    void draw() const override
+    {
+        for (float t = 0.f; t < getEndTime(); t += 0.1f)
+        {
+            Common::debug().draw(getPosition(t), Common::Color::magenta());
+        }
     }
 };
 } // namespace Tyr::Soccer

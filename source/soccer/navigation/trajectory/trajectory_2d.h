@@ -31,6 +31,14 @@ public:
     bool hasCollision(const TrajectoryBase &other, float r) const override;
     bool hasCollision(const ObstacleMap &map) const override;
 
+    void draw() const override
+    {
+        for (float t = 0.f; t < getEndTime(); t += 0.1f)
+        {
+            Common::debug().draw(getPosition(t), Common::Color::magenta());
+        }
+    }
+
     // generates a piece to be sent to the robot for a control period of dt
     TrajectoryPiece2D getCommandPiece(const float dt) const
     {

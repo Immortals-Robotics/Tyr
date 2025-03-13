@@ -21,6 +21,10 @@ public:
     virtual bool hasCollision(const TrajectoryBase &other, float r) const = 0;
     virtual bool hasCollision(const ObstacleMap &map) const = 0;
 
+    virtual void draw() const
+    {
+    }
+
     float getDuration() const
     {
         return getEndTime() - getStartTime();

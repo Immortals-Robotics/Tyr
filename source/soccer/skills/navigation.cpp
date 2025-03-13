@@ -33,8 +33,15 @@ void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProf
 
     robot.target.position = target;
 
-    //const Trajectory2D trajectory = Trajectory2D::makeRobotTrajectory(robot.state().position, robot.currentMotion(), target, t_profile);
+    // TODO: use the old trajectory for now
+#if 1
+    const Trajectory2D trajectory = Trajectory2D::makeRobotTrajectory(robot.state().position, robot.currentMotion(), target, t_profile);
+#else
     const Trajectory2DXY trajectory = Trajectory2DXY::makeBangBangTrajectory(robot.state().position, robot.currentMotion(), target, t_profile);
+#endif
+
+    trajectory.draw();
+
     const float dt = 1.f / Common::config().vision.vision_frame_rate;
     TrajectoryPiece2D command_piece = trajectory.getCommandPiece(dt);
 
