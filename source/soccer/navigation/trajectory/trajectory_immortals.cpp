@@ -8,10 +8,8 @@ static float computeMotion1D(const float v0, const float delta, const float acc,
 {
     float result = 0.f;
 
-    result = pow(7.6f * acc * std::fabs(delta), 0.6f);
+    result = pow(6.5f * acc * std::fabs(delta), 0.6f);
     result *= Common::sign(delta);
-    if (std::fabs(delta) < 5)
-        result = 0.0f;
 
     if (result * v0 <= 0)
     {
