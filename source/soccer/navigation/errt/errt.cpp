@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-Planner::Planner(const int t_max_nodes, const float t_step)
+PlannerRrt::PlannerRrt(const int t_max_nodes, const float t_step)
     : m_step_size(t_step)
     , m_max_nodes(t_max_nodes)
     , m_tree(t_max_nodes)
@@ -11,7 +11,7 @@ Planner::Planner(const int t_max_nodes, const float t_step)
     m_cached_waypoints.reserve(m_max_nodes);
 }
 
-Common::Vec2 Planner::nearestFree(Common::Vec2 state)
+Common::Vec2 PlannerRrt::nearestFree(Common::Vec2 state)
 {
     const float acceptable_free_dis = 50.0f;
 
@@ -45,7 +45,7 @@ Common::Vec2 Planner::nearestFree(Common::Vec2 state)
     return ans;
 }
 
-Node *Planner::extend(Node *s, Common::Vec2 &target)
+Node *PlannerRrt::extend(Node *s, Common::Vec2 &target)
 {
     if (s->state.distanceTo(target) < m_step_size)
         return nullptr;
@@ -64,7 +64,7 @@ Node *Planner::extend(Node *s, Common::Vec2 &target)
     return m_tree.addNode(new_state, s);
 }
 
-void Planner::setWayPoints()
+void PlannerRrt::setWayPoints()
 {
     m_waypoints.clear();
 
@@ -82,7 +82,7 @@ void Planner::setWayPoints()
         m_cached_waypoints = m_waypoints;
 }
 
-Common::Vec2 Planner::plan(const Common::Vec2 init, const Common::Vec2 final)
+Common::Vec2 PlannerRrt::plan(const Common::Vec2 init, const Common::Vec2 final)
 {
     init_state  = nearestFree(init);
     final_state = nearestFree(final);
@@ -131,7 +131,7 @@ Common::Vec2 Planner::plan(const Common::Vec2 init, const Common::Vec2 final)
     }
 }
 
-void Planner::optimizeTree()
+void PlannerRrt::optimizeTree()
 {
     for (size_t i = 0; i < m_waypoints.size() - 1; i++)
     {
@@ -144,7 +144,7 @@ void Planner::optimizeTree()
     }
 }
 
-void Planner::draw(const Common::Color t_color) const
+void PlannerRrt::draw(const Common::Color t_color) const
 {
     for (size_t i = 0; i < m_waypoints.size() - 1; i++)
     {

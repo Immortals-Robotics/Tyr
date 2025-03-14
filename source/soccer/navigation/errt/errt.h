@@ -5,11 +5,11 @@
 
 namespace Tyr::Soccer
 {
-class Planner
+class PlannerRrt
 {
 public:
-     Planner(int t_max_nodes = 2000, float t_step = 90.f);
-    ~Planner() = default;
+     PlannerRrt(int t_max_nodes = 2000, float t_step = 90.f);
+    ~PlannerRrt() = default;
 
     Common::Vec2 plan(Common::Vec2 init, Common::Vec2 final);
 
@@ -75,7 +75,7 @@ private:
     void optimizeTree();
 };
 
-inline Common::Vec2 Planner::chooseTarget()
+inline Common::Vec2 PlannerRrt::chooseTarget()
 {
     const float r = m_random.get(0.0f, 1.0f);
 

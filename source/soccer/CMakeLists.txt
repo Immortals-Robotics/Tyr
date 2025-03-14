@@ -13,6 +13,7 @@ set(HEADER_FILES
         navigation/obstacle/map.h
         navigation/obstacle/rect.h
         navigation/trajectory/trajectory_base.h
+        navigation/trajectory/trajectory_chained.h
         navigation/trajectory/trajectory_pieced.h
         navigation/trajectory/trajectory_1d.h
         navigation/trajectory/trajectory_2d.h
@@ -20,6 +21,7 @@ set(HEADER_FILES
         navigation/trajectory/piece/piece_base.h
         navigation/trajectory/piece/piece_1d.h
         navigation/trajectory/piece/piece_2d.h
+        navigation/trajectory/planner/planner.h
 
         plays/play_book.h
 
@@ -55,6 +57,7 @@ set(SOURCE_FILES
         navigation/trajectory/trajectory_bang_bang.cpp
         navigation/trajectory/trajectory_immortals.cpp
         navigation/trajectory/piece/piece_2d.cpp
+        navigation/trajectory/planner/planner.cpp
 
         helpers/attack_fucking_angle.cpp
         helpers/ball_is_goaling.cpp

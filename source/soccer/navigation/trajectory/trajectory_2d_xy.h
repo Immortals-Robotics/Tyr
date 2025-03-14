@@ -62,7 +62,7 @@ public:
     }
 
     // TODO: this duplicates the one in trajectory_2d
-    bool hasCollision(const TrajectoryBase &other, float r, float step_t = 0.1f, float look_ahead = 3.0f) const override
+    bool hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f, float step_t = 0.1f) const override
     {
         const float t_start = std::max(this->getStartTime(), other.getStartTime());
         const float t_end_raw = std::min(this->getEndTime(), other.getEndTime());
@@ -83,7 +83,7 @@ public:
     }
 
     // TODO: this duplicates the one in trajectory_2d
-    bool hasCollision(const ObstacleMap &map, float step_t = 0.1f, float look_ahead = 3.0f) const override
+    bool hasCollision(const ObstacleMap &map, float look_ahead = 3.0f, float step_t = 0.1f) const override
     {
         const float t_end = std::min(getEndTime(), getStartTime() + look_ahead);
 
@@ -102,7 +102,7 @@ public:
 
     void draw() const override
     {
-        for (float t = 0.f; t < getEndTime(); t += 0.1f)
+        for (float t = getStartTime(); t < getEndTime(); t += 0.1f)
         {
             Common::debug().draw(getPosition(t), Common::Color::magenta());
         }

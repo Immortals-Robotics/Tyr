@@ -2,6 +2,7 @@
 
 #include "navigation/dss/dss.h"
 #include "navigation/errt/errt.h"
+#include "navigation/trajectory/planner/planner.h"
 #include "helpers/ball_trajectory.h"
 #include "helpers/one_touch_detector.h"
 #include "plays/play_book.h"
@@ -176,7 +177,8 @@ private:
     void setObstacles(int t_robot_num, NavigationFlags t_flags = NavigationFlagsNone);
 
     ObstacleMap          m_obsMap[Common::Config::Common::kMaxRobots];
-    Planner              m_planner[Common::Config::Common::kMaxRobots];
+    PlannerRrt           m_planner_rrt[Common::Config::Common::kMaxRobots];
+    PlannerTrajectory    m_planner_trajectory[Common::Config::Common::kMaxRobots];
     std::unique_ptr<Dss> m_dss;
 
     // Skills

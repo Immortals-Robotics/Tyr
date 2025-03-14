@@ -71,7 +71,8 @@ Ai::Ai()
 
     for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
-        m_planner[i].setObstacleMap(&m_obsMap[i]);
+        m_planner_rrt[i].setObstacleMap(&m_obsMap[i]);
+        m_planner_trajectory[i].setObstacleMap(&m_obsMap[i]);
 
         m_own_robot[i] = Robot(&m_world_state.own_robot[i]);
 

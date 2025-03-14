@@ -68,7 +68,8 @@ Trajectory2D Trajectory2D::makeStopDssTrajectory(const TrajectoryPiece2D& cmd_pi
 }
 
 // TODO: this duplicates the one in trajectory_2d_xy
-bool Trajectory2D::hasCollision(const TrajectoryBase &other, const float r, const float step_t, const float look_ahead) const
+bool Trajectory2D::hasCollision(const TrajectoryBase &other, const float r, const float look_ahead,
+                                const float step_t) const
 {
     const float t_start = std::max(this->getStartTime(), other.getStartTime());
     const float t_end_raw = std::min(this->getEndTime(), other.getEndTime());
@@ -89,7 +90,7 @@ bool Trajectory2D::hasCollision(const TrajectoryBase &other, const float r, cons
 }
 
 // TODO: this duplicates the one in trajectory_2d_xy
-bool Trajectory2D::hasCollision(const ObstacleMap &map, const float step_t, const float look_ahead) const
+bool Trajectory2D::hasCollision(const ObstacleMap &map, const float look_ahead, const float step_t) const
 {
     const float t_end = std::min(getEndTime(), getStartTime() + look_ahead);
 

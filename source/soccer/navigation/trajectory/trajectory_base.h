@@ -11,15 +11,15 @@ public:
     TrajectoryBase() = default;
     virtual ~TrajectoryBase() = default;
 
-    virtual T getPosition(const float t) const = 0;
-    virtual T getVelocity(const float t) const = 0;
-    virtual T getAcceleration(const float t) const = 0;
+    virtual T getPosition(float t) const = 0;
+    virtual T getVelocity(float t) const = 0;
+    virtual T getAcceleration(float t) const = 0;
 
     virtual float getStartTime() const = 0;
     virtual float getEndTime() const = 0;
 
-    virtual bool hasCollision(const TrajectoryBase &other, float r, float step_t = 0.1f, float look_ahead = 3.0f) const = 0;
-    virtual bool hasCollision(const ObstacleMap &map, float step_t = 0.1f, float look_ahead = 3.0f) const = 0;
+    virtual bool hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f, float step_t = 0.1f) const = 0;
+    virtual bool hasCollision(const ObstacleMap &map, float look_ahead = 3.0f, float step_t = 0.1f) const = 0;
 
     virtual void draw() const
     {
