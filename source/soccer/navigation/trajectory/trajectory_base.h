@@ -18,8 +18,8 @@ public:
     virtual float getStartTime() const = 0;
     virtual float getEndTime() const = 0;
 
-    virtual bool hasCollision(const TrajectoryBase &other, float r) const = 0;
-    virtual bool hasCollision(const ObstacleMap &map) const = 0;
+    virtual bool hasCollision(const TrajectoryBase &other, float r, float step_t = 0.1f, float look_ahead = 3.0f) const = 0;
+    virtual bool hasCollision(const ObstacleMap &map, float step_t = 0.1f, float look_ahead = 3.0f) const = 0;
 
     virtual void draw() const
     {

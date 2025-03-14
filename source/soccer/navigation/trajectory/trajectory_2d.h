@@ -28,8 +28,8 @@ public:
 
     static Trajectory2D makeBangBangTrajectory(Common::Vec2 p0, Common::Vec2 v0, Common::Vec2 target, const VelocityProfile &profile);
 
-    bool hasCollision(const TrajectoryBase &other, float r) const override;
-    bool hasCollision(const ObstacleMap &map) const override;
+    bool hasCollision(const TrajectoryBase &other, float r, float step_t = 0.1f, float look_ahead = 3.0f) const override;
+    bool hasCollision(const ObstacleMap &map, float step_t = 0.1f, float look_ahead = 3.0f) const override;
 
     void draw() const override
     {

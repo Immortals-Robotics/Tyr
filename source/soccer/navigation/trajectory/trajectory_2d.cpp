@@ -1,5 +1,7 @@
 #include "trajectory_2d.h"
 
+#include "../obstacle/map.h"
+
 namespace Tyr::Soccer
 {
 Trajectory2D Trajectory2D::makeDssTrajectory(const TrajectoryPiece2D& cmd_piece, const float a_dec)
@@ -65,29 +67,37 @@ Trajectory2D Trajectory2D::makeStopDssTrajectory(const TrajectoryPiece2D& cmd_pi
     return trajectory;
 }
 
-bool Trajectory2D::hasCollision(const TrajectoryBase &other, const float r) const
+// TODO: this duplicates the one in trajectory_2d_xy
+bool Trajectory2D::hasCollision(const TrajectoryBase &other, const float r, const float step_t, const float look_ahead) const
 {
-    const Trajectory2D& other_2d = static_cast<const Trajectory2D&>(other);
+    const float t_start = std::max(this->getStartTime(), other.getStartTime());
+    const float t_end_raw = std::min(this->getEndTime(), other.getEndTime());
+    const float t_end = std::min(t_end_raw, t_start + look_ahead);
 
-    for (const TrajectoryPiece2D &piece : m_pieces)
+    for (float t = t_start; t < t_end; t += step_t)
     {
-        for (const TrajectoryPiece2D &otherPiece : other_2d.m_pieces)
+        const Common::Vec2 pos = getPosition(t);
+        const Common::Vec2 other_pos = other.getPosition(t);
+
+        if (pos.distanceTo(other_pos) <= r)
         {
-            if (piece.hasCollision(otherPiece, r))
-            {
-                return true;
-            }
+            return true;
         }
     }
 
     return false;
 }
 
-bool Trajectory2D::hasCollision(const ObstacleMap &map) const
+// TODO: this duplicates the one in trajectory_2d_xy
+bool Trajectory2D::hasCollision(const ObstacleMap &map, const float step_t, const float look_ahead) const
 {
-    for (const TrajectoryPiece2D &piece : m_pieces)
+    const float t_end = std::min(getEndTime(), getStartTime() + look_ahead);
+
+    for (float t = getStartTime(); t < t_end; t += step_t)
     {
-        if (piece.hasCollision(map))
+        const Common::Vec2 pos = getPosition(t);
+
+        if (map.inside(pos))
         {
             return true;
         }

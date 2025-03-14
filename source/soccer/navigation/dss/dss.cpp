@@ -110,10 +110,6 @@ void Dss::Reset()
 TrajectoryPiece2D Dss::ComputeSafeMotion(const int robot_num, const TrajectoryPiece2D &cmd, const VelocityProfile &t_profile)
 {
     m_profile = t_profile;
-    // TODO: in simulation setting a lower dec compared
-    // to motion plan results in better avoidance.
-    // Verify on the real field
-    m_profile.acceleration /= 2.0f;
 
     TrajectoryPiece2D result;
 
