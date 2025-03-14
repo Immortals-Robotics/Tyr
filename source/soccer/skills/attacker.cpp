@@ -189,7 +189,7 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const floa
         }
         else
         {
-            r     = 400.0f;
+            r     = 1000.0f;
             tetta = 45.0f;
             // if ( !passedBall )
             //	r *= 1.5;

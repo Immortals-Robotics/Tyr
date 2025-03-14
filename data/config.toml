@@ -59,11 +59,11 @@ one_touch_shoot_k = 4000.0
 
     [soccer.velocity_profile.kharaki]
     acceleration = 4010.0
-    speed = 3000.0
+    speed = 4000.0
 
     [soccer.velocity_profile.mamooli]
     acceleration = 3500.0
-    speed = 3000.0
+    speed = 3500.0
 
     [soccer.velocity_profile.sooski]
     acceleration = 1620.0
