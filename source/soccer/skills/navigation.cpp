@@ -39,8 +39,6 @@ void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProf
     if (std::fabs(target.y) > Common::field().height + margin)
         target.y = Common::sign(target.y) * (Common::field().height + margin);
 
-    robot.target.position = target;
-
 #if 0
     const Trajectory2D trajectory = Trajectory2D::makeRobotTrajectory(robot.state().position, robot.currentMotion(), target, t_profile);
 #else
@@ -61,5 +59,8 @@ void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProf
 
     Common::Vec2 motion_cmd = command_piece.getVelocity(dt);
     robot.move(motion_cmd);
+
+    // this is only used for assignment, not navigation
+    robot.target.position = t_dest;
 }
 } // namespace Tyr::Soccer
