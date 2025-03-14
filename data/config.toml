@@ -64,6 +64,8 @@ mark_in_stop = true
 one_touch_beta = 0.40000000000000002
 one_touch_gamma = 0.14000000000000001
 one_touch_shoot_k = 4000.0
+penalty_area_mark = true
+penalty_area_mark_distance = 400.0
 
     [soccer.velocity_profile.aroom]
     acceleration = 2160.0

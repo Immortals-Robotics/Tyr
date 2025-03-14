@@ -13,7 +13,7 @@ void Ai::mark2Goal(const int t_robot_num, const int t_opp, float t_dist, bool t_
 
     if (t_def_area_mark)
     {
-        const float penalty_area_dist = 120.f;
+        const float penalty_area_dist = Common::config().soccer.penalty_area_mark_distance;
         const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
         const Common::Vec2 start{ownGoal().x, -(penalty_area_half_width + penalty_area_dist)};
         const float        w = -m_side * (penalty_area_dist + Common::field().penalty_area_depth);
