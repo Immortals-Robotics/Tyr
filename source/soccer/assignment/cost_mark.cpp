@@ -17,8 +17,9 @@ int Ai::markRoleCost(const int t_robot_idx, const Assignment &t_assignment) cons
     constexpr float kPredictT = 0.3f;
 
     const Common::Vec2 predicted_pos_own = own_robot.position + own_robot.velocity * kPredictT;
-    const Common::Vec2 predicted_pos_opp = opp_robot.position + opp_robot.velocity * kPredictT;
-    const float        dis_pred          = predicted_pos_own.distanceTo(predicted_pos_opp);
+    const Common::Vec2 target            = t_assignment.target_point;
+    Common::debug().draw(Common::Circle(target, 200.0f), Common::Color::red());
+    const float        dis_pred          = predicted_pos_own.distanceTo(target);
 
     const bool already_marked = t_robot_idx == t_assignment.currentAssignee();
 

@@ -183,7 +183,7 @@ private:
 
     // Skills
     void mark(int t_robot_num, int t_opp, float t_dist = 220.0f);
-    void mark2Goal(int t_robot_num, int t_opp, float t_dist = 220.0f);
+    void mark2Goal(int t_robot_num, int t_opp, float t_dist = 220.0f, bool t_def_area_mark = false);
     void mark2Ball(int t_robot_num, int t_opp, float t_dist = 220.0f);
     void halt(int t_robot_num);
 
