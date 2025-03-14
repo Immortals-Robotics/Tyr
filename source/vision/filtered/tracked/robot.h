@@ -130,6 +130,8 @@ public:
 
         Filter::RobotState predicted_state = state();
         predicted_state.setPosition(position);
+        if (!history.empty())
+            predicted_state.setVelocity(history.back().motion);
         return predicted_state;
     }
 
