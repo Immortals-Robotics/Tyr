@@ -3,6 +3,10 @@ enable_debug = true
 immortals_is_the_best_team = true
 our_color = 0
 
+[network.active]
+use_internal_referee = false
+use_simulated_vision = false
+
 [network.blue_robot_simulation]
 ip = '127.0.0.1'
 port = 10301
@@ -14,6 +18,10 @@ port = 10300
 [network.grsim]
 ip = '127.0.0.1'
 port = 20011
+
+[network.internal_referee]
+ip = '224.5.23.69'
+port = 10069
 
 [network.referee]
 ip = '224.5.23.23'
@@ -32,8 +40,12 @@ ip = '224.5.23.2'
 port = 10099
 
 [network.vision]
-ip = '224.5.23.22'
-port = 10020
+ip = '224.5.23.2'
+port = 10006
+
+[network.vision_sim]
+ip = '224.5.23.2'
+port = 10024
 
 [network.yellow_robot_simulation]
 ip = '127.0.0.1'
