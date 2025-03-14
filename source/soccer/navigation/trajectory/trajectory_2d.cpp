@@ -68,8 +68,8 @@ Trajectory2D Trajectory2D::makeStopDssTrajectory(const TrajectoryPiece2D& cmd_pi
 }
 
 // TODO: this duplicates the one in trajectory_2d_xy
-bool Trajectory2D::hasCollision(const TrajectoryBase &other, const float r, const float look_ahead,
-                                const float step_t) const
+std::pair<bool, float> Trajectory2D::hasCollision(const TrajectoryBase &other, const float r, const float look_ahead,
+                                                  const float step_t) const
 {
     const float t_start = std::max(this->getStartTime(), other.getStartTime());
     const float t_end_raw = std::min(this->getEndTime(), other.getEndTime());
@@ -82,15 +82,16 @@ bool Trajectory2D::hasCollision(const TrajectoryBase &other, const float r, cons
 
         if (pos.distanceTo(other_pos) <= r)
         {
-            return true;
+            return {true, t};
         }
     }
 
-    return false;
+    return {false, std::numeric_limits<float>::max()};
 }
 
 // TODO: this duplicates the one in trajectory_2d_xy
-bool Trajectory2D::hasCollision(const ObstacleMap &map, const float look_ahead, const float step_t) const
+std::pair<bool, float> Trajectory2D::hasCollision(const ObstacleMap &map, const float look_ahead,
+                                                  const float step_t) const
 {
     const float t_end = std::min(getEndTime(), getStartTime() + look_ahead);
 
@@ -100,10 +101,27 @@ bool Trajectory2D::hasCollision(const ObstacleMap &map, const float look_ahead, 
 
         if (map.inside(pos))
         {
-            return true;
+            return {true, t};
         }
     }
 
-    return false;
+    return {false, std::numeric_limits<float>::max()};
+}
+
+std::pair<bool, float> Trajectory2D::reachFree(const ObstacleMap &map, float look_ahead, float step_t) const
+{
+    const float t_end = std::min(getEndTime(), getStartTime() + look_ahead);
+
+    for (float t = getStartTime(); t < t_end; t += step_t)
+    {
+        const Common::Vec2 pos = getPosition(t);
+
+        if (!map.inside(pos))
+        {
+            return {true, t};
+        }
+    }
+
+    return {false, std::numeric_limits<float>::max()};
 }
 } // namespace Tyr::Soccer

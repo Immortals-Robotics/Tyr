@@ -11,7 +11,7 @@ Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::
 
     const Trajectory2DXY target_trajectory = Trajectory2DXY::makeBangBangTrajectory(
         init_pos, init_vel, target, profile);
-    if (!target_trajectory.hasCollision(*m_map))
+    if (!target_trajectory.hasCollision(*m_map).first)
     {
         return target;
     }
@@ -22,22 +22,31 @@ Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::
 
     for (const Common::Vec2 &point : intermediate_points)
     {
-        Common::debug().draw(Common::Circle{point, 20.0f}, Common::Color::blue(), true);
-
         const Trajectory2DXY trajectory = Trajectory2DXY::makeBangBangTrajectory(
             init_pos, init_vel, point, profile);
 
-        const auto chained_trajectory = findChainedTrajectory(trajectory);
-        if (chained_trajectory.has_value())
-        {
-            valid_trajectories.push_back(chained_trajectory.value());
+        const TrajectoryChained2DXY chained_trajectory = findChainedTrajectory(trajectory);
+        valid_trajectories.push_back(chained_trajectory);
+    }
 
-            chained_trajectory.value().draw();
+    int best_index = 0;
+    float min_penalty = std::numeric_limits<float>::max();
+    for (int i = 1; i < valid_trajectories.size(); i++)
+    {
+        const float penalty = calculateTrajectoryPenalty(valid_trajectories[i]);
+        if (penalty < min_penalty)
+        {
+            min_penalty = penalty;
+            best_index = i;
         }
     }
 
-    // TODO: remove
-    return init_pos;
+    const TrajectoryChained2DXY& best_trajectory = valid_trajectories[best_index];
+    best_trajectory.draw(Common::Color::blue());
+    const Trajectory2DXY& second_trajectory = best_trajectory.getFirstTrajectory();
+    const Common::Vec2 intermediate_point = second_trajectory.getPosition(second_trajectory.getEndTime());
+    Common::debug().draw(Common::Circle{intermediate_point, 40.0f}, Common::Color::red(), true);
+    return intermediate_point;
 }
 
 std::vector<Common::Vec2> PlannerTrajectory::generateIntermediateTargetsSystematic(const Common::Vec2 t_center) const
@@ -65,17 +74,19 @@ std::vector<Common::Vec2> PlannerTrajectory::generateIntermediateTargetsSystemat
 
     return targets;
 }
-std::optional<PlannerTrajectory::TrajectoryChained2DXY> PlannerTrajectory::findChainedTrajectory(const Trajectory2DXY &trajectory) const
+
+// finds a trajectory that consists of
+// 1- init to time t1 somewhere on the input trajectory
+// 2- trajectory from the state at t1 to target
+PlannerTrajectory::TrajectoryChained2DXY PlannerTrajectory::findChainedTrajectory(const Trajectory2DXY &trajectory) const
 {
-    constexpr float kTimeStep = 0.2f;
-    constexpr float kLookaheadTime = 3.f;
+    constexpr float kTimeStep      = 0.2f;
 
     const float t_end = std::min(trajectory.getStartTime() + kLookaheadTime, trajectory.getEndTime());
 
     for (float t = trajectory.getStartTime(); t < t_end; t += kTimeStep)
     {
-        const bool first_leg_valid = !trajectory.hasCollision(*m_map, t);
-        if (!first_leg_valid)
+        if (!trajectory.hasCollision(*m_map, t).first)
         {
             break;
         }
@@ -83,17 +94,52 @@ std::optional<PlannerTrajectory::TrajectoryChained2DXY> PlannerTrajectory::findC
         const Common::Vec2 pos = trajectory.getPosition(t);
         const Common::Vec2 vel = trajectory.getVelocity(t);
 
-        const Trajectory2DXY target_trajectory = Trajectory2DXY::makeBangBangTrajectory(
-        pos, vel, m_target, m_profile);
-        if (!target_trajectory.hasCollision(*m_map))
+        const Trajectory2DXY target_trajectory = Trajectory2DXY::makeBangBangTrajectory(pos, vel, m_target, m_profile);
+        if (!target_trajectory.hasCollision(*m_map).first)
         {
-            return TrajectoryChained2DXY{
-                trajectory,
-                target_trajectory,
-                t};
+            return TrajectoryChained2DXY{trajectory, target_trajectory, t};
         }
     }
 
-    return {};
+    const Common::Vec2 pos = trajectory.getPosition(t_end);
+    const Common::Vec2 vel = trajectory.getVelocity(t_end);
+
+    const Trajectory2DXY target_trajectory = Trajectory2DXY::makeBangBangTrajectory(pos, vel, m_target, m_profile);
+    return TrajectoryChained2DXY{trajectory, target_trajectory, t_end};
+}
+
+float PlannerTrajectory::calculateTrajectoryPenalty(const TrajectoryChained2DXY &trajectory) const
+{
+    float penalty = 0.0f;
+
+    const auto collision = trajectory.hasCollision(*m_map, kLookaheadTime);
+
+    penalty += trajectory.getDuration();
+
+    if (collision.first)
+    {
+        penalty += 5.0f;
+
+        penalty += std::max(0.f, kLookaheadTime - collision.second);
+    }
+
+    const auto free = trajectory.reachFree(*m_map, kLookaheadTime);
+    if (free.first && free.second > 0.1f) // starts in collision but gets free
+    {
+        penalty += 3.0f * free.second;
+    }
+    else if (!free.first) // starts in collision and never gets free
+    {
+        // TODO: this is 0 in their TDP
+        penalty += 5.0f;
+    }
+
+    if (trajectory.getDuration() > kLookaheadTime)
+    {
+        const Common::Vec2 pos_at_lookahead = trajectory.getPosition(kLookaheadTime);
+        penalty += pos_at_lookahead.distanceTo(m_target) / 1000.0f;
+    }
+
+    return penalty;
 }
 } // namespace Tyr::Soccer

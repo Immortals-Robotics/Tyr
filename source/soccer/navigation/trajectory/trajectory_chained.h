@@ -52,34 +52,68 @@ public:
         return m_trajectory[1].getEndTime() + m_cut_time;
     }
 
-    bool hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f, float step_t = 0.1f) const override
+    std::pair<bool, float> hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f,
+                                        float step_t = 0.1f) const override
     {
-        const float look_aheads[2] = {
-            std::min(m_cut_time, look_ahead),
-            std::max(0.0f, look_ahead - m_cut_time)};
+        const float look_ahead_0 = std::min(m_cut_time, look_ahead);
+        const float look_ahead_1 = std::max(0.0f, look_ahead - m_cut_time);
 
-        return
-            m_trajectory[0].hasCollision(other, r, look_aheads[0], step_t) ||
-            m_trajectory[1].hasCollision(other, r, look_aheads[1], step_t);
+        const auto collision_0 = m_trajectory[0].hasCollision(other, r, look_ahead_0, step_t);
+        const auto collision_1 = m_trajectory[1].hasCollision(other, r, look_ahead_1, step_t);
+
+        return {
+            collision_0.first || collision_1.first,
+            std::min(collision_0.second, collision_1.second)};
     }
 
-    bool hasCollision(const ObstacleMap &map, float look_ahead = 3.0f, float step_t = 0.1f) const override
+    std::pair<bool, float> hasCollision(const ObstacleMap &map, float look_ahead = 3.0f,
+                                        float step_t = 0.1f) const override
     {
-        const float look_aheads[2] = {
-            std::min(m_cut_time, look_ahead),
-            std::max(0.0f, look_ahead - m_cut_time)};
+        const float look_ahead_0 = std::min(m_cut_time, look_ahead);
+        const float look_ahead_1 = std::max(0.0f, look_ahead - m_cut_time);
 
-        return
-            m_trajectory[0].hasCollision(map, look_aheads[0], step_t) ||
-            m_trajectory[1].hasCollision(map, look_aheads[1], step_t);
+        const auto collision_0 = m_trajectory[0].hasCollision(map, look_ahead_0, step_t);
+        const auto collision_1 = m_trajectory[1].hasCollision(map, look_ahead_1, step_t);
+
+        return {
+            collision_0.first || collision_1.first,
+            std::min(collision_0.second, collision_1.second)};
     }
 
-    void draw() const override
+    std::pair<bool, float> reachFree(const ObstacleMap &map, const float look_ahead = 3.0f, const float step_t = 0.1f) const override
+    {
+        const float look_ahead_0 = std::min(m_cut_time, look_ahead);
+        const float look_ahead_1 = std::max(0.0f, look_ahead - m_cut_time);
+
+        const auto free_0 = m_trajectory[0].reachFree(map, look_ahead_0, step_t);
+        const auto free_1 = m_trajectory[1].reachFree(map, look_ahead_1, step_t);
+
+        return {
+            free_0.first || free_1.first,
+            std::min(free_0.second, free_1.second)};
+    }
+
+    void draw(const Common::Color color) const override
     {
         for (float t = getStartTime(); t < getEndTime(); t += 0.1f)
         {
-            Common::debug().draw(getPosition(t), Common::Color::magenta());
+            Common::debug().draw(getPosition(t), color);
         }
+    }
+
+    const Trajectory& getFirstTrajectory() const
+    {
+        return m_trajectory[0];
+    }
+
+    const Trajectory& getSecondTrajectory() const
+    {
+        return m_trajectory[1];
+    }
+
+    float getCutTime() const
+    {
+        return m_cut_time;
     }
 };
 } // namespace Tyr::Soccer

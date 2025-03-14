@@ -18,16 +18,22 @@ public:
     virtual float getStartTime() const = 0;
     virtual float getEndTime() const = 0;
 
-    virtual bool hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f, float step_t = 0.1f) const = 0;
-    virtual bool hasCollision(const ObstacleMap &map, float look_ahead = 3.0f, float step_t = 0.1f) const = 0;
+    virtual std::pair<bool, float> hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f,
+                                                float step_t = 0.1f) const = 0;
+    virtual std::pair<bool, float> hasCollision(const ObstacleMap &map, float look_ahead = 3.0f,
+                                                float step_t = 0.1f) const = 0;
 
-    virtual void draw() const
+    // if the trajectory starts with collision, will it ever get out?
+    virtual std::pair<bool, float> reachFree(const ObstacleMap &map, float look_ahead = 3.0f, float step_t = 0.1f) const = 0;
+
+    virtual void draw(Common::Color color) const
     {
+        (void)color;
     }
 
     float getDuration() const
     {
-        return getEndTime() - getStartTime();
+        return std::max(0.0f, getEndTime() - getStartTime());
     }
 };
 } // namespace Tyr::Soccer

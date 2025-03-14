@@ -26,16 +26,21 @@ public:
 
     static Trajectory2D makeRobotTrajectory(Common::Vec2 p0, Common::Vec2 v0, Common::Vec2 target, const VelocityProfile &profile);
 
-    static Trajectory2D makeBangBangTrajectory(Common::Vec2 p0, Common::Vec2 v0, Common::Vec2 target, const VelocityProfile &profile);
+    static Trajectory2D makeBangBangTrajectory(Common::Vec2 p0, Common::Vec2 v0, Common::Vec2 target,
+                                               const VelocityProfile &profile);
 
-    bool hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f, float step_t = 0.1f) const override;
-    bool hasCollision(const ObstacleMap &map, float look_ahead = 3.0f, float step_t = 0.1f) const override;
+    std::pair<bool, float> hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f,
+                                        float step_t = 0.1f) const override;
+    std::pair<bool, float> hasCollision(const ObstacleMap &map, float look_ahead = 3.0f,
+                                        float step_t = 0.1f) const override;
 
-    void draw() const override
+    std::pair<bool, float> reachFree(const ObstacleMap &map, float look_ahead, float step_t) const override;
+
+    void draw(const Common::Color color) const override
     {
         for (float t = getStartTime(); t < getEndTime(); t += 0.1f)
         {
-            Common::debug().draw(getPosition(t), Common::Color::magenta());
+            Common::debug().draw(getPosition(t), color);
         }
     }
 
@@ -46,11 +51,11 @@ public:
         const float t1 = t0 + dt;
 
         TrajectoryPiece2D cmd_piece{};
-        cmd_piece.acc = getAcceleration(t0);
+        cmd_piece.acc     = getAcceleration(t0);
         cmd_piece.v_start = getVelocity(t0);
         cmd_piece.p_start = getPosition(t0);
         cmd_piece.t_start = t0;
-        cmd_piece.t_end = t1;
+        cmd_piece.t_end   = t1;
 
         return cmd_piece;
     }

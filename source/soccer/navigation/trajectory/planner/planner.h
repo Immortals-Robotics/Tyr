@@ -29,11 +29,16 @@ private:
     VelocityProfile m_profile;
     Common::Vec2 m_target;
 
+    static constexpr float kLookaheadTime = 3.f;
+
     using TrajectoryChained2DXY = TrajectoryChained<Trajectory2DXY>;
 
     std::vector<Common::Vec2> generateIntermediateTargetsSystematic(Common::Vec2 t_center) const;
 
-    std::optional<TrajectoryChained2DXY> findChainedTrajectory(const Trajectory2DXY& trajectory) const;
+
+    TrajectoryChained2DXY findChainedTrajectory(const Trajectory2DXY& trajectory) const;
+
+    float calculateTrajectoryPenalty(const TrajectoryChained2DXY& trajectory) const;
 
 };
 } // namespace Tyr::Soccer

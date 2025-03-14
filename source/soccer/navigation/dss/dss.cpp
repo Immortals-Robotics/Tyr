@@ -14,7 +14,7 @@ bool Dss::collisionWithOwn(const TrajectoryPiece2D &cmd_a,
     const Trajectory2D traj_a = Trajectory2D::makeDssTrajectory(cmd_a, m_profile.acceleration);
     const Trajectory2D traj_b = Trajectory2D::makeDssTrajectory(cmd_b, m_profile.acceleration);
 
-    return traj_a.hasCollision(traj_b, Common::field().robot_radius * 2.f);
+    return traj_a.hasCollision(traj_b, Common::field().robot_radius * 2.f).first;
 }
 
 bool Dss::collisionWithOpp(const TrajectoryPiece2D &cmd_own,
@@ -23,7 +23,7 @@ bool Dss::collisionWithOpp(const TrajectoryPiece2D &cmd_own,
     const Trajectory2D traj_own = Trajectory2D::makeDssTrajectory(cmd_own, m_profile.acceleration);
     const Trajectory2D traj_opp = Trajectory2D::makeStopDssTrajectory(TrajectoryPiece2D::makeOppPiece(state_opp), m_profile.acceleration);
 
-    return traj_own.hasCollision(traj_opp, Common::field().robot_radius * 2.f);
+    return traj_own.hasCollision(traj_opp, Common::field().robot_radius * 2.f).first;
 }
 
 bool Dss::RobotHasStaticCollision(const TrajectoryPiece2D &cmd) const
@@ -31,7 +31,7 @@ bool Dss::RobotHasStaticCollision(const TrajectoryPiece2D &cmd) const
     const Trajectory2D traj =
         Trajectory2D::makeDssTrajectory(cmd, m_profile.acceleration);
 
-    return traj.hasCollision(*m_map);
+    return traj.hasCollision(*m_map).first;
 }
 
 bool Dss::isSafe(const int robot_num, const TrajectoryPiece2D &cmd)

@@ -53,16 +53,17 @@ public:
 
     float getStartTime() const override
     {
-        return std::min(m_trajectory_x.getStartTime(), m_trajectory_y.getStartTime());
+        return std::max(m_trajectory_x.getStartTime(), m_trajectory_y.getStartTime());
     }
 
     float getEndTime() const override
     {
-        return std::max(m_trajectory_x.getEndTime(), m_trajectory_y.getEndTime());
+        return std::min(m_trajectory_x.getEndTime(), m_trajectory_y.getEndTime());
     }
 
     // TODO: this duplicates the one in trajectory_2d
-    bool hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f, float step_t = 0.1f) const override
+    std::pair<bool, float> hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f,
+                                        float step_t = 0.1f) const override
     {
         const float t_start = std::max(this->getStartTime(), other.getStartTime());
         const float t_end_raw = std::min(this->getEndTime(), other.getEndTime());
@@ -75,15 +76,16 @@ public:
 
             if (pos.distanceTo(other_pos) <= r)
             {
-                return true;
+                return {true, t};
             }
         }
 
-        return false;
+        return {false, std::numeric_limits<float>::max()};
     }
 
     // TODO: this duplicates the one in trajectory_2d
-    bool hasCollision(const ObstacleMap &map, float look_ahead = 3.0f, float step_t = 0.1f) const override
+    std::pair<bool, float> hasCollision(const ObstacleMap &map, float look_ahead = 3.0f,
+                                        float step_t = 0.1f) const override
     {
         const float t_end = std::min(getEndTime(), getStartTime() + look_ahead);
 
@@ -93,18 +95,36 @@ public:
 
             if (map.inside(pos))
             {
-                return true;
+                return {true, t};
             }
         }
 
-        return false;
+        return {false, std::numeric_limits<float>::max()};
     }
 
-    void draw() const override
+    // TODO: this duplicates the one in trajectory_2d
+    std::pair<bool, float> reachFree(const ObstacleMap &map, float look_ahead, float step_t) const override
+    {
+        const float t_end = std::min(getEndTime(), getStartTime() + look_ahead);
+
+        for (float t = getStartTime(); t < t_end; t += step_t)
+        {
+            const Common::Vec2 pos = getPosition(t);
+
+            if (!map.inside(pos))
+            {
+                return {true, t};
+            }
+        }
+
+        return {false, std::numeric_limits<float>::max()};
+    }
+
+    void draw(const Common::Color color) const override
     {
         for (float t = getStartTime(); t < getEndTime(); t += 0.1f)
         {
-            Common::debug().draw(getPosition(t), Common::Color::magenta());
+            Common::debug().draw(getPosition(t), color);
         }
     }
 };
