@@ -16,8 +16,6 @@ public:
 
     Common::Vec2 plan(Common::Vec2 init_pos, Common::Vec2 init_vel, Common::Vec2 target, const VelocityProfile &profile);
 
-    void draw(Common::Color t_color = Common::Color::black().transparent()) const;
-
     void setObstacleMap(const ObstacleMap* const t_map)
     {
         m_map = t_map;
@@ -25,6 +23,8 @@ public:
 
 private:
     const ObstacleMap* m_map = nullptr;
+
+    std::optional<Common::Vec2> m_intermediate_target;
 
     VelocityProfile m_profile;
     Common::Vec2 m_target;
@@ -34,7 +34,6 @@ private:
     using TrajectoryChained2DXY = TrajectoryChained<Trajectory2DXY>;
 
     std::vector<Common::Vec2> generateIntermediateTargetsSystematic(Common::Vec2 t_center) const;
-
 
     TrajectoryChained2DXY findChainedTrajectory(const Trajectory2DXY& trajectory) const;
 

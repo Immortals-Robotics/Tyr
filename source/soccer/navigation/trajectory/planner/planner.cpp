@@ -16,36 +16,54 @@ Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::
         return target;
     }
 
-    std::vector<TrajectoryChained2DXY> valid_trajectories{};
-
     const std::vector<Common::Vec2> intermediate_points = generateIntermediateTargetsSystematic(init_pos);
 
-    for (const Common::Vec2 &point : intermediate_points)
+    TrajectoryChained2DXY best_trajectory{};
+    float min_penalty = std::numeric_limits<float>::max();
+
+    for (int i = 0; i < intermediate_points.size(); i++)
     {
+        const Common::Vec2 point = intermediate_points[i];
+
         const Trajectory2DXY trajectory = Trajectory2DXY::makeBangBangTrajectory(
             init_pos, init_vel, point, profile);
 
         const TrajectoryChained2DXY chained_trajectory = findChainedTrajectory(trajectory);
-        valid_trajectories.push_back(chained_trajectory);
-    }
+        const float penalty = calculateTrajectoryPenalty(chained_trajectory);
 
-    int best_index = 0;
-    float min_penalty = std::numeric_limits<float>::max();
-    for (int i = 1; i < valid_trajectories.size(); i++)
-    {
-        const float penalty = calculateTrajectoryPenalty(valid_trajectories[i]);
         if (penalty < min_penalty)
         {
             min_penalty = penalty;
-            best_index = i;
+            best_trajectory = chained_trajectory;
         }
     }
 
-    const TrajectoryChained2DXY& best_trajectory = valid_trajectories[best_index];
+    // check if the last intermediate point is still valid
+    if (m_intermediate_target.has_value())
+    {
+        const Trajectory2DXY trajectory = Trajectory2DXY::makeBangBangTrajectory(
+                    init_pos, init_vel, m_intermediate_target.value(), profile);
+
+        const TrajectoryChained2DXY chained_trajectory = findChainedTrajectory(trajectory);
+        const float penalty = calculateTrajectoryPenalty(chained_trajectory);
+
+        Common::logDebug("last penalty: {}, min penalty: {}", penalty, min_penalty);
+
+        if (penalty < min_penalty + 1.0f)
+        {
+            min_penalty = penalty;
+            best_trajectory = chained_trajectory;
+        }
+    }
+
     best_trajectory.draw(Common::Color::blue());
+
     const Trajectory2DXY& second_trajectory = best_trajectory.getFirstTrajectory();
     const Common::Vec2 intermediate_point = second_trajectory.getPosition(second_trajectory.getEndTime());
     Common::debug().draw(Common::Circle{intermediate_point, 40.0f}, Common::Color::red(), true);
+
+    m_intermediate_target = intermediate_point;
+
     return intermediate_point;
 }
 
