@@ -10,7 +10,7 @@ void Ai::mark(const int t_robot_num, const int t_opp, const float t_dist)
     auto oneTouchDot  = oppToBall.dot(oppToGoal);
     if (oneTouchDot > 0 || oppToGoalDis < 2500)
     {
-        mark2Goal(t_robot_num, t_opp, t_dist, true);
+        mark2Goal(t_robot_num, t_opp, t_dist, Common::config().soccer.penalty_area_mark);
     }
     else
     {
