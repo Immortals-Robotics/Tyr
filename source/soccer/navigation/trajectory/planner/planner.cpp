@@ -4,8 +4,46 @@
 
 namespace Tyr::Soccer
 {
-Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::Vec2 init_vel, const Common::Vec2 target, const VelocityProfile &profile)
+Common::Vec2 PlannerTrajectory::nearestFree(Common::Vec2 state)
 {
+    const float acceptable_free_dis = 50.0f;
+
+    // clamp the position to be inside the field
+    const float margin = Common::field().boundary_width - Common::field().robot_radius;
+    if (std::fabs(state.x) > Common::field().width + margin)
+        state.x = Common::sign(state.x) * (Common::field().width + margin);
+
+    if (std::fabs(state.y) > Common::field().height + margin)
+        state.y = Common::sign(state.y) * (Common::field().height + margin);
+
+    if (!m_map->inside(state))
+        return state;
+
+    Common::Vec2 ans    = state;
+    float        minDis = std::numeric_limits<float>::max();
+
+    for (int i = 0; i < 1000; i++)
+    {
+        Common::Vec2 newRndPoint = randomState();
+        const float  tmp_d       = state.distanceSquaredTo(newRndPoint);
+        if (!m_map->inside(newRndPoint) && tmp_d < minDis)
+        {
+            ans    = newRndPoint;
+            minDis = tmp_d;
+            if (minDis < acceptable_free_dis)
+                break;
+        }
+    }
+
+    return ans;
+}
+
+Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::Vec2 init_vel, Common::Vec2 target, const VelocityProfile &profile)
+{
+    if (m_map->inside(target))
+    {
+        target = nearestFree(target);
+    }
     m_profile = profile;
     m_target = target;
 
