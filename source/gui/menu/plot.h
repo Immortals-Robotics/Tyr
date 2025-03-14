@@ -22,6 +22,10 @@ private:
         VelocityXY  = 1,
         Angle = 2,
         AngularVelocity = 3,
+        Position = 4,
+        PosVelY = 5, // used for delay measurement
+
+        Count,
     };
 
     enum class Item
@@ -32,6 +36,29 @@ private:
     };
 
     void pushData(const Common::WorldState &t_state, const bool &t_playback);
+
+    // used for delay measurement
+    std::pair<Common::Duration, Common::Vec2> pos(const int t_idx) const
+    {
+        const Common::WorldState &state = m_data[t_idx];
+        Common::Vec2              data{};
+
+        switch (m_item)
+        {
+        case Item::OurRobot:
+            data = state.own_robot[m_id].position;
+            break;
+        case Item::OppRobot:
+            data = state.opp_robot[m_id].position;
+            break;
+        case Item::Ball:
+            data = state.ball.position;
+            break;
+        }
+
+        const Common::Duration time = state.time - m_data.at(0).time;
+        return {time, data};
+    }
 
     std::pair<Common::Duration, Common::Vec2> velocity(const int t_idx) const
     {

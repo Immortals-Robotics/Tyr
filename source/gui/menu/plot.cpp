@@ -57,7 +57,13 @@ void PlotMenu::draw(const Common::WorldState &t_world, const bool &t_playback)
             ImGui::Combo("ID", &m_id, id_choices, IM_ARRAYSIZE(id_choices));
         }
 
-        const char *data_choices[] = {"Velocity", "Velocity XY", "Angle", "Angular Velocity"};
+        const char *data_choices[(int) Type::Count];
+        data_choices[(int) Type::Velocity]        = "Velocity";
+        data_choices[(int) Type::VelocityXY]      = "VelocityXY";
+        data_choices[(int) Type::Angle]           = "Angle";
+        data_choices[(int) Type::AngularVelocity] = "AngularVelocity";
+        data_choices[(int) Type::Position]        = "Position";
+        data_choices[(int) Type::PosVelY]         = "PosVelY";
 
         ImGui::TableNextColumn();
         ImGui::Combo("Data", reinterpret_cast<int *>(&m_type), data_choices, IM_ARRAYSIZE(data_choices));
@@ -69,7 +75,7 @@ void PlotMenu::draw(const Common::WorldState &t_world, const bool &t_playback)
 
     if (ImPlot::BeginPlot("Plot", ImVec2(-1, ImGui::GetWindowHeight() - 60.), ImPlotFlags_NoTitle))
     {
-        auto getter_x = [](const int t_idx, void *t_user_data)
+        auto getter_vel_x = [](const int t_idx, void *t_user_data)
         {
             const PlotMenu &menu = *static_cast<PlotMenu *>(t_user_data);
 
@@ -77,11 +83,27 @@ void PlotMenu::draw(const Common::WorldState &t_world, const bool &t_playback)
             return ImPlotPoint(time.seconds(), data.x);
         };
 
-        auto getter_y = [](const int t_idx, void *t_user_data)
+        auto getter_vel_y = [](const int t_idx, void *t_user_data)
         {
             const PlotMenu &menu = *static_cast<PlotMenu *>(t_user_data);
 
             const auto [time, data] = menu.velocity(t_idx);
+            return ImPlotPoint(time.seconds(), data.y);
+        };
+
+        auto getter_pos_x = [](const int t_idx, void *t_user_data)
+        {
+            const PlotMenu &menu = *static_cast<PlotMenu *>(t_user_data);
+
+            const auto [time, data] = menu.pos(t_idx);
+            return ImPlotPoint(time.seconds(), data.x);
+        };
+
+        auto getter_pos_y = [](const int t_idx, void *t_user_data)
+        {
+            const PlotMenu &menu = *static_cast<PlotMenu *>(t_user_data);
+
+            const auto [time, data] = menu.pos(t_idx);
             return ImPlotPoint(time.seconds(), data.y);
         };
 
@@ -121,6 +143,12 @@ void PlotMenu::draw(const Common::WorldState &t_world, const bool &t_playback)
         case Type::AngularVelocity:
             ImPlot::SetupAxes("s", "deg/s", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
             break;
+        case Type::Position:
+            ImPlot::SetupAxes("s", "mm", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+            break;
+        case Type::PosVelY:
+            ImPlot::SetupAxes("s", "mm | mm/s", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+            break;
         default:
             break;
         }
@@ -141,14 +169,22 @@ void PlotMenu::draw(const Common::WorldState &t_world, const bool &t_playback)
             ImPlot::PlotLineG("Velocity", getter_len, this, m_data.size());
             break;
         case Type::VelocityXY:
-            ImPlot::PlotLineG("Velocity x", getter_x, this, m_data.size());
-            ImPlot::PlotLineG("Velocity y", getter_y, this, m_data.size());
+            ImPlot::PlotLineG("Velocity x", getter_vel_x, this, m_data.size());
+            ImPlot::PlotLineG("Velocity y", getter_vel_y, this, m_data.size());
             break;
         case Type::Angle:
             ImPlot::PlotLineG("Angle", getter_angle, this, m_data.size());
             break;
         case Type::AngularVelocity:
             ImPlot::PlotLineG("Angular Velocity", getter_angular_velocity, this, m_data.size());
+            break;
+        case Type::Position:
+            ImPlot::PlotLineG("Position x", getter_pos_x, this, m_data.size());
+            ImPlot::PlotLineG("Position y", getter_pos_y, this, m_data.size());
+            break;
+        case Type::PosVelY:
+            ImPlot::PlotLineG("Pos Y", getter_pos_y, this, m_data.size());
+            ImPlot::PlotLineG("Velocity y", getter_vel_y, this, m_data.size());
             break;
         default:
             break;
