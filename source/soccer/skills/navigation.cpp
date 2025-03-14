@@ -22,7 +22,14 @@ void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProf
     if (robot.state().position.distanceTo(t_dest) > 100.0f)
         Common::debug().draw(t_dest);
 
-    Common::Vec2 target = m_planner[t_robot_num].plan(robot.state().position, t_dest);
+#if 0
+    Common::Vec2 target = m_planner_rrt[t_robot_num].plan(robot.state().position, t_dest);
+    m_planner[t_robot_num].draw();
+#elif 1
+    Common::Vec2 target = m_planner_trajectory[t_robot_num].plan(robot.state().position, robot.currentMotion(), t_dest, t_profile);
+#else
+    Common::Vec2 target = t_dest;
+#endif
 
     const float margin = Common::field().boundary_width - Common::field().robot_radius;
 
@@ -32,18 +39,16 @@ void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProf
     if (std::fabs(target.y) > Common::field().height + margin)
         target.y = Common::sign(target.y) * (Common::field().height + margin);
 
-    m_planner[t_robot_num].draw();
-
     robot.target.position = target;
 
-    // TODO: use the old trajectory for now
-#if 1
+#if 0
     const Trajectory2D trajectory = Trajectory2D::makeRobotTrajectory(robot.state().position, robot.currentMotion(), target, t_profile);
 #else
     const Trajectory2DXY trajectory = Trajectory2DXY::makeBangBangTrajectory(robot.state().position, robot.currentMotion(), target, t_profile);
 #endif
 
-    trajectory.draw();
+    Common::logDebug("robot [{}] time of arrival: {}", t_robot_num, Common::global_timer().time().seconds() + trajectory.getDuration());
+    trajectory.draw(Common::Color::black());
 
     const float dt = 1.f / Common::config().vision.vision_frame_rate;
     TrajectoryPiece2D command_piece = trajectory.getCommandPiece(dt);
