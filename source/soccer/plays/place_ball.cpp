@@ -189,7 +189,7 @@ void Ai::ourNewPlaceBall()
         {
             m_our_ball_placement_state = OurBallPlacementState::Stuck;
         }
-        else if (m_world_state.ball.position.distanceTo(final_ball_pos) > 3000.0f)
+        else if (m_world_state.ball.position.distanceTo(final_ball_pos) > 5000.0f)
         {
             m_our_ball_placement_state = OurBallPlacementState::LongDistance;
         }
@@ -275,7 +275,9 @@ void Ai::ourNewPlaceBall()
             if (m_own_robot[m_attack].state().position.distanceTo(attack_pos) < 20.0f &&
                 m_own_robot[m_mid5].state().position.distanceTo(mid5_pos) < 20.0f)
             {
-                switchBallPlacementStateDelayed(20, OurBallPlacementState::Done);
+            m_our_ball_placement_attack_final_pos = m_ref_state.designated_position + (m_own_robot[m_attack].state().position - m_ref_state.designated_position).normalized() * 250.0f;
+            m_our_ball_placement_mid5_final_pos = m_ref_state.designated_position + (m_own_robot[m_mid5].state().position - m_ref_state.designated_position).normalized() * 250.0f;
+                switchBallPlacementStateDelayed(20, OurBallPlacementState::KissingDone);
             }
             else
             {
@@ -321,18 +323,36 @@ void Ai::ourNewPlaceBall()
     case OurBallPlacementState::LongDistance:
         placeBallLongDistance();
         break;
+    case OurBallPlacementState::KissingDone:
+        m_own_robot[m_attack].face(m_ref_state.designated_position);
+        m_own_robot[m_mid5].face(m_ref_state.designated_position);
+
+        navigate(m_attack, m_our_ball_placement_attack_final_pos, VelocityProfile::aroom(), NavigationFlagsForceBallSmallObstacle);
+        navigate(m_mid5, m_our_ball_placement_mid5_final_pos, VelocityProfile::aroom(), NavigationFlagsForceBallSmallObstacle);
+        if (m_own_robot[m_attack].state().position.distanceTo(m_our_ball_placement_attack_final_pos) < 20.0f &&
+                m_own_robot[m_mid5].state().position.distanceTo(m_our_ball_placement_mid5_final_pos) < 20.0f)
+            {
+            m_our_ball_placement_attack_final_pos = m_ref_state.designated_position + (m_own_robot[m_attack].state().position - m_ref_state.designated_position).normalized() * 600.0f;
+            m_our_ball_placement_mid5_final_pos = m_ref_state.designated_position + (m_own_robot[m_mid5].state().position - m_ref_state.designated_position).normalized() * 600.0f;
+                switchBallPlacementStateDelayed(20, OurBallPlacementState::Done);
+            }
+            else
+            {
+                resetBallPlacementStateFrameCounter();
+            }
+
+        break;
+
     case OurBallPlacementState::Done:
     {
-            const Common::Vec2 attack_pos = m_ref_state.designated_position + (m_own_robot[m_attack].state().position - m_ref_state.designated_position).normalized() * 600.0f;
-            const Common::Vec2 mid5_pos = m_ref_state.designated_position + (m_own_robot[m_mid5].state().position - m_ref_state.designated_position).normalized() * 600.0f;
+            m_own_robot[m_attack].face(m_ref_state.designated_position);
+            m_own_robot[m_mid5].face(m_ref_state.designated_position);
 
-            m_own_robot[m_attack].face(m_world_state.ball.position);
-            m_own_robot[m_mid5].face(m_world_state.ball.position);
-            navigate(m_attack, attack_pos, VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
-            navigate(m_mid5, mid5_pos, VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
+            navigate(m_attack, m_our_ball_placement_attack_final_pos, VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
+            navigate(m_mid5, m_our_ball_placement_mid5_final_pos, VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
 
-            if (m_own_robot[m_attack].state().position.distanceTo(attack_pos) < 20.0f &&
-                m_own_robot[m_mid5].state().position.distanceTo(mid5_pos) < 20.0f)
+            if (m_own_robot[m_attack].state().position.distanceTo(m_our_ball_placement_attack_final_pos) < 20.0f &&
+                m_own_robot[m_mid5].state().position.distanceTo(m_our_ball_placement_mid5_final_pos) < 20.0f)
             {
                 switchBallPlacementStateDelayed(20, OurBallPlacementState::Idle);
             }
