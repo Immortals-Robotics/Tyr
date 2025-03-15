@@ -181,6 +181,7 @@ private:
         Kissing,
         Stuck,
         LongDistance,
+        KissingDone,
         Done,
     };
 

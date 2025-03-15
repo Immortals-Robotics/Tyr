@@ -332,7 +332,7 @@ void Ai::ourNewPlaceBall()
         if (m_own_robot[m_attack].state().position.distanceTo(m_our_ball_placement_attack_final_pos) < 20.0f &&
                 m_own_robot[m_mid5].state().position.distanceTo(m_our_ball_placement_mid5_final_pos) < 20.0f)
             {
-            m_our_ball_placement_attack_final_pos = m_ref_state.designated_position + (m_own_robot[m_attack].state().position - m_ref_state.designated_position).normalized() * 600.0f;
+            m_our_ball_placement_attack_final_pos = m_ref_state.designated_position + (m_own_robot[m_attack].state().position - m_ref_state.designated_position).normalized() * 800.0f;
             m_our_ball_placement_mid5_final_pos = m_ref_state.designated_position + (m_own_robot[m_mid5].state().position - m_ref_state.designated_position).normalized() * 600.0f;
                 switchBallPlacementStateDelayed(20, OurBallPlacementState::Done);
             }
