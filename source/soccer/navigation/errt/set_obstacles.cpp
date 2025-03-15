@@ -36,12 +36,23 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
 {
     ObstacleMap &map = m_obsMap[t_robot_num];
 
+    // Don't extend opp robots if
+    // - the game is running and either:
+    //   - we're the attacker and close to the ball
+    //   - we're the keeper
+    const bool dont_extend =
+        m_ref_state.running() &&
+        ((t_robot_num == m_attack && m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) < 500.0f) ||
+        t_robot_num == m_gk);
+
     const bool ourPenalty = t_robot_num != m_gk && !m_ref_state.ourBallPlacement();
     const bool oppPenalty = !m_ref_state.ballPlacement();
 
     const bool oppPenaltyBig = m_ref_state.freeKick() || m_ref_state.stop();
 
-    const float current_robot_radius = calculateRobotRadius(m_own_robot[t_robot_num].state());
+    const float current_robot_radius = dont_extend
+        ? Common::field().robot_radius
+        : calculateRobotRadius(m_own_robot[t_robot_num].state());
 
     map.resetMap();
 
@@ -67,8 +78,7 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
     {
         if (m_world_state.opp_robot[i].seen_state != Common::SeenState::CompletelyOut)
         {
-            // Don't extend opp robots if we're the attacker
-            const float radius = t_robot_num == m_attack ? Common::field().robot_radius
+            const float radius = dont_extend ? Common::field().robot_radius
                                                          : calculateOtherRadius(m_own_robot[t_robot_num].state(),
                                                                                 m_world_state.opp_robot[i]);
             map.add({m_world_state.opp_robot[i].position, radius + current_robot_radius});
