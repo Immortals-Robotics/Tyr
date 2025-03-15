@@ -67,7 +67,7 @@ void Ai::normalPlayAtt()
 
         const bool opp_attacker_in_range = findKickerOpp(-1, 1000.0f) != -1;
 
-        if (openAngle.magnitude.deg() < 8 && ball_is_stationary && !opp_attacker_in_range && (suitable_mid != nullptr))
+        if (openAngle.magnitude.deg() < 8 && ball_is_stationary && !opp_attacker_in_range && suitable_mid != nullptr)
         {
             Common::Angle passAngle =
                 Common::Vec2(-m_side * 1700, Common::sign(-m_world_state.ball.position.y) * 1700.0f)
@@ -107,7 +107,7 @@ void Ai::normalPlayAtt()
                 shoot_pow = 1.f;
                 activeShootTimer.start();
             }
-            
+
             attacker(m_attack, shootAngle, shoot_pow, 0, 0, 0);
         }
     }

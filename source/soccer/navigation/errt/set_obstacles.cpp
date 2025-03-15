@@ -28,7 +28,7 @@ static float calculateOtherRadius(const Common::RobotState &t_current, const Com
     const float        velocity_dot_connection = velocity_diff.dot(connection_vector) - 300.0f;
 
     const float extension =
-        std::clamp(velocity_dot_connection * kMaxExtension / kSpeedToReachMaxExtension, 0.0f, kMaxExtension);
+        std::clamp(kMaxExtension * velocity_dot_connection / kSpeedToReachMaxExtension, 0.0f, kMaxExtension);
     return Common::field().robot_radius + extension;
 }
 
