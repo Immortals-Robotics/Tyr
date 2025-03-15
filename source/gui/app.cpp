@@ -81,8 +81,15 @@ bool Application::initialize(const int t_width, const int t_height)
     m_vision_filtered = std::make_unique<Vision::Filtered>();
 
     m_sender_hub = std::make_unique<Sender::Hub>();
-    m_sender_hub->registerSender<Sender::Nrf>();
-    m_sender_hub->registerSender<Sender::Simulator>();
+    if (Common::config().network.use_simulated_vision)
+    {
+        m_sender_hub->registerSender<Sender::Simulator>();
+    }
+    else
+    {
+        m_sender_hub->registerSender<Sender::Nrf>();
+    }
+
 
     m_ai = std::make_unique<Soccer::Ai>();
 
