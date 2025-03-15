@@ -121,7 +121,7 @@ void Ai::placeBallLongDistance()
 bool Ai::placeBallLost()
 {
     return ((m_own_robot[m_attack].state().position + m_own_robot[m_mid5].state().position) / 2)
-                   .distanceTo(m_world_state.ball.position) > 150.0f &&
+                   .distanceTo(m_world_state.ball.position) > 250.0f &&
            m_world_state.ball.seen_state == Common::SeenState::Seen;
 }
 
