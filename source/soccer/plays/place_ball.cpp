@@ -170,6 +170,12 @@ void Ai::ourNewPlaceBall()
 
     const bool ball_in_goal = our_goal_area.inside(m_world_state.ball.position) || opp_goal_area.inside(m_world_state.ball.position);
 
+    const Common::Rect field_access_area(
+        Common::Vec2(-Common::field().width - Common::field().boundary_width + Common::field().robot_radius,
+                     -Common::field().height - Common::field().boundary_width + Common::field().robot_radius),
+        Common::Vec2(Common::field().width + Common::field().boundary_width - Common::field().robot_radius,
+                     Common::field().height + Common::field().boundary_width - Common::field().robot_radius));
+
     switch (m_our_ball_placement_state)
     {
     case OurBallPlacementState::Idle:
@@ -198,14 +204,10 @@ void Ai::ourNewPlaceBall()
         if (m_world_state.ball.velocity.length() < 100.0f)
         {
             Common::Vec2 attack_pos, mid5_pos;
-            generateKissPoints(150.0f, attack_pos, mid5_pos);
+            generateKissPoints(250.0f, attack_pos, mid5_pos);
             m_own_robot[m_attack].face(m_world_state.ball.position);
             m_own_robot[m_mid5].face(m_world_state.ball.position);
-            const Common::Rect field_access_area(
-                Common::Vec2(-Common::field().width - Common::field().boundary_width + Common::field().robot_radius,
-                             -Common::field().height - Common::field().boundary_width + Common::field().robot_radius),
-                Common::Vec2(Common::field().width + Common::field().boundary_width - Common::field().robot_radius,
-                             Common::field().height + Common::field().boundary_width - Common::field().robot_radius));
+            
 
             if (!field_access_area.inside(attack_pos) || !field_access_area.inside(mid5_pos))
             {
@@ -324,8 +326,8 @@ void Ai::ourNewPlaceBall()
 
             m_own_robot[m_attack].face(m_world_state.ball.position);
             m_own_robot[m_mid5].face(m_world_state.ball.position);
-            navigate(m_attack, attack_pos, VelocityProfile::aroom());
-            navigate(m_mid5, mid5_pos, VelocityProfile::aroom());
+            navigate(m_attack, attack_pos, VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
+            navigate(m_mid5, mid5_pos, VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
 
             if (m_own_robot[m_attack].state().position.distanceTo(attack_pos) < 20.0f &&
                 m_own_robot[m_mid5].state().position.distanceTo(mid5_pos) < 20.0f)
