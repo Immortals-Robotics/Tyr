@@ -107,11 +107,7 @@ void Ai::normalPlayAtt()
                 shoot_pow = 1.f;
                 activeShootTimer.start();
             }
-            else if (goalBlocked(m_world_state.ball.position, 200, 90))
-            {
-                shoot_pow = 1.f;
-            }
-
+            
             attacker(m_attack, shootAngle, shoot_pow, 0, 0, 0);
         }
     }
