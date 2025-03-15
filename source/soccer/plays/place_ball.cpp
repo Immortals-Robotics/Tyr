@@ -264,8 +264,8 @@ void Ai::ourNewPlaceBall()
             const Common::Vec2 mid5_pos =
                 final_ball_pos + (final_ball_pos - m_own_robot[m_attack].state().position).normalized() * 75.0f;
 
-            navigate(m_attack, attack_pos, VelocityProfile::aroom(), NavigationFlagsForceNoObstacles);
-            navigate(m_mid5, mid5_pos, VelocityProfile::aroom(), NavigationFlagsForceNoObstacles);
+            navigate(m_attack, attack_pos, VelocityProfile::sooski(), NavigationFlagsForceNoObstacles);
+            navigate(m_mid5, mid5_pos, VelocityProfile::sooski(), NavigationFlagsForceNoObstacles);
 
             Common::logDebug("frame step wait: {}", m_our_ball_placement_state_wait_frames);
             if (m_own_robot[m_attack].state().position.distanceTo(attack_pos) < 20.0f &&
