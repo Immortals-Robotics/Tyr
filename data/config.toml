@@ -28,12 +28,12 @@ ip = '224.5.23.23'
 port = 10048
 
 [network.sender]
-ip = '224.5.92.99'
-port = 99222
+ip = '224.5.92.9'
+port = 60090
 
 [network.strategy]
 ip = '224.5.23.3'
-port = 60007
+port = 60006
 
 [network.tracker]
 ip = '224.5.23.2'
@@ -211,5 +211,5 @@ max_robot_frame_not_seen = 120
 merge_distance = 70.0
 predict_time = 0.14999999999999999
 use_ball_3d = true
-use_camera = [ true, true, false, false, false, false, false, false ]
+use_camera = [ true, true, true, true, false, false, false, false ]
 vision_frame_rate = 70.0
