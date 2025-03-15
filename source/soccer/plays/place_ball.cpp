@@ -242,8 +242,8 @@ void Ai::ourNewPlaceBall()
             generateKissPoints(75.0f, attack_pos, mid5_pos);
             m_own_robot[m_attack].face(m_world_state.ball.position);
             m_own_robot[m_mid5].face(m_world_state.ball.position);
-            navigate(m_attack, attack_pos, VelocityProfile::aroom(), NavigationFlagsForceNoObstacles);
-            navigate(m_mid5, mid5_pos, VelocityProfile::aroom(), NavigationFlagsForceNoObstacles);
+            navigate(m_attack, attack_pos, VelocityProfile::sooski(), NavigationFlagsForceNoObstacles);
+            navigate(m_mid5, mid5_pos, VelocityProfile::sooski(), NavigationFlagsForceNoObstacles);
 
             if (m_own_robot[m_attack].state().position.distanceTo(attack_pos) < 20.0f &&
                 m_own_robot[m_mid5].state().position.distanceTo(mid5_pos) < 20.0f)
