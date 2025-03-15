@@ -11,14 +11,14 @@ public:
     CircleObstacle(const Common::Circle t_circle) : m_circle(t_circle)
     {}
 
-    bool inside(const Common::Vec2 t_point, const float t_margin = 0.f) const
+    bool inside(const Common::Vec2 t_point) const
     {
-        return m_circle.inside(t_point, t_margin);
+        return m_circle.inside(t_point);
     }
 
     float distance(const Common::Vec2 t_point) const
     {
-        return m_circle.distance(t_point);
+        return m_circle.center.distanceTo(t_point) - m_circle.r;
     }
 };
 } // namespace Tyr::Soccer

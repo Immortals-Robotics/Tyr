@@ -9,7 +9,6 @@ set(HEADER_FILES
         navigation/errt/errt.h
         navigation/errt/tree.h
         navigation/dss/dss.h
-        navigation/obstacle/inverse_rect.h
         navigation/obstacle/circle.h
         navigation/obstacle/map.h
         navigation/obstacle/rect.h
@@ -51,8 +50,9 @@ set(SOURCE_FILES
         assignment/create_static.cpp
 
         navigation/errt/errt.cpp
+        navigation/errt/set_obstacles.cpp
         navigation/dss/dss.cpp
-        navigation/obstacle/set_obstacles.cpp
+        navigation/obstacle/map.cpp
         navigation/trajectory/trajectory_2d.cpp
         navigation/trajectory/trajectory_bang_bang.cpp
         navigation/trajectory/trajectory_immortals.cpp
