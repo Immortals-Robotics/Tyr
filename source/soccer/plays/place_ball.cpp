@@ -223,7 +223,7 @@ void Ai::ourNewPlaceBall()
             if (m_own_robot[m_attack].state().position.distanceTo(attack_pos) < 20.0f &&
                 m_own_robot[m_mid5].state().position.distanceTo(mid5_pos) < 20.0f)
             {
-                switchBallPlacementStateDelayed(20, OurBallPlacementState::KissTouch);
+                switchBallPlacementStateDelayed(20, OurBallPlacementState::Kissing);
             }
             else
             {
