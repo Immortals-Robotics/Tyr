@@ -41,7 +41,6 @@ void Ai::gkHi(const int t_robot_num)
     {
         my_hys = 0;
         auto predicted_ball = predictBallForwardAINew(Common::config().soccer.def_prediction_time);
-        ObstacleMap obs_map;
 
         // our penalty area
         static constexpr float area_extension_size     = 200.0f;
@@ -70,9 +69,9 @@ void Ai::gkHi(const int t_robot_num)
         const float        gk_target_h = Common::field().penalty_area_width - 2 * area_notch;
         const Common::Vec2 gk_target_area_start{ownGoal().x, -(penalty_area_half_width - area_notch)};
         Common::logDebug("ang {} pos {} pt {}", ball_angle, ball_ang_effect, penalty_area_half_width);
-        obs_map.add({start, w, h});
+        const RectObstacle obs {Common::Rect{start, w, h}};
 
-        if ((obs_map.inside(predicted_ball)) && (m_world_state.ball.velocity.length() < 1500) &&
+        if (obs.inside(predicted_ball) && (m_world_state.ball.velocity.length() < 1500) &&
             m_ref_state.running())
         {
             Common::logDebug("GK intercepting");

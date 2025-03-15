@@ -58,7 +58,7 @@ Node *PlannerRrt::extend(Node *s, Common::Vec2 &target)
     if (m_map->inside(new_state))
         return nullptr;
 
-    if (m_map->collisionDetect(new_state, s->state))
+    if (m_map->collisionDetect({new_state, s->state}))
         return nullptr;
 
     return m_tree.addNode(new_state, s);
@@ -98,7 +98,7 @@ Common::Vec2 PlannerRrt::plan(const Common::Vec2 init, const Common::Vec2 final)
     }
 
     // return final_state;
-    if (!m_map->collisionDetect(init_state, final_state))
+    if (!m_map->collisionDetect({init_state, final_state}))
     {
         // TODO: slice the path so that the cache contains valid waypoints
         m_tree.addNode(final_state, m_tree.nearestNeighbour(final_state));
@@ -135,7 +135,7 @@ void PlannerRrt::optimizeTree()
 {
     for (size_t i = 0; i < m_waypoints.size() - 1; i++)
     {
-        if (m_map->collisionDetect(m_waypoints[i], m_waypoints.back()) == false)
+        if (m_map->collisionDetect({m_waypoints[i], m_waypoints.back()}) == false)
         {
             std::swap(m_waypoints[i + 1], m_waypoints.back());
             m_waypoints.resize(i + 2);
