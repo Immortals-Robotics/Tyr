@@ -213,8 +213,8 @@ void Ai::ourNewPlaceBall()
                 m_our_ball_placement_force_stuck = true;
                 break;
             }
-            navigate(m_attack, attack_pos, VelocityProfile::aroom(), NavigationFlagsForceNoObstacles);
-            navigate(m_mid5, mid5_pos, VelocityProfile::aroom(), NavigationFlagsForceNoObstacles);
+            navigate(m_attack, attack_pos, VelocityProfile::aroom(), NavigationFlagsForceBallSmallObstacle);
+            navigate(m_mid5, mid5_pos, VelocityProfile::aroom(), NavigationFlagsForceBallSmallObstacle);
 
             if (m_own_robot[m_attack].state().position.distanceTo(attack_pos) < 20.0f &&
                 m_own_robot[m_mid5].state().position.distanceTo(mid5_pos) < 20.0f)
