@@ -40,10 +40,19 @@ Common::Vec2 PlannerTrajectory::nearestFree(Common::Vec2 state)
 
 Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::Vec2 init_vel, Common::Vec2 target, const VelocityProfile &profile)
 {
-    if (m_map->inside(target))
+#if 0
+    // if starting in obstacle, just get out first
+    if (m_map->inside(init_pos))
+    {
+        target = nearestFree(init_pos);
+    }
+    else
+#endif
+        if (m_map->inside(target))
     {
         target = nearestFree(target);
     }
+
     m_profile = profile;
     m_target = target;
 
@@ -180,14 +189,14 @@ float PlannerTrajectory::calculateTrajectoryPenalty(const TrajectoryChained2DXY 
     }
 
     const auto free = trajectory.reachFree(*m_map, kLookaheadTime);
-    if (free.first && free.second > 0.1f) // starts in collision but gets free
+    if (free.first) // is or will eventually get free
     {
         penalty += 3.0f * free.second;
     }
-    else if (!free.first) // starts in collision and never gets free
+    else // starts in collision and never gets free
     {
         // TODO: this is 0 in their TDP
-        penalty += 5.0f;
+        penalty += 3.0f * kLookaheadTime;
     }
 
     if (trajectory.getDuration() > kLookaheadTime)

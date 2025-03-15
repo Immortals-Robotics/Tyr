@@ -24,7 +24,7 @@ void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProf
 
 #if 0
     Common::Vec2 target = m_planner_rrt[t_robot_num].plan(robot.state().position, t_dest);
-    m_planner[t_robot_num].draw();
+    m_planner_rrt[t_robot_num].draw();
 #elif 1
     Common::Vec2 target = m_planner_trajectory[t_robot_num].plan(robot.state().position, robot.currentMotion(), t_dest, t_profile);
 #else
