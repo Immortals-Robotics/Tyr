@@ -144,14 +144,15 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
     // avoid the line between the ball and the placement point
     if (m_ref_state.theirBallPlacement())
     {
+        const float placement_clearance = ballAreaRadius * 2.0f;
         const Common::Vec2 ball_line      = m_ref_state.designated_position - m_world_state.ball.position;
-        const int          ball_obs_count = std::ceil(ball_line.length() / (ballAreaRadius + current_robot_radius));
+        const int          ball_obs_count = std::ceil(ball_line.length() / (0.5f * placement_clearance + current_robot_radius));
 
         for (int i = 0; i < ball_obs_count; i++)
         {
             const float        t        = static_cast<float>(i) / static_cast<float>(ball_obs_count);
             const Common::Vec2 ball_obs = m_world_state.ball.position + ball_line * t;
-            map.add({ball_obs, ballAreaRadius + current_robot_radius});
+            map.add({ball_obs, placement_clearance + current_robot_radius});
         }
     }
 }
