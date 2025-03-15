@@ -114,7 +114,7 @@ void Ai::assignRolesInternal(const Assignment::Priority t_priority)
             const Assignment &assignment     = m_assignments[assignment_idx];
 
             const int cost = assignment.cost_function(robot_idx, assignment);
-
+            Common::logDebug("Cost [{}]: {}", assignment_idx, cost);
             if (cost < 0)
                 continue;
 
