@@ -99,7 +99,7 @@ void Ai::normalPlayAtt()
                 else
                     shootAngle = (m_world_state.ball.position - oppGoal()).toAngle();
 
-            float shoot_pow = 6500.f; // 6.5m/s
+            float shoot_pow = 6000.f; // mm/s
 
             // TODO: calibrate this
             if (m_own_robot[m_attack].state().position.distanceTo(m_world_state.ball.position) > 400)
