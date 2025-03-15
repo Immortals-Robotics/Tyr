@@ -161,6 +161,15 @@ void Ai::ourNewPlaceBall()
     auto final_ball_pos = m_ref_state.designated_position;
 
     const double desired_distance = 100.0f;
+
+    const Common::Rect our_goal_area(Common::Vec2(-Common::field().width - Common::field().boundary_width, Common::field().goal_width / 2.f),
+                                     Common::Vec2(-Common::field().width, -Common::field().goal_width / 2.f));
+
+    const Common::Rect opp_goal_area(Common::Vec2(Common::field().width, Common::field().goal_width / 2.f),
+                                     Common::Vec2(Common::field().width + Common::field().boundary_width, -Common::field().goal_width / 2.f));
+
+    const bool ball_in_goal = our_goal_area.inside(m_world_state.ball.position) || opp_goal_area.inside(m_world_state.ball.position);
+
     switch (m_our_ball_placement_state)
     {
     case OurBallPlacementState::Idle:
@@ -168,7 +177,7 @@ void Ai::ourNewPlaceBall()
         {
             m_our_ball_placement_state = OurBallPlacementState::Idle;
         }
-        else if (min_wall_distance < wall_distance_threshold)
+        else if (min_wall_distance < wall_distance_threshold && !ball_in_goal)
         {
             m_our_ball_placement_state = OurBallPlacementState::Stuck;
         }
@@ -275,17 +284,35 @@ void Ai::ourNewPlaceBall()
         }
         break;
     case OurBallPlacementState::Stuck:
-        circleBall(m_attack,
-                   (m_world_state.ball.position - closest_wall_point).toAngle() + Common::Angle::fromDeg(angle_offset),
-                   3000, 0);
+
+        if (m_our_ball_placement_stuck_count >= 100)
+        {
+            m_our_ball_placement_stuck_count = 100;
+            const Common::Vec2 attack_pos = m_world_state.ball.position + (m_world_state.ball.position - closest_wall_point).normalized() * 1000.0f;
+            m_own_robot[m_attack].face(m_world_state.ball.position);
+            navigate(m_attack, attack_pos, VelocityProfile::mamooli(), NavigationFlagsForceNoObstacles);
+        } else {
+            circleBall(m_attack,
+                       (m_world_state.ball.position - closest_wall_point).toAngle() + Common::Angle::fromDeg(angle_offset),
+                       3000, 0);
+        }
+
+        if (m_own_robot[m_attack].state().position.distanceTo(m_world_state.ball.position) > 400.0f)
+        {
+            m_our_ball_placement_stuck_count = 0;
+        }
+
         if (m_world_state.ball.velocity.length() > 20.0f)
         {
+            m_our_ball_placement_stuck_count = 0;
             m_our_ball_placement_force_stuck = false;
         }
+        
         if (min_wall_distance >= wall_distance_threshold && !m_our_ball_placement_force_stuck)
         {
             m_our_ball_placement_state = OurBallPlacementState::Idle;
         }
+        m_our_ball_placement_stuck_count++;
         break;
     case OurBallPlacementState::LongDistance:
         placeBallLongDistance();

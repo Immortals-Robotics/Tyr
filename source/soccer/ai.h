@@ -255,6 +255,7 @@ private:
     OurBallPlacementState m_our_ball_placement_state = OurBallPlacementState::Idle;
     int m_our_ball_placement_state_wait_frames = 0;
     bool m_our_ball_placement_force_stuck = false;
+    int m_our_ball_placement_stuck_count = 0;
 
     void internalProcessData();
 
