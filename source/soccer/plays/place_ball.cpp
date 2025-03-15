@@ -176,10 +176,12 @@ void Ai::ourNewPlaceBall()
         Common::Vec2(Common::field().width + Common::field().boundary_width - Common::field().robot_radius,
                      Common::field().height + Common::field().boundary_width - Common::field().robot_radius));
 
+    // const Common::Vec2 robots_mid_point = (m_own_robot[m_attack].state().position + m_own_robot[m_mid5].state().position) / 2;
+
     switch (m_our_ball_placement_state)
     {
     case OurBallPlacementState::Idle:
-        if (m_world_state.ball.velocity.length() > 100.0f)
+        if (m_world_state.ball.velocity.length() > 100.0f && m_world_state.ball.seen_state == Common::SeenState::Seen)
         {
             m_our_ball_placement_state = OurBallPlacementState::Idle;
         }
