@@ -52,7 +52,7 @@ ip = '127.0.0.1'
 port = 10302
 
 [soccer]
-chip_tune_coef = 2.5
+chip_tune_coef = 1.8
 def_ball_distance_coef = 0.69999999999999996
 def_max_extension_area = 1100.0
 def_prediction_time = 0.5
