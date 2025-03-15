@@ -24,12 +24,12 @@ ip = '224.5.23.69'
 port = 10069
 
 [network.referee]
-ip = '224.5.23.23'
-port = 10048
+ip = '224.5.23.1'
+port = 10003
 
 [network.sender]
-ip = '224.5.92.9'
-port = 60090
+ip = '224.5.92.5'
+port = 60005
 
 [network.strategy]
 ip = '224.5.23.3'
