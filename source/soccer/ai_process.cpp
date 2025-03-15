@@ -14,6 +14,7 @@ void Ai::process()
         m_target_str   = strategyWeight();
         m_func_state   = 0;
         m_func_count   = 0;
+        m_our_ball_placement_state = OurBallPlacementState::Idle;
     }
 
     if (m_ref_state.stop())
@@ -48,7 +49,7 @@ void Ai::process()
     }
     else if (m_ref_state.ourBallPlacement())
     {
-        m_current_play = &Ai::ourPlaceBall;
+        m_current_play = &Ai::ourNewPlaceBall;
     }
     else if (m_ref_state.theirFreeKick())
     {
