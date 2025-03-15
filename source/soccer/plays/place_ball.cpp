@@ -318,11 +318,10 @@ void Ai::ourNewPlaceBall()
         placeBallLongDistance();
         break;
     case OurBallPlacementState::Done:
-            Common::Vec2 attack_pos, mid5_pos;
-            generateKissPoints(600.0f, attack_pos, mid5_pos);
-            if (m_own_robot[m_attack].state().position.distanceTo(attack_pos) > m_own_robot[m_mid5].state().position.distanceTo(mid5_pos)) {
-                std::swap(attack_pos, mid5_pos);
-            }
+    {
+            const Common::Vec2 attack_pos = m_ref_state.designated_position + (m_own_robot[m_attack].state().position - m_ref_state.designated_position).normalized() * 600.0f;
+            const Common::Vec2 mid5_pos = m_ref_state.designated_position + (m_own_robot[m_mid5].state().position - m_ref_state.designated_position).normalized() * 600.0f;
+
             m_own_robot[m_attack].face(m_world_state.ball.position);
             m_own_robot[m_mid5].face(m_world_state.ball.position);
             navigate(m_attack, attack_pos, VelocityProfile::aroom());
@@ -337,6 +336,7 @@ void Ai::ourNewPlaceBall()
             {
                 resetBallPlacementStateFrameCounter();
             }
+    }
         break;
     }
 }
