@@ -100,6 +100,54 @@ void Ai::setObstacles(const int t_robot_num, const NavigationFlags t_flags)
         map.add({m_world_state.ball.position, ball_radius + current_robot_radius});
     }
 
+    // goal posts
+    static constexpr float kWallThickness = 20.0f;
+    const Common::Vec2 goal_post_size {
+        Common::field().goal_depth + Common::field().robot_radius * 2.f,
+        kWallThickness + Common::field().robot_radius * 2.0f
+    };
+
+    const Common::Rect goal_post_1 {
+            {
+                -Common::field().width - (goal_post_size.x - Common::field().robot_radius),
+                -Common::field().goal_width / 2.0f - (goal_post_size.y - Common::field().robot_radius)
+            },
+        goal_post_size.x,
+        goal_post_size.y
+    };
+
+    const Common::Rect goal_post_2 {
+            {
+                -Common::field().width - (goal_post_size.x - Common::field().robot_radius),
+                Common::field().goal_width / 2.0f - (goal_post_size.y - Common::field().robot_radius)
+            },
+        goal_post_size.x,
+        goal_post_size.y
+    };
+
+    const Common::Rect goal_post_3 {
+            {
+                Common::field().width - Common::field().robot_radius,
+                -Common::field().goal_width / 2.0f - (goal_post_size.y - Common::field().robot_radius)
+            },
+        goal_post_size.x,
+        goal_post_size.y
+    };
+
+    const Common::Rect goal_post_4 {
+            {
+                Common::field().width - Common::field().robot_radius,
+                Common::field().goal_width / 2.0f - (goal_post_size.y - Common::field().robot_radius)
+            },
+        goal_post_size.x,
+        goal_post_size.y
+    };
+    
+    map.add(goal_post_1);
+    map.add(goal_post_2);
+    map.add(goal_post_3);
+    map.add(goal_post_4);
+
     const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
     if (ourPenalty)
