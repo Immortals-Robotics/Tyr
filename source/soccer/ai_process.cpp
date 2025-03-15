@@ -49,7 +49,11 @@ void Ai::process()
     }
     else if (m_ref_state.ourBallPlacement())
     {
+#if 1
         m_current_play = &Ai::ourNewPlaceBall;
+#else
+        m_current_play = &Ai::ourPlaceBall;
+#endif
     }
     else if (m_ref_state.theirFreeKick())
     {

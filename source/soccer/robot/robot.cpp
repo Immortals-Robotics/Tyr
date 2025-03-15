@@ -52,6 +52,15 @@ void Robot::halt()
     m_halted = true;
 }
 
+void Robot::fullBeak(const float acc_factor)
+{
+    const float acc = VelocityProfile::mamooli().acceleration * acc_factor;
+    const float dt = 1.0f / Common::config().vision.vision_frame_rate;
+    const Common::Vec2 new_cmd = currentMotion() - currentMotion().normalized() * acc * dt;
+
+    move(new_cmd);
+}
+
 Common::Vec2 Robot::currentMotion() const
 {
     return m_last_motion;

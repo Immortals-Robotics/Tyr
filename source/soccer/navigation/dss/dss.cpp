@@ -34,7 +34,7 @@ bool Dss::RobotHasStaticCollision(const TrajectoryPiece2D &cmd) const
     return traj.hasCollision(*m_map).first;
 }
 
-bool Dss::isSafe(const int robot_num, const TrajectoryPiece2D &cmd)
+bool Dss::isSafe(const int robot_num, const TrajectoryPiece2D &cmd) const
 {
     if (RobotHasStaticCollision(cmd))
     {

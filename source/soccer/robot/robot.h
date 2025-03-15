@@ -32,6 +32,7 @@ public:
     void face(Common::Vec2 t_target);
     void move(Common::Vec2 motion);
     void halt();
+    void fullBeak(float acc_factor = 1.0f);
 
     [[nodiscard]] float shoot() const
     {
