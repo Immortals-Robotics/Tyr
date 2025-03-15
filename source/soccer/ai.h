@@ -172,6 +172,18 @@ private:
         NavigationFlagsForceBallSmallObstacle  = (1 << 4), // 60.0f
     };
 
+    // ball placement states
+    enum class OurBallPlacementState
+    {
+        Idle,
+        KissInit,
+        KissTouch,
+        Kissing,
+        Stuck,
+        LongDistance,
+        Done,
+    };
+
     void navigate(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile = VelocityProfile::mamooli(),
                   NavigationFlags t_flags = NavigationFlagsNone);
     void setObstacles(int t_robot_num, NavigationFlags t_flags = NavigationFlagsNone);
@@ -220,8 +232,15 @@ private:
     void cornerTheirGlobal();
     void strategy();
     void ourPlaceBall();
+    void ourNewPlaceBall();
     void theirPlaceBall();
 
+    void calcMinBallWallDist(double &t_min_dist, Common::Vec2 &t_closest_point);
+    void placeBallLongDistance();
+    void switchBallPlacementStateDelayed(int t_wait_frames, OurBallPlacementState t_new_state);
+    void resetBallPlacementStateFrameCounter();
+    bool placeBallLost();
+    void generateKissPoints(double t_distance, Common::Vec2 &t_pos1, Common::Vec2 &t_pos2);
     // Strategy
     int strategyWeight();
 
@@ -231,6 +250,11 @@ private:
     // FSM
     int m_func_state = 0;
     int m_func_count = 0;
+
+    // ball placement
+    OurBallPlacementState m_our_ball_placement_state = OurBallPlacementState::Idle;
+    int m_our_ball_placement_state_wait_frames = 0;
+    bool m_our_ball_placement_force_stuck = false;
 
     void internalProcessData();
 
