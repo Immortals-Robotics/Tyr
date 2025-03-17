@@ -66,15 +66,18 @@ void Ai::navigate(const int t_robot_num, const Common::Vec2 t_dest, VelocityProf
 #if USE_RRT
         command_piece = m_dss->ComputeSafeMotion(t_robot_num, command_piece, t_profile);
 #elif USE_TRAJ
-        // TODO: this just sets the profile
-        m_dss->ComputeSafeMotion(t_robot_num, command_piece, t_profile);
-        if (!m_obsMap[t_robot_num].inside(robot.state().position) &&
-            !m_dss->isSafe(t_robot_num, command_piece))
+        if (!(t_flags & NavigationFlagsForceNoBreak))
         {
-            Common::debug().draw(Common::Circle{robot.state().position, Common::field().robot_radius}, Common::Color::magenta(),
-                             false, 30.f);
+            // TODO: this just sets the profile
+            m_dss->ComputeSafeMotion(t_robot_num, command_piece, t_profile);
+            if (!m_obsMap[t_robot_num].inside(robot.state().position) &&
+                !m_dss->isSafe(t_robot_num, command_piece))
+            {
+                Common::debug().draw(Common::Circle{robot.state().position, Common::field().robot_radius}, Common::Color::magenta(),
+                                 false, 30.f);
 
-            robot.fullBeak(2.f);
+                robot.fullBeak(2.f);
+            }
         }
 #endif
     }

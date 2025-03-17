@@ -170,6 +170,7 @@ private:
         NavigationFlagsForceBallObstacle       = (1 << 2), // 500.0f
         NavigationFlagsForceBallMediumObstacle = (1 << 3), // 230.0f
         NavigationFlagsForceBallSmallObstacle  = (1 << 4), // 60.0f
+        NavigationFlagsForceNoBreak            = (1 << 5),
     };
 
     // ball placement states

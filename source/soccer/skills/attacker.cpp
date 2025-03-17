@@ -189,8 +189,8 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const floa
         }
         else
         {
-            r     = 300.0f;
-            tetta = 20.0f;
+            r     = 900.0f;
+            tetta = 45.0f;
             // if ( !passedBall )
             //	r *= 1.5;
         }
@@ -274,16 +274,17 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const floa
                     }
                 }
 
-                navigate(t_robot_num, targetPoint, VelocityProfile::kharaki());
+                navigate(t_robot_num, targetPoint, VelocityProfile::kharaki(), NavigationFlagsForceNoBreak);
             }
             else
                 navigate(
                     t_robot_num,
                     m_predicted_ball.circleAroundPoint(t_angle, std::min(r, std::fabs(hehe.deg()) * 320.0f / tetta)),
-                    VelocityProfile::mamooli());
+                    VelocityProfile::mamooli(),
+                    NavigationFlagsForceNoBreak);
         }
         else
-            navigate(t_robot_num, m_predicted_ball.circleAroundPoint(t_angle + hehe * 0.0f, r));
+            navigate(t_robot_num, m_predicted_ball.circleAroundPoint(t_angle + hehe * 0.0f, r), VelocityProfile::mamooli(), NavigationFlagsForceNoBreak);
     }
     else
     {
@@ -293,9 +294,9 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const floa
         hehe = m_predicted_ball.angleWith(m_own_robot[t_robot_num].state().position) +
                Common::Angle::fromDeg(Common::sign(hehe.deg()) * tetta);
         if (passedBall)
-            navigate(t_robot_num, m_predicted_ball.circleAroundPoint(hehe, r));
+            navigate(t_robot_num, m_predicted_ball.circleAroundPoint(hehe, r), VelocityProfile::mamooli(), NavigationFlagsForceNoBreak);
         else
-            navigate(t_robot_num, m_predicted_ball.circleAroundPoint(hehe, r), VelocityProfile::kharaki());
+            navigate(t_robot_num, m_predicted_ball.circleAroundPoint(hehe, r), VelocityProfile::kharaki(), NavigationFlagsForceNoBreak);
     }
 
     Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::violet(),

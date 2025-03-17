@@ -62,10 +62,10 @@ void Ai::normalPlayAtt()
         Common::logDebug("open angle: {}", openAngle.magnitude.deg());
 
         static bool ball_is_stationary    = false;
-        float speed_threshold = ball_is_stationary ? 750.0f : 250.0f;
+        float speed_threshold = ball_is_stationary ? 1000.0f : 500.0f;
         ball_is_stationary = m_world_state.ball.velocity.length() < speed_threshold;
 
-        const bool opp_attacker_in_range = findKickerOpp(-1, 1000.0f) != -1;
+        const bool opp_attacker_in_range = findKickerOpp(-1, 150.0f) != -1;
 
         if (openAngle.magnitude.deg() < 8 && ball_is_stationary && !opp_attacker_in_range && suitable_mid != nullptr)
         {
