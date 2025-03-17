@@ -25,7 +25,6 @@ set(HEADER_FILES
 
         plays/play_book.h
 
-        helpers/ball_trajectory.h
         helpers/one_touch_detector.h
 
         robot/robot.h
@@ -61,7 +60,6 @@ set(SOURCE_FILES
 
         helpers/attack_fucking_angle.cpp
         helpers/ball_is_goaling.cpp
-        helpers/ball_trajectory.cpp
         helpers/calc_is_defending.cpp
         helpers/calculate_mark_cost.cpp
         helpers/calculate_opp_threat.cpp

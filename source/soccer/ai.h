@@ -3,7 +3,6 @@
 #include "navigation/dss/dss.h"
 #include "navigation/errt/errt.h"
 #include "navigation/trajectory/planner/planner.h"
-#include "helpers/ball_trajectory.h"
 #include "helpers/one_touch_detector.h"
 #include "plays/play_book.h"
 
@@ -76,8 +75,6 @@ private:
     Common::Vec2 calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar = 89.0f);
     float        calculateRobotReachTime(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile);
     float        calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile);
-
-    BallTrajectory m_ball_trajectory;
 
     // static pos for mids
     struct Zone
