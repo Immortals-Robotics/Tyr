@@ -14,6 +14,8 @@ protected:
     static constexpr size_t kMaxParts = 4;
     std::vector<Piece> m_pieces;
 
+    static constexpr size_t kInvalidIdx = std::numeric_limits<size_t>::max();
+
     inline size_t findPieceIdx(const float t) const
     {
         for (size_t idx = 0; idx < m_pieces.size(); idx++)
@@ -25,7 +27,7 @@ protected:
         }
 
         Common::logError("no piece found for t = {}", t);
-        return -1;
+        return kInvalidIdx;
     }
 
 public:
@@ -42,19 +44,19 @@ public:
     T getPosition(const float t) const override
     {
         const int idx = findPieceIdx(t);
-        return idx == -1 ? T() : m_pieces[idx].getPosition(t);
+        return idx == kInvalidIdx ? T() : m_pieces[idx].getPosition(t);
     }
 
     T getVelocity(const float t) const override
     {
         const int idx = findPieceIdx(t);
-        return idx == -1 ? T() : m_pieces[idx].getVelocity(t);
+        return idx == kInvalidIdx ? T() : m_pieces[idx].getVelocity(t);
     }
 
     T getAcceleration(const float t) const override
     {
         const int idx = findPieceIdx(t);
-        return idx == -1 ? T() : m_pieces[idx].acc;
+        return idx == kInvalidIdx ? T() : m_pieces[idx].acc;
     }
 
     float getStartTime() const override

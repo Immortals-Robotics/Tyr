@@ -229,8 +229,8 @@ Trajectory2DXY Trajectory2DXY::makeBangBangTrajectory(const Common::Vec2 s0, con
 
     Trajectory2DXY trajectory{};
 
-    Common::Angle inc = Common::Angle::fromRad(std::numbers::pi / 8.0f);
-    Common::Angle alpha = Common::Angle::fromRad(std::numbers::pi / 4.0f);
+    Common::Angle inc = Common::Angle::fromRad(std::numbers::pi_v<float> / 8.0f);
+    Common::Angle alpha = Common::Angle::fromRad(std::numbers::pi_v<float> / 4.0f);
 
     // binary search, some iterations (fixed)
     while (inc.rad() > 1e-7)
