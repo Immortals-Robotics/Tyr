@@ -2,7 +2,7 @@
 
 #include "base.h"
 
-namespace Immortals::Common::Config
+namespace Tyr::Common::Config
 {
 struct Vision final : IConfig
 {
@@ -66,4 +66,4 @@ struct Vision final : IConfig
     float kicker_depth        = 150.0;
     bool  use_ball_3d         = true;
 };
-} // namespace Immortals::Common::Config
+} // namespace Tyr::Common::Config

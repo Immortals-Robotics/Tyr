@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common::Soccer
+namespace Tyr::Common::Soccer
 {
 enum class Role
 {
@@ -85,53 +85,53 @@ public:
 
     int mark_target = -1;
 };
-} // namespace Immortals::Common::Soccer
+} // namespace Tyr::Common::Soccer
 
 #if FEATURE_LOGGING
 template <>
-struct fmt::formatter<Immortals::Common::Soccer::Role> : fmt::formatter<std::string>
+struct fmt::formatter<Tyr::Common::Soccer::Role> : fmt::formatter<std::string>
 {
-    auto format(const Immortals::Common::Soccer::Role t_role, format_context &t_ctx) const
+    auto format(const Tyr::Common::Soccer::Role t_role, format_context &t_ctx) const
     {
         const char *type_str = "Unknown";
         switch (t_role)
         {
-        case Immortals::Common::Soccer::Role::Unknown:
+        case Tyr::Common::Soccer::Role::Unknown:
             type_str = "Unknown";
             break;
 
-        case Immortals::Common::Soccer::Role::Gk:
+        case Tyr::Common::Soccer::Role::Gk:
             type_str = "Gk";
             break;
-        case Immortals::Common::Soccer::Role::Def1:
+        case Tyr::Common::Soccer::Role::Def1:
             type_str = "Def1";
             break;
-        case Immortals::Common::Soccer::Role::Def2:
+        case Tyr::Common::Soccer::Role::Def2:
             type_str = "Def2";
             break;
-        case Immortals::Common::Soccer::Role::Mid1:
+        case Tyr::Common::Soccer::Role::Mid1:
             type_str = "Mid1";
             break;
-        case Immortals::Common::Soccer::Role::Mid2:
+        case Tyr::Common::Soccer::Role::Mid2:
             type_str = "Mid2";
             break;
-        case Immortals::Common::Soccer::Role::Mid3:
+        case Tyr::Common::Soccer::Role::Mid3:
             type_str = "Mid3";
             break;
-        case Immortals::Common::Soccer::Role::Mid4:
+        case Tyr::Common::Soccer::Role::Mid4:
             type_str = "Mid4";
             break;
-        case Immortals::Common::Soccer::Role::Mid5:
+        case Tyr::Common::Soccer::Role::Mid5:
             type_str = "Mid5";
             break;
-        case Immortals::Common::Soccer::Role::Mid6:
+        case Tyr::Common::Soccer::Role::Mid6:
             type_str = "Mid6";
             break;
-        case Immortals::Common::Soccer::Role::Mid7:
+        case Tyr::Common::Soccer::Role::Mid7:
             type_str = "Mid7";
             break;
 
-        case Immortals::Common::Soccer::Role::Attack:
+        case Tyr::Common::Soccer::Role::Attack:
             type_str = "Attack";
             break;
         }
@@ -141,23 +141,23 @@ struct fmt::formatter<Immortals::Common::Soccer::Role> : fmt::formatter<std::str
 };
 
 template <>
-struct fmt::formatter<Immortals::Common::Soccer::OneTouchType> : fmt::formatter<std::string>
+struct fmt::formatter<Tyr::Common::Soccer::OneTouchType> : fmt::formatter<std::string>
 {
-    auto format(const Immortals::Common::Soccer::OneTouchType t_type, format_context &t_ctx) const
+    auto format(const Tyr::Common::Soccer::OneTouchType t_type, format_context &t_ctx) const
     {
         const char *type_str = "Unknown";
         switch (t_type)
         {
-        case Immortals::Common::Soccer::OneTouchType::OneTouch:
+        case Tyr::Common::Soccer::OneTouchType::OneTouch:
             type_str = "One Touch";
             break;
-        case Immortals::Common::Soccer::OneTouchType::Shirje:
+        case Tyr::Common::Soccer::OneTouchType::Shirje:
             type_str = "Shirje";
             break;
-        case Immortals::Common::Soccer::OneTouchType::Gool:
+        case Tyr::Common::Soccer::OneTouchType::Gool:
             type_str = "Gool";
             break;
-        case Immortals::Common::Soccer::OneTouchType::Allaf:
+        case Tyr::Common::Soccer::OneTouchType::Allaf:
             type_str = "Allaf";
             break;
         }

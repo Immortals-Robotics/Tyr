@@ -1,6 +1,6 @@
 #include "services.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 bool Services::initialize([[maybe_unused]] const Params &t_params)
 {
@@ -57,4 +57,4 @@ void Services::shutdown()
     delete s_debug;
 #endif
 }
-} // namespace Immortals::Common
+} // namespace Tyr::Common

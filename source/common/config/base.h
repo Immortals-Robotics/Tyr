@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common::Config
+namespace Tyr::Common::Config
 {
 #if FEATURE_CONFIG_FILE
 template <typename Enum>
@@ -20,4 +20,4 @@ public:
     virtual void load(toml::node_view<const toml::node> t_node) = 0;
 #endif
 };
-} // namespace Immortals::Common::Config
+} // namespace Tyr::Common::Config

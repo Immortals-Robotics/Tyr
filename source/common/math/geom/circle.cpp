@@ -1,6 +1,6 @@
 #include "circle.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 std::vector<Vec2> Circle::intersect(const Circle &t_other) const
 {
@@ -147,4 +147,4 @@ bool Circle::isCircleCross(const Vec2 t_point1, const Vec2 t_point2) const
     }
     return false;
 }
-} // namespace Immortals::Common
+} // namespace Tyr::Common

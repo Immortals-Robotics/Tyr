@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 template <class T, size_t size = 10>
 class MedianFilter
@@ -41,4 +41,4 @@ private:
 
     bool m_empty = true;
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

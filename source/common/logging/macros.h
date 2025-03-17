@@ -12,7 +12,7 @@
 #define FORCEINLINE
 #endif
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 #if FEATURE_LOGGING
 #define LOG_MACRO(fn, lvl)                                                                                             \
@@ -43,4 +43,4 @@ LOG_MACRO(logWarning, warn);
 LOG_MACRO(logError, err);
 LOG_MACRO(logCritical, critical);
 
-} // namespace Immortals::Common
+} // namespace Tyr::Common

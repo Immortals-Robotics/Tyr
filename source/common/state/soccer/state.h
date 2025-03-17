@@ -2,7 +2,7 @@
 
 #include "robot.h"
 
-namespace Immortals::Common::Soccer
+namespace Tyr::Common::Soccer
 {
 class State
 {
@@ -69,4 +69,4 @@ public:
     int func_state = -1;
     int func_count = -1;
 };
-} // namespace Immortals::Common::Soccer
+} // namespace Tyr::Common::Soccer

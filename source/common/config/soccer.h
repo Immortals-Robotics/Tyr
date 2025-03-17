@@ -2,7 +2,7 @@
 
 #include "base.h"
 
-namespace Immortals::Common::Config
+namespace Tyr::Common::Config
 {
 struct RobotPhysicalStatus final : IConfig
 {
@@ -120,4 +120,4 @@ struct Soccer final : IConfig
     bool penalty_area_mark = false;
     float penalty_area_mark_distance = 120.0f;
 };
-} // namespace Immortals::Common::Config
+} // namespace Tyr::Common::Config

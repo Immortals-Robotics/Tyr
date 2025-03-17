@@ -3,7 +3,7 @@
 #include "color.h"
 #include "source_location.h"
 
-namespace Immortals::Common::Debug
+namespace Tyr::Common::Debug
 {
 struct Log
 {
@@ -87,4 +87,4 @@ struct Log
         }
     }
 };
-} // namespace Immortals::Common::Debug
+} // namespace Tyr::Common::Debug

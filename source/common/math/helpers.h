@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 inline bool almostEqual(const float t_a, const float t_b)
 {
@@ -16,4 +16,4 @@ inline int signInt(const float t_f)
 {
     return std::copysign(1, t_f);
 }
-} // namespace Immortals::Common
+} // namespace Tyr::Common

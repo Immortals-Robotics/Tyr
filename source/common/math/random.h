@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 class Random
 {
@@ -24,4 +24,4 @@ public:
 private:
     std::default_random_engine m_rnd_engine;
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

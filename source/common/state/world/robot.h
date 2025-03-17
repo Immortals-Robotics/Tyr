@@ -2,7 +2,7 @@
 
 #include "seen_state.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct RobotState
 {
@@ -50,4 +50,4 @@ struct RobotState
         t_robot->set_out_for_substitute(out_for_substitute);
     }
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

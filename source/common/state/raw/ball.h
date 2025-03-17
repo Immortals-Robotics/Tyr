@@ -2,7 +2,7 @@
 
 #include "frame.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct RawBallState
 {
@@ -57,4 +57,4 @@ struct RawBallState
         t_ball->set_area(area);
     }
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

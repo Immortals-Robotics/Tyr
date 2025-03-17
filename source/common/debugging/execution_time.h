@@ -1,7 +1,7 @@
 #pragma once
 #include "../time/duration.h"
 
-namespace Immortals::Common::Debug
+namespace Tyr::Common::Debug
 {
 struct ExecutionTime
 {
@@ -22,4 +22,4 @@ struct ExecutionTime
         t_time->set_duration(duration.microseconds());
     }
 };
-} // namespace Immortals::Common::Debug
+} // namespace Tyr::Common::Debug

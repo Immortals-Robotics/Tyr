@@ -4,7 +4,7 @@
 #include "frame.h"
 #include "robot.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct RawWorldState
 {
@@ -100,4 +100,4 @@ struct RawWorldState
         blue_robots.clear();
     }
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

@@ -1,6 +1,6 @@
 #include "dumper.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 bool Dumper::process()
 {
@@ -18,4 +18,4 @@ bool Dumper::process()
 
     return any;
 }
-} // namespace Immortals::Common
+} // namespace Tyr::Common

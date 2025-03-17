@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common::Referee
+namespace Tyr::Common::Referee
 {
 struct Command
 {
@@ -84,60 +84,60 @@ struct Command
     Type next = Type::None;
 };
 
-} // namespace Immortals::Common::Referee
+} // namespace Tyr::Common::Referee
 
 #if FEATURE_LOGGING
 template <>
-struct fmt::formatter<Immortals::Common::Referee::Command::Type> : fmt::formatter<std::string>
+struct fmt::formatter<Tyr::Common::Referee::Command::Type> : fmt::formatter<std::string>
 {
-    auto format(const Immortals::Common::Referee::Command::Type t_type, format_context &t_ctx) const
+    auto format(const Tyr::Common::Referee::Command::Type t_type, format_context &t_ctx) const
     {
         const char *type_str = "Unknown";
         switch (t_type)
         {
-        case Immortals::Common::Referee::Command::Type::None:
+        case Tyr::Common::Referee::Command::Type::None:
             type_str = "None";
             break;
-        case Immortals::Common::Referee::Command::Type::Halt:
+        case Tyr::Common::Referee::Command::Type::Halt:
             type_str = "Halt";
             break;
-        case Immortals::Common::Referee::Command::Type::Stop:
+        case Tyr::Common::Referee::Command::Type::Stop:
             type_str = "Stop";
             break;
-        case Immortals::Common::Referee::Command::Type::NormalStart:
+        case Tyr::Common::Referee::Command::Type::NormalStart:
             type_str = "NormalStart";
             break;
-        case Immortals::Common::Referee::Command::Type::ForceStart:
+        case Tyr::Common::Referee::Command::Type::ForceStart:
             type_str = "ForceStart";
             break;
-        case Immortals::Common::Referee::Command::Type::PrepareKickoffYellow:
+        case Tyr::Common::Referee::Command::Type::PrepareKickoffYellow:
             type_str = "PrepareKickoffYellow";
             break;
-        case Immortals::Common::Referee::Command::Type::PrepareKickoffBlue:
+        case Tyr::Common::Referee::Command::Type::PrepareKickoffBlue:
             type_str = "PrepareKickoffBlue";
             break;
-        case Immortals::Common::Referee::Command::Type::PreparePenaltyYellow:
+        case Tyr::Common::Referee::Command::Type::PreparePenaltyYellow:
             type_str = "PreparePenaltyYellow";
             break;
-        case Immortals::Common::Referee::Command::Type::PreparePenaltyBlue:
+        case Tyr::Common::Referee::Command::Type::PreparePenaltyBlue:
             type_str = "PreparePenaltyBlue";
             break;
-        case Immortals::Common::Referee::Command::Type::DirectFreeYellow:
+        case Tyr::Common::Referee::Command::Type::DirectFreeYellow:
             type_str = "DirectFreeYellow";
             break;
-        case Immortals::Common::Referee::Command::Type::DirectFreeBlue:
+        case Tyr::Common::Referee::Command::Type::DirectFreeBlue:
             type_str = "DirectFreeBlue";
             break;
-        case Immortals::Common::Referee::Command::Type::TimeoutYellow:
+        case Tyr::Common::Referee::Command::Type::TimeoutYellow:
             type_str = "TimeoutYellow";
             break;
-        case Immortals::Common::Referee::Command::Type::TimeoutBlue:
+        case Tyr::Common::Referee::Command::Type::TimeoutBlue:
             type_str = "TimeoutBlue";
             break;
-        case Immortals::Common::Referee::Command::Type::BallPlacementYellow:
+        case Tyr::Common::Referee::Command::Type::BallPlacementYellow:
             type_str = "BallPlacementYellow";
             break;
-        case Immortals::Common::Referee::Command::Type::BallPlacementBlue:
+        case Tyr::Common::Referee::Command::Type::BallPlacementBlue:
             type_str = "BallPlacementBlue";
             break;
         }
@@ -147,9 +147,9 @@ struct fmt::formatter<Immortals::Common::Referee::Command::Type> : fmt::formatte
 };
 
 template <>
-struct fmt::formatter<Immortals::Common::Referee::Command> : fmt::formatter<std::string>
+struct fmt::formatter<Tyr::Common::Referee::Command> : fmt::formatter<std::string>
 {
-    auto format(const Immortals::Common::Referee::Command &t_command, format_context &t_ctx) const
+    auto format(const Tyr::Common::Referee::Command &t_command, format_context &t_ctx) const
     {
         return fmt::format_to(t_ctx.out(), "[{}] [{}] {}", t_command.id, t_command.time_issued, t_command.type);
     }

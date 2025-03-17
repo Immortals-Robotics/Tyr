@@ -1,6 +1,6 @@
 #include "udp_client.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 UdpClient::UdpClient(const NetworkAddress &t_address)
 {
@@ -56,4 +56,4 @@ bool UdpClient::receiveRaw(std::span<char> *const t_data)
     return true;
 }
 
-} // namespace Immortals::Common
+} // namespace Tyr::Common

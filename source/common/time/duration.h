@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct Duration
 {
@@ -95,4 +95,4 @@ inline auto format_as(const Duration t_duration)
     return t_duration.duration;
 }
 
-} // namespace Immortals::Common
+} // namespace Tyr::Common

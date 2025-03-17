@@ -2,7 +2,7 @@
 
 #include "seen_state.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct BallState
 {
@@ -40,4 +40,4 @@ struct BallState
         return Line::fromPointAndAngle(position, velocity.toAngle());
     }
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

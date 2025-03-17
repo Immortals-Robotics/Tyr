@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct Angle;
 
@@ -195,13 +195,13 @@ struct Vec3
     float z = 0.0f;
 };
 
-} // namespace Immortals::Common
+} // namespace Tyr::Common
 
 #if FEATURE_LOGGING
 template <>
-struct fmt::formatter<Immortals::Common::Vec3> : fmt::formatter<std::string>
+struct fmt::formatter<Tyr::Common::Vec3> : fmt::formatter<std::string>
 {
-    auto format(Immortals::Common::Vec3 t_v, format_context &t_ctx) const
+    auto format(Tyr::Common::Vec3 t_v, format_context &t_ctx) const
     {
         return fmt::format_to(t_ctx.out(), "[{}, {}, {}]", t_v.x, t_v.y, t_v.z);
     }

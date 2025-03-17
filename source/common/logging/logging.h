@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 class Logger
 {
@@ -26,4 +26,4 @@ protected:
 private:
     std::shared_ptr<spdlog::logger> m_logger;
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

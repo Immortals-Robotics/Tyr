@@ -3,7 +3,7 @@
 #include "ball_model.h"
 #include "camera_calibration.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct FieldState
 {
@@ -86,4 +86,4 @@ struct FieldState
         }
     }
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

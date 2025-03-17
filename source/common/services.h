@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 #if FEATURE_DEBUG
 namespace Debug
@@ -110,6 +110,6 @@ inline static FieldState &field()
 {
     return Services::field();
 }
-} // namespace Immortals::Common
+} // namespace Tyr::Common
 
 #include "logging/macros.h"

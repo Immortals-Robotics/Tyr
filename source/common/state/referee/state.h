@@ -4,7 +4,7 @@
 #include "match.h"
 #include "team_info.h"
 
-namespace Immortals::Common::Referee
+namespace Tyr::Common::Referee
 {
 // https://robocup-ssl.github.io/ssl-rules/sslrules.html#_game_states
 enum class GameState
@@ -270,44 +270,44 @@ struct State
 
     std::string status_message;
 };
-} // namespace Immortals::Common::Referee
+} // namespace Tyr::Common::Referee
 
 #if FEATURE_LOGGING
 template <>
-struct fmt::formatter<Immortals::Common::Referee::State> : fmt::formatter<std::string>
+struct fmt::formatter<Tyr::Common::Referee::State> : fmt::formatter<std::string>
 {
-    auto format(const Immortals::Common::Referee::State &t_state, format_context &t_ctx) const
+    auto format(const Tyr::Common::Referee::State &t_state, format_context &t_ctx) const
     {
         const char *state_str = "Unknown";
         switch (t_state.state)
         {
-        case Immortals::Common::Referee::GameState::None:
+        case Tyr::Common::Referee::GameState::None:
             state_str = "None";
             break;
-        case Immortals::Common::Referee::GameState::Halt:
+        case Tyr::Common::Referee::GameState::Halt:
             state_str = "Halt";
             break;
-        case Immortals::Common::Referee::GameState::Timeout:
+        case Tyr::Common::Referee::GameState::Timeout:
             state_str = t_state.our() ? "Our timeout" : "Their timeout";
             break;
-        case Immortals::Common::Referee::GameState::Stop:
+        case Tyr::Common::Referee::GameState::Stop:
             state_str = "Stop";
             break;
-        case Immortals::Common::Referee::GameState::BallPlacement:
+        case Tyr::Common::Referee::GameState::BallPlacement:
             state_str = t_state.our() ? "Our ball placement" : "Their ball placement";
             break;
-        case Immortals::Common::Referee::GameState::Kickoff:
+        case Tyr::Common::Referee::GameState::Kickoff:
             state_str = t_state.our() ? (t_state.ready ? "Our kickoff (ready)" : "Our prepare kickoff")
                                       : (t_state.ready ? "Their kickoff (ready)" : "Their prepare kickoff");
             break;
-        case Immortals::Common::Referee::GameState::Penalty:
+        case Tyr::Common::Referee::GameState::Penalty:
             state_str = t_state.our() ? (t_state.ready ? "Our penalty (ready)" : "Our prepare penalty")
                                       : (t_state.ready ? "Their penalty (ready)" : "Their prepare penalty");
             break;
-        case Immortals::Common::Referee::GameState::FreeKick:
+        case Tyr::Common::Referee::GameState::FreeKick:
             state_str = t_state.our() ? "Our free kick" : "Their free kick";
             break;
-        case Immortals::Common::Referee::GameState::Running:
+        case Tyr::Common::Referee::GameState::Running:
             state_str = "Running";
             break;
         }
