@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct RawFrame
 {
@@ -43,4 +43,4 @@ struct RawFrame
         t_frame->set_t_capture_camera(t_capture_camera.microseconds());
     }
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

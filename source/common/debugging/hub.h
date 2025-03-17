@@ -8,7 +8,7 @@
 #include "../network/nng_server.h"
 #include "../time/time_point.h"
 
-namespace Immortals::Common::Debug
+namespace Tyr::Common::Debug
 {
 class Hub
 {
@@ -165,7 +165,7 @@ private:
 
     ~Hub() = default;
 
-    friend struct ::Immortals::Common::Services;
+    friend struct ::Tyr::Common::Services;
 
     std::unique_ptr<NngServer> m_server;
 
@@ -175,4 +175,4 @@ private:
     std::mutex m_draw_mutex;
     std::mutex m_execution_time_mutex;
 };
-} // namespace Immortals::Common::Debug
+} // namespace Tyr::Common::Debug

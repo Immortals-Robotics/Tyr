@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct Color
 {
@@ -188,4 +188,4 @@ struct Color
                 t_c1.a * (1.0f - clamped_amount) + t_c2.a * clamped_amount};
     }
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

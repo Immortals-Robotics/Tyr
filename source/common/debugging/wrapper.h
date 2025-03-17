@@ -7,7 +7,7 @@
 
 #include "../time/time_point.h"
 
-namespace Immortals::Common::Debug
+namespace Tyr::Common::Debug
 {
 struct Wrapper
 {
@@ -70,4 +70,4 @@ struct Wrapper
             execution_time.second.fillProto(&(*t_wrapper->mutable_execution_times())[execution_time.first]);
     }
 };
-} // namespace Immortals::Common::Debug
+} // namespace Tyr::Common::Debug

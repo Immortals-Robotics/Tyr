@@ -1,6 +1,6 @@
 #include "storage.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 static std::string getErrorString(const int t_error)
 {
@@ -526,4 +526,4 @@ bool Storage::storeRaw(Key t_key, std::span<char> t_data)
 
     return true;
 }
-} // namespace Immortals::Common
+} // namespace Tyr::Common

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common::Debug
+namespace Tyr::Common::Debug
 {
 inline void setThreadName(const char *name)
 {
@@ -18,4 +18,4 @@ inline void setThreadName(const char *name)
     pthread_setname_np(name);
 #endif
 }
-} // namespace Immortals::Common::Debug
+} // namespace Tyr::Common::Debug

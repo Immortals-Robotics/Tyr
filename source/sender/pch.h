@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../common/pch.h"
-using namespace Immortals;
 
 #include <protos/grsim/grsim_packet.pb.h>
 #include <protos/immortals/command.pb.h>

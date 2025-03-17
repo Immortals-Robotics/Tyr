@@ -3,7 +3,7 @@
 #include "ball.h"
 #include "robot.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct WorldState
 {
@@ -60,4 +60,4 @@ struct WorldState
         }
     }
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

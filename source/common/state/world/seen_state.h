@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 enum class SeenState
 {
@@ -8,4 +8,4 @@ enum class SeenState
     TemporarilyOut = 1,
     Seen           = 2,
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

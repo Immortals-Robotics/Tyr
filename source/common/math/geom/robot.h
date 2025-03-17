@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct Robot
 {
@@ -69,4 +69,4 @@ struct Robot
     float radius;
     Angle angle;
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

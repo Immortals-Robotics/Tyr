@@ -1,6 +1,6 @@
 #include "nng_server.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 NngServer::NngServer(const std::string_view t_url)
 {
@@ -47,4 +47,4 @@ bool NngServer::sendRaw(const NngMessage &t_message)
 
     return true;
 }
-} // namespace Immortals::Common
+} // namespace Tyr::Common

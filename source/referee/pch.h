@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../common/pch.h"
-using namespace Immortals;
 
 // These might be defined by raylib
 #ifdef YELLOW

@@ -2,7 +2,7 @@
 
 #include "../time/time_point.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct NngMessage
 {
@@ -53,4 +53,4 @@ private:
 
     std::span<char> m_data;
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

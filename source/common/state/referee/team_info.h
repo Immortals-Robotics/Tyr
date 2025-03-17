@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common::Referee
+namespace Tyr::Common::Referee
 {
 struct TeamInfo
 {
@@ -140,4 +140,4 @@ struct TeamInfo
     // The number of microseconds left for current bot substitution
     Duration substitution_time_left;
 };
-} // namespace Immortals::Common::Referee
+} // namespace Tyr::Common::Referee

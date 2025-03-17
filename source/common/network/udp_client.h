@@ -2,7 +2,7 @@
 
 #include "../config/config.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 class UdpClient
 {
@@ -46,4 +46,4 @@ private:
 
     std::array<char, Config::Network::kMaxUdpPacketSize> m_buffer = {};
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

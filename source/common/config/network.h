@@ -3,7 +3,7 @@
 #include "../network/address.h"
 #include "base.h"
 
-namespace Immortals::Common::Config
+namespace Tyr::Common::Config
 {
 struct Network final : IConfig
 {
@@ -65,4 +65,4 @@ struct Network final : IConfig
     std::string referee_db         = "referee";
     std::string soccer_db          = "soccer";
 };
-} // namespace Immortals::Common::Config
+} // namespace Tyr::Common::Config

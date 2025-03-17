@@ -9,7 +9,7 @@
 #include "soccer.h"
 #include "vision.h"
 
-namespace Immortals::Common::Config
+namespace Tyr::Common::Config
 {
 class Config
 {
@@ -23,7 +23,7 @@ private:
 
     ~Config() = default;
 
-    friend struct ::Immortals::Common::Services;
+    friend struct ::Tyr::Common::Services;
 
 #if FEATURE_CONFIG_FILE
     File m_file;
@@ -67,4 +67,4 @@ public:
     Vision  vision;
     Soccer  soccer;
 };
-} // namespace Immortals::Common::Config
+} // namespace Tyr::Common::Config

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../common/pch.h"
-using namespace Immortals;
 
 #include <protos/immortals/command.pb.h>
 

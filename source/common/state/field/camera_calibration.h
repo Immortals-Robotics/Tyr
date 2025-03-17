@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct CameraCalibration
 {
@@ -49,4 +49,4 @@ struct CameraCalibration
                                 static_cast<float>(t_calibration.pixel_image_height())};
     }
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

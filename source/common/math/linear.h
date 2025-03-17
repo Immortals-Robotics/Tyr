@@ -13,7 +13,7 @@
 
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 //! Given a set of points, this class calculates the linear regression parameters and evaluates the regression line at
 //! arbitrary abscissas.
@@ -77,4 +77,4 @@ private:
 
     bool m_amoodi = false;
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

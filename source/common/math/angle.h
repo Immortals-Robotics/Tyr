@@ -2,7 +2,7 @@
 
 #include "vec2.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct Angle
 {
@@ -197,13 +197,13 @@ private:
     return *this + t_angle.toUnitVec() * t_radius;
 }
 
-} // namespace Immortals::Common
+} // namespace Tyr::Common
 
 #if FEATURE_LOGGING
 template <>
-struct fmt::formatter<Immortals::Common::Angle> : fmt::formatter<std::string>
+struct fmt::formatter<Tyr::Common::Angle> : fmt::formatter<std::string>
 {
-    auto format(const Immortals::Common::Angle t_angle, format_context &t_ctx) const
+    auto format(const Tyr::Common::Angle t_angle, format_context &t_ctx) const
     {
         return fmt::format_to(t_ctx.out(), "{} deg", t_angle.deg());
     }

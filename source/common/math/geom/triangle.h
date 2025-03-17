@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct Triangle
 {
@@ -30,4 +30,4 @@ struct Triangle
 
     std::array<Vec2, 3> corner;
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

@@ -2,7 +2,7 @@
 
 #include "helpers.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct Angle;
 
@@ -256,13 +256,13 @@ struct Vec2
     float x = 0.0f;
     float y = 0.0f;
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common
 
 #if FEATURE_LOGGING
 template <>
-struct fmt::formatter<Immortals::Common::Vec2> : fmt::formatter<std::string>
+struct fmt::formatter<Tyr::Common::Vec2> : fmt::formatter<std::string>
 {
-    auto format(Immortals::Common::Vec2 t_v, format_context &t_ctx) const
+    auto format(Tyr::Common::Vec2 t_v, format_context &t_ctx) const
     {
         return fmt::format_to(t_ctx.out(), "[{}, {}]", t_v.x, t_v.y);
     }

@@ -2,7 +2,7 @@
 
 #include "frame.h"
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 struct RawRobotState
 {
@@ -77,4 +77,4 @@ struct RawRobotState
         angle.fillProto(t_state->mutable_angle());
     }
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

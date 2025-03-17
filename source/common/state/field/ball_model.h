@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common
+namespace Tyr::Common
 {
 // Two-Phase model for straight-kicked balls.
 // There are two phases with different accelerations during the ball kicks:
@@ -47,4 +47,4 @@ struct BallModelChipFixedLoss
         damping_z             = t_model.damping_z();
     }
 };
-} // namespace Immortals::Common
+} // namespace Tyr::Common

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Immortals::Common::Config
+namespace Tyr::Common::Config
 {
 class File
 {
@@ -25,4 +25,4 @@ private:
 
     toml::table m_table;
 };
-} // namespace Immortals::Common::Config
+} // namespace Tyr::Common::Config
