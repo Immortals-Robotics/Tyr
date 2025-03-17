@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../common/pch.h"
-
 #include <protos/immortals/command.pb.h>
 
 #include <deque>

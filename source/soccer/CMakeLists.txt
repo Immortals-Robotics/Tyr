@@ -126,9 +126,11 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})
 
+get_target_property(COMMON_PCHS ${CMAKE_PROJECT_NAME}-common INTERFACE_PRECOMPILE_HEADERS)
 get_target_property(SENDER_PCHS ${CMAKE_PROJECT_NAME}-sender INTERFACE_PRECOMPILE_HEADERS)
 
 target_precompile_headers(${PROJECT_NAME}
+        PUBLIC ${COMMON_PCHS}
         PUBLIC ${SENDER_PCHS}
         PUBLIC pch.h
         INTERFACE ${HEADER_FILES})

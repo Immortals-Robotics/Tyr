@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../common/pch.h"
-
 // These might be defined by raylib
 #ifdef YELLOW
 #undef YELLOW
