@@ -41,6 +41,9 @@ set_source_files_properties(${C_SOURCE_FILES} PROPERTIES
         SKIP_PRECOMPILE_HEADERS TRUE
         SKIP_UNITY_BUILD_INCLUSION TRUE)
 
+get_target_property(COMMON_PCHS ${CMAKE_PROJECT_NAME}-common INTERFACE_PRECOMPILE_HEADERS)
+
 target_precompile_headers(${PROJECT_NAME}
+        PUBLIC ${COMMON_PCHS}
         PUBLIC pch.h
         INTERFACE ${HEADER_FILES})

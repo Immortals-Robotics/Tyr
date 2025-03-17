@@ -150,4 +150,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${libs})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${USE_UNITY_BUILDS})
 
-target_precompile_headers(${PROJECT_NAME} PRIVATE pch.h)
+target_precompile_headers(${PROJECT_NAME}
+        PUBLIC pch.h
+        INTERFACE ${HEADER_FILES})
