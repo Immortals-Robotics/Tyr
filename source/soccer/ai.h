@@ -72,7 +72,7 @@ private:
     // Helpers
     Common::Vec2 calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar = 89.0f);
     float        calculateRobotReachTime(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile) const;
-    float        calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile) const;
+    float        calculateBallRobotReachTime(int t_robot_num, Common::Angle angle,  VelocityProfile t_profile, float t_wait) const;
 
     // static pos for mids
     struct Zone

@@ -43,20 +43,24 @@ float Ai::calculateRobotReachTime(const int t_robot_num, const Common::Vec2 t_de
     return trajectory.getDuration();
 }
 
-float Ai::calculateBallRobotReachTime(const int t_robot_num, const VelocityProfile t_profile) const
+float Ai::calculateBallRobotReachTime(const int t_robot_num, const Common::Angle angle, const VelocityProfile t_profile, const float t_wait) const
 {
-    const float tMax  = 5.0;
-    float       predT = tMax;
-    for (float forwT = 0; forwT < tMax; forwT += 0.02f)
+    const float t_max  = 5.0;
+    float       t_interception = t_max;
+    for (float t = 0; t < t_max; t += 0.1f)
     {
-        Common::Vec2 newBallPos  = predictBall(forwT).position;
-        float        robotReachT = calculateRobotReachTime(t_robot_num, newBallPos, t_profile);
-        if (robotReachT <= forwT)
+        const Common::BallState ball_state = predictBall(t);
+
+        const Common::Vec2 interception_point =
+            ball_state.position.circleAroundPoint(angle, Common::field().robot_radius);
+
+        float t_reach = calculateRobotReachTime(t_robot_num, interception_point, t_profile);
+        if (t_reach + t_wait <= t)
         {
-            predT = robotReachT;
+            t_interception = t_reach;
             break;
         }
     }
-    return predT;
+    return t_interception;
 }
 } // namespace Tyr::Soccer
