@@ -1,3 +1,0 @@
-[submodule "source/common"]
-	path = source/common
-	url = git@github.com:Immortals-Robotics/Common.git
