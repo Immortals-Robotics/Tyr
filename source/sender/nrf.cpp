@@ -75,8 +75,8 @@ void Nrf::queueCommand(const Command &command)
     unsigned char data[32] = {};
 
     // TODO: verify this magic number. motion is in mm/s
-    convert_float_to_2x_buff(data + 3, command.motion.x / 17.5f);
-    convert_float_to_2x_buff(data + 5, command.motion.y / 17.5f);
+    convert_float_to_2x_buff(data + 3, command.motion.x / 20.f);
+    convert_float_to_2x_buff(data + 5, command.motion.y / 20.f);
     convert_float_to_2x_buff(data + 7, command.target_angle.deg());
 
     data[0] = command.vision_id;

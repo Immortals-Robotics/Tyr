@@ -62,12 +62,12 @@ void Ai::normalPlayAtt()
         Common::logDebug("open angle: {}", openAngle.magnitude.deg());
 
         static bool ball_is_stationary    = false;
-        const float speed_threshold = ball_is_stationary ? 750.0f : 250.0f;
+        float speed_threshold = ball_is_stationary ? 750.0f : 250.0f;
         ball_is_stationary = m_world_state.ball.velocity.length() < speed_threshold;
 
         const bool opp_attacker_in_range = findKickerOpp(-1, 1000.0f) != -1;
 
-        if (openAngle.magnitude.deg() < 8 && ball_is_stationary && !opp_attacker_in_range && (suitable_mid != nullptr))
+        if (openAngle.magnitude.deg() < 8 && ball_is_stationary && !opp_attacker_in_range && suitable_mid != nullptr)
         {
             Common::Angle passAngle =
                 Common::Vec2(-m_side * 1700, Common::sign(-m_world_state.ball.position.y) * 1700.0f)
@@ -93,42 +93,19 @@ void Ai::normalPlayAtt()
         {
             Common::Angle shootAngle;
 
-            static bool intersecting    = false;
-            const float speed_threshold = intersecting ? 500.0f : 1000.0f;
-
-            const float ball_dir_goal_dot =
-                m_world_state.ball.velocity.normalized().dot((oppGoal() - m_world_state.ball.position).normalized());
-            if (m_world_state.ball.velocity.length() < speed_threshold || std::abs(ball_dir_goal_dot) > 0.75f)
-            {
-                intersecting = false;
-
                 // target the goal center if the open angle is too small
                 if (openAngle.magnitude.deg() > 5.0f)
                     shootAngle = Common::Angle::fromDeg(180.0f) + openAngle.center;
                 else
                     shootAngle = (m_world_state.ball.position - oppGoal()).toAngle();
-            }
-            else
-            {
-                intersecting = true;
-                shootAngle   = m_world_state.ball.velocity.toAngle();
-            }
 
-            float shoot_pow = 6500.f; // 6.5m/s
+            float shoot_pow = 6000.f; // mm/s
 
             // TODO: calibrate this
             if (m_own_robot[m_attack].state().position.distanceTo(m_world_state.ball.position) > 400)
             {
                 shoot_pow = 1.f;
                 activeShootTimer.start();
-            }
-            else if (goalBlocked(m_world_state.ball.position, 200, 90))
-            {
-                shoot_pow = 1.f;
-            }
-            else if (intersecting)
-            {
-                shoot_pow = 1.0f;
             }
 
             attacker(m_attack, shootAngle, shoot_pow, 0, 0, 0);

@@ -5,19 +5,24 @@
 
 namespace Tyr::Soccer
 {
-class Planner
+class PlannerRrt
 {
 public:
-     Planner(int t_max_nodes = 2000);
-    ~Planner() = default;
+     PlannerRrt(int t_max_nodes = 2000, float t_step = 90.f);
+    ~PlannerRrt() = default;
 
-    void init(Common::Vec2 init, Common::Vec2 final, float step);
-
-    Common::Vec2 plan();
+    Common::Vec2 plan(Common::Vec2 init, Common::Vec2 final);
 
     void draw(Common::Color t_color = Common::Color::black().transparent()) const;
 
+    void setObstacleMap(const ObstacleMap* const t_map)
+    {
+        m_map = t_map;
+    }
+
 private:
+    const ObstacleMap* m_map = nullptr;
+
     Common::Vec2 init_state;
     Common::Vec2 final_state;
 
@@ -41,8 +46,9 @@ private:
 
     Common::Vec2 randomState()
     {
-        return Common::Vec2((m_random.get(-1.0f, 1.0f) * (Common::field().width + Common::field().boundary_width)),
-                            (m_random.get(-1.0f, 1.0f) * (Common::field().height + Common::field().boundary_width)));
+        const float margin = Common::field().boundary_width - Common::field().robot_radius;
+        return Common::Vec2((m_random.get(-1.0f, 1.0f) * (Common::field().width + margin)),
+                            (m_random.get(-1.0f, 1.0f) * (Common::field().height + margin)));
     }
 
     Common::Vec2 nearestFree(Common::Vec2 state);
@@ -69,7 +75,7 @@ private:
     void optimizeTree();
 };
 
-inline Common::Vec2 Planner::chooseTarget()
+inline Common::Vec2 PlannerRrt::chooseTarget()
 {
     const float r = m_random.get(0.0f, 1.0f);
 

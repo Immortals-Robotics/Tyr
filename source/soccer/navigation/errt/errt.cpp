@@ -2,29 +2,28 @@
 
 namespace Tyr::Soccer
 {
-Planner::Planner(const int t_max_nodes) : m_max_nodes(t_max_nodes), m_tree(t_max_nodes)
+PlannerRrt::PlannerRrt(const int t_max_nodes, const float t_step)
+    : m_step_size(t_step)
+    , m_max_nodes(t_max_nodes)
+    , m_tree(t_max_nodes)
 {
     m_waypoints.reserve(m_max_nodes);
     m_cached_waypoints.reserve(m_max_nodes);
 }
 
-void Planner::init(const Common::Vec2 init, const Common::Vec2 final, const float step)
-{
-    init_state  = nearestFree(init);
-    final_state = nearestFree(final);
-    m_step_size = step;
-
-    m_tree.reset();
-    m_tree.addNode(init_state, nullptr);
-
-    m_started_in_obs = g_obs_map.isInObstacle(init);
-}
-
-Common::Vec2 Planner::nearestFree(const Common::Vec2 state)
+Common::Vec2 PlannerRrt::nearestFree(Common::Vec2 state)
 {
     const float acceptable_free_dis = 50.0f;
 
-    if (!g_obs_map.isInObstacle(state))
+    // clamp the position to be inside the field
+    const float margin = Common::field().boundary_width - Common::field().robot_radius;
+    if (std::fabs(state.x) > Common::field().width + margin)
+        state.x = Common::sign(state.x) * (Common::field().width + margin);
+
+    if (std::fabs(state.y) > Common::field().height + margin)
+        state.y = Common::sign(state.y) * (Common::field().height + margin);
+
+    if (!m_map->inside(state))
         return state;
 
     Common::Vec2 ans    = state;
@@ -34,7 +33,7 @@ Common::Vec2 Planner::nearestFree(const Common::Vec2 state)
     {
         Common::Vec2 newRndPoint = randomState();
         const float  tmp_d       = state.distanceSquaredTo(newRndPoint);
-        if ((!g_obs_map.isInObstacle(newRndPoint)) && tmp_d < minDis)
+        if (!m_map->inside(newRndPoint) && tmp_d < minDis)
         {
             ans    = newRndPoint;
             minDis = tmp_d;
@@ -46,7 +45,7 @@ Common::Vec2 Planner::nearestFree(const Common::Vec2 state)
     return ans;
 }
 
-Node *Planner::extend(Node *s, Common::Vec2 &target)
+Node *PlannerRrt::extend(Node *s, Common::Vec2 &target)
 {
     if (s->state.distanceTo(target) < m_step_size)
         return nullptr;
@@ -56,16 +55,16 @@ Node *Planner::extend(Node *s, Common::Vec2 &target)
     Common::Vec2 new_state = s->state + step_vec;
 
     // collision check
-    if (g_obs_map.isInObstacle(new_state))
+    if (m_map->inside(new_state))
         return nullptr;
 
-    if (g_obs_map.collisionDetect(new_state, s->state))
+    if (m_map->collisionDetect(new_state, s->state))
         return nullptr;
 
     return m_tree.addNode(new_state, s);
 }
 
-void Planner::setWayPoints()
+void PlannerRrt::setWayPoints()
 {
     m_waypoints.clear();
 
@@ -83,15 +82,23 @@ void Planner::setWayPoints()
         m_cached_waypoints = m_waypoints;
 }
 
-Common::Vec2 Planner::plan()
+Common::Vec2 PlannerRrt::plan(const Common::Vec2 init, const Common::Vec2 final)
 {
+    init_state  = nearestFree(init);
+    final_state = nearestFree(final);
+
+    m_tree.reset();
+    m_tree.addNode(init_state, nullptr);
+
+    m_started_in_obs = m_map->inside(init);
+
     if (m_cached_waypoints.empty())
     {
         Common::logWarning("cached waypoints are empty");
     }
 
     // return final_state;
-    if (!g_obs_map.collisionDetect(init_state, final_state))
+    if (!m_map->collisionDetect(init_state, final_state))
     {
         // TODO: slice the path so that the cache contains valid waypoints
         m_tree.addNode(final_state, m_tree.nearestNeighbour(final_state));
@@ -104,7 +111,7 @@ Common::Vec2 Planner::plan()
             extend(m_tree.nearestNeighbour(r), r);
         }
 
-        if ((isReached()) && (!g_obs_map.isInObstacle(final_state)) &&
+        if ((isReached()) && (!m_map->inside(final_state)) &&
             (final_state.distanceTo(m_tree.nearestNeighbour(final_state)->state) > 1))
         {
             m_tree.addNode(final_state, m_tree.nearestNeighbour(final_state));
@@ -124,11 +131,11 @@ Common::Vec2 Planner::plan()
     }
 }
 
-void Planner::optimizeTree()
+void PlannerRrt::optimizeTree()
 {
     for (size_t i = 0; i < m_waypoints.size() - 1; i++)
     {
-        if (g_obs_map.collisionDetect(m_waypoints[i], m_waypoints.back()) == false)
+        if (m_map->collisionDetect(m_waypoints[i], m_waypoints.back()) == false)
         {
             std::swap(m_waypoints[i + 1], m_waypoints.back());
             m_waypoints.resize(i + 2);
@@ -137,7 +144,7 @@ void Planner::optimizeTree()
     }
 }
 
-void Planner::draw(const Common::Color t_color) const
+void PlannerRrt::draw(const Common::Color t_color) const
 {
     for (size_t i = 0; i < m_waypoints.size() - 1; i++)
     {

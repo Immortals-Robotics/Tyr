@@ -1,15 +1,17 @@
 #pragma once
 
 #include "../kalman/ekf_3d.h"
-#include "../kalman/filtered_object.h"
 #include "ball_estimator.h"
+
+#include "tracked/ball.h"
+#include "tracked/robot.h"
 
 namespace Tyr::Vision
 {
 class Filtered
 {
 public:
-     Filtered();
+    Filtered();
     ~Filtered() = default;
 
     bool receiveRaw();
@@ -19,28 +21,15 @@ public:
     bool publish() const;
 
 private:
-    void processRobots();
-    void filterRobots(Common::TeamColor t_color);
-    void predictRobots();
-    void sendStates();
+    void processRobots(Common::TeamColor t_color);
 
-    void processBalls(const bool t_new_kalman);
-    void filterBalls(const bool t_new_kalman);
-    void predictBall();
+    void processBalls();
     void newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen, const int &t_camera_id,
                        const ChipEstimator::Ball3D &t_ball_3d);
 
 private:
     // TODO: move to settings
-    static constexpr float kPredictSteps       = 7.0f;
     static constexpr int   kMaxRobotSubstitute = 60;
-
-    // Don't add prediction to Ball or Opponents if both velocities are below this threshold
-    static constexpr float kIgnorePrediction = 0.045f;
-
-    // If the filtering process yields velocities above these values, reset the filter state
-    // All these are in metres/sec
-    static constexpr float kRobotErrorVelocity = 4500.0f;
 
     static constexpr int kMaxHistDraw = 200;
 
@@ -48,17 +37,11 @@ private:
     std::unique_ptr<Common::NngClient> m_cmd_client;
     std::unique_ptr<Common::NngServer> m_server;
 
-    Common::RawBallState m_last_raw_ball; // The last position of the locked ball
-    FilteredObject       m_ball_kalman;
-    int                  m_ball_not_seen = std::numeric_limits<int>::max() - 1;
+    TrackedBall m_tracked_ball;
 
-    FilteredObject m_robot_kalman[2][Common::Config::Common::kMaxRobots];
-    int            m_robot_not_seen[2][Common::Config::Common::kMaxRobots];
+    TrackedRobot m_tracked_robot[2][Common::Config::Common::kMaxRobots];
 
-    Common::MedianFilter<Common::Angle> m_angle_filter[2][Common::Config::Common::kMaxRobots];
-    Common::Angle                       m_raw_angles[2][Common::Config::Common::kMaxRobots];
-
-    static constexpr size_t kMaxHist = 7;
+    static constexpr size_t kMaxHist = 100;
     using CommandHistory = std::deque<Sender::Command>;
     std::unordered_map<int, CommandHistory> m_cmd_map;
 

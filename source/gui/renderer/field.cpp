@@ -31,7 +31,11 @@ void Renderer::draw(const Common::FieldState &t_field)
 
     float centerCircleRad = t_field.center_circle_radius;
 
-    draw(Common::Rect{fieldWallStartPoint, fieldWallEndPoint}, Common::Color::brown(), false, 70.0f);
+    constexpr float kWallThickness = 70.0f;
+    draw(Common::Rect{
+        fieldWallStartPoint - Common::Vec2{kWallThickness, kWallThickness},
+        fieldWallEndPoint + Common::Vec2{kWallThickness, kWallThickness}},
+        Common::Color::brown(), false, kWallThickness);
 
     const float line_width = 2.0f * Common::field().line_thickness;
 

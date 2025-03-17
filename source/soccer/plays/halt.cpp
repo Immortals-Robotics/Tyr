@@ -4,7 +4,14 @@ namespace Tyr::Soccer
 {
 void Ai::halt(const int t_robot_num)
 {
-    m_own_robot[t_robot_num].halt();
+    if (m_own_robot[t_robot_num].currentMotion().length() > 100.0f)
+    {
+        m_own_robot[t_robot_num].fullBeak();
+    }
+    else
+    {
+        m_own_robot[t_robot_num].halt();
+    }
 }
 
 void Ai::haltAll()

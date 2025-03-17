@@ -119,11 +119,7 @@ void ControllerMenu::draw()
         ImGui::Spacing();
         ImGui::Separator();
 
-        const char *controller_choices[] = {"Disable", "Referee", "Robot Control"};
-        ImGui::Combo("Mode", reinterpret_cast<int *>(&m_controller_mode), controller_choices,
-                     IM_ARRAYSIZE(controller_choices));
-
-        if (m_controller_mode == Mode::Referee)
+        if (Common::config().network.use_internal_referee)
         {
             ImGui::SeparatorText("Referee");
             ImGui::PushID("ControllerReferee");
@@ -158,7 +154,6 @@ void ControllerMenu::draw()
     else
     {
         ImGui::TextColored(static_cast<ImVec4>(Common::Color::red()), "No Controller connected");
-        m_controller_mode = Mode::Disabled;
     }
 }
 

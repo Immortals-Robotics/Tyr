@@ -14,6 +14,7 @@ using namespace Immortals;
 #include <stdlib.h>
 #include <Eigen/Dense>
 #include <numeric>
+#include <optional>
 
 #ifdef PI
 #undef PI

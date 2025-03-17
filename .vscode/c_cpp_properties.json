@@ -1,0 +1,63 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/source/common",
+                "${workspaceFolder}/source/sender",
+                "${workspaceFolder}/source/vision",
+                "${workspaceFolder}/source/referee",
+                "${workspaceFolder}/source/soccer",
+                "${workspaceFolder}/source/cli",
+                "${workspaceFolder}/source/gui"
+            ],
+            "defines": [
+                "DATA_DIR=\"${workspaceFolder}/data\"",
+                "LOG_DIR=\"${workspaceFolder}/log\""
+            ],
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "linux-gcc-x64"
+        },
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/source/common",
+                "${workspaceFolder}/source/sender",
+                "${workspaceFolder}/source/vision",
+                "${workspaceFolder}/source/referee",
+                "${workspaceFolder}/source/soccer",
+                "${workspaceFolder}/source/cli",
+                "${workspaceFolder}/source/gui"
+            ],
+            "forcedInclude": [
+                "${workspaceFolder}/source/common/source/pch.h",
+                "${workspaceFolder}/source/gui/pch.h",
+                "${workspaceFolder}/source/referee/pch.h",
+                "${workspaceFolder}/source/sender/pch.h",
+                "${workspaceFolder}/source/soccer/pch.h",
+                "${workspaceFolder}/source/vision/pch.h"
+            ],
+            "defines": [
+                "DATA_DIR=\"${workspaceFolder}/data\"",
+                "LOG_DIR=\"${workspaceFolder}/log\"",
+                "FEATURE_UDP",
+                "FEATURE_NNG",
+                "FEATURE_STORAGE",
+                "FEATURE_RAYLIB",
+                "FEATURE_IMGUI",
+                "FEATURE_LOGGING",
+                "FEATURE_CONFIG_FILE",
+                "FEATURE_DEBUG"
+            ],
+            "compilerPath": "/usr/bin/clang++",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "macos-clang-arm64"
+        }
+    ],
+    "version": 4
+}

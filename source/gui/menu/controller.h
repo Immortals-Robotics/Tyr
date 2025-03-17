@@ -16,13 +16,6 @@ public:
     void draw();
 
 private:
-    enum class Mode
-    {
-        Disabled = 0,
-        Referee,
-        Robot,
-    };
-
     void renderController();
 
     RenderTexture m_render_target;
@@ -35,8 +28,6 @@ private:
 
     // UDP socket for ref commands
     std::unique_ptr<Common::UdpServer> m_udp;
-
-    Mode m_controller_mode = Mode::Disabled;
 
     uint32_t m_command_counter = 0;
 

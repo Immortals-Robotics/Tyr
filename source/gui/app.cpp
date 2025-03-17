@@ -81,8 +81,15 @@ bool Application::initialize(const int t_width, const int t_height)
     m_vision_filtered = std::make_unique<Vision::Filtered>();
 
     m_sender_hub = std::make_unique<Sender::Hub>();
-    m_sender_hub->registerSender<Sender::Nrf>();
-    m_sender_hub->registerSender<Sender::Simulator>();
+    if (Common::config().network.use_simulated_vision)
+    {
+        m_sender_hub->registerSender<Sender::Simulator>();
+    }
+    else
+    {
+        m_sender_hub->registerSender<Sender::Nrf>();
+    }
+
 
     m_ai = std::make_unique<Soccer::Ai>();
 
@@ -104,6 +111,9 @@ bool Application::initialize(const int t_width, const int t_height)
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
     InitWindow(t_width, t_height, "Tyr");
     SetTraceLogLevel(LOG_ALL);
+
+    // disable exit when escape key is pressed
+    SetExitKey(0);
 
     const std::filesystem::path icon_path = std::filesystem::path(DATA_DIR) / "immortals.png";
     SetWindowIcon(LoadImage(icon_path.string().c_str()));
@@ -357,6 +367,9 @@ void Application::visionRawEntry() const
 {
     Common::Debug::setThreadName("VisionRaw");
 
+    Common::Timer interval_timer;
+    interval_timer.start();
+
     while (m_running && Common::config().common.immortals_is_the_best_team) // Hope it lasts Forever...
     {
         m_vision_raw->receive();
@@ -367,8 +380,17 @@ void Application::visionRawEntry() const
             continue;
         }
 
+        Common::Timer duration_timer;
+        duration_timer.start();
+
         m_vision_raw->process();
         m_vision_raw->publish();
+
+        Common::Debug::ExecutionTime execution_time;
+        execution_time.duration = duration_timer.time();
+        execution_time.interval = interval_timer.interval();
+
+        Common::debug().reportExecutionTime("vision-raw", execution_time);
     }
 }
 

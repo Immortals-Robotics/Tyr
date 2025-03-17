@@ -32,6 +32,7 @@ public:
     void face(Common::Vec2 t_target);
     void move(Common::Vec2 motion);
     void halt();
+    void fullBeak(float acc_factor = 1.0f);
 
     [[nodiscard]] float shoot() const
     {
@@ -57,8 +58,6 @@ public:
     {
         return m_halted;
     }
-
-    [[nodiscard]] Common::Vec2 computeMotion(const VelocityProfile &profile);
 
     [[nodiscard]] Common::Vec2    currentMotion() const;
     [[nodiscard]] Sender::Command currentCommand() const;

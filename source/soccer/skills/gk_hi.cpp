@@ -70,9 +70,9 @@ void Ai::gkHi(const int t_robot_num)
         const float        gk_target_h = Common::field().penalty_area_width - 2 * area_notch;
         const Common::Vec2 gk_target_area_start{ownGoal().x, -(penalty_area_half_width - area_notch)};
         Common::logDebug("ang {} pos {} pt {}", ball_angle, ball_ang_effect, penalty_area_half_width);
-        obs_map.addRectangle({start, w, h});
+        obs_map.add({start, w, h});
 
-        if ((obs_map.isInObstacle(predicted_ball)) && (m_world_state.ball.velocity.length() < 1500) &&
+        if ((obs_map.inside(predicted_ball)) && (m_world_state.ball.velocity.length() < 1500) &&
             m_ref_state.running())
         {
             Common::logDebug("GK intercepting");

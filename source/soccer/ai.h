@@ -1,7 +1,8 @@
 #pragma once
 
-#include "dss/dss.h"
-#include "errt/errt.h"
+#include "navigation/dss/dss.h"
+#include "navigation/errt/errt.h"
+#include "navigation/trajectory/planner/planner.h"
 #include "helpers/ball_trajectory.h"
 #include "helpers/one_touch_detector.h"
 #include "plays/play_book.h"
@@ -171,16 +172,31 @@ private:
         NavigationFlagsForceBallSmallObstacle  = (1 << 4), // 60.0f
     };
 
+    // ball placement states
+    enum class OurBallPlacementState
+    {
+        Idle,
+        KissInit,
+        KissTouch,
+        Kissing,
+        Stuck,
+        LongDistance,
+        KissingDone,
+        Done,
+    };
+
     void navigate(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile = VelocityProfile::mamooli(),
                   NavigationFlags t_flags = NavigationFlagsNone);
     void setObstacles(int t_robot_num, NavigationFlags t_flags = NavigationFlagsNone);
 
-    Planner              m_planner[Common::Config::Common::kMaxRobots];
+    ObstacleMap          m_obsMap[Common::Config::Common::kMaxRobots];
+    PlannerRrt           m_planner_rrt[Common::Config::Common::kMaxRobots];
+    PlannerTrajectory    m_planner_trajectory[Common::Config::Common::kMaxRobots];
     std::unique_ptr<Dss> m_dss;
 
     // Skills
     void mark(int t_robot_num, int t_opp, float t_dist = 220.0f);
-    void mark2Goal(int t_robot_num, int t_opp, float t_dist = 220.0f);
+    void mark2Goal(int t_robot_num, int t_opp, float t_dist = 220.0f, bool t_def_area_mark = false);
     void mark2Ball(int t_robot_num, int t_opp, float t_dist = 220.0f);
     void halt(int t_robot_num);
 
@@ -217,8 +233,15 @@ private:
     void cornerTheirGlobal();
     void strategy();
     void ourPlaceBall();
+    void ourNewPlaceBall();
     void theirPlaceBall();
 
+    void calcMinBallWallDist(double &t_min_dist, Common::Vec2 &t_closest_point);
+    void placeBallLongDistance();
+    void switchBallPlacementStateDelayed(int t_wait_frames, OurBallPlacementState t_new_state);
+    void resetBallPlacementStateFrameCounter();
+    bool placeBallLost();
+    void generateKissPoints(double t_distance, Common::Vec2 &t_pos1, Common::Vec2 &t_pos2);
     // Strategy
     int strategyWeight();
 
@@ -228,6 +251,16 @@ private:
     // FSM
     int m_func_state = 0;
     int m_func_count = 0;
+
+    // ball placement
+    OurBallPlacementState m_our_ball_placement_state = OurBallPlacementState::Idle;
+    OurBallPlacementState m_our_last_ball_placement_state = OurBallPlacementState::Idle;
+    int m_our_ball_placement_state_wait_frames = 0;
+    bool m_our_ball_placement_force_stuck = false;
+    int m_our_ball_placement_stuck_count = 0;
+    Common::Vec2 m_our_ball_placement_attack_final_pos;
+    Common::Vec2 m_our_ball_placement_mid5_final_pos;
+
 
     void internalProcessData();
 

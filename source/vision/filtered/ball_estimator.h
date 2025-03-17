@@ -40,9 +40,25 @@ public:
         m_candidate_robot    = Common::Robot(Common::Vec2(0, 0), 0, Common::Angle::fromDeg(0));
     }
 
+    inline bool distanceIncreasingValidator(const Common::Vec2 &t_robot_kicker_pos)
+    {
+        return t_robot_kicker_pos.distanceTo(m_ball_records.back().ball) >
+               t_robot_kicker_pos.distanceTo(m_ball_records.front().ball) + 50.f; // Need to be tuned
+    }
+
+    inline bool velocityValidator(const double &t_ball_velocity)
+    {
+        return t_ball_velocity > 600.f; // Need to be tuned
+    }
+
+    inline bool kickerValidator(const Common::Robot &t_robot)
+    {
+        return t_robot.canKick(m_ball_records.front().ball, Common::config().vision.kicker_depth);
+    }
+
     inline Kick detect(const Common::Vec2 &t_ball_position, const Common::TimePoint &t_time,
                        const Common::RobotState t_own_robots[], const Common::RobotState t_opp_robots[],
-                       const double &t_threshold = 0.8, const bool t_fast = true)
+                       const double &t_threshold = 0.8, const bool t_fast = false)
     {
         m_ball_records.push_back(BallTime(t_time, t_ball_position));
         Kick kick;
@@ -51,37 +67,35 @@ public:
         {
             m_ball_records.pop_front();
         }
-        if (!m_can_kick)
+
+        std::vector<Common::Robot> robots;
+
+        for (auto i = 0; i < Common::Config::Common::kMaxRobots; i++)
         {
-            std::vector<Common::Robot> robots;
-
-            for (auto i = 0; i < Common::Config::Common::kMaxRobots; i++)
+            if (t_own_robots[i].seen_state != Common::SeenState::CompletelyOut)
             {
-                if (t_own_robots->seen_state != Common::SeenState::CompletelyOut)
-                {
-                    robots.push_back(
-                        Common::Robot(t_own_robots[i].position, Common::field().robot_radius, t_own_robots[i].angle));
-                }
-                if (t_opp_robots->seen_state != Common::SeenState::CompletelyOut)
-                {
-                    robots.push_back(
-                        Common::Robot(t_opp_robots[i].position, Common::field().robot_radius, t_opp_robots[i].angle));
-                }
+                robots.push_back(
+                    Common::Robot(t_own_robots[i].position, Common::field().robot_radius, t_own_robots[i].angle));
             }
-
-            for (auto const &robot : robots)
+            if (t_opp_robots[i].seen_state != Common::SeenState::CompletelyOut)
             {
-                if (robot.canKick(t_ball_position))
-                {
-                    m_candidate_kick_pos = t_ball_position;
-                    m_candidate_robot    = robot;
-                    m_can_kick           = true;
-                    continue;
-                }
+                robots.push_back(
+                    Common::Robot(t_opp_robots[i].position, Common::field().robot_radius, t_opp_robots[i].angle));
             }
         }
 
-        if (m_ball_records.size() < (t_fast ? kFastRecordNum : kSlowRecordNum) || (!m_can_kick))
+        for (auto const &robot : robots)
+        {
+            if (robot.canKick(t_ball_position, Common::config().vision.kicker_depth))
+            {
+                m_candidate_kick_pos = t_ball_position;
+                m_candidate_robot    = robot;
+                m_can_kick           = true;
+                continue;
+            }
+        }
+
+        if (m_ball_records.size() < (t_fast ? kFastRecordNum : kSlowRecordNum) || !m_can_kick || !distanceIncreasingValidator(m_candidate_robot.center) || !kickerValidator(m_candidate_robot))
         {
             return kick;
         }
@@ -121,10 +135,8 @@ public:
             std::any_of(velocity_changes_magnitudes.begin(), velocity_changes_magnitudes.end(),
                         [threshold](double t_change_magnitude) { return t_change_magnitude > threshold; });
 
-        if (kick_detected &&
-            (m_ball_records.back().ball.distanceTo(m_candidate_robot.center) >
-             m_ball_records.front().ball.distanceTo(m_candidate_robot.center)) &&
-            velocities.back().length() > 400.)
+        Common::logError("kick detected {}", kick_detected);
+        if (kick_detected && velocityValidator(velocities.back().length()))
         {
             kick = Kick(m_candidate_kick_pos, velocities.back(), m_candidate_robot.angle, m_ball_records.front().time,
                         true);
@@ -156,7 +168,7 @@ public:
         double          l1_error;
         double          t_offset;
         ChipSolveResult(Eigen::VectorXd t_x, double t_l1_error, double t_offset)
-            : x(t_x), l1_error(t_l1_error), t_offset(t_offset){};
+            : x(t_x), l1_error(t_l1_error), t_offset(t_offset) {};
     };
 
     struct Ball3D
@@ -176,7 +188,7 @@ public:
         return Common::field().camera_calibrations[t_id].derived_camera_world_t;
     }
 
-    inline ChipSolveResult estimateWithOffset(const double &t_offset, const Common::Vec3 &t_camera_pos)
+    inline ChipSolveResult estimateSpeedWithOffset(const double &t_offset, const Common::Vec3 &t_camera_pos)
     {
         if (m_ball_records.size() > Common::config().vision.chip_min_records)
         {
@@ -209,9 +221,63 @@ public:
         }
         else
         {
-            auto dummy = Eigen::VectorXd(1);
-            dummy << -100000;
-            return ChipSolveResult(dummy, -1000000, -1000000);
+            auto dummy = Eigen::VectorXd(3);
+            dummy << kInvalidData, kInvalidData, kInvalidData;
+            return ChipSolveResult(dummy, kInvalidData, kInvalidData);
+        }
+    }
+
+    inline ChipSolveResult estimateSpeedStartPositionWithOffset(const double &t_offset, const Common::Vec3 &t_camera_pos)
+    {
+        if (m_ball_records.size() > Common::config().vision.chip_min_records)
+        {
+            Eigen::Vector3d f;
+            f << t_camera_pos.x, t_camera_pos.y, t_camera_pos.z;
+            Eigen::MatrixXd mat_a = Eigen::MatrixXd(m_ball_records.size() * 2, 5);
+            int row = 0;
+            float time_offset = 0.0;
+            Eigen::VectorXd b = Eigen::VectorXd(m_ball_records.size() * 2);
+
+            double t_zero = m_ball_records.front().time.microseconds();
+
+            for (const auto &record : m_ball_records)
+            {
+                time_offset = (record.time.microseconds() - t_zero) / 1000000. + t_offset;
+                Eigen::Vector2d g(record.ball.x, record.ball.y);
+                
+                // Matrix rows for x coordinate
+                mat_a.row(row * 2) << f.z(), 0, f.z() * time_offset, 0, (g.x() - f.x()) * time_offset;
+                // Matrix rows for y coordinate
+                mat_a.row((row * 2) + 1) << 0, f.z(), 0, f.z() * time_offset, (g.y() - f.y()) * time_offset;
+                
+                // Right hand side of the equations
+                b(row * 2) = (0.5 * kG * time_offset * time_offset * (g.x() - f.x())) + (g.x() * f.z());
+                b(row * 2 + 1) = (0.5 * kG * time_offset * time_offset * (g.y() - f.y())) + (g.y() * f.z());
+                
+                row++;
+            }
+
+            // Solve the system using QR decomposition
+            Eigen::HouseholderQR<Eigen::MatrixXd> qr(mat_a);
+            Eigen::VectorXd x;
+            try 
+            {
+                x = qr.solve(b);
+                return ChipSolveResult(x, (mat_a * x - b).lpNorm<1>(), t_offset);
+            }
+            catch (...)
+            {
+                // Handle singular matrix exception
+                auto dummy = Eigen::VectorXd(5);
+                dummy << kInvalidData, kInvalidData, kInvalidData, kInvalidData, kInvalidData;
+                return ChipSolveResult(dummy, kInvalidData, kInvalidData);
+            }
+        }
+        else
+        {
+            auto dummy = Eigen::VectorXd(5);
+            dummy << kInvalidData, kInvalidData, kInvalidData, kInvalidData, kInvalidData;
+            return ChipSolveResult(dummy, kInvalidData, kInvalidData);
         }
     }
 
@@ -229,6 +295,103 @@ public:
         double scale = t_ball_pos.z / t_camera_pos.z;
         return Common::Vec2((t_camera_pos.x - t_ball_pos.x) * scale + t_ball_pos.x,
                             (t_camera_pos.y - t_ball_pos.y) * scale + t_ball_pos.y);
+    }
+
+    // Find the optimal time offset using iterative method
+
+
+    inline ChipSolveResult findOptimalTimeOffsetSpeed(const Common::Vec3 &t_camera_pos)
+    {
+        if (m_ball_records.size() < Common::config().vision.chip_min_records)
+        {
+            auto dummy = Eigen::VectorXd(3);
+            dummy << kInvalidData, kInvalidData, kInvalidData;
+            return ChipSolveResult(dummy, kInvalidData, kInvalidData);
+        }
+
+        // Start with initial offset value
+        double t_off = 0.05;
+        double inc   = t_off / 2;
+
+        // Iteratively refine the offset
+        while (inc > 1e-3)
+        {
+            auto result_neg = estimateSpeedWithOffset(t_off - 1e-5, t_camera_pos);
+            auto result_pos = estimateSpeedWithOffset(t_off + 1e-5, t_camera_pos);
+
+            if (result_neg.l1_error == kInvalidData || result_pos.l1_error == kInvalidData)
+            {
+                auto dummy = Eigen::VectorXd(3);
+                dummy << kInvalidData, kInvalidData, kInvalidData;
+                return ChipSolveResult(dummy, kInvalidData, kInvalidData);
+            }
+
+            if (result_neg.l1_error > result_pos.l1_error)
+            {
+                t_off += inc;
+            }
+            else
+            {
+                t_off -= inc;
+            }
+
+            inc /= 2;
+        }
+       
+        // Return the best result with the optimized offset
+        return estimateSpeedWithOffset(t_off, t_camera_pos);
+    }
+
+    inline ChipSolveResult findOptimalTimeOffsetSpeedStartPosition(const Common::Vec3 &t_camera_pos)
+    {
+        if (m_ball_records.size() < Common::config().vision.chip_min_records)
+        {
+            auto dummy = Eigen::VectorXd(3);
+            dummy << kInvalidData, kInvalidData, kInvalidData;
+            return ChipSolveResult(dummy, kInvalidData, kInvalidData);
+        }
+
+         // Start with initial offset value
+        double t_off = 0.05;
+        double inc   = t_off / 2;
+
+        // Iteratively refine the offset
+        while (inc > 1e-3)
+        {
+            auto result_neg = estimateSpeedStartPositionWithOffset(t_off - 1e-5, t_camera_pos);
+            auto result_pos = estimateSpeedStartPositionWithOffset(t_off + 1e-5, t_camera_pos);
+
+            if (result_neg.l1_error == kInvalidData || result_pos.l1_error == kInvalidData)
+            {
+                auto dummy = Eigen::VectorXd(5);
+                dummy << kInvalidData, kInvalidData, kInvalidData, kInvalidData, kInvalidData;
+                return ChipSolveResult(dummy, kInvalidData, kInvalidData);
+            }
+
+            if (result_neg.l1_error > result_pos.l1_error)
+            {
+                t_off += inc;
+            }
+            else
+            {
+                t_off -= inc;
+            }
+
+            inc /= 2;
+        }
+
+        return estimateSpeedStartPositionWithOffset(t_off, t_camera_pos);
+    }
+
+
+    inline ChipSolveResult findOptimalMethod(const Common::Vec3 &t_camera_pos) {
+        auto result_speed = findOptimalTimeOffsetSpeed(t_camera_pos);
+        auto result_speed_start_position = findOptimalTimeOffsetSpeedStartPosition(t_camera_pos);
+
+        if (result_speed.l1_error < result_speed_start_position.l1_error) {
+            return result_speed;
+        }
+        return result_speed_start_position;
     }
 
     inline Ball3D getBall3D(const Common::Vec2 &t_ball_position, const int &t_camera_id,
@@ -252,7 +415,9 @@ public:
             m_kick          = kick;
             m_kick_position << kick.position.x, kick.position.y;
         }
-        if (m_ball_records.size() > 1 && (m_ball_records.back().ball - (*(m_ball_records.end())).ball).length() < 20.)
+
+        if (m_ball_records.size() > 1 &&
+            (m_ball_records.back().ball - m_ball_records[m_ball_records.size() - 2].ball).length() < 20.)
         {
             reset();
         }
@@ -266,15 +431,18 @@ public:
 
         if (m_ball_records.size() < Common::config().vision.chip_min_records)
         {
-             m_result_found = false;
+            m_result_found = false;
             return result;
         }
 
-        auto solved_result = estimateWithOffset(0, ChipEstimator::getCameraPos(t_camera_id));
-        auto vel           = solved_result.x;
-        Common::logError("vel z {} error {} ", vel.z(), solved_result.l1_error);
+        // Use the optimized time offset approach instead of fixed offset
+        auto solved_result = findOptimalMethod(ChipEstimator::getCameraPos(t_camera_id));
+        Common::logError("solved_result size {}", solved_result.x.size());
+        auto vel           = solved_result.x.size() == 5 ? solved_result.x.segment<3>(2) : solved_result.x;
 
-        if ((solved_result.l1_error == -1000000 || vel.z() < 100. ||
+        Common::logError("vel z {} error {} offset {}", vel.z(), solved_result.l1_error, solved_result.t_offset);
+
+        if ((solved_result.l1_error == kInvalidData || vel.z() < 100. ||
              vel.z() > Common::config().vision.chip_max_vel_z) &&
             !m_result_found)
         {
@@ -293,7 +461,7 @@ public:
         double dt = static_cast<double>(t_time.microseconds() - m_kick.time.microseconds()) / 1000000;
 
         m_ball_height = m_v_0 * dt - 0.5 * kG * dt * dt;
-        Common::logInfo("height {} vel {} error {} ", m_ball_height, vel.z(), solved_result.l1_error);
+        Common::logCritical("height {} vel {} error {} ", m_ball_height, vel.z(), solved_result.l1_error);
         if (m_ball_height <= 0)
         {
             m_ball_height   = 0;
@@ -316,5 +484,6 @@ private:
     KickDetector::Kick                 m_kick;
     bool                               m_result_found = false;
     constexpr static float             kG             = 9810;
+    constexpr static float             kInvalidData    = -1000000;
 };
 } // namespace Tyr::Vision

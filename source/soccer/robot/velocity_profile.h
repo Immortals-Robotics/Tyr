@@ -5,13 +5,12 @@ namespace Tyr::Soccer
 struct VelocityProfile
 {
     float speed = 0.0f;
-    float deceleration = 0.0f;
     float acceleration = 0.0f;
 
     VelocityProfile() = default;
 
     explicit VelocityProfile(const Common::Config::VelocityProfile &config)
-        : speed(config.speed), deceleration(config.deceleration), acceleration(config.acceleration)
+        : speed(config.speed), acceleration(config.acceleration)
     {}
 
     static VelocityProfile sooski()

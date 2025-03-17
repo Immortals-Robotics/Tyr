@@ -3,6 +3,10 @@ enable_debug = true
 immortals_is_the_best_team = true
 our_color = 0
 
+[network.active]
+use_internal_referee = true
+use_simulated_vision = false
+
 [network.blue_robot_simulation]
 ip = '127.0.0.1'
 port = 10301
@@ -15,9 +19,13 @@ port = 10300
 ip = '127.0.0.1'
 port = 20011
 
+[network.internal_referee]
+ip = '224.5.23.69'
+port = 10069
+
 [network.referee]
-ip = '224.5.23.23'
-port = 10004
+ip = '224.5.23.1'
+port = 10003
 
 [network.sender]
 ip = '224.5.92.5'
@@ -32,15 +40,19 @@ ip = '224.5.23.2'
 port = 10099
 
 [network.vision]
-ip = '224.5.23.22'
-port = 10020
+ip = '224.5.23.2'
+port = 10016
+
+[network.vision_sim]
+ip = '224.5.23.2'
+port = 10024
 
 [network.yellow_robot_simulation]
 ip = '127.0.0.1'
 port = 10302
 
 [soccer]
-chip_tune_coef = 2.5
+chip_tune_coef = 1.8
 def_ball_distance_coef = 0.69999999999999996
 def_max_extension_area = 1100.0
 def_prediction_time = 0.5
@@ -52,25 +64,23 @@ mark_in_stop = true
 one_touch_beta = 0.40000000000000002
 one_touch_gamma = 0.14000000000000001
 one_touch_shoot_k = 4000.0
+penalty_area_mark = true
+penalty_area_mark_distance = 400.0
 
     [soccer.velocity_profile.aroom]
     acceleration = 2160.0
-    deceleration = 2700.0
     speed = 900.0
 
     [soccer.velocity_profile.kharaki]
     acceleration = 4010.0
-    deceleration = 4860.0
-    speed = 2200.0
+    speed = 3500.0
 
     [soccer.velocity_profile.mamooli]
     acceleration = 3500.0
-    deceleration = 3850.0
-    speed = 1800.0
+    speed = 3000.0
 
     [soccer.velocity_profile.sooski]
     acceleration = 1620.0
-    deceleration = 2700.0
     speed = 450.0
 
     [[soccer.robot_physical_status]]
@@ -191,13 +201,15 @@ camera_delay = 0.0
 chip_max_error = 300000.0
 chip_max_records = 200
 chip_max_vel_z = 7000.0
-chip_min_records = 3
+chip_min_records = 5
 kick_threshold = 0.69999999999999996
+kicker_depth = 200.0
 max_ball_2_frame_dist = 1000.0
 max_ball_frame_not_seen = 30
 max_ball_hist = 10
 max_robot_frame_not_seen = 120
 merge_distance = 70.0
+predict_time = 0.14999999999999999
+use_ball_3d = true
 use_camera = [ true, true, true, true, false, false, false, false ]
-use_new_ball_kalman = true
 vision_frame_rate = 70.0

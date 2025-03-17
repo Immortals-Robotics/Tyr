@@ -3,15 +3,6 @@
 namespace Tyr::Vision
 {
 
-void Filtered::processBalls(const bool t_new_kalman)
-{
-    filterBalls(t_new_kalman);
-    if (!t_new_kalman)
-    {
-        predictBall();
-    }
-}
-
 void Filtered::newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen, const int &t_camera_id,
                              const ChipEstimator::Ball3D &t_ball_3d = ChipEstimator::Ball3D{Common::Vec2(0, 0)})
 {
@@ -29,17 +20,12 @@ void Filtered::newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen,
     Common::Vec3 position_3d(t_position.x, t_position.y, 0);
     Common::Vec3 velocity_3d = t_ball_3d.velocity;
 
-// TODO: fix 3d estimator
-#if 0
     if (t_ball_3d.position.z > 0)
     {
         auto real_pos = ChipEstimator::projectToGround(Common::Vec3(t_position.x, t_position.y, t_ball_3d.position.z),
                                                        ChipEstimator::getCameraPos(t_camera_id));
         position_3d   = Common::Vec3(real_pos.x, real_pos.y, t_ball_3d.position.z);
     }
-#else
-    (void) t_camera_id;
-#endif
 
     m_ball_ekf->process(position_3d, velocity_3d, t_seen, m_state.own_robot, m_state.opp_robot);
 
@@ -58,17 +44,18 @@ void Filtered::newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen,
                          Common::Color::red());
 }
 
-void Filtered::filterBalls(const bool t_new_kalman)
+void Filtered::processBalls()
 {
-    auto &balls = m_raw_state.balls;
+    const auto &raw_balls = m_raw_state.balls;
 
-    int             id  = std::numeric_limits<int>::max();
-    float           dis = std::numeric_limits<float>::max();
-    Eigen::VectorXd z(2);
+    // find the closest ball to last known ball
+    const Common::Vec2 last_ball_position = m_tracked_ball.state().position();
+    int                id                 = -1;
+    float              dis                = std::numeric_limits<float>::max();
 
-    for (size_t i = 0; i < balls.size(); i++)
+    for (size_t i = 0; i < raw_balls.size(); i++)
     {
-        const float curr_dis = balls[i].position.distanceTo(m_last_raw_ball.position);
+        const float curr_dis = raw_balls[i].position.xy().distanceTo(last_ball_position);
         if (curr_dis < dis)
         {
             dis = curr_dis;
@@ -76,118 +63,69 @@ void Filtered::filterBalls(const bool t_new_kalman)
         }
     }
 
-    if (dis < Common::config().vision.max_ball_2_frame_dist)
-    {
-        ChipEstimator::Ball3D ball_3d = m_chip_estimator->getBall3D(
-            balls[id].position.xy(), balls[id].frame.camera_id, m_raw_state.time, m_state.own_robot, m_state.opp_robot);
-        m_last_raw_ball = balls[id];
-        z << balls[id].position.x, balls[id].position.y;
-        if (m_ball_not_seen > 0)
-        {
+    m_tracked_ball.predict();
 
-            if (t_new_kalman)
+    const bool any_ball_found = id >= 0;
+
+    const bool current_ball_found = any_ball_found && dis < Common::config().vision.max_ball_2_frame_dist;
+    const bool should_switch_ball =
+        any_ball_found && !current_ball_found && m_state.ball.seen_state == Common::SeenState::CompletelyOut;
+
+    if (current_ball_found || should_switch_ball)
+    {
+        const Common::RawBallState &raw_ball = raw_balls[id];
+
+        if (should_switch_ball)
+        {
+            m_tracked_ball.reset(raw_ball.position.xy());
+        }
+        else if (current_ball_found)
+        {
+            if (Common::config().vision.use_ball_3d)
             {
-                m_ball_ekf->init(balls[id].position.xy());
+                ChipEstimator::Ball3D ball_3d =
+                    m_chip_estimator->getBall3D(raw_ball.position.xy(), raw_ball.frame.camera_id, m_raw_state.time,
+                                                m_state.own_robot, m_state.opp_robot);
+                if (ball_3d.position.z > 0.f)
+                {
+                    const auto real_pos = ChipEstimator::projectToGround(
+                        Common::Vec3(ball_3d.position.x, ball_3d.position.y, ball_3d.position.z),
+                        ChipEstimator::getCameraPos(raw_ball.frame.camera_id));
+                    ball_3d.position = Common::Vec3(real_pos.x, real_pos.y, ball_3d.position.z);
+                }
+
+                Common::debug().draw(
+                    Common::Circle(ball_3d.position.xy(), Common::field().ball_radius + ball_3d.position.z / 10),
+                    Common::Color::red());
+
+                m_tracked_ball.update(ball_3d.position.xy());
             }
             else
             {
-                m_ball_kalman.initializePos(balls[id].position.xy());
+                m_tracked_ball.update(raw_ball.position.xy());
             }
         }
+    }
 
-        if (t_new_kalman)
-        {
-            newKalmanBall(balls[id].position.xy(), true, balls[id].frame.camera_id, ball_3d);
-        }
-        else
-        {
-            m_ball_kalman.updatePosition(balls[id].position.xy());
-            m_state.ball.position = m_ball_kalman.getPosition();
-            m_state.ball.velocity = m_ball_kalman.getVelocity();
-        }
-        m_ball_not_seen         = 0;
+    const Filter::BallState predicted_state = m_tracked_ball.predict(Common::config().vision.predict_time);
+
+    m_state.ball.position = predicted_state.position();
+    m_state.ball.velocity = predicted_state.velocity();
+
+    m_state.ball.position = m_tracked_ball.state().position();
+    m_state.ball.velocity = m_tracked_ball.state().velocity();
+
+    if (m_tracked_ball.notSeen() == 0)
+    {
         m_state.ball.seen_state = Common::SeenState::Seen;
     }
-
+    else if (m_tracked_ball.notSeen() < Common::config().vision.max_ball_frame_not_seen)
+    {
+        m_state.ball.seen_state = Common::SeenState::TemporarilyOut;
+    }
     else
     {
-        m_ball_not_seen++;
-
-        if (m_ball_not_seen > Common::config().vision.max_ball_frame_not_seen)
-        {
-            if (balls.size() > 0)
-            {
-                m_last_raw_ball = balls[id];
-                if (t_new_kalman)
-                {
-                    m_ball_ekf->init(balls[id].position.xy());
-                    newKalmanBall(balls[id].position.xy(), true, balls[id].frame.camera_id);
-                }
-                else
-                {
-                    m_ball_kalman.initializePos(balls[id].position.xy());
-
-                    m_ball_kalman.updatePosition(balls[id].position.xy());
-                    m_state.ball.position = m_ball_kalman.getPosition();
-                    m_state.ball.velocity = m_ball_kalman.getVelocity();
-                }
-                m_ball_not_seen         = 0;
-                m_state.ball.seen_state = Common::SeenState::Seen;
-            }
-            else
-            {
-                m_state.ball.velocity = Common::Vec2{};
-
-                m_last_raw_ball = Common::RawBallState();
-
-                m_state.ball.seen_state = Common::SeenState::CompletelyOut;
-            }
-        }
-        else
-        {
-            if (t_new_kalman)
-            {
-                newKalmanBall(Common::Vec2(0, 0), false, 0);
-            }
-            m_state.ball.seen_state = Common::SeenState::TemporarilyOut;
-        }
+        m_state.ball.seen_state = Common::SeenState::CompletelyOut;
     }
 }
-
-void Filtered::predictBall()
-{
-    m_state.ball.position /= 1000.0f;
-    m_state.ball.velocity /= 1000.0f;
-
-    float k       = 0.25f; // velocity derate every sec(units (m/s)/s)
-    float tsample = (float) 1.0f / (float) Common::config().vision.vision_frame_rate;
-
-    float t;
-    if (m_state.ball.seen_state == Common::SeenState::TemporarilyOut)
-        t = tsample;
-    else
-        t = kPredictSteps * tsample;
-
-    float dist       = m_state.ball.velocity.length() * t - k * (t * t) / 2.0f;
-    float vball_pred = m_state.ball.velocity.length() - k * t;
-
-    // if speed turns out to be negative..it means that ball has stopped, so calculate that amount of
-    // distance traveled
-    if (vball_pred < 0)
-    {
-        vball_pred = 0.0f;
-        dist       = m_state.ball.velocity.lengthSquared() * k / 2.0f;
-        // i.e the ball has stopped, so take a newer vision data for the prediction
-    }
-
-    if (m_state.ball.velocity.length() > 0)
-    {
-        m_state.ball.velocity = m_state.ball.velocity.normalized() * vball_pred;
-        m_state.ball.position += m_state.ball.velocity.normalized() * dist;
-    }
-
-    m_state.ball.velocity *= 1000.0f;
-    m_state.ball.position *= 1000.0f;
-}
-
 } // namespace Tyr::Vision
