@@ -1,8 +1,6 @@
 #pragma once
 
-#if FEATURE_LOGGING
 #include "logging.h"
-#endif
 
 #if defined(__clang__) || defined(__GNUC__)
 #define FORCEINLINE __attribute__((always_inline))
@@ -14,7 +12,6 @@
 
 namespace Tyr::Common
 {
-#if FEATURE_LOGGING
 #define LOG_MACRO(fn, lvl)                                                                                             \
     template <typename... Args>                                                                                        \
     struct fn                                                                                                          \
@@ -27,14 +24,6 @@ namespace Tyr::Common
     };                                                                                                                 \
     template <typename... Args>                                                                                        \
     fn(spdlog::format_string_t<Args...> format, Args &&...args) -> fn<Args...>;
-#else
-#define LOG_MACRO(fn, lvl)                                                                                             \
-    template <typename... Args>                                                                                        \
-    FORCEINLINE void fn(const char *format, Args &&...args)                                                                 \
-    {                                                                                                                  \
-        std::printf(format, std::forward<Args>(args)...);                                                              \
-    }
-#endif
 
 LOG_MACRO(logTrace, trace);
 LOG_MACRO(logDebug, debug);

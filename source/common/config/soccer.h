@@ -8,7 +8,6 @@ struct RobotPhysicalStatus final : IConfig
 {
     RobotPhysicalStatus() = default;
 
-#if FEATURE_CONFIG_FILE
     void load(const toml::node_view<const toml::node> t_node) override
     {
         id              = t_node["id"].value_or(id);
@@ -17,7 +16,6 @@ struct RobotPhysicalStatus final : IConfig
         has_chip_kick   = t_node["has_chip_kick"].value_or(has_chip_kick);
         is_3D_printed   = t_node["is_3D_printed"].value_or(is_3D_printed);
     }
-#endif
 
     int  id              = -1;
     bool has_dribbler    = false;
@@ -30,13 +28,11 @@ struct VelocityProfile final : IConfig
 {
     VelocityProfile() = default;
 
-#if FEATURE_CONFIG_FILE
     void load(const toml::node_view<const toml::node> t_node) override
     {
         speed        = t_node["speed"].value_or(speed);
         acceleration = t_node["acceleration"].value_or(acceleration);
     }
-#endif
 
     float speed        = 0.0f;
     float acceleration = 0.0f;
@@ -44,7 +40,6 @@ struct VelocityProfile final : IConfig
 
 struct Soccer final : IConfig
 {
-#if FEATURE_CONFIG_FILE
     void load(const toml::node_view<const toml::node> t_node) override
     {
         one_touch_beta    = t_node["one_touch_beta"].value_or(one_touch_beta);
@@ -96,7 +91,6 @@ struct Soccer final : IConfig
             velocity_profile_kharaki.load((*velocity_profiles)["kharaki"]);
         }
     }
-#endif
 
     RobotPhysicalStatus robot_physical_status[Common::kMaxRobots];
 

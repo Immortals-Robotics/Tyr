@@ -19,9 +19,7 @@ public:
 
     void flush()
     {
-#if FEATURE_LOGGING
         logger().flush();
-#endif
 
         if (!config().common.enable_debug)
             return;
@@ -37,9 +35,7 @@ public:
 
         m_wrapper.draws.clear();
 
-#if FEATURE_LOGGING
         m_wrapper.logs.clear();
-#endif
 
         m_wrapper.execution_times.clear();
 
@@ -125,7 +121,6 @@ public:
         this->draw(std::move(draw));
     }
 
-#if FEATURE_LOGGING
     void log(Log &&t_log)
     {
         if (!config().common.enable_debug)
@@ -135,7 +130,6 @@ public:
         m_wrapper.logs.emplace_back(t_log);
         m_log_mutex.unlock();
     }
-#endif
 
     void draw(Draw &&t_draw)
     {

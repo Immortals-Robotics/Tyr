@@ -19,15 +19,13 @@ struct SourceLocation
         line     = t_source.line();
     }
 
-#if FEATURE_LOGGING
     explicit SourceLocation(const spdlog::source_loc &t_source)
     {
         file     = t_source.filename;
         function = t_source.funcname;
         line     = t_source.line;
     }
-#endif
-    
+
     SourceLocation(const Protos::Immortals::Debug::SourceLocation &t_source, const StringMap &t_strings)
     {
         file     = t_strings.at(t_source.file());

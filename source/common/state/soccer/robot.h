@@ -87,7 +87,6 @@ public:
 };
 } // namespace Tyr::Common::Soccer
 
-#if FEATURE_LOGGING
 template <>
 struct fmt::formatter<Tyr::Common::Soccer::Role> : fmt::formatter<std::string>
 {
@@ -165,5 +164,3 @@ struct fmt::formatter<Tyr::Common::Soccer::OneTouchType> : fmt::formatter<std::s
         return fmt::format_to(t_ctx.out(), "{}", type_str);
     }
 };
-
-#endif

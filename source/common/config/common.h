@@ -26,14 +26,12 @@ namespace Tyr::Common::Config
 {
 struct Common final : IConfig
 {
-#if FEATURE_CONFIG_FILE
     void load(const toml::node_view<const toml::node> t_node) override
     {
         immortals_is_the_best_team = t_node["immortals_is_the_best_team"].value_or(immortals_is_the_best_team);
         fillEnum(t_node["our_color"], our_color);
         enable_debug = t_node["enable_debug"].value_or(enable_debug);
     }
-#endif
 
     // The variety of standard patterns that we can have is 16
     static constexpr unsigned kMaxRobots = 16;

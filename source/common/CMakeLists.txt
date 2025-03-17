@@ -85,7 +85,6 @@ set(SOURCE_FILES
         math/geom/circle.cpp
         math/geom/line.cpp)
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC FEATURE_UDP=1)
 if (WIN32)
     target_compile_definitions(${PROJECT_NAME} PUBLIC _WIN32_WINNT=_WIN32_WINNT_WIN10)
 endif ()
@@ -96,7 +95,6 @@ list(APPEND SOURCE_FILES
         network/udp_client.cpp
         network/udp_server.cpp)
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC FEATURE_NNG=1)
 list(APPEND HEADER_FILES
         network/nng_client.h
         network/nng_server.h
@@ -105,7 +103,6 @@ list(APPEND SOURCE_FILES
         network/nng_client.cpp
         network/nng_server.cpp)
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC FEATURE_STORAGE=1)
 list(APPEND HEADER_FILES
         storage/storage.h)
 list(APPEND SOURCE_FILES
@@ -117,9 +114,6 @@ list(APPEND SOURCE_FILES
     list(APPEND SOURCE_FILES
             storage/dumper.cpp)
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC FEATURE_RAYLIB=1)
-target_compile_definitions(${PROJECT_NAME} PUBLIC FEATURE_IMGUI=1)
-target_compile_definitions(${PROJECT_NAME} PUBLIC FEATURE_LOGGING=1)
 list(APPEND HEADER_FILES
         logging/logging.h)
 list(APPEND SOURCE_FILES
@@ -128,13 +122,11 @@ list(APPEND SOURCE_FILES
     list(APPEND HEADER_FILES
             logging/debug_sink.h)
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC FEATURE_CONFIG_FILE=1)
 list(APPEND HEADER_FILES
         config/file.h)
 list(APPEND SOURCE_FILES
         config/file.cpp)
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC FEATURE_DEBUG=1)
 list(APPEND HEADER_FILES
         debugging/color.h
         debugging/draw.h

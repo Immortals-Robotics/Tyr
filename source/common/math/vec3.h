@@ -20,7 +20,6 @@ struct Vec3
     explicit Vec3(const Protos::Ssl::Vector3 &t_v) : Vec3(t_v.x(), t_v.y(), t_v.z())
     {}
 
-#if FEATURE_RAYLIB
     explicit Vec3(const ::Vector3 &t_v) : Vec3(t_v.x, t_v.y, t_v.z)
     {}
 
@@ -28,7 +27,6 @@ struct Vec3
     {
         return {.x = x, .y = y, .z = z};
     }
-#endif
 
     void fillProto(Protos::Immortals::Vec3 *const t_v) const
     {
@@ -197,7 +195,6 @@ struct Vec3
 
 } // namespace Tyr::Common
 
-#if FEATURE_LOGGING
 template <>
 struct fmt::formatter<Tyr::Common::Vec3> : fmt::formatter<std::string>
 {
@@ -206,4 +203,3 @@ struct fmt::formatter<Tyr::Common::Vec3> : fmt::formatter<std::string>
         return fmt::format_to(t_ctx.out(), "[{}, {}, {}]", t_v.x, t_v.y, t_v.z);
     }
 };
-#endif

@@ -7,10 +7,8 @@ namespace Tyr::Common::Config
 {
 struct Network final : IConfig
 {
-#if FEATURE_CONFIG_FILE
     void load(const toml::node_view<const toml::node> t_node) override
     {
-
         use_simulated_vision = t_node["active"]["use_simulated_vision"].value_or(use_simulated_vision);
         use_internal_referee = t_node["active"]["use_internal_referee"].value_or(use_internal_referee);
 
@@ -29,7 +27,6 @@ struct Network final : IConfig
         blue_robot_simulation_address.load(t_node["blue_robot_simulation"]);
         yellow_robot_simulation_address.load(t_node["yellow_robot_simulation"]);
     }
-#endif
 
     static constexpr size_t kMaxUdpPacketSize = 16 * 1024; // TODO what should the size be really?
 

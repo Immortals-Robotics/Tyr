@@ -13,7 +13,6 @@ struct Color
     explicit Color(const Protos::Immortals::Color &t_color) : Color(t_color.r(), t_color.g(), t_color.b(), t_color.a())
     {}
 
-#if FEATURE_RAYLIB
     explicit Color(const ::Color &t_c) : Color(t_c.r / 255.0f, t_c.g / 255.0f, t_c.b / 255.0f, t_c.a / 255.0f)
     {}
 
@@ -26,14 +25,11 @@ struct Color
             .a = static_cast<unsigned char>(a * 255.0f),
         };
     }
-#endif
 
-#if FEATURE_IMGUI
     explicit operator ::ImVec4() const
     {
         return {r, g, b, a};
     }
-#endif
 
     void fillProto(Protos::Immortals::Color *const t_color) const
     {
