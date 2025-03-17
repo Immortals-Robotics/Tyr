@@ -86,7 +86,6 @@ struct Command
 
 } // namespace Tyr::Common::Referee
 
-#if FEATURE_LOGGING
 template <>
 struct fmt::formatter<Tyr::Common::Referee::Command::Type> : fmt::formatter<std::string>
 {
@@ -154,4 +153,3 @@ struct fmt::formatter<Tyr::Common::Referee::Command> : fmt::formatter<std::strin
         return fmt::format_to(t_ctx.out(), "[{}] [{}] {}", t_command.id, t_command.time_issued, t_command.type);
     }
 };
-#endif

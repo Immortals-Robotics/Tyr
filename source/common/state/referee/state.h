@@ -272,7 +272,6 @@ struct State
 };
 } // namespace Tyr::Common::Referee
 
-#if FEATURE_LOGGING
 template <>
 struct fmt::formatter<Tyr::Common::Referee::State> : fmt::formatter<std::string>
 {
@@ -315,4 +314,3 @@ struct fmt::formatter<Tyr::Common::Referee::State> : fmt::formatter<std::string>
         return fmt::format_to(t_ctx.out(), "{}", state_str);
     }
 };
-#endif

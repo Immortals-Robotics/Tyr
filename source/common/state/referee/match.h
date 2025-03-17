@@ -53,7 +53,6 @@ enum class Stage
 };
 } // namespace Tyr::Common::Referee
 
-#if FEATURE_LOGGING
 template <>
 struct fmt::formatter<Tyr::Common::Referee::MatchType> : fmt::formatter<std::string>
 {
@@ -138,4 +137,3 @@ struct fmt::formatter<Tyr::Common::Referee::Stage> : fmt::formatter<std::string>
         return fmt::format_to(t_ctx.out(), "{}", stage_str);
     }
 };
-#endif

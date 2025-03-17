@@ -6,7 +6,6 @@ namespace Tyr::Common::Config
 {
 struct Vision final : IConfig
 {
-#if FEATURE_CONFIG_FILE
     void load(const toml::node_view<const toml::node> t_node) override
     {
         if (auto *use_camera_array = t_node["use_camera"].as_array())
@@ -38,7 +37,6 @@ struct Vision final : IConfig
         kicker_depth     = t_node["kicker_depth"].value_or(kicker_depth);
         use_ball_3d      = t_node["use_ball_3d"].value_or(use_ball_3d);
     }
-#endif
 
     static constexpr unsigned kCamCount = 8;
     static constexpr unsigned kMaxBalls = 10;

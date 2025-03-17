@@ -199,7 +199,6 @@ private:
 
 } // namespace Tyr::Common
 
-#if FEATURE_LOGGING
 template <>
 struct fmt::formatter<Tyr::Common::Angle> : fmt::formatter<std::string>
 {
@@ -208,4 +207,3 @@ struct fmt::formatter<Tyr::Common::Angle> : fmt::formatter<std::string>
         return fmt::format_to(t_ctx.out(), "{} deg", t_angle.deg());
     }
 };
-#endif

@@ -57,19 +57,7 @@ endif ()
 add_compile_definitions(DATA_DIR="${CMAKE_SOURCE_DIR}/data")
 add_compile_definitions(LOG_DIR="${CMAKE_SOURCE_DIR}/log")
 
-# enable common features
-set(FEATURE_UDP ON)
-set(FEATURE_NNG ON)
-set(FEATURE_STORAGE ON)
-set(FEATURE_RAYLIB ON)
-set(FEATURE_IMGUI ON)
-set(FEATURE_LOGGING ON)
-set(FEATURE_CONFIG_FILE ON)
-set(FEATURE_DEBUG ON)
-
-# common is imported as subdmodule
 add_subdirectory(source/common)
-
 add_subdirectory(source/sender)
 add_subdirectory(source/vision)
 add_subdirectory(source/referee)

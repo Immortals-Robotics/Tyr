@@ -1,9 +1,6 @@
 #pragma once
 
-#if FEATURE_CONFIG_FILE
 #include "file.h"
-#endif
-
 #include "common.h"
 #include "network.h"
 #include "soccer.h"
@@ -14,26 +11,19 @@ namespace Tyr::Common::Config
 class Config
 {
 private:
-#if FEATURE_CONFIG_FILE
     Config(const std::filesystem::path &t_path) : m_file(t_path)
     {}
-#else
-    Config() = default;
-#endif
 
     ~Config() = default;
 
     friend struct ::Tyr::Common::Services;
 
-#if FEATURE_CONFIG_FILE
     File m_file;
-#endif
 
 public:
     Config(const Config &)            = delete;
     Config &operator=(const Config &) = delete;
 
-#if FEATURE_CONFIG_FILE
     void load()
     {
         m_file.load();
@@ -60,7 +50,6 @@ public:
     {
         return m_file.root();
     }
-#endif
 
     Common  common;
     Network network;
