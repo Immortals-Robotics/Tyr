@@ -39,8 +39,8 @@ void Ai::gkHi(const int t_robot_num)
 
     else
     {
-        my_hys = 0;
-        auto predicted_ball = predictBallForwardAI(Common::config().soccer.def_prediction_time);
+        my_hys                            = 0;
+        const Common::Vec2 predicted_ball = predictBall(Common::config().soccer.def_prediction_time).position;
         ObstacleMap obs_map;
 
         // our penalty area

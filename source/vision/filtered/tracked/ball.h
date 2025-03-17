@@ -96,7 +96,7 @@ public:
         }
 
         // TODO: add acceleration to the state vector and let kalman compute it
-        const float k  = 700.f; // ball deceleration (mm/s2)
+        const float k  = Common::config().vision.ball_rolling_friction; // ball deceleration (mm/s2)
         const Common::Vec2 deceleration = -velocity.normalized() * k;
 
         const float time_to_stop = velocity.length() / k;

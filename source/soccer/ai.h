@@ -71,8 +71,8 @@ private:
 
     // Helpers
     Common::Vec2 calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar = 89.0f);
-    float        calculateRobotReachTime(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile);
-    float        calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile);
+    float        calculateRobotReachTime(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile) const;
+    float        calculateBallRobotReachTime(int t_robot_num, VelocityProfile t_profile) const;
 
     // static pos for mids
     struct Zone
@@ -124,9 +124,10 @@ private:
     int          findKickerOpp(int t_mask, float t_max_dis = 500.0f);
     bool         goalBlocked(Common::Vec2 t_init_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r);
     bool         attackFuckingAngle();
-    Common::Vec2 predictBallForwardAI(float t_time_ahead);
     float        calculateOppThreat(int t_opp, bool t_restart = false);
     float        calculateMarkCost(int t_robot_num, int t_opp);
+
+    Common::BallState predictBall(float t_time_ahead) const;
 
     /**
      * Calculates a score indicating the suitability of a robot for switching to the attacker role.
