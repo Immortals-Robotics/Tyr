@@ -6,7 +6,7 @@ static int hys_dive = 0, hys_select = 0;
 
 void Ai::defHi(int t_def1_num, int t_def2_num, Common::Vec2 *t_defend_target)
 {
-    auto predicted_ball = predictBallForwardAINew(Common::config().soccer.def_prediction_time);
+    auto predicted_ball = predictBallForwardAI(Common::config().soccer.def_prediction_time);
     if (t_defend_target != nullptr)
     {
         predicted_ball = *t_defend_target;

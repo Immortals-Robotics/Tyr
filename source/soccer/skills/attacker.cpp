@@ -5,19 +5,6 @@ namespace Tyr::Soccer
 int lockAngleCounter = 0;
 int elendil          = 0;
 
-Common::Vec2 Ai::predictBallForwardAINew(const float t_time_ahead)
-{
-    Common::WorldState world_state = m_world_state;
-    Common::Vec3       pos_3d      = Common::Vec3(world_state.ball.position.x, world_state.ball.position.y, 0.0);
-    Common::Vec3       vel_3d      = Common::Vec3(world_state.ball.velocity.x, world_state.ball.velocity.y, 0.0);
-
-    m_ball_predictor->process(pos_3d, vel_3d, true, world_state.own_robot, world_state.opp_robot);
-    auto filtered_position =
-        m_ball_predictor->getFutureState(t_time_ahead, world_state.own_robot, world_state.opp_robot,
-                                         950. * Common::field().ball_model_straight.acc_roll);
-    return filtered_position.xy();
-}
-
 Common::Vec2 Ai::predictBallForwardAI(const float t_time_ahead)
 {
     Common::BallState _ball = m_world_state.ball;

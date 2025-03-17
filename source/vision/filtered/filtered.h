@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../kalman/ekf_3d.h"
 #include "ball_estimator.h"
 
 #include "tracked/ball.h"
@@ -24,8 +23,6 @@ private:
     void processRobots(Common::TeamColor t_color);
 
     void processBalls();
-    void newKalmanBall(const Common::Vec2 &t_position, const bool &t_seen, const int &t_camera_id,
-                       const ChipEstimator::Ball3D &t_ball_3d);
 
 private:
     // TODO: move to settings
@@ -47,9 +44,6 @@ private:
 
     Common::RawWorldState m_raw_state;
     Common::WorldState    m_state;
-
-    std::unique_ptr<Ekf3D> m_ball_ekf;
-    std::unique_ptr<Ekf3D> m_ball_ekf_future;
 
     std::unique_ptr<KickDetector>  m_kick_detector;
     std::unique_ptr<ChipEstimator> m_chip_estimator;
