@@ -120,7 +120,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FILES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-        immortals::common
+        ${CMAKE_PROJECT_NAME}-common
         ${CMAKE_PROJECT_NAME}-sender
         unofficial::lemon::lemon)
 
