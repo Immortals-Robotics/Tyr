@@ -76,7 +76,10 @@ set(HEADER_FILES
         config/network.h
         config/config.h
         config/soccer.h
-        config/vision.h)
+        config/vision.h
+
+        utility/enum_flags.h
+)
 
 set(SOURCE_FILES
         services.cpp
