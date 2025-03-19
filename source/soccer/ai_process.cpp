@@ -12,15 +12,11 @@ void Ai::process()
         m_last_referee = m_ref_state.state;
         m_random_param = m_random.get(0.0f, 1.0f);
         m_target_str   = strategyWeight();
-        m_func_state   = 0;
-        m_func_count   = 0;
         m_our_ball_placement_state = OurBallPlacementState::Idle;
     }
 
     if (m_ref_state.stop())
     {
-        m_func_state = 0;
-
         m_opp_restarted = false;
         m_current_play  = &Ai::stop;
     }
@@ -49,11 +45,7 @@ void Ai::process()
     }
     else if (m_ref_state.ourBallPlacement())
     {
-#if 1
-        m_current_play = &Ai::ourNewPlaceBall;
-#else
-        m_current_play = &Ai::ourPlaceBall;
-#endif
+        m_current_play = &Ai::placeBall;
     }
     else if (m_ref_state.theirFreeKick())
     {

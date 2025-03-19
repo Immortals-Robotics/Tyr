@@ -178,8 +178,7 @@ private:
     void penaltyTheirSimple();
     void cornerTheirGlobal();
     void strategy();
-    void ourPlaceBall();
-    void ourNewPlaceBall();
+    void placeBall();
     void theirPlaceBall();
 
     void calcMinBallWallDist(double &t_min_dist, Common::Vec2 &t_closest_point);
@@ -193,10 +192,6 @@ private:
 
     PlayBook                                m_playbook;
     std::unordered_map<int *, Common::Vec2> m_allaf_pos;
-
-    // FSM
-    int m_func_state = 0;
-    int m_func_count = 0;
 
     // ball placement
     OurBallPlacementState m_our_ball_placement_state = OurBallPlacementState::Idle;

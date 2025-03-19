@@ -25,9 +25,6 @@ public:
         opp_restarted = t_state.opp_restarted();
 
         gk_intercepting = t_state.gk_intercepting();
-
-        func_state = t_state.func_state();
-        func_count = t_state.func_count();
     }
 
     void fillProto(Protos::Immortals::Soccer::State *const t_state) const
@@ -49,9 +46,6 @@ public:
         t_state->set_opp_restarted(opp_restarted);
 
         t_state->set_gk_intercepting(gk_intercepting);
-
-        t_state->set_func_state(func_state);
-        t_state->set_func_count(func_count);
     }
 
     TimePoint time;
@@ -65,8 +59,5 @@ public:
     bool opp_restarted = false;
 
     bool gk_intercepting = false;
-
-    int func_state = -1;
-    int func_count = -1;
 };
 } // namespace Tyr::Common::Soccer

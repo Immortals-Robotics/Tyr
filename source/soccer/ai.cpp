@@ -171,9 +171,6 @@ bool Ai::publishState() const
 
     state.gk_intercepting = m_gk_intercepting;
 
-    state.func_state = m_func_state;
-    state.func_count = m_func_count;
-
     Protos::Immortals::Soccer::State pb_state;
     state.fillProto(&pb_state);
 

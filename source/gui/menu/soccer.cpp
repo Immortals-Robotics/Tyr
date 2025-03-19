@@ -30,16 +30,6 @@ void SoccerMenu::draw(const Common::Soccer::State &t_state)
         ImGui::Text("str: %s", t_state.target_str.c_str());
     }
 
-    if (t_state.func_count > 0)
-    {
-        ImGui::SeparatorText("FSM");
-        ImGui::Text("state: %d", t_state.func_state);
-        ImGui::SameLine(0, 2.5f);
-        ImGui::Text(" | ");
-        ImGui::SameLine(0, 2.5f);
-        ImGui::Text("count: %d", t_state.func_count);
-    }
-
     std::map<Common::Soccer::Role, int> role_map;
     for (const auto &robot : t_state.robots)
     {
