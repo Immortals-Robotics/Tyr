@@ -15,7 +15,7 @@ void Ai::newNormalPlay()
     createAttackAssignment();
     assignRoles();
 
-    gkHi(m_gk);
+    gkHi(m_own_robot[m_gk]);
 
     defHi(m_def1, m_def2, nullptr);
 

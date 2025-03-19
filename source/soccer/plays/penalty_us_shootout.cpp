@@ -17,17 +17,17 @@ void Ai::penaltyUsShootout()
 
     if (!m_ref_state.canKickBall())
     {
-        circleBall(m_attack, oppGoal().angleWith(m_world_state.ball.position), 0, 0);
+        circleBall(m_own_robot[m_attack], oppGoal().angleWith(m_world_state.ball.position), 0, 0);
         Common::logInfo("step0 - Waiting for permission");
     }
     else if (m_world_state.ball.position.distanceTo(oppGoal()) > 3000)
     {
-        circleBall(m_attack, oppGoal().angleWith(m_world_state.ball.position), 1, 0);
+        circleBall(m_own_robot[m_attack], oppGoal().angleWith(m_world_state.ball.position), 1, 0);
         Common::logInfo("step1 - Moving forward - waiting to get close to the opp goal");
     }
     else
     {
-        circleBall(m_attack, oppGoal().angleWith(m_world_state.ball.position), 6000.0f, 0);
+        circleBall(m_own_robot[m_attack], oppGoal().angleWith(m_world_state.ball.position), 6000.0f, 0);
         Common::logInfo("step2 - Kick in the goal!!!!");
     }
 }

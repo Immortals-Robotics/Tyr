@@ -88,16 +88,16 @@ void Ai::process()
 
     (this->*m_current_play)();
 
-    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
+    for (Robot& robot : m_own_robot)
     {
-        if (m_own_robot[i].state().seen_state == Common::SeenState::CompletelyOut)
+        if (robot.state().seen_state == Common::SeenState::CompletelyOut)
         {
-            halt(i);
+            halt(robot);
         }
-        else if (!m_own_robot[i].navigated() && !m_own_robot[i].halted())
+        else if (!robot.navigated() && !robot.halted())
         {
-            Common::logWarning("Own robot {} was neither navigated nor halted", m_own_robot[i].state().vision_id);
-            halt(i);
+            Common::logWarning("Own robot {} was neither navigated nor halted", robot.state().vision_id);
+            halt(robot);
         }
     }
 }

@@ -22,11 +22,11 @@ void Ai::cornerTheirGlobal()
     }
     else
     {
-        gkHi(m_gk);
+        gkHi(m_own_robot[m_gk]);
         defHi(m_def1, m_def2, nullptr);
     }
 
-    defenceWall(m_attack, false);
+    defenceWall(m_own_robot[m_attack], false);
 
     std::map<int, Common::Vec2> static_pos;
     static_pos[m_mid5]  = Common::Vec2(m_side * 3500, -Common::sign(m_world_state.ball.position.y) * 1100.0f);
@@ -48,7 +48,7 @@ void Ai::cornerTheirGlobal()
         }
         else
         {
-            mark(own, opp, Common::config().soccer.mark_distance);
+            mark(m_own_robot[own], opp, Common::config().soccer.mark_distance);
         }
     }
 }

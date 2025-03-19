@@ -35,15 +35,14 @@ Common::BallState Ai::predictBall(const float t_time_ahead) const
     return predicted_state;
 }
 
-float Ai::calculateRobotReachTime(const int t_robot_num, const Common::Vec2 t_dest, const VelocityProfile t_profile) const
+float Ai::calculateRobotReachTime(const Robot& t_robot, const Common::Vec2 t_dest, const VelocityProfile t_profile) const
 {
-    const Robot& robot = m_own_robot[t_robot_num];
     const Trajectory2D trajectory = Trajectory2D::makeBangBangTrajectory(
-        robot.state().position, robot.currentMotion(), t_dest, t_profile);
+        t_robot.state().position, t_robot.currentMotion(), t_dest, t_profile);
     return trajectory.getDuration();
 }
 
-float Ai::calculateBallRobotReachTime(const int t_robot_num, const Common::Angle angle, const VelocityProfile t_profile, const float t_wait) const
+float Ai::calculateBallRobotReachTime(const Robot& t_robot, const Common::Angle angle, const VelocityProfile t_profile, const float t_wait) const
 {
     const float t_max  = 5.0;
     float       t_interception = t_max;
@@ -54,7 +53,7 @@ float Ai::calculateBallRobotReachTime(const int t_robot_num, const Common::Angle
         const Common::Vec2 interception_point =
             ball_state.position.circleAroundPoint(angle, Common::field().robot_radius);
 
-        float t_reach = calculateRobotReachTime(t_robot_num, interception_point, t_profile);
+        float t_reach = calculateRobotReachTime(t_robot, interception_point, t_profile);
         if (t_reach + t_wait <= t)
         {
             t_interception = t_reach;

@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::mark2Goal(const int t_robot_num, const int t_opp, float t_dist, bool t_def_area_mark)
+void Ai::mark2Goal(Robot& t_robot, const int t_opp, float t_dist, const bool t_def_area_mark)
 {
     const float opp_predict_t = 0.15f;
     t_dist                    = std::min(1500.0f, t_dist);
@@ -35,7 +35,7 @@ void Ai::mark2Goal(const int t_robot_num, const int t_opp, float t_dist, bool t_
         target = predictedOpp.pointOnConnectingLine(ownGoal(), t_dist);
     }
 
-    m_own_robot[t_robot_num].face(m_world_state.ball.position);
-    m_own_robot[t_robot_num].navigate(target, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
+    t_robot.face(m_world_state.ball.position);
+    t_robot.navigate(target, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
 }
 } // namespace Tyr::Soccer

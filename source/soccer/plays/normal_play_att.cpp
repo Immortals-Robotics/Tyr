@@ -14,7 +14,7 @@ void Ai::normalPlayAtt()
     int zone_idx = 0;
     for (const auto &mid : m_prioritized_mids)
     {
-        receivePass(*mid, m_sorted_zones[zone_idx]->best_pos);
+        receivePass(m_own_robot[*mid], m_sorted_zones[zone_idx]->best_pos);
         ++zone_idx;
     }
 
@@ -32,7 +32,7 @@ void Ai::normalPlayAtt()
 
     else
     {
-        OpenAngle openAngle = calculateOpenAngleToGoal(m_world_state.ball.position, m_attack);
+        OpenAngle openAngle = calculateOpenAngleToGoal(m_world_state.ball.position, m_own_robot[m_attack]);
 
         int *suitable_mid = nullptr;
         for (const auto &mid : m_prioritized_mids)
@@ -87,7 +87,7 @@ void Ai::normalPlayAtt()
                 chip_pow  = 0;
             }
 
-            attacker(m_attack, passAngle, 0, chip_pow, 0, 1, true);
+            attacker(m_own_robot[m_attack], passAngle, 0, chip_pow, 0, 1, true);
         }
         else
         {
@@ -108,7 +108,7 @@ void Ai::normalPlayAtt()
                 activeShootTimer.start();
             }
 
-            attacker(m_attack, shootAngle, shoot_pow, 0, 0, 0);
+            attacker(m_own_robot[m_attack], shootAngle, shoot_pow, 0, 0, 0);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::runningDef(const int t_robot_num, const Common::Vec2 t_target, Common::Vec2 *t_defend_target)
+void Ai::runningDef(Robot& t_robot, const Common::Vec2 t_target, Common::Vec2 *t_defend_target)
 {
     const float max_def_move_to_intercept = 400.0f;
     const float max_ball_handler_opp_dis  = 400.0f;
@@ -46,14 +46,14 @@ void Ai::runningDef(const int t_robot_num, const Common::Vec2 t_target, Common::
     //    if(1)
     {
         Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");
-        attacker(t_robot_num,
+        attacker(t_robot,
                  m_world_state.ball.position.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0, 80,
                  0, 0);
     }
     else
     {
-        m_own_robot[t_robot_num].face(*t_defend_target);
-        m_own_robot[t_robot_num].navigate(t_target, VelocityProfile::mamooli());
+        t_robot.face(*t_defend_target);
+        t_robot.navigate(t_target, VelocityProfile::mamooli());
     }
 }
 } // namespace Tyr::Soccer

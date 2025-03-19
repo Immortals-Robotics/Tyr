@@ -10,8 +10,8 @@ enum ball_circling_state
     kKick,
 };
 
-void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, float t_shoot_pow,
-                    const int t_chip_pow, const float t_near_dis_override)
+void Ai::circleBall(Robot &t_robot, const Common::Angle t_tagret_angle, float t_shoot_pow, const int t_chip_pow,
+                    const float t_near_dis_override)
 {
     // t_tagret_angle -= 5;
     const float very_far_ball_dis = 600.0f;
@@ -30,22 +30,22 @@ void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, f
     {
         state       = kVeryFar;
         hys_bank[0] = hys_bank[1] = hys_bank[2] = hys_bank[3] = 0;
-        halt(t_robot_num);
+        halt(t_robot);
         return;
     }
 
     if (state == kVeryFar)
     {
         Common::logDebug("STEPPPPP1");
-        m_own_robot[t_robot_num].face(m_world_state.ball.position);
+        t_robot.face(m_world_state.ball.position);
         VelocityProfile profile = VelocityProfile::mamooli();
-        profile.speed         = 900.0f;
-        m_own_robot[t_robot_num].navigate(m_world_state.ball.position, profile);
+        profile.speed           = 900.0f;
+        t_robot.navigate(m_world_state.ball.position, profile);
 
         Common::debug().draw(Common::Circle{m_world_state.ball.position, very_far_ball_dis - 90.0f},
                              Common::Color::red(), false);
 
-        if (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) < very_far_ball_dis)
+        if (t_robot.state().position.distanceTo(m_world_state.ball.position) < very_far_ball_dis)
         {
             state = kFar;
         }
@@ -53,15 +53,15 @@ void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, f
     else if (state == kFar)
     {
         Common::logDebug("STEPPPPP2");
-        m_own_robot[t_robot_num].face(m_world_state.ball.position);
+        t_robot.face(m_world_state.ball.position);
         Common::Vec2 target_point = m_world_state.ball.position.circleAroundPoint(
-            m_world_state.ball.position.angleWith(m_own_robot[t_robot_num].state().position), near_ball_dis);
-        m_own_robot[t_robot_num].navigate(target_point, VelocityProfile::aroom());
+            m_world_state.ball.position.angleWith(t_robot.state().position), near_ball_dis);
+        t_robot.navigate(target_point, VelocityProfile::aroom());
 
         Common::debug().draw(Common::Circle{m_world_state.ball.position, far_ball_dis - 90.0f}, Common::Color::pink(),
                              false);
 
-        if (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) < far_ball_dis)
+        if (t_robot.state().position.distanceTo(m_world_state.ball.position) < far_ball_dis)
         {
             hys_bank[0]++;
         }
@@ -73,8 +73,7 @@ void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, f
         {
             state = kNear;
         }
-        else if (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) >
-                 very_far_ball_dis * shmit_coeff)
+        else if (t_robot.state().position.distanceTo(m_world_state.ball.position) > very_far_ball_dis * shmit_coeff)
         {
             state = kVeryFar;
         }
@@ -82,25 +81,23 @@ void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, f
     else if (state == kNear)
     {
         Common::logDebug("STEPPPPP3");
-        Common::Angle toRobot    = m_world_state.ball.position.angleWith(m_own_robot[t_robot_num].state().position);
+        Common::Angle toRobot    = m_world_state.ball.position.angleWith(t_robot.state().position);
         Common::Angle newToRobot = toRobot - t_tagret_angle;
         Common::Angle deltaAngle = Common::Angle::fromDeg(std::min(std::fabs(newToRobot.deg()), 30.0f));
         newToRobot.setDeg(std::max(0.0f, std::fabs(newToRobot.deg()) - deltaAngle.deg()) *
                           Common::sign(newToRobot.deg()));
         newToRobot = newToRobot + t_tagret_angle;
 
-        m_own_robot[t_robot_num].face(m_world_state.ball.position);
-        m_own_robot[t_robot_num].target.angle +=
-            (newToRobot + Common::Angle::fromDeg(180.0f) - m_own_robot[t_robot_num].target.angle) / 2.0f;
+        t_robot.face(m_world_state.ball.position);
+        t_robot.target.angle += (newToRobot + Common::Angle::fromDeg(180.0f) - t_robot.target.angle) / 2.0f;
         Common::Vec2 target_point =
             m_world_state.ball.position.circleAroundPoint(newToRobot, near_ball_dis / deltaAngle.cos());
         if (t_near_dis_override > 0)
-            m_own_robot[t_robot_num].navigate(target_point, VelocityProfile::aroom());
+            t_robot.navigate(target_point, VelocityProfile::aroom());
         else
-            m_own_robot[t_robot_num].navigate(target_point, VelocityProfile::mamooli());
+            t_robot.navigate(target_point, VelocityProfile::mamooli());
 
-        if (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) >
-            far_ball_dis * shmit_coeff)
+        if (t_robot.state().position.distanceTo(m_world_state.ball.position) > far_ball_dis * shmit_coeff)
         {
             state = kFar;
         }
@@ -125,17 +122,16 @@ void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, f
         Common::logDebug("STEPPPPP4");
         if (t_chip_pow > 0)
         {
-            m_chip_head = m_own_robot[t_robot_num].state().angle;
+            m_chip_head = t_robot.state().angle;
         }
-        m_own_robot[t_robot_num].target.angle = t_tagret_angle + Common::Angle::fromDeg(180.0f);
-        m_own_robot[t_robot_num].navigate(m_world_state.ball.position, VelocityProfile::aroom());
+        t_robot.target.angle = t_tagret_angle + Common::Angle::fromDeg(180.0f);
+        t_robot.navigate(m_world_state.ball.position, VelocityProfile::aroom());
         if (t_shoot_pow > 0.f)
-            m_own_robot[t_robot_num].shoot(t_shoot_pow);
+            t_robot.shoot(t_shoot_pow);
         if (t_chip_pow > 0)
-            m_own_robot[t_robot_num].chip(t_chip_pow);
+            t_robot.chip(t_chip_pow);
 
-        if (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) >
-            near_ball_dis * shmit_coeff)
+        if (t_robot.state().position.distanceTo(m_world_state.ball.position) > near_ball_dis * shmit_coeff)
         {
             state = kFar;
         }

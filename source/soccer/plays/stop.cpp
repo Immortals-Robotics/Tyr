@@ -14,7 +14,7 @@ void Ai::stop()
     createAttackAssignment();
     assignRoles();
 
-    gkHi(m_gk);
+    gkHi(m_own_robot[m_gk]);
     defHi(m_def1, m_def2, nullptr);
 
     int zone_idx = 0;
@@ -41,7 +41,7 @@ void Ai::stop()
         }
         else
         {
-            mark(own, opp, Common::config().soccer.mark_distance);
+            mark(m_own_robot[own], opp, Common::config().soccer.mark_distance);
         }
     }
 

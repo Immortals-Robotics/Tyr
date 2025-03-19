@@ -110,7 +110,7 @@ void Ai::strategy()
 
     assignRoles();
 
-    gkHi(m_gk);
+    gkHi(m_own_robot[m_gk]);
     defHi(m_def1, m_def2, nullptr);
 
     const Strategy &strategy = m_playbook.strategies[curr_str_id];
@@ -129,7 +129,7 @@ void Ai::strategy()
             Common::logDebug("zeroed: {}", i);
         }
         Common::Angle passAngle = Common::Angle::fromDeg(90.0f - m_side * 90.0f);
-        circleBall(m_attack, passAngle, 0, 0);
+        circleBall(m_own_robot[m_attack], passAngle, 0, 0);
         return;
     }
     else
@@ -197,19 +197,19 @@ void Ai::strategy()
             {
                 Common::Angle passAngle =
                     (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
-                circleBall(*m_strategy_ids[i], passAngle, shoot, chip);
+                circleBall(m_own_robot[*m_strategy_ids[i]], passAngle, shoot, chip);
             }
             else if (step[i] == strategy.roles[i].path.size() - 2)
             {
                 Common::Angle passAngle =
                     (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
-                circleBall(*m_strategy_ids[i], passAngle, 0, 0, 140.0f);
+                circleBall(m_own_robot[*m_strategy_ids[i]], passAngle, 0, 0, 140.0f);
             }
             else
             {
                 Common::Angle passAngle =
                     (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
-                circleBall(*m_strategy_ids[i], passAngle, 0, 0);
+                circleBall(m_own_robot[*m_strategy_ids[i]], passAngle, 0, 0);
             }
         }
         else
@@ -224,7 +224,7 @@ void Ai::strategy()
             }
             else
             {
-                receivePass(*m_strategy_ids[i], strategy.roles[i].path[step[i]].position * sign_modifier);
+                receivePass(m_own_robot[*m_strategy_ids[i]], strategy.roles[i].path[step[i]].position * sign_modifier);
             }
         }
 

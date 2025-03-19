@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::receivePass(const int t_robot_num, Common::Vec2 t_static_pos, const bool t_chip)
+void Ai::receivePass(Robot& t_robot, Common::Vec2 t_static_pos, const bool t_chip)
 {
     const float contStrStaticTime = 1.0f;
 
@@ -12,35 +12,35 @@ void Ai::receivePass(const int t_robot_num, Common::Vec2 t_static_pos, const boo
     }
 
     const auto &allaf_pos = std::find_if(m_allaf_pos.begin(), m_allaf_pos.end(),
-                                         [t_robot_num](const auto &entry) { return *entry.first == t_robot_num; });
+                                         [&t_robot](const auto &entry) { return *entry.first == t_robot.state().vision_id; });
 
-    if (m_own_robot[t_robot_num].one_touch_type == Common::Soccer::OneTouchType::Allaf &&
+    if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Allaf &&
         allaf_pos != m_allaf_pos.end())
         t_static_pos = allaf_pos->second;
-    if (m_own_robot[t_robot_num].one_touch_type == Common::Soccer::OneTouchType::OneTouch &&
+    if (t_robot.one_touch_type == Common::Soccer::OneTouchType::OneTouch &&
         m_timer.time().seconds() < contStrStaticTime && allaf_pos != m_allaf_pos.end())
         t_static_pos = allaf_pos->second;
 
     if (m_timer.time().seconds() > 2.5)
     {
-        m_own_robot[t_robot_num].one_touch_type_used = true;
+        t_robot.one_touch_type_used = true;
     }
 
     float angleTol, maxBallAngle;
 
-    if (m_own_robot[t_robot_num].one_touch_type == Common::Soccer::OneTouchType::OneTouch)
+    if (t_robot.one_touch_type == Common::Soccer::OneTouchType::OneTouch)
     {
         angleTol     = 45;
         maxBallAngle = 150;
     }
-    else if (m_own_robot[t_robot_num].one_touch_type == Common::Soccer::OneTouchType::Shirje)
+    else if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Shirje)
     {
         // angleTol = 55;
         // maxBallAngle = 140;
         angleTol     = 45;
         maxBallAngle = 90;
     }
-    else if (m_own_robot[t_robot_num].one_touch_type == Common::Soccer::OneTouchType::Gool)
+    else if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Gool)
     {
         angleTol     = 35;
         maxBallAngle = 110;
@@ -51,46 +51,46 @@ void Ai::receivePass(const int t_robot_num, Common::Vec2 t_static_pos, const boo
         maxBallAngle = 0;
     }
 
-    float distCoeff = m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) / 1500.0f;
+    float distCoeff = m_world_state.ball.position.distanceTo(t_robot.state().position) / 1500.0f;
     distCoeff       = std::max(0.8f, distCoeff);
     distCoeff       = std::min(1.2f, distCoeff);
 
-    if ((m_own_robot[t_robot_num].one_touch_detector.isArriving(angleTol, maxBallAngle)) &&
-        (m_own_robot[t_robot_num].one_touch_type != Common::Soccer::OneTouchType::Allaf))
+    if ((t_robot.one_touch_detector.isArriving(angleTol, maxBallAngle)) &&
+        (t_robot.one_touch_type != Common::Soccer::OneTouchType::Allaf))
     {
-        Common::logDebug("robot {} one touch detected", t_robot_num);
+        Common::logDebug("robot {} one touch detected", t_robot.state().vision_id);
 
-        m_own_robot[t_robot_num].one_touch_type_used = true;
-        if (m_own_robot[t_robot_num].one_touch_type == Common::Soccer::OneTouchType::OneTouch)
+        t_robot.one_touch_type_used = true;
+        if (t_robot.one_touch_type == Common::Soccer::OneTouchType::OneTouch)
         {
             if (m_timer.time().seconds() < contStrStaticTime)
-                waitForPass(t_robot_num, t_chip, nullptr, &t_static_pos);
+                waitForPass(t_robot, t_chip, nullptr, &t_static_pos);
             else
-                waitForPass(t_robot_num, t_chip);
+                waitForPass(t_robot, t_chip);
         }
-        else if (m_own_robot[t_robot_num].one_touch_type == Common::Soccer::OneTouchType::Shirje)
+        else if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Shirje)
         {
-            waitForOmghi(t_robot_num);
+            waitForOmghi(t_robot);
         }
-        else if (m_own_robot[t_robot_num].one_touch_type == Common::Soccer::OneTouchType::Gool)
+        else if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Gool)
         {
-            waitForGool(t_robot_num);
+            waitForGool(t_robot);
         }
         else
         { // probably Allaf!!!
-            m_own_robot[t_robot_num].face(oppGoal());
-            m_own_robot[t_robot_num].navigate(t_static_pos, VelocityProfile::mamooli());
+            t_robot.face(oppGoal());
+            t_robot.navigate(t_static_pos, VelocityProfile::mamooli());
         }
     }
     else
     {
-        if (m_own_robot[t_robot_num].one_touch_type_used)
+        if (t_robot.one_touch_type_used)
         {
-            m_own_robot[t_robot_num].one_touch_type_used = false;
-            m_own_robot[t_robot_num].one_touch_type      = Common::Soccer::OneTouchType::OneTouch;
+            t_robot.one_touch_type_used = false;
+            t_robot.one_touch_type      = Common::Soccer::OneTouchType::OneTouch;
         }
-        m_own_robot[t_robot_num].face(oppGoal());
-        m_own_robot[t_robot_num].navigate(t_static_pos, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
+        t_robot.face(oppGoal());
+        t_robot.navigate(t_static_pos, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
     }
 }
 } // namespace Tyr::Soccer

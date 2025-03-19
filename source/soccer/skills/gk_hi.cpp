@@ -4,36 +4,36 @@ namespace Tyr::Soccer
 {
 static int my_hys = 0;
 
-void Ai::gkHi(const int t_robot_num)
+void Ai::gkHi(Robot& t_robot)
 {
     m_gk_intercepting = false;
 
     Common::logDebug("GKhi: {} _ {}", ballIsGoaling(),
-                     m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) /
+                     m_world_state.ball.position.distanceTo(t_robot.state().position) /
                          m_world_state.ball.velocity.length());
     if (ballIsGoaling())
     {
-        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::red(),
+        Common::debug().draw(Common::Circle{t_robot.state().position, 100}, Common::Color::red(),
                              false);
     }
     else
     {
-        Common::debug().draw(Common::Circle{m_own_robot[t_robot_num].state().position, 100}, Common::Color::yellow(),
+        Common::debug().draw(Common::Circle{t_robot.state().position, 100}, Common::Color::yellow(),
                              false);
     }
 
     if ((ballIsGoaling()) &&
-        (m_world_state.ball.position.distanceTo(m_own_robot[t_robot_num].state().position) /
+        (m_world_state.ball.position.distanceTo(t_robot.state().position) /
              m_world_state.ball.velocity.length() <
          3) &&
         m_ref_state.running())
     {
-        gkShirje(t_robot_num);
+        gkShirje(t_robot);
         my_hys = 10;
     }
     else if ((my_hys > 0) && m_ref_state.running())
     {
-        gkShirje(t_robot_num);
+        gkShirje(t_robot);
         my_hys--;
     }
 
@@ -79,7 +79,7 @@ void Ai::gkHi(const int t_robot_num)
 
             m_gk_intercepting = true;
 
-            attacker(t_robot_num,
+            attacker(t_robot,
                      predicted_ball.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0,
                      20, 0, 0);
         }
@@ -114,23 +114,23 @@ void Ai::gkHi(const int t_robot_num)
             }
             Common::debug().draw(ball_goal_line, Common::Color::red());
 
-            m_own_robot[t_robot_num].face((gk_final_pos - ownGoal()).normalized() * 10000. +
+            t_robot.face((gk_final_pos - ownGoal()).normalized() * 10000. +
                                           ownGoal()); // m_world_state.ball.position);
-            m_own_robot[t_robot_num].navigate(gk_final_pos, VelocityProfile::mamooli(), NavigationFlags::ForceNoOwnPenaltyArea);
+            t_robot.navigate(gk_final_pos, VelocityProfile::mamooli(), NavigationFlags::ForceNoOwnPenaltyArea);
         }
     }
 }
 
-void Ai::gkShirje(const int t_robot_num)
+void Ai::gkShirje(Robot& t_robot)
 {
     Common::logDebug("GK Shirje");
 
     Common::Line ball_line =
         Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());
-    Common::Vec2 ans = ball_line.closestPoint(m_own_robot[t_robot_num].state().position);
-    m_own_robot[t_robot_num].face(m_world_state.ball.position);
-    //    ans = ((ans - m_own_robot[t_robot_num].state().position) * 2.0f) + m_own_robot[t_robot_num].state().position;
-    m_own_robot[t_robot_num].navigate(ans, VelocityProfile::kharaki(), NavigationFlags::ForceNoOwnPenaltyArea);
-    m_own_robot[t_robot_num].chip(150);
+    Common::Vec2 ans = ball_line.closestPoint(t_robot.state().position);
+    t_robot.face(m_world_state.ball.position);
+    //    ans = ((ans - t_robot.state().position) * 2.0f) + t_robot.state().position;
+    t_robot.navigate(ans, VelocityProfile::kharaki(), NavigationFlags::ForceNoOwnPenaltyArea);
+    t_robot.chip(150);
 }
 } // namespace Tyr::Soccer

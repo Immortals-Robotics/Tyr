@@ -2,16 +2,16 @@
 
 namespace Tyr::Soccer
 {
-void Ai::waitForGool(const int t_robot_num)
+void Ai::waitForGool(Robot& t_robot)
 {
-    Common::Vec2 pos = calculatePassPos(oppGoal(), m_own_robot[t_robot_num].state().position, -1600);
+    Common::Vec2 pos = calculatePassPos(oppGoal(), t_robot.state().position, -1600);
 
-    m_own_robot[t_robot_num].face(oppGoal());
+    t_robot.face(oppGoal());
 
-    m_own_robot[t_robot_num].navigate(pos, VelocityProfile::mamooli());
+    t_robot.navigate(pos, VelocityProfile::mamooli());
 
     //TODO: What is this number?
-    m_own_robot[t_robot_num].shoot(6500.f);
-    m_own_robot[t_robot_num].dribble(15);
+    t_robot.shoot(6500.f);
+    t_robot.dribble(15);
 }
 } // namespace Tyr::Soccer

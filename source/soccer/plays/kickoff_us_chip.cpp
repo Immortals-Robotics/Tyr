@@ -13,7 +13,7 @@ void Ai::kickoffUsChip()
     createAttackAssignment();
     assignRoles();
 
-    gkHi(m_gk);
+    gkHi(m_own_robot[m_gk]);
     defHi(m_def1, m_def2, nullptr);
 
     m_own_robot[m_mid5].face(m_world_state.ball.position);
@@ -54,11 +54,11 @@ void Ai::kickoffUsChip()
     if (m_ref_state.canKickBall())
     {
         // TODO: why isn't this circleBall?
-        attacker(m_attack, chip_target.angleWith(m_world_state.ball.position), 0, 80, 0, 1);
+        attacker(m_own_robot[m_attack], chip_target.angleWith(m_world_state.ball.position), 0, 80, 0, 1);
     }
     else
     {
-        circleBall(m_attack, chip_target.angleWith(m_world_state.ball.position), 0, 0);
+        circleBall(m_own_robot[m_attack], chip_target.angleWith(m_world_state.ball.position), 0, 0);
     }
 }
 } // namespace Tyr::Soccer

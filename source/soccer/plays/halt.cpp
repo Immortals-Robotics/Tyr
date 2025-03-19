@@ -2,15 +2,15 @@
 
 namespace Tyr::Soccer
 {
-void Ai::halt(const int t_robot_num)
+void Ai::halt(Robot& t_robot)
 {
-    if (m_own_robot[t_robot_num].currentMotion().length() > 100.0f)
+    if (t_robot.currentMotion().length() > 100.0f)
     {
-        m_own_robot[t_robot_num].fullBeak();
+        t_robot.fullBeak();
     }
     else
     {
-        m_own_robot[t_robot_num].halt();
+        t_robot.halt();
     }
 }
 
@@ -18,7 +18,7 @@ void Ai::haltAll()
 {
     for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
-        halt(i);
+        halt(m_own_robot[i]);
     }
 }
 } // namespace Tyr::Soccer

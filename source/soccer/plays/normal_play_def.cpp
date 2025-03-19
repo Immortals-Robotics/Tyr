@@ -25,7 +25,7 @@ void Ai::normalPlayDef()
 
         if (m_own_robot[own].one_touch_detector.isArriving())
         {
-            waitForPass(own, false);
+            waitForPass(m_own_robot[own], false);
         }
         else if (opp == -1)
         {
@@ -37,11 +37,11 @@ void Ai::normalPlayDef()
         }
         else
         {
-            mark(own, opp, Common::config().soccer.mark_distance);
+            mark(m_own_robot[own], opp, Common::config().soccer.mark_distance);
         }
     }
 
-    OpenAngle     openAngle  = calculateOpenAngleToGoal(m_world_state.ball.position, m_attack);
+    OpenAngle     openAngle  = calculateOpenAngleToGoal(m_world_state.ball.position, m_own_robot[m_attack]);
     Common::Angle shootAngle = Common::Angle::fromDeg(180) + openAngle.center;
 
     float shoot_pow = 1;
@@ -88,7 +88,7 @@ void Ai::normalPlayDef()
     }
 #endif
 
-    attacker(m_attack, shootAngle, shoot_pow, chip_pow, 0, 1);
+    attacker(m_own_robot[m_attack], shootAngle, shoot_pow, chip_pow, 0, 1);
     // circleBall(m_attack, 90, 80, 0);
 }
 } // namespace Tyr::Soccer

@@ -105,11 +105,11 @@ void Ai::placeBallLongDistance()
     m_own_robot[m_mid5].navigate(receiver_pos, VelocityProfile::mamooli());
     if (m_own_robot[m_mid5].state().position.distanceTo(receiver_pos) < 100)
     {
-        circleBall(m_attack, (m_world_state.ball.position - receiver_pos).toAngle(), 4000, 0);
+        circleBall(m_own_robot[m_attack], (m_world_state.ball.position - receiver_pos).toAngle(), 4000, 0);
     }
     else
     {
-        circleBall(m_attack, (m_world_state.ball.position - receiver_pos).toAngle(), 0, 0);
+        circleBall(m_own_robot[m_attack], (m_world_state.ball.position - receiver_pos).toAngle(), 0, 0);
     }
     if (m_world_state.ball.velocity.length() < 100.0f &&
         m_ref_state.designated_position.distanceTo(m_world_state.ball.position) < 1000)
@@ -136,7 +136,7 @@ void Ai::generateKissPoints(double t_distance, Common::Vec2 &t_pos1, Common::Vec
 
 void Ai::ourNewPlaceBall()
 {
-    gkHi(m_gk);
+    gkHi(m_own_robot[m_gk]);
     defHi(m_def1, m_def2, nullptr);
 
     int zone_idx = 0;
@@ -298,7 +298,7 @@ void Ai::ourNewPlaceBall()
             m_own_robot[m_attack].face(m_world_state.ball.position);
             m_own_robot[m_attack].navigate(attack_pos, VelocityProfile::mamooli(), NavigationFlags::ForceNoObstacles);
         } else {
-            circleBall(m_attack,
+            circleBall(m_own_robot[m_attack],
                        (m_world_state.ball.position - closest_wall_point).toAngle() + Common::Angle::fromDeg(angle_offset),
                        3000, 0);
         }
@@ -378,7 +378,7 @@ void Ai::ourPlaceBall()
     assignRoles();
 #endif
 
-    gkHi(m_gk);
+    gkHi(m_own_robot[m_gk]);
     defHi(m_def1, m_def2, nullptr);
 
     int zone_idx = 0;
@@ -408,7 +408,7 @@ void Ai::ourPlaceBall()
 
     if (m_func_state == -2)
     {
-        circleBall(m_attack, outFieldAng, 1000.0f, 0);
+        circleBall(m_own_robot[m_attack], outFieldAng, 1000.0f, 0);
 
         // TODO: transition when m_dmf fits behind the ball
         if (last_state_ball_pos.distanceTo(m_world_state.ball.position) > 400)
@@ -461,7 +461,7 @@ void Ai::ourPlaceBall()
                 }
             }
         }
-        circleBall(m_attack, outFieldAng, 0, 0);
+        circleBall(m_own_robot[m_attack], outFieldAng, 0, 0);
         Common::logDebug("outFieldAng: {}", outFieldAng.deg());
 
         if (m_own_robot[m_attack].state().velocity.length() < 20)
@@ -502,7 +502,7 @@ void Ai::ourPlaceBall()
         m_own_robot[m_mid5].navigate(m_ref_state.designated_position.circleAroundPoint(temp_opp_ang, 250), VelocityProfile::aroom(),
                  NavigationFlags::ForceBallSmallObstacle);
 
-        circleBall(m_attack, move_angle, 0, 0);
+        circleBall(m_own_robot[m_attack], move_angle, 0, 0);
         Common::logDebug(":::{}", m_own_robot[m_attack].state().velocity.length());
         Common::logDebug("", m_own_robot[m_mid5].state().velocity.length());
         if (m_own_robot[m_attack].state().velocity.length() < 20 && m_own_robot[m_mid5].state().velocity.length() < 20)
@@ -518,8 +518,8 @@ void Ai::ourPlaceBall()
     }
     else if (m_func_state == 1)
     {
-        circleBall(m_attack, move_angle, 5000.0f, 0);
-        waitForPass(m_mid5, false, &m_own_robot[m_attack].state().position);
+        circleBall(m_own_robot[m_attack], move_angle, 5000.0f, 0);
+        waitForPass(m_own_robot[m_mid5], false, &m_own_robot[m_attack].state().position);
 
         if (last_state_ball_pos.distanceTo(m_world_state.ball.position) > 400)
         { // TODO added this TEST IT with the kicker on (already tested without the kicker)
@@ -538,7 +538,7 @@ void Ai::ourPlaceBall()
     }
     else if (m_func_state == 2)
     {
-        waitForPass(m_mid5, false, &m_own_robot[m_attack].state().position);
+        waitForPass(m_own_robot[m_mid5], false, &m_own_robot[m_attack].state().position);
 
         if (temp_time.time().seconds() > 2)
         {
