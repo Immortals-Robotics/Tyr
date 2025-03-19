@@ -53,7 +53,7 @@ void Ai::runningDef(const int t_robot_num, const Common::Vec2 t_target, Common::
     else
     {
         m_own_robot[t_robot_num].face(*t_defend_target);
-        navigate(t_robot_num, t_target, VelocityProfile::mamooli());
+        m_own_robot[t_robot_num].navigate(t_target, VelocityProfile::mamooli());
     }
 }
 } // namespace Tyr::Soccer

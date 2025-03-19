@@ -6,7 +6,7 @@ int Ai::attackRoleCost(const int t_robot_idx, const Assignment &t_assignment)
 {
     // Check if the robot is waiting for a pass and is in a suitable state to receive it
     const bool pass_receiver_role = t_robot_idx == m_mid1 || t_robot_idx == m_mid2 || t_robot_idx == m_mid5;
-    const bool one_touch_arriving = m_one_touch_detector[t_robot_idx].isArriving(45, 150);
+    const bool one_touch_arriving = m_own_robot[t_robot_idx].one_touch_detector.isArriving(45, 150);
     if (!m_is_defending && pass_receiver_role && one_touch_arriving)
         return -1;
 

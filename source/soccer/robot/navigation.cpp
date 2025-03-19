@@ -1,0 +1,56 @@
+#include "robot.h"
+
+#include "../navigation/trajectory/trajectory_2d.h"
+
+namespace Tyr::Soccer
+{
+void Robot::navigate(const Common::Vec2 t_dest, VelocityProfile t_profile, const NavigationFlags t_flags)
+{
+    if (state().seen_state == Common::SeenState::CompletelyOut)
+        return;
+
+    setObstacles(t_flags);
+
+    if (State::ref().shouldSlowDown())
+    {
+        t_profile.speed = std::min(t_profile.speed, 900.0f);
+    }
+
+    if (state().position.distanceTo(t_dest) > 100.0f)
+        Common::debug().draw(t_dest);
+
+    m_planner.setObstacleMap(&m_obs_map);
+    Common::Vec2 dest = m_planner.plan(state().position, currentMotion(), t_dest, t_profile);
+
+    const float margin = Common::field().boundary_width - Common::field().robot_radius;
+
+    if (std::fabs(dest.x) > Common::field().width + margin)
+        dest.x = Common::sign(dest.x) * (Common::field().width + margin);
+
+    if (std::fabs(dest.y) > Common::field().height + margin)
+        dest.y = Common::sign(dest.y) * (Common::field().height + margin);
+
+    Trajectory2D trajectory = Trajectory2D::makeBangBangTrajectory(state().position, currentMotion(), dest, t_profile);
+
+    Common::logDebug("robot [{}] time of arrival: {}", state().vision_id, Common::global_timer().time().seconds() + trajectory.getDuration());
+
+    if (!(t_flags & NavigationFlags::ForceNoBreak))
+    {
+        if (!m_obs_map.inside(state().position) &&
+            m_obs_map.hasCollision(trajectory, 0.2f).first)
+        {
+            Common::debug().draw(Common::Circle{state().position, Common::field().robot_radius}, Common::Color::magenta(),
+                             false, 30.f);
+
+            VelocityProfile stop_profile = t_profile;
+            stop_profile.acceleration *= 2.0f;
+            trajectory = Trajectory2D::makeFullStopTrajectory(state().position, currentMotion(), stop_profile);
+        }
+    }
+
+    move(trajectory);
+
+    // this is only used for assignment, not navigation
+    target.position = t_dest;
+}
+} // namespace Tyr::Soccer

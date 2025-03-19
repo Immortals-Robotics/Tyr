@@ -18,13 +18,13 @@ void Ai::normalPlayAtt()
         ++zone_idx;
     }
 
-    if (m_one_touch_type[m_attack] == OneTouchType::Allaf && m_allaf_pos.contains(&m_attack))
+    if (m_own_robot[m_attack].one_touch_type == Common::Soccer::OneTouchType::Allaf && m_allaf_pos.contains(&m_attack))
     {
         m_own_robot[m_attack].face(oppGoal());
-        navigate(m_attack, m_allaf_pos[&m_attack], VelocityProfile::mamooli());
+        m_own_robot[m_attack].navigate(m_allaf_pos[&m_attack], VelocityProfile::mamooli());
         if (m_timer.time().seconds() > 2.5)
         {
-            m_one_touch_type[m_attack] = OneTouchType::OneTouch;
+            m_own_robot[m_attack].one_touch_type = Common::Soccer::OneTouchType::OneTouch;
         }
 
         activeShootTimer.start();

@@ -159,7 +159,8 @@ void Ai::strategy()
             else
             {
                 if ((strategy.roles[i].path[step[i]].position * sign_modifier)
-                        .distanceTo(m_own_robot[*m_strategy_ids[i]].state().position) < strategy.roles[i].path[step[i]].tolerance)
+                        .distanceTo(m_own_robot[*m_strategy_ids[i]].state().position) <
+                    strategy.roles[i].path[step[i]].tolerance)
                 {
                     step[i]    = std::min(static_cast<int>(strategy.roles[i].path.size()) - 1, step[i] + 1);
                     lastAdv[i] = m_timer.time().seconds();
@@ -218,8 +219,8 @@ void Ai::strategy()
             if (step[i] != strategy.roles[i].path.size() - 1)
             {
                 m_own_robot[*m_strategy_ids[i]].face(oppGoal());
-                navigate(*m_strategy_ids[i], strategy.roles[i].path[step[i]].position * sign_modifier, profile,
-                         NavigationFlagsForceBallObstacle);
+                m_own_robot[*m_strategy_ids[i]].navigate(strategy.roles[i].path[step[i]].position * sign_modifier,
+                                                         profile, NavigationFlags::ForceBallObstacle);
             }
             else
             {
@@ -230,21 +231,21 @@ void Ai::strategy()
         switch (strategy.roles[i].afterlife)
         {
         case Role::Afterlife::Gool:
-            m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::Gool;
+            m_own_robot[*m_strategy_ids[i]].one_touch_type = Common::Soccer::OneTouchType::Gool;
             break;
         case Role::Afterlife::OneTouch:
-            m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::OneTouch;
-            m_allaf_pos[m_strategy_ids[i]] = strategy.roles[i].path.back().position * sign_modifier;
+            m_own_robot[*m_strategy_ids[i]].one_touch_type = Common::Soccer::OneTouchType::OneTouch;
+            m_allaf_pos[m_strategy_ids[i]]                 = strategy.roles[i].path.back().position * sign_modifier;
 
             if (step[i] != strategy.roles[i].path.size() - 1)
                 // if (i == m_dmf && remainingDis > 150)
                 new_receivers_reached = false;
             break;
         case Role::Afterlife::Shirje:
-            m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::Shirje;
+            m_own_robot[*m_strategy_ids[i]].one_touch_type = Common::Soccer::OneTouchType::Shirje;
             break;
         case Role::Afterlife::Allaf:
-            m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::Allaf;
+            m_own_robot[*m_strategy_ids[i]].one_touch_type = Common::Soccer::OneTouchType::Allaf;
             if (*m_strategy_ids[i] == m_attack)
             {
                 m_allaf_pos[m_strategy_ids[i]] = m_world_state.ball.position;
@@ -255,19 +256,19 @@ void Ai::strategy()
             }
             break;
         default:
-            m_one_touch_type[*m_strategy_ids[i]] = OneTouchType::OneTouch;
+            m_own_robot[*m_strategy_ids[i]].one_touch_type = Common::Soccer::OneTouchType::OneTouch;
             break;
         }
     }
-    
+
     int zone_idx = 0;
-    for (const auto& mid : m_prioritized_mids)
+    for (const auto &mid : m_prioritized_mids)
     {
         if (m_own_robot[*mid].navigated())
             continue;
 
         m_own_robot[*mid].face(m_world_state.ball.position);
-        navigate(*mid, m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli());
+        m_own_robot[*mid].navigate(m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli());
         ++zone_idx;
     }
 

@@ -36,7 +36,7 @@ void Ai::stop()
             Common::Vec2 static_pos = m_sorted_zones[zone_idx]->best_pos;
             ++zone_idx;
             m_own_robot[own].face(m_world_state.ball.position);
-            navigate(own, static_pos, VelocityProfile::aroom());
+            m_own_robot[own].navigate(static_pos, VelocityProfile::aroom());
             m_own_robot[own].shoot(0);
         }
         else
@@ -49,7 +49,7 @@ void Ai::stop()
         m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 650);
 
     m_own_robot[m_attack].face(m_world_state.ball.position);
-    navigate(m_attack, attack_pos, VelocityProfile::aroom());
+    m_own_robot[m_attack].navigate(attack_pos, VelocityProfile::aroom());
     m_own_robot[m_attack].shoot(0);
 }
 } // namespace Tyr::Soccer

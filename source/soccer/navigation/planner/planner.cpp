@@ -4,7 +4,7 @@
 
 namespace Tyr::Soccer
 {
-Common::Vec2 PlannerTrajectory::nearestFree(Common::Vec2 state)
+Common::Vec2 Planner::nearestFree(Common::Vec2 state)
 {
     const float acceptable_free_dis = 50.0f;
 
@@ -38,7 +38,7 @@ Common::Vec2 PlannerTrajectory::nearestFree(Common::Vec2 state)
     return ans;
 }
 
-Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::Vec2 init_vel, Common::Vec2 target, const VelocityProfile &profile)
+Common::Vec2 Planner::plan(const Common::Vec2 init_pos, const Common::Vec2 init_vel, Common::Vec2 target, const VelocityProfile &profile)
 {
 #if 0
     // if starting in obstacle, just get out first
@@ -114,7 +114,7 @@ Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::
     return intermediate_point;
 }
 
-std::vector<Common::Vec2> PlannerTrajectory::generateIntermediateTargetsSystematic(const Common::Vec2 t_center) const
+std::vector<Common::Vec2> Planner::generateIntermediateTargetsSystematic(const Common::Vec2 t_center) const
 {
     constexpr float kMinRadius       = 100.0f;
     constexpr float kRadiusStep      = 1000.0f;
@@ -143,7 +143,7 @@ std::vector<Common::Vec2> PlannerTrajectory::generateIntermediateTargetsSystemat
 // finds a trajectory that consists of
 // 1- init to time t1 somewhere on the input trajectory
 // 2- trajectory from the state at t1 to target
-PlannerTrajectory::TrajectoryChained2DXY PlannerTrajectory::findChainedTrajectory(const Trajectory2D &trajectory) const
+Planner::TrajectoryChained2DXY Planner::findChainedTrajectory(const Trajectory2D &trajectory) const
 {
     constexpr float kTimeStep      = 0.2f;
 
@@ -174,7 +174,7 @@ PlannerTrajectory::TrajectoryChained2DXY PlannerTrajectory::findChainedTrajector
     return TrajectoryChained2DXY{trajectory, target_trajectory, t_end};
 }
 
-float PlannerTrajectory::calculateTrajectoryPenalty(const TrajectoryChained2DXY &trajectory) const
+float Planner::calculateTrajectoryPenalty(const TrajectoryChained2DXY &trajectory) const
 {
     float penalty = 0.0f;
 

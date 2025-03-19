@@ -199,7 +199,8 @@ Trajectory2D::Trajectory1D Trajectory2D::makeBangBangTrajectory1D(
     }
 }
 
-Trajectory2D Trajectory2D::makeBangBangTrajectory(const Common::Vec2 s0, const Common::Vec2 v0, const Common::Vec2 s1, const VelocityProfile &profile)
+Trajectory2D Trajectory2D::makeBangBangTrajectory(const Common::Vec2 s0, const Common::Vec2 v0, const Common::Vec2 s1,
+                                                  const VelocityProfile &profile)
 {
     // alphaFn is either
     // - [async] alpha -> alpha + (((float) AngleMath.PI_HALF - alpha) * 0.5f);
@@ -207,7 +208,7 @@ Trajectory2D Trajectory2D::makeBangBangTrajectory(const Common::Vec2 s0, const C
     const float accuracy = 1e-3f;
 
     const float vmax = profile.speed;
-    const float acc = profile.acceleration;
+    const float acc  = profile.acceleration;
 
     const float s0x = s0.x;
     const float s0y = s0.y;
@@ -218,7 +219,7 @@ Trajectory2D Trajectory2D::makeBangBangTrajectory(const Common::Vec2 s0, const C
 
     Trajectory2D trajectory{};
 
-    Common::Angle inc = Common::Angle::fromRad(std::numbers::pi_v<float> / 8.0f);
+    Common::Angle inc   = Common::Angle::fromRad(std::numbers::pi_v<float> / 8.0f);
     Common::Angle alpha = Common::Angle::fromRad(std::numbers::pi_v<float> / 4.0f);
 
     // binary search, some iterations (fixed)
@@ -238,12 +239,42 @@ Trajectory2D Trajectory2D::makeBangBangTrajectory(const Common::Vec2 s0, const C
         if (trajectory.m_trajectory_x.getDuration() > trajectory.m_trajectory_y.getDuration())
         {
             alpha -= inc;
-        } else
+        }
+        else
         {
             alpha += inc;
         }
 
         inc = inc * 0.5f;
+    }
+
+    return trajectory;
+}
+
+Trajectory2D Trajectory2D::makeFullStopTrajectory(Common::Vec2 p0, Common::Vec2 v0, const VelocityProfile &profile)
+{
+    Trajectory2D trajectory{};
+
+    if (!Common::almostEqual(v0.length(), 0.0f))
+    {
+        const float duration = v0.length() / profile.acceleration;
+        const Common::Vec2 acc = v0.normalized() * -profile.acceleration;
+
+        TrajectoryPiece1D piece_x{};
+        piece_x.p_start = p0.x;
+        piece_x.v_start = v0.x;
+        piece_x.t_start = 0.0f;
+        piece_x.t_end = duration;
+        piece_x.acc = acc.x;
+        trajectory.m_trajectory_x.addPiece(piece_x);
+
+        TrajectoryPiece1D piece_y{};
+        piece_y.p_start = p0.y;
+        piece_y.v_start = v0.y;
+        piece_y.t_start = 0.0f;
+        piece_y.t_end = duration;
+        piece_y.acc = acc.y;
+        trajectory.m_trajectory_y.addPiece(piece_y);
     }
 
     return trajectory;

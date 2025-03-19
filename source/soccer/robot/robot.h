@@ -1,15 +1,35 @@
 #pragma once
 
+#include "../helpers/one_touch_detector.h"
+#include "../navigation/planner/planner.h"
 #include "velocity_profile.h"
 
 namespace Tyr::Soccer
 {
+enum class NavigationFlags
+{
+    None                    = 0,
+    ForceNoObstacles        = BIT(1), // only used in ball placement
+    ForceBallObstacle       = BIT(2), // 500.0f
+    ForceBallMediumObstacle = BIT(3), // 230.0f
+    ForceBallSmallObstacle  = BIT(4), // 60.0f
+    ForceNoBreak            = BIT(5),
+    ForceNoOwnPenaltyArea   = BIT(6),
+    ForceNoExtraMargin      = BIT(7),
+};
+
+ENABLE_ENUM_FLAG_OPERATORS(NavigationFlags);
+
 class Robot
 {
 public:
     Robot() = default;
-    Robot(const Common::RobotState *t_state) : m_state(t_state)
-    {}
+
+    void setState(const Common::RobotState *t_state)
+    {
+        m_state                  = t_state;
+        one_touch_detector.robot = t_state;
+    }
 
     const Common::RobotState &state() const
     {
@@ -29,10 +49,14 @@ public:
     void chip(float pow);
     void dribble(float pow);
 
-    void face(Common::Vec2 t_target);
-    void move(Common::Vec2 motion);
+    void navigate(Common::Vec2 t_dest, VelocityProfile t_profile = VelocityProfile::mamooli(),
+                  NavigationFlags t_flags = NavigationFlags::None);
+
+    void move(const Trajectory2D &trajectory);
     void halt();
     void fullBeak(float acc_factor = 1.0f);
+
+    void face(Common::Vec2 t_target);
 
     [[nodiscard]] float shoot() const
     {
@@ -59,15 +83,39 @@ public:
         return m_halted;
     }
 
-    [[nodiscard]] Common::Vec2    currentMotion() const;
+    [[nodiscard]] Trajectory2D currentTrajectory() const
+    {
+        return m_trajectory;
+    }
+
+    [[nodiscard]] Common::Vec2 currentMotion() const
+    {
+        if (Common::almostEqual(m_trajectory.getDuration(), 0.0f))
+        {
+            return {};
+        }
+
+        const float dt = 1.0f / Common::config().vision.vision_frame_rate;
+        return m_trajectory.getVelocity(dt);
+    }
+
     [[nodiscard]] Sender::Command currentCommand() const;
 
     Common::RobotState target;
 
+    // TODO: these don't really belong here
+    OneTouchDetector one_touch_detector;
+
+    Common::Soccer::OneTouchType one_touch_type      = Common::Soccer::OneTouchType::OneTouch;
+    bool                         one_touch_type_used = false;
+
 private:
     const Common::RobotState *m_state = nullptr;
 
-    Common::Vec2 m_last_motion;
+    ObstacleMap m_obs_map;
+    Planner     m_planner;
+
+    Trajectory2D m_trajectory;
 
     float m_shoot    = 0.0f;
     float m_chip     = 0.0f;
@@ -75,5 +123,7 @@ private:
 
     bool m_navigated = false;
     bool m_halted    = false;
+
+    void setObstacles(NavigationFlags t_flags = NavigationFlags::None);
 };
 } // namespace Tyr::Soccer

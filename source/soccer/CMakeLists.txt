@@ -5,6 +5,7 @@ find_package(LEMON CONFIG REQUIRED)
 set(HEADER_FILES
         pch.h
         ai.h
+        state.h
 
         navigation/obstacle/circle.h
         navigation/obstacle/map.h
@@ -86,7 +87,6 @@ set(SOURCE_FILES
         skills/mark_to_ball.cpp
         skills/mark_to_goal.cpp
         skills/mark.cpp
-        skills/navigation.cpp
         skills/pass_gool.cpp
         skills/pass_omghi.cpp
         skills/pass.cpp
@@ -95,6 +95,8 @@ set(SOURCE_FILES
         skills/attacker.cpp
 
         robot/robot.cpp
+        robot/navigation.cpp
+        robot/set_obstacles.cpp
 
         zone/pos_attack.cpp
         zone/pos_defence.cpp

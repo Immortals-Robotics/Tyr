@@ -2,9 +2,6 @@
 
 namespace Tyr::Soccer
 {
-int lockAngleCounter = 0;
-int elendil          = 0;
-
 void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const float t_kick, const int t_chip,
                   const bool t_kiss, const bool t_dribbler, const bool precise)
 {
@@ -41,7 +38,7 @@ void Ai::attacker(const int t_robot_num, const Common::Angle t_angle, const floa
 
     Common::debug().draw(interception_point);
 
-    navigate(t_robot_num, interception_point, profile);
+    robot.navigate(interception_point, profile);
     robot.target.angle = Common::Angle::fromVec(ball_state.position - interception_point);
 }
 } // namespace Tyr::Soccer

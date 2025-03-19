@@ -21,3 +21,5 @@
 #include <lemon/network_simplex.h>
 
 #include <protos/immortals/play_book.pb.h>
+
+#include "state.h"

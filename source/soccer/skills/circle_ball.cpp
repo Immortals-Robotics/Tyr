@@ -40,7 +40,7 @@ void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, f
         m_own_robot[t_robot_num].face(m_world_state.ball.position);
         VelocityProfile profile = VelocityProfile::mamooli();
         profile.speed         = 900.0f;
-        navigate(t_robot_num, m_world_state.ball.position, profile);
+        m_own_robot[t_robot_num].navigate(m_world_state.ball.position, profile);
 
         Common::debug().draw(Common::Circle{m_world_state.ball.position, very_far_ball_dis - 90.0f},
                              Common::Color::red(), false);
@@ -56,7 +56,7 @@ void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, f
         m_own_robot[t_robot_num].face(m_world_state.ball.position);
         Common::Vec2 target_point = m_world_state.ball.position.circleAroundPoint(
             m_world_state.ball.position.angleWith(m_own_robot[t_robot_num].state().position), near_ball_dis);
-        navigate(t_robot_num, target_point, VelocityProfile::aroom());
+        m_own_robot[t_robot_num].navigate(target_point, VelocityProfile::aroom());
 
         Common::debug().draw(Common::Circle{m_world_state.ball.position, far_ball_dis - 90.0f}, Common::Color::pink(),
                              false);
@@ -95,9 +95,9 @@ void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, f
         Common::Vec2 target_point =
             m_world_state.ball.position.circleAroundPoint(newToRobot, near_ball_dis / deltaAngle.cos());
         if (t_near_dis_override > 0)
-            navigate(t_robot_num, target_point, VelocityProfile::aroom());
+            m_own_robot[t_robot_num].navigate(target_point, VelocityProfile::aroom());
         else
-            navigate(t_robot_num, target_point, VelocityProfile::mamooli());
+            m_own_robot[t_robot_num].navigate(target_point, VelocityProfile::mamooli());
 
         if (m_own_robot[t_robot_num].state().position.distanceTo(m_world_state.ball.position) >
             far_ball_dis * shmit_coeff)
@@ -128,7 +128,7 @@ void Ai::circleBall(const int t_robot_num, const Common::Angle t_tagret_angle, f
             m_chip_head = m_own_robot[t_robot_num].state().angle;
         }
         m_own_robot[t_robot_num].target.angle = t_tagret_angle + Common::Angle::fromDeg(180.0f);
-        navigate(t_robot_num, m_world_state.ball.position, VelocityProfile::aroom());
+        m_own_robot[t_robot_num].navigate(m_world_state.ball.position, VelocityProfile::aroom());
         if (t_shoot_pow > 0.f)
             m_own_robot[t_robot_num].shoot(t_shoot_pow);
         if (t_chip_pow > 0)

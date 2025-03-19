@@ -23,7 +23,7 @@ void Ai::throwinChipShoot()
             continue;
 
         m_own_robot[*mid].face(m_world_state.ball.position);
-        navigate(*mid, m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
+        m_own_robot[*mid].navigate(m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
         ++zone_idx;
     }
 
@@ -42,17 +42,17 @@ void Ai::throwinChipShoot()
     m_own_robot[m_attack].face(oppGoal());
     if (m_random_param < 0.5)
     {
-        navigate(m_attack,
+        m_own_robot[m_attack].navigate(
                  m_world_state.ball.position.pointOnConnectingLine(
                      Common::Vec2(oppGoal().x, Common::sign(-m_world_state.ball.position.x) * 2000.0f), 350),
-                 VelocityProfile::mamooli(), NavigationFlagsForceBallMediumObstacle);
+                 VelocityProfile::mamooli(), NavigationFlags::ForceBallMediumObstacle);
     }
     else
     {
-        navigate(m_attack,
+        m_own_robot[m_attack].navigate(
                  m_world_state.ball.position.pointOnConnectingLine(
                      Common::Vec2(oppGoal().x, Common::sign(m_world_state.ball.position.x) * 2000.0f), 350),
-                 VelocityProfile::mamooli(), NavigationFlagsForceBallMediumObstacle);
+                 VelocityProfile::mamooli(), NavigationFlags::ForceBallMediumObstacle);
     }
 }
 } // namespace Tyr::Soccer

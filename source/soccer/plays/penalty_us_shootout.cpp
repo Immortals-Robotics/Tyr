@@ -7,13 +7,13 @@ void Ai::penaltyUsShootout()
     defHi(m_def1, m_def2, nullptr);
 
     m_own_robot[m_mid5].face(oppGoal());
-    navigate(m_mid5, Common::Vec2(m_side * 4000, 0), VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
+    m_own_robot[m_mid5].navigate(Common::Vec2(m_side * 4000, 0), VelocityProfile::aroom(), NavigationFlags::ForceBallObstacle);
 
     m_own_robot[m_mid1].face(oppGoal());
-    navigate(m_mid1, Common::Vec2(m_side * 4000, -500), VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
+    m_own_robot[m_mid1].navigate(Common::Vec2(m_side * 4000, -500), VelocityProfile::aroom(), NavigationFlags::ForceBallObstacle);
 
     m_own_robot[m_mid2].face(oppGoal());
-    navigate(m_mid2, Common::Vec2(m_side * 4000, 500), VelocityProfile::aroom(), NavigationFlagsForceBallObstacle);
+    m_own_robot[m_mid2].navigate(Common::Vec2(m_side * 4000, 500), VelocityProfile::aroom(), NavigationFlags::ForceBallObstacle);
 
     if (!m_ref_state.canKickBall())
     {

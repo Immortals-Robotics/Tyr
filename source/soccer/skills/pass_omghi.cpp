@@ -41,7 +41,7 @@ void Ai::waitForOmghi(const int t_robot_num)
     VelocityProfile profile = VelocityProfile::kharaki();
     profile.speed         = sBAR * 45.0f;
 
-    navigate(t_robot_num, target, profile);
+    m_own_robot[t_robot_num].navigate(target, profile);
 
     // TODO: What is this number
     m_own_robot[t_robot_num].shoot(6500.f);

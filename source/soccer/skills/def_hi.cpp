@@ -122,9 +122,9 @@ void Ai::defHi(int t_def1_num, int t_def2_num, Common::Vec2 *t_defend_target)
         Common::debug().draw(virtual_defense_area, Common::Color::blue(), false);
 
         m_own_robot[t_def1_num].face(final_pos_1 + (final_pos_1 - ownGoal()).normalized() * 10000.);
-        navigate(t_def1_num, final_pos_1, VelocityProfile::mamooli());
+        m_own_robot[t_def1_num].navigate(final_pos_1, VelocityProfile::mamooli());
         m_own_robot[t_def2_num].face(final_pos_2 + (final_pos_2 - ownGoal()).normalized() * 10000.);
-        navigate(t_def2_num, final_pos_2, VelocityProfile::mamooli());
+        m_own_robot[t_def2_num].navigate(final_pos_2, VelocityProfile::mamooli());
     }
 }
 
@@ -167,7 +167,7 @@ void Ai::defShirje(const int t_def_1, const int t_def_2)
     Common::debug().draw(Common::Circle{one_touch_1, 50}, Common::Color::yellow());
     Common::debug().draw(Common::Circle{one_touch_2, 50}, Common::Color::yellow());
 
-    navigate(t_def_1, one_touch_1, VelocityProfile::kharaki());
-    navigate(t_def_2, one_touch_2, VelocityProfile::kharaki());
+    m_own_robot[t_def_1].navigate(one_touch_1, VelocityProfile::kharaki());
+    m_own_robot[t_def_2].navigate(one_touch_2, VelocityProfile::kharaki());
 }
 } // namespace Tyr::Soccer

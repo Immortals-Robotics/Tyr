@@ -36,6 +36,6 @@ void Ai::mark2Goal(const int t_robot_num, const int t_opp, float t_dist, bool t_
     }
 
     m_own_robot[t_robot_num].face(m_world_state.ball.position);
-    navigate(t_robot_num, target, VelocityProfile::mamooli(), NavigationFlagsForceBallObstacle);
+    m_own_robot[t_robot_num].navigate(target, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
 }
 } // namespace Tyr::Soccer

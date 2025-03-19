@@ -1,10 +1,9 @@
 #pragma once
 
-#include "navigation/dss/dss.h"
-#include "navigation/errt/errt.h"
-#include "navigation/trajectory/planner/planner.h"
-#include "helpers/one_touch_detector.h"
+#include "robot/robot.h"
 #include "plays/play_book.h"
+
+#include "skills/skill.h"
 
 namespace Tyr::Soccer
 {
@@ -57,17 +56,6 @@ private:
     std::vector<int *> m_strategy_ids;
 
     void manageAttRoles();
-
-    OneTouchDetector m_one_touch_detector[Common::Config::Common::kMaxRobots];
-    enum class OneTouchType
-    {
-        OneTouch = 0,
-        Shirje,
-        Gool,
-        Allaf,
-    };
-    OneTouchType m_one_touch_type[Common::Config::Common::kMaxRobots];
-    bool         m_one_touch_type_used[Common::Config::Common::kMaxRobots];
 
     // Helpers
     Common::Vec2 calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar = 89.0f);
@@ -157,17 +145,6 @@ private:
     inline Common::Rect        oppPenaltyArea() const;
     inline bool                isOut(Common::Vec2 t_point, float t_margin = 0.0f) const;
 
-    // Navigation
-    enum NavigationFlags
-    {
-        NavigationFlagsNone                    = 0,
-        NavigationFlagsForceNoObstacles        = (1 << 1), // only used in ball placement
-        NavigationFlagsForceBallObstacle       = (1 << 2), // 500.0f
-        NavigationFlagsForceBallMediumObstacle = (1 << 3), // 230.0f
-        NavigationFlagsForceBallSmallObstacle  = (1 << 4), // 60.0f
-        NavigationFlagsForceNoBreak            = (1 << 5),
-    };
-
     // ball placement states
     enum class OurBallPlacementState
     {
@@ -180,15 +157,6 @@ private:
         KissingDone,
         Done,
     };
-
-    void navigate(int t_robot_num, Common::Vec2 t_dest, VelocityProfile t_profile = VelocityProfile::mamooli(),
-                  NavigationFlags t_flags = NavigationFlagsNone);
-    void setObstacles(int t_robot_num, NavigationFlags t_flags = NavigationFlagsNone);
-
-    ObstacleMap          m_obsMap[Common::Config::Common::kMaxRobots];
-    PlannerRrt           m_planner_rrt[Common::Config::Common::kMaxRobots];
-    PlannerTrajectory    m_planner_trajectory[Common::Config::Common::kMaxRobots];
-    std::unique_ptr<Dss> m_dss;
 
     // Skills
     void mark(int t_robot_num, int t_opp, float t_dist = 220.0f);

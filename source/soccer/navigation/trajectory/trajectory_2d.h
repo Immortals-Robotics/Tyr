@@ -41,6 +41,10 @@ public:
         Common::Vec2 p0, Common::Vec2 v0,
         Common::Vec2 target, const VelocityProfile &profile);
 
+    static Trajectory2D makeFullStopTrajectory(
+        Common::Vec2 p0, Common::Vec2 v0,
+        const VelocityProfile &profile);
+
     Common::Vec2 getPosition(const float t) const
     {
         return {m_trajectory_x.getPosition(t), m_trajectory_y.getPosition(t)};

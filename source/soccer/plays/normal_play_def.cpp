@@ -23,7 +23,7 @@ void Ai::normalPlayDef()
             continue;
         }
 
-        if (m_one_touch_detector[own].isArriving())
+        if (m_own_robot[own].one_touch_detector.isArriving())
         {
             waitForPass(own, false);
         }
@@ -32,7 +32,7 @@ void Ai::normalPlayDef()
             Common::Vec2 static_pos = m_sorted_zones[zone_idx]->best_pos;
             ++zone_idx;
             m_own_robot[own].face(m_world_state.ball.position);
-            navigate(own, static_pos, VelocityProfile::mamooli());
+            m_own_robot[own].navigate(static_pos, VelocityProfile::mamooli());
             m_own_robot[own].shoot(0);
         }
         else

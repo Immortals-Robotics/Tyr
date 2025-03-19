@@ -116,7 +116,7 @@ void Ai::gkHi(const int t_robot_num)
 
             m_own_robot[t_robot_num].face((gk_final_pos - ownGoal()).normalized() * 10000. +
                                           ownGoal()); // m_world_state.ball.position);
-            navigate(t_robot_num, gk_final_pos, VelocityProfile::mamooli());
+            m_own_robot[t_robot_num].navigate(gk_final_pos, VelocityProfile::mamooli(), NavigationFlags::ForceNoOwnPenaltyArea);
         }
     }
 }
@@ -130,7 +130,7 @@ void Ai::gkShirje(const int t_robot_num)
     Common::Vec2 ans = ball_line.closestPoint(m_own_robot[t_robot_num].state().position);
     m_own_robot[t_robot_num].face(m_world_state.ball.position);
     //    ans = ((ans - m_own_robot[t_robot_num].state().position) * 2.0f) + m_own_robot[t_robot_num].state().position;
-    navigate(t_robot_num, ans, VelocityProfile::kharaki());
+    m_own_robot[t_robot_num].navigate(ans, VelocityProfile::kharaki(), NavigationFlags::ForceNoOwnPenaltyArea);
     m_own_robot[t_robot_num].chip(150);
 }
 } // namespace Tyr::Soccer

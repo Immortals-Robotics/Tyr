@@ -8,7 +8,7 @@ void Ai::waitForGool(const int t_robot_num)
 
     m_own_robot[t_robot_num].face(oppGoal());
 
-    navigate(t_robot_num, pos, VelocityProfile::mamooli());
+    m_own_robot[t_robot_num].navigate(pos, VelocityProfile::mamooli());
 
     //TODO: What is this number?
     m_own_robot[t_robot_num].shoot(6500.f);

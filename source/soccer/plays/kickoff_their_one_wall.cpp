@@ -39,13 +39,13 @@ void Ai::kickoffTheirOneWall()
     if (indexN != -1)
     {
         m_own_robot[m_mid5].face(oppGoal());
-        navigate(m_mid5, m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
+        m_own_robot[m_mid5].navigate(m_world_state.opp_robot[indexN].position.pointOnConnectingLine(
                              ownGoal(), (std::fabs(m_world_state.opp_robot[indexN].position.x) + 140) * 2.5));
     }
     if (indexP != -1)
     {
         m_own_robot[m_mid1].face(oppGoal());
-        navigate(m_mid1, m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
+        m_own_robot[m_mid1].navigate(m_world_state.opp_robot[indexP].position.pointOnConnectingLine(
                              ownGoal(), (std::fabs(m_world_state.opp_robot[indexP].position.x) + 140) * 2.5));
     }
 
@@ -56,7 +56,7 @@ void Ai::kickoffTheirOneWall()
             continue;
 
         m_own_robot[*mid].face(m_world_state.ball.position);
-        navigate(*mid, m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli());
+        m_own_robot[*mid].navigate(m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli());
         ++zone_idx;
     }
 

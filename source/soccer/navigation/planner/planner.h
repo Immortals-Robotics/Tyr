@@ -8,11 +8,11 @@
 namespace Tyr::Soccer
 {
 // trajectory-based path planner as described in Tigers' 2019 TDP
-class PlannerTrajectory
+class Planner
 {
 public:
-     PlannerTrajectory() = default;
-    ~PlannerTrajectory() = default;
+     Planner() = default;
+    ~Planner() = default;
 
     Common::Vec2 plan(Common::Vec2 init_pos, Common::Vec2 init_vel, Common::Vec2 target, const VelocityProfile &profile);
 

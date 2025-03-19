@@ -49,7 +49,7 @@ void Ai::waitForPass(const int t_robot_num, const bool t_chip, const Common::Vec
     Common::debug().draw(Common::LineSegment{pos, Common::Vec2(oppGoal().x, open_line.y(oppGoal().x))},
                          Common::Color::pink());
 
-    navigate(t_robot_num, pos, VelocityProfile::kharaki());
+    m_own_robot[t_robot_num].navigate(pos, VelocityProfile::kharaki());
 
     if (t_target == nullptr)
     {

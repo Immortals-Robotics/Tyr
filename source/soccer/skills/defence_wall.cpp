@@ -46,6 +46,6 @@ void Ai::defenceWall(const int t_robot_num, const bool t_kick_off)
     }
 
     m_own_robot[t_robot_num].face(m_world_state.ball.position);
-    navigate(t_robot_num, target);
+    m_own_robot[t_robot_num].navigate(target);
 }
 } // namespace Tyr::Soccer
