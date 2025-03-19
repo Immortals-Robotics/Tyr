@@ -14,7 +14,7 @@ void Ai::throwinChipShoot()
     assignRoles();
 
     gkHi(m_own_robot[m_gk]);
-    defHi(m_def1, m_def2, nullptr);
+    defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
 
     int zone_idx = 0;
     for (const auto &mid : m_prioritized_mids)

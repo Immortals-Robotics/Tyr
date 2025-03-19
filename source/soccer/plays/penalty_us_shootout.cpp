@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 void Ai::penaltyUsShootout()
 {
-    defHi(m_def1, m_def2, nullptr);
+    defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
 
     m_own_robot[m_mid5].face(oppGoal());
     m_own_robot[m_mid5].navigate(Common::Vec2(m_side * 4000, 0), VelocityProfile::aroom(), NavigationFlags::ForceBallObstacle);

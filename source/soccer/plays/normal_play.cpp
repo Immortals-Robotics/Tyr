@@ -17,7 +17,7 @@ void Ai::newNormalPlay()
 
     gkHi(m_own_robot[m_gk]);
 
-    defHi(m_def1, m_def2, nullptr);
+    defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
 
     if (m_is_defending)
     {

@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 static int hys_dive = 0, hys_select = 0;
 
-void Ai::defHi(int t_def1_num, int t_def2_num, Common::Vec2 *t_defend_target)
+void Ai::defHi(Robot& t_robot_1, Robot& t_robot_2, Common::Vec2 *t_defend_target)
 {
     auto predicted_ball = predictBall(Common::config().soccer.def_prediction_time).position;
     if (t_defend_target != nullptr)
@@ -14,12 +14,12 @@ void Ai::defHi(int t_def1_num, int t_def2_num, Common::Vec2 *t_defend_target)
 
     if (ballIsGoaling() && m_ref_state.running())
     {
-        defShirje(t_def1_num, t_def2_num);
+        defShirje(t_robot_1, t_robot_2);
         hys_dive = 10;
     }
     else if (hys_dive > 0 && m_ref_state.running())
     {
-        defShirje(t_def1_num, t_def2_num);
+        defShirje(t_robot_1, t_robot_2);
         hys_dive--;
     }
     else
@@ -121,22 +121,22 @@ void Ai::defHi(int t_def1_num, int t_def2_num, Common::Vec2 *t_defend_target)
 
         Common::debug().draw(virtual_defense_area, Common::Color::blue(), false);
 
-        m_own_robot[t_def1_num].face(final_pos_1 + (final_pos_1 - ownGoal()).normalized() * 10000.);
-        m_own_robot[t_def1_num].navigate(final_pos_1, VelocityProfile::mamooli());
-        m_own_robot[t_def2_num].face(final_pos_2 + (final_pos_2 - ownGoal()).normalized() * 10000.);
-        m_own_robot[t_def2_num].navigate(final_pos_2, VelocityProfile::mamooli());
+        t_robot_1.face(final_pos_1 + (final_pos_1 - ownGoal()).normalized() * 10000.);
+        t_robot_1.navigate(final_pos_1, VelocityProfile::mamooli());
+        t_robot_2.face(final_pos_2 + (final_pos_2 - ownGoal()).normalized() * 10000.);
+        t_robot_2.navigate(final_pos_2, VelocityProfile::mamooli());
     }
 }
 
-void Ai::defShirje(const int t_def_1, const int t_def_2)
+void Ai::defShirje(Robot& t_robot_1, Robot& t_robot_2)
 {
     Common::Line ball_line =
         Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.ball.velocity.toAngle());
-    Common::Vec2 one_touch_1  = ball_line.closestPoint(m_own_robot[t_def_1].state().position);
-    Common::Vec2 one_touch_2  = ball_line.closestPoint(m_own_robot[t_def_2].state().position);
+    Common::Vec2 one_touch_1  = ball_line.closestPoint(t_robot_1.state().position);
+    Common::Vec2 one_touch_2  = ball_line.closestPoint(t_robot_2.state().position);
     int          dive_def_num = 2;
-    if (one_touch_1.distanceTo(m_own_robot[t_def_1].state().position) <
-            one_touch_2.distanceTo(m_own_robot[t_def_2].state().position))
+    if (one_touch_1.distanceTo(t_robot_1.state().position) <
+            one_touch_2.distanceTo(t_robot_2.state().position))
     {
         dive_def_num = 1;
         hys_select   = 10;
@@ -147,19 +147,19 @@ void Ai::defShirje(const int t_def_1, const int t_def_2)
 
     if (dive_def_num == 1)
     {
-        m_own_robot[t_def_1].face(m_world_state.ball.position);
-        m_own_robot[t_def_1].chip(150);
+        t_robot_1.face(m_world_state.ball.position);
+        t_robot_1.chip(150);
         const Common::Line tangent            = ball_line.tangentLine(one_touch_1);
-        const Common::Vec2 nearest_to_tangent = tangent.closestPoint(m_own_robot[t_def_2].state().position);
+        const Common::Vec2 nearest_to_tangent = tangent.closestPoint(t_robot_2.state().position);
         one_touch_2 =
             one_touch_1 + (nearest_to_tangent - one_touch_1).normalized() * (Common::field().robot_radius * 2.f);
     }
     else
     {
-        m_own_robot[t_def_2].face(m_world_state.ball.position);
-        m_own_robot[t_def_2].chip(150);
+        t_robot_2.face(m_world_state.ball.position);
+        t_robot_2.chip(150);
         const Common::Line tangent            = ball_line.tangentLine(one_touch_2);
-        const Common::Vec2 nearest_to_tangent = tangent.closestPoint(m_own_robot[t_def_1].state().position);
+        const Common::Vec2 nearest_to_tangent = tangent.closestPoint(t_robot_1.state().position);
         one_touch_1 =
             one_touch_2 + (nearest_to_tangent - one_touch_2).normalized() * (Common::field().robot_radius * 2.f);
     }
@@ -167,7 +167,7 @@ void Ai::defShirje(const int t_def_1, const int t_def_2)
     Common::debug().draw(Common::Circle{one_touch_1, 50}, Common::Color::yellow());
     Common::debug().draw(Common::Circle{one_touch_2, 50}, Common::Color::yellow());
 
-    m_own_robot[t_def_1].navigate(one_touch_1, VelocityProfile::kharaki());
-    m_own_robot[t_def_2].navigate(one_touch_2, VelocityProfile::kharaki());
+    t_robot_1.navigate(one_touch_1, VelocityProfile::kharaki());
+    t_robot_2.navigate(one_touch_2, VelocityProfile::kharaki());
 }
 } // namespace Tyr::Soccer

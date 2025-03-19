@@ -15,7 +15,7 @@ void Ai::stop()
     assignRoles();
 
     gkHi(m_own_robot[m_gk]);
-    defHi(m_def1, m_def2, nullptr);
+    defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
 
     int zone_idx = 0;
     for (int mid_idx = 0; mid_idx < m_prioritized_mids.size(); ++mid_idx)

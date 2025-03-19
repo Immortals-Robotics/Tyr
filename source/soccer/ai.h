@@ -55,8 +55,6 @@ private:
     std::vector<int *> m_ids;
     std::vector<int *> m_strategy_ids;
 
-    void manageAttRoles();
-
     // Helpers
     Common::Vec2 calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar = 89.0f);
     float        calculateRobotReachTime(const Robot& t_robot, Common::Vec2 t_dest, VelocityProfile t_profile) const;
@@ -93,8 +91,6 @@ private:
     std::map<int *, int> m_mark_map;
     std::vector<int *>   m_prioritized_mids;
 
-    Common::Vec2  m_predicted_ball;
-    bool          m_circle_reached_behind_ball = false;
     Common::Angle calculateOneTouchAngle(const Robot& t_robot, Common::Vec2 t_one_touch_position);
 
     struct OpenAngle
@@ -116,21 +112,6 @@ private:
     float        calculateMarkCost(int t_robot_num, int t_opp);
 
     Common::BallState predictBall(float t_time_ahead) const;
-
-    /**
-     * Calculates a score indicating the suitability of a robot for switching to the attacker role.
-     *
-     * This function evaluates the potential of a robot to become the attacker based on its current state,
-     * position relative to the ball, and specific capabilities. The score is a combination of distance to the
-     * ball and the robot's capabilities, adjusted by various conditions such as whether the robot is waiting
-     * for a pass or marking an opponent.
-     *
-     * @param t_robot_num The ID of the robot being evaluated.
-     * @return A float score representing the suitability of the robot for the attacker role.
-     * - -1: if the switch results in fatal error, ie. robot is the goalkeeper or is out of the game
-     * - [0:1]: switch is possible, a higher score indicates a more suitable candidate.
-     */
-    float calculateSwitchToAttackerScore(int t_robot_num);
 
     // Field helpers
     inline Common::Vec2        ownGoal() const;
@@ -181,8 +162,8 @@ private:
     bool m_gk_intercepting = false;
 
     // Tactics
-    void defHi(int t_def1_num, int t_def2_num, Common::Vec2 *t_defend_target);
-    void defShirje(const int t_def_1, const int t_def_2);
+    void defHi(Robot& t_robot_1, Robot& t_robot_2, Common::Vec2 *t_defend_target);
+    void defShirje(Robot& t_robot_1, Robot& t_robot_2);
 
     // Plays
     void stop();

@@ -54,11 +54,9 @@ set(SOURCE_FILES
         helpers/calc_is_defending.cpp
         helpers/calculate_mark_cost.cpp
         helpers/calculate_opp_threat.cpp
-        helpers/calculate_switch_to_attacker_score.cpp
         helpers/field.inl
         helpers/find_kicker_opp.cpp
         helpers/goal_blocked.cpp
-        helpers/manage_att_roles.cpp
         helpers/mark_manager.cpp
         helpers/nearest_opp.cpp
         helpers/one_touch_angle.cpp
