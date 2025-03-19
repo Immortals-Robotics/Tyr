@@ -1,13 +1,13 @@
 #pragma once
 
+#include "trajectory_constant_acc.h"
 #include "trajectory_pieced.h"
-#include "piece/piece_2d.h"
 
 namespace Tyr::Soccer
 {
 struct VelocityProfile;
 
-class Trajectory2D : public TrajectoryPieced<Common::Vec2, TrajectoryPiece2D>
+class Trajectory2D : public TrajectoryPieced<Common::Vec2>
 {
 public:
     Trajectory2D() = default;
@@ -25,16 +25,6 @@ public:
     static Trajectory2D makeStopDssTrajectory(const TrajectoryPiece2D& cmd_piece, float a_dec);
 
     static Trajectory2D makeRobotTrajectory(Common::Vec2 p0, Common::Vec2 v0, Common::Vec2 target, const VelocityProfile &profile);
-
-    static Trajectory2D makeBangBangTrajectory(Common::Vec2 p0, Common::Vec2 v0, Common::Vec2 target,
-                                               const VelocityProfile &profile);
-
-    std::pair<bool, float> hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f,
-                                        float step_t = 0.1f) const override;
-    std::pair<bool, float> hasCollision(const ObstacleMap &map, float look_ahead = 3.0f,
-                                        float step_t = 0.1f) const override;
-
-    std::pair<bool, float> reachFree(const ObstacleMap &map, float look_ahead, float step_t) const override;
 
     void draw(const Common::Color color) const override
     {

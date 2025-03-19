@@ -1,14 +1,14 @@
 #pragma once
 
-#include "piece/piece_base.h"
-#include "trajectory_base.h"
+#include "trajectory.h"
+#include "trajectory_constant_acc.h"
 
 namespace Tyr::Soccer
 {
 struct VelocityProfile;
 
-template<typename T, typename Piece = TrajectoryPieceBase<T>>
-class TrajectoryPieced : public TrajectoryBase<T>
+template<typename T, typename Piece = TrajectoryConstantAcc<T>>
+class TrajectoryPieced : public Trajectory<T>
 {
 protected:
     static constexpr size_t kMaxParts = 4;

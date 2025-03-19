@@ -1,16 +1,14 @@
 #pragma once
 
-#include "trajectory_base.h"
+#include "trajectory.h"
 #include "trajectory_1d.h"
-#include "piece/piece_2d.h"
-
-#include "../obstacle/map.h"
+#include "trajectory_constant_acc.h"
 
 namespace Tyr::Soccer
 {
 struct VelocityProfile;
 
-class Trajectory2DXY final : public TrajectoryBase<Common::Vec2>
+class Trajectory2DXY final : public Trajectory<Common::Vec2>
 {
 protected:
     Trajectory1D m_trajectory_x;
@@ -59,65 +57,6 @@ public:
     float getEndTime() const override
     {
         return std::min(m_trajectory_x.getEndTime(), m_trajectory_y.getEndTime());
-    }
-
-    // TODO: this duplicates the one in trajectory_2d
-    std::pair<bool, float> hasCollision(const TrajectoryBase &other, float r, float look_ahead = 3.0f,
-                                        float step_t = 0.1f) const override
-    {
-        const float t_start = std::max(this->getStartTime(), other.getStartTime());
-        const float t_end_raw = std::min(this->getEndTime(), other.getEndTime());
-        const float t_end = std::min(t_end_raw, t_start + look_ahead);
-
-        for (float t = t_start; t < t_end; t += step_t)
-        {
-            const Common::Vec2 pos = getPosition(t);
-            const Common::Vec2 other_pos = other.getPosition(t);
-
-            if (pos.distanceTo(other_pos) <= r)
-            {
-                return {true, t};
-            }
-        }
-
-        return {false, std::numeric_limits<float>::max()};
-    }
-
-    // TODO: this duplicates the one in trajectory_2d
-    std::pair<bool, float> hasCollision(const ObstacleMap &map, float look_ahead = 3.0f,
-                                        float step_t = 0.1f) const override
-    {
-        const float t_end = std::min(getEndTime(), getStartTime() + look_ahead);
-
-        for (float t = getStartTime(); t < t_end; t += step_t)
-        {
-            const Common::Vec2 pos = getPosition(t);
-
-            if (map.inside(pos))
-            {
-                return {true, t};
-            }
-        }
-
-        return {false, std::numeric_limits<float>::max()};
-    }
-
-    // TODO: this duplicates the one in trajectory_2d
-    std::pair<bool, float> reachFree(const ObstacleMap &map, float look_ahead, float step_t) const override
-    {
-        const float t_end = std::min(getEndTime(), getStartTime() + look_ahead);
-
-        for (float t = getStartTime(); t < t_end; t += step_t)
-        {
-            const Common::Vec2 pos = getPosition(t);
-
-            if (!map.inside(pos))
-            {
-                return {true, t};
-            }
-        }
-
-        return {false, std::numeric_limits<float>::max()};
     }
 
     void draw(const Common::Color color) const override

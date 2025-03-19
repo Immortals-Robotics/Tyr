@@ -58,7 +58,7 @@ Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::
 
     const Trajectory2DXY target_trajectory = Trajectory2DXY::makeBangBangTrajectory(
         init_pos, init_vel, target, profile);
-    if (!target_trajectory.hasCollision(*m_map).first)
+    if (!m_map->hasCollision(target_trajectory).first)
     {
         return target;
     }
@@ -151,7 +151,8 @@ PlannerTrajectory::TrajectoryChained2DXY PlannerTrajectory::findChainedTrajector
 
     for (float t = trajectory.getStartTime(); t < t_end; t += kTimeStep)
     {
-        if (!trajectory.hasCollision(*m_map, t).first)
+        // TODO: shouldn't this be inverted?
+        if (!m_map->hasCollision(trajectory, t).first)
         {
             break;
         }
@@ -160,7 +161,7 @@ PlannerTrajectory::TrajectoryChained2DXY PlannerTrajectory::findChainedTrajector
         const Common::Vec2 vel = trajectory.getVelocity(t);
 
         const Trajectory2DXY target_trajectory = Trajectory2DXY::makeBangBangTrajectory(pos, vel, m_target, m_profile);
-        if (!target_trajectory.hasCollision(*m_map).first)
+        if (!m_map->hasCollision(target_trajectory).first)
         {
             return TrajectoryChained2DXY{trajectory, target_trajectory, t};
         }
@@ -177,7 +178,7 @@ float PlannerTrajectory::calculateTrajectoryPenalty(const TrajectoryChained2DXY 
 {
     float penalty = 0.0f;
 
-    const auto collision = trajectory.hasCollision(*m_map, kLookaheadTime);
+    const auto collision = m_map->hasCollision(trajectory, kLookaheadTime);
 
     penalty += trajectory.getDuration();
 
@@ -188,7 +189,7 @@ float PlannerTrajectory::calculateTrajectoryPenalty(const TrajectoryChained2DXY 
         penalty += std::max(0.f, kLookaheadTime - collision.second);
     }
 
-    const auto free = trajectory.reachFree(*m_map, kLookaheadTime);
+    const auto free = m_map->reachFree(trajectory, kLookaheadTime);
     if (free.first) // is or will eventually get free
     {
         penalty += 3.0f * free.second;

@@ -1,7 +1,5 @@
 #include "trajectory_2d.h"
 
-#include "../obstacle/map.h"
-
 namespace Tyr::Soccer
 {
 Trajectory2D Trajectory2D::makeDssTrajectory(const TrajectoryPiece2D& cmd_piece, const float a_dec)
@@ -65,63 +63,5 @@ Trajectory2D Trajectory2D::makeStopDssTrajectory(const TrajectoryPiece2D& cmd_pi
     trajectory.addPiece(piece_stopped);
 
     return trajectory;
-}
-
-// TODO: this duplicates the one in trajectory_2d_xy
-std::pair<bool, float> Trajectory2D::hasCollision(const TrajectoryBase &other, const float r, const float look_ahead,
-                                                  const float step_t) const
-{
-    const float t_start = std::max(this->getStartTime(), other.getStartTime());
-    const float t_end_raw = std::min(this->getEndTime(), other.getEndTime());
-    const float t_end = std::min(t_end_raw, t_start + look_ahead);
-
-    for (float t = t_start; t < t_end; t += step_t)
-    {
-        const Common::Vec2 pos = getPosition(t);
-        const Common::Vec2 other_pos = other.getPosition(t);
-
-        if (pos.distanceTo(other_pos) <= r)
-        {
-            return {true, t};
-        }
-    }
-
-    return {false, std::numeric_limits<float>::max()};
-}
-
-// TODO: this duplicates the one in trajectory_2d_xy
-std::pair<bool, float> Trajectory2D::hasCollision(const ObstacleMap &map, const float look_ahead,
-                                                  const float step_t) const
-{
-    const float t_end = std::min(getEndTime(), getStartTime() + look_ahead);
-
-    for (float t = getStartTime(); t < t_end; t += step_t)
-    {
-        const Common::Vec2 pos = getPosition(t);
-
-        if (map.inside(pos))
-        {
-            return {true, t};
-        }
-    }
-
-    return {false, std::numeric_limits<float>::max()};
-}
-
-std::pair<bool, float> Trajectory2D::reachFree(const ObstacleMap &map, float look_ahead, float step_t) const
-{
-    const float t_end = std::min(getEndTime(), getStartTime() + look_ahead);
-
-    for (float t = getStartTime(); t < t_end; t += step_t)
-    {
-        const Common::Vec2 pos = getPosition(t);
-
-        if (!map.inside(pos))
-        {
-            return {true, t};
-        }
-    }
-
-    return {false, std::numeric_limits<float>::max()};
 }
 } // namespace Tyr::Soccer
