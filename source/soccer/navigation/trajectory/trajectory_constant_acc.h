@@ -50,10 +50,5 @@ public:
     {
         return std::max(0.0f, getEndTime() - getStartTime());
     }
-
-    void draw(const Common::Color color) const
-    {
-        (void) color;
-    }
 };
 } // namespace Tyr::Soccer

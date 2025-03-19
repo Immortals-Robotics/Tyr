@@ -11,14 +11,15 @@ template<typename T, TrajectoryConcept<T> Piece>
 class TrajectoryPieced
 {
 protected:
-    static constexpr size_t kMaxParts = 4;
-    std::vector<Piece> m_pieces;
+    static constexpr size_t kMaxParts = 3;
+    std::array<Piece, kMaxParts> m_pieces;
+    size_t m_pieces_count = 0;
 
     static constexpr size_t kInvalidIdx = std::numeric_limits<size_t>::max();
 
-    inline size_t findPieceIdx(const float t) const
+    size_t findPieceIdx(const float t) const
     {
-        for (size_t idx = 0; idx < m_pieces.size(); idx++)
+        for (size_t idx = 0; idx < m_pieces_count; idx++)
         {
             if (t <= m_pieces[idx].t_end)
             {
@@ -30,43 +31,57 @@ protected:
         return kInvalidIdx;
     }
 
-public:
-    TrajectoryPieced()
+    const Piece& firstPiece() const
     {
-        m_pieces.reserve(kMaxParts);
+        assert(m_pieces_count > 0);
+        return m_pieces[0];
     }
+
+    const Piece& lastPiece() const
+    {
+        assert(m_pieces_count > 0);
+        return m_pieces[m_pieces_count - 1];
+    }
+
+public:
+    TrajectoryPieced() = default;
 
     void addPiece(const Piece &piece)
     {
-        m_pieces.push_back(piece);
+        assert(m_pieces_count < kMaxParts);
+        m_pieces[m_pieces_count] = piece;
+        m_pieces_count++;
     }
 
-    T getPosition(const float t) const
+    T getPosition(float t) const
     {
+        t = std::clamp(t, getStartTime(), getEndTime());
         const int idx = findPieceIdx(t);
         return idx == kInvalidIdx ? T() : m_pieces[idx].getPosition(t);
     }
 
-    T getVelocity(const float t) const
+    T getVelocity(float t) const
     {
+        t = std::clamp(t, getStartTime(), getEndTime());
         const int idx = findPieceIdx(t);
         return idx == kInvalidIdx ? T() : m_pieces[idx].getVelocity(t);
     }
 
-    T getAcceleration(const float t) const
+    T getAcceleration(float t) const
     {
+        t = std::clamp(t, getStartTime(), getEndTime());
         const int idx = findPieceIdx(t);
         return idx == kInvalidIdx ? T() : m_pieces[idx].acc;
     }
 
     float getStartTime() const
     {
-        return m_pieces.empty() ? 0.f : m_pieces.front().t_start;
+        return m_pieces_count == 0 ? 0.0f : firstPiece().getStartTime();
     }
 
     float getEndTime() const
     {
-        return m_pieces.empty() ? 0.f : m_pieces.back().t_end;
+        return m_pieces_count == 0 ? 0.0f : lastPiece().getEndTime();
     }
 
     float getDuration() const

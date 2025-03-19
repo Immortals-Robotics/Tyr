@@ -10,12 +10,13 @@ set(HEADER_FILES
         navigation/obstacle/map.h
         navigation/obstacle/rect.h
 
+        navigation/planner/planner.h
+
         navigation/trajectory/trajectory.h
         navigation/trajectory/trajectory_chained.h
         navigation/trajectory/trajectory_constant_acc.h
         navigation/trajectory/trajectory_pieced.h
         navigation/trajectory/trajectory_2d.h
-        navigation/trajectory/planner/planner.h
 
         plays/play_book.h
 
@@ -43,8 +44,8 @@ set(SOURCE_FILES
         assignment/create_static.cpp
 
         navigation/obstacle/map.cpp
+        navigation/planner/planner.cpp
         navigation/trajectory/trajectory_bang_bang.cpp
-        navigation/trajectory/planner/planner.cpp
 
         helpers/attack_fucking_angle.cpp
         helpers/ball_is_goaling.cpp

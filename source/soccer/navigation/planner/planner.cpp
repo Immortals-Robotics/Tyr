@@ -1,6 +1,6 @@
 #include "planner.h"
 
-#include "../trajectory_2d.h"
+#include "../trajectory/trajectory_2d.h"
 
 namespace Tyr::Soccer
 {
@@ -103,7 +103,7 @@ Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::
         }
     }
 
-    best_trajectory.draw(Common::Color::blue());
+    drawTrajectory(best_trajectory, Common::Color::blue());
 
     const Trajectory2D& second_trajectory = best_trajectory.getFirstTrajectory();
     const Common::Vec2 intermediate_point = second_trajectory.getPosition(second_trajectory.getEndTime());

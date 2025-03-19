@@ -70,13 +70,5 @@ public:
     {
         return std::max(0.0f, getEndTime() - getStartTime());
     }
-
-    void draw(const Common::Color color) const
-    {
-        for (float t = getStartTime(); t < getEndTime(); t += 0.1f)
-        {
-            Common::debug().draw(getPosition(t), color);
-        }
-    }
 };
 } // namespace Tyr::Soccer

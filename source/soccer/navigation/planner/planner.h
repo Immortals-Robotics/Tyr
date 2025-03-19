@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../../robot/velocity_profile.h"
-#include "../../obstacle/map.h"
-#include "../trajectory_2d.h"
-#include "../trajectory_chained.h"
+#include "../../robot/velocity_profile.h"
+#include "../obstacle/map.h"
+#include "../trajectory/trajectory_2d.h"
+#include "../trajectory/trajectory_chained.h"
 
 namespace Tyr::Soccer
 {
