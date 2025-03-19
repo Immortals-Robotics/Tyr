@@ -6,9 +6,6 @@ set(HEADER_FILES
         pch.h
         ai.h
 
-        navigation/errt/errt.h
-        navigation/errt/tree.h
-        navigation/dss/dss.h
         navigation/obstacle/circle.h
         navigation/obstacle/map.h
         navigation/obstacle/rect.h
@@ -17,9 +14,7 @@ set(HEADER_FILES
         navigation/trajectory/trajectory_chained.h
         navigation/trajectory/trajectory_constant_acc.h
         navigation/trajectory/trajectory_pieced.h
-        navigation/trajectory/trajectory_1d.h
         navigation/trajectory/trajectory_2d.h
-        navigation/trajectory/trajectory_2d_xy.h
         navigation/trajectory/planner/planner.h
 
         plays/play_book.h
@@ -47,13 +42,8 @@ set(SOURCE_FILES
         assignment/create_mids.cpp
         assignment/create_static.cpp
 
-        navigation/errt/errt.cpp
-        navigation/errt/set_obstacles.cpp
-        navigation/dss/dss.cpp
         navigation/obstacle/map.cpp
-        navigation/trajectory/trajectory_2d.cpp
         navigation/trajectory/trajectory_bang_bang.cpp
-        navigation/trajectory/trajectory_immortals.cpp
         navigation/trajectory/planner/planner.cpp
 
         helpers/attack_fucking_angle.cpp

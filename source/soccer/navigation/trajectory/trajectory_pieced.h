@@ -7,8 +7,8 @@ namespace Tyr::Soccer
 {
 struct VelocityProfile;
 
-template<typename T, typename Piece = TrajectoryConstantAcc<T>>
-class TrajectoryPieced : public Trajectory<T>
+template<typename T, TrajectoryConcept<T> Piece>
+class TrajectoryPieced
 {
 protected:
     static constexpr size_t kMaxParts = 4;
@@ -41,32 +41,37 @@ public:
         m_pieces.push_back(piece);
     }
 
-    T getPosition(const float t) const override
+    T getPosition(const float t) const
     {
         const int idx = findPieceIdx(t);
         return idx == kInvalidIdx ? T() : m_pieces[idx].getPosition(t);
     }
 
-    T getVelocity(const float t) const override
+    T getVelocity(const float t) const
     {
         const int idx = findPieceIdx(t);
         return idx == kInvalidIdx ? T() : m_pieces[idx].getVelocity(t);
     }
 
-    T getAcceleration(const float t) const override
+    T getAcceleration(const float t) const
     {
         const int idx = findPieceIdx(t);
         return idx == kInvalidIdx ? T() : m_pieces[idx].acc;
     }
 
-    float getStartTime() const override
+    float getStartTime() const
     {
         return m_pieces.empty() ? 0.f : m_pieces.front().t_start;
     }
 
-    float getEndTime() const override
+    float getEndTime() const
     {
         return m_pieces.empty() ? 0.f : m_pieces.back().t_end;
+    }
+
+    float getDuration() const
+    {
+        return std::max(0.0f, getEndTime() - getStartTime());
     }
 };
 } // namespace Tyr::Soccer

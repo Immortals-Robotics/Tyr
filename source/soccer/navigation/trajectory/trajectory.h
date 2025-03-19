@@ -2,30 +2,28 @@
 
 namespace Tyr::Soccer
 {
-struct VelocityProfile;
-
-template<typename T>
-class Trajectory
+// Concept defining required interface for trajectory types
+template <typename Trajectory, typename T>
+concept TrajectoryConcept = requires(const Trajectory& trajectory, float t, Common::Color color)
 {
-public:
-    Trajectory() = default;
-    virtual ~Trajectory() = default;
+    { trajectory.getPosition(t) } -> std::convertible_to<T>;
+    { trajectory.getVelocity(t) } -> std::convertible_to<T>;
+    { trajectory.getAcceleration(t) } -> std::convertible_to<T>;
 
-    virtual T getPosition(float t) const = 0;
-    virtual T getVelocity(float t) const = 0;
-    virtual T getAcceleration(float t) const = 0;
+    { trajectory.getStartTime() } -> std::convertible_to<float>;
+    { trajectory.getEndTime() } -> std::convertible_to<float>;
+    { trajectory.getDuration() } -> std::convertible_to<float>;
 
-    virtual float getStartTime() const = 0;
-    virtual float getEndTime() const = 0;
-
-    virtual void draw(Common::Color color) const
-    {
-        (void)color;
-    }
-
-    float getDuration() const
-    {
-        return std::max(0.0f, getEndTime() - getStartTime());
-    }
+    { trajectory.draw(color) } -> std::same_as<void>;
 };
+
+// helper aliases
+template <typename Trajectory>
+concept TrajectoryConcept1D = TrajectoryConcept<Trajectory, float>;
+
+template <typename Trajectory>
+concept TrajectoryConcept2D = TrajectoryConcept<Trajectory, Common::Vec2>;
+
+template <typename Trajectory>
+concept TrajectoryConcept3D = TrajectoryConcept<Trajectory, Common::Vec3>;
 } // namespace Tyr::Soccer

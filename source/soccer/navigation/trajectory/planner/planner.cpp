@@ -1,6 +1,6 @@
 #include "planner.h"
 
-#include "../trajectory_2d_xy.h"
+#include "../trajectory_2d.h"
 
 namespace Tyr::Soccer
 {
@@ -56,7 +56,7 @@ Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::
     m_profile = profile;
     m_target = target;
 
-    const Trajectory2DXY target_trajectory = Trajectory2DXY::makeBangBangTrajectory(
+    const Trajectory2D target_trajectory = Trajectory2D::makeBangBangTrajectory(
         init_pos, init_vel, target, profile);
     if (!m_map->hasCollision(target_trajectory).first)
     {
@@ -72,7 +72,7 @@ Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::
     {
         const Common::Vec2 point = intermediate_points[i];
 
-        const Trajectory2DXY trajectory = Trajectory2DXY::makeBangBangTrajectory(
+        const Trajectory2D trajectory = Trajectory2D::makeBangBangTrajectory(
             init_pos, init_vel, point, profile);
 
         const TrajectoryChained2DXY chained_trajectory = findChainedTrajectory(trajectory);
@@ -88,7 +88,7 @@ Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::
     // check if the last intermediate point is still valid
     if (m_intermediate_target.has_value())
     {
-        const Trajectory2DXY trajectory = Trajectory2DXY::makeBangBangTrajectory(
+        const Trajectory2D trajectory = Trajectory2D::makeBangBangTrajectory(
                     init_pos, init_vel, m_intermediate_target.value(), profile);
 
         const TrajectoryChained2DXY chained_trajectory = findChainedTrajectory(trajectory);
@@ -105,7 +105,7 @@ Common::Vec2 PlannerTrajectory::plan(const Common::Vec2 init_pos, const Common::
 
     best_trajectory.draw(Common::Color::blue());
 
-    const Trajectory2DXY& second_trajectory = best_trajectory.getFirstTrajectory();
+    const Trajectory2D& second_trajectory = best_trajectory.getFirstTrajectory();
     const Common::Vec2 intermediate_point = second_trajectory.getPosition(second_trajectory.getEndTime());
     Common::debug().draw(Common::Circle{intermediate_point, 40.0f}, Common::Color::red(), true);
 
@@ -143,7 +143,7 @@ std::vector<Common::Vec2> PlannerTrajectory::generateIntermediateTargetsSystemat
 // finds a trajectory that consists of
 // 1- init to time t1 somewhere on the input trajectory
 // 2- trajectory from the state at t1 to target
-PlannerTrajectory::TrajectoryChained2DXY PlannerTrajectory::findChainedTrajectory(const Trajectory2DXY &trajectory) const
+PlannerTrajectory::TrajectoryChained2DXY PlannerTrajectory::findChainedTrajectory(const Trajectory2D &trajectory) const
 {
     constexpr float kTimeStep      = 0.2f;
 
@@ -160,7 +160,7 @@ PlannerTrajectory::TrajectoryChained2DXY PlannerTrajectory::findChainedTrajector
         const Common::Vec2 pos = trajectory.getPosition(t);
         const Common::Vec2 vel = trajectory.getVelocity(t);
 
-        const Trajectory2DXY target_trajectory = Trajectory2DXY::makeBangBangTrajectory(pos, vel, m_target, m_profile);
+        const Trajectory2D target_trajectory = Trajectory2D::makeBangBangTrajectory(pos, vel, m_target, m_profile);
         if (!m_map->hasCollision(target_trajectory).first)
         {
             return TrajectoryChained2DXY{trajectory, target_trajectory, t};
@@ -170,7 +170,7 @@ PlannerTrajectory::TrajectoryChained2DXY PlannerTrajectory::findChainedTrajector
     const Common::Vec2 pos = trajectory.getPosition(t_end);
     const Common::Vec2 vel = trajectory.getVelocity(t_end);
 
-    const Trajectory2DXY target_trajectory = Trajectory2DXY::makeBangBangTrajectory(pos, vel, m_target, m_profile);
+    const Trajectory2D target_trajectory = Trajectory2D::makeBangBangTrajectory(pos, vel, m_target, m_profile);
     return TrajectoryChained2DXY{trajectory, target_trajectory, t_end};
 }
 

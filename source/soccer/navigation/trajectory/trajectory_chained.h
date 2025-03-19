@@ -4,8 +4,8 @@
 
 namespace Tyr::Soccer
 {
-template<typename SubTrajectory>
-class TrajectoryChained final : public Trajectory<Common::Vec2>
+template<typename T, TrajectoryConcept<T> SubTrajectory>
+class TrajectoryChained
 {
 protected:
     SubTrajectory m_trajectory[2];
@@ -21,38 +21,43 @@ public:
         m_cut_time = cut_time;
     }
 
-    Common::Vec2 getPosition(const float t) const override
+    T getPosition(const float t) const
     {
         return t < m_cut_time
             ? m_trajectory[0].getPosition(t)
             : m_trajectory[1].getPosition(t - m_cut_time);
     }
 
-    Common::Vec2 getVelocity(const float t) const override
+    T getVelocity(const float t) const
     {
         return t < m_cut_time
             ? m_trajectory[0].getVelocity(t)
             : m_trajectory[1].getVelocity(t - m_cut_time);
     }
 
-    Common::Vec2 getAcceleration(const float t) const override
+    T getAcceleration(const float t) const
     {
         return t < m_cut_time
             ? m_trajectory[0].getAcceleration(t)
             : m_trajectory[1].getAcceleration(t - m_cut_time);
     }
 
-    float getStartTime() const override
+    float getStartTime() const
     {
         return m_trajectory[0].getStartTime();
     }
 
-    float getEndTime() const override
+    float getEndTime() const
     {
         return m_trajectory[1].getEndTime() + m_cut_time;
     }
 
-    void draw(const Common::Color color) const override
+    float getDuration() const
+    {
+        return std::max(0.0f, getEndTime() - getStartTime());
+    }
+
+    void draw(const Common::Color color) const
     {
         for (float t = getStartTime(); t < getEndTime(); t += 0.1f)
         {

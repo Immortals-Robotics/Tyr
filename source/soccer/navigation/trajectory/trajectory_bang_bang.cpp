@@ -1,5 +1,5 @@
-#include "trajectory_1d.h"
-#include "trajectory_2d_xy.h"
+#include "trajectory_2d.h"
+#include "trajectory_pieced.h"
 
 #include "../../robot/velocity_profile.h"
 
@@ -7,7 +7,7 @@ namespace Tyr::Soccer
 {
 // note: these are basically copy-pasted from tigers' code-basse.
 
-static float velChangeToZero(const float s0, const float v0, const float aMax)
+float Trajectory2D::velChangeToZero(const float s0, const float v0, const float aMax)
 {
     const float a = 0 >= v0 ? aMax : -aMax;
 
@@ -15,18 +15,7 @@ static float velChangeToZero(const float s0, const float v0, const float aMax)
     return s0 + (0.5f * v0 * t);
 }
 
-//    Velocity
-//    ^
-//    |    v1
-//    |    /\
-//    |   /  \
-//    |  /    \
-// v0 | /      \
-//    |/        \
-//    +-----------> Time
-//    0    t1   t1+t2
-// this return the pos at (t1+t2)
-static float velTriToZero(const float s0, const float v0, const float v1, const float aMax)
+float Trajectory2D::velTriToZero(const float s0, const float v0, const float v1, const float aMax)
 {
     float a1;
     float a2;
@@ -48,7 +37,7 @@ static float velTriToZero(const float s0, const float v0, const float v1, const 
     return s1 + (0.5f * v1 * t2);
 }
 
-static Trajectory1D calcTri(const float s0, const float v0, const float s2, const float a)
+Trajectory2D::Trajectory1D Trajectory2D::calcTri(const float s0, const float v0, const float s2, const float a)
 {
     float t2;
     float v1;
@@ -97,7 +86,7 @@ static Trajectory1D calcTri(const float s0, const float v0, const float s2, cons
     return trajectory;
 }
 
-static Trajectory1D calcTrapz(
+Trajectory2D::Trajectory1D Trajectory2D::calcTrapz(
             const float s0,
             const float v0,
             const float v1,
@@ -166,7 +155,7 @@ static Trajectory1D calcTrapz(
     return trajectory;
 }
 
-static Trajectory1D makeBangBangTrajectory1D(
+Trajectory2D::Trajectory1D Trajectory2D::makeBangBangTrajectory1D(
     const float initialPos,
     const float finalPos,
     const float initialVel,
@@ -210,7 +199,7 @@ static Trajectory1D makeBangBangTrajectory1D(
     }
 }
 
-Trajectory2DXY Trajectory2DXY::makeBangBangTrajectory(const Common::Vec2 s0, const Common::Vec2 v0, const Common::Vec2 s1, const VelocityProfile &profile)
+Trajectory2D Trajectory2D::makeBangBangTrajectory(const Common::Vec2 s0, const Common::Vec2 v0, const Common::Vec2 s1, const VelocityProfile &profile)
 {
     // alphaFn is either
     // - [async] alpha -> alpha + (((float) AngleMath.PI_HALF - alpha) * 0.5f);
@@ -227,7 +216,7 @@ Trajectory2DXY Trajectory2DXY::makeBangBangTrajectory(const Common::Vec2 s0, con
     const float v0x = v0.x;
     const float v0y = v0.y;
 
-    Trajectory2DXY trajectory{};
+    Trajectory2D trajectory{};
 
     Common::Angle inc = Common::Angle::fromRad(std::numbers::pi_v<float> / 8.0f);
     Common::Angle alpha = Common::Angle::fromRad(std::numbers::pi_v<float> / 4.0f);

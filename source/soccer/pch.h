@@ -12,6 +12,7 @@
 #include <Eigen/Dense>
 #include <numeric>
 #include <optional>
+#include <concepts>
 
 #ifdef PI
 #undef PI

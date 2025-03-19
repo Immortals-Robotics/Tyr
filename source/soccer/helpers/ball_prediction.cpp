@@ -38,7 +38,7 @@ Common::BallState Ai::predictBall(const float t_time_ahead) const
 float Ai::calculateRobotReachTime(const int t_robot_num, const Common::Vec2 t_dest, const VelocityProfile t_profile) const
 {
     const Robot& robot = m_own_robot[t_robot_num];
-    const Trajectory2DXY trajectory = Trajectory2DXY::makeBangBangTrajectory(
+    const Trajectory2D trajectory = Trajectory2D::makeBangBangTrajectory(
         robot.state().position, robot.currentMotion(), t_dest, t_profile);
     return trajectory.getDuration();
 }

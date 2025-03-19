@@ -2,7 +2,7 @@
 
 #include "../../../robot/velocity_profile.h"
 #include "../../obstacle/map.h"
-#include "../trajectory_2d_xy.h"
+#include "../trajectory_2d.h"
 #include "../trajectory_chained.h"
 
 namespace Tyr::Soccer
@@ -42,11 +42,11 @@ private:
 
     static constexpr float kLookaheadTime = 3.f;
 
-    using TrajectoryChained2DXY = TrajectoryChained<Trajectory2DXY>;
+    using TrajectoryChained2DXY = TrajectoryChained<Common::Vec2, Trajectory2D>;
 
     std::vector<Common::Vec2> generateIntermediateTargetsSystematic(Common::Vec2 t_center) const;
 
-    TrajectoryChained2DXY findChainedTrajectory(const Trajectory2DXY& trajectory) const;
+    TrajectoryChained2DXY findChainedTrajectory(const Trajectory2D& trajectory) const;
 
     float calculateTrajectoryPenalty(const TrajectoryChained2DXY& trajectory) const;
 

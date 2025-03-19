@@ -6,7 +6,7 @@ class ObstacleMap;
 
 // defines a constant-acceleration piece of trajectory
 template<typename T>
-class TrajectoryConstantAcc : public Trajectory<T>
+class TrajectoryConstantAcc
 {
 public:
     T acc;
@@ -19,34 +19,41 @@ public:
 
     TrajectoryConstantAcc() = default;
 
-    T getPosition(const float t) const override
+    T getPosition(const float t) const
     {
         const float dt = t - t_start;
         return p_start + v_start * dt + acc * (dt * dt * .5f);
     }
 
-    T getVelocity(const float t) const override
+    T getVelocity(const float t) const
     {
         const float dt = t - t_start;
         return v_start + acc * dt;
     }
 
-    T getAcceleration(const float t) const override
+    T getAcceleration(const float t) const
     {
         return acc;
     }
 
-    float getStartTime() const override
+    float getStartTime() const
     {
         return t_start;
     }
 
-    float getEndTime() const override
+    float getEndTime() const
     {
         return t_end;
     }
-};
 
-using TrajectoryPiece2D = TrajectoryConstantAcc<Common::Vec2>;
-using TrajectoryPiece1D = TrajectoryConstantAcc<float>;
+    float getDuration() const
+    {
+        return std::max(0.0f, getEndTime() - getStartTime());
+    }
+
+    void draw(const Common::Color color) const
+    {
+        (void) color;
+    }
+};
 } // namespace Tyr::Soccer
