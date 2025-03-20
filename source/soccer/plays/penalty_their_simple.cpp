@@ -6,15 +6,15 @@ void Ai::penaltyTheirSimple()
 {
     float penalty_x = Common::field().width - 85.0;
 
-    int index = findKickerOpp(-1);
-    if (index == -1)
+        const std::optional<Common::RobotState> opp_attack = findKickerOpp();
+    if (!opp_attack.has_value())
     {
         m_own_robot[m_gk].target.angle = Common::Angle::fromDeg((1 + m_side) * 90.0f);
         m_own_robot[m_gk].navigate(Common::Vec2(m_side * penalty_x, 0.0f));
     }
     else
     {
-        float gkp_y = Common::Line::fromPointAndAngle(m_world_state.ball.position, m_world_state.opp_robot[index].angle)
+        float gkp_y = Common::Line::fromPointAndAngle(m_world_state.ball.position, opp_attack.value().angle)
                           .intersect(Common::Line::fromTwoPoints(Common::Vec2(m_side * penalty_x, 100),
                                                                  Common::Vec2(m_side * penalty_x, -100)))
                           .value_or(Common::Vec2())

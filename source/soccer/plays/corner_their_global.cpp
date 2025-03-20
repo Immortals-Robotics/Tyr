@@ -48,7 +48,7 @@ void Ai::cornerTheirGlobal()
         }
         else
         {
-            mark(m_own_robot[own], opp, Common::config().soccer.mark_distance);
+            mark(m_own_robot[own], m_world_state.opp_robot[opp], Common::config().soccer.mark_distance);
         }
     }
 }

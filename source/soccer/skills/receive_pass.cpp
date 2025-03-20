@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "wait_for_pass.h"
+
 namespace Tyr::Soccer
 {
 void Ai::receivePass(Robot& t_robot, Common::Vec2 t_static_pos, const bool t_chip)
@@ -64,22 +66,18 @@ void Ai::receivePass(Robot& t_robot, Common::Vec2 t_static_pos, const bool t_chi
         if (t_robot.one_touch_type == Common::Soccer::OneTouchType::OneTouch)
         {
             if (m_timer.time().seconds() < contStrStaticTime)
-                waitForPass(t_robot, t_chip, nullptr, &t_static_pos);
+                WaitForPassSkill{t_chip, nullptr, &t_static_pos}.execute(t_robot);
             else
-                waitForPass(t_robot, t_chip);
+                WaitForPassSkill{t_chip}.execute(t_robot);
         }
-        else if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Shirje)
+        else if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Allaf)
         {
-            waitForOmghi(t_robot);
-        }
-        else if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Gool)
-        {
-            waitForGool(t_robot);
-        }
-        else
-        { // probably Allaf!!!
             t_robot.face(oppGoal());
             t_robot.navigate(t_static_pos, VelocityProfile::mamooli());
+        }
+        else
+        {
+            Common::logWarning("robot {} has unsupported one-touch type {}", t_robot.state().vision_id, t_robot.one_touch_type);
         }
     }
     else

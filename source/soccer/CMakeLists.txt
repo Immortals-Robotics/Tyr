@@ -22,9 +22,18 @@ set(HEADER_FILES
         plays/play_book.h
 
         helpers/one_touch_detector.h
+        helpers/open_angle.h
 
         robot/robot.h
-        robot/velocity_profile.h)
+        robot/velocity_profile.h
+
+        skills/skill.h
+        skills/halt.h
+        skills/mark.h
+        skills/mark_to_ball.h
+        skills/mark_to_goal.h
+        skills/wait_for_pass.h
+)
 
 set(SOURCE_FILES
         ai.cpp
@@ -59,7 +68,6 @@ set(SOURCE_FILES
         helpers/goal_blocked.cpp
         helpers/mark_manager.cpp
         helpers/nearest_opp.cpp
-        helpers/one_touch_angle.cpp
         helpers/open_angle.cpp
         helpers/strategy_weight.cpp
 
@@ -82,12 +90,11 @@ set(SOURCE_FILES
         skills/def_hi.cpp
         skills/defence_wall.cpp
         skills/gk_hi.cpp
+        skills/halt.cpp
         skills/mark_to_ball.cpp
         skills/mark_to_goal.cpp
         skills/mark.cpp
-        skills/pass_gool.cpp
-        skills/pass_omghi.cpp
-        skills/pass.cpp
+        skills/wait_for_pass.cpp
         skills/receive_pass.cpp
         skills/running_def.cpp
         skills/attacker.cpp

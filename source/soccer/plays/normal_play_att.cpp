@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "../helpers/open_angle.h"
+
 namespace Tyr::Soccer
 {
 Common::Timer activeShootTimer;
@@ -32,7 +34,7 @@ void Ai::normalPlayAtt()
 
     else
     {
-        OpenAngle openAngle = calculateOpenAngleToGoal(m_world_state.ball.position, m_own_robot[m_attack]);
+        OpenAngle openAngle = OpenAngle::calculateOpenAngleToGoal(m_world_state.ball.position, m_own_robot[m_attack]);
 
         int *suitable_mid = nullptr;
         for (const auto &mid : m_prioritized_mids)
@@ -65,7 +67,7 @@ void Ai::normalPlayAtt()
         float speed_threshold = ball_is_stationary ? 1000.0f : 500.0f;
         ball_is_stationary = m_world_state.ball.velocity.length() < speed_threshold;
 
-        const bool opp_attacker_in_range = findKickerOpp(-1, 150.0f) != -1;
+        const bool opp_attacker_in_range = findKickerOpp(-1, 150.0f).has_value();
 
         if (openAngle.magnitude.deg() < 8 && ball_is_stationary && !opp_attacker_in_range && suitable_mid != nullptr)
         {

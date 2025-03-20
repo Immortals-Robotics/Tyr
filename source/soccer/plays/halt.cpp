@@ -1,24 +1,14 @@
 #include "../ai.h"
 
+#include "../skills/halt.h"
+
 namespace Tyr::Soccer
 {
-void Ai::halt(Robot& t_robot)
-{
-    if (t_robot.currentMotion().length() > 100.0f)
-    {
-        t_robot.fullBeak();
-    }
-    else
-    {
-        t_robot.halt();
-    }
-}
-
 void Ai::haltAll()
 {
-    for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
+    for (Robot &t_robot : m_own_robot)
     {
-        halt(m_own_robot[i]);
+        HaltSkill{}.execute(t_robot);
     }
 }
 } // namespace Tyr::Soccer

@@ -2,7 +2,8 @@
 
 namespace Tyr::Soccer
 {
-int Ai::findNearestOpp(const Common::Vec2 t_pos, const int t_mask, const bool t_accept_near_ball)
+std::optional<Common::RobotState> Ai::findNearestOpp(const Common::Vec2 t_pos, const int t_mask,
+                                                     const bool t_accept_near_ball)
 {
     float mdis  = std::numeric_limits<float>::max();
     int   index = -1;
@@ -14,7 +15,8 @@ int Ai::findNearestOpp(const Common::Vec2 t_pos, const int t_mask, const bool t_
             continue;
         if (isOut(m_world_state.opp_robot[i].position))
             continue;
-        if ((!t_accept_near_ball) && ((m_world_state.ball.position.distanceTo(m_world_state.opp_robot[i].position) < 500)))
+        if ((!t_accept_near_ball) &&
+            ((m_world_state.ball.position.distanceTo(m_world_state.opp_robot[i].position) < 500)))
         {
             continue;
         }
@@ -25,6 +27,11 @@ int Ai::findNearestOpp(const Common::Vec2 t_pos, const int t_mask, const bool t_
         }
     }
 
-    return index;
+    if (index == -1)
+    {
+        return std::nullopt;
+    }
+
+    return m_world_state.opp_robot[index];
 }
 } // namespace Tyr::Soccer

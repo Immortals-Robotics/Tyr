@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-int Ai::findKickerOpp(const int t_mask, const float t_max_dis)
+std::optional<Common::RobotState> Ai::findKickerOpp(const int t_mask, const float t_max_dis)
 {
     float mdis  = t_max_dis;
     int   index = -1;
@@ -18,6 +18,12 @@ int Ai::findKickerOpp(const int t_mask, const float t_max_dis)
             index = i;
         }
     }
-    return index;
+
+    if (index == -1)
+    {
+        return std::nullopt;
+    }
+
+    return m_world_state.opp_robot[index];
 }
 } // namespace Tyr::Soccer

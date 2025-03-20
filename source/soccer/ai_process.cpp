@@ -1,5 +1,7 @@
 #include "ai.h"
 
+#include "skills/halt.h"
+
 namespace Tyr::Soccer
 {
 void Ai::process()
@@ -84,12 +86,12 @@ void Ai::process()
     {
         if (robot.state().seen_state == Common::SeenState::CompletelyOut)
         {
-            halt(robot);
+            HaltSkill{}.execute(robot);
         }
         else if (!robot.navigated() && !robot.halted())
         {
             Common::logWarning("Own robot {} was neither navigated nor halted", robot.state().vision_id);
-            halt(robot);
+            HaltSkill{}.execute(robot);
         }
     }
 }

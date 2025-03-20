@@ -56,7 +56,6 @@ private:
     std::vector<int *> m_strategy_ids;
 
     // Helpers
-    Common::Vec2 calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar = 89.0f);
     float        calculateRobotReachTime(const Robot& t_robot, Common::Vec2 t_dest, VelocityProfile t_profile) const;
     float        calculateBallRobotReachTime(const Robot& t_robot, Common::Angle angle,  VelocityProfile t_profile, float t_wait) const;
 
@@ -91,21 +90,13 @@ private:
     std::map<int *, int> m_mark_map;
     std::vector<int *>   m_prioritized_mids;
 
-    Common::Angle calculateOneTouchAngle(const Robot& t_robot, Common::Vec2 t_one_touch_position);
 
-    struct OpenAngle
-    {
-        // Center of the angle
-        Common::Angle center;
-        // how big it is
-        Common::Angle magnitude;
-    };
-
-    OpenAngle calculateOpenAngleToGoal(Common::Vec2 t_pos, const Robot& t_robot);
 
     bool         ballIsGoaling();
-    int          findNearestOpp(Common::Vec2 t_pos, int t_mask, bool t_accept_near_ball = true);
-    int          findKickerOpp(int t_mask, float t_max_dis = 500.0f);
+
+    std::optional<Common::RobotState> findNearestOpp(Common::Vec2 t_pos, int t_mask, bool t_accept_near_ball = true);
+    std::optional<Common::RobotState> findKickerOpp(int t_mask = -1, float t_max_dis = 500.0f);
+
     bool         goalBlocked(Common::Vec2 t_init_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r);
     bool         attackFuckingAngle();
     float        calculateOppThreat(int t_opp, bool t_restart = false);
@@ -140,21 +131,13 @@ private:
     };
 
     // Skills
-    void halt(Robot& t_robot);
-
-    void mark(Robot& t_robot, int t_opp, float t_dist = 220.0f);
-    void mark2Goal(Robot& t_robot, int t_opp, float t_dist = 220.0f, bool t_def_area_mark = false);
-    void mark2Ball(Robot& t_robot, int t_opp, float t_dist = 220.0f);
+    void mark(Robot& t_robot, const Common::RobotState& t_opp, float t_dist = 220.0f);
 
     void gkShirje(Robot& t_robot);
     void gkHi(Robot& t_robot);
     void runningDef(Robot& t_robot, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
     void defenceWall(Robot& t_robot, bool t_kick_off = false);
     void attacker(Robot& t_robot, Common::Angle t_angle, float t_kick, int t_chip, bool t_kiss, bool t_dribbler, bool precise = false);
-    void waitForPass(Robot& t_robot, bool t_chip = false, const Common::Vec2 *t_target = nullptr,
-                     Common::Vec2 *t_stat_pos = nullptr);
-    void waitForOmghi(Robot& t_robot);
-    void waitForGool(Robot& t_robot);
     void receivePass(Robot& t_robot, Common::Vec2 t_static_pos, bool t_chip = false);
     void circleBall(Robot& t_robot, Common::Angle t_tagret_angle, float t_shoot_pow, int t_chip_pow,
                     float t_near_dis_override = -1.0f);

@@ -8,11 +8,10 @@ bool Ai::attackFuckingAngle()
 
     static int hys = 0;
 
-    int oppAttack = findKickerOpp(-1);
-    if (oppAttack != -1)
+    if (findKickerOpp().has_value())
     {
-        Common::Angle ownGoalAngle = ownGoal().angleWith(m_world_state.ball.position);
-        Common::Angle oppGoalAngle = m_world_state.ball.position.angleWith(oppGoal());
+        const Common::Angle ownGoalAngle = ownGoal().angleWith(m_world_state.ball.position);
+        const Common::Angle oppGoalAngle = m_world_state.ball.position.angleWith(oppGoal());
 
         if (std::fabs((ownGoalAngle - oppGoalAngle).deg()) > 80.0f)
         {

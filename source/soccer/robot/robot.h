@@ -25,6 +25,12 @@ class Robot
 public:
     Robot() = default;
 
+    Robot(const Robot&) = delete;
+    Robot& operator=(const Robot&) = delete;
+
+    Robot(Robot&&) = delete;
+    Robot& operator=(Robot&&) = delete;
+
     void setState(const Common::RobotState *t_state)
     {
         m_state                  = t_state;

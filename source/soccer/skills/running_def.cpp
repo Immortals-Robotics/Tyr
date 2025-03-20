@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-void Ai::runningDef(Robot& t_robot, const Common::Vec2 t_target, Common::Vec2 *t_defend_target)
+void Ai::runningDef(Robot &t_robot, const Common::Vec2 t_target, Common::Vec2 *t_defend_target)
 {
     const float max_def_move_to_intercept = 400.0f;
     const float max_ball_handler_opp_dis  = 400.0f;
@@ -19,9 +19,9 @@ void Ai::runningDef(Robot& t_robot, const Common::Vec2 t_target, Common::Vec2 *t
         interceptNear = true;
     }
 
-    int ballHandlerOpp = findNearestOpp(m_world_state.ball.position, -1, true);
-    oppHasBall         = m_world_state.opp_robot[ballHandlerOpp].position.distanceTo(m_world_state.ball.position) <
-                 max_ball_handler_opp_dis;
+    const std::optional<Common::RobotState> ballHandlerOpp = findNearestOpp(m_world_state.ball.position, -1, true);
+    oppHasBall                                             = ballHandlerOpp.has_value() &&
+                 ballHandlerOpp.value().position.distanceTo(m_world_state.ball.position) < max_ball_handler_opp_dis;
 
     //    ballMovingFast = m_world_state.ball.velocity.length() > max_fast_ball_spd;
 

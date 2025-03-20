@@ -1,5 +1,8 @@
 #include "../ai.h"
 
+#include "../helpers/open_angle.h"
+#include "../skills/wait_for_pass.h"
+
 namespace Tyr::Soccer
 {
 void Ai::normalPlayDef()
@@ -13,9 +16,9 @@ void Ai::normalPlayDef()
     for (int mid_idx = 0; mid_idx < m_prioritized_mids.size(); ++mid_idx)
     {
         int *const role = m_prioritized_mids[mid_idx];
-        auto i = m_mark_map.find(role);
-        int opp = i->second;
-        int own = *i->first;
+        auto       i    = m_mark_map.find(role);
+        int        opp  = i->second;
+        int        own  = *i->first;
 
         if (m_own_robot[own].navigated())
         {
@@ -25,7 +28,7 @@ void Ai::normalPlayDef()
 
         if (m_own_robot[own].one_touch_detector.isArriving())
         {
-            waitForPass(m_own_robot[own], false);
+            WaitForPassSkill{}.execute(m_own_robot[own]);
         }
         else if (opp == -1)
         {
@@ -37,11 +40,11 @@ void Ai::normalPlayDef()
         }
         else
         {
-            mark(m_own_robot[own], opp, Common::config().soccer.mark_distance);
+            mark(m_own_robot[own], m_world_state.opp_robot[opp], Common::config().soccer.mark_distance);
         }
     }
 
-    OpenAngle     openAngle  = calculateOpenAngleToGoal(m_world_state.ball.position, m_own_robot[m_attack]);
+    OpenAngle     openAngle  = OpenAngle::calculateOpenAngleToGoal(m_world_state.ball.position, m_own_robot[m_attack]);
     Common::Angle shootAngle = Common::Angle::fromDeg(180) + openAngle.center;
 
     float shoot_pow = 1;
@@ -65,11 +68,11 @@ void Ai::normalPlayDef()
         chip_pow  = 20;
     }
 
-    const int kicker_opp = findKickerOpp(-1, 250.0f);
+    const std::optional<Common::RobotState> kicker_opp = findKickerOpp(-1, 250.0f);
 
     // chip the ball out if in a dangerous position
 #if 1
-    if (kicker_opp != -1)
+    if (kicker_opp.has_value())
     {
         shootAngle = m_world_state.ball.position.angleWith(ownGoal());
         shoot_pow  = 1;

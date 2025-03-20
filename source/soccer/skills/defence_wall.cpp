@@ -14,19 +14,19 @@ void Ai::defenceWall(Robot& t_robot, const bool t_kick_off)
 
     Common::Vec2 target;
 
-    int index = findKickerOpp(-1);
-    if (index == -1)
+    const std::optional<Common::RobotState> opp_attack = findKickerOpp();
+    if (!opp_attack.has_value())
     {
         target = m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 730);
     }
     else
     {
-        target = m_world_state.opp_robot[index].position.pointOnConnectingLine(
+        target = opp_attack.value().position.pointOnConnectingLine(
             m_world_state.ball.position,
-            590 + m_world_state.ball.position.distanceTo(m_world_state.opp_robot[index].position));
+            590 + m_world_state.ball.position.distanceTo(opp_attack.value().position));
     }
 
-    Common::logDebug("{}", index);
+    Common::logDebug("{}", opp_attack.value().vision_id);
 
     Common::Angle ballAngle = m_world_state.ball.position.angleWith(target);
     Common::Angle firstLeg  = m_world_state.ball.position.angleWith(

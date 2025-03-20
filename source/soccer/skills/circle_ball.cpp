@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "halt.h"
+
 namespace Tyr::Soccer
 {
 enum ball_circling_state
@@ -30,7 +32,7 @@ void Ai::circleBall(Robot &t_robot, const Common::Angle t_tagret_angle, float t_
     {
         state       = kVeryFar;
         hys_bank[0] = hys_bank[1] = hys_bank[2] = hys_bank[3] = 0;
-        halt(t_robot);
+        HaltSkill{}.execute(t_robot);
         return;
     }
 
