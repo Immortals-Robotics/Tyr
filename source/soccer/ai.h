@@ -52,8 +52,6 @@ private:
     std::vector<int *> m_strategy_ids;
 
     // Helpers
-    float        calculateRobotReachTime(const Robot& t_robot, Common::Vec2 t_dest, VelocityProfile t_profile) const;
-    float        calculateBallRobotReachTime(const Robot& t_robot, Common::Angle angle,  VelocityProfile t_profile, float t_wait) const;
 
     // static pos for mids
     struct Zone
@@ -98,8 +96,6 @@ private:
     float        calculateOppThreat(int t_opp, bool t_restart = false);
     float        calculateMarkCost(int t_robot_num, int t_opp);
 
-    Common::BallState predictBall(float t_time_ahead) const;
-
     // Field helpers
     inline Common::Vec2        ownGoal() const;
     inline Common::Vec2        ownGoalPostTop() const;
@@ -131,7 +127,6 @@ private:
     void gkHi(Robot& t_robot);
     void runningDef(Robot& t_robot, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
     void defenceWall(Robot& t_robot, bool t_kick_off = false);
-    void attacker(Robot& t_robot, Common::Angle t_angle, float t_kick, int t_chip, bool t_kiss, bool t_dribbler, bool precise = false);
     void circleBall(Robot& t_robot, Common::Angle t_tagret_angle, float t_shoot_pow, int t_chip_pow,
                     float t_near_dis_override = -1.0f);
 

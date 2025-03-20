@@ -1,5 +1,8 @@
 #include "../ai.h"
 
+#include "../helpers/ball_prediction.h"
+#include "../tactics/attacker.h"
+
 namespace Tyr::Soccer
 {
 static int my_hys = 0;
@@ -79,9 +82,8 @@ void Ai::gkHi(Robot& t_robot)
 
             m_gk_intercepting = true;
 
-            attacker(t_robot,
-                     predicted_ball.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0,
-                     20, 0, 0);
+            AttackerTactic{predicted_ball.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0,
+                     20, 0, 0}.execute(t_robot);
         }
         else
         {

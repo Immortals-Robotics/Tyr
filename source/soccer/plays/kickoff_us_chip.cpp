@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "../tactics/attacker.h"
+
 namespace Tyr::Soccer
 {
 void Ai::kickoffUsChip()
@@ -54,7 +56,7 @@ void Ai::kickoffUsChip()
     if (m_ref_state.canKickBall())
     {
         // TODO: why isn't this circleBall?
-        attacker(m_own_robot[m_attack], chip_target.angleWith(m_world_state.ball.position), 0, 80, 0, 1);
+        AttackerTactic{chip_target.angleWith(m_world_state.ball.position), 0, 80, 0, 1}.execute(m_own_robot[m_attack]);
     }
     else
     {

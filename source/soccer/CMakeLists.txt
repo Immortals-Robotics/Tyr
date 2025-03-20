@@ -21,6 +21,7 @@ set(HEADER_FILES
 
         plays/play_book.h
 
+        helpers/ball_prediction.h
         helpers/one_touch_detector.h
         helpers/open_angle.h
 
@@ -34,6 +35,7 @@ set(HEADER_FILES
         skills/wait_for_pass.h
 
         tactics/tactic.h
+        tactics/attacker.h
         tactics/mark.h
         tactics/receive_pass.h
 )
@@ -62,7 +64,6 @@ set(SOURCE_FILES
 
         helpers/attack_fucking_angle.cpp
         helpers/ball_is_goaling.cpp
-        helpers/ball_prediction.cpp
         helpers/calc_is_defending.cpp
         helpers/calculate_mark_cost.cpp
         helpers/calculate_opp_threat.cpp

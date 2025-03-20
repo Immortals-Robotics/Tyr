@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "../tactics/attacker.h"
+
 namespace Tyr::Soccer
 {
 void Ai::runningDef(Robot &t_robot, const Common::Vec2 t_target, Common::Vec2 *t_defend_target)
@@ -46,9 +48,9 @@ void Ai::runningDef(Robot &t_robot, const Common::Vec2 t_target, Common::Vec2 *t
     //    if(1)
     {
         Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");
-        attacker(t_robot,
-                 m_world_state.ball.position.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)), 0, 80,
-                 0, 0);
+        AttackerTactic{m_world_state.ball.position.angleWith(Common::Vec2(m_side * (Common::field().width + 110), 0)),
+                       0, 80, 0, 0}
+            .execute(t_robot);
     }
     else
     {

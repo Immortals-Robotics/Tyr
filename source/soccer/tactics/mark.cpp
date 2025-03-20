@@ -8,7 +8,7 @@
 
 namespace Tyr::Soccer
 {
-const MarkTactic::Id MarkTactic::kId = &MarkTactic::kId;
+const Tactic::Id MarkTactic::kId = &MarkTactic::kId;
 
 void MarkTactic::execute(Robot &t_robot)
 {

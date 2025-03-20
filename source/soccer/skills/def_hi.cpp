@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "../helpers/ball_prediction.h"
+
 namespace Tyr::Soccer
 {
 static int hys_dive = 0, hys_select = 0;

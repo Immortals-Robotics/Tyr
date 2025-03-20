@@ -1,6 +1,7 @@
 #include "../ai.h"
 
 #include "../tactics/receive_pass.h"
+#include "../tactics/attacker.h"
 
 #include "../helpers/open_angle.h"
 
@@ -106,7 +107,7 @@ void Ai::normalPlayAtt()
                 chip_pow  = 0;
             }
 
-            attacker(m_own_robot[m_attack], passAngle, 0, chip_pow, 0, 1, true);
+            AttackerTactic{passAngle, 0, chip_pow, 0, 1, true}.execute(m_own_robot[m_attack]);
         }
         else
         {
@@ -127,7 +128,7 @@ void Ai::normalPlayAtt()
                 activeShootTimer.start();
             }
 
-            attacker(m_own_robot[m_attack], shootAngle, shoot_pow, 0, 0, 0);
+            AttackerTactic{shootAngle, shoot_pow, 0, 0, 0}.execute(m_own_robot[m_attack]);
         }
     }
 }
