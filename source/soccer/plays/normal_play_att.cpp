@@ -3,6 +3,7 @@
 #include "../tactics/receive_pass.h"
 #include "../tactics/attacker.h"
 
+#include "../helpers/find_kicker_opp.h"
 #include "../helpers/open_angle.h"
 
 namespace Tyr::Soccer

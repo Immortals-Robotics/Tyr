@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "../skills/defence_wall.h"
+
 namespace Tyr::Soccer
 {
 void Ai::kickoffTheirOneWall()
@@ -60,6 +62,6 @@ void Ai::kickoffTheirOneWall()
         ++zone_idx;
     }
 
-    defenceWall(m_own_robot[m_attack], true);
+    DefenceWallSkill{true}.execute(m_own_robot[m_attack]);
 }
 } // namespace Tyr::Soccer

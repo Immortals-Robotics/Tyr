@@ -1,6 +1,6 @@
 #include "../ai.h"
 
-#include "halt.h"
+#include "../skills/halt.h"
 
 namespace Tyr::Soccer
 {

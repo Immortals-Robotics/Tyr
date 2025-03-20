@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "../helpers/find_kicker_opp.h"
+
 namespace Tyr::Soccer
 {
 void Ai::penaltyTheirSimple()

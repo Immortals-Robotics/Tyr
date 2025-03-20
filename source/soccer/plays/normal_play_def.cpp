@@ -1,6 +1,7 @@
 #include "../ai.h"
 
 #include "../helpers/open_angle.h"
+#include "../helpers/find_kicker_opp.h"
 #include "../skills/wait_for_pass.h"
 
 #include "../tactics/mark.h"

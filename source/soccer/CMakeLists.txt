@@ -22,6 +22,7 @@ set(HEADER_FILES
         plays/play_book.h
 
         helpers/ball_prediction.h
+        helpers/find_kicker_opp.h
         helpers/one_touch_detector.h
         helpers/open_angle.h
 
@@ -29,6 +30,7 @@ set(HEADER_FILES
         robot/velocity_profile.h
 
         skills/skill.h
+        skills/defence_wall.h
         skills/halt.h
         skills/mark_to_ball.h
         skills/mark_to_goal.h
@@ -62,13 +64,11 @@ set(SOURCE_FILES
         navigation/planner/planner.cpp
         navigation/trajectory/trajectory_bang_bang.cpp
 
-        helpers/attack_fucking_angle.cpp
         helpers/ball_is_goaling.cpp
         helpers/calc_is_defending.cpp
         helpers/calculate_mark_cost.cpp
         helpers/calculate_opp_threat.cpp
         helpers/field.inl
-        helpers/find_kicker_opp.cpp
         helpers/goal_blocked.cpp
         helpers/mark_manager.cpp
         helpers/nearest_opp.cpp
@@ -90,10 +90,7 @@ set(SOURCE_FILES
         plays/their_place_ball.cpp
         plays/throwin_chip_shoot.cpp
 
-        skills/circle_ball.cpp
-        skills/def_hi.cpp
         skills/defence_wall.cpp
-        skills/gk_hi.cpp
         skills/halt.cpp
         skills/mark_to_ball.cpp
         skills/mark_to_goal.cpp
@@ -105,6 +102,9 @@ set(SOURCE_FILES
         robot/set_obstacles.cpp
 
         tactics/attacker.cpp
+        tactics/circle_ball.cpp
+        tactics/def_hi.cpp
+        tactics/gk_hi.cpp
         tactics/mark.cpp
         tactics/receive_pass.cpp
 

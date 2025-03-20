@@ -1,7 +1,7 @@
 #include "../ai.h"
 
 #include "../helpers/ball_prediction.h"
-#include "../tactics/attacker.h"
+#include "attacker.h"
 
 namespace Tyr::Soccer
 {

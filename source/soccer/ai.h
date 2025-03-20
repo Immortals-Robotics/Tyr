@@ -89,10 +89,8 @@ private:
     bool         ballIsGoaling();
 
     std::optional<Common::RobotState> findNearestOpp(Common::Vec2 t_pos, int t_mask, bool t_accept_near_ball = true);
-    std::optional<Common::RobotState> findKickerOpp(int t_mask = -1, float t_max_dis = 500.0f);
 
     bool         goalBlocked(Common::Vec2 t_init_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r);
-    bool         attackFuckingAngle();
     float        calculateOppThreat(int t_opp, bool t_restart = false);
     float        calculateMarkCost(int t_robot_num, int t_opp);
 
@@ -126,7 +124,6 @@ private:
     void gkShirje(Robot& t_robot);
     void gkHi(Robot& t_robot);
     void runningDef(Robot& t_robot, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
-    void defenceWall(Robot& t_robot, bool t_kick_off = false);
     void circleBall(Robot& t_robot, Common::Angle t_tagret_angle, float t_shoot_pow, int t_chip_pow,
                     float t_near_dis_override = -1.0f);
 
