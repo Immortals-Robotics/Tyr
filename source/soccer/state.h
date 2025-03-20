@@ -16,6 +16,11 @@ public:
         return *m_ref;
     }
 
+    static const Common::Timer &timer()
+    {
+        return *m_timer;
+    }
+
     static int side()
     {
         return *m_side;
@@ -101,6 +106,7 @@ private:
 
     static inline const Common::WorldState     *m_world;
     static inline const Common::Referee::State *m_ref;
+    static inline const Common::Timer *m_timer;
 
     static inline const int   *m_side;
     static inline const Robot *m_robots;

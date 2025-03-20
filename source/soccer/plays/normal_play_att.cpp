@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "../tactics/receive_pass.h"
+
 #include "../helpers/open_angle.h"
 
 namespace Tyr::Soccer
@@ -16,7 +18,22 @@ void Ai::normalPlayAtt()
     int zone_idx = 0;
     for (const auto &mid : m_prioritized_mids)
     {
-        receivePass(m_own_robot[*mid], m_sorted_zones[zone_idx]->best_pos);
+        Robot &robot = m_own_robot[*mid];
+
+        Common::Vec2 static_pos = m_sorted_zones[zone_idx]->best_pos;
+
+        const auto &allaf_pos = std::find_if(m_allaf_pos.begin(), m_allaf_pos.end(), [&robot](const auto &entry)
+                                             { return *entry.first == robot.state().vision_id; });
+
+        // allaf-pos is provided by the strategy
+        if (allaf_pos != m_allaf_pos.end() && (robot.one_touch_type == Common::Soccer::OneTouchType::Allaf ||
+                                               (robot.one_touch_type == Common::Soccer::OneTouchType::OneTouch &&
+                                                State::timer().time().seconds() < 1.0f)))
+        {
+            static_pos = allaf_pos->second;
+        }
+
+        ReceivePassTactic{static_pos}.execute(robot);
         ++zone_idx;
     }
 
@@ -63,9 +80,9 @@ void Ai::normalPlayAtt()
 
         Common::logDebug("open angle: {}", openAngle.magnitude.deg());
 
-        static bool ball_is_stationary    = false;
-        float speed_threshold = ball_is_stationary ? 1000.0f : 500.0f;
-        ball_is_stationary = m_world_state.ball.velocity.length() < speed_threshold;
+        static bool ball_is_stationary = false;
+        float       speed_threshold    = ball_is_stationary ? 1000.0f : 500.0f;
+        ball_is_stationary             = m_world_state.ball.velocity.length() < speed_threshold;
 
         const bool opp_attacker_in_range = findKickerOpp(-1, 150.0f).has_value();
 
@@ -95,11 +112,11 @@ void Ai::normalPlayAtt()
         {
             Common::Angle shootAngle;
 
-                // target the goal center if the open angle is too small
-                if (openAngle.magnitude.deg() > 5.0f)
-                    shootAngle = Common::Angle::fromDeg(180.0f) + openAngle.center;
-                else
-                    shootAngle = (m_world_state.ball.position - oppGoal()).toAngle();
+            // target the goal center if the open angle is too small
+            if (openAngle.magnitude.deg() > 5.0f)
+                shootAngle = Common::Angle::fromDeg(180.0f) + openAngle.center;
+            else
+                shootAngle = (m_world_state.ball.position - oppGoal()).toAngle();
 
             float shoot_pow = 6000.f; // mm/s
 

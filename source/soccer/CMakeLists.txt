@@ -35,6 +35,7 @@ set(HEADER_FILES
 
         tactics/tactic.h
         tactics/mark.h
+        tactics/receive_pass.h
 )
 
 set(SOURCE_FILES

@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "../tactics/receive_pass.h"
+
 namespace Tyr::Soccer
 {
 bool Ai::loadPlayBook(const std::filesystem::path &t_path)
@@ -224,7 +226,7 @@ void Ai::strategy()
             }
             else
             {
-                receivePass(m_own_robot[*m_strategy_ids[i]], strategy.roles[i].path[step[i]].position * sign_modifier);
+                ReceivePassTactic{strategy.roles[i].path[step[i]].position * sign_modifier}.execute(m_own_robot[*m_strategy_ids[i]]);
             }
         }
 

@@ -1,29 +1,16 @@
-#include "../ai.h"
+#include "receive_pass.h"
+
+#include "../robot/robot.h"
 
 #include "../skills/wait_for_pass.h"
 
 namespace Tyr::Soccer
 {
-void Ai::receivePass(Robot& t_robot, Common::Vec2 t_static_pos, const bool t_chip)
+const Tactic::Id ReceivePassTactic::kId = &ReceivePassTactic::kId;
+
+void ReceivePassTactic::execute(Robot &t_robot)
 {
-    const float contStrStaticTime = 1.0f;
-
-    if (m_timer.time().seconds() > 0.7)
-    {
-        m_chip_head.setDeg(200);
-    }
-
-    const auto &allaf_pos = std::find_if(m_allaf_pos.begin(), m_allaf_pos.end(),
-                                         [&t_robot](const auto &entry) { return *entry.first == t_robot.state().vision_id; });
-
-    if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Allaf &&
-        allaf_pos != m_allaf_pos.end())
-        t_static_pos = allaf_pos->second;
-    if (t_robot.one_touch_type == Common::Soccer::OneTouchType::OneTouch &&
-        m_timer.time().seconds() < contStrStaticTime && allaf_pos != m_allaf_pos.end())
-        t_static_pos = allaf_pos->second;
-
-    if (m_timer.time().seconds() > 2.5)
+    if (State::timer().time().seconds() > 2.5)
     {
         t_robot.one_touch_type_used = true;
     }
@@ -53,7 +40,7 @@ void Ai::receivePass(Robot& t_robot, Common::Vec2 t_static_pos, const bool t_chi
         maxBallAngle = 0;
     }
 
-    float distCoeff = m_world_state.ball.position.distanceTo(t_robot.state().position) / 1500.0f;
+    float distCoeff = State::world().ball.position.distanceTo(t_robot.state().position) / 1500.0f;
     distCoeff       = std::max(0.8f, distCoeff);
     distCoeff       = std::min(1.2f, distCoeff);
 
@@ -65,19 +52,17 @@ void Ai::receivePass(Robot& t_robot, Common::Vec2 t_static_pos, const bool t_chi
         t_robot.one_touch_type_used = true;
         if (t_robot.one_touch_type == Common::Soccer::OneTouchType::OneTouch)
         {
-            if (m_timer.time().seconds() < contStrStaticTime)
-                WaitForPassSkill{t_chip, nullptr, &t_static_pos}.execute(t_robot);
-            else
-                WaitForPassSkill{t_chip}.execute(t_robot);
+            WaitForPassSkill{m_chip}.execute(t_robot);
         }
         else if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Allaf)
         {
-            t_robot.face(oppGoal());
-            t_robot.navigate(t_static_pos, VelocityProfile::mamooli());
+            t_robot.face(State::oppGoal());
+            t_robot.navigate(m_static_pos, VelocityProfile::mamooli());
         }
         else
         {
-            Common::logWarning("robot {} has unsupported one-touch type {}", t_robot.state().vision_id, t_robot.one_touch_type);
+            Common::logWarning("robot {} has unsupported one-touch type {}", t_robot.state().vision_id,
+                               t_robot.one_touch_type);
         }
     }
     else
@@ -87,8 +72,8 @@ void Ai::receivePass(Robot& t_robot, Common::Vec2 t_static_pos, const bool t_chi
             t_robot.one_touch_type_used = false;
             t_robot.one_touch_type      = Common::Soccer::OneTouchType::OneTouch;
         }
-        t_robot.face(oppGoal());
-        t_robot.navigate(t_static_pos, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
+        t_robot.face(State::oppGoal());
+        t_robot.navigate(m_static_pos, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
     }
 }
 } // namespace Tyr::Soccer

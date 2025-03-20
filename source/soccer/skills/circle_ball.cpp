@@ -122,10 +122,6 @@ void Ai::circleBall(Robot &t_robot, const Common::Angle t_tagret_angle, float t_
     else if (state == kKick)
     {
         Common::logDebug("STEPPPPP4");
-        if (t_chip_pow > 0)
-        {
-            m_chip_head = t_robot.state().angle;
-        }
         t_robot.target.angle = t_tagret_angle + Common::Angle::fromDeg(180.0f);
         t_robot.navigate(m_world_state.ball.position, VelocityProfile::aroom());
         if (t_shoot_pow > 0.f)

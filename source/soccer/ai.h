@@ -25,8 +25,6 @@ private:
     using Play = void (Ai::*)();
     Play              m_current_play;
 
-    Common::Angle m_chip_head = Common::Angle::fromDeg(200);
-
     float m_random_param = 0.0f;
     int   m_target_str   = -1;
 
@@ -134,7 +132,6 @@ private:
     void runningDef(Robot& t_robot, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
     void defenceWall(Robot& t_robot, bool t_kick_off = false);
     void attacker(Robot& t_robot, Common::Angle t_angle, float t_kick, int t_chip, bool t_kiss, bool t_dribbler, bool precise = false);
-    void receivePass(Robot& t_robot, Common::Vec2 t_static_pos, bool t_chip = false);
     void circleBall(Robot& t_robot, Common::Angle t_tagret_angle, float t_shoot_pow, int t_chip_pow,
                     float t_near_dis_override = -1.0f);
 

@@ -20,6 +20,7 @@ Ai::Ai()
     State::m_ref = &m_ref_state;
     State::m_side = &m_side;
     State::m_robots = m_own_robot;
+    State::m_timer = &m_timer;
 
     m_world_client = std::make_unique<Common::NngClient>(Common::config().network.world_state_url);
     m_ref_client   = std::make_unique<Common::NngClient>(Common::config().network.referee_state_url);

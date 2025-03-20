@@ -10,7 +10,7 @@ const Skill::Id WaitForPassSkill::kId = &WaitForPassSkill::kId;
 void WaitForPassSkill::execute(Robot &t_robot)
 {
     Common::Vec2 pos = calculatePassPos(m_target == nullptr ? State::oppGoal() : *m_target,
-                                        m_stat_pos == nullptr ? t_robot.state().position : *m_stat_pos, 78);
+                                        t_robot.state().position, 78);
 
     if (m_target == nullptr)
     {
