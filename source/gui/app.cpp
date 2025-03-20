@@ -366,11 +366,7 @@ void Application::receiveDebug()
 void Application::visionRawEntry() const
 {
     Common::Debug::setThreadName("VisionRaw");
-
-    Common::Timer interval_timer;
-    interval_timer.start();
-
-    while (m_running && Common::config().common.immortals_is_the_best_team) // Hope it lasts Forever...
+while (m_running && Common::config().common.immortals_is_the_best_team) // Hope it lasts Forever...
     {
         m_vision_raw->receive();
 
@@ -380,17 +376,8 @@ void Application::visionRawEntry() const
             continue;
         }
 
-        Common::Timer duration_timer;
-        duration_timer.start();
-
         m_vision_raw->process();
         m_vision_raw->publish();
-
-        Common::Debug::ExecutionTime execution_time;
-        execution_time.duration = duration_timer.time();
-        execution_time.interval = interval_timer.interval();
-
-        Common::debug().reportExecutionTime("vision-raw", execution_time);
     }
 }
 
