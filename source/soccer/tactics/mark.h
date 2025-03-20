@@ -1,13 +1,13 @@
 #pragma once
 
-#include "skill.h"
+#include "tactic.h"
 
 namespace Tyr::Soccer
 {
-class MarkSkill final : public Skill
+class MarkTactic final : public Tactic
 {
 public:
-    explicit MarkSkill(const Common::RobotState& t_opp, const float t_dist = 220.0f) : m_opp(t_opp), m_dist(t_dist)
+    explicit MarkTactic(const Common::RobotState& t_opp, const float t_dist = 220.0f) : m_opp(t_opp), m_dist(t_dist)
     {}
 
     static const Id kId;

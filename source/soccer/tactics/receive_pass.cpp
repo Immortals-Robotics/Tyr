@@ -1,6 +1,6 @@
 #include "../ai.h"
 
-#include "wait_for_pass.h"
+#include "../skills/wait_for_pass.h"
 
 namespace Tyr::Soccer
 {

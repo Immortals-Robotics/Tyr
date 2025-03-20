@@ -2,6 +2,7 @@
 
 #include "../helpers/open_angle.h"
 #include "../skills/wait_for_pass.h"
+#include "../tactics/mark.h"
 
 namespace Tyr::Soccer
 {
@@ -40,7 +41,7 @@ void Ai::normalPlayDef()
         }
         else
         {
-            mark(m_own_robot[own], m_world_state.opp_robot[opp], Common::config().soccer.mark_distance);
+            MarkTactic{m_world_state.opp_robot[opp], Common::config().soccer.mark_distance}.execute(m_own_robot[own]);
         }
     }
 

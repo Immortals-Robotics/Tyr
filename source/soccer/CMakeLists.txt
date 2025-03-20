@@ -29,10 +29,12 @@ set(HEADER_FILES
 
         skills/skill.h
         skills/halt.h
-        skills/mark.h
         skills/mark_to_ball.h
         skills/mark_to_goal.h
         skills/wait_for_pass.h
+
+        tactics/tactic.h
+        tactics/mark.h
 )
 
 set(SOURCE_FILES
@@ -93,15 +95,16 @@ set(SOURCE_FILES
         skills/halt.cpp
         skills/mark_to_ball.cpp
         skills/mark_to_goal.cpp
-        skills/mark.cpp
         skills/wait_for_pass.cpp
-        skills/receive_pass.cpp
         skills/running_def.cpp
-        skills/attacker.cpp
 
         robot/robot.cpp
         robot/navigation.cpp
         robot/set_obstacles.cpp
+
+        tactics/attacker.cpp
+        tactics/mark.cpp
+        tactics/receive_pass.cpp
 
         zone/pos_attack.cpp
         zone/pos_defence.cpp

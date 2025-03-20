@@ -4,10 +4,11 @@ namespace Tyr::Soccer
 {
 class Robot;
 
-class Skill
+// TODO: add cost calculation function
+class Tactic
 {
 public:
-    virtual ~Skill() = default;
+    virtual ~Tactic() = default;
 
     using Id = const void*;
     virtual Id id() const = 0;

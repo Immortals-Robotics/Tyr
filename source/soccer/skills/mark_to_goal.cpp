@@ -1,6 +1,6 @@
-#include "../ai.h"
-
 #include "mark_to_goal.h"
+
+#include "../robot/robot.h"
 
 namespace Tyr::Soccer
 {

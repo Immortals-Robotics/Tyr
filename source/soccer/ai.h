@@ -3,8 +3,6 @@
 #include "robot/robot.h"
 #include "plays/play_book.h"
 
-#include "skills/skill.h"
-
 namespace Tyr::Soccer
 {
 class Ai
@@ -131,8 +129,6 @@ private:
     };
 
     // Skills
-    void mark(Robot& t_robot, const Common::RobotState& t_opp, float t_dist = 220.0f);
-
     void gkShirje(Robot& t_robot);
     void gkHi(Robot& t_robot);
     void runningDef(Robot& t_robot, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
