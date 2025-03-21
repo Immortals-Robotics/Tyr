@@ -16,7 +16,7 @@ public:
 
     Common::Vec2 plan(Common::Vec2 init_pos, Common::Vec2 init_vel, Common::Vec2 target, const VelocityProfile &profile);
 
-    void setObstacleMap(const ObstacleMap* const t_map)
+    void setObstacleMap(ObstacleMap* const t_map)
     {
         m_map = t_map;
     }
@@ -31,11 +31,12 @@ private:
                             (m_random.get(-1.0f, 1.0f) * (Common::field().height + margin)));
     }
 
-    Common::Vec2 nearestFree(Common::Vec2 state);
+    Common::Vec2 nearestFree(Common::Vec2 state, float t_margin);
 
-    const ObstacleMap* m_map = nullptr;
+    ObstacleMap* m_map = nullptr;
 
     std::optional<Common::Vec2> m_intermediate_target;
+    std::optional<Common::Vec2> m_last_nearest_free;
 
     VelocityProfile m_profile;
     Common::Vec2 m_target;

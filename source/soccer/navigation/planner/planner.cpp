@@ -4,7 +4,7 @@
 
 namespace Tyr::Soccer
 {
-Common::Vec2 Planner::nearestFree(Common::Vec2 state)
+Common::Vec2 Planner::nearestFree(Common::Vec2 state, const float t_margin)
 {
     const float acceptable_free_dis = 50.0f;
 
@@ -22,11 +22,17 @@ Common::Vec2 Planner::nearestFree(Common::Vec2 state)
     Common::Vec2 ans    = state;
     float        minDis = std::numeric_limits<float>::max();
 
+    if (m_last_nearest_free.has_value() && !m_map->inside(m_last_nearest_free.value(), t_margin))
+    {
+        ans    = m_last_nearest_free.value();
+        minDis = state.distanceSquaredTo(m_last_nearest_free.value());
+    }
+
     for (int i = 0; i < 1000; i++)
     {
         Common::Vec2 newRndPoint = randomState();
         const float  tmp_d       = state.distanceSquaredTo(newRndPoint);
-        if (!m_map->inside(newRndPoint) && tmp_d < minDis)
+        if (!m_map->inside(newRndPoint, t_margin) && tmp_d < minDis)
         {
             ans    = newRndPoint;
             minDis = tmp_d;
@@ -35,20 +41,22 @@ Common::Vec2 Planner::nearestFree(Common::Vec2 state)
         }
     }
 
+    m_last_nearest_free = ans;
     return ans;
 }
 
-Common::Vec2 Planner::plan(const Common::Vec2 init_pos, const Common::Vec2 init_vel, Common::Vec2 target,
+Common::Vec2 Planner::plan(const Common::Vec2     init_pos, const Common::Vec2 init_vel, Common::Vec2 target,
                            const VelocityProfile &profile)
 {
     // if starting in obstacle, just get out first
     if (m_map->inside(init_pos))
     {
-        target = nearestFree(init_pos);
+        target = nearestFree(init_pos, 100.0f);
+        m_map->setPhysicality(Physicality::Physical);
     }
     else if (m_map->inside(target))
     {
-        target = nearestFree(target);
+        target = nearestFree(target, 0.0f);
     }
 
     m_profile = profile;
