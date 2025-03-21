@@ -5,6 +5,7 @@
 namespace Tyr::Soccer
 {
 struct VelocityProfile;
+enum class NavigationFlags;
 
 class AttackerTactic final : public Tactic
 {

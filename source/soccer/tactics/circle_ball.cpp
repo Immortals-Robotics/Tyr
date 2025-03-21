@@ -1,5 +1,6 @@
 #include "circle_ball.h"
 
+#include "../robot/robot.h"
 #include "../skills/halt.h"
 
 namespace Tyr::Soccer

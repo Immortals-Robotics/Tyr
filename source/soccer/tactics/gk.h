@@ -4,6 +4,8 @@
 
 namespace Tyr::Soccer
 {
+enum class NavigationFlags;
+
 class GkTactic final : public Tactic
 {
 public:

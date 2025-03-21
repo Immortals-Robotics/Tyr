@@ -33,6 +33,7 @@ public:
 
     T getAcceleration(const float t) const
     {
+        (void) t;
         return acc;
     }
 

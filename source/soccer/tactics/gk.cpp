@@ -1,5 +1,6 @@
 #include "gk.h"
 
+#include "../robot/robot.h"
 #include "../helpers/ball_is_goaling.h"
 #include "../helpers/ball_prediction.h"
 
