@@ -1,6 +1,7 @@
 #include "../ai.h"
 
 #include "../tactics/gk.h"
+#include "../tactics/def.h"
 
 namespace Tyr::Soccer
 {
@@ -137,7 +138,9 @@ void Ai::generateKissPoints(double t_distance, Common::Vec2 &t_pos1, Common::Vec
 void Ai::placeBall()
 {
     GkTactic{}.execute(m_own_robot[m_mid5]);
-    defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
+
+    DefTactic{1}.execute(m_own_robot[m_def1]);
+    DefTactic{2}.execute(m_own_robot[m_def2]);
 
     int zone_idx = 0;
     for (const auto &mid : m_prioritized_mids)

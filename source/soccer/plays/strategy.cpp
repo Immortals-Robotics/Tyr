@@ -1,6 +1,7 @@
 #include "../ai.h"
 
 #include "../tactics/gk.h"
+#include "../tactics/def.h"
 #include "../tactics/receive_pass.h"
 
 namespace Tyr::Soccer
@@ -114,7 +115,9 @@ void Ai::strategy()
     assignRoles();
 
     GkTactic{}.execute(m_own_robot[m_gk]);
-    defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
+
+    DefTactic{1}.execute(m_own_robot[m_def1]);
+    DefTactic{2}.execute(m_own_robot[m_def2]);
 
     const Strategy &strategy = m_playbook.strategies[curr_str_id];
     Common::logInfo("STRATEGY: {}", strategy.name);

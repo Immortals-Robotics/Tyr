@@ -1,10 +1,13 @@
 #include "../ai.h"
 
+#include "../tactics/def.h"
+
 namespace Tyr::Soccer
 {
 void Ai::penaltyUsShootout()
 {
-    defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
+    DefTactic{1}.execute(m_own_robot[m_def1]);
+    DefTactic{2}.execute(m_own_robot[m_def2]);
 
     m_own_robot[m_mid5].face(Field::oppGoal());
     m_own_robot[m_mid5].navigate(Common::Vec2(m_side * 4000, 0), VelocityProfile::aroom(), NavigationFlags::ForceBallObstacle);

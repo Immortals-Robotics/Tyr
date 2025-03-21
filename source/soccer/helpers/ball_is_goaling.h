@@ -4,6 +4,9 @@ namespace Tyr::Soccer
 {
 inline bool ballIsGoaling()
 {
+    if (State::world().ball.velocity.length() < 200.0f)
+        return false;
+
     bool towardGoal = false;
 
     if ((State::side() == -1) && (std::fabs(State::world().ball.velocity.toAngle().deg()) > 90.0f))
@@ -12,9 +15,6 @@ inline bool ballIsGoaling()
         towardGoal = true;
 
     if (!towardGoal)
-        return false;
-
-    if (State::world().ball.velocity.length() < 200.0f)
         return false;
 
     Common::Line        ball_line  = State::world().ball.line();

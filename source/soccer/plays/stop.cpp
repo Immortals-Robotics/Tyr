@@ -2,6 +2,7 @@
 
 #include "../tactics/gk.h"
 #include "../tactics/mark.h"
+#include "../tactics/def.h"
 
 namespace Tyr::Soccer
 {
@@ -18,7 +19,9 @@ void Ai::stop()
     assignRoles();
 
     GkTactic{}.execute(m_own_robot[m_gk]);
-    defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
+
+    DefTactic{1}.execute(m_own_robot[m_def1]);
+    DefTactic{2}.execute(m_own_robot[m_def2]);
 
     int zone_idx = 0;
     for (int mid_idx = 0; mid_idx < m_prioritized_mids.size(); ++mid_idx)

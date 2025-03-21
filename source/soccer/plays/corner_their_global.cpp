@@ -1,6 +1,7 @@
 #include "../ai.h"
 
 #include "../skills/defence_wall.h"
+#include "../tactics/def.h"
 #include "../tactics/gk.h"
 #include "../tactics/mark.h"
 
@@ -21,14 +22,14 @@ void Ai::cornerTheirGlobal()
     {
         m_own_robot[m_gk].target.angle = Common::Angle::fromDeg((1 + m_side) * 90.0f);
         m_own_robot[m_gk].navigate(Common::Vec2(m_side * (Common::field().width - 100), 0), VelocityProfile::mamooli());
-
-        defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
     }
     else
     {
         GkTactic{}.execute(m_own_robot[m_gk]);
-        defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
     }
+
+    DefTactic{1}.execute(m_own_robot[m_def1]);
+    DefTactic{2}.execute(m_own_robot[m_def2]);
 
     DefenceWallSkill{}.execute(m_own_robot[m_attack]);
 

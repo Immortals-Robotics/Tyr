@@ -104,12 +104,6 @@ private:
     void circleBall(Robot& t_robot, Common::Angle t_tagret_angle, float t_shoot_pow, int t_chip_pow,
                     float t_near_dis_override = -1.0f);
 
-
-
-    // Tactics
-    void defHi(Robot& t_robot_1, Robot& t_robot_2, Common::Vec2 *t_defend_target);
-    void defShirje(Robot& t_robot_1, Robot& t_robot_2);
-
     // Plays
     void stop();
     void newNormalPlay();
