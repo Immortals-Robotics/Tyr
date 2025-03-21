@@ -41,7 +41,7 @@ void AttackerTactic::execute(Robot &t_robot)
 }
 
 // TODO: this is called in a hot loop, make it inline
-float AttackerTactic::calculateRobotReachTime(const Robot &t_robot, const Common::Vec2 t_dest,
+float AttackerTactic::calculateRobotReachTime(const Robot &         t_robot, const Common::Vec2 t_dest,
                                               const VelocityProfile t_profile) const
 {
     const Trajectory2D trajectory =
@@ -49,8 +49,8 @@ float AttackerTactic::calculateRobotReachTime(const Robot &t_robot, const Common
     return trajectory.getDuration();
 }
 
-float AttackerTactic::calculateBallRobotReachTime(const Robot &t_robot, const Common::Angle angle,
-                                                  const VelocityProfile t_profile, const float t_wait) const
+float AttackerTactic::calculateBallRobotReachTime(const Robot &         t_robot, const Common::Angle angle,
+                                                  const VelocityProfile t_profile, const float       t_wait) const
 {
     const float t_max          = 5.0;
     float       t_interception = t_max;
@@ -97,14 +97,8 @@ void AttackerTactic::oldAttacker(Robot &t_robot)
         Common::LineSegment{State::world().ball.position, State::world().ball.position + m_angle.toUnitVec() * 1000.0f},
         Common::Color::blue());
 
-    // TODO: replace with robot reach time
-    float d = t_robot.state().position.distanceTo(State::world().ball.position.circleAroundPoint(m_angle, 200.0f));
-    d += State::world().ball.position.distanceTo(State::world().ball.position.circleAroundPoint(m_angle, 200.0f));
-    d -= 100;
-
-    d /= 2000.0f;
-
-    const Common::Vec2 predicted_ball = predictBall(d).position;
+    const float        t_interception = calculateBallRobotReachTime(t_robot, m_angle, VelocityProfile::mamooli(), 0.1f);
+    const Common::Vec2 predicted_ball = predictBall(t_interception).position;
 
     Common::debug().draw(Common::Circle{predicted_ball, 50}, Common::Color::blue(), false);
 
@@ -112,7 +106,7 @@ void AttackerTactic::oldAttacker(Robot &t_robot)
 
     Common::Vec2 ballToGoal = Field::oppGoal() - State::world().ball.position;
     ballToGoal              = ballToGoal.normalized();
-    float ballVelToGoalDot =
+    float ballVelToGoalDot  =
         (State::world().ball.velocity.x * ballToGoal.x + State::world().ball.velocity.y * ballToGoal.y);
     Common::Vec2 ballVelToGoal     = ballToGoal * ballVelToGoalDot;
     Common::Vec2 ballVelPrepToGoal = State::world().ball.velocity - ballVelToGoal;
@@ -200,7 +194,7 @@ void AttackerTactic::oldAttacker(Robot &t_robot)
                 if (!State::ref().restart())
                 {
                     float normalized_hehe = std::fabs(hehe.deg()) / tetta;
-                    normalized_hehe       = std::pow(normalized_hehe, 0.3f);
+                    normalized_hehe = std::pow(normalized_hehe, 0.3f);
                     targetPoint = predicted_ball.circleAroundPoint(m_angle, std::min(r, normalized_hehe * 265.0f));
 
                     if (!m_precise)
@@ -224,7 +218,7 @@ void AttackerTactic::oldAttacker(Robot &t_robot)
                     hehe2               = m_angle - hehe2;
                     Common::logDebug("hehe2: {}", hehe2.deg());
 
-                    const bool el_in  = ((std::abs(hehe2.deg()) < 5.0f) &&
+                    const bool el_in = ((std::abs(hehe2.deg()) < 5.0f) &&
                                         (State::world().ball.position.distanceTo(t_robot.state().position) < 100));
                     const bool el_out = ((std::abs(hehe2.deg()) > 10.0f) &&
                                          (State::world().ball.position.distanceTo(t_robot.state().position) > 200));
@@ -276,7 +270,7 @@ void AttackerTactic::oldAttacker(Robot &t_robot)
     Common::debug().draw(
         Common::LineSegment{t_robot.state().position,
                             t_robot.state().position +
-                                (t_robot.target.position - t_robot.state().position).normalized() * 1000.0f},
+                            (t_robot.target.position - t_robot.state().position).normalized() * 1000.0f},
         Common::Color::black());
 
     if ((m_kick > 0.f) || (m_chip > 0))

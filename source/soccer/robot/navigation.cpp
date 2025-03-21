@@ -80,8 +80,8 @@ void Robot::navigateJob(Common::Vec2 t_dest, VelocityProfile t_profile, Navigati
 
         if (!already_in_obstacle && collision_imminent && fast_enough)
         {
-            Common::debug().draw(Common::Circle{state().position, Common::field().robot_radius},
-                                 Common::Color::magenta(), false, 30.f);
+            Common::debug().draw(Common::Circle{state().position, Common::field().robot_radius * 1.5f},
+                                         Common::Color::red(), false, 50.f);
 
             VelocityProfile stop_profile = t_profile;
             stop_profile.acceleration *= 2.0f;
