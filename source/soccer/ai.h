@@ -99,9 +99,6 @@ private:
         Done,
     };
 
-    // Skills
-    void runningDef(Robot& t_robot, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
-
     // Plays
     void stop();
     void newNormalPlay();

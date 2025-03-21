@@ -98,7 +98,6 @@ set(SOURCE_FILES
         skills/mark_to_ball.cpp
         skills/mark_to_goal.cpp
         skills/wait_for_pass.cpp
-        skills/running_def.cpp
 
         robot/robot.cpp
         robot/navigation.cpp
