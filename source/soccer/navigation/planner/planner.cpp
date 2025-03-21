@@ -65,6 +65,7 @@ Common::Vec2 Planner::plan(const Common::Vec2     init_pos, const Common::Vec2 i
     const Trajectory2D target_trajectory = Trajectory2D::makeBangBangTrajectory(init_pos, init_vel, target, profile);
     if (!m_map->hasCollision(target_trajectory).first)
     {
+        m_intermediate_target.reset();
         return target;
     }
 
@@ -73,9 +74,9 @@ Common::Vec2 Planner::plan(const Common::Vec2     init_pos, const Common::Vec2 i
     TrajectoryChained2DXY best_trajectory{};
     float                 min_penalty = std::numeric_limits<float>::max();
 
-    for (int i = 0; i < intermediate_points.size(); i++)
+    for (const Common::Vec2 point : intermediate_points)
     {
-        const Common::Vec2 point = intermediate_points[i];
+        // Common::debug().draw(Common::Circle{point, 50.0f}, Common::Color::blue(), true);
 
         const Trajectory2D trajectory = Trajectory2D::makeBangBangTrajectory(init_pos, init_vel, point, profile);
 
@@ -115,7 +116,6 @@ Common::Vec2 Planner::plan(const Common::Vec2     init_pos, const Common::Vec2 i
     Common::debug().draw(Common::Circle{intermediate_point, 40.0f}, Common::Color::red(), true);
 
     m_intermediate_target = intermediate_point;
-
     return intermediate_point;
 }
 
@@ -128,23 +128,22 @@ std::vector<Common::Vec2> Planner::generateIntermediateTargetsSystematic(const C
     constexpr int   kAngleStepCount = 16;
     constexpr float kAngleStep      = 360.0f / 16;
 
-    const float rnd_angle_offset  = m_random.get(0.0f, kAngleStep);
     const float rnd_radius_offset = m_random.get(0.0f, kRadiusStep);
 
-    std::vector<Common::Vec2> targets{kRadiusStepCount * kAngleStepCount};
+    std::vector<Common::Vec2> targets{};
+    targets.reserve(kRadiusStepCount * kAngleStepCount);
 
     for (int i = 0; i <= kRadiusStepCount; ++i)
     {
         const float radius = rnd_radius_offset + kMinRadius + kRadiusStep * i;
+
+        const float rnd_angle_offset  = m_random.get(0.0f, kAngleStep);
 
         for (int j = 0; j < kAngleStepCount; ++j)
         {
             const Common::Angle angle = Common::Angle::fromDeg(j * kAngleStep + rnd_angle_offset);
 
             const Common::Vec2 point = t_center.circleAroundPoint(angle, radius);
-
-            // Common::debug().draw(Common::Circle{point, 50.0f}, Common::Color::blue(), true);
-
             targets.push_back(point);
         }
     }
