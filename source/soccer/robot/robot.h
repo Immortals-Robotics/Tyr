@@ -58,6 +58,8 @@ public:
     void navigate(Common::Vec2 t_dest, VelocityProfile t_profile = VelocityProfile::mamooli(),
                   NavigationFlags t_flags = NavigationFlags::None);
 
+    void waitForNavigationJob();
+
     void move(const Trajectory2D &trajectory);
     void halt();
     void fullBeak(float acc_factor = 1.0f);
@@ -131,5 +133,8 @@ private:
     bool m_halted    = false;
 
     void setObstacles(NavigationFlags t_flags = NavigationFlags::None);
+
+    std::future<void> m_navigation_future;
+    void navigateJob(Common::Vec2 t_dest, VelocityProfile t_profile, NavigationFlags t_flags);
 };
 } // namespace Tyr::Soccer

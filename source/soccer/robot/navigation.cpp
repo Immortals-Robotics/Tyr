@@ -7,8 +7,33 @@ namespace Tyr::Soccer
 void Robot::navigate(const Common::Vec2 t_dest, VelocityProfile t_profile, const NavigationFlags t_flags)
 {
     if (state().seen_state == Common::SeenState::CompletelyOut)
+    {
         return;
+    }
 
+    if (m_navigated)
+    {
+        Common::logWarning("Robot {} is navigated more than once", state().vision_id);
+        waitForNavigationJob();
+    }
+
+    m_navigated = true;
+    // this is only used for assignment, not navigation
+    target.position = t_dest;
+
+    m_navigation_future = std::async(std::launch::async, &Robot::navigateJob, this, t_dest, t_profile, t_flags);
+}
+
+void Robot::waitForNavigationJob()
+{
+    if (m_navigation_future.valid())
+    {
+        m_navigation_future.get();
+    }
+}
+
+void Robot::navigateJob(Common::Vec2 t_dest, VelocityProfile t_profile, NavigationFlags t_flags)
+{
     setObstacles(t_flags);
 
     if (State::ref().shouldSlowDown())
@@ -32,15 +57,15 @@ void Robot::navigate(const Common::Vec2 t_dest, VelocityProfile t_profile, const
 
     Trajectory2D trajectory = Trajectory2D::makeBangBangTrajectory(state().position, currentMotion(), dest, t_profile);
 
-    Common::logDebug("robot [{}] time of arrival: {}", state().vision_id, Common::global_timer().time().seconds() + trajectory.getDuration());
+    Common::logDebug("robot [{}] time of arrival: {}", state().vision_id,
+                     Common::global_timer().time().seconds() + trajectory.getDuration());
 
     if (!(t_flags & NavigationFlags::ForceNoBreak))
     {
-        if (!m_obs_map.inside(state().position) &&
-            m_obs_map.hasCollision(trajectory, 0.2f).first)
+        if (!m_obs_map.inside(state().position) && m_obs_map.hasCollision(trajectory, 0.2f).first)
         {
-            Common::debug().draw(Common::Circle{state().position, Common::field().robot_radius}, Common::Color::magenta(),
-                             false, 30.f);
+            Common::debug().draw(Common::Circle{state().position, Common::field().robot_radius},
+                                 Common::Color::magenta(), false, 30.f);
 
             VelocityProfile stop_profile = t_profile;
             stop_profile.acceleration *= 2.0f;
@@ -49,8 +74,5 @@ void Robot::navigate(const Common::Vec2 t_dest, VelocityProfile t_profile, const
     }
 
     move(trajectory);
-
-    // this is only used for assignment, not navigation
-    target.position = t_dest;
 }
 } // namespace Tyr::Soccer

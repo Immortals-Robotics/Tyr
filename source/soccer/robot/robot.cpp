@@ -25,14 +25,7 @@ void Robot::move(const Trajectory2D& trajectory)
 {
     drawTrajectory(trajectory, Common::Color::black());
 
-    if (m_navigated && state().seen_state != Common::SeenState::CompletelyOut)
-    {
-        Common::logWarning("Robot {} is navigated more than once", state().vision_id);
-    }
-
     m_trajectory = trajectory;
-
-    m_navigated = true;
 }
 
 void Robot::halt()

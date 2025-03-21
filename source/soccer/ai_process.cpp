@@ -84,6 +84,8 @@ void Ai::process()
 
     for (Robot& robot : m_own_robot)
     {
+        robot.waitForNavigationJob();
+
         if (robot.state().seen_state == Common::SeenState::CompletelyOut)
         {
             HaltSkill{}.execute(robot);
