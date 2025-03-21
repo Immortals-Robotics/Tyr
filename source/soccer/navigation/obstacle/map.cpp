@@ -2,8 +2,9 @@
 
 namespace Tyr::Soccer
 {
-bool ObstacleMap::inside(const Common::Vec2 t_p) const
+bool ObstacleMap::inside(const Common::Vec2 t_p, const float t_margin) const
 {
+    // TODO: make this an actual obstacle
     const float margin = Common::field().boundary_width - Common::field().robot_radius + 10.f;
     if (std::fabs(t_p.x) > Common::field().width + margin ||
         std::fabs(t_p.y) > Common::field().height + margin)
@@ -13,13 +14,19 @@ bool ObstacleMap::inside(const Common::Vec2 t_p) const
 
     for (const auto &obstacle : m_circles)
     {
-        if (obstacle.inside(t_p))
+        if (!(obstacle.physicality() & physicality()))
+            continue;
+
+        if (obstacle.inside(t_p, t_margin))
             return true;
     }
 
     for (const auto &obstacle : m_rects)
     {
-        if (obstacle.inside(t_p))
+        if (!(obstacle.physicality() & physicality()))
+            continue;
+
+        if (obstacle.inside(t_p, t_margin))
             return true;
     }
 
@@ -32,6 +39,9 @@ float ObstacleMap::distance(const Common::Vec2 t_p) const
 
     for (const auto &obstacle : m_circles)
     {
+        if (!(obstacle.physicality() & physicality()))
+            continue;
+
         const float tmp_dis = obstacle.distance(t_p);
         if (tmp_dis < dis)
             dis = tmp_dis;
@@ -41,6 +51,9 @@ float ObstacleMap::distance(const Common::Vec2 t_p) const
 
     for (const auto &obstacle : m_rects)
     {
+        if (!(obstacle.physicality() & physicality()))
+            continue;
+
         const float tmp_dis = obstacle.distance(t_p);
         if (tmp_dis < dis)
             dis = tmp_dis;

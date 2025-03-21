@@ -1,8 +1,7 @@
 #pragma once
 
 #include "../trajectory/trajectory.h"
-#include "circle.h"
-#include "rect.h"
+#include "obstacle.h"
 
 namespace Tyr::Soccer
 {
@@ -11,25 +10,26 @@ class ObstacleMap
 private:
     std::vector<CircleObstacle> m_circles;
     std::vector<RectObstacle>   m_rects;
+    Physicality m_physicality = Physicality::All;
 
 public:
     ObstacleMap() = default;
 
-    void add(Common::Circle t_circle)
+    void add(const Common::Circle t_circle, const Physicality t_physicality)
     {
-        m_circles.emplace_back(t_circle);
+        m_circles.emplace_back(t_circle, t_physicality);
 
         Common::debug().draw(t_circle, Common::Color::maroon().transparent(), false);
     }
 
-    void add(Common::Rect t_rect)
+    void add(const Common::Rect t_rect, const Physicality t_physicality)
     {
-        m_rects.emplace_back(t_rect);
+        m_rects.emplace_back(t_rect, t_physicality);
 
         Common::debug().draw(t_rect, Common::Color::maroon().transparent(), false);
     }
 
-    bool  inside(Common::Vec2 t_point) const;
+    bool  inside(Common::Vec2 t_point, float t_margin = 0.0f) const;
     float distance(Common::Vec2 t_point) const;
 
     // TODO: change the param to line segment
@@ -94,10 +94,22 @@ public:
         return {false, std::numeric_limits<float>::max()};
     }
 
+    Physicality physicality() const
+    {
+        return m_physicality;
+    }
+
+    void setPhysicality(const Physicality t_physicality)
+    {
+        m_physicality = t_physicality;
+    }
+
     void resetMap()
     {
         m_circles.clear();
         m_rects.clear();
+
+        m_physicality = Physicality::All;
     }
 };
 

@@ -16,7 +16,7 @@ void GkTactic::execute(Robot &t_robot)
 
     Common::logDebug("GKhi: {} _ {}", ballIsGoaling(),
                      State::world().ball.position.distanceTo(t_robot.state().position) /
-                         State::world().ball.velocity.length());
+                     State::world().ball.velocity.length());
     if (ballIsGoaling())
     {
         Common::debug().draw(Common::Circle{t_robot.state().position, 100}, Common::Color::red(), false);
@@ -44,7 +44,6 @@ void GkTactic::execute(Robot &t_robot)
     {
         m_hys                             = 0;
         const Common::Vec2 predicted_ball = predictBall(Common::config().soccer.def_prediction_time).position;
-        ObstacleMap        obs_map;
 
         // our penalty area
         static constexpr float area_extension_size     = 200.0f;
@@ -57,27 +56,28 @@ void GkTactic::execute(Robot &t_robot)
         const float        h         = Common::field().penalty_area_width + 2 * area_extension_size;
         const Common::Line goal_line = Common::Line::fromTwoPoints(Field::ownGoal() - Common::Vec2(0, 1000),
                                                                    Field::ownGoal() + Common::Vec2(0, 1000));
-        float              ball_position_effect = goal_line.distanceTo(predicted_ball);
-        const auto         start_ang_effect     = Common::config().soccer.gk_tight_start_angle;
-        const auto         ball_angle =
+        float      ball_position_effect = goal_line.distanceTo(predicted_ball);
+        const auto start_ang_effect     = Common::config().soccer.gk_tight_start_angle;
+        const auto ball_angle           =
             std::min(std::max(0.f, std::fabs(((Field::ownGoal() - predicted_ball).normalized().toAngle() -
                                               Common::Angle::fromDeg(State::side() == -1 ? 180.f : 0.f))
-                                                 .deg()) -
-                                       (90.f - start_ang_effect)),
+                                       .deg()) -
+                                   (90.f - start_ang_effect)),
                      start_ang_effect);
-        const auto gk_max_dist = penalty_area_half_width - area_notch;
+        const auto gk_max_dist     = penalty_area_half_width - area_notch;
         const auto ball_ang_effect =
             gk_max_dist -
             ((gk_max_dist - (Common::field().goal_width / 2.f - Common::field().robot_radius)) / start_ang_effect) *
-                ball_angle;
+            ball_angle;
         const float gk_target_w =
             -State::side() * std::min((Common::field().penalty_area_depth - area_notch), ball_position_effect);
         const float        gk_target_h = Common::field().penalty_area_width - 2 * area_notch;
         const Common::Vec2 gk_target_area_start{Field::ownGoal().x, -(penalty_area_half_width - area_notch)};
         Common::logDebug("ang {} pos {} pt {}", ball_angle, ball_ang_effect, penalty_area_half_width);
-        obs_map.add({start, w, h});
 
-        if ((obs_map.inside(predicted_ball)) && (State::world().ball.velocity.length() < 1500) &&
+        const RectObstacle obs{{start, w, h}, Physicality::Virtual};
+
+        if ((obs.inside(predicted_ball)) && (State::world().ball.velocity.length() < 1500) &&
             State::ref().running())
         {
             Common::logDebug("GK intercepting");

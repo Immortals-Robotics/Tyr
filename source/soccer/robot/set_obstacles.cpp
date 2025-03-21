@@ -62,7 +62,7 @@ void Robot::setObstacles(const NavigationFlags t_flags)
             (own.vision_id != state().vision_id))
         {
             const float radius = calculateRobotRadius(state());
-            m_obs_map.add({own.position, current_robot_radius + radius});
+            m_obs_map.add({own.position, current_robot_radius + radius}, Physicality::Physical);
         }
     }
 
@@ -75,7 +75,7 @@ void Robot::setObstacles(const NavigationFlags t_flags)
             const float radius = dont_extend ? Common::field().robot_radius
                                                          : calculateOtherRadius(state(),
                                                                                 opp);
-            m_obs_map.add({opp.position, radius + current_robot_radius});
+            m_obs_map.add({opp.position, radius + current_robot_radius}, Physicality::Physical);
         }
     }
 
@@ -89,7 +89,11 @@ void Robot::setObstacles(const NavigationFlags t_flags)
 
     if (ball_radius > 0.0f)
     {
-        m_obs_map.add({State::world().ball.position, ball_radius + current_robot_radius});
+        // the ball itself
+        m_obs_map.add({State::world().ball.position, Common::field().ball_radius + current_robot_radius}, Physicality::Physical);
+
+        // the area around the ball
+        m_obs_map.add({State::world().ball.position, ball_radius + current_robot_radius}, Physicality::Virtual);
     }
 
     // goal posts
@@ -135,10 +139,10 @@ void Robot::setObstacles(const NavigationFlags t_flags)
         goal_post_size.y
     };
     
-    m_obs_map.add(goal_post_1);
-    m_obs_map.add(goal_post_2);
-    m_obs_map.add(goal_post_3);
-    m_obs_map.add(goal_post_4);
+    m_obs_map.add(goal_post_1, Physicality::Physical);
+    m_obs_map.add(goal_post_2, Physicality::Physical);
+    m_obs_map.add(goal_post_3, Physicality::Physical);
+    m_obs_map.add(goal_post_4, Physicality::Physical);
 
     const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
@@ -151,7 +155,7 @@ void Robot::setObstacles(const NavigationFlags t_flags)
             -State::side() * (penaltyAreaExtensionBehindGoal + current_robot_radius + Common::field().penalty_area_depth);
         const float h = Common::field().penalty_area_width + 2 * current_robot_radius;
 
-        m_obs_map.add({start, w, h});
+        m_obs_map.add({start, w, h}, Physicality::Virtual);
     }
 
     if (oppPenalty)
@@ -163,7 +167,7 @@ void Robot::setObstacles(const NavigationFlags t_flags)
             State::side() * (penaltyAreaExtensionBehindGoal + current_robot_radius + Common::field().penalty_area_depth);
         const float h = Common::field().penalty_area_width + 2 * current_robot_radius;
 
-        m_obs_map.add({start, w, h});
+        m_obs_map.add({start, w, h}, Physicality::Virtual);
     }
 
     if (oppPenaltyBig)
@@ -178,7 +182,7 @@ void Robot::setObstacles(const NavigationFlags t_flags)
         const float w = State::side() * (penaltyAreaExtensionBehindGoal + current_robot_radius + big_penalty_area_r);
         const float h = big_penalty_area_w + 2 * current_robot_radius;
 
-        m_obs_map.add({start, w, h});
+        m_obs_map.add({start, w, h}, Physicality::Virtual);
     }
 
     // avoid the line between the ball and the placement point
@@ -192,7 +196,7 @@ void Robot::setObstacles(const NavigationFlags t_flags)
         {
             const float        t        = static_cast<float>(i) / static_cast<float>(ball_obs_count);
             const Common::Vec2 ball_obs = State::world().ball.position + ball_line * t;
-            m_obs_map.add({ball_obs, placement_clearance + current_robot_radius});
+            m_obs_map.add({ball_obs, placement_clearance + current_robot_radius}, Physicality::Virtual);
         }
     }
 }

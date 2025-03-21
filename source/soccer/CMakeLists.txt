@@ -9,9 +9,8 @@ set(HEADER_FILES
         globals/field.h
         globals/state.h
 
-        navigation/obstacle/circle.h
         navigation/obstacle/map.h
-        navigation/obstacle/rect.h
+        navigation/obstacle/obstacle.h
 
         navigation/planner/planner.h
 
