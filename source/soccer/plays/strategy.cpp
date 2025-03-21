@@ -1,7 +1,8 @@
 #include "../ai.h"
 
-#include "../tactics/gk.h"
+#include "../tactics/circle_ball.h"
 #include "../tactics/def.h"
+#include "../tactics/gk.h"
 #include "../tactics/receive_pass.h"
 
 namespace Tyr::Soccer
@@ -135,7 +136,7 @@ void Ai::strategy()
             Common::logDebug("zeroed: {}", i);
         }
         Common::Angle passAngle = Common::Angle::fromDeg(90.0f - m_side * 90.0f);
-        circleBall(m_own_robot[m_attack], passAngle, 0, 0);
+        CircleBallTactic{passAngle, 0, 0}.execute(m_own_robot[m_attack]);
         return;
     }
     else
@@ -185,8 +186,8 @@ void Ai::strategy()
 
         if (*m_strategy_ids[i] == m_attack)
         {
-            int shoot = 0;
-            int chip  = 0;
+            float shoot = 0;
+            float chip  = 0;
 
             if (strategy.roles[i].path[step[i]].type == Waypoint::Type::Position)
             {
@@ -203,19 +204,19 @@ void Ai::strategy()
             {
                 Common::Angle passAngle =
                     (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
-                circleBall(m_own_robot[*m_strategy_ids[i]], passAngle, shoot, chip);
+                CircleBallTactic{passAngle, shoot, chip}.execute(m_own_robot[*m_strategy_ids[i]]);
             }
             else if (step[i] == strategy.roles[i].path.size() - 2)
             {
                 Common::Angle passAngle =
                     (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
-                circleBall(m_own_robot[*m_strategy_ids[i]], passAngle, 0, 0, 140.0f);
+                CircleBallTactic{passAngle, 0, 0, 140.0f}.execute(m_own_robot[*m_strategy_ids[i]]);
             }
             else
             {
                 Common::Angle passAngle =
                     (strategy.roles[i].path[step[i]].position * sign_modifier).angleWith(m_world_state.ball.position);
-                circleBall(m_own_robot[*m_strategy_ids[i]], passAngle, 0, 0);
+                CircleBallTactic{passAngle, 0, 0}.execute(m_own_robot[*m_strategy_ids[i]]);
             }
         }
         else
@@ -230,7 +231,8 @@ void Ai::strategy()
             }
             else
             {
-                ReceivePassTactic{strategy.roles[i].path[step[i]].position * sign_modifier}.execute(m_own_robot[*m_strategy_ids[i]]);
+                ReceivePassTactic{strategy.roles[i].path[step[i]].position * sign_modifier}.execute(
+                    m_own_robot[*m_strategy_ids[i]]);
             }
         }
 

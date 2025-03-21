@@ -18,8 +18,9 @@ public:
     void execute(Robot &t_robot) override;
 
 private:
-    bool m_intercepting = false;
-    int m_hys = 0;
+    // TODO: make these non-static once we persist tactics
+    static inline bool m_intercepting = false;
+    static inline int m_hys = 0;
 
     // TODO: this should probably be an skill
     void shirje(Robot& t_robot);

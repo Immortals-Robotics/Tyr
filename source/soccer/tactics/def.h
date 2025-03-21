@@ -21,7 +21,8 @@ public:
 private:
     int m_num = 0;
 
-    int m_hys_dive = 0;
+    // TODO: make these non-static once we persist tactics
+    static inline int m_hys_dive = 0;
     static inline int s_hys_select = 0;
 
     Common::Vec2 defStatic_1();

@@ -42,6 +42,7 @@ set(HEADER_FILES
 
         tactics/tactic.h
         tactics/attacker.h
+        tactics/circle_ball.h
         tactics/def.h
         tactics/gk.h
         tactics/mark.h

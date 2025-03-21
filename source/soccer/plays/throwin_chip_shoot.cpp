@@ -1,7 +1,8 @@
 #include "../ai.h"
 
-#include "../tactics/gk.h"
+#include "../tactics/circle_ball.h"
 #include "../tactics/def.h"
+#include "../tactics/gk.h"
 
 namespace Tyr::Soccer
 {
@@ -28,36 +29,37 @@ void Ai::throwinChipShoot()
             continue;
 
         m_own_robot[*mid].face(m_world_state.ball.position);
-        m_own_robot[*mid].navigate(m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
+        m_own_robot[*mid].navigate(m_sorted_zones[zone_idx]->best_pos, VelocityProfile::mamooli(),
+                                   NavigationFlags::ForceBallObstacle);
         ++zone_idx;
     }
 
     if (m_timer.time().seconds() > 4)
     {
-        circleBall(m_own_robot[m_mid5],
-                   Common::Vec2(Field::oppGoal().x, Common::sign(m_world_state.ball.position.y) * 200.0f)
-                       .angleWith(m_world_state.ball.position),
-                   0, 15);
+        CircleBallTactic{Common::Vec2(Field::oppGoal().x, Common::sign(m_world_state.ball.position.y) * 200.0f)
+                             .angleWith(m_world_state.ball.position),
+                         0, 15}
+            .execute(m_own_robot[m_mid5]);
     }
     else
     {
-        circleBall(m_own_robot[m_mid5], Field::oppGoal().angleWith(m_world_state.ball.position), 0, 0);
+        CircleBallTactic{Field::oppGoal().angleWith(m_world_state.ball.position), 0, 0}.execute(m_own_robot[m_mid5]);
     }
 
     m_own_robot[m_attack].face(Field::oppGoal());
     if (m_random_param < 0.5)
     {
         m_own_robot[m_attack].navigate(
-                 m_world_state.ball.position.pointOnConnectingLine(
-                     Common::Vec2(Field::oppGoal().x, Common::sign(-m_world_state.ball.position.x) * 2000.0f), 350),
-                 VelocityProfile::mamooli(), NavigationFlags::ForceBallMediumObstacle);
+            m_world_state.ball.position.pointOnConnectingLine(
+                Common::Vec2(Field::oppGoal().x, Common::sign(-m_world_state.ball.position.x) * 2000.0f), 350),
+            VelocityProfile::mamooli(), NavigationFlags::ForceBallMediumObstacle);
     }
     else
     {
         m_own_robot[m_attack].navigate(
-                 m_world_state.ball.position.pointOnConnectingLine(
-                     Common::Vec2(Field::oppGoal().x, Common::sign(m_world_state.ball.position.x) * 2000.0f), 350),
-                 VelocityProfile::mamooli(), NavigationFlags::ForceBallMediumObstacle);
+            m_world_state.ball.position.pointOnConnectingLine(
+                Common::Vec2(Field::oppGoal().x, Common::sign(m_world_state.ball.position.x) * 2000.0f), 350),
+            VelocityProfile::mamooli(), NavigationFlags::ForceBallMediumObstacle);
     }
 }
 } // namespace Tyr::Soccer

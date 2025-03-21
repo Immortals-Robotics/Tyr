@@ -101,8 +101,6 @@ private:
 
     // Skills
     void runningDef(Robot& t_robot, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
-    void circleBall(Robot& t_robot, Common::Angle t_tagret_angle, float t_shoot_pow, int t_chip_pow,
-                    float t_near_dis_override = -1.0f);
 
     // Plays
     void stop();
