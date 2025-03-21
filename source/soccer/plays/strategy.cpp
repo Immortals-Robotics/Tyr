@@ -220,7 +220,7 @@ void Ai::strategy()
 
             if (step[i] != strategy.roles[i].path.size() - 1)
             {
-                m_own_robot[*m_strategy_ids[i]].face(oppGoal());
+                m_own_robot[*m_strategy_ids[i]].face(Field::oppGoal());
                 m_own_robot[*m_strategy_ids[i]].navigate(strategy.roles[i].path[step[i]].position * sign_modifier,
                                                          profile, NavigationFlags::ForceBallObstacle);
             }

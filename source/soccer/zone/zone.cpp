@@ -8,7 +8,7 @@ void Ai::staticZoneScore(Zone &t_zone) const
     t_zone.score    = -1.0f;
 
     // Skip if it contains a penalty area
-    if (ownPenaltyArea().inside(t_zone.rect.center()) || oppPenaltyArea().inside(t_zone.rect.center()))
+    if (Field::ownPenaltyArea().inside(t_zone.rect.center()) || Field::oppPenaltyArea().inside(t_zone.rect.center()))
         return;
 
     // Skip the zone if the ball is inside it

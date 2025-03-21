@@ -48,7 +48,7 @@ void Ai::stop()
     }
 
     const Common::Vec2 attack_pos =
-        m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 650);
+        m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(Field::ownGoal()), 650);
 
     m_own_robot[m_attack].face(m_world_state.ball.position);
     m_own_robot[m_attack].navigate(attack_pos, VelocityProfile::aroom());

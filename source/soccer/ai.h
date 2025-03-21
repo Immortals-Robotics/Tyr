@@ -79,33 +79,12 @@ private:
 
     void calcIsDefending();
 
-    void markManager();
-
     std::map<int *, int> m_mark_map;
     std::vector<int *>   m_prioritized_mids;
-
-
-
-    bool         ballIsGoaling();
-
-    std::optional<Common::RobotState> findNearestOpp(Common::Vec2 t_pos, int t_mask, bool t_accept_near_ball = true);
 
     bool         goalBlocked(Common::Vec2 t_init_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r);
     float        calculateOppThreat(int t_opp, bool t_restart = false);
     float        calculateMarkCost(int t_robot_num, int t_opp);
-
-    // Field helpers
-    inline Common::Vec2        ownGoal() const;
-    inline Common::Vec2        ownGoalPostTop() const;
-    inline Common::Vec2        ownGoalPostBottom() const;
-    inline Common::LineSegment ownGoalLine() const;
-    inline Common::Vec2        oppGoal() const;
-    inline Common::Vec2        oppGoalPostTop() const;
-    inline Common::Vec2        oppGoalPostBottom() const;
-    inline Common::LineSegment oppGoalLine() const;
-    inline Common::Rect        ownPenaltyArea() const;
-    inline Common::Rect        oppPenaltyArea() const;
-    inline bool                isOut(Common::Vec2 t_point, float t_margin = 0.0f) const;
 
     // ball placement states
     enum class OurBallPlacementState
@@ -257,5 +236,3 @@ public:
     bool setPlayBook(const Protos::Immortals::PlayBook &t_playbook);
 };
 } // namespace Tyr::Soccer
-
-#include "helpers/field.inl"

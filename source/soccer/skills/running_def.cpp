@@ -1,5 +1,8 @@
 #include "../ai.h"
 
+#include "../helpers/find_nearest_opp.h"
+#include "../helpers/ball_is_goaling.h"
+
 #include "../tactics/attacker.h"
 
 namespace Tyr::Soccer

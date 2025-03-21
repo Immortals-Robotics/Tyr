@@ -13,9 +13,9 @@ const Tactic::Id MarkTactic::kId = &MarkTactic::kId;
 void MarkTactic::execute(Robot &t_robot)
 {
     const Common::Vec2 oppToBall = (State::world().ball.position - m_opp.position).normalized();
-    const Common::Vec2 oppToGoal = (State::ownGoal() - m_opp.position).normalized();
+    const Common::Vec2 oppToGoal = (Field::ownGoal() - m_opp.position).normalized();
 
-    const float oppToGoalDis = m_opp.position.distanceTo(State::ownGoal());
+    const float oppToGoalDis = m_opp.position.distanceTo(Field::ownGoal());
     const float oneTouchDot  = oppToBall.dot(oppToGoal);
 
     if (oneTouchDot > 0 || oppToGoalDis < 2500)

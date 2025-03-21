@@ -56,7 +56,7 @@ void ReceivePassTactic::execute(Robot &t_robot)
         }
         else if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Allaf)
         {
-            t_robot.face(State::oppGoal());
+            t_robot.face(Field::oppGoal());
             t_robot.navigate(m_static_pos, VelocityProfile::mamooli());
         }
         else
@@ -72,7 +72,7 @@ void ReceivePassTactic::execute(Robot &t_robot)
             t_robot.one_touch_type_used = false;
             t_robot.one_touch_type      = Common::Soccer::OneTouchType::OneTouch;
         }
-        t_robot.face(State::oppGoal());
+        t_robot.face(Field::oppGoal());
         t_robot.navigate(m_static_pos, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
     }
 }

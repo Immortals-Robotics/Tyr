@@ -1,5 +1,6 @@
 #include "open_angle.h"
 
+#include "../globals/field.h"
 #include "../robot/robot.h"
 
 namespace Tyr::Soccer
@@ -23,9 +24,9 @@ OpenAngle OpenAngle::calculateOpenAngleToGoal(const Common::Vec2 t_pos, const Ro
     std::vector<Common::Vec2> obstacles;
     obstacles.reserve(50);
 
-    const Common::Vec2 t2      = State::oppGoalPostTop();
-    const Common::Vec2 t1      = State::oppGoalPostBottom();
-    const Common::Vec2 MidGoal = State::oppGoal();
+    const Common::Vec2 t2      = Field::oppGoalPostTop();
+    const Common::Vec2 t1      = Field::oppGoalPostBottom();
+    const Common::Vec2 MidGoal = Field::oppGoal();
 
     float midGoalAngel = atan2((MidGoal.y - t_pos.y), (MidGoal.x - t_pos.x));
     float t1Angel      = atan2((t1.y - t_pos.y), (t1.x - t_pos.x));

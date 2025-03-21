@@ -22,7 +22,7 @@ void DefenceWallSkill::execute(Robot& t_robot)
     const std::optional<Common::RobotState> opp_attack = findKickerOpp();
     if (!opp_attack.has_value())
     {
-        target = State::world().ball.position.circleAroundPoint(State::world().ball.position.angleWith(State::ownGoal()), 730);
+        target = State::world().ball.position.circleAroundPoint(State::world().ball.position.angleWith(Field::ownGoal()), 730);
     }
     else
     {
@@ -35,7 +35,7 @@ void DefenceWallSkill::execute(Robot& t_robot)
 
     Common::Angle ballAngle = State::world().ball.position.angleWith(target);
     Common::Angle firstLeg  = State::world().ball.position.angleWith(
-        Common::Vec2(State::ownGoal().x, Common::sign(State::world().ball.position.y) * (350.0f)));
+        Common::Vec2(Field::ownGoal().x, Common::sign(State::world().ball.position.y) * (350.0f)));
     Common::Angle secLeg =
         firstLeg - Common::Angle::fromDeg(tetta * Common::sign(State::world().ball.position.y) * State::side());
 
@@ -47,7 +47,7 @@ void DefenceWallSkill::execute(Robot& t_robot)
 
     if (isOut)
     {
-        target = State::world().ball.position.circleAroundPoint(State::world().ball.position.angleWith(State::ownGoal()), 730);
+        target = State::world().ball.position.circleAroundPoint(State::world().ball.position.angleWith(Field::ownGoal()), 730);
     }
 
     t_robot.face(State::world().ball.position);

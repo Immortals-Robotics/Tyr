@@ -45,7 +45,7 @@ void Ai::cornerTheirGlobal()
         {
             if (static_pos.find(own) != static_pos.end())
             {
-                m_own_robot[own].face(oppGoal());
+                m_own_robot[own].face(Field::oppGoal());
                 m_own_robot[own].navigate(static_pos[own], VelocityProfile::mamooli());
             }
         }

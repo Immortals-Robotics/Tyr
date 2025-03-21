@@ -26,7 +26,7 @@ void Ai::theirPlaceBall()
 
     m_own_robot[m_attack].face(m_world_state.ball.position);
     m_own_robot[m_attack].navigate(
-             m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(ownGoal()), 1090),
+             m_world_state.ball.position.circleAroundPoint(m_world_state.ball.position.angleWith(Field::ownGoal()), 1090),
              VelocityProfile::aroom());
 }
 } // namespace Tyr::Soccer

@@ -22,4 +22,5 @@
 
 #include <protos/immortals/play_book.pb.h>
 
-#include "state.h"
+#include "globals/state.h"
+#include "globals/field.h"

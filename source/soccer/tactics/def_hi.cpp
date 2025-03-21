@@ -1,6 +1,7 @@
 #include "../ai.h"
 
 #include "../helpers/ball_prediction.h"
+#include "../helpers/ball_is_goaling.h"
 
 namespace Tyr::Soccer
 {
@@ -27,12 +28,12 @@ void Ai::defHi(Robot& t_robot_1, Robot& t_robot_2, Common::Vec2 *t_defend_target
     else
     {
 
-        float area_extension_size = predicted_ball.distanceTo(ownGoal()) * 0.7 - Common::field().penalty_area_depth;
+        float area_extension_size = predicted_ball.distanceTo(Field::ownGoal()) * 0.7 - Common::field().penalty_area_depth;
         area_extension_size       = std::min(1100.f, area_extension_size);
         area_extension_size       = std::max(Common::field().robot_radius, area_extension_size);
         const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
-        const Common::Vec2 start{ownGoal().x, -(penalty_area_half_width + area_extension_size)};
+        const Common::Vec2 start{Field::ownGoal().x, -(penalty_area_half_width + area_extension_size)};
         const float        w = -m_side * (area_extension_size + Common::field().penalty_area_depth);
         const float        h = Common::field().penalty_area_width + 2 * area_extension_size;
 
@@ -40,46 +41,46 @@ void Ai::defHi(Robot& t_robot_1, Robot& t_robot_2, Common::Vec2 *t_defend_target
 
         const auto start_ang_effect = Common::config().soccer.def_tight_start_angle;
         const auto ball_angle =
-            (ownGoal() - predicted_ball).normalized().toAngle() - Common::Angle::fromDeg(m_side == -1 ? 180.f : 0.f);
+            (Field::ownGoal() - predicted_ball).normalized().toAngle() - Common::Angle::fromDeg(m_side == -1 ? 180.f : 0.f);
         const auto ball_angle_corrected =
             std::min(std::max(0.f, std::fabs(ball_angle.deg()) - (90.f - start_ang_effect)), start_ang_effect) *
             (ball_angle.deg() >= 0.f ? 1.f : -1.f);
 
         Common::Line line_1 =
-            Common::Line::fromTwoPoints(predicted_ball, ownGoal() + Common::Vec2(0, Common::field().goal_width / 2));
+            Common::Line::fromTwoPoints(predicted_ball, Field::ownGoal() + Common::Vec2(0, Common::field().goal_width / 2));
         Common::Line line_2 =
-            Common::Line::fromTwoPoints(predicted_ball, ownGoal() - Common::Vec2(0, Common::field().goal_width / 2));
+            Common::Line::fromTwoPoints(predicted_ball, Field::ownGoal() - Common::Vec2(0, Common::field().goal_width / 2));
 
         if (std::fabs(ball_angle_corrected) > 0.f)
         {
             const Common::Vec2 limit_ball =
-                ownGoal() -
+                Field::ownGoal() -
                 Common::Angle::fromDeg((90.f - start_ang_effect) * (ball_angle.deg() >= 0.f ? 1.f : -1.f)).toUnitVec() *
-                    (predicted_ball.distanceTo(ownGoal())) * (m_side);
+                    (predicted_ball.distanceTo(Field::ownGoal())) * (m_side);
 
             if (ball_angle_corrected * m_side >= 0.f)
             {
                 line_1 = Common::Line::fromTwoPoints(limit_ball,
-                                                     ownGoal() + Common::Vec2(0, Common::field().goal_width / 2));
+                                                     Field::ownGoal() + Common::Vec2(0, Common::field().goal_width / 2));
             }
             else
             {
                 line_2 = Common::Line::fromTwoPoints(limit_ball,
-                                                     ownGoal() + Common::Vec2(0, Common::field().goal_width / 2));
+                                                     Field::ownGoal() + Common::Vec2(0, Common::field().goal_width / 2));
             }
             Common::debug().draw(limit_ball, Common::Color::red());
         }
 
-        const Common::Line ball_goal_line = Common::Line::fromTwoPoints(predicted_ball, ownGoal());
+        const Common::Line ball_goal_line = Common::Line::fromTwoPoints(predicted_ball, Field::ownGoal());
 
         const auto   intersects_1 = virtual_defense_area.intersection(line_1);
         const auto   intersects_2 = virtual_defense_area.intersection(line_2);
-        Common::Vec2 final_pos_1{(predicted_ball - ownGoal()).normalized() *
+        Common::Vec2 final_pos_1{(predicted_ball - Field::ownGoal()).normalized() *
                                      (penalty_area_half_width + Common::field().robot_radius + 20.f) +
-                                 ownGoal()};
-        Common::Vec2 final_pos_2{(predicted_ball - ownGoal()).normalized() *
+                                 Field::ownGoal()};
+        Common::Vec2 final_pos_2{(predicted_ball - Field::ownGoal()).normalized() *
                                      (penalty_area_half_width + Common::field().robot_radius + 20.f) +
-                                 ownGoal()};
+                                 Field::ownGoal()};
         if (intersects_1.size())
         {
             final_pos_1 = intersects_1.front();
@@ -123,9 +124,9 @@ void Ai::defHi(Robot& t_robot_1, Robot& t_robot_2, Common::Vec2 *t_defend_target
 
         Common::debug().draw(virtual_defense_area, Common::Color::blue(), false);
 
-        t_robot_1.face(final_pos_1 + (final_pos_1 - ownGoal()).normalized() * 10000.);
+        t_robot_1.face(final_pos_1 + (final_pos_1 - Field::ownGoal()).normalized() * 10000.);
         t_robot_1.navigate(final_pos_1, VelocityProfile::mamooli());
-        t_robot_2.face(final_pos_2 + (final_pos_2 - ownGoal()).normalized() * 10000.);
+        t_robot_2.face(final_pos_2 + (final_pos_2 - Field::ownGoal()).normalized() * 10000.);
         t_robot_2.navigate(final_pos_2, VelocityProfile::mamooli());
     }
 }

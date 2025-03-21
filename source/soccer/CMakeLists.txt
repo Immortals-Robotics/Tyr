@@ -5,7 +5,9 @@ find_package(LEMON CONFIG REQUIRED)
 set(HEADER_FILES
         pch.h
         ai.h
-        state.h
+
+        globals/field.h
+        globals/state.h
 
         navigation/obstacle/circle.h
         navigation/obstacle/map.h
@@ -21,7 +23,9 @@ set(HEADER_FILES
 
         plays/play_book.h
 
+        helpers/ball_is_goaling.h
         helpers/ball_prediction.h
+        helpers/find_nearest_opp.h
         helpers/find_kicker_opp.h
         helpers/one_touch_detector.h
         helpers/open_angle.h
@@ -64,14 +68,10 @@ set(SOURCE_FILES
         navigation/planner/planner.cpp
         navigation/trajectory/trajectory_bang_bang.cpp
 
-        helpers/ball_is_goaling.cpp
         helpers/calc_is_defending.cpp
         helpers/calculate_mark_cost.cpp
         helpers/calculate_opp_threat.cpp
-        helpers/field.inl
         helpers/goal_blocked.cpp
-        helpers/mark_manager.cpp
-        helpers/nearest_opp.cpp
         helpers/open_angle.cpp
         helpers/strategy_weight.cpp
 

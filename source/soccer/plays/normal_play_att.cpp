@@ -12,8 +12,8 @@ Common::Timer activeShootTimer;
 
 void Ai::normalPlayAtt()
 {
-    Common::Vec2 oppgoal_p1 = oppGoalPostTop();
-    Common::Vec2 oppgoal_p2 = oppGoalPostBottom();
+    Common::Vec2 oppgoal_p1 = Field::oppGoalPostTop();
+    Common::Vec2 oppgoal_p2 = Field::oppGoalPostBottom();
     Common::debug().draw(Common::Triangle{oppgoal_p1, m_world_state.ball.position, oppgoal_p2},
                          Common::Color::red().transparent(), true);
 
@@ -41,7 +41,7 @@ void Ai::normalPlayAtt()
 
     if (m_own_robot[m_attack].one_touch_type == Common::Soccer::OneTouchType::Allaf && m_allaf_pos.contains(&m_attack))
     {
-        m_own_robot[m_attack].face(oppGoal());
+        m_own_robot[m_attack].face(Field::oppGoal());
         m_own_robot[m_attack].navigate(m_allaf_pos[&m_attack], VelocityProfile::mamooli());
         if (m_timer.time().seconds() > 2.5)
         {
@@ -66,7 +66,7 @@ void Ai::normalPlayAtt()
 
             const bool pass_angle_ok = (robot.state().position - m_world_state.ball.position)
                                            .normalized()
-                                           .dot((ownGoal() - m_world_state.ball.position).normalized()) < 0.85f;
+                                           .dot((Field::ownGoal() - m_world_state.ball.position).normalized()) < 0.85f;
 
             Common::logDebug("mid {} pass angle ok: {}", *mid, pass_angle_ok);
 
@@ -104,7 +104,7 @@ void Ai::normalPlayAtt()
             }
             else
             {
-                passAngle = oppGoal().angleWith(m_world_state.ball.position);
+                passAngle = Field::oppGoal().angleWith(m_world_state.ball.position);
                 chip_pow  = 0;
             }
 
@@ -118,7 +118,7 @@ void Ai::normalPlayAtt()
             if (openAngle.magnitude.deg() > 5.0f)
                 shootAngle = Common::Angle::fromDeg(180.0f) + openAngle.center;
             else
-                shootAngle = (m_world_state.ball.position - oppGoal()).toAngle();
+                shootAngle = (m_world_state.ball.position - Field::oppGoal()).toAngle();
 
             float shoot_pow = 6000.f; // mm/s
 

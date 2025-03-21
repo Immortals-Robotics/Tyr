@@ -9,7 +9,7 @@ const Skill::Id WaitForPassSkill::kId = &WaitForPassSkill::kId;
 
 void WaitForPassSkill::execute(Robot &t_robot)
 {
-    Common::Vec2 pos = calculatePassPos(m_target == nullptr ? State::oppGoal() : *m_target,
+    Common::Vec2 pos = calculatePassPos(m_target == nullptr ? Field::oppGoal() : *m_target,
                                         t_robot.state().position, 78);
 
     if (m_target == nullptr)
@@ -25,9 +25,9 @@ void WaitForPassSkill::execute(Robot &t_robot)
 
     Common::Line shoot_line = Common::Line::fromPointAndAngle(pos, t_robot.target.angle);
     Common::Line open_line  = Common::Line::fromPointAndAngle(pos, open_angle.center);
-    Common::debug().draw(Common::LineSegment{pos, Common::Vec2(State::oppGoal().x, shoot_line.y(State::oppGoal().x))},
+    Common::debug().draw(Common::LineSegment{pos, Common::Vec2(Field::oppGoal().x, shoot_line.y(Field::oppGoal().x))},
                          Common::Color::brown());
-    Common::debug().draw(Common::LineSegment{pos, Common::Vec2(State::oppGoal().x, open_line.y(State::oppGoal().x))},
+    Common::debug().draw(Common::LineSegment{pos, Common::Vec2(Field::oppGoal().x, open_line.y(Field::oppGoal().x))},
                          Common::Color::pink());
 
     t_robot.navigate(pos, VelocityProfile::kharaki());
@@ -91,14 +91,14 @@ Common::Angle WaitForPassSkill::calculateOneTouchAngle(const Robot& t_robot, con
     v0x = State::world().ball.velocity.x;
     v0y = State::world().ball.velocity.y;
 
-    const Common::LineSegment targetLine = State::oppGoalLine();
+    const Common::LineSegment targetLine = Field::oppGoalLine();
 
     OpenAngle boz = OpenAngle::calculateOpenAngleToGoal(t_one_touch_position, t_robot);
     Common::logDebug("Open angle : {}    {}", boz.center.deg(), boz.magnitude.deg());
 
     Common::Line ball_line = Common::Line::fromPointAndAngle(t_one_touch_position, boz.center);
 
-    Common::Vec2 goal = ball_line.intersect(targetLine).value_or(Common::Vec2(State::oppGoal().x, 0.0f));
+    Common::Vec2 goal = ball_line.intersect(targetLine).value_or(Common::Vec2(Field::oppGoal().x, 0.0f));
 
     // TODO: cleanup the following
 

@@ -17,15 +17,15 @@ float Ai::calculateOppThreat(const int t_opp, const bool t_restart)
         std::fabs(m_world_state.opp_robot[t_opp].position.x - m_world_state.ball.position.x) > 3000)
         return -1;
 
-    float oppDisToGoal = m_world_state.opp_robot[t_opp].position.distanceTo(ownGoal());
+    float oppDisToGoal = m_world_state.opp_robot[t_opp].position.distanceTo(Field::ownGoal());
 
-    Common::Angle t1Angel = m_world_state.opp_robot[t_opp].position.angleWith(ownGoalPostBottom());
-    Common::Angle t2Angel = m_world_state.opp_robot[t_opp].position.angleWith(ownGoalPostTop());
+    Common::Angle t1Angel = m_world_state.opp_robot[t_opp].position.angleWith(Field::ownGoalPostBottom());
+    Common::Angle t2Angel = m_world_state.opp_robot[t_opp].position.angleWith(Field::ownGoalPostTop());
 
     float oppOpenAngleToGoal = std::fabs((t2Angel - t1Angel).deg());
 
     Common::Vec2 oppToBall = (m_world_state.ball.position - m_world_state.opp_robot[t_opp].position).normalized();
-    Common::Vec2 oppToGoal = (ownGoal() - m_world_state.opp_robot[t_opp].position).normalized();
+    Common::Vec2 oppToGoal = (Field::ownGoal() - m_world_state.opp_robot[t_opp].position).normalized();
 
     float oneTouchDot = oppToBall.dot(oppToGoal);
 

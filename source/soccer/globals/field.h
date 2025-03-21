@@ -2,38 +2,12 @@
 
 namespace Tyr::Soccer
 {
-class Robot;
-class State
+class Field
 {
 public:
-    static const Common::WorldState &world()
-    {
-        return *m_world;
-    }
-
-    static const Common::Referee::State &ref()
-    {
-        return *m_ref;
-    }
-
-    static const Common::Timer &timer()
-    {
-        return *m_timer;
-    }
-
-    static int side()
-    {
-        return *m_side;
-    }
-
-    static const Robot *robots()
-    {
-        return m_robots;
-    }
-
     static Common::Vec2 ownGoal()
     {
-        return Common::Vec2(side() * Common::field().width, 0);
+        return Common::Vec2(State::side() * Common::field().width, 0);
     }
 
     static Common::Vec2 ownGoalPostTop()
@@ -53,7 +27,7 @@ public:
 
     static Common::Vec2 oppGoal()
     {
-        return Common::Vec2(-side() * Common::field().width, 0);
+        return Common::Vec2(-State::side() * Common::field().width, 0);
     }
 
     static Common::Vec2 oppGoalPostTop()
@@ -75,9 +49,9 @@ public:
     {
         const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
-        const Common::Vec2 start{side() * Common::field().width, -penalty_area_half_width};
+        const Common::Vec2 start{State::side() * Common::field().width, -penalty_area_half_width};
 
-        const float w = -side() * Common::field().penalty_area_depth;
+        const float w = -State::side() * Common::field().penalty_area_depth;
         const float h = Common::field().penalty_area_width;
 
         return {start, w, h};
@@ -87,29 +61,18 @@ public:
     {
         const float penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
-        const Common::Vec2 start{-side() * Common::field().width, -penalty_area_half_width};
+        const Common::Vec2 start{-State::side() * Common::field().width, -penalty_area_half_width};
 
-        const float w = side() * Common::field().penalty_area_depth;
+        const float w = State::side() * Common::field().penalty_area_depth;
         const float h = Common::field().penalty_area_width;
 
         return {start, w, h};
     }
 
-    static bool isOut(const Common::Vec2 t_point, const float t_margin)
+    static bool isOut(const Common::Vec2 t_point, const float t_margin = 0.0f)
     {
         return std::fabs(t_point.x) > Common::field().width + t_margin ||
                std::fabs(t_point.y) > Common::field().height + t_margin;
     }
-
-private:
-    friend class Ai;
-
-    static inline const Common::WorldState     *m_world;
-    static inline const Common::Referee::State *m_ref;
-    static inline const Common::Timer *m_timer;
-
-    static inline const int   *m_side;
-    static inline const Robot *m_robots;
 };
-
 } // namespace Tyr::Soccer

@@ -11,8 +11,8 @@ namespace Tyr::Soccer
 {
 void Ai::normalPlayDef()
 {
-    Common::Vec2 ourgoal_p1 = ownGoalPostTop();
-    Common::Vec2 ourgoal_p2 = ownGoalPostBottom();
+    Common::Vec2 ourgoal_p1 = Field::ownGoalPostTop();
+    Common::Vec2 ourgoal_p2 = Field::ownGoalPostBottom();
     Common::debug().draw(Common::Triangle{ourgoal_p1, m_world_state.ball.position, ourgoal_p2},
                          Common::Color::blue().transparent(), true);
 
@@ -78,7 +78,7 @@ void Ai::normalPlayDef()
 #if 1
     if (kicker_opp.has_value())
     {
-        shootAngle = m_world_state.ball.position.angleWith(ownGoal());
+        shootAngle = m_world_state.ball.position.angleWith(Field::ownGoal());
         shoot_pow  = 1;
         chip_pow   = 0;
     }
