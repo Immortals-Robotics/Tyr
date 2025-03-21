@@ -2,7 +2,7 @@
 
 namespace Tyr::Soccer
 {
-bool ObstacleMap::inside(const Common::Vec2 t_p, const float t_margin) const
+bool ObstacleMap::inside(const Common::Vec2 t_p, const float t_margin, const Physicality t_physicality) const
 {
     // TODO: make this an actual obstacle
     const float margin = Common::field().boundary_width - Common::field().robot_radius + 10.f;
@@ -12,9 +12,11 @@ bool ObstacleMap::inside(const Common::Vec2 t_p, const float t_margin) const
         return true;
     }
 
+    const Physicality physicality = this->physicality() & t_physicality;
+
     for (const auto &obstacle : m_circles)
     {
-        if (!(obstacle.physicality() & physicality()))
+        if (!(obstacle.physicality() & physicality))
             continue;
 
         if (obstacle.inside(t_p, t_margin))
@@ -23,7 +25,7 @@ bool ObstacleMap::inside(const Common::Vec2 t_p, const float t_margin) const
 
     for (const auto &obstacle : m_rects)
     {
-        if (!(obstacle.physicality() & physicality()))
+        if (!(obstacle.physicality() & physicality))
             continue;
 
         if (obstacle.inside(t_p, t_margin))
@@ -33,13 +35,15 @@ bool ObstacleMap::inside(const Common::Vec2 t_p, const float t_margin) const
     return false;
 }
 
-float ObstacleMap::distance(const Common::Vec2 t_p) const
+float ObstacleMap::distance(const Common::Vec2 t_p, const Physicality t_physicality) const
 {
+    const Physicality physicality = this->physicality() & t_physicality;
+
     float dis = std::numeric_limits<float>::max();
 
     for (const auto &obstacle : m_circles)
     {
-        if (!(obstacle.physicality() & physicality()))
+        if (!(obstacle.physicality() & physicality))
             continue;
 
         const float tmp_dis = obstacle.distance(t_p);
@@ -51,7 +55,7 @@ float ObstacleMap::distance(const Common::Vec2 t_p) const
 
     for (const auto &obstacle : m_rects)
     {
-        if (!(obstacle.physicality() & physicality()))
+        if (!(obstacle.physicality() & physicality))
             continue;
 
         const float tmp_dis = obstacle.distance(t_p);
@@ -64,7 +68,7 @@ float ObstacleMap::distance(const Common::Vec2 t_p) const
     return dis;
 }
 
-bool ObstacleMap::collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2) const
+bool ObstacleMap::collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2, const Physicality t_physicality) const
 {
     static constexpr float kStepSize = 50.0f;
 
@@ -74,7 +78,7 @@ bool ObstacleMap::collisionDetect(const Common::Vec2 p1, const Common::Vec2 p2) 
 
     while (current.distanceTo(p2) > kStepSize)
     {
-        if (inside(current))
+        if (inside(current, 0.0f, t_physicality))
             return true;
 
         current += step;

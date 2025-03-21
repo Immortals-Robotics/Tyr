@@ -70,21 +70,27 @@ void Robot::navigateJob(Common::Vec2 t_dest, VelocityProfile t_profile, Navigati
 
     if (!(t_flags & NavigationFlags::ForceNoBreak))
     {
+        VelocityProfile stop_profile = t_profile;
+        stop_profile.acceleration *= 2.0f;
+
         const bool already_in_obstacle = m_obs_map.inside(state().position);
 
-        static constexpr float kCollisionLookahead = 0.2f;
-        const bool collision_imminent = m_obs_map.hasCollision(trajectory, kCollisionLookahead).first;
-
+        // below this speed we consider the collision "ok" even if it happens
+        // we only break when above this speed
+        // and slow down only to below this speed
         static constexpr float kBreakSpeedThreshold = 500.0f;
-        const bool fast_enough = currentMotion().length() > kBreakSpeedThreshold;
 
-        if (!already_in_obstacle && collision_imminent && fast_enough)
+        const float extra_speed = std::max(0.0f, currentMotion().length() - kBreakSpeedThreshold);
+
+        const float collision_lookahead = extra_speed / stop_profile.acceleration;
+        const bool  collision_imminent  = m_obs_map.hasCollision(trajectory, collision_lookahead, 0.1f,
+                                                               Physicality::Physical).first;
+
+        if (!already_in_obstacle && collision_imminent)
         {
             Common::debug().draw(Common::Circle{state().position, Common::field().robot_radius * 1.5f},
-                                         Common::Color::red(), false, 50.f);
+                                 Common::Color::red(), false, 50.f);
 
-            VelocityProfile stop_profile = t_profile;
-            stop_profile.acceleration *= 2.0f;
             trajectory = Trajectory2D::makeFullStopTrajectory(state().position, currentMotion(), stop_profile);
         }
     }
