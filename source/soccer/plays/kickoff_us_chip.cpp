@@ -1,6 +1,7 @@
 #include "../ai.h"
 
 #include "../tactics/attacker.h"
+#include "../tactics/gk.h"
 
 namespace Tyr::Soccer
 {
@@ -15,7 +16,7 @@ void Ai::kickoffUsChip()
     createAttackAssignment();
     assignRoles();
 
-    gkHi(m_own_robot[m_gk]);
+    GkTactic{}.execute(m_own_robot[m_gk]);
     defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
 
     m_own_robot[m_mid5].face(m_world_state.ball.position);

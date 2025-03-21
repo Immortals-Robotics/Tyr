@@ -23,8 +23,6 @@ public:
 
         is_defending  = t_state.is_defending();
         opp_restarted = t_state.opp_restarted();
-
-        gk_intercepting = t_state.gk_intercepting();
     }
 
     void fillProto(Protos::Immortals::Soccer::State *const t_state) const
@@ -44,8 +42,6 @@ public:
 
         t_state->set_is_defending(is_defending);
         t_state->set_opp_restarted(opp_restarted);
-
-        t_state->set_gk_intercepting(gk_intercepting);
     }
 
     TimePoint time;
@@ -57,7 +53,5 @@ public:
 
     bool is_defending  = false;
     bool opp_restarted = false;
-
-    bool gk_intercepting = false;
 };
 } // namespace Tyr::Common::Soccer

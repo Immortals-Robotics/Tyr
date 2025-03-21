@@ -13,13 +13,6 @@ void SoccerMenu::draw(const Common::Soccer::State &t_state)
         ImGui::SameLine(0, 2.5f);
         ImGui::Text("Opp Restarted");
     }
-    if (t_state.gk_intercepting)
-    {
-        ImGui::SameLine(0, 2.5f);
-        ImGui::Text(" | ");
-        ImGui::SameLine(0, 2.5f);
-        ImGui::Text("GK Intercepting");
-    }
 
     ImGui::Text("Rnd: %.2f", t_state.random_param);
     if (!t_state.target_str.empty())

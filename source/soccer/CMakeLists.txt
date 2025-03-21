@@ -42,6 +42,7 @@ set(HEADER_FILES
 
         tactics/tactic.h
         tactics/attacker.h
+        tactics/gk.h
         tactics/mark.h
         tactics/receive_pass.h
 )
@@ -104,7 +105,7 @@ set(SOURCE_FILES
         tactics/attacker.cpp
         tactics/circle_ball.cpp
         tactics/def_hi.cpp
-        tactics/gk_hi.cpp
+        tactics/gk.cpp
         tactics/mark.cpp
         tactics/receive_pass.cpp
 

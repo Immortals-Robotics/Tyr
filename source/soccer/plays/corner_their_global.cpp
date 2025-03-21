@@ -1,7 +1,8 @@
 #include "../ai.h"
 
-#include "../tactics/mark.h"
 #include "../skills/defence_wall.h"
+#include "../tactics/gk.h"
+#include "../tactics/mark.h"
 
 namespace Tyr::Soccer
 {
@@ -25,7 +26,7 @@ void Ai::cornerTheirGlobal()
     }
     else
     {
-        gkHi(m_own_robot[m_gk]);
+        GkTactic{}.execute(m_own_robot[m_gk]);
         defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
     }
 

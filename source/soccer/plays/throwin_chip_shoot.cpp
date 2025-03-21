@@ -1,5 +1,7 @@
 #include "../ai.h"
 
+#include "../tactics/gk.h"
+
 namespace Tyr::Soccer
 {
 void Ai::throwinChipShoot()
@@ -13,7 +15,7 @@ void Ai::throwinChipShoot()
     createAttackAssignment();
     assignRoles();
 
-    gkHi(m_own_robot[m_gk]);
+    GkTactic{}.execute(m_own_robot[m_gk]);
     defHi(m_own_robot[m_def1], m_own_robot[m_def2], nullptr);
 
     int zone_idx = 0;

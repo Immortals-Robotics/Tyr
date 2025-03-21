@@ -1,7 +1,7 @@
 #include "../ai.h"
 
-#include "../helpers/find_nearest_opp.h"
 #include "../helpers/ball_is_goaling.h"
+#include "../helpers/find_nearest_opp.h"
 
 #include "../tactics/attacker.h"
 
@@ -44,10 +44,9 @@ void Ai::runningDef(Robot &t_robot, const Common::Vec2 t_target, Common::Vec2 *t
     Common::logDebug("ballMovingFast: {}", ballMovingFast);
     Common::logDebug("ownAttackHasBall: {}", ownAttackHasBall);
     Common::logDebug("ballIsToGoal: {}", ballIsToGoal);
-    Common::logDebug("m_gk_intercepting: {}", m_gk_intercepting);
 
     if ((interceptNear) && (!oppHasBall) && (!ballMovingFast) && (!ownAttackHasBall) && (!ballIsToGoal) &&
-        (!m_gk_intercepting) && m_ref_state.running())
+        m_ref_state.running())
     //    if(1)
     {
         Common::logDebug("IIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJJJJ");

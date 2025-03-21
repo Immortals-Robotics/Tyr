@@ -170,8 +170,6 @@ bool Ai::publishState() const
     state.is_defending  = m_is_defending;
     state.opp_restarted = m_opp_restarted;
 
-    state.gk_intercepting = m_gk_intercepting;
-
     Protos::Immortals::Soccer::State pb_state;
     state.fillProto(&pb_state);
 

@@ -100,13 +100,11 @@ private:
     };
 
     // Skills
-    void gkShirje(Robot& t_robot);
-    void gkHi(Robot& t_robot);
     void runningDef(Robot& t_robot, Common::Vec2 t_target, Common::Vec2 *t_defend_target);
     void circleBall(Robot& t_robot, Common::Angle t_tagret_angle, float t_shoot_pow, int t_chip_pow,
                     float t_near_dis_override = -1.0f);
 
-    bool m_gk_intercepting = false;
+
 
     // Tactics
     void defHi(Robot& t_robot_1, Robot& t_robot_2, Common::Vec2 *t_defend_target);
