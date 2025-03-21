@@ -151,12 +151,6 @@ Planner::TrajectoryChained2DXY Planner::findChainedTrajectory(const Trajectory2D
 
     for (float t = trajectory.getStartTime(); t < t_end; t += kTimeStep)
     {
-        // TODO: shouldn't this be inverted?
-        if (!m_map->hasCollision(trajectory, t).first)
-        {
-            break;
-        }
-
         const Common::Vec2 pos = trajectory.getPosition(t);
         const Common::Vec2 vel = trajectory.getVelocity(t);
 
