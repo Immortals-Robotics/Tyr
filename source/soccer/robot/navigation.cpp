@@ -70,7 +70,15 @@ void Robot::navigateJob(Common::Vec2 t_dest, VelocityProfile t_profile, Navigati
 
     if (!(t_flags & NavigationFlags::ForceNoBreak))
     {
-        if (!m_obs_map.inside(state().position) && m_obs_map.hasCollision(trajectory, 0.2f).first)
+        const bool already_in_obstacle = m_obs_map.inside(state().position);
+
+        static constexpr float kCollisionLookahead = 0.2f;
+        const bool collision_imminent = m_obs_map.hasCollision(trajectory, kCollisionLookahead).first;
+
+        static constexpr float kBreakSpeedThreshold = 500.0f;
+        const bool fast_enough = currentMotion().length() > kBreakSpeedThreshold;
+
+        if (!already_in_obstacle && collision_imminent && fast_enough)
         {
             Common::debug().draw(Common::Circle{state().position, Common::field().robot_radius},
                                  Common::Color::magenta(), false, 30.f);
