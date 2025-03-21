@@ -139,7 +139,7 @@ void Ai::generateKissPoints(double t_distance, Common::Vec2 &t_pos1, Common::Vec
 
 void Ai::placeBall()
 {
-    GkTactic{}.execute(m_own_robot[m_mid5]);
+    GkTactic{}.execute(m_own_robot[m_gk]);
 
     DefTactic{1}.execute(m_own_robot[m_def1]);
     DefTactic{2}.execute(m_own_robot[m_def2]);

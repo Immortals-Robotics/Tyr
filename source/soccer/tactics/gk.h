@@ -24,5 +24,7 @@ private:
 
     // TODO: this should probably be an skill
     void shirje(Robot& t_robot);
+
+    NavigationFlags getNavigationFlags() const;
 };
 } // namespace Tyr::Soccer

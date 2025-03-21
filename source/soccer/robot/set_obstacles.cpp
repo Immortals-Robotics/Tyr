@@ -34,17 +34,7 @@ static float calculateOtherRadius(const Common::RobotState &t_current, const Com
 
 void Robot::setObstacles(const NavigationFlags t_flags)
 {
-    // Don't extend opp robots if
-    // - the game is running and either:
-    //   - we're the attacker and close to the ball
-    //   - we're the keeper
     const bool dont_extend = !!(t_flags & NavigationFlags::ForceNoExtraMargin);
-        // TODO:
-#if 0
-        State::ref().running() &&
-        ((state().vision_id == m_attack && state().position.distanceTo(State::world().ball.position) < 500.0f) ||
-        state().vision_id == m_gk);
-#endif
 
     const bool ourPenalty = !(t_flags & NavigationFlags::ForceNoOwnPenaltyArea) && !State::ref().ourBallPlacement();
     const bool oppPenalty = !State::ref().ballPlacement();
@@ -92,11 +82,6 @@ void Robot::setObstacles(const NavigationFlags t_flags)
     float ball_radius = 0.0f;
     if (!!(t_flags & NavigationFlags::ForceBallObstacle) || !State::ref().allowedNearBall())
         ball_radius = ballAreaRadius;
-// TODO:
-#if 0
-    else if (State::ref().ourBallPlacement() && state().vision_id != m_attack && state().vision_id != m_mid5)
-        ball_radius = ballAreaRadius;
-#endif
     else if (!!(t_flags & NavigationFlags::ForceBallMediumObstacle))
         ball_radius = 230.0f;
     else if (!!(t_flags & NavigationFlags::ForceBallSmallObstacle))

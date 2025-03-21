@@ -83,8 +83,13 @@ void GkTactic::execute(Robot &t_robot)
 
             m_intercepting = true;
 
-            AttackerTactic{predicted_ball.angleWith(Common::Vec2(State::side() * (Common::field().width + 110), 0)), 0,
-                           20, 0, 0}
+            AttackerTactic{predicted_ball.angleWith(Common::Vec2(State::side() * (Common::field().width + 110), 0)),
+                           0,
+                           20,
+                           0,
+                           0,
+                           false,
+                           true}
                 .execute(t_robot);
         }
         else
@@ -123,7 +128,7 @@ void GkTactic::execute(Robot &t_robot)
 
             t_robot.face((gk_final_pos - Field::ownGoal()).normalized() * 10000. +
                          Field::ownGoal()); // State::world().ball.position);
-            t_robot.navigate(gk_final_pos, VelocityProfile::mamooli(), NavigationFlags::ForceNoOwnPenaltyArea);
+            t_robot.navigate(gk_final_pos, VelocityProfile::mamooli(), getNavigationFlags());
         }
     }
 }
@@ -137,7 +142,15 @@ void GkTactic::shirje(Robot &t_robot)
     Common::Vec2 ans = ball_line.closestPoint(t_robot.state().position);
     t_robot.face(State::world().ball.position);
     //    ans = ((ans - t_robot.state().position) * 2.0f) + t_robot.state().position;
-    t_robot.navigate(ans, VelocityProfile::kharaki(), NavigationFlags::ForceNoOwnPenaltyArea);
+    t_robot.navigate(ans, VelocityProfile::kharaki(), getNavigationFlags());
     t_robot.chip(150);
+}
+
+NavigationFlags GkTactic::getNavigationFlags() const
+{
+    NavigationFlags flags = NavigationFlags::ForceNoOwnPenaltyArea;
+    if (State::ref().running())
+        flags |= NavigationFlags::ForceNoExtraMargin;
+    return flags;
 }
 } // namespace Tyr::Soccer
