@@ -38,12 +38,9 @@ struct Rect
 
     float distance(const Vec2 t_point) const
     {
-        // Inside distance (negative if inside)
-        const float d = std::max({
-            min.x - t_point.x,
-            t_point.x - max.x,
-            min.y - t_point.y,
-            t_point.y - max.y});
+        const float d_x = std::max(min.x - t_point.x, t_point.x - max.x);
+        const float d_y = std::max(min.y - t_point.y, t_point.y - max.y);
+        const float d   = std::max(d_x, d_y);
 
         return d;
     }
@@ -55,7 +52,7 @@ struct Rect
 
     std::vector<Vec2> intersection(const Line &t_line) const
     {
-        int  n_sol = 0;
+        int               n_sol = 0;
         std::vector<Vec2> sols;
 
         std::vector<LineSegment> segments;
@@ -67,7 +64,8 @@ struct Rect
         for (const auto &segment : segments)
         {
             auto intersect = t_line.intersect(segment);
-            if(intersect.has_value()) {
+            if (intersect.has_value())
+            {
                 sols.push_back(intersect.value());
             }
         }

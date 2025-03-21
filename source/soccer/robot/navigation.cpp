@@ -2,6 +2,8 @@
 
 #include "../navigation/trajectory/trajectory_2d.h"
 
+#define NAVIGATION_JOB 1
+
 namespace Tyr::Soccer
 {
 void Robot::navigate(const Common::Vec2 t_dest, VelocityProfile t_profile, const NavigationFlags t_flags)
@@ -21,15 +23,21 @@ void Robot::navigate(const Common::Vec2 t_dest, VelocityProfile t_profile, const
     // this is only used for assignment, not navigation
     target.position = t_dest;
 
+#if NAVIGATION_JOB
     m_navigation_future = std::async(std::launch::async, &Robot::navigateJob, this, t_dest, t_profile, t_flags);
+#else
+    navigateJob(t_dest, t_profile, t_flags);
+#endif
 }
 
 void Robot::waitForNavigationJob()
 {
+#if NAVIGATION_JOB
     if (m_navigation_future.valid())
     {
         m_navigation_future.get();
     }
+#endif
 }
 
 void Robot::navigateJob(Common::Vec2 t_dest, VelocityProfile t_profile, NavigationFlags t_flags)
