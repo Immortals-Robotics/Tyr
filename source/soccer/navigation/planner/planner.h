@@ -44,9 +44,9 @@ private:
 
     using TrajectoryChained2DXY = TrajectoryChained<Common::Vec2, Trajectory2D>;
 
-    std::vector<Common::Vec2> generateIntermediateTargetsSystematic(Common::Vec2 t_center) const;
+    std::vector<Common::Vec2> generateIntermediateTargetsSystematic(Common::Vec2 t_center);
 
-    TrajectoryChained2DXY findChainedTrajectory(const Trajectory2D& trajectory) const;
+    TrajectoryChained2DXY findChainedTrajectory(const Trajectory2D& trajectory);
 
     float calculateTrajectoryPenalty(const TrajectoryChained2DXY& trajectory) const;
 
