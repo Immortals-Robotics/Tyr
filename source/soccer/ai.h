@@ -107,6 +107,7 @@ private:
     void haltAll();
     void penaltyUsShootout();
     void kickoffUsChip();
+    void kickoffUsPass();
     void throwinChipShoot();
     void kickoffTheirOneWall();
     void penaltyTheirSimple();

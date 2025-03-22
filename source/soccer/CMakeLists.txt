@@ -81,6 +81,7 @@ set(SOURCE_FILES
         plays/halt.cpp
         plays/kickoff_their_one_wall.cpp
         plays/kickoff_us_chip.cpp
+        plays/kickoff_us_pass.cpp
         plays/normal_play_att.cpp
         plays/normal_play_def.cpp
         plays/normal_play.cpp

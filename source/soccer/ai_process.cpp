@@ -28,7 +28,11 @@ void Ai::process()
     }
     else if (m_ref_state.ourKickoff())
     {
+#if 0
         m_current_play = &Ai::kickoffUsChip;
+#else
+        m_current_play = &Ai::kickoffUsPass;
+#endif
     }
     else if (m_ref_state.ourFreeKick())
     {
