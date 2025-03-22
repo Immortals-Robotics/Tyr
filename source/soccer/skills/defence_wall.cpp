@@ -9,6 +9,8 @@ const Skill::Id DefenceWallSkill::kId = &DefenceWallSkill::kId;
 
 void DefenceWallSkill::execute(Robot& t_robot)
 {
+    const float distance = 600.0f + Common::field().robot_radius;
+
     float x     = -State::side() * State::world().ball.position.x;
     float tetta = -0.000003f * x * x + 0.0016f * x + 90.0f;
     if (m_kick_off)
@@ -20,17 +22,17 @@ void DefenceWallSkill::execute(Robot& t_robot)
     Common::Vec2 target;
 
     const std::optional<Common::RobotState> opp_attack = findKickerOpp();
-    if (!opp_attack.has_value())
-    {
-        target = State::world().ball.position.circleAroundPoint(State::world().ball.position.angleWith(Field::ownGoal()), 730);
-    }
-    else
+    if (opp_attack.has_value())
     {
         Common::logDebug("{}", opp_attack.value().vision_id);
 
-        target = opp_attack.value().position.pointOnConnectingLine(
-            State::world().ball.position,
-            590 + State::world().ball.position.distanceTo(opp_attack.value().position));
+        const Common::Vec2 direction = (State::world().ball.position - opp_attack.value().position).normalized();
+
+        target = State::world().ball.position + direction * distance;
+    }
+    else
+    {
+        target = State::world().ball.position.circleAroundPoint(State::world().ball.position.angleWith(Field::ownGoal()), distance);
     }
 
     Common::Angle ballAngle = State::world().ball.position.angleWith(target);
