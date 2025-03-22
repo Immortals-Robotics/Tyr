@@ -40,6 +40,7 @@ set(HEADER_FILES
         skills/one_touch.h
         skills/old_attacker.h
         skills/intercept_ball.h
+        skills/wait_for_ball.h
 
         tactics/tactic.h
         tactics/attacker.h
@@ -102,6 +103,7 @@ set(SOURCE_FILES
         skills/one_touch.cpp
         skills/old_attacker.cpp
         skills/intercept_ball.cpp
+        skills/wait_for_ball.cpp
 
         robot/robot.cpp
         robot/navigation.cpp

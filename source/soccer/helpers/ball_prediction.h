@@ -38,6 +38,11 @@ inline Common::BallState predictBall(const float t_time_ahead)
     return predicted_state;
 }
 
+inline float ballStopT()
+{
+    return State::world().ball.velocity.length() / Common::config().vision.ball_rolling_friction;
+}
+
 inline float calculateBallRobotReachTime(const Robot &t_robot, Common::Angle angle, VelocityProfile t_profile,
                                       float t_wait)
 {

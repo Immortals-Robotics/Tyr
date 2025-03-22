@@ -4,6 +4,8 @@
 #include "../tactics/def.h"
 #include "../tactics/gk.h"
 
+#include "../skills/wait_for_ball.h"
+
 namespace Tyr::Soccer
 {
 
@@ -93,18 +95,12 @@ void Ai::resetBallPlacementStateFrameCounter()
 
 void Ai::placeBallLongDistance()
 {
-    Common::Vec2 receiver_pos =
+    const Common::Vec2 receiver_pos =
         m_ref_state.designated_position +
         (m_ref_state.designated_position - m_world_state.ball.position).normalized() * Common::field().robot_radius;
-    m_own_robot[m_mid5].face(m_world_state.ball.position);
-    if (m_world_state.ball.velocity.length() >= 100)
-    {
-        receiver_pos =
-            Common::Line::fromTwoPoints(m_world_state.ball.position,
-                                        m_world_state.ball.velocity.normalized() * 1000 + m_world_state.ball.position)
-                .closestPoint(m_own_robot[m_mid5].state().position);
-    }
-    m_own_robot[m_mid5].navigate(receiver_pos, VelocityProfile::mamooli());
+
+    WaitForBallSkill{receiver_pos}.execute(m_own_robot[m_mid5]);
+
     if (m_own_robot[m_mid5].state().position.distanceTo(receiver_pos) < 100)
     {
         CircleBallTactic{(m_world_state.ball.position - receiver_pos).toAngle(), 4000, 0}.execute(
