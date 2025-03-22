@@ -62,6 +62,8 @@ public:
 
     void waitForNavigationJob();
 
+    float calculateReachTime(Common::Vec2 t_dest, VelocityProfile t_profile) const;
+
     void move(const Trajectory2D &trajectory);
     void halt();
     void fullBeak(float acc_factor = 1.0f);

@@ -4,7 +4,7 @@
 #include "../helpers/ball_is_goaling.h"
 #include "../helpers/ball_prediction.h"
 
-#include "attacker.h"
+#include "../skills/old_attacker.h"
 
 namespace Tyr::Soccer
 {
@@ -84,7 +84,7 @@ void GkTactic::execute(Robot &t_robot)
 
             m_intercepting = true;
 
-            AttackerTactic{predicted_ball.angleWith(Common::Vec2(State::side() * (Common::field().width + 110), 0)),
+            OldAttackerSkill{predicted_ball.angleWith(Common::Vec2(State::side() * (Common::field().width + 110), 0)),
                            0,
                            20,
                            0,
@@ -154,10 +154,8 @@ void GkTactic::shirje(Robot &t_robot)
             break;
         }
 
-        const Trajectory2D trajectory =
-            Trajectory2D::makeBangBangTrajectory(t_robot.state().position, t_robot.currentMotion(), point, profile);
-
-        const float wait_t = t - trajectory.getDuration();
+        const float robot_reach_t = t_robot.calculateReachTime(point, profile);
+        const float wait_t = t - robot_reach_t;
 
         if (wait_t > 0.0f)
         {

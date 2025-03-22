@@ -38,6 +38,7 @@ set(HEADER_FILES
         skills/mark_to_ball.h
         skills/mark_to_goal.h
         skills/wait_for_pass.h
+        skills/old_attacker.h
 
         tactics/tactic.h
         tactics/attacker.h
@@ -98,6 +99,7 @@ set(SOURCE_FILES
         skills/mark_to_ball.cpp
         skills/mark_to_goal.cpp
         skills/wait_for_pass.cpp
+        skills/old_attacker.cpp
 
         robot/robot.cpp
         robot/navigation.cpp

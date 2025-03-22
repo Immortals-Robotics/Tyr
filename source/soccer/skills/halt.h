@@ -7,11 +7,11 @@ namespace Tyr::Soccer
 class HaltSkill final : public Skill
 {
 public:
-    explicit HaltSkill()
-    {}
+    HaltSkill() = default;
 
     static const Id kId;
-    Id              id() const override
+
+    Id id() const override
     {
         return kId;
     }

@@ -1,6 +1,5 @@
 #include "../ai.h"
 
-#include "../tactics/attacker.h"
 #include "../tactics/circle_ball.h"
 #include "../tactics/def.h"
 #include "../tactics/gk.h"
@@ -59,14 +58,9 @@ void Ai::kickoffUsChip()
 
     Common::Vec2 chip_target = Common::Vec2(-m_side * 2000, 0);
     Common::logDebug("can kick ball: {}", m_ref_state.canKickBall());
-    if (m_ref_state.canKickBall())
-    {
-        // TODO: why isn't this circleBall?
-        AttackerTactic{chip_target.angleWith(m_world_state.ball.position), 0, 80, 0, 1}.execute(m_own_robot[m_attack]);
-    }
-    else
-    {
-        CircleBallTactic{chip_target.angleWith(m_world_state.ball.position), 0, 0}.execute(m_own_robot[m_attack]);
-    }
+
+
+    const float chip_pow = m_ref_state.canKickBall() ? 80.0f : 0.0f;
+    CircleBallTactic{chip_target.angleWith(m_world_state.ball.position), 0, chip_pow}.execute(m_own_robot[m_attack]);
 }
 } // namespace Tyr::Soccer

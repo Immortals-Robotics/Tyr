@@ -1,6 +1,5 @@
 #include "../ai.h"
 
-#include "../tactics/attacker.h"
 #include "../tactics/circle_ball.h"
 #include "../tactics/def.h"
 #include "../tactics/gk.h"
@@ -58,14 +57,10 @@ void Ai::kickoffUsPass()
     {
         CircleBallTactic{Field::oppGoal().angleWith(m_world_state.ball.position), 0, 0}.execute(m_own_robot[m_attack]);
     }
-    else if (m_ref_state.canKickBall())
-    {
-        // TODO: why isn't this circleBall?
-        AttackerTactic{chip_target.angleWith(m_world_state.ball.position), 5000, 0, 0, 1}.execute(m_own_robot[m_attack]);
-    }
     else
     {
-        CircleBallTactic{chip_target.angleWith(m_world_state.ball.position), 0, 0}.execute(m_own_robot[m_attack]);
+        const float shoot_pow = m_ref_state.canKickBall() ? 5000.0f : 0.0f;
+        CircleBallTactic{chip_target.angleWith(m_world_state.ball.position), shoot_pow, 0}.execute(m_own_robot[m_attack]);
     }
 }
 } // namespace Tyr::Soccer

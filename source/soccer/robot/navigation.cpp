@@ -40,6 +40,13 @@ void Robot::waitForNavigationJob()
 #endif
 }
 
+float Robot::calculateReachTime(const Common::Vec2 t_dest, const VelocityProfile t_profile) const
+{
+    const Trajectory2D trajectory =
+        Trajectory2D::makeBangBangTrajectory(state().position, currentMotion(), t_dest, t_profile);
+    return trajectory.getDuration();
+}
+
 void Robot::navigateJob(Common::Vec2 t_dest, VelocityProfile t_profile, NavigationFlags t_flags)
 {
     setObstacles(t_flags);
