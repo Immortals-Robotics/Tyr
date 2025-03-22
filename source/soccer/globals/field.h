@@ -69,6 +69,28 @@ public:
         return {start, w, h};
     }
 
+    static Common::Rect ourHalf()
+    {
+        const float height = Common::field().height + Common::field().boundary_width;
+
+        const Common::Vec2 corner{
+            0.0f,
+            -height};
+
+        return Common::Rect{corner, State::side() * Common::field().width, 2.0f * height};
+    }
+
+    static Common::Rect theirHalf()
+    {
+        const float height = Common::field().height + Common::field().boundary_width;
+
+        const Common::Vec2 corner{
+            0.0f,
+            -height};
+
+        return Common::Rect{corner, - State::side() * Common::field().width, 2.0f * height};
+    }
+
     static bool isOut(const Common::Vec2 t_point, const float t_margin = 0.0f)
     {
         return std::fabs(t_point.x) > Common::field().width + t_margin ||

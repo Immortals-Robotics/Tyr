@@ -73,7 +73,7 @@ void ReceivePassTactic::execute(Robot &t_robot)
             t_robot.one_touch_type      = Common::Soccer::OneTouchType::OneTouch;
         }
         t_robot.face(Field::oppGoal());
-        t_robot.navigate(m_static_pos, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
+        t_robot.navigate(m_static_pos, VelocityProfile::mamooli(), NavigationFlags::BallObstacle);
     }
 }
 } // namespace Tyr::Soccer

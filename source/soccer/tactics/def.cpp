@@ -34,7 +34,7 @@ void DefTactic::execute(Robot &t_robot)
 
         NavigationFlags flags = NavigationFlags::None;
         if (State::ref().ourBallPlacement())
-            flags |= NavigationFlags::ForceBallPlacementLine;
+            flags |= NavigationFlags::BallPlacementLine;
 
         t_robot.navigate(static_pos, VelocityProfile::mamooli(), flags);
     }

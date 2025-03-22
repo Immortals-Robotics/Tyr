@@ -77,13 +77,13 @@ NavigationFlags AttackerTactic::getNavigationFlags(const Robot &t_robot) const
 
     if (State::ref().running() && t_robot.state().position.distanceTo(State::world().ball.position) < 500.0f)
     {
-        navigation_flags |= NavigationFlags::ForceNoExtraMargin;
-        navigation_flags |= NavigationFlags::ForceNoBreak;
+        navigation_flags |= NavigationFlags::NoExtraMargin;
+        navigation_flags |= NavigationFlags::NoBreak;
     }
 
     if (m_is_gk)
     {
-        navigation_flags |= NavigationFlags::ForceNoOwnPenaltyArea;
+        navigation_flags |= NavigationFlags::NoOwnPenaltyArea;
     }
 
     return navigation_flags;

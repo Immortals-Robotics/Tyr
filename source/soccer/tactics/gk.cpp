@@ -189,11 +189,11 @@ void GkTactic::shirje(Robot &t_robot)
 
 NavigationFlags GkTactic::getNavigationFlags() const
 {
-    NavigationFlags flags = NavigationFlags::ForceNoOwnPenaltyArea;
+    NavigationFlags flags = NavigationFlags::NoOwnPenaltyArea;
     if (State::ref().running())
-        flags |= NavigationFlags::ForceNoExtraMargin;
+        flags |= NavigationFlags::NoExtraMargin;
     if (State::ref().ourBallPlacement())
-        flags |= NavigationFlags::ForceBallPlacementLine;
+        flags |= NavigationFlags::BallPlacementLine;
     return flags;
 }
 } // namespace Tyr::Soccer

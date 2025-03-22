@@ -9,14 +9,15 @@ namespace Tyr::Soccer
 enum class NavigationFlags
 {
     None                    = 0,
-    ForceNoObstacles        = BIT(1), // only used in ball placement
-    ForceBallObstacle       = BIT(2), // 500.0f
-    ForceBallMediumObstacle = BIT(3), // 230.0f
-    ForceBallSmallObstacle  = BIT(4), // 60.0f
-    ForceNoBreak            = BIT(5),
-    ForceNoOwnPenaltyArea   = BIT(6),
-    ForceNoExtraMargin      = BIT(7),
-    ForceBallPlacementLine  = BIT(8),
+    NoObstacles        = BIT(1), // only used in ball placement
+    BallObstacle       = BIT(2), // 500.0f
+    BallMediumObstacle = BIT(3), // 230.0f
+    BallSmallObstacle  = BIT(4), // 60.0f
+    NoBreak            = BIT(5),
+    NoOwnPenaltyArea   = BIT(6),
+    NoExtraMargin      = BIT(7),
+    BallPlacementLine  = BIT(8),
+    TheirHalf          = BIT(9),
 };
 
 ENABLE_ENUM_FLAG_OPERATORS(NavigationFlags);

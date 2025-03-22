@@ -26,7 +26,7 @@ void Ai::kickoffUsChip()
     m_own_robot[m_mid5].face(m_world_state.ball.position);
     m_own_robot[m_mid5].navigate(m_world_state.ball.position.pointOnConnectingLine(
                                      Field::ownGoal(), 1000.0f),
-                                 VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
+                                 VelocityProfile::mamooli(), NavigationFlags::BallObstacle);
 
     if (m_timer.time().seconds() < 0.5)
     {
@@ -39,12 +39,12 @@ void Ai::kickoffUsChip()
     m_own_robot[m_mid2].face(Field::oppGoal());
     m_own_robot[m_mid2].navigate(
         Common::Vec2(m_world_state.ball.position.x + m_side * 150, (Common::field().height - 300)),
-        VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
+        VelocityProfile::mamooli(), NavigationFlags::BallObstacle);
 
     m_own_robot[m_mid1].face(Field::oppGoal());
     m_own_robot[m_mid1].navigate(
         Common::Vec2(m_world_state.ball.position.x + m_side * 150, -(Common::field().height - 300)),
-        VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
+        VelocityProfile::mamooli(), NavigationFlags::BallObstacle);
 
     int zone_idx = 0;
     for (const auto &mid : m_prioritized_mids)

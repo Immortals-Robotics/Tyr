@@ -227,7 +227,7 @@ void Ai::strategy()
             {
                 m_own_robot[*m_strategy_ids[i]].face(Field::oppGoal());
                 m_own_robot[*m_strategy_ids[i]].navigate(strategy.roles[i].path[step[i]].position * sign_modifier,
-                                                         profile, NavigationFlags::ForceBallObstacle);
+                                                         profile, NavigationFlags::BallObstacle);
             }
             else
             {

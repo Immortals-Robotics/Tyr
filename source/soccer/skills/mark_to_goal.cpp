@@ -38,6 +38,6 @@ void MarkToGoalSkill::execute(Robot &t_robot)
     }
 
     t_robot.face(State::world().ball.position);
-    t_robot.navigate(target, VelocityProfile::mamooli(), NavigationFlags::ForceBallObstacle);
+    t_robot.navigate(target, VelocityProfile::mamooli(), NavigationFlags::BallObstacle);
 }
 } // namespace Tyr::Soccer

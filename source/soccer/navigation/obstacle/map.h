@@ -10,7 +10,10 @@ class ObstacleMap
 private:
     std::vector<CircleObstacle> m_circles;
     std::vector<RectObstacle>   m_rects;
+
     Physicality m_physicality = Physicality::All;
+
+    float m_base_margin = 0.0f;
 
 public:
     ObstacleMap() = default;
@@ -82,12 +85,24 @@ public:
         m_physicality = t_physicality;
     }
 
-    void resetMap()
+    float baseMargin() const
+    {
+        return m_base_margin;
+    }
+
+    void setBaseMargin(const float t_margin)
+    {
+        m_base_margin = t_margin;
+    }
+
+    void reset()
     {
         m_circles.clear();
         m_rects.clear();
 
         m_physicality = Physicality::All;
+
+        m_base_margin = 0.0f;
     }
 };
 

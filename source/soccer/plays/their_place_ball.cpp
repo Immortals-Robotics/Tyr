@@ -25,7 +25,7 @@ void Ai::theirPlaceBall()
     for (const auto &mid : m_prioritized_mids)
     {
         m_own_robot[*mid].face(m_world_state.ball.position);
-        m_own_robot[*mid].navigate(m_sorted_zones[zone_idx]->best_pos, VelocityProfile::aroom(), NavigationFlags::ForceBallObstacle);
+        m_own_robot[*mid].navigate(m_sorted_zones[zone_idx]->best_pos, VelocityProfile::aroom(), NavigationFlags::BallObstacle);
         ++zone_idx;
     }
 
