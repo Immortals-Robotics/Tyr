@@ -138,12 +138,47 @@ void GkTactic::shirje(Robot &t_robot)
 {
     Common::logDebug("GK Shirje");
 
-    Common::Line ball_line =
-        Common::Line::fromPointAndAngle(State::world().ball.position, State::world().ball.velocity.toAngle());
-    Common::Vec2 ans = ball_line.closestPoint(t_robot.state().position);
+    VelocityProfile profile = VelocityProfile::kharaki();
+    profile.acceleration *= 1.5f;
+
+#if 0
+    float intercept_t = -1.0f;
+    float max_wait_t  = std::numeric_limits<float>::lowest();
+
+    for (float t = 0.0f; t < 2.0f; t += 0.1f)
+    {
+        const Common::Vec2 point = predictBall(t).position;
+
+        if (std::fabs(point.x) > Common::field().width)
+        {
+            break;
+        }
+
+        const Trajectory2D trajectory =
+            Trajectory2D::makeBangBangTrajectory(t_robot.state().position, t_robot.currentMotion(), point, profile);
+
+        const float wait_t = t - trajectory.getDuration();
+
+        Common::logTrace("t: {}, wait:{}", t, wait_t);
+
+        if (wait_t > max_wait_t)
+        {
+            max_wait_t  = wait_t;
+            intercept_t = t;
+        }
+    }
+
+    Common::logDebug("intercept t: {}", intercept_t);
+
+    const Common::Vec2 target = predictBall(intercept_t).position;
+#else
+    Common::Line        ball_line  = State::world().ball.line();
+    const Common::Vec2 target = ball_line.closestPoint(t_robot.state().position);
+#endif
+
     t_robot.face(State::world().ball.position);
     //    ans = ((ans - t_robot.state().position) * 2.0f) + t_robot.state().position;
-    t_robot.navigate(ans, VelocityProfile::kharaki(), getNavigationFlags());
+    t_robot.navigate(target, profile, getNavigationFlags());
     t_robot.chip(150);
 }
 
