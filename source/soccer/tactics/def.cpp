@@ -31,7 +31,12 @@ void DefTactic::execute(Robot &t_robot)
             static_pos = defStatic_1();
         else if (m_num == 2)
             static_pos = defStatic_2();
-        t_robot.navigate(static_pos);
+
+        NavigationFlags flags = NavigationFlags::None;
+        if (State::ref().ourBallPlacement())
+            flags |= NavigationFlags::ForceBallPlacementLine;
+
+        t_robot.navigate(static_pos, VelocityProfile::mamooli(), flags);
     }
 }
 

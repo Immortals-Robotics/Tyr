@@ -186,7 +186,7 @@ void Robot::setObstacles(const NavigationFlags t_flags)
     }
 
     // avoid the line between the ball and the placement point
-    if (State::ref().theirBallPlacement())
+    if (State::ref().theirBallPlacement() || !!(t_flags & NavigationFlags::ForceBallPlacementLine))
     {
         const float placement_clearance = ballAreaRadius * 2.0f;
         const Common::Vec2 ball_line      = State::ref().designated_position - State::world().ball.position;

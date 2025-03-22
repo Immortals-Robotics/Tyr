@@ -16,6 +16,7 @@ enum class NavigationFlags
     ForceNoBreak            = BIT(5),
     ForceNoOwnPenaltyArea   = BIT(6),
     ForceNoExtraMargin      = BIT(7),
+    ForceBallPlacementLine  = BIT(8),
 };
 
 ENABLE_ENUM_FLAG_OPERATORS(NavigationFlags);

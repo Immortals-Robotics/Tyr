@@ -151,7 +151,7 @@ void Ai::placeBall()
             continue;
         m_own_robot[*mid].face(m_world_state.ball.position);
         m_own_robot[*mid].navigate(m_sorted_zones[zone_idx]->best_pos, VelocityProfile::aroom(),
-                                   NavigationFlags::ForceBallObstacle);
+                                   NavigationFlags::ForceBallPlacementLine);
         ++zone_idx;
     }
 

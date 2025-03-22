@@ -152,6 +152,8 @@ NavigationFlags GkTactic::getNavigationFlags() const
     NavigationFlags flags = NavigationFlags::ForceNoOwnPenaltyArea;
     if (State::ref().running())
         flags |= NavigationFlags::ForceNoExtraMargin;
+    if (State::ref().ourBallPlacement())
+        flags |= NavigationFlags::ForceBallPlacementLine;
     return flags;
 }
 } // namespace Tyr::Soccer
