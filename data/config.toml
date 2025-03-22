@@ -205,6 +205,7 @@ chip_min_records = 5
 kick_threshold = 0.69999999999999996
 kicker_depth = 200.0
 max_ball_2_frame_dist = 1000.0
+max_robot_2_frame_dist = 1000.0
 max_ball_frame_not_seen = 30
 max_ball_hist = 10
 max_robot_frame_not_seen = 120

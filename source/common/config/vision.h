@@ -24,6 +24,7 @@ struct Vision final : IConfig
         merge_distance        = t_node["merge_distance"].value_or(merge_distance);
         ball_merge_distance   = t_node["ball_merge_distance"].value_or(ball_merge_distance);
         max_ball_2_frame_dist = t_node["max_ball_2_frame_dist"].value_or(max_ball_2_frame_dist);
+        max_robot_2_frame_dist = t_node["max_robot_2_frame_dist"].value_or(max_robot_2_frame_dist);
 
         max_robot_frame_not_seen = t_node["max_robot_frame_not_seen"].value_or(max_robot_frame_not_seen);
         max_ball_frame_not_seen  = t_node["max_ball_frame_not_seen"].value_or(max_ball_frame_not_seen);
@@ -52,6 +53,7 @@ struct Vision final : IConfig
     float merge_distance        = 70.0;
     float ball_merge_distance   = 70.0;
     float max_ball_2_frame_dist = 1000.0;
+    float max_robot_2_frame_dist = 1000.0;
 
     int max_robot_frame_not_seen = 200;
     int max_ball_frame_not_seen  = 120; // 2 seconds
