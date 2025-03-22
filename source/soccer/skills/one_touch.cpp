@@ -34,18 +34,24 @@ void OneTouchSkill::execute(Robot &t_robot)
 
     if (m_target == nullptr)
     {
-        if (m_chip)
+        const bool angle_correct = std::fabs((t_robot.state().angle - t_robot.target.angle).deg()) < 5.0f;
+        Common::logDebug("angle diff: {}", std::fabs((t_robot.state().angle - t_robot.target.angle).deg()));
+
+        if (angle_correct)
         {
-            t_robot.chip(60);
-        }
-        else
-        {
-            float vel_delta = State::world().ball.velocity.length() / 100.0f;
-            vel_delta *= 0.7f;
-            vel_delta = 60 - vel_delta;
-            Common::logDebug("ball vel: {}", vel_delta);
-            // TODO: calc pass speed
-            t_robot.shoot(6000.f);
+            if (m_chip)
+            {
+                t_robot.chip(60);
+            }
+            else
+            {
+                float vel_delta = State::world().ball.velocity.length() / 100.0f;
+                vel_delta *= 0.7f;
+                vel_delta = 60 - vel_delta;
+                Common::logDebug("ball vel: {}", vel_delta);
+                // TODO: calc pass speed
+                t_robot.shoot(6000.f);
+            }
         }
     }
     else

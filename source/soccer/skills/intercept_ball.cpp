@@ -24,7 +24,7 @@ void InterceptBallSkill::execute(Robot &t_robot)
         Common::Color::blue());
 
     const Common::Angle interception_angle = Common::Angle::fromVec(ball.velocity);
-    const float         t_interception     = calculateBallRobotReachTime(t_robot, interception_angle, profile, 0.1f);
+    const float         t_interception     = calculateBallRobotReachTime(t_robot, interception_angle, profile, m_wait_t);
 
     const Common::BallState ball_state = predictBall(t_interception);
     const Common::Vec2      interception_point =
@@ -32,7 +32,8 @@ void InterceptBallSkill::execute(Robot &t_robot)
 
     Common::debug().draw(interception_point);
 
-    t_robot.navigate(interception_point, profile);
+    t_robot.navigate(interception_point, profile, NavigationFlags::BallSmallObstacle);
+
     t_robot.target.angle = Common::Angle::fromVec(ball_state.position - interception_point);
 }
 } // namespace Tyr::Soccer
