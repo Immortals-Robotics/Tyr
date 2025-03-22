@@ -108,7 +108,7 @@ void Ai::normalPlayAtt()
                 chip_pow  = 0;
             }
 
-            AttackerTactic{passAngle, 0, chip_pow, 0, 1, true}.execute(m_own_robot[m_attack]);
+            AttackerTactic{passAngle, 0, chip_pow}.execute(m_own_robot[m_attack]);
         }
         else
         {
@@ -129,7 +129,7 @@ void Ai::normalPlayAtt()
                 activeShootTimer.start();
             }
 
-            AttackerTactic{shootAngle, shoot_pow, 0, 0, 0}.execute(m_own_robot[m_attack]);
+            AttackerTactic{shootAngle, shoot_pow, 0}.execute(m_own_robot[m_attack]);
         }
     }
 }

@@ -95,7 +95,7 @@ void Ai::normalPlayDef()
     }
 #endif
 
-    AttackerTactic{shootAngle, shoot_pow, chip_pow, 0, 1}.execute(m_own_robot[m_attack]);
+    AttackerTactic{shootAngle, shoot_pow, chip_pow}.execute(m_own_robot[m_attack]);
     // circleBall(m_attack, 90, 80, 0);
 }
 } // namespace Tyr::Soccer
