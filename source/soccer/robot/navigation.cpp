@@ -68,17 +68,15 @@ void Robot::navigateJob(Common::Vec2 t_dest, VelocityProfile t_profile, Navigati
     Common::logDebug("robot [{}] time of arrival: {}", state().vision_id,
                      Common::global_timer().time().seconds() + trajectory.getDuration());
 
-    if (!(t_flags & NavigationFlags::ForceNoBreak))
+    if (!(t_flags & NavigationFlags::NoBreak))
     {
         VelocityProfile stop_profile = VelocityProfile::mamooli();
         stop_profile.acceleration *= 2.0f;
 
-        const bool already_in_obstacle = m_obs_map.inside(state().position);
-
         // below this speed we consider the collision "ok" even if it happens
         // we only break when above this speed
         // and slow down only to below this speed
-        static constexpr float kBreakSpeedThreshold = 200.0f;
+        static constexpr float kBreakSpeedThreshold = 500.0f;
 
         const float extra_speed = std::max(0.0f, currentMotion().length() - kBreakSpeedThreshold);
 
@@ -86,7 +84,7 @@ void Robot::navigateJob(Common::Vec2 t_dest, VelocityProfile t_profile, Navigati
         const bool  collision_imminent  = m_obs_map.hasCollision(trajectory, collision_lookahead, 0.1f,
                                                                Physicality::Physical).first;
 
-        if (!already_in_obstacle && collision_imminent)
+        if (collision_imminent)
         {
             Common::debug().draw(Common::Circle{state().position, Common::field().robot_radius * 1.5f},
                                  Common::Color::red(), false, 50.f);
