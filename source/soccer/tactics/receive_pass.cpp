@@ -2,7 +2,7 @@
 
 #include "../robot/robot.h"
 
-#include "../skills/wait_for_pass.h"
+#include "../skills/one_touch.h"
 
 namespace Tyr::Soccer
 {
@@ -52,7 +52,7 @@ void ReceivePassTactic::execute(Robot &t_robot)
         t_robot.one_touch_type_used = true;
         if (t_robot.one_touch_type == Common::Soccer::OneTouchType::OneTouch)
         {
-            WaitForPassSkill{m_chip}.execute(t_robot);
+            OneTouchSkill{m_chip}.execute(t_robot);
         }
         else if (t_robot.one_touch_type == Common::Soccer::OneTouchType::Allaf)
         {

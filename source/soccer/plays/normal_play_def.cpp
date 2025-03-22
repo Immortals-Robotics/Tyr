@@ -2,7 +2,7 @@
 
 #include "../helpers/open_angle.h"
 #include "../helpers/find_kicker_opp.h"
-#include "../skills/wait_for_pass.h"
+#include "../skills/one_touch.h"
 
 #include "../tactics/mark.h"
 #include "../tactics/attacker.h"
@@ -32,7 +32,7 @@ void Ai::normalPlayDef()
 
         if (m_own_robot[own].one_touch_detector.isArriving())
         {
-            WaitForPassSkill{}.execute(m_own_robot[own]);
+            OneTouchSkill{}.execute(m_own_robot[own]);
         }
         else if (opp == -1)
         {

@@ -4,10 +4,10 @@
 
 namespace Tyr::Soccer
 {
-class WaitForPassSkill final : public Skill
+class OneTouchSkill final : public Skill
 {
 public:
-    explicit WaitForPassSkill(const bool t_chip = false, const Common::Vec2 *t_target = nullptr)
+    explicit OneTouchSkill(const bool t_chip = false, const Common::Vec2 *t_target = nullptr)
         : m_chip(t_chip), m_target(t_target)
     {}
 

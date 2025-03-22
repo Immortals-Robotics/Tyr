@@ -1,13 +1,13 @@
-#include "wait_for_pass.h"
+#include "one_touch.h"
 
 #include "../robot/robot.h"
 #include "../helpers/open_angle.h"
 
 namespace Tyr::Soccer
 {
-const Skill::Id WaitForPassSkill::kId = &WaitForPassSkill::kId;
+const Skill::Id OneTouchSkill::kId = &OneTouchSkill::kId;
 
-void WaitForPassSkill::execute(Robot &t_robot)
+void OneTouchSkill::execute(Robot &t_robot)
 {
     Common::Vec2 pos = calculatePassPos(m_target == nullptr ? Field::oppGoal() : *m_target,
                                         t_robot.state().position, 78);
@@ -59,7 +59,7 @@ void WaitForPassSkill::execute(Robot &t_robot)
     }
 }
 
-Common::Vec2 WaitForPassSkill::calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, const float t_bar)
+Common::Vec2 OneTouchSkill::calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, const float t_bar)
 {
     Common::Line ball_line =
         Common::Line::fromPointAndAngle(State::world().ball.position, State::world().ball.velocity.toAngle());
@@ -82,7 +82,7 @@ Common::Vec2 WaitForPassSkill::calculatePassPos(const Common::Vec2 &t_target, co
     return fans;
 }
 
-Common::Angle WaitForPassSkill::calculateOneTouchAngle(const Robot& t_robot, const Common::Vec2 t_one_touch_position)
+Common::Angle OneTouchSkill::calculateOneTouchAngle(const Robot& t_robot, const Common::Vec2 t_one_touch_position)
 {
     // t_one_touch_position = State::world().ball.position;
     float v0x, v0y;

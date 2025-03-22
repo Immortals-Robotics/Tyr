@@ -4,7 +4,7 @@
 
 #include "../skills/mark_to_ball.h"
 #include "../skills/mark_to_goal.h"
-#include "../skills/wait_for_pass.h"
+#include "../skills/one_touch.h"
 
 namespace Tyr::Soccer
 {
@@ -26,7 +26,7 @@ void MarkTactic::execute(Robot &t_robot)
     {
         if (t_robot.one_touch_detector.isArriving(20))
         {
-            WaitForPassSkill{}.execute(t_robot);
+            OneTouchSkill{}.execute(t_robot);
         }
         else
         {
