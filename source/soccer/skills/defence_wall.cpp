@@ -26,12 +26,12 @@ void DefenceWallSkill::execute(Robot& t_robot)
     }
     else
     {
+        Common::logDebug("{}", opp_attack.value().vision_id);
+
         target = opp_attack.value().position.pointOnConnectingLine(
             State::world().ball.position,
             590 + State::world().ball.position.distanceTo(opp_attack.value().position));
     }
-
-    Common::logDebug("{}", opp_attack.value().vision_id);
 
     Common::Angle ballAngle = State::world().ball.position.angleWith(target);
     Common::Angle firstLeg  = State::world().ball.position.angleWith(
