@@ -4,11 +4,13 @@ namespace Tyr::Soccer
 {
 void Robot::shoot(const float pow)
 {
-    m_shoot = pow * Common::config().soccer.kick_tune_coef;
+    const bool ability = Common::config().soccer.robot_physical_status[state().vision_id].has_direct_kick;
+    m_shoot = ability ? pow * Common::config().soccer.kick_tune_coef : 0.0f;
 }
 void Robot::chip(const float pow)
 {
-    m_chip = pow * Common::config().soccer.chip_tune_coef;
+    const bool ability = Common::config().soccer.robot_physical_status[state().vision_id].has_chip_kick;
+    m_chip = ability ? pow * Common::config().soccer.chip_tune_coef : 0.0f;
 }
 
 void Robot::dribble(const float pow)
