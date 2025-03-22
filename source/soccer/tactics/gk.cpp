@@ -141,7 +141,7 @@ void GkTactic::shirje(Robot &t_robot)
     VelocityProfile profile = VelocityProfile::kharaki();
     profile.acceleration *= 1.5f;
 
-#if 0
+#if 1
     float intercept_t = -1.0f;
     float max_wait_t  = std::numeric_limits<float>::lowest();
 
@@ -158,6 +158,11 @@ void GkTactic::shirje(Robot &t_robot)
             Trajectory2D::makeBangBangTrajectory(t_robot.state().position, t_robot.currentMotion(), point, profile);
 
         const float wait_t = t - trajectory.getDuration();
+
+        if (wait_t > 0.0f)
+        {
+            break;
+        }
 
         Common::logTrace("t: {}, wait:{}", t, wait_t);
 
