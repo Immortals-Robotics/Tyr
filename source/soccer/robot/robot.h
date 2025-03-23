@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../helpers/one_touch_detector.h"
 #include "../navigation/planner/planner.h"
 #include "velocity_profile.h"
 
@@ -37,7 +36,6 @@ public:
     void setState(const Common::RobotState *t_state)
     {
         m_state                  = t_state;
-        one_touch_detector.robot = t_state;
     }
 
     const Common::RobotState &state() const
@@ -115,9 +113,6 @@ public:
     [[nodiscard]] Sender::Command currentCommand() const;
 
     Common::RobotState target;
-
-    // TODO: these don't really belong here
-    OneTouchDetector one_touch_detector;
 
     Common::Soccer::OneTouchType one_touch_type      = Common::Soccer::OneTouchType::OneTouch;
     bool                         one_touch_type_used = false;

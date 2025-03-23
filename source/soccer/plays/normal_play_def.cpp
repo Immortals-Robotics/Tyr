@@ -43,8 +43,7 @@ void Ai::normalPlayDef()
         }
     }
 
-    OpenAngle     openAngle  = OpenAngle::calculateOpenAngleToGoal(m_world_state.ball.position, m_own_robot[m_attack]);
-    Common::Angle shootAngle = Common::Angle::fromDeg(180) + openAngle.center;
+    Common::Angle shootAngle = Field::oppGoal().angleWith(m_world_state.ball.position);
 
     float shoot_pow = 1;
     float chip_pow  = 1;
@@ -56,21 +55,15 @@ void Ai::normalPlayDef()
     {
         chip_pow = 20;
     }
-    else if (!goalBlocked(m_world_state.ball.position, 3000, 130))
+    else
     {
         shoot_pow = 6500.f;
         chip_pow  = 0;
     }
-    else
-    {
-        shoot_pow = 0;
-        chip_pow  = 20;
-    }
-
-    const std::optional<Common::RobotState> kicker_opp = findKickerOpp(-1, 250.0f);
 
     // chip the ball out if in a dangerous position
-#if 1
+#if 0
+    const std::optional<Common::RobotState> kicker_opp = findKickerOpp(-1, 250.0f);
     if (kicker_opp.has_value())
     {
         shootAngle = m_world_state.ball.position.angleWith(Field::ownGoal());
@@ -90,7 +83,7 @@ void Ai::normalPlayDef()
     }
 #endif
 
-    AttackerTactic{shootAngle, shoot_pow, chip_pow}.execute(m_own_robot[m_attack]);
+    AttackerTactic{shootAngle, true, shoot_pow, chip_pow}.execute(m_own_robot[m_attack]);
     // circleBall(m_attack, 90, 80, 0);
 }
 } // namespace Tyr::Soccer

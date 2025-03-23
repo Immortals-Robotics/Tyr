@@ -26,7 +26,6 @@ set(HEADER_FILES
         helpers/ball_prediction.h
         helpers/find_nearest_opp.h
         helpers/find_kicker_opp.h
-        helpers/one_touch_detector.h
         helpers/open_angle.h
 
         robot/robot.h
