@@ -17,10 +17,12 @@ const Tactic::Id AttackerTactic::kId = &AttackerTactic::kId;
 
 void AttackerTactic::execute(Robot &t_robot)
 {
-    if (State::timer().time().seconds() < 0.2f)
+    if (State::timer().time().seconds() < 0.2f || last_robot_id != t_robot.state().vision_id)
     {
         m_state = EState::None;
     }
+
+    last_robot_id = t_robot.state().vision_id;
 
 #if OLD_ATTACKER
     OldAttackerSkill{m_angle, m_kick, m_chip}.execute(t_robot);

@@ -36,6 +36,7 @@ private:
     float         m_chip;
 
     static inline EState m_state = EState::None;
+    static inline int last_robot_id = -1;
 
     NavigationFlags getNavigationFlags(const Robot &t_robot) const;
 };
