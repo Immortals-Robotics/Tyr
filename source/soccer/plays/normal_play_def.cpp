@@ -2,7 +2,6 @@
 
 #include "../helpers/open_angle.h"
 #include "../helpers/find_kicker_opp.h"
-#include "../skills/one_touch.h"
 
 #include "../tactics/mark.h"
 #include "../tactics/attacker.h"
@@ -30,11 +29,7 @@ void Ai::normalPlayDef()
             continue;
         }
 
-        if (m_own_robot[own].one_touch_detector.isArriving())
-        {
-            OneTouchSkill{}.execute(m_own_robot[own]);
-        }
-        else if (opp == -1)
+        if (opp == -1)
         {
             Common::Vec2 static_pos = m_sorted_zones[zone_idx]->best_pos;
             ++zone_idx;

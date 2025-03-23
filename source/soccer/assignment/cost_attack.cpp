@@ -1,15 +1,11 @@
 #include "../ai.h"
 
+#include "../helpers/ball_prediction.h"
+
 namespace Tyr::Soccer
 {
 int Ai::attackRoleCost(const int t_robot_idx, const Assignment &t_assignment)
 {
-    // Check if the robot is waiting for a pass and is in a suitable state to receive it
-    const bool pass_receiver_role = t_robot_idx == m_mid1 || t_robot_idx == m_mid2 || t_robot_idx == m_mid5;
-    const bool one_touch_arriving = m_own_robot[t_robot_idx].one_touch_detector.isArriving(45, 150);
-    if (!m_is_defending && pass_receiver_role && one_touch_arriving)
-        return -1;
-
     const float dis_to_ball = m_own_robot[t_robot_idx].state().position.distanceTo(m_world_state.ball.position);
 
     // check if robot is marking an opponent
@@ -31,8 +27,32 @@ int Ai::attackRoleCost(const int t_robot_idx, const Assignment &t_assignment)
         }
     }
 
+    const bool ball_is_rolling = State::world().ball.velocity.length() > 500.0f;
+
+    Common::Angle kick_angle     = (Field::oppGoal() - State::world().ball.position).toAngle();
+    const float   interception_t = calculateBallRobotReachTime(m_own_robot[t_robot_idx], kick_angle,
+                                                               VelocityProfile::mamooli(), 0.0f);
+    float interception_score = (5.0f - interception_t) / 5.0f;
+    interception_score       = std::clamp(interception_score, 0.1f, 1.0f);
+
+    Common::debug().draw(Common::Circle{m_own_robot[t_robot_idx].state().position, 500.0f * interception_score}, Common::Color::yellow(), false, 50.0f);
+
+    const Common::Vec2 to_ball      = State::world().ball.position - m_own_robot[t_robot_idx].state().position;
+
+    const float ball_angle_diff =  std::fabs(State::world().ball.velocity.angleDiff(-to_ball).deg());
+    float ball_direction_score = (45.0f - ball_angle_diff) / 45.0f;
+    ball_direction_score       = !ball_is_rolling ? 0.0f : std::clamp(ball_direction_score, 0.1f, 1.0f);
+
+    const Common::Line ball_line = State::world().ball.line();
+    const float dis_to_ball_line = ball_line.distanceTo(m_own_robot[t_robot_idx].state().position);
+    const float ball_towards_me = ball_is_rolling && ball_angle_diff < 45.f;
+    ball_direction_score = (2000.0f - dis_to_ball_line) / 2000.0f;
+    ball_direction_score = std::clamp(ball_direction_score, 0.1f, 1.0f);
+
     float dis_score = (5000.0f - dis_to_ball) / 5000.0f;
     dis_score       = std::clamp(dis_score, 0.1f, 1.0f);
+
+    const float receive_ball_score = !ball_towards_me ? 0.0f : (ball_direction_score + dis_score) / 2.0f;
 
     // Calculate another score based on the robot's physical capabilities
     const auto &physical_status = Common::config().soccer.robot_physical_status[t_robot_idx];
@@ -49,7 +69,7 @@ int Ai::attackRoleCost(const int t_robot_idx, const Assignment &t_assignment)
 
     // Return the combined cost
     (void) mark_score;
-    const int cost = 1000.0f * (3.f - dis_score - caps_score - role_score);
+    const int cost = 1000.0f * (4.f - interception_score - caps_score - role_score - receive_ball_score);
     return cost;
 }
 } // namespace Tyr::Soccer

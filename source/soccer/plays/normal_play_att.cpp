@@ -25,7 +25,9 @@ void Ai::normalPlayAtt()
         Common::Vec2 static_pos = m_sorted_zones[zone_idx]->best_pos;
 
         const auto &allaf_pos = std::find_if(m_allaf_pos.begin(), m_allaf_pos.end(), [&robot](const auto &entry)
-                                             { return *entry.first == robot.state().vision_id; });
+        {
+            return *entry.first == robot.state().vision_id;
+        });
 
         // allaf-pos is provided by the strategy
         if (allaf_pos != m_allaf_pos.end() && (robot.one_touch_type == Common::Soccer::OneTouchType::Allaf ||
@@ -39,20 +41,6 @@ void Ai::normalPlayAtt()
         ++zone_idx;
     }
 
-    if (m_own_robot[m_attack].one_touch_type == Common::Soccer::OneTouchType::Allaf && m_allaf_pos.contains(&m_attack))
-    {
-        m_own_robot[m_attack].face(Field::oppGoal());
-        m_own_robot[m_attack].navigate(m_allaf_pos[&m_attack], VelocityProfile::mamooli());
-        if (m_timer.time().seconds() > 2.5)
-        {
-            m_own_robot[m_attack].one_touch_type = Common::Soccer::OneTouchType::OneTouch;
-        }
-
-        activeShootTimer.start();
-    }
-
-    else
-    {
         OpenAngle openAngle = OpenAngle::calculateOpenAngleToGoal(m_world_state.ball.position, m_own_robot[m_attack]);
 
         int *suitable_mid = nullptr;

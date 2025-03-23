@@ -7,8 +7,8 @@ namespace Tyr::Soccer
 class ReceivePassTactic final : public Tactic
 {
 public:
-    explicit ReceivePassTactic(const Common::Vec2 t_static_pos, const bool t_chip = false)
-        : m_static_pos(t_static_pos), m_chip(t_chip)
+    explicit ReceivePassTactic(const Common::Vec2 t_static_pos)
+        : m_static_pos(t_static_pos)
     {}
 
     static const Id kId;
@@ -21,6 +21,5 @@ public:
 
 private:
     Common::Vec2 m_static_pos;
-    bool         m_chip;
 };
 } // namespace Tyr::Soccer

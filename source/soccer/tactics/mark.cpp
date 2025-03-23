@@ -4,7 +4,6 @@
 
 #include "../skills/mark_to_ball.h"
 #include "../skills/mark_to_goal.h"
-#include "../skills/one_touch.h"
 
 namespace Tyr::Soccer
 {
@@ -24,14 +23,7 @@ void MarkTactic::execute(Robot &t_robot)
     }
     else
     {
-        if (t_robot.one_touch_detector.isArriving(20))
-        {
-            OneTouchSkill{}.execute(t_robot);
-        }
-        else
-        {
-            MarkToBallSkill{m_opp, m_dist}.execute(t_robot);
-        }
+        MarkToBallSkill{m_opp, m_dist}.execute(t_robot);
     }
 }
 } // namespace Tyr::Soccer

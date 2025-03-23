@@ -15,11 +15,6 @@ void OneTouchSkill::execute(Robot &t_robot)
     if (m_target == nullptr)
     {
         t_robot.target.angle = calculateOneTouchAngle(t_robot, pos);
-    }
-    else
-    {
-        t_robot.target.angle = t_robot.state().position.angleWith(*m_target);
-    }
 
     const OpenAngle open_angle = OpenAngle::calculateOpenAngleToGoal(pos, t_robot);
 
@@ -29,6 +24,11 @@ void OneTouchSkill::execute(Robot &t_robot)
                          Common::Color::brown());
     Common::debug().draw(Common::LineSegment{pos, Common::Vec2(Field::oppGoal().x, open_line.y(Field::oppGoal().x))},
                          Common::Color::pink());
+    }
+    else
+    {
+        t_robot.target.angle = t_robot.state().position.angleWith(*m_target);
+    }
 
     t_robot.navigate(pos, VelocityProfile::kharaki());
 
