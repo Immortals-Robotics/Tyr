@@ -92,6 +92,9 @@ void Robot::setObstacles(const NavigationFlags t_flags)
         ball_radius = 230.0f;
     else if (!!(t_flags & NavigationFlags::BallSmallObstacle))
         ball_radius = 60.0f;
+    else if (!!(t_flags & NavigationFlags::DynamicBallObstacle))
+        ball_radius = dynamic_ball_obs_r;
+
 
     if (ball_radius > 0.0f)
     {

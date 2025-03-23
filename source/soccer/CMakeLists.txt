@@ -41,6 +41,7 @@ set(HEADER_FILES
         skills/old_attacker.h
         skills/intercept_ball.h
         skills/wait_for_ball.h
+        skills/kick_ball.h
 
         tactics/tactic.h
         tactics/attacker.h
@@ -104,6 +105,7 @@ set(SOURCE_FILES
         skills/old_attacker.cpp
         skills/intercept_ball.cpp
         skills/wait_for_ball.cpp
+        skills/kick_ball.cpp
 
         robot/robot.cpp
         robot/navigation.cpp

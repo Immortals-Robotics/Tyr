@@ -9,6 +9,7 @@
 #include "../skills/one_touch.h"
 #include "../skills/wait_for_ball.h"
 #include "../skills/old_attacker.h"
+#include "../skills/kick_ball.h"
 
 namespace Tyr::Soccer
 {
@@ -133,10 +134,18 @@ void AttackerTactic::execute(Robot &t_robot)
     if (m_state == EState::Kick)
     {
         const bool angle_correct = std::fabs((t_robot.state().angle - ball_to_goal.toAngle()).deg()) < 5.0f;
+#if 1
         if (angle_correct)
             OldAttackerSkill{m_angle, m_kick, m_chip}.execute(t_robot);
         else
             OldAttackerSkill{m_angle, 1, 0}.execute(t_robot);
+#else
+        if (angle_correct)
+            KickBallSkill{m_angle, m_kick, m_chip}.execute(t_robot);
+        else
+            KickBallSkill{m_angle, 1, 0}.execute(t_robot);
+#endif
+
     }
     else if (m_state == EState::WaitForBall)
     {

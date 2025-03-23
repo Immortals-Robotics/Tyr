@@ -18,6 +18,7 @@ enum class NavigationFlags
     NoExtraMargin      = BIT(7),
     BallPlacementLine  = BIT(8),
     TheirHalf          = BIT(9),
+    DynamicBallObstacle = BIT(10),
 };
 
 ENABLE_ENUM_FLAG_OPERATORS(NavigationFlags);
@@ -120,6 +121,8 @@ public:
 
     Common::Soccer::OneTouchType one_touch_type      = Common::Soccer::OneTouchType::OneTouch;
     bool                         one_touch_type_used = false;
+
+    float dynamic_ball_obs_r = 0.0f;
 
 private:
     const Common::RobotState *m_state = nullptr;
