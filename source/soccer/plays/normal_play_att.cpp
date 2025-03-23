@@ -56,11 +56,14 @@ void Ai::normalPlayAtt()
                                    .normalized()
                                    .dot((Field::ownGoal() - m_world_state.ball.position).normalized()) < 0.85f;
 
-        Common::logDebug("mid {} pass angle ok: {}", *mid, pass_angle_ok);
+
 
         const bool seen = robot.state().seen_state != Common::SeenState::CompletelyOut;
 
-        const bool suitable = seen && reached && dis_ok && pass_angle_ok;
+        const Common::Config::RobotPhysicalStatus& physical = Common::config().soccer.robot_physical_status[robot.state().vision_id];
+        const bool abilities = physical.has_direct_kick && !physical.is_3D_printed;
+
+        const bool suitable = seen && reached && dis_ok && pass_angle_ok && abilities;
         if (suitable)
         {
             suitable_mid = mid;
@@ -68,6 +71,7 @@ void Ai::normalPlayAtt()
         }
     }
 
+    Common::logDebug("suitable_mid {}", suitable_mid ? *suitable_mid : -1);
     Common::logDebug("open angle: {}", openAngle.magnitude.deg());
 
     static bool ball_is_stationary = false;
