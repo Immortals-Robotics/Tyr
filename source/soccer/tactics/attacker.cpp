@@ -27,7 +27,7 @@ void AttackerTactic::execute(Robot &t_robot)
 #else
     const Common::Line ball_line = State::world().ball.line();
 
-    const Common::Vec2 ball_to_goal = Field::oppGoal() - State::world().ball.position;
+    const Common::Vec2 ball_to_goal = -(m_angle.toUnitVec()) * 1000.0f;
     const Common::Vec2 to_ball      = State::world().ball.position - t_robot.state().position;
 
     const float ball_line_d = ball_line.distanceTo(t_robot.state().position);
@@ -148,12 +148,14 @@ void AttackerTactic::execute(Robot &t_robot)
     }
     else if (m_state == EState::WaitForBall)
     {
-        const Common::Vec2 target_to_goal = Field::oppGoal() - t_robot.target.position;
+        //const Common::Vec2 target_to_goal = Field::oppGoal() - t_robot.target.position;
+        const Common::Vec2 target_to_goal = ball_to_goal;
         const bool one_touch_feasible = std::fabs(target_to_goal.angleDiff(-State::world().ball.velocity).deg()) < 60.0;
 
         if (one_touch_feasible)
         {
-            OneTouchSkill{}.execute(t_robot);
+            const Common::Vec2 target = t_robot.state().position + ball_to_goal;
+            OneTouchSkill{false, &target}.execute(t_robot);
         }
         else
         {

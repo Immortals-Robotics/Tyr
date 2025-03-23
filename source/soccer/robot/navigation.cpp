@@ -72,9 +72,6 @@ void Robot::navigateJob(Common::Vec2 t_dest, VelocityProfile t_profile, Navigati
 
     Trajectory2D trajectory = Trajectory2D::makeBangBangTrajectory(state().position, currentMotion(), dest, t_profile);
 
-    Common::logDebug("robot [{}] time of arrival: {}", state().vision_id,
-                     Common::global_timer().time().seconds() + trajectory.getDuration());
-
     if (!(t_flags & NavigationFlags::NoBreak))
     {
         VelocityProfile stop_profile = VelocityProfile::mamooli();
