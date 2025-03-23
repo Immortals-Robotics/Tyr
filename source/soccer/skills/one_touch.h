@@ -22,8 +22,8 @@ public:
 private:
     const Common::Vec2 *m_target;
 
-    const float m_kick;
-    const float m_chip;
+    float m_kick;
+    float m_chip;
 
     Common::Angle calculateOneTouchAngle(const Robot& t_robot, Common::Vec2 t_one_touch_position);
     Common::Vec2 calculatePassPos(const Common::Vec2 &t_target, const Common::Vec2 &t_stat_pos, float t_bar = 89.0f);

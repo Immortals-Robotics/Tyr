@@ -40,7 +40,7 @@ void OneTouchSkill::execute(Robot &t_robot)
     {
         // TODO: calc pass speed
         t_robot.shoot(m_kick);
-        t_robot.shoot(m_chip);
+        t_robot.chip(m_chip);
     }
 }
 
