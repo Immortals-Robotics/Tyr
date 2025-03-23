@@ -32,7 +32,7 @@ void InterceptBallSkill::execute(Robot &t_robot)
 
     Common::debug().draw(interception_point);
 
-    t_robot.navigate(interception_point, profile, NavigationFlags::BallSmallObstacle);
+    t_robot.navigate(interception_point, profile, NavigationFlags::BallMediumObstacle);
 
     t_robot.target.angle = Common::Angle::fromVec(ball_state.position - interception_point);
 }

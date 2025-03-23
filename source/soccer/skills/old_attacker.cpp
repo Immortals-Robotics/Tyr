@@ -16,8 +16,8 @@ void OldAttackerSkill::execute(Robot &t_robot)
         Common::LineSegment{State::world().ball.position, State::world().ball.position + m_angle.toUnitVec() * 1000.0f},
         Common::Color::blue());
 
-    const float        t_interception = calculateBallRobotReachTime(t_robot, m_angle, VelocityProfile::mamooli(), 0.1f);
-    const Common::Vec2 predicted_ball = predictBall(t_interception).position;
+    const float        t_interception = calculateBallRobotReachTime(t_robot, -m_angle, VelocityProfile::mamooli(), 0.1f);
+    const Common::Vec2 predicted_ball = predictBall(t_interception * 0.5f).position;
 
     Common::debug().draw(Common::Circle{predicted_ball, 50}, Common::Color::blue(), false);
 
@@ -78,8 +78,8 @@ void OldAttackerSkill::execute(Robot &t_robot)
         }
         else
         {
-            r     = 900.0f;
-            tetta = 45.0f;
+            r     = 160.0f;
+            tetta = 20.0f;
             // if ( !passedBall )
             //	r *= 1.5;
         }

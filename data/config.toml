@@ -197,6 +197,7 @@ penalty_area_mark_distance = 400.0
 
 [vision]
 ball_merge_distance = 70.0
+ball_rolling_friction = 200
 camera_delay = 0.0
 chip_max_error = 300000.0
 chip_max_records = 200
@@ -204,10 +205,10 @@ chip_max_vel_z = 7000.0
 chip_min_records = 5
 kick_threshold = 0.69999999999999996
 kicker_depth = 200.0
-max_ball_2_frame_dist = 1000.0
-max_robot_2_frame_dist = 1000.0
+max_ball_2_frame_dist = 500.0
 max_ball_frame_not_seen = 30
 max_ball_hist = 10
+max_robot_2_frame_dist = 500.0
 max_robot_frame_not_seen = 120
 merge_distance = 70.0
 predict_time = 0.14999999999999999
