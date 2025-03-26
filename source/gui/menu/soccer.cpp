@@ -13,13 +13,6 @@ void SoccerMenu::draw(const Common::Soccer::State &t_state)
         ImGui::SameLine(0, 2.5f);
         ImGui::Text("Opp Restarted");
     }
-    if (t_state.gk_intercepting)
-    {
-        ImGui::SameLine(0, 2.5f);
-        ImGui::Text(" | ");
-        ImGui::SameLine(0, 2.5f);
-        ImGui::Text("GK Intercepting");
-    }
 
     ImGui::Text("Rnd: %.2f", t_state.random_param);
     if (!t_state.target_str.empty())
@@ -28,16 +21,6 @@ void SoccerMenu::draw(const Common::Soccer::State &t_state)
         ImGui::Text(" | ");
         ImGui::SameLine(0, 2.5f);
         ImGui::Text("str: %s", t_state.target_str.c_str());
-    }
-
-    if (t_state.func_count > 0)
-    {
-        ImGui::SeparatorText("FSM");
-        ImGui::Text("state: %d", t_state.func_state);
-        ImGui::SameLine(0, 2.5f);
-        ImGui::Text(" | ");
-        ImGui::SameLine(0, 2.5f);
-        ImGui::Text("count: %d", t_state.func_count);
     }
 
     std::map<Common::Soccer::Role, int> role_map;

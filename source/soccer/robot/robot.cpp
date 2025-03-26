@@ -1,16 +1,16 @@
 #include "robot.h"
 
-#include "../navigation/trajectory/trajectory_2d.h"
-
 namespace Tyr::Soccer
 {
 void Robot::shoot(const float pow)
 {
-    m_shoot = pow * Common::config().soccer.kick_tune_coef;
+    const bool ability = Common::config().soccer.robot_physical_status[state().vision_id].has_direct_kick;
+    m_shoot = ability ? pow * Common::config().soccer.kick_tune_coef : 0.0f;
 }
 void Robot::chip(const float pow)
 {
-    m_chip = pow * Common::config().soccer.chip_tune_coef;
+    const bool ability = Common::config().soccer.robot_physical_status[state().vision_id].has_chip_kick;
+    m_chip = ability ? pow * Common::config().soccer.chip_tune_coef : 0.0f;
 }
 
 void Robot::dribble(const float pow)
@@ -23,19 +23,11 @@ void Robot::face(const Common::Vec2 t_target)
     target.angle = state().position.angleWith(t_target);
 }
 
-void Robot::move(Common::Vec2 motion)
+void Robot::move(const Trajectory2D& trajectory)
 {
-    if (m_navigated && state().seen_state != Common::SeenState::CompletelyOut)
-    {
-        Common::logWarning("Robot {} is navigated more than once", state().vision_id);
-    }
+    drawTrajectory(trajectory, Common::Color::black());
 
-    motion.x = std::clamp(motion.x, -4500.0f, 4500.0f);
-    motion.y = std::clamp(motion.y, -4500.0f, 4500.0f);
-
-    m_last_motion = motion;
-
-    m_navigated = true;
+    m_trajectory = trajectory;
 }
 
 void Robot::halt()
@@ -43,7 +35,7 @@ void Robot::halt()
     target.angle    = state().angle;
     target.position = state().position;
 
-    m_last_motion = Common::Vec2();
+    m_trajectory = {};
 
     m_shoot    = 0.0f;
     m_chip     = 0.0f;
@@ -54,16 +46,11 @@ void Robot::halt()
 
 void Robot::fullBeak(const float acc_factor)
 {
-    const float acc = VelocityProfile::mamooli().acceleration * acc_factor;
-    const float dt = 1.0f / Common::config().vision.vision_frame_rate;
-    const Common::Vec2 new_cmd = currentMotion() - currentMotion().normalized() * acc * dt;
+    VelocityProfile profile = VelocityProfile::mamooli();
+    profile.acceleration *= acc_factor;
 
-    move(new_cmd);
-}
-
-Common::Vec2 Robot::currentMotion() const
-{
-    return m_last_motion;
+    const Trajectory2D trajectory = Trajectory2D::makeFullStopTrajectory(state().position, currentMotion(), profile);
+    move(trajectory);
 }
 
 Sender::Command Robot::currentCommand() const

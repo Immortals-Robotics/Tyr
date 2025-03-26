@@ -10,7 +10,6 @@ set(HEADER_FILES
         filtered/tracked/ball.h
         filtered/tracked/robot.h
 
-        kalman/ekf_3d.h
         kalman/control.h
         kalman/measurement/orientation.h
         kalman/measurement/orientation_model.h

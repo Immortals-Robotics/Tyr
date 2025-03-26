@@ -41,11 +41,11 @@ port = 10099
 
 [network.vision]
 ip = '224.5.23.2'
-port = 10016
+port = 10006
 
 [network.vision_sim]
 ip = '224.5.23.2'
-port = 10024
+port = 10025
 
 [network.yellow_robot_simulation]
 ip = '127.0.0.1'
@@ -112,7 +112,7 @@ penalty_area_mark_distance = 400.0
     is_3D_printed = true
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = true
+    has_chip_kick = false
     has_direct_kick = true
     has_dribbler = false
     id = 4
@@ -126,7 +126,7 @@ penalty_area_mark_distance = 400.0
     is_3D_printed = true
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = true
+    has_chip_kick = false
     has_direct_kick = true
     has_dribbler = false
     id = 6
@@ -197,6 +197,7 @@ penalty_area_mark_distance = 400.0
 
 [vision]
 ball_merge_distance = 70.0
+ball_rolling_friction = 200
 camera_delay = 0.0
 chip_max_error = 300000.0
 chip_max_records = 200
@@ -207,9 +208,10 @@ kicker_depth = 200.0
 max_ball_2_frame_dist = 1000.0
 max_ball_frame_not_seen = 30
 max_ball_hist = 10
+max_robot_2_frame_dist = 500.0
 max_robot_frame_not_seen = 120
 merge_distance = 70.0
 predict_time = 0.14999999999999999
 use_ball_3d = true
-use_camera = [ true, true, true, true, false, false, false, false ]
-vision_frame_rate = 70.0
+use_camera = [ true, true, false, false, false, false, false, false ]
+vision_frame_rate = 73.0

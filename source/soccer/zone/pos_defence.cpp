@@ -4,15 +4,15 @@ namespace Tyr::Soccer
 {
 float Ai::staticPosScoreDefence(const Common::Vec2 t_pos) const
 {
-    float oppDisToGoal = t_pos.distanceTo(ownGoal());
+    float oppDisToGoal = t_pos.distanceTo(Field::ownGoal());
 
-    Common::Angle t1Angel = t_pos.angleWith(ownGoalPostBottom());
-    Common::Angle t2Angel = t_pos.angleWith(ownGoalPostTop());
+    Common::Angle t1Angel = t_pos.angleWith(Field::ownGoalPostBottom());
+    Common::Angle t2Angel = t_pos.angleWith(Field::ownGoalPostTop());
 
     float oppOpenAngleToGoal = std::fabs((t2Angel - t1Angel).deg());
 
     Common::Vec2 oppToBall = (m_world_state.ball.position - t_pos).normalized();
-    Common::Vec2 oppToGoal = (ownGoal() - t_pos).normalized();
+    Common::Vec2 oppToGoal = (Field::ownGoal() - t_pos).normalized();
 
     float oneTouchDot = oppToBall.dot(oppToGoal);
 

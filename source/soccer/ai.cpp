@@ -16,6 +16,12 @@ Ai::Ai()
     Common::logInfo("Running Immortals SSL AI module");
     Common::logInfo("Hope us luck :D ");
 
+    State::m_world = &m_world_state;
+    State::m_ref = &m_ref_state;
+    State::m_side = &m_side;
+    State::m_robots = m_own_robot;
+    State::m_timer = &m_timer;
+
     m_world_client = std::make_unique<Common::NngClient>(Common::config().network.world_state_url);
     m_ref_client   = std::make_unique<Common::NngClient>(Common::config().network.referee_state_url);
 
@@ -23,11 +29,6 @@ Ai::Ai()
 
     m_cmd_server   = std::make_unique<Common::NngServer>(Common::config().network.commands_url);
     m_state_server = std::make_unique<Common::NngServer>(Common::config().network.soccer_state_url);
-
-    m_ball_predictor = std::make_unique<Vision::Ekf3D>(1. / Common::config().vision.vision_frame_rate,
-                                                       Common::config().vision.camera_delay);
-
-    m_dss = std::make_unique<Dss>(&m_world_state);
 
     m_current_play = &Ai::haltAll;
 
@@ -71,17 +72,7 @@ Ai::Ai()
 
     for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
     {
-        m_planner_rrt[i].setObstacleMap(&m_obsMap[i]);
-        m_planner_trajectory[i].setObstacleMap(&m_obsMap[i]);
-
-        m_own_robot[i] = Robot(&m_world_state.own_robot[i]);
-
-        m_one_touch_detector[i].rState = &m_own_robot[i];
-        m_one_touch_detector[i].ball   = &m_world_state.ball;
-        m_one_touch_detector[i].side   = &m_side;
-
-        m_one_touch_type[i]      = OneTouchType::OneTouch;
-        m_one_touch_type_used[i] = false;
+        m_own_robot[i].setState(&m_world_state.own_robot[i]);
     }
 
     const auto strategy_path = std::filesystem::path(DATA_DIR) / "strategy.ims";
@@ -161,10 +152,10 @@ bool Ai::publishState() const
         state.robots[robot_idx].navigated = m_own_robot[robot_idx].navigated();
         state.robots[robot_idx].halted    = m_own_robot[robot_idx].halted();
 
-        state.robots[robot_idx].one_touch_type = static_cast<Common::Soccer::OneTouchType>(m_one_touch_type[robot_idx]);
+        state.robots[robot_idx].one_touch_type = m_own_robot[robot_idx].one_touch_type;
         // TODO:
         // state.robots[robot_idx].one_touch_arriving = m_one_touch_detector[robot_idx].arriving;
-        state.robots[robot_idx].one_touch_type_used = m_one_touch_type_used[robot_idx];
+        state.robots[robot_idx].one_touch_type_used = m_own_robot[robot_idx].one_touch_type_used;
     }
 
     for (const auto &[own, opp] : m_mark_map)
@@ -178,11 +169,6 @@ bool Ai::publishState() const
 
     state.is_defending  = m_is_defending;
     state.opp_restarted = m_opp_restarted;
-
-    state.gk_intercepting = m_gk_intercepting;
-
-    state.func_state = m_func_state;
-    state.func_count = m_func_count;
 
     Protos::Immortals::Soccer::State pb_state;
     state.fillProto(&pb_state);

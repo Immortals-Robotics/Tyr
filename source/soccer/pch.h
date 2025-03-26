@@ -12,6 +12,7 @@
 #include <Eigen/Dense>
 #include <numeric>
 #include <optional>
+#include <concepts>
 
 #ifdef PI
 #undef PI
@@ -21,4 +22,5 @@
 
 #include <protos/immortals/play_book.pb.h>
 
-#include "../vision/kalman/ekf_3d.h"
+#include "globals/state.h"
+#include "globals/field.h"

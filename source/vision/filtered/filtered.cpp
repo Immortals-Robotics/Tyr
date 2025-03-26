@@ -7,10 +7,6 @@ Filtered::Filtered()
     m_raw_client = std::make_unique<Common::NngClient>(Common::config().network.raw_world_state_url);
     m_cmd_client = std::make_unique<Common::NngClient>(Common::config().network.commands_url);
     m_server     = std::make_unique<Common::NngServer>(Common::config().network.world_state_url);
-    m_ball_ekf =
-        std::make_unique<Ekf3D>(1. / Common::config().vision.vision_frame_rate, Common::config().vision.camera_delay);
-    m_ball_ekf_future =
-        std::make_unique<Ekf3D>(1. / Common::config().vision.vision_frame_rate, Common::config().vision.camera_delay);
     m_kick_detector  = std::make_unique<KickDetector>();
     m_chip_estimator = std::make_unique<ChipEstimator>();
 }

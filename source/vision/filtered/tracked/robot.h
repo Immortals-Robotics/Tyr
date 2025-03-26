@@ -48,8 +48,6 @@ public:
         m_orientation_model.setCovariance(orientationMeasurementNoise);
 
         reset({},{});
-
-        m_not_seen = std::numeric_limits<int>::max() - 1;
     }
 
     // Initialize the position whenever it is lost and re-found. Use this for the first initial state too.
@@ -82,7 +80,7 @@ public:
         robot_state.setAngle(t_angle);
         m_kalman.init(robot_state);
 
-        m_not_seen = 0;
+        m_confidence = 0;
     }
 
     // propagated the state forward in time
@@ -92,7 +90,7 @@ public:
     {
         m_kalman.predict(m_system_model);
 
-        m_not_seen = std::min(m_not_seen + 1, std::numeric_limits<int>::max() - 1);
+        m_confidence = std::clamp(m_confidence - 1, 0, 100);
     }
 
     //  update the internal state using known vision data
@@ -104,7 +102,7 @@ public:
         Filter::OrientationMeasurement orientation_measurement{t_angle};
         m_kalman.update(m_orientation_model, orientation_measurement);
 
-        m_not_seen = 0;
+        m_confidence = std::clamp(m_confidence + 2, 0, 100);
     }
 
     Filter::RobotState predictOwn(const float dt, const std::deque<Sender::Command>& history) const
@@ -154,9 +152,14 @@ public:
         return m_kalman.getState();
     }
 
-    int notSeen() const
+    int confidence() const
     {
-        return m_not_seen;
+        return m_confidence;
+    }
+
+    void setConfidence(const int t_confidence)
+    {
+        m_confidence = t_confidence;
     }
 
 private:
@@ -167,6 +170,8 @@ private:
     Filter::PositionMeasurementModel<Filter::RobotState> m_position_model;
     Filter::OrientationMeasurementModel m_orientation_model;
 
-    int m_not_seen = std::numeric_limits<int>::max() - 1;
+    // 0: never seen it, what's that?
+    // 100: seen just now
+    int m_confidence = 0;
 };
 } // namespace Tyr::Vision

@@ -6,29 +6,50 @@ set(HEADER_FILES
         pch.h
         ai.h
 
-        navigation/errt/errt.h
-        navigation/errt/tree.h
-        navigation/dss/dss.h
-        navigation/obstacle/circle.h
+        globals/field.h
+        globals/state.h
+
         navigation/obstacle/map.h
-        navigation/obstacle/rect.h
-        navigation/trajectory/trajectory_base.h
+        navigation/obstacle/obstacle.h
+
+        navigation/planner/planner.h
+
+        navigation/trajectory/trajectory.h
         navigation/trajectory/trajectory_chained.h
+        navigation/trajectory/trajectory_constant_acc.h
         navigation/trajectory/trajectory_pieced.h
-        navigation/trajectory/trajectory_1d.h
         navigation/trajectory/trajectory_2d.h
-        navigation/trajectory/trajectory_2d_xy.h
-        navigation/trajectory/piece/piece_base.h
-        navigation/trajectory/piece/piece_1d.h
-        navigation/trajectory/piece/piece_2d.h
-        navigation/trajectory/planner/planner.h
 
         plays/play_book.h
 
-        helpers/one_touch_detector.h
+        helpers/ball_is_goaling.h
+        helpers/ball_prediction.h
+        helpers/find_nearest_opp.h
+        helpers/find_kicker_opp.h
+        helpers/open_angle.h
 
         robot/robot.h
-        robot/velocity_profile.h)
+        robot/velocity_profile.h
+
+        skills/skill.h
+        skills/defence_wall.h
+        skills/halt.h
+        skills/mark_to_ball.h
+        skills/mark_to_goal.h
+        skills/one_touch.h
+        skills/old_attacker.h
+        skills/intercept_ball.h
+        skills/wait_for_ball.h
+        skills/kick_ball.h
+
+        tactics/tactic.h
+        tactics/attacker.h
+        tactics/circle_ball.h
+        tactics/def.h
+        tactics/gk.h
+        tactics/mark.h
+        tactics/receive_pass.h
+)
 
 set(SOURCE_FILES
         ai.cpp
@@ -48,29 +69,14 @@ set(SOURCE_FILES
         assignment/create_mids.cpp
         assignment/create_static.cpp
 
-        navigation/errt/errt.cpp
-        navigation/errt/set_obstacles.cpp
-        navigation/dss/dss.cpp
         navigation/obstacle/map.cpp
-        navigation/trajectory/trajectory_2d.cpp
+        navigation/planner/planner.cpp
         navigation/trajectory/trajectory_bang_bang.cpp
-        navigation/trajectory/trajectory_immortals.cpp
-        navigation/trajectory/piece/piece_2d.cpp
-        navigation/trajectory/planner/planner.cpp
 
-        helpers/attack_fucking_angle.cpp
-        helpers/ball_is_goaling.cpp
         helpers/calc_is_defending.cpp
         helpers/calculate_mark_cost.cpp
         helpers/calculate_opp_threat.cpp
-        helpers/calculate_switch_to_attacker_score.cpp
-        helpers/field.inl
-        helpers/find_kicker_opp.cpp
         helpers/goal_blocked.cpp
-        helpers/manage_att_roles.cpp
-        helpers/mark_manager.cpp
-        helpers/nearest_opp.cpp
-        helpers/one_touch_angle.cpp
         helpers/open_angle.cpp
         helpers/strategy_weight.cpp
 
@@ -78,6 +84,7 @@ set(SOURCE_FILES
         plays/halt.cpp
         plays/kickoff_their_one_wall.cpp
         plays/kickoff_us_chip.cpp
+        plays/kickoff_us_pass.cpp
         plays/normal_play_att.cpp
         plays/normal_play_def.cpp
         plays/normal_play.cpp
@@ -89,22 +96,26 @@ set(SOURCE_FILES
         plays/their_place_ball.cpp
         plays/throwin_chip_shoot.cpp
 
-        skills/circle_ball.cpp
-        skills/def_hi.cpp
         skills/defence_wall.cpp
-        skills/gk_hi.cpp
+        skills/halt.cpp
         skills/mark_to_ball.cpp
         skills/mark_to_goal.cpp
-        skills/mark.cpp
-        skills/navigation.cpp
-        skills/pass_gool.cpp
-        skills/pass_omghi.cpp
-        skills/pass.cpp
-        skills/receive_pass.cpp
-        skills/running_def.cpp
-        skills/attacker.cpp
+        skills/one_touch.cpp
+        skills/old_attacker.cpp
+        skills/intercept_ball.cpp
+        skills/wait_for_ball.cpp
+        skills/kick_ball.cpp
 
         robot/robot.cpp
+        robot/navigation.cpp
+        robot/set_obstacles.cpp
+
+        tactics/attacker.cpp
+        tactics/circle_ball.cpp
+        tactics/def.cpp
+        tactics/gk.cpp
+        tactics/mark.cpp
+        tactics/receive_pass.cpp
 
         zone/pos_attack.cpp
         zone/pos_defence.cpp

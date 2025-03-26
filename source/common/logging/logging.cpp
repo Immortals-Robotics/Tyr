@@ -15,13 +15,8 @@ void Logger::flush()
 
 Logger::Logger()
 {
-    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    console_sink->set_level(spdlog::level::trace);
-
-    setPattern(console_sink.get());
-
-    spdlog::init_thread_pool(8192, 1);
-    m_logger = std::make_shared<spdlog::async_logger>("default", console_sink, spdlog::thread_pool(),
+    spdlog::init_thread_pool(8192, 4);
+    m_logger = std::make_shared<spdlog::async_logger>("default", spdlog::sinks_init_list{}, spdlog::thread_pool(),
                                                       spdlog::async_overflow_policy::block);
     m_logger->set_level(spdlog::level::trace);
     m_logger->flush_on(spdlog::level::err);

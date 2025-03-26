@@ -6,23 +6,23 @@ float Ai::staticPosScoreAttack(const Common::Vec2 t_pos) const
 {
     // Reject if blocks the attack's shot on goal
     const Common::Line pos_ball_line = Common::Line::fromTwoPoints(m_world_state.ball.position, t_pos);
-    const Common::Line goal_line = Common::Line::fromSegment(oppGoalLine());
+    const Common::Line goal_line = Common::Line::fromSegment(Field::oppGoalLine());
     const auto goal_inter = pos_ball_line.intersect(goal_line);
 
-    const float dot = (t_pos - m_world_state.ball.position).normalized().dot((oppGoal() - m_world_state.ball.position).normalized());
+    const float dot = (t_pos - m_world_state.ball.position).normalized().dot((Field::oppGoal() - m_world_state.ball.position).normalized());
 
     if (dot > 0 && goal_inter.has_value() && std::abs(goal_inter.value().y) < Common::field().goal_width / 2.0f)
         return 0.0f;
 
-    float oppDisToGoal = t_pos.distanceTo(oppGoal());
+    float oppDisToGoal = t_pos.distanceTo(Field::oppGoal());
 
-    Common::Angle t1Angel = t_pos.angleWith(oppGoalPostBottom());
-    Common::Angle t2Angel = t_pos.angleWith(oppGoalPostTop());
+    Common::Angle t1Angel = t_pos.angleWith(Field::oppGoalPostBottom());
+    Common::Angle t2Angel = t_pos.angleWith(Field::oppGoalPostTop());
 
     float oppOpenAngleToGoal = std::fabs((t2Angel - t1Angel).deg());
 
     Common::Vec2 oppToBall = (m_world_state.ball.position - t_pos).normalized();
-    Common::Vec2 oppToGoal = (oppGoal() - t_pos).normalized();
+    Common::Vec2 oppToGoal = (Field::oppGoal() - t_pos).normalized();
 
     float oneTouchDot = oppToBall.dot(oppToGoal);
 
@@ -58,7 +58,7 @@ float Ai::staticPosScoreAttack(const Common::Vec2 t_pos) const
 
     const bool pass_angle_ok = (t_pos - m_world_state.ball.position)
                                            .normalized()
-                                           .dot((ownGoal() - m_world_state.ball.position).normalized()) < 0.85f;
+                                           .dot((Field::ownGoal() - m_world_state.ball.position).normalized()) < 0.85f;
     const float own_goal_angle_score = pass_angle_ok ? 1.0f : 0.0f;
 
     auto final_score_one_touch  = own_goal_angle_score * score_one_touch_angle * std::min(score_ball_dis * score_goal_dis, score_open_angle);

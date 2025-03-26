@@ -21,25 +21,25 @@ int Ai::markRoleCost(const int t_robot_idx, const Assignment &t_assignment) cons
     Common::Vec2       target;
 
     auto oppToBall    = (m_world_state.ball.position - predicted_pos_opp).normalized();
-    auto oppToGoal    = (ownGoal() - predicted_pos_opp).normalized();
-    auto oppToGoalDis = predicted_pos_opp.distanceTo(ownGoal());
+    auto oppToGoal    = (Field::ownGoal() - predicted_pos_opp).normalized();
+    auto oppToGoalDis = predicted_pos_opp.distanceTo(Field::ownGoal());
     auto oneTouchDot  = oppToBall.dot(oppToGoal);
 
     if ((oneTouchDot > 0 || oppToGoalDis < 2500) && Common::config().soccer.penalty_area_mark)
     {
         const float        penalty_area_dist       = Common::config().soccer.penalty_area_mark_distance;
         const float        penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
-        const Common::Vec2 start{ownGoal().x, -(penalty_area_half_width + penalty_area_dist)};
+        const Common::Vec2 start{Field::ownGoal().x, -(penalty_area_half_width + penalty_area_dist)};
         const float        w = -m_side * (penalty_area_dist + Common::field().penalty_area_depth);
         const float        h = Common::field().penalty_area_width + 2 * penalty_area_dist;
 
         const Common::Rect              virtual_defense_area{start, w, h};
-        const Common::Line              shot_line     = Common::Line::fromTwoPoints(ownGoal(), predicted_pos_opp);
+        const Common::Line              shot_line     = Common::Line::fromTwoPoints(Field::ownGoal(), predicted_pos_opp);
         const std::vector<Common::Vec2> intersections = virtual_defense_area.intersection(shot_line);
 
         if (intersections.size() == 2)
         {
-            target = intersections[0].distanceTo(ownGoal()) > intersections[1].distanceTo(ownGoal()) ? intersections[0]
+            target = intersections[0].distanceTo(Field::ownGoal()) > intersections[1].distanceTo(Field::ownGoal()) ? intersections[0]
                                                                                                      : intersections[1];
         }
         // Common::debug().draw(target, Common::Color::blue());

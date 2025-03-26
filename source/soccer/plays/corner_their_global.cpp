@@ -1,5 +1,10 @@
 #include "../ai.h"
 
+#include "../skills/defence_wall.h"
+#include "../tactics/def.h"
+#include "../tactics/gk.h"
+#include "../tactics/mark.h"
+
 namespace Tyr::Soccer
 {
 void Ai::cornerTheirGlobal()
@@ -16,17 +21,17 @@ void Ai::cornerTheirGlobal()
     if (m_side * m_world_state.ball.position.x > Common::field().width - 1000)
     {
         m_own_robot[m_gk].target.angle = Common::Angle::fromDeg((1 + m_side) * 90.0f);
-        navigate(m_gk, Common::Vec2(m_side * (Common::field().width - 100), 0), VelocityProfile::mamooli());
-
-        defHi(m_def1, m_def2, nullptr);
+        m_own_robot[m_gk].navigate(Common::Vec2(m_side * (Common::field().width - 100), 0), VelocityProfile::mamooli());
     }
     else
     {
-        gkHi(m_gk);
-        defHi(m_def1, m_def2, nullptr);
+        GkTactic{}.execute(m_own_robot[m_gk]);
     }
 
-    defenceWall(m_attack, false);
+    DefTactic{1}.execute(m_own_robot[m_def1]);
+    DefTactic{2}.execute(m_own_robot[m_def2]);
+
+    DefenceWallSkill{}.execute(m_own_robot[m_attack]);
 
     std::map<int, Common::Vec2> static_pos;
     static_pos[m_mid5]  = Common::Vec2(m_side * 3500, -Common::sign(m_world_state.ball.position.y) * 1100.0f);
@@ -42,13 +47,13 @@ void Ai::cornerTheirGlobal()
         {
             if (static_pos.find(own) != static_pos.end())
             {
-                m_own_robot[own].face(oppGoal());
-                navigate(own, static_pos[own], VelocityProfile::mamooli());
+                m_own_robot[own].face(Field::oppGoal());
+                m_own_robot[own].navigate(static_pos[own], VelocityProfile::mamooli());
             }
         }
         else
         {
-            mark(own, opp, Common::config().soccer.mark_distance);
+            MarkTactic{m_world_state.opp_robot[opp], Common::config().soccer.mark_distance}.execute(m_own_robot[own]);
         }
     }
 }
