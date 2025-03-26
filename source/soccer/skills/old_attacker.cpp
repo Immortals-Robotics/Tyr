@@ -17,7 +17,7 @@ void OldAttackerSkill::execute(Robot &t_robot)
         Common::Color::blue());
 
     const float        t_interception = calculateBallRobotReachTime(t_robot, -m_angle, VelocityProfile::mamooli(), 0.1f);
-    const Common::Vec2 predicted_ball = predictBall(t_interception * 0.5f).position;
+    const Common::Vec2 predicted_ball = predictBall(t_interception * 0.8f).position;
 
     Common::debug().draw(Common::Circle{predicted_ball, 50}, Common::Color::blue(), false);
 

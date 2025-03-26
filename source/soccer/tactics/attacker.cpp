@@ -5,6 +5,7 @@
 #define OLD_ATTACKER 0
 
 #include "../helpers/ball_prediction.h"
+#include "../helpers/find_kicker_opp.h"
 #include "../skills/intercept_ball.h"
 #include "../skills/one_touch.h"
 #include "../skills/wait_for_ball.h"
@@ -56,7 +57,7 @@ void AttackerTactic::execute(Robot &t_robot)
     // state transitions
     if (m_state == EState::None)
     {
-        const bool ball_rolling = State::world().ball.velocity.length() > 100.0f;
+        const bool ball_rolling = State::world().ball.velocity.length() > 1000.0f;
 
         if (!ball_rolling || rolling_kick_feasible)
         {
@@ -70,6 +71,12 @@ void AttackerTactic::execute(Robot &t_robot)
         {
             m_state = EState::Interception;
         }
+
+        const auto attacker = findKickerOpp();
+        if (attacker.has_value())
+        {
+            m_state = EState::Kick;
+        }
     }
     else if (m_state == EState::Interception)
     {
@@ -82,6 +89,12 @@ void AttackerTactic::execute(Robot &t_robot)
         else if (ball_towards_me && ball_line_d < 200.0f)
         {
             m_state = EState::WaitForBall;
+        }
+
+        const auto attacker = findKickerOpp();
+        if (attacker.has_value())
+        {
+            m_state = EState::Kick;
         }
     }
     else if (m_state == EState::WaitForBall)
@@ -103,7 +116,7 @@ void AttackerTactic::execute(Robot &t_robot)
     else if (m_state == EState::Kick)
     {
         // TODO: change these to ball interception t
-        const bool ball_rolling = State::world().ball.velocity.length() > 300.0f;
+        const bool ball_rolling = State::world().ball.velocity.length() > 1000.0f;
         const bool ball_too_fast = State::world().ball.velocity.length() > 3000.0f;
         const bool ball_too_far = State::world().ball.position.distanceTo(t_robot.state().position) > 150.0f;
 
