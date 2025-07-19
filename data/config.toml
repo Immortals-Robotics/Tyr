@@ -52,14 +52,14 @@ ip = '127.0.0.1'
 port = 10302
 
 [soccer]
-chip_tune_coef = 1.8
+chip_tune_coef = 1.2
 def_ball_distance_coef = 0.69999999999999996
 def_max_extension_area = 1100.0
-def_prediction_time = 0.5
+def_prediction_time = 0.0
 def_tight_start_angle = 30.0
 gk_tight_start_angle = 15.0
 kick_tune_coef = 1.0
-mark_distance = 250.0
+mark_distance = 450.0
 mark_in_stop = true
 one_touch_beta = 0.40000000000000002
 one_touch_gamma = 0.14000000000000001
@@ -72,12 +72,12 @@ penalty_area_mark_distance = 400.0
     speed = 900.0
 
     [soccer.velocity_profile.kharaki]
-    acceleration = 4010.0
-    speed = 3500.0
+    acceleration = 3000.0
+    speed = 2500.0
 
     [soccer.velocity_profile.mamooli]
-    acceleration = 3500.0
-    speed = 3000.0
+    acceleration = 3000.0
+    speed = 2000.0
 
     [soccer.velocity_profile.sooski]
     acceleration = 1620.0
@@ -112,7 +112,7 @@ penalty_area_mark_distance = 400.0
     is_3D_printed = true
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = false
+    has_chip_kick = true
     has_direct_kick = true
     has_dribbler = false
     id = 4
@@ -126,7 +126,7 @@ penalty_area_mark_distance = 400.0
     is_3D_printed = true
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = false
+    has_chip_kick = true
     has_direct_kick = true
     has_dribbler = false
     id = 6
@@ -147,8 +147,8 @@ penalty_area_mark_distance = 400.0
     is_3D_printed = true
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = false
-    has_direct_kick = false
+    has_chip_kick = true
+    has_direct_kick = true
     has_dribbler = false
     id = 9
     is_3D_printed = false
@@ -197,7 +197,7 @@ penalty_area_mark_distance = 400.0
 
 [vision]
 ball_merge_distance = 70.0
-ball_rolling_friction = 200
+ball_rolling_friction = 50
 camera_delay = 0.0
 chip_max_error = 300000.0
 chip_max_records = 200
@@ -212,6 +212,6 @@ max_robot_2_frame_dist = 500.0
 max_robot_frame_not_seen = 120
 merge_distance = 70.0
 predict_time = 0.14999999999999999
-use_ball_3d = true
+use_ball_3d = false
 use_camera = [ true, true, false, false, false, false, false, false ]
 vision_frame_rate = 73.0

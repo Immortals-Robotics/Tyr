@@ -9,7 +9,7 @@ const Skill::Id DefenceWallSkill::kId = &DefenceWallSkill::kId;
 
 void DefenceWallSkill::execute(Robot& t_robot)
 {
-    const float distance = 600.0f + Common::field().robot_radius;
+    const float distance = 700.0f + Common::field().robot_radius;
 
     float x     = -State::side() * State::world().ball.position.x;
     float tetta = -0.000003f * x * x + 0.0016f * x + 90.0f;

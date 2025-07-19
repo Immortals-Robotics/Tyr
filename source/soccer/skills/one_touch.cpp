@@ -34,7 +34,7 @@ void OneTouchSkill::execute(Robot &t_robot)
 
     t_robot.navigate(pos, VelocityProfile::kharaki());
 
-    const bool angle_correct = std::fabs((t_robot.state().angle - t_robot.target.angle).deg()) < 5.0f;
+    const bool angle_correct = true;//std::fabs((t_robot.state().angle - t_robot.target.angle).deg()) < 25.0f;
 
     if (angle_correct)
     {

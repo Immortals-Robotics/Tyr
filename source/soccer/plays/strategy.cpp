@@ -196,7 +196,7 @@ void Ai::strategy()
             }
             else
             {
-                chip = strategy.roles[i].path[step[i]].tolerance;
+                chip = strategy.roles[i].path[step[i]].tolerance * 0.25f;
                 Common::logDebug("ATTACK: chip:{}", chip);
             }
 

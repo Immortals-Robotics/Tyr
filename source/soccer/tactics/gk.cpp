@@ -141,7 +141,7 @@ void GkTactic::shirje(Robot &t_robot)
     VelocityProfile profile = VelocityProfile::kharaki();
     profile.acceleration *= 1.5f;
 
-#if 1
+#if 0
     float intercept_t = -1.0f;
     float max_wait_t  = std::numeric_limits<float>::lowest();
 
