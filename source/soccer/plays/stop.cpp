@@ -39,11 +39,18 @@ void Ai::stop()
 
         if (opp == -1)
         {
-            Common::Vec2 static_pos = m_sorted_zones[zone_idx]->best_pos;
-            ++zone_idx;
-            m_own_robot[own].face(m_world_state.ball.position);
-            m_own_robot[own].navigate(static_pos, VelocityProfile::aroom());
-            m_own_robot[own].shoot(0);
+            if (zone_idx >= m_sorted_zones.size())
+            {
+                m_own_robot[own].halt();
+            }
+            else
+            {
+                Common::Vec2 static_pos = m_sorted_zones[zone_idx]->best_pos;
+                ++zone_idx;
+                m_own_robot[own].face(m_world_state.ball.position);
+                m_own_robot[own].navigate(static_pos, VelocityProfile::aroom());
+                m_own_robot[own].shoot(0);
+            }
         }
         else
         {

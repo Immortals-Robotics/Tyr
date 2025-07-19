@@ -7,17 +7,17 @@ namespace Tyr::Common
 {
 struct FieldState
 {
-    float width  = 6000.0f;
-    float height = 4500.0f;
+    float width  = 4500.0f;
+    float height = 3000.0f;
 
-    float goal_width  = 1800.0f;
+    float goal_width  = 1000.0f;
     float goal_depth  = 180.0f;
     float goal_height = 200.0f;
 
-    float boundary_width = 300.0f;
+    float boundary_width = 50.0f;
 
-    float penalty_area_depth = 1800.0f;
-    float penalty_area_width = 3600.0f;
+    float penalty_area_depth = 1000.0f;
+    float penalty_area_width = 2000.0f;
 
     float center_circle_radius = 500.0f;
 

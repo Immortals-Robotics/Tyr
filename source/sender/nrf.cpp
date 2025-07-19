@@ -74,12 +74,8 @@ void Nrf::queueCommand(const Command &command)
 {
     unsigned char data[32] = {};
 
-    // TODO: verify this magic number. motion is in mm/s
-    convert_float_to_2x_buff(data + 3, command.motion.x / 20.f);
-    convert_float_to_2x_buff(data + 5, command.motion.y / 20.f);
-    convert_float_to_2x_buff(data + 7, command.target_angle.deg());
-
     data[0] = command.vision_id;
+
     if (command.halted)
     {
         data[1] = 0x0A; // length=10
@@ -96,6 +92,11 @@ void Nrf::queueCommand(const Command &command)
     {
         data[1] = 15; // length=10
         data[2] = 12; // Command to move with new protocol
+
+        // TODO: verify this magic number. motion is in mm/s
+        convert_float_to_2x_buff(data + 3, command.motion.x / 20.f);
+        convert_float_to_2x_buff(data + 5, command.motion.y / 20.f);
+        convert_float_to_2x_buff(data + 7, command.target_angle.deg());
 
         convert_float_to_2x_buff(data + 9, command.current_angle.deg());
         if (command.shoot > 0)
