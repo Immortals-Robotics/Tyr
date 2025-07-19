@@ -103,7 +103,8 @@ void Ai::normalPlayAtt()
         Common::Angle shootAngle;
 
         // target the goal center if the open angle is too small
-        if (openAngle.magnitude.deg() > 5.0f)
+        Common::logCritical("Open angle magnitude {}", openAngle.magnitude.deg());
+        if (openAngle.magnitude.deg() > 1.0f)
             shootAngle = Common::Angle::fromDeg(180.0f) + openAngle.center;
         else
             shootAngle = (m_world_state.ball.position - Field::oppGoal()).toAngle();
