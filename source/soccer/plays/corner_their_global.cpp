@@ -21,7 +21,7 @@ void Ai::cornerTheirGlobal()
     if (m_side * m_world_state.ball.position.x > Common::field().width - 1000)
     {
         m_own_robot[m_gk].target.angle = Common::Angle::fromDeg((1 + m_side) * 90.0f);
-        m_own_robot[m_gk].navigate(Common::Vec2(m_side * (Common::field().width - 100), 0), VelocityProfile::mamooli());
+        m_own_robot[m_gk].navigate(Common::Vec2(m_side * (Common::field().width - 100), 0), VelocityProfile::mamooli(), NavigationFlags::NoOwnPenaltyArea);
     }
     else
     {
