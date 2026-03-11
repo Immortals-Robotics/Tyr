@@ -5,6 +5,7 @@
 #include "../helpers/ball_prediction.h"
 
 #include "../skills/old_attacker.h"
+#include "../skills/kick_ball.h"
 
 namespace Tyr::Soccer
 {
@@ -87,18 +88,15 @@ void GkTactic::execute(Robot &t_robot)
         if ((obs.inside(predicted_ball)) && (State::world().ball.velocity.length() < 1500) &&
             State::ref().running())
         {
-            Common::logDebug("GK intercepting");
+            if (ballIsGoaling() && State::world().ball.velocity.length() > 50.0) {
+                shirje(t_robot, false);
+                m_intercepting = true;
+            } else {
+                auto kick_angle = predicted_ball.angleWith(Common::Vec2(State::side() * (Common::field().width + 110), 0));///*State::world().ball.velocity.length() < 50.0 ? (Common::WorldState().ball.position - Field::oppGoal()).normalized().toAngle() : */ (t_robot.state().position - Common::WorldState().ball.position).normalized().toAngle();
+                Common::logDebug("GK intercepting");
 
-            m_intercepting = true;
-
-            OldAttackerSkill{predicted_ball.angleWith(Common::Vec2(State::side() * (Common::field().width + 110), 0)),
-                           0,
-                           20,
-                           0,
-                           0,
-                           false,
-                           true}
-                .execute(t_robot);
+                KickBallSkill{kick_angle, 0, 150, true}.execute(t_robot);
+            }
         }
         else
         {
@@ -153,10 +151,14 @@ void GkTactic::shirje(Robot &t_robot, bool kharaki)
 #if 0
     float intercept_t = -1.0f;
     float max_wait_t  = std::numeric_limits<float>::lowest();
+    Common::Circle goalie_circle(Field::ownGoal(), Common::field().penalty_area_depth);
 
-    for (float t = 0.0f; t < 2.0f; t += 0.1f)
+    for (float t = 0.0f; t < 15.0f; t += 0.1f)
     {
         const Common::Vec2 point = predictBall(t).position;
+        if (!goalie_circle.inside(point) || Field::isOut(point)) {
+            continue;
+        }
 
         if (std::fabs(point.x) > Common::field().width)
         {
@@ -181,11 +183,19 @@ void GkTactic::shirje(Robot &t_robot, bool kharaki)
     }
 
     Common::logDebug("intercept t: {}", intercept_t);
+     Common::Vec2 target = predictBall(intercept_t).position;
+    if (intercept_t < 0.0f) {
+        Common::Line ball_line = State::world().ball.line();
+        const Common::Vec2 target_backup = ball_line.closestPoint(t_robot.state().position);
 
-    const Common::Vec2 target = predictBall(intercept_t).position;
+        target = ball_line.intersect(Field::ownGoalLine()).value_or(target_backup);
+    }
 #else
     Common::Line        ball_line  = State::world().ball.line();
-    const Common::Vec2 target = ball_line.closestPoint(t_robot.state().position);
+    Common::Vec2 target = ball_line.closestPoint(t_robot.state().position);
+    if (fabs(State::world().ball.position.x) + Common::field().robot_radius >= fabs(t_robot.state().position.x) ) {
+        target = ball_line.intersect(Field::ownGoalLine()).value_or(target);
+    }
 #endif
 
     t_robot.face(State::world().ball.position);

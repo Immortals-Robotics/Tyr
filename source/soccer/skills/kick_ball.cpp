@@ -12,7 +12,7 @@ const Skill::Id KickBallSkill::kId = &KickBallSkill::kId;
 
 void KickBallSkill::execute(Robot &t_robot)
 {
-    constexpr float kMaxForwardOffset = 300.0f;
+    const float kMaxForwardOffset = m_is_gk ? 200.f: 300.0f;
     const auto      smoothstep01      = [](const float t_value)
     {
         const float t = std::clamp(t_value, 0.0f, 1.0f);
@@ -40,7 +40,7 @@ void KickBallSkill::execute(Robot &t_robot)
     const float ball_target_dot = to_target.dot(to_ball);
     const float r_scale_factor  = 2.0f * std::pow((1.0f - ball_target_dot) / 2.f, 0.9f) - 1.0f;
 
-    const float r = 50.0f + 100.0f * r_scale_factor;
+    const float r = m_is_gk ? 70.f + 120.0f * r_scale_factor: 50.0f + 100.0f * r_scale_factor;
     const float behind_ball_distance = Common::field().robot_radius + r;
 
     const Common::Vec2 behind_ball_pos = ball.position.circleAroundPoint(m_angle, behind_ball_distance);
@@ -59,7 +59,12 @@ void KickBallSkill::execute(Robot &t_robot)
 #if 0
     robot.target.angle = t_angle + Common::Angle::fromDeg(180.0f);
 #else
-    robot.target.angle = (ball.position - behind_ball_pos).normalized().toAngle();
+    if (m_is_gk) {
+        robot.face(ball.position);
+    }
+    else {
+        robot.target.angle = (ball.position - behind_ball_pos).normalized().toAngle();
+    }
 #endif
 
     robot.shoot(m_kick);
@@ -79,6 +84,10 @@ NavigationFlags KickBallSkill::getNavigationFlags(const Robot &t_robot) const
         navigation_flags |= NavigationFlags::NoBreak;
     }
 
+    if (m_is_gk)
+    {
+        navigation_flags |= NavigationFlags::NoOwnPenaltyArea;
+    }
     return navigation_flags;
 }
 } // namespace Tyr::Soccer
