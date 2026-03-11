@@ -21,9 +21,9 @@ void KickBallSkill::execute(Robot &t_robot)
 
     const NavigationFlags navigation_flags = getNavigationFlags(t_robot);
 
-#if 0
-    const float t_interception = calculateBallRobotReachTime(t_robot, -m_angle, VelocityProfile::mamooli(), 0.1f);
-    const Common::BallState ball = predictBall(t_interception);
+#if 1
+    // const float t_interception = calculateBallRobotReachTime(t_robot, -m_angle, VelocityProfile::mamooli(), 0.1f);
+    const Common::BallState ball = predictBall(0.2);
     Common::debug().draw(Common::Circle{ball.position, 50}, Common::Color::blue(), false);
 #else
     const Common::BallState& ball = State::world().ball;
