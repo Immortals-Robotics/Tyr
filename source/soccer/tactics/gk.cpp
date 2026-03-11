@@ -31,18 +31,25 @@ void GkTactic::execute(Robot &t_robot)
          3) &&
         State::ref().running())
     {
-        shirje(t_robot);
-        m_hys = 10;
+        shirje(t_robot, true);
+        m_hys_kharaki = 10;
+    } else if ((ballIsGoaling()) && (State::world().ball.velocity.length() > 1000) && (State::world().ball.position.distanceTo(Field::ownGoal()) < 4000.0) &&
+        State::ref().running()) {
+        shirje(t_robot, false);
+        m_hys_mamooli = 10;
     }
-    else if ((m_hys > 0) && State::ref().running())
+    else if ((m_hys_kharaki > 0) && State::ref().running())
     {
-        shirje(t_robot);
-        m_hys--;
+        shirje(t_robot, true);
+        m_hys_kharaki--;
+    } else if ((m_hys_mamooli > 0) && State::ref().running()) {
+        shirje(t_robot, false);
+        m_hys_mamooli--;
     }
-
     else
     {
-        m_hys                             = 0;
+        m_hys_mamooli                             = 0;
+        m_hys_kharaki                             = 0;
         const Common::Vec2 predicted_ball = predictBall(Common::config().soccer.def_prediction_time).position;
 
         // our penalty area
@@ -134,12 +141,14 @@ void GkTactic::execute(Robot &t_robot)
     }
 }
 
-void GkTactic::shirje(Robot &t_robot)
+void GkTactic::shirje(Robot &t_robot, bool kharaki)
 {
     Common::logDebug("GK Shirje");
-
-    VelocityProfile profile = VelocityProfile::kharaki();
-    profile.acceleration *= 1.5f;
+    VelocityProfile profile = VelocityProfile::mamooli();
+    if (kharaki) {
+        profile = VelocityProfile::kharaki();
+        profile.acceleration *= 1.5f;
+    }
 
 #if 0
     float intercept_t = -1.0f;
