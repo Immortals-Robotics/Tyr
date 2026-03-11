@@ -18,6 +18,7 @@ const Tactic::Id AttackerTactic::kId = &AttackerTactic::kId;
 
 void AttackerTactic::execute(Robot &t_robot)
 {
+    (void)m_goal;
     if (State::timer().time().seconds() < 0.2f || last_robot_id != t_robot.state().vision_id)
     {
         m_state = EState::None;
@@ -148,7 +149,7 @@ void AttackerTactic::execute(Robot &t_robot)
     // state execution
     if (m_state == EState::Kick)
     {
-        const bool angle_correct = std::fabs((t_robot.state().angle - ball_to_goal.toAngle()).deg()) < 2.0f;
+        const bool angle_correct = std::fabs((t_robot.state().angle - ball_to_goal.toAngle()).deg()) < 5.0f;
 
         const float kick = angle_correct ? m_kick : 1.0f;
         const float chip = angle_correct ? m_chip : 0.0f;

@@ -4,7 +4,7 @@ namespace Tyr::Soccer
 {
 void Ai::createDefAssignments()
 {
-#if 1
+#if 0
     createStaticAssignment(&m_def1, Assignment::Priority::Low);
     createStaticAssignment(&m_def2, Assignment::Priority::Low);
 #else

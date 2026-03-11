@@ -1,10 +1,10 @@
 [common]
 enable_debug = true
 immortals_is_the_best_team = true
-our_color = 0
+our_color = 1
 
 [network.active]
-use_internal_referee = true
+use_internal_referee = false
 use_simulated_vision = false
 
 [network.blue_robot_simulation]
@@ -72,12 +72,12 @@ penalty_area_mark_distance = 400.0
     speed = 900.0
 
     [soccer.velocity_profile.kharaki]
-    acceleration = 3000.0
-    speed = 2500.0
+    acceleration = 4000.0
+    speed = 3500.0
 
     [soccer.velocity_profile.mamooli]
-    acceleration = 3000.0
-    speed = 2000.0
+    acceleration = 3500.0
+    speed = 3000.0
 
     [soccer.velocity_profile.sooski]
     acceleration = 1620.0
