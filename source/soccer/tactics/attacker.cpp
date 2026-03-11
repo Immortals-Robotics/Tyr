@@ -200,7 +200,7 @@ void AttackerTactic::execute(Robot &t_robot)
         }
         else
         {
-            WaitForBallSkill{{}}.execute(t_robot);
+            WaitForBallSkill{{}, WaitForBallSkill::WaitMode::Quickest}.execute(t_robot);
         }
 
     }

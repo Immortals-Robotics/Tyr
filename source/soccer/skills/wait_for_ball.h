@@ -7,7 +7,14 @@ namespace Tyr::Soccer
 class WaitForBallSkill final : public Skill
 {
 public:
-    WaitForBallSkill(const Common::Vec2 t_static_pos) : m_static_pos(t_static_pos)
+    enum class WaitMode
+    {
+        ClosestToRobot, // wait at the closest point on the ball path to the robot (current position)
+        Quickest,       // wait at the earliest reachable point on the ball path
+    };
+
+    WaitForBallSkill(const Common::Vec2 t_static_pos, const WaitMode t_mode = WaitMode::ClosestToRobot)
+        : m_static_pos(t_static_pos), m_mode(t_mode)
     {}
 
     static const Id kId;
@@ -21,5 +28,6 @@ public:
 
 private:
     Common::Vec2 m_static_pos;
+    WaitMode     m_mode;
 };
 } // namespace Tyr::Soccer
