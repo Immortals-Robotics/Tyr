@@ -12,12 +12,12 @@ public:
 
     static Common::Vec2 ownGoalPostTop()
     {
-        return ownGoal() + Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
+        return ownGoal() + Common::Vec2{0.0f, Common::field().goal_width / 2.0f + 50.0f};
     }
 
     static Common::Vec2 ownGoalPostBottom()
     {
-        return ownGoal() - Common::Vec2{0.0f, Common::field().goal_width / 2.0f};
+        return ownGoal() - Common::Vec2{0.0f, Common::field().goal_width / 2.0f + 50.0f};
     }
 
     static Common::LineSegment ownGoalLine()
