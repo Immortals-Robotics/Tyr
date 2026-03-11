@@ -105,6 +105,8 @@ set(SOURCE_FILES
         skills/intercept_ball.cpp
         skills/wait_for_ball.cpp
         skills/kick_ball.cpp
+        skills/dribble_to_direction.cpp
+        skills/turn_and_shoot.cpp
 
         robot/robot.cpp
         robot/navigation.cpp

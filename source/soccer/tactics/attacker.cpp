@@ -11,6 +11,8 @@
 #include "../skills/wait_for_ball.h"
 #include "../skills/old_attacker.h"
 #include "../skills/kick_ball.h"
+#include "../skills/dribble_to_direction.h"
+#include "../skills/turn_and_shoot.h"
 
 namespace Tyr::Soccer
 {
@@ -103,8 +105,13 @@ void AttackerTactic::execute(Robot &t_robot)
         if (!ball_towards_me || ball_line_d > 1000.0f)
         {
             const bool ball_rolling = State::world().ball.velocity.length() > 100.0f;
+            const bool ball_close   = State::world().ball.position.distanceTo(t_robot.state().position) < 300.0f;
 
-            if (!ball_rolling || rolling_kick_feasible)
+            if (ball_close && !ball_rolling)
+            {
+                m_state = EState::TurnAndShoot;
+            }
+            else if (!ball_rolling || rolling_kick_feasible)
             {
                 m_state = EState::Kick;
             }
@@ -112,6 +119,22 @@ void AttackerTactic::execute(Robot &t_robot)
             {
                 m_state = EState::Interception;
             }
+        }
+    }
+    else if (m_state == EState::TurnAndShoot)
+    {
+        // TurnAndShoot internally transitions to KickBall when aligned (<20°),
+        // but if the ball gets away, fall back.
+        const bool ball_far     = State::world().ball.position.distanceTo(t_robot.state().position) > 500.0f;
+        const bool ball_rolling = State::world().ball.velocity.length() > 1000.0f;
+
+        if (ball_far && ball_rolling)
+        {
+            m_state = EState::Interception;
+        }
+        else if (ball_far)
+        {
+            m_state = EState::Kick;
         }
     }
     else if (m_state == EState::Kick)
@@ -138,6 +161,9 @@ void AttackerTactic::execute(Robot &t_robot)
         break;
     case EState::Kick:
         state_str = "kick";
+        break;
+    case EState::TurnAndShoot:
+        state_str = "turn_and_shoot";
         break;
     case EState::None:
         state_str = "none";
@@ -177,6 +203,10 @@ void AttackerTactic::execute(Robot &t_robot)
             WaitForBallSkill{{}}.execute(t_robot);
         }
 
+    }
+    else if (m_state == EState::TurnAndShoot)
+    {
+        TurnAndShootSkill{m_angle, m_kick, m_chip}.execute(t_robot);
     }
     else if (m_state == EState::Interception)
     {

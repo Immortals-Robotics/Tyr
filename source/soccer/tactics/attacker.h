@@ -15,7 +15,8 @@ public:
         None = 0,
         Interception,
         WaitForBall,
-        Kick
+        Kick,
+        TurnAndShoot
     };
 
     explicit AttackerTactic(const Common::Angle t_angle, const bool t_goal, const float t_kick, const float t_chip)
