@@ -44,11 +44,12 @@ void Ai::normalPlayAtt()
     OpenAngle openAngle = OpenAngle::calculateOpenAngleToGoal(m_world_state.ball.position, m_own_robot[m_attack]);
 
     int *suitable_mid = nullptr;
+    float max_score = std::numeric_limits<float>::lowest();
     for (const auto &mid : m_prioritized_mids)
     {
         const Robot &robot = m_own_robot[*mid];
         // const bool reached = robot.state().velocity.length() < 500;
-        const bool reached = robot.state().position.distanceTo(robot.target.position) < 2500;
+        const bool reached = robot.state().position.distanceTo(robot.target.position) < 1000;
 
         const bool dis_ok = robot.state().position.distanceTo(m_world_state.ball.position) > 1000;
 
@@ -64,10 +65,16 @@ void Ai::normalPlayAtt()
         const bool abilities = physical.has_direct_kick && !physical.is_3D_printed;
 
         const bool suitable = seen && reached && dis_ok && pass_angle_ok && abilities;
-        if (suitable)
+        if (!suitable)
         {
+            continue;
+        }
+
+        const auto score = staticPosScoreAttack(robot.target.position);
+        if (score > max_score)
+        {
+            max_score = score;
             suitable_mid = mid;
-            break;
         }
     }
 
@@ -80,23 +87,64 @@ void Ai::normalPlayAtt()
 
     const bool opp_attacker_in_range = findKickerOpp(-1, 150.0f).has_value();
 
-    if (openAngle.magnitude.deg() < 5 && !opp_attacker_in_range && suitable_mid != nullptr)
+    static int kick_pass_hys = 0;
+    const int max_hys = static_cast<int>(Common::config().vision.vision_frame_rate * 0.5);
+
+    if (m_timer.time().seconds() < 0.5) {
+        kick_pass_hys = 0;
+    }
+
+    if (openAngle.magnitude.deg() < 15 && !opp_attacker_in_range && suitable_mid != nullptr)
+    {
+        if (kick_pass_hys == 0)
+        {
+            kick_pass_hys = max_hys;
+        }
+        else
+        {
+            kick_pass_hys = std::min(kick_pass_hys + 1, max_hys);
+        }
+    }
+    else
+    {
+        if (kick_pass_hys == 0)
+        {
+            kick_pass_hys = -max_hys;
+        }
+        else
+        {
+            kick_pass_hys = std::max(kick_pass_hys - 1, -max_hys);
+        }
+    }
+
+    if (suitable_mid == nullptr) {
+        kick_pass_hys = -max_hys;
+    }
+
+    Common::logDebug("kick_pass_hys {}", kick_pass_hys);
+
+    if (kick_pass_hys > 0)
     {
         Common::Angle passAngle =
             Common::Vec2(-m_side * 1700, Common::sign(-m_world_state.ball.position.y) * 1700.0f)
             .angleWith(m_world_state.ball.position);
+
+        const Common::Vec2 target_pos = m_own_robot[*suitable_mid].target.position;
         float chip_pow = 40;
 
-        passAngle = m_own_robot[*suitable_mid].state().position.angleWith(m_world_state.ball.position);
-        chip_pow  = 50.f * m_own_robot[*suitable_mid].state().position.distanceTo(m_world_state.ball.position) /
+        passAngle = target_pos.angleWith(m_world_state.ball.position);
+        chip_pow  = 100.f * target_pos.distanceTo(m_world_state.ball.position) /
                    8000.0f;
-        chip_pow = std::min(400.f, chip_pow);
+        chip_pow = std::clamp(chip_pow, 15.0f, 100.f);
+        float kick_power = 5000.0f;
 
-        chip_pow = 5000.0f;
+        if (shootBlocked(m_world_state.ball.position, target_pos, 2000.0, 150.0)) {
+            kick_power = 0.0f;
+        } else {
+            chip_pow = 0.0f;
+        }
 
-        (void) chip_pow;
-
-        AttackerTactic{passAngle, false, chip_pow, 0.0f}.execute(m_own_robot[m_attack]);
+        AttackerTactic{passAngle, false, kick_power, chip_pow}.execute(m_own_robot[m_attack]);
     }
     else
     {
