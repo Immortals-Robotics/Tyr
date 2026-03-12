@@ -141,8 +141,8 @@ void AttackerTactic::execute(Robot &t_robot)
     {
         // TODO: change these to ball interception t
         const bool ball_rolling = State::world().ball.velocity.length() > 1000.0f;
-        const bool ball_too_fast = State::world().ball.velocity.length() > 3000.0f;
-        const bool ball_too_far = State::world().ball.position.distanceTo(t_robot.state().position) > 150.0f;
+        const bool ball_too_fast = State::world().ball.velocity.length() > 5000.0f;
+        const bool ball_too_far = State::world().ball.position.distanceTo(t_robot.state().position) > 250.0f;
 
         if (ball_too_fast || (ball_rolling && !rolling_kick_feasible && ball_too_far))
         {
@@ -200,7 +200,7 @@ void AttackerTactic::execute(Robot &t_robot)
         }
         else
         {
-            WaitForBallSkill{m_wait_pos}.execute(t_robot);
+            WaitForBallSkill{{}}.execute(t_robot);
         }
 
     }
