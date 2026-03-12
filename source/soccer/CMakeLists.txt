@@ -76,7 +76,7 @@ set(SOURCE_FILES
         helpers/calc_is_defending.cpp
         helpers/calculate_mark_cost.cpp
         helpers/calculate_opp_threat.cpp
-        helpers/goal_blocked.cpp
+        helpers/shoot_blocked.cpp
         helpers/open_angle.cpp
         helpers/strategy_weight.cpp
 

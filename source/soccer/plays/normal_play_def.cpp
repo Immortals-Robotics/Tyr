@@ -51,7 +51,7 @@ void Ai::normalPlayDef()
     {
         chip_pow = 1;
     }
-    if (goalBlocked(m_world_state.ball.position, 200, 90))
+    if (shootBlocked(m_world_state.ball.position, Field::oppGoal(), 200, 90))
     {
         chip_pow = 20;
     }
