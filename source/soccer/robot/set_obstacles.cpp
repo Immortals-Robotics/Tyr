@@ -3,14 +3,14 @@
 namespace Tyr::Soccer
 {
 // This is 500 mm in the rules, but we add some extra to avoid
-static constexpr float ballAreaRadius = 650.0f;
+static constexpr float ballAreaRadius = 600.0f;
 
 // We allow errt points to be 250 mm outside the field,
 // so set this to some higher value
 static constexpr float penaltyAreaExtensionBehindGoal = 300.0f;
 
 // This is 200 mm in the rules, but we add some extra to avoid
-static constexpr float bigPenaltyAddition = 420.0f;
+static constexpr float bigPenaltyAddition = 400.0f;
 
 static float calculateRobotRadius(const Common::RobotState &state)
 {
