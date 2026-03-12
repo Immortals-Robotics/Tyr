@@ -80,7 +80,9 @@ void Referee::transition()
 {
     // TODO: this 5s should be based on restart type and division A/B
     // ideally get this from GC's time left
-    const Common::Duration timeout = Common::Duration::fromSeconds(10.0f);
+    const Common::Duration timeout = m_state.theirFreeKick()
+        ? Common::Duration::fromSeconds(5.0f)
+        : Common::Duration::fromSeconds(10.0f);
     const Common::Duration elapsed = Common::TimePoint::now() - m_state.time;
 
     const bool ball_kicked = isKicked() || elapsed > timeout;
