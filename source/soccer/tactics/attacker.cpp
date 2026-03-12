@@ -11,7 +11,6 @@
 #include "../skills/wait_for_ball.h"
 #include "../skills/old_attacker.h"
 #include "../skills/kick_ball.h"
-#include "../skills/dribble_to_direction.h"
 #include "../skills/turn_and_shoot.h"
 
 namespace Tyr::Soccer
@@ -90,9 +89,9 @@ void AttackerTactic::execute(Robot &t_robot)
             m_state = EState::Kick;
         }
         else if (ball_towards_me && ball_line_d < 200.0f)
-        {
-            m_state = EState::WaitForBall;
-        }
+                {
+                    m_state = EState::WaitForBall;
+                }
 
         const auto attacker = findKickerOpp();
         if (attacker.has_value())
