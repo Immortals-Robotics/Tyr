@@ -36,7 +36,7 @@ void TurnAndShootSkill::execute(Robot &t_robot)
     Common::logDebug("turn_and_shoot ball_dist: {}", ball_dist);
 
     // Once nearly aligned, hand off to kick_ball for the final approach and shot
-    if (angle_error < 15.0f)
+    if (angle_error < 8.0f)
     {
         KickBallSkill{m_angle, m_kick, m_chip}.execute(t_robot);
         return;
@@ -61,7 +61,7 @@ void TurnAndShootSkill::execute(Robot &t_robot)
         * Common::field().robot_radius * 0.5f;
 
     t_robot.navigate(effective_ball_pos + behind + side_offset,
-                     VelocityProfile::mamooli(), flags);
+                     VelocityProfile::kharaki(), flags);
     t_robot.target.angle = heading;
 
     Common::debug().draw(

@@ -104,7 +104,7 @@ void AttackerTactic::execute(Robot &t_robot)
     {
         if (!ball_towards_me || ball_line_d > 1000.0f)
         {
-            const bool ball_rolling = State::world().ball.velocity.length() > 100.0f;
+            const bool ball_rolling = State::world().ball.velocity.length() > 1000.0f;
             const bool ball_close   = State::world().ball.position.distanceTo(t_robot.state().position) < 300.0f;
 
             if (ball_close && !ball_rolling)
@@ -210,7 +210,7 @@ void AttackerTactic::execute(Robot &t_robot)
     }
     else if (m_state == EState::Interception)
     {
-        InterceptBallSkill{m_angle, 1.0f}.execute(t_robot);
+        InterceptBallSkill{m_angle, 0.5f}.execute(t_robot);
     }
 #endif
 }

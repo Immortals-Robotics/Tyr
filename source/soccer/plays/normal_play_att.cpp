@@ -48,11 +48,11 @@ void Ai::normalPlayAtt()
     {
         const Robot &robot = m_own_robot[*mid];
         // const bool reached = robot.state().velocity.length() < 500;
-        const bool reached = robot.state().position.distanceTo(robot.target.position) < 500;
+        const bool reached = robot.state().position.distanceTo(robot.target.position) < 2500;
 
-        const bool dis_ok = robot.state().position.distanceTo(m_world_state.ball.position) > 2000;
+        const bool dis_ok = robot.state().position.distanceTo(m_world_state.ball.position) > 1000;
 
-        const bool pass_angle_ok = (robot.state().position - m_world_state.ball.position)
+        const bool pass_angle_ok = true || (robot.state().position - m_world_state.ball.position)
                                    .normalized()
                                    .dot((Field::ownGoal() - m_world_state.ball.position).normalized()) < 0.85f;
 
@@ -81,7 +81,7 @@ void Ai::normalPlayAtt()
     const bool opp_attacker_in_range = findKickerOpp(-1, 150.0f).has_value();
     (void)opp_attacker_in_range;
 
-    if (false)//openAngle.magnitude.deg() < 8 && !opp_attacker_in_range && suitable_mid != nullptr)
+    if (openAngle.magnitude.deg() < 8 && !opp_attacker_in_range && suitable_mid != nullptr)
     {
         Common::Angle passAngle =
             Common::Vec2(-m_side * 1700, Common::sign(-m_world_state.ball.position.y) * 1700.0f)
@@ -93,7 +93,7 @@ void Ai::normalPlayAtt()
                    8000.0f;
         chip_pow = std::min(400.f, chip_pow);
 
-        chip_pow = 3000.0f;
+        chip_pow = 5000.0f;
 
         (void) chip_pow;
 

@@ -56,8 +56,8 @@ private:
     // static pos for mids
     struct Zone
     {
-        static constexpr float kZoneWidth  = 2000.0f;
-        static constexpr float kZoneHeight = 3000.0f;
+        static constexpr float kZoneWidth  = 1000.0f;
+        static constexpr float kZoneHeight = 1500.0f;
 
         Common::Rect rect;
 
