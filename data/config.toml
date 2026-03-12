@@ -197,7 +197,7 @@ penalty_area_mark_distance = 400.0
 
 [vision]
 ball_merge_distance = 70.0
-ball_rolling_friction = 50
+ball_rolling_friction = 225
 camera_delay = 0.0
 chip_max_error = 300000.0
 chip_max_records = 200
