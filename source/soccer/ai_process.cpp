@@ -1,4 +1,5 @@
 #include "ai.h"
+#include "helpers/ball_prediction.h"
 
 #include "skills/halt.h"
 
@@ -100,5 +101,7 @@ void Ai::process()
             HaltSkill{}.execute(robot);
         }
     }
+    const auto stop_time = ballStopT();
+    Common::debug().draw(Common::Circle{predictBall(stop_time).position, 40.f}, Common::Color::orange(), false);
 }
 } // namespace Tyr::Soccer
