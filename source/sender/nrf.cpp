@@ -94,8 +94,8 @@ void Nrf::queueCommand(const Command &command)
         data[2] = 12; // Command to move with new protocol
 
         // TODO: verify this magic number. motion is in mm/s
-        convert_float_to_2x_buff(data + 3, command.motion.x / 20.f);
-        convert_float_to_2x_buff(data + 5, command.motion.y / 20.f);
+        convert_float_to_2x_buff(data + 3, command.motion.x / 22.f);
+        convert_float_to_2x_buff(data + 5, command.motion.y / 22.f);
         convert_float_to_2x_buff(data + 7, command.target_angle.deg());
 
         convert_float_to_2x_buff(data + 9, command.current_angle.deg());
