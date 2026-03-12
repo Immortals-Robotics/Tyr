@@ -99,7 +99,7 @@ void Ai::placeBallLongDistance()
         m_ref_state.designated_position +
         (m_ref_state.designated_position - m_world_state.ball.position).normalized() * Common::field().robot_radius;
 
-    WaitForBallSkill{receiver_pos, WaitForBallSkill::WaitMode::ClosestToRobot}.execute(m_own_robot[m_mid5]);
+    WaitForBallSkill{receiver_pos}.execute(m_own_robot[m_mid5]);
 
     if (m_own_robot[m_mid5].state().position.distanceTo(receiver_pos) < 100)
     {
