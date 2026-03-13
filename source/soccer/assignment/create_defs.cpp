@@ -8,8 +8,8 @@ void Ai::createDefAssignments()
     createStaticAssignment(&m_def1, Assignment::Priority::Low);
     createStaticAssignment(&m_def2, Assignment::Priority::Low);
 #else
-    createStaticAssignment(&m_def1, Assignment::Priority::Max);
-    createStaticAssignment(&m_def2, Assignment::Priority::Max);
+    createStaticAssignment(&m_def1, Assignment::Priority::High);
+    createStaticAssignment(&m_def2, Assignment::Priority::High);
 #endif
 }
 } // namespace Tyr::Soccer

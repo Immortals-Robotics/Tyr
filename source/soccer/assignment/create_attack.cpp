@@ -5,7 +5,7 @@ namespace Tyr::Soccer
 void Ai::createAttackAssignment()
 {
     Assignment assignment;
-    assignment.priority      = Assignment::Priority::High;
+    assignment.priority      = Assignment::Priority::Max;
     assignment.needs_shoot   = true;
     assignment.needs_chip    = true;
     assignment.cost_function = std::bind(&Ai::attackRoleCost, this, std::placeholders::_1, std::placeholders::_2);
