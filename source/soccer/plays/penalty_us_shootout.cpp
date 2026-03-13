@@ -31,7 +31,7 @@ void Ai::penaltyUsShootout()
     }
     else if (m_world_state.ball.position.distanceTo(Field::oppGoal()) > 5500)
     {
-        KickBallSkill{Field::oppGoal().angleWith(m_world_state.ball.position), 2700, 0}.execute(m_own_robot[m_attack]);
+        KickBallSkill{Field::oppGoal().angleWith(m_world_state.ball.position), 1800, 0}.execute(m_own_robot[m_attack]);
 
         Common::logInfo("step1 - Moving forward - waiting to get close to the opp goal");
     }
