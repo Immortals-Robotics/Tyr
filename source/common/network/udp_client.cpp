@@ -36,7 +36,7 @@ bool UdpClient::receive(google::protobuf::MessageLite *const t_message)
     if (!receiveRaw(&data))
         return false;
 
-    return t_message->ParseFromArray(data.data(), data.size());
+    return t_message->ParsePartialFromArray(data.data(), data.size());
 }
 
 bool UdpClient::receiveRaw(std::span<char> *const t_data)
