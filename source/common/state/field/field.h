@@ -14,8 +14,8 @@ struct FieldState
     float goal_depth  = 160.0f;
     float goal_height = 200.0f;
 
-    float boundary_width = 300.0f;
-    float goal_boundary_width = 600.0f;
+    float boundary_width = 320.0f;
+    float goal_boundary_width = 620.0f;
 
     float penalty_area_depth = 1800.0f;
     float penalty_area_width = 3600.0f;
@@ -46,7 +46,7 @@ struct FieldState
         if (t_data.field().has_goal_height())
             goal_height = t_data.field().goal_height();
 
-        boundary_width = t_data.field().boundary_width();
+        boundary_width = t_data.field().boundary_width() + 20.0f;
         goal_boundary_width = boundary_width + 300.0f;
 
         if (t_data.field().has_penalty_area_depth())
