@@ -136,6 +136,7 @@ void Ai::normalPlayAtt()
         chip_pow  = 100.f * target_pos.distanceTo(m_world_state.ball.position) /
                    8000.0f;
         chip_pow = std::clamp(chip_pow, 15.0f, 100.f);
+        chip_pow = 40.0f;
         float kick_power = 5000.0f;
 
         if (shootBlocked(m_world_state.ball.position, target_pos, 2000.0, 150.0)) {
