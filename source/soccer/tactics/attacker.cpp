@@ -180,11 +180,11 @@ void AttackerTactic::execute(Robot &t_robot)
         const float chip = angle_correct ? m_chip : 0.0f;
 
         const bool ball_rolling = State::world().ball.velocity.length() > 100.0f;
-
-        if (ball_rolling)
-            OldAttackerSkill{m_angle, kick, chip}.execute(t_robot);
-        else
-            KickBallSkill{m_angle, kick, chip}.execute(t_robot);
+        (void) ball_rolling;
+        // if (ball_rolling)
+        //     OldAttackerSkill{m_angle, kick, chip}.execute(t_robot);
+        // else
+        KickBallSkill{m_angle, kick, chip}.execute(t_robot);
 
     }
     else if (m_state == EState::WaitForBall)
