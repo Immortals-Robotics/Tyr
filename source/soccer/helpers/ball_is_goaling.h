@@ -17,10 +17,12 @@ inline bool ballIsGoaling()
     if (!towardGoal)
         return false;
 
-    Common::Line        ball_line  = State::world().ball.line();
-    Common::LineSegment targetLine = Field::ownGoalLine();
+    const Common::Line        ball_line  = State::world().ball.line();
+    const Common::LineSegment goal_line {
+        Field::ownGoalPostBottom() - Common::Vec2{0.f, 100.f},
+        Field::ownGoalPostTop() + Common::Vec2{0.f, 100.f}};
 
-    const auto ballInter = ball_line.intersect(targetLine);
+    const auto ballInter = ball_line.intersect(goal_line);
 
     if (ballInter.has_value())
     {

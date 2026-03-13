@@ -55,7 +55,7 @@ void GkTactic::execute(Robot &t_robot)
 
         // our penalty area
         static constexpr float area_extension_size     = 200.0f;
-        static constexpr float area_notch              = 200.0f;
+        static constexpr float area_notch              = 600.0f;
         const float            penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
         const Common::Vec2 start{Field::ownGoal().x, -(penalty_area_half_width + area_extension_size)};
@@ -145,15 +145,14 @@ void GkTactic::shirje(Robot &t_robot, bool kharaki)
     VelocityProfile profile = VelocityProfile::mamooli();
     if (kharaki) {
         profile = VelocityProfile::kharaki();
-        profile.acceleration *= 1.5f;
     }
 
-#if 0
+#if 1
     float intercept_t = -1.0f;
     float max_wait_t  = std::numeric_limits<float>::lowest();
-    Common::Circle goalie_circle(Field::ownGoal(), Common::field().penalty_area_depth);
+    Common::Circle goalie_circle(Field::ownGoal(), Common::field().penalty_area_depth - 200.0f);
 
-    for (float t = 0.0f; t < 15.0f; t += 0.1f)
+    for (float t = 0.0f; t < 5.0f; t += 0.1f)
     {
         const Common::Vec2 point = predictBall(t).position;
         if (!goalie_circle.inside(point) || Field::isOut(point)) {
@@ -168,11 +167,6 @@ void GkTactic::shirje(Robot &t_robot, bool kharaki)
         const float robot_reach_t = t_robot.calculateReachTime(point, profile);
         const float wait_t = t - robot_reach_t;
 
-        if (wait_t > 0.0f)
-        {
-            break;
-        }
-
         Common::logTrace("t: {}, wait:{}", t, wait_t);
 
         if (wait_t > max_wait_t)
@@ -180,15 +174,26 @@ void GkTactic::shirje(Robot &t_robot, bool kharaki)
             max_wait_t  = wait_t;
             intercept_t = t;
         }
+
+        if (wait_t > 1.5f)
+        {
+            break;
+        }
     }
 
     Common::logDebug("intercept t: {}", intercept_t);
      Common::Vec2 target = predictBall(intercept_t).position;
-    if (intercept_t < 0.0f) {
-        Common::Line ball_line = State::world().ball.line();
-        const Common::Vec2 target_backup = ball_line.closestPoint(t_robot.state().position);
 
-        target = ball_line.intersect(Field::ownGoalLine()).value_or(target_backup);
+    Common::Line ball_line = State::world().ball.line();
+    const Common::Vec2 ball_line_clossest = ball_line.closestPoint(t_robot.state().position);
+    const float dis_to_closest = ball_line_clossest.distanceTo(t_robot.state().position);
+
+    if (intercept_t < 0.0f || max_wait_t < 1.0f) {
+        target = ball_line.intersect(Field::ownGoalLine()).value_or(ball_line_clossest);
+    }
+    else if (dis_to_closest < Common::field().robot_radius * 0.5f)
+    {
+        target = ball_line_clossest;
     }
 #else
     Common::Line        ball_line  = State::world().ball.line();
@@ -200,6 +205,7 @@ void GkTactic::shirje(Robot &t_robot, bool kharaki)
 
     t_robot.face(State::world().ball.position);
     //    ans = ((ans - t_robot.state().position) * 2.0f) + t_robot.state().position;
+    profile.acceleration *= 3.f;
     t_robot.navigate(target, profile, getNavigationFlags());
     t_robot.chip(150);
 }
