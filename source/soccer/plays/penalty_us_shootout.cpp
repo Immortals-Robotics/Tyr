@@ -48,7 +48,7 @@ void Ai::penaltyUsShootout()
         else
             shoot_angle = (m_world_state.ball.position - Field::oppGoal()).toAngle();
 
-        KickBallSkill{shoot_angle, 6000, 0}.execute(m_own_robot[m_attack]);
+        KickBallSkill{shoot_angle, 5000, 0}.execute(m_own_robot[m_attack]);
 
         Common::logInfo("step2 - Kick in the goal!!!!");
     }
