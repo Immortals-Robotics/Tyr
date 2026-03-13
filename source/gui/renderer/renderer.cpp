@@ -14,7 +14,7 @@ void Renderer::begin(const Common::FieldState &t_field, const Common::Rect t_win
 {
     const Common::Vec2 offset = t_window_rect.min + t_window_rect.size() / 2.0f;
 
-    const Common::Vec2 field_size = {t_field.width * 2.0f + 4.0f * t_field.boundary_width,
+    const Common::Vec2 field_size = {t_field.width * 2.0f + 4.0f * t_field.goal_boundary_width,
                                      t_field.height * 2.0f + 4.0f * t_field.boundary_width};
 
     const Common::Vec2 ratio = t_window_rect.size() / field_size;
