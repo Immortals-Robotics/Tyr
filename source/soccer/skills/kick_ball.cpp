@@ -44,7 +44,7 @@ void KickBallSkill::execute(Robot &t_robot)
     const float r_scale_factor  = 2.0f * std::pow((1.0f - ball_target_dot) / 2.f, 0.5f) - 1.0f;
 
     // Wider path when the robot is in front of / beside the ball, tighter path when already behind it.
-    const float r = m_is_gk ? 70.f + 120.0f * r_scale_factor: 50.0f + 120.0f * r_scale_factor;
+    const float r = std::min(m_is_gk ? 70.f + 120.0f * r_scale_factor: 50.0f + 120.0f * r_scale_factor, 500.0f);
     const float behind_ball_distance = Common::field().robot_radius + r;
 
     const Common::Vec2 behind_ball_pos = ball.position.circleAroundPoint(m_angle, behind_ball_distance);
