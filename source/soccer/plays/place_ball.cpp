@@ -103,7 +103,7 @@ void Ai::placeBallLongDistance()
 
     if (m_own_robot[m_mid5].state().position.distanceTo(receiver_pos) < 100)
     {
-        CircleBallTactic{(m_world_state.ball.position - receiver_pos).toAngle(), 4000, 0}.execute(
+        CircleBallTactic{(m_world_state.ball.position - receiver_pos).toAngle(), 3000, 0}.execute(
             m_own_robot[m_attack]);
     }
     else
