@@ -85,7 +85,8 @@ void Referee::transition()
         : Common::Duration::fromSeconds(10.0f);
     const Common::Duration elapsed = Common::TimePoint::now() - m_state.time;
 
-    const bool ball_kicked = isKicked() || elapsed > timeout;
+    const bool timed_out = elapsed > timeout;
+    const bool ball_kicked = isKicked();
 
     if (m_state.last_command.type == Common::Referee::Command::Type::Halt)
     {
@@ -104,9 +105,15 @@ void Referee::transition()
     {
         m_state.ready = true;
     }
-    else if (m_state.restart() && m_state.ready && ball_kicked)
+    else if ((m_state.kickoff() || m_state.freeKick())
+            && m_state.ready && (ball_kicked || timed_out))
     {
         m_state.state = Common::Referee::GameState::Running;
+    }
+    else if (m_state.state == Common::Referee::GameState::PenaltyPrepare
+            && m_state.ready && ball_kicked)
+    {
+        m_state.state = Common::Referee::GameState::PenaltyInPlay;
     }
     else if (m_state.state == Common::Referee::GameState::Stop)
     {
@@ -120,7 +127,7 @@ void Referee::transition()
 
         case Common::Referee::Command::Type::PreparePenaltyBlue:
         case Common::Referee::Command::Type::PreparePenaltyYellow:
-            m_state.state = Common::Referee::GameState::Penalty;
+            m_state.state = Common::Referee::GameState::PenaltyPrepare;
             m_state.ready = false;
             break;
 

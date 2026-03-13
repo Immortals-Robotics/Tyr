@@ -46,7 +46,7 @@ void Ai::process()
             m_current_play = &Ai::throwinChipShoot;
         }
     }
-    else if (m_ref_state.ourPenaltyKick())
+    else if (m_ref_state.ourPenaltyPrepare() || m_ref_state.ourPenaltyInPlay())
     {
         m_current_play = &Ai::penaltyUsShootout;
     }
@@ -62,7 +62,7 @@ void Ai::process()
     {
         m_current_play = &Ai::kickoffTheirOneWall;
     }
-    else if (m_ref_state.theirPenaltyKick())
+    else if (m_ref_state.theirPenaltyPrepare() || m_ref_state.theirPenaltyInPLay())
     {
         m_current_play = &Ai::penaltyTheirSimple;
     }
