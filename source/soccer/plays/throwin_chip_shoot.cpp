@@ -39,24 +39,24 @@ void Ai::throwinChipShoot()
         CircleBallTactic{Common::Vec2(Field::oppGoal().x, Common::sign(m_world_state.ball.position.y) * 200.0f)
                              .angleWith(m_world_state.ball.position),
                          0, 15}
-            .execute(m_own_robot[m_mid5]);
+            .execute(m_own_robot[m_attack]);
     }
     else
     {
-        CircleBallTactic{Field::oppGoal().angleWith(m_world_state.ball.position), 0, 0}.execute(m_own_robot[m_mid5]);
+        CircleBallTactic{Field::oppGoal().angleWith(m_world_state.ball.position), 0, 0}.execute(m_own_robot[m_attack]);
     }
 
-    m_own_robot[m_attack].face(Field::oppGoal());
+    m_own_robot[m_mid5].face(Field::oppGoal());
     if (m_random_param < 0.5)
     {
-        m_own_robot[m_attack].navigate(
+        m_own_robot[m_mid5].navigate(
             m_world_state.ball.position.pointOnConnectingLine(
                 Common::Vec2(Field::oppGoal().x, Common::sign(-m_world_state.ball.position.x) * 2000.0f), 350),
             VelocityProfile::mamooli(), NavigationFlags::BallMediumObstacle);
     }
     else
     {
-        m_own_robot[m_attack].navigate(
+        m_own_robot[m_mid5].navigate(
             m_world_state.ball.position.pointOnConnectingLine(
                 Common::Vec2(Field::oppGoal().x, Common::sign(m_world_state.ball.position.x) * 2000.0f), 350),
             VelocityProfile::mamooli(), NavigationFlags::BallMediumObstacle);
