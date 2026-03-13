@@ -86,7 +86,9 @@ void Robot::setObstacles(const NavigationFlags t_flags)
     }
 
     float ball_radius = 0.0f;
-    if (!!(t_flags & NavigationFlags::BallObstacle) || !State::ref().allowedNearBall())
+    if (!!(t_flags & NavigationFlags::NoBallObstacle))
+    {}
+    else if (!!(t_flags & NavigationFlags::BallObstacle) || !State::ref().allowedNearBall())
         ball_radius = ballAreaRadius;
     else if (!!(t_flags & NavigationFlags::BallMediumObstacle))
         ball_radius = 230.0f;

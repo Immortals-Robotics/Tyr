@@ -27,30 +27,24 @@ void GkTactic::execute(Robot &t_robot)
         Common::debug().draw(Common::Circle{t_robot.state().position, 100}, Common::Color::yellow(), false);
     }
 
+    bool ref_shirje_allowed = State::ref().running() || State::ref().theirPenaltyInPLay();
+
     if ((ballIsGoaling()) &&
         (State::world().ball.position.distanceTo(t_robot.state().position) / State::world().ball.velocity.length() <
          3) &&
-        State::ref().running())
+        ref_shirje_allowed)
     {
         shirje(t_robot, true);
-        m_hys_kharaki = 10;
-    } else if ((ballIsGoaling()) && (State::world().ball.velocity.length() > 1000) && (State::world().ball.position.distanceTo(Field::ownGoal()) < 4000.0) &&
-        State::ref().running()) {
-        shirje(t_robot, false);
-        m_hys_mamooli = 10;
+        m_hys_shirje = 10;
     }
-    else if ((m_hys_kharaki > 0) && State::ref().running())
+    else if ((m_hys_shirje > 0) && ref_shirje_allowed)
     {
         shirje(t_robot, true);
-        m_hys_kharaki--;
-    } else if ((m_hys_mamooli > 0) && State::ref().running()) {
-        shirje(t_robot, false);
-        m_hys_mamooli--;
+        m_hys_shirje--;
     }
     else
     {
-        m_hys_mamooli                             = 0;
-        m_hys_kharaki                             = 0;
+        m_hys_shirje                             = 0;
         const Common::Vec2 predicted_ball = predictBall(Common::config().soccer.def_prediction_time).position;
 
         // our penalty area
@@ -86,7 +80,7 @@ void GkTactic::execute(Robot &t_robot)
         const RectObstacle obs{{start, w, h}, Physicality::Virtual};
 
         if ((obs.inside(predicted_ball)) && (State::world().ball.velocity.length() < 1500) &&
-            State::ref().running())
+            ref_shirje_allowed)
         {
             if (ballIsGoaling() && State::world().ball.velocity.length() > 50.0) {
                 shirje(t_robot, false);
@@ -213,10 +207,12 @@ void GkTactic::shirje(Robot &t_robot, bool kharaki)
 NavigationFlags GkTactic::getNavigationFlags() const
 {
     NavigationFlags flags = NavigationFlags::NoOwnPenaltyArea;
-    if (State::ref().running())
+    if (State::ref().running() || State::ref().theirPenaltyInPLay())
         flags |= NavigationFlags::NoExtraMargin;
     if (State::ref().ourBallPlacement())
         flags |= NavigationFlags::BallPlacementLine;
+    if (State::ref().theirPenaltyInPLay())
+        flags |= NavigationFlags::NoBallObstacle;
     return flags;
 }
 } // namespace Tyr::Soccer
