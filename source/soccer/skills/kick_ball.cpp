@@ -68,7 +68,7 @@ void KickBallSkill::execute(Robot &t_robot)
 #if 0
     robot.target.angle = t_angle + Common::Angle::fromDeg(180.0f);
 #else
-    if (m_is_gk || true) {
+    if (m_is_gk) {
         robot.face(ball.position);
     }
     else {
