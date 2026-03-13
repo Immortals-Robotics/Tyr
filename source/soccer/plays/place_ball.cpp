@@ -195,7 +195,7 @@ void Ai::placeBall()
         {
             m_our_ball_placement_state = OurBallPlacementState::Stuck;
         }
-        else if (m_world_state.ball.position.distanceTo(final_ball_pos) > 5000.0f)
+        else if (m_world_state.ball.position.distanceTo(final_ball_pos) > 4000.0f)
         {
             m_our_ball_placement_state = OurBallPlacementState::LongDistance;
         }
@@ -222,9 +222,9 @@ void Ai::placeBall()
                 m_our_ball_placement_force_stuck = true;
                 break;
             }
-            m_own_robot[m_attack].navigate(attack_pos, VelocityProfile::aroom(),
+            m_own_robot[m_attack].navigate(attack_pos, VelocityProfile::mamooli(),
                                            NavigationFlags::BallSmallObstacle);
-            m_own_robot[m_mid5].navigate(mid5_pos, VelocityProfile::aroom(), NavigationFlags::BallSmallObstacle);
+            m_own_robot[m_mid5].navigate(mid5_pos, VelocityProfile::mamooli(), NavigationFlags::BallSmallObstacle);
 
             if (m_own_robot[m_attack].state().position.distanceTo(attack_pos) < 20.0f &&
                 m_own_robot[m_mid5].state().position.distanceTo(mid5_pos) < 20.0f)
