@@ -85,7 +85,7 @@ private:
     std::vector<int *>   m_prioritized_mids;
 
     bool         shootBlocked(Common::Vec2 t_init_pos, Common::Vec2 t_target_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r);
-    float        calculateOppThreat(int t_opp, bool t_restart = false);
+    float        calculateOppThreat(int t_opp);
     float        calculateMarkCost(int t_robot_num, int t_opp);
 
     // ball placement states

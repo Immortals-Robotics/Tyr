@@ -2,19 +2,17 @@
 
 namespace Tyr::Soccer
 {
-float Ai::calculateOppThreat(const int t_opp, const bool t_restart)
+float Ai::calculateOppThreat(const int t_opp)
 {
     if (m_world_state.opp_robot[t_opp].seen_state == Common::SeenState::CompletelyOut)
         return -1;
     if (t_opp == static_cast<int>(m_ref_state.oppInfo().gk_id))
         return -1;
 
-    if ((m_world_state.opp_robot[t_opp].position.distanceTo(m_world_state.ball.position) < 400) &&
-        ((m_own_robot[m_attack].state().position.distanceTo(m_world_state.ball.position) < 400) || t_restart))
+    if (m_world_state.opp_robot[t_opp].position.distanceTo(m_world_state.ball.position) < 500)
         return -1;
 
-    if (m_world_state.opp_robot[t_opp].position.x * m_side < 1000 &&
-        std::fabs(m_world_state.opp_robot[t_opp].position.x - m_world_state.ball.position.x) > 3000)
+    if (m_world_state.opp_robot[t_opp].position.x * m_side < 1000)
         return -1;
 
     float oppDisToGoal = m_world_state.opp_robot[t_opp].position.distanceTo(Field::ownGoal());
