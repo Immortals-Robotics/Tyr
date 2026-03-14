@@ -23,7 +23,8 @@ void Ai::stop()
     DefTactic{1}.execute(m_own_robot[m_def1]);
     DefTactic{2}.execute(m_own_robot[m_def2]);
 
-    int zone_idx = 0;
+    bool attack_sent = false;
+    int  zone_idx    = 0;
     for (int mid_idx = 0; mid_idx < m_prioritized_mids.size(); ++mid_idx)
     {
         int *const role = m_prioritized_mids[mid_idx];
@@ -39,18 +40,28 @@ void Ai::stop()
 
         if (opp == -1)
         {
-            if (zone_idx >= m_sorted_zones.size())
+            Common::Vec2 static_pos;
+            if (!attack_sent)
+            {
+                const Zone *att_zone = *std::max_element(m_sorted_zones.begin(), m_sorted_zones.end(),
+                                                         [](const Zone *a, const Zone *b) { return a->attack_score < b->attack_score; });
+                static_pos   = att_zone->best_pos;
+                attack_sent  = true;
+            }
+            else if (zone_idx >= m_sorted_zones.size())
             {
                 m_own_robot[own].halt();
+                continue;
             }
             else
             {
-                Common::Vec2 static_pos = m_sorted_zones[zone_idx]->best_pos;
+                static_pos = m_sorted_zones[zone_idx]->best_pos;
                 ++zone_idx;
-                m_own_robot[own].face(m_world_state.ball.position);
-                m_own_robot[own].navigate(static_pos, VelocityProfile::aroom());
-                m_own_robot[own].shoot(0);
             }
+
+            m_own_robot[own].face(m_world_state.ball.position);
+            m_own_robot[own].navigate(static_pos, VelocityProfile::aroom());
+            m_own_robot[own].shoot(0);
         }
         else
         {

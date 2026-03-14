@@ -15,6 +15,7 @@ void Ai::normalPlayDef()
     Common::debug().draw(Common::Triangle{ourgoal_p1, m_world_state.ball.position, ourgoal_p2},
                          Common::Color::blue().transparent(), true);
 
+    bool attack_sent = false;
     int zone_idx = 0;
     for (int mid_idx = 0; mid_idx < m_prioritized_mids.size(); ++mid_idx)
     {
@@ -31,8 +32,21 @@ void Ai::normalPlayDef()
 
         if (opp == -1)
         {
-            Common::Vec2 static_pos = m_sorted_zones[zone_idx]->best_pos;
-            ++zone_idx;
+            Common::Vec2 static_pos;
+            if (!attack_sent)
+            {
+                const Zone* att_zone = *std::max_element(m_sorted_zones.begin(), m_sorted_zones.end(),
+                                             [](const Zone *a, const Zone *b) { return a->attack_score < b->attack_score; });
+                static_pos = att_zone->best_pos;
+
+                attack_sent = true;
+            }
+            else
+            {
+                static_pos = m_sorted_zones[zone_idx]->best_pos;
+                ++zone_idx;
+            }
+
             m_own_robot[own].face(m_world_state.ball.position);
             m_own_robot[own].navigate(static_pos, VelocityProfile::mamooli());
             m_own_robot[own].shoot(0);
