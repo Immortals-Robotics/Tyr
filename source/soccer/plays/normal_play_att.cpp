@@ -137,7 +137,7 @@ void Ai::normalPlayAtt()
                    8000.0f;
         chip_pow = std::clamp(chip_pow, 15.0f, 100.f);
         chip_pow = 40.0f;
-        float kick_power = 5000.0f;
+        float kick_power = 3000.0f;
 
         if (shootBlocked(m_world_state.ball.position, target_pos, 2000.0, 150.0)) {
             kick_power = 0.0f;
@@ -158,7 +158,7 @@ void Ai::normalPlayAtt()
         else
             shootAngle = (m_world_state.ball.position - Field::oppGoal()).toAngle();
 
-        float shoot_pow = 6000.f; // mm/s
+        float shoot_pow = 5000.f; // mm/s
 
         // TODO: calibrate this
         if (m_own_robot[m_attack].state().position.distanceTo(m_world_state.ball.position) > 400)
