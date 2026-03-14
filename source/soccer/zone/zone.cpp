@@ -43,7 +43,9 @@ void Ai::staticZoneScore(Zone &t_zone) const
     }
 
     // TODO: find the best position in the zone
-    t_zone.best_pos = t_zone.rect.center();
-    t_zone.score    = m_is_defending ? staticPosScoreDefence(t_zone.best_pos) : staticPosScoreAttack(t_zone.best_pos);
+    t_zone.best_pos      = t_zone.rect.center();
+    t_zone.attack_score  = staticPosScoreAttack(t_zone.best_pos);
+    t_zone.defense_score = staticPosScoreDefence(t_zone.best_pos);
+    t_zone.score         = m_is_defending ? t_zone.defense_score : t_zone.attack_score;
 }
 } // namespace Tyr::Soccer

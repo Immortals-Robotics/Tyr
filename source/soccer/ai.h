@@ -63,6 +63,8 @@ private:
 
         Common::Vec2 best_pos;
         float        score;
+        float        attack_score;
+        float        defense_score;
     };
 
     std::vector<Zone>         m_zones;
