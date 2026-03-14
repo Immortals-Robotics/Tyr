@@ -22,7 +22,7 @@ void Ai::kickoffUsPass()
     DefTactic{1}.execute(m_own_robot[m_def1]);
     DefTactic{2}.execute(m_own_robot[m_def2]);
 
-    NavigationFlags non_attack_flags = NavigationFlags::BallObstacle | NavigationFlags::TheirHalf;
+    NavigationFlags non_attack_flags = NavigationFlags::BallObstacle;
 
     m_own_robot[m_mid2].face(m_world_state.ball.position);
     m_own_robot[m_mid2].navigate(m_world_state.ball.position.pointOnConnectingLine(

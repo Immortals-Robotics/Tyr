@@ -49,7 +49,7 @@ void Robot::setObstacles(const NavigationFlags t_flags)
 
     const bool oppPenaltyBig = State::ref().freeKick() || State::ref().stop();
 
-    const bool their_half = State::ref().theirKickoff() || !!(t_flags & NavigationFlags::TheirHalf);
+    const bool their_half = State::ref().kickoff();
 
     const bool ball_placement_line = State::ref().theirBallPlacement() || !!(t_flags & NavigationFlags::BallPlacementLine);
 
