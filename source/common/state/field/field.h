@@ -7,17 +7,18 @@ namespace Tyr::Common
 {
 struct FieldState
 {
-    float width  = 4500.0f;
-    float height = 3000.0f;
+    float width  = 6000.0f;
+    float height = 4500.0f;
 
-    float goal_width  = 1000.0f;
-    float goal_depth  = 180.0f;
+    float goal_width  = 1800.0f;
+    float goal_depth  = 160.0f;
     float goal_height = 200.0f;
 
-    float boundary_width = 50.0f;
+    float boundary_width = 320.0f;
+    float goal_boundary_width = 620.0f;
 
-    float penalty_area_depth = 1000.0f;
-    float penalty_area_width = 2000.0f;
+    float penalty_area_depth = 1800.0f;
+    float penalty_area_width = 3600.0f;
 
     float center_circle_radius = 500.0f;
 
@@ -45,7 +46,8 @@ struct FieldState
         if (t_data.field().has_goal_height())
             goal_height = t_data.field().goal_height();
 
-        boundary_width = t_data.field().boundary_width();
+        boundary_width = t_data.field().boundary_width() + 20.0f;
+        goal_boundary_width = boundary_width + 300.0f;
 
         if (t_data.field().has_penalty_area_depth())
             penalty_area_depth = t_data.field().penalty_area_depth();

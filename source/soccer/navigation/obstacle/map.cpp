@@ -8,9 +8,10 @@ bool ObstacleMap::inside(const Common::Vec2 t_p, const float t_margin, const Phy
 
     // TODO: make this an actual obstacle
     // TODO: apply the margin
-    const float field_margin = Common::field().boundary_width - Common::field().robot_radius + 10.f;
-    if (std::fabs(t_p.x) > Common::field().width + field_margin ||
-        std::fabs(t_p.y) > Common::field().height + field_margin)
+    const float field_margin_x = Common::field().goal_boundary_width - Common::field().robot_radius + 10.f;
+    const float field_margin_y = Common::field().boundary_width - Common::field().robot_radius + 10.f;
+    if (std::fabs(t_p.x) > Common::field().width + field_margin_x ||
+        std::fabs(t_p.y) > Common::field().height + field_margin_y)
     {
         return true;
     }

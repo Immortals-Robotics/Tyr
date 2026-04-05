@@ -1,4 +1,5 @@
 #include "ai.h"
+#include "helpers/ball_prediction.h"
 
 #include "skills/halt.h"
 
@@ -45,7 +46,7 @@ void Ai::process()
             m_current_play = &Ai::throwinChipShoot;
         }
     }
-    else if (m_ref_state.ourPenaltyKick())
+    else if (m_ref_state.ourPenaltyPrepare() || m_ref_state.ourPenaltyInPlay())
     {
         m_current_play = &Ai::penaltyUsShootout;
     }
@@ -61,7 +62,7 @@ void Ai::process()
     {
         m_current_play = &Ai::kickoffTheirOneWall;
     }
-    else if (m_ref_state.theirPenaltyKick())
+    else if (m_ref_state.theirPenaltyPrepare() || m_ref_state.theirPenaltyInPLay())
     {
         m_current_play = &Ai::penaltyTheirSimple;
     }
@@ -100,5 +101,7 @@ void Ai::process()
             HaltSkill{}.execute(robot);
         }
     }
+    const auto stop_time = ballStopT();
+    Common::debug().draw(Common::Circle{predictBall(stop_time).position, 40.f}, Common::Color::orange(), false);
 }
 } // namespace Tyr::Soccer

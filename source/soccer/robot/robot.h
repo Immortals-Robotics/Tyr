@@ -18,6 +18,7 @@ enum class NavigationFlags
     BallPlacementLine  = BIT(8),
     TheirHalf          = BIT(9),
     DynamicBallObstacle = BIT(10),
+    NoBallObstacle      = BIT(11),
 };
 
 ENABLE_ENUM_FLAG_OPERATORS(NavigationFlags);

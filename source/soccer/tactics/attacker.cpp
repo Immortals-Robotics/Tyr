@@ -11,6 +11,7 @@
 #include "../skills/wait_for_ball.h"
 #include "../skills/old_attacker.h"
 #include "../skills/kick_ball.h"
+#include "../skills/turn_and_shoot.h"
 
 namespace Tyr::Soccer
 {
@@ -18,6 +19,7 @@ const Tactic::Id AttackerTactic::kId = &AttackerTactic::kId;
 
 void AttackerTactic::execute(Robot &t_robot)
 {
+    (void)m_goal;
     if (State::timer().time().seconds() < 0.2f || last_robot_id != t_robot.state().vision_id)
     {
         m_state = EState::None;
@@ -87,9 +89,9 @@ void AttackerTactic::execute(Robot &t_robot)
             m_state = EState::Kick;
         }
         else if (ball_towards_me && ball_line_d < 200.0f)
-        {
-            m_state = EState::WaitForBall;
-        }
+                {
+                    m_state = EState::WaitForBall;
+                }
 
         const auto attacker = findKickerOpp();
         if (attacker.has_value())
@@ -101,9 +103,14 @@ void AttackerTactic::execute(Robot &t_robot)
     {
         if (!ball_towards_me || ball_line_d > 1000.0f)
         {
-            const bool ball_rolling = State::world().ball.velocity.length() > 100.0f;
+            const bool ball_rolling = State::world().ball.velocity.length() > 1000.0f;
+            const bool ball_close   = State::world().ball.position.distanceTo(t_robot.state().position) < 300.0f;
 
-            if (!ball_rolling || rolling_kick_feasible)
+            if (ball_close && !ball_rolling)
+            {
+                m_state = EState::TurnAndShoot;
+            }
+            else if (!ball_rolling || rolling_kick_feasible)
             {
                 m_state = EState::Kick;
             }
@@ -113,12 +120,28 @@ void AttackerTactic::execute(Robot &t_robot)
             }
         }
     }
+    else if (m_state == EState::TurnAndShoot)
+    {
+        // TurnAndShoot internally transitions to KickBall when aligned (<20°),
+        // but if the ball gets away, fall back.
+        const bool ball_far     = State::world().ball.position.distanceTo(t_robot.state().position) > 500.0f;
+        const bool ball_rolling = State::world().ball.velocity.length() > 1000.0f;
+
+        if (ball_far && ball_rolling)
+        {
+            m_state = EState::Interception;
+        }
+        else if (ball_far)
+        {
+            m_state = EState::Kick;
+        }
+    }
     else if (m_state == EState::Kick)
     {
         // TODO: change these to ball interception t
         const bool ball_rolling = State::world().ball.velocity.length() > 1000.0f;
-        const bool ball_too_fast = State::world().ball.velocity.length() > 3000.0f;
-        const bool ball_too_far = State::world().ball.position.distanceTo(t_robot.state().position) > 150.0f;
+        const bool ball_too_fast = State::world().ball.velocity.length() > 5000.0f;
+        const bool ball_too_far = State::world().ball.position.distanceTo(t_robot.state().position) > 250.0f;
 
         if (ball_too_fast || (ball_rolling && !rolling_kick_feasible && ball_too_far))
         {
@@ -138,6 +161,9 @@ void AttackerTactic::execute(Robot &t_robot)
     case EState::Kick:
         state_str = "kick";
         break;
+    case EState::TurnAndShoot:
+        state_str = "turn_and_shoot";
+        break;
     case EState::None:
         state_str = "none";
         break;
@@ -148,17 +174,17 @@ void AttackerTactic::execute(Robot &t_robot)
     // state execution
     if (m_state == EState::Kick)
     {
-        const bool angle_correct = std::fabs((t_robot.state().angle - ball_to_goal.toAngle()).deg()) < 2.0f;
+        const bool angle_correct = std::fabs((t_robot.state().angle - ball_to_goal.toAngle()).deg()) < 5.0f;
 
         const float kick = angle_correct ? m_kick : 1.0f;
         const float chip = angle_correct ? m_chip : 0.0f;
 
         const bool ball_rolling = State::world().ball.velocity.length() > 100.0f;
-
-        if (ball_rolling)
-            OldAttackerSkill{m_angle, kick, chip}.execute(t_robot);
-        else
-            KickBallSkill{m_angle, kick, chip}.execute(t_robot);
+        (void) ball_rolling;
+        // if (ball_rolling)
+        //     OldAttackerSkill{m_angle, kick, chip}.execute(t_robot);
+        // else
+        KickBallSkill{m_angle, kick, chip}.execute(t_robot);
 
     }
     else if (m_state == EState::WaitForBall)
@@ -177,9 +203,13 @@ void AttackerTactic::execute(Robot &t_robot)
         }
 
     }
+    else if (m_state == EState::TurnAndShoot)
+    {
+        TurnAndShootSkill{m_angle, m_kick, m_chip}.execute(t_robot);
+    }
     else if (m_state == EState::Interception)
     {
-        InterceptBallSkill{m_angle, 1.0f}.execute(t_robot);
+        InterceptBallSkill{m_angle, 0.5f}.execute(t_robot);
     }
 #endif
 }

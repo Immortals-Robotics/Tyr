@@ -7,9 +7,9 @@ void Renderer::draw(const Common::FieldState &t_field)
     ClearBackground(GREEN);
 
     Common::Vec2 fieldWallStartPoint =
-        Common::Vec2(-t_field.width - t_field.boundary_width, -t_field.height - t_field.boundary_width);
+        Common::Vec2(-t_field.width - t_field.goal_boundary_width, -t_field.height - t_field.boundary_width);
     Common::Vec2 fieldWallEndPoint =
-        Common::Vec2(t_field.width + t_field.boundary_width, t_field.height + t_field.boundary_width);
+        Common::Vec2(t_field.width + t_field.goal_boundary_width, t_field.height + t_field.boundary_width);
     Common::Vec2 fieldStartPoint = Common::Vec2(-t_field.width, t_field.height * 2.0f / -2);
     Common::Vec2 fieldEndPoint   = Common::Vec2(t_field.width, t_field.height * 2.0f / 2);
     Common::Vec2 fieldCenter     = Common::Vec2(0, 0);

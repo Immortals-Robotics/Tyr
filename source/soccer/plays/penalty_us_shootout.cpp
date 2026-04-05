@@ -1,4 +1,6 @@
 #include "../ai.h"
+#include "../helpers/open_angle.h"
+#include "../skills/kick_ball.h"
 
 #include "../tactics/circle_ball.h"
 #include "../tactics/def.h"
@@ -22,20 +24,32 @@ void Ai::penaltyUsShootout()
     m_own_robot[m_mid2].navigate(Common::Vec2(m_side * 4000, 500), VelocityProfile::aroom(),
                                  NavigationFlags::BallObstacle);
 
-    if (!m_ref_state.canKickBall())
+    if (m_ref_state.ourPenaltyPrepare() && !m_ref_state.ready)
     {
         CircleBallTactic{Field::oppGoal().angleWith(m_world_state.ball.position), 0, 0}.execute(m_own_robot[m_attack]);
         Common::logInfo("step0 - Waiting for permission");
     }
-    else if (m_world_state.ball.position.distanceTo(Field::oppGoal()) > 3000)
+    else if (m_world_state.ball.position.distanceTo(Field::oppGoal()) > 5500)
     {
-        CircleBallTactic{Field::oppGoal().angleWith(m_world_state.ball.position), 1, 0}.execute(m_own_robot[m_attack]);
+        KickBallSkill{Field::oppGoal().angleWith(m_world_state.ball.position), 1800, 0}.execute(m_own_robot[m_attack]);
+
         Common::logInfo("step1 - Moving forward - waiting to get close to the opp goal");
     }
     else
     {
-        CircleBallTactic{Field::oppGoal().angleWith(m_world_state.ball.position), 6000.0f, 0}.execute(
-            m_own_robot[m_attack]);
+        OpenAngle open_angle = OpenAngle::calculateOpenAngleToGoal(m_world_state.ball.position, m_own_robot[m_attack]);
+
+        Common::Angle shoot_angle;
+
+        // target the goal center if the open angle is too small
+        Common::logCritical("Open angle magnitude {}", open_angle.magnitude.deg());
+        if (open_angle.magnitude.deg() > 1.0f)
+            shoot_angle = Common::Angle::fromDeg(180.0f) + open_angle.center;
+        else
+            shoot_angle = (m_world_state.ball.position - Field::oppGoal()).toAngle();
+
+        KickBallSkill{shoot_angle, 5000, 0}.execute(m_own_robot[m_attack]);
+
         Common::logInfo("step2 - Kick in the goal!!!!");
     }
 }

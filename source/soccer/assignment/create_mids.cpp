@@ -11,10 +11,11 @@ void Ai::createMidAssignments()
     {
         for (int i = 0; i < Common::Config::Common::kMaxRobots; i++)
         {
-            float threat = calculateOppThreat(i, m_ref_state.theirRestart());
-            Common::logDebug("Opp {} threat: {}", i, threat);
+            float threat = calculateOppThreat(i);
             if (threat < 0)
                 continue;
+
+            Common::logDebug("Opp {} threat: {}", i, threat);
             crunchingOpps.push_back(std::make_pair(i, threat));
         }
 

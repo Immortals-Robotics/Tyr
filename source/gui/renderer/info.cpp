@@ -4,9 +4,9 @@ namespace Tyr::Gui
 void Renderer::draw(const Common::Referee::State &t_referee_state, const Common::FieldState &t_field)
 {
     Common::Vec2 top_left_corner =
-        Common::Vec2(t_field.width * -1 - 2 * t_field.boundary_width, t_field.height + 2 * t_field.boundary_width);
+        Common::Vec2(t_field.width * -1 - 2 * t_field.goal_boundary_width, t_field.height + 2 * t_field.boundary_width);
 
-    draw(top_left_corner + Common::Vec2(t_field.width * 2 + t_field.boundary_width, -150.),
+    draw(top_left_corner + Common::Vec2(t_field.width * 2 + t_field.goal_boundary_width, -150.),
          "GUI FPS: " + std::to_string(GetFPS()), Common::Color::black(), 200);
 
     const std::string ref_state = fmt::format("Ref: {}", t_referee_state);

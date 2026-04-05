@@ -62,13 +62,14 @@ void Robot::navigateJob(Common::Vec2 t_dest, VelocityProfile t_profile, Navigati
     m_planner.setObstacleMap(&m_obs_map);
     Common::Vec2 dest = m_planner.plan(state().position, currentMotion(), t_dest, t_profile);
 
-    const float margin = Common::field().boundary_width - Common::field().robot_radius;
+    const float margin_x = Common::field().goal_boundary_width - Common::field().robot_radius;
+    const float margin_y = Common::field().boundary_width - Common::field().robot_radius;
 
-    if (std::fabs(dest.x) > Common::field().width + margin)
-        dest.x = Common::sign(dest.x) * (Common::field().width + margin);
+    if (std::fabs(dest.x) > Common::field().width + margin_x)
+        dest.x = Common::sign(dest.x) * (Common::field().width + margin_x);
 
-    if (std::fabs(dest.y) > Common::field().height + margin)
-        dest.y = Common::sign(dest.y) * (Common::field().height + margin);
+    if (std::fabs(dest.y) > Common::field().height + margin_y)
+        dest.y = Common::sign(dest.y) * (Common::field().height + margin_y);
 
     Trajectory2D trajectory = Trajectory2D::makeBangBangTrajectory(state().position, currentMotion(), dest, t_profile);
 

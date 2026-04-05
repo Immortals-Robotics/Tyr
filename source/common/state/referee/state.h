@@ -9,15 +9,16 @@ namespace Tyr::Common::Referee
 // https://robocup-ssl.github.io/ssl-rules/sslrules.html#_game_states
 enum class GameState
 {
-    None          = 0,
-    Halt          = 1,
-    Timeout       = 2,
-    Stop          = 3,
-    BallPlacement = 4,
-    Kickoff       = 5,
-    Penalty       = 6,
-    FreeKick      = 7,
-    Running       = 8,
+    None           = 0,
+    Halt           = 1,
+    Timeout        = 2,
+    Stop           = 3,
+    BallPlacement  = 4,
+    Kickoff        = 5,
+    PenaltyPrepare = 6,
+    PenaltyInPlay = 7,
+    FreeKick       = 8,
+    Running        = 9,
 };
 
 struct State
@@ -138,17 +139,30 @@ struct State
         return kickoff() && !our();
     }
 
-    bool penaltyKick() const
+    bool penaltyPrepare() const
     {
-        return state == GameState::Penalty;
+        return state == GameState::PenaltyPrepare;
     }
-    bool ourPenaltyKick() const
+    bool ourPenaltyPrepare() const
     {
-        return penaltyKick() && our();
+        return penaltyPrepare() && our();
     }
-    bool theirPenaltyKick() const
+    bool theirPenaltyPrepare() const
     {
-        return penaltyKick() && !our();
+        return penaltyPrepare() && !our();
+    }
+
+    bool penaltyInPlay() const
+    {
+        return state == GameState::PenaltyInPlay;
+    }
+    bool ourPenaltyInPlay() const
+    {
+        return penaltyInPlay() && our();
+    }
+    bool theirPenaltyInPLay() const
+    {
+        return penaltyInPlay() && !our();
     }
 
     bool freeKick() const
@@ -179,7 +193,8 @@ struct State
 
     bool restart() const
     {
-        return state == GameState::Kickoff || state == GameState::Penalty || state == GameState::FreeKick;
+        return state == GameState::Kickoff || state == GameState::FreeKick
+            || state == GameState::PenaltyPrepare || state == GameState::PenaltyInPlay;
     }
     bool ourRestart() const
     {
@@ -221,7 +236,7 @@ struct State
 
     bool shouldSlowDown() const
     {
-        return stop() || ballPlacement() || canEnterField();
+        return stop() || canEnterField();
     }
 
     bool canEnterField() const
@@ -299,9 +314,12 @@ struct fmt::formatter<Tyr::Common::Referee::State> : fmt::formatter<std::string>
             state_str = t_state.our() ? (t_state.ready ? "Our kickoff (ready)" : "Our prepare kickoff")
                                       : (t_state.ready ? "Their kickoff (ready)" : "Their prepare kickoff");
             break;
-        case Tyr::Common::Referee::GameState::Penalty:
-            state_str = t_state.our() ? (t_state.ready ? "Our penalty (ready)" : "Our prepare penalty")
-                                      : (t_state.ready ? "Their penalty (ready)" : "Their prepare penalty");
+        case Tyr::Common::Referee::GameState::PenaltyPrepare:
+            state_str = t_state.our() ? (t_state.ready ? "Our penalty prepare (ready)" : "Our penalty prepare")
+                                      : (t_state.ready ? "Their penalty prepare (ready)" : "Their penalty prepare");
+            break;
+        case Tyr::Common::Referee::GameState::PenaltyInPlay:
+            state_str = t_state.our() ? "Our penalty in-play" : "Their penalty in-play";
             break;
         case Tyr::Common::Referee::GameState::FreeKick:
             state_str = t_state.our() ? "Our free kick" : "Their free kick";

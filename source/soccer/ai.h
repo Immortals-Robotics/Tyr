@@ -56,13 +56,15 @@ private:
     // static pos for mids
     struct Zone
     {
-        static constexpr float kZoneWidth  = 2000.0f;
-        static constexpr float kZoneHeight = 3000.0f;
+        static constexpr float kZoneWidth  = 1000.0f;
+        static constexpr float kZoneHeight = 1500.0f;
 
         Common::Rect rect;
 
         Common::Vec2 best_pos;
         float        score;
+        float        attack_score;
+        float        defense_score;
     };
 
     std::vector<Zone>         m_zones;
@@ -82,8 +84,8 @@ private:
     std::map<int *, int> m_mark_map;
     std::vector<int *>   m_prioritized_mids;
 
-    bool         goalBlocked(Common::Vec2 t_init_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r);
-    float        calculateOppThreat(int t_opp, bool t_restart = false);
+    bool         shootBlocked(Common::Vec2 t_init_pos, Common::Vec2 t_target_pos, float t_max_shoot_blocker_dis, float t_shoot_blocker_r);
+    float        calculateOppThreat(int t_opp);
     float        calculateMarkCost(int t_robot_num, int t_opp);
 
     // ball placement states

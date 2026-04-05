@@ -15,28 +15,28 @@ void Ai::calcMinBallWallDist(double &t_min_dist, Common::Vec2 &t_closest_point)
     int          min_distance_wall_idx = -1;
     Common::Vec2 closest_point;
 
-    Common::Vec2 fieldTopLeft     = Common::Vec2(-Common::field().width - Common::field().boundary_width,
+    Common::Vec2 fieldTopLeft     = Common::Vec2(-Common::field().width - Common::field().goal_boundary_width,
                                                  Common::field().height + Common::field().boundary_width);
-    Common::Vec2 fieldTopRight    = Common::Vec2(Common::field().width + Common::field().boundary_width,
+    Common::Vec2 fieldTopRight    = Common::Vec2(Common::field().width + Common::field().goal_boundary_width,
                                                  Common::field().height + Common::field().boundary_width);
-    Common::Vec2 fieldBottomLeft  = Common::Vec2(-Common::field().width - Common::field().boundary_width,
+    Common::Vec2 fieldBottomLeft  = Common::Vec2(-Common::field().width - Common::field().goal_boundary_width,
                                                  -Common::field().height - Common::field().boundary_width);
-    Common::Vec2 fieldBottomRight = Common::Vec2(Common::field().width + Common::field().boundary_width,
+    Common::Vec2 fieldBottomRight = Common::Vec2(Common::field().width + Common::field().goal_boundary_width,
                                                  -Common::field().height - Common::field().boundary_width);
 
     Common::Vec2 leftGoalTopLeft =
-        Common::Vec2(-Common::field().width - Common::field().boundary_width, Common::field().goal_width / 2.f);
+        Common::Vec2(-Common::field().width - Common::field().goal_boundary_width, Common::field().goal_width / 2.f);
     Common::Vec2 leftGoalTopRight = Common::Vec2(-Common::field().width, Common::field().goal_width / 2.f);
     Common::Vec2 leftGoalBottomLeft =
-        Common::Vec2(-Common::field().width - Common::field().boundary_width, -Common::field().goal_width / 2.f);
+        Common::Vec2(-Common::field().width - Common::field().goal_boundary_width, -Common::field().goal_width / 2.f);
     Common::Vec2 leftGoalBottomRight = Common::Vec2(-Common::field().width, -Common::field().goal_width / 2.f);
 
     Common::Vec2 rightGoalTopLeft = Common::Vec2(Common::field().width, Common::field().goal_width / 2.f);
     Common::Vec2 rightGoalTopRight =
-        Common::Vec2(Common::field().width + Common::field().boundary_width, Common::field().goal_width / 2.f);
+        Common::Vec2(Common::field().width + Common::field().goal_boundary_width, Common::field().goal_width / 2.f);
     Common::Vec2 rightGoalBottomLeft = Common::Vec2(Common::field().width, -Common::field().goal_width / 2.f);
     Common::Vec2 rightGoalBottomRight =
-        Common::Vec2(Common::field().width + Common::field().boundary_width, -Common::field().goal_width / 2.f);
+        Common::Vec2(Common::field().width + Common::field().goal_boundary_width, -Common::field().goal_width / 2.f);
 
     std::vector<Common::LineSegment> walls;
     // field walls
@@ -103,7 +103,7 @@ void Ai::placeBallLongDistance()
 
     if (m_own_robot[m_mid5].state().position.distanceTo(receiver_pos) < 100)
     {
-        CircleBallTactic{(m_world_state.ball.position - receiver_pos).toAngle(), 4000, 0}.execute(
+        CircleBallTactic{(m_world_state.ball.position - receiver_pos).toAngle(), 2000, 0}.execute(
             m_own_robot[m_attack]);
     }
     else
@@ -165,20 +165,20 @@ void Ai::placeBall()
     const double desired_distance = 100.0f;
 
     const Common::Rect our_goal_area(
-        Common::Vec2(-Common::field().width - Common::field().boundary_width, Common::field().goal_width / 2.f),
+        Common::Vec2(-Common::field().width - Common::field().goal_boundary_width, Common::field().goal_width / 2.f),
         Common::Vec2(-Common::field().width, -Common::field().goal_width / 2.f));
 
     const Common::Rect opp_goal_area(
         Common::Vec2(Common::field().width, Common::field().goal_width / 2.f),
-        Common::Vec2(Common::field().width + Common::field().boundary_width, -Common::field().goal_width / 2.f));
+        Common::Vec2(Common::field().width + Common::field().goal_boundary_width, -Common::field().goal_width / 2.f));
 
     const bool ball_in_goal =
         our_goal_area.inside(m_world_state.ball.position) || opp_goal_area.inside(m_world_state.ball.position);
 
     const Common::Rect field_access_area(
-        Common::Vec2(-Common::field().width - Common::field().boundary_width + Common::field().robot_radius,
+        Common::Vec2(-Common::field().width - Common::field().goal_boundary_width + Common::field().robot_radius,
                      -Common::field().height - Common::field().boundary_width + Common::field().robot_radius),
-        Common::Vec2(Common::field().width + Common::field().boundary_width - Common::field().robot_radius,
+        Common::Vec2(Common::field().width + Common::field().goal_boundary_width - Common::field().robot_radius,
                      Common::field().height + Common::field().boundary_width - Common::field().robot_radius));
 
     // const Common::Vec2 robots_mid_point = (m_own_robot[m_attack].state().position +
@@ -195,7 +195,7 @@ void Ai::placeBall()
         {
             m_our_ball_placement_state = OurBallPlacementState::Stuck;
         }
-        else if (m_world_state.ball.position.distanceTo(final_ball_pos) > 5000.0f)
+        else if (m_world_state.ball.position.distanceTo(final_ball_pos) > 4000.0f)
         {
             m_our_ball_placement_state = OurBallPlacementState::LongDistance;
         }
@@ -222,9 +222,9 @@ void Ai::placeBall()
                 m_our_ball_placement_force_stuck = true;
                 break;
             }
-            m_own_robot[m_attack].navigate(attack_pos, VelocityProfile::aroom(),
+            m_own_robot[m_attack].navigate(attack_pos, VelocityProfile::mamooli(),
                                            NavigationFlags::BallSmallObstacle);
-            m_own_robot[m_mid5].navigate(mid5_pos, VelocityProfile::aroom(), NavigationFlags::BallSmallObstacle);
+            m_own_robot[m_mid5].navigate(mid5_pos, VelocityProfile::mamooli(), NavigationFlags::BallSmallObstacle);
 
             if (m_own_robot[m_attack].state().position.distanceTo(attack_pos) < 20.0f &&
                 m_own_robot[m_mid5].state().position.distanceTo(mid5_pos) < 20.0f)

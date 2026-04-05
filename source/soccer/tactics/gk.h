@@ -22,10 +22,10 @@ public:
 private:
     // TODO: make these non-static once we persist tactics
     static inline bool m_intercepting = false;
-    static inline int m_hys = 0;
+    static inline int m_hys_shirje = 0;
 
     // TODO: this should probably be an skill
-    void shirje(Robot& t_robot);
+    void shirje(Robot& t_robot, bool kharaki);
 
     NavigationFlags getNavigationFlags() const;
 };

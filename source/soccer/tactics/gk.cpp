@@ -5,6 +5,7 @@
 #include "../helpers/ball_prediction.h"
 
 #include "../skills/old_attacker.h"
+#include "../skills/kick_ball.h"
 
 namespace Tyr::Soccer
 {
@@ -26,28 +27,29 @@ void GkTactic::execute(Robot &t_robot)
         Common::debug().draw(Common::Circle{t_robot.state().position, 100}, Common::Color::yellow(), false);
     }
 
+    bool ref_shirje_allowed = State::ref().running() || State::ref().theirPenaltyInPLay();
+
     if ((ballIsGoaling()) &&
         (State::world().ball.position.distanceTo(t_robot.state().position) / State::world().ball.velocity.length() <
          3) &&
-        State::ref().running())
+        ref_shirje_allowed)
     {
-        shirje(t_robot);
-        m_hys = 10;
+        shirje(t_robot, true);
+        m_hys_shirje = 10;
     }
-    else if ((m_hys > 0) && State::ref().running())
+    else if ((m_hys_shirje > 0) && ref_shirje_allowed)
     {
-        shirje(t_robot);
-        m_hys--;
+        shirje(t_robot, true);
+        m_hys_shirje--;
     }
-
     else
     {
-        m_hys                             = 0;
+        m_hys_shirje                             = 0;
         const Common::Vec2 predicted_ball = predictBall(Common::config().soccer.def_prediction_time).position;
 
         // our penalty area
         static constexpr float area_extension_size     = 200.0f;
-        static constexpr float area_notch              = 200.0f;
+        static constexpr float area_notch              = 600.0f;
         const float            penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
         const Common::Vec2 start{Field::ownGoal().x, -(penalty_area_half_width + area_extension_size)};
@@ -78,20 +80,17 @@ void GkTactic::execute(Robot &t_robot)
         const RectObstacle obs{{start, w, h}, Physicality::Virtual};
 
         if ((obs.inside(predicted_ball)) && (State::world().ball.velocity.length() < 1500) &&
-            State::ref().running())
+            ref_shirje_allowed)
         {
-            Common::logDebug("GK intercepting");
+            if (ballIsGoaling() && State::world().ball.velocity.length() > 50.0) {
+                shirje(t_robot, false);
+                m_intercepting = true;
+            } else {
+                auto kick_angle = predicted_ball.angleWith(Common::Vec2(State::side() * (Common::field().width + 110), 0));///*State::world().ball.velocity.length() < 50.0 ? (Common::WorldState().ball.position - Field::oppGoal()).normalized().toAngle() : */ (t_robot.state().position - Common::WorldState().ball.position).normalized().toAngle();
+                Common::logDebug("GK intercepting");
 
-            m_intercepting = true;
-
-            OldAttackerSkill{predicted_ball.angleWith(Common::Vec2(State::side() * (Common::field().width + 110), 0)),
-                           0,
-                           20,
-                           0,
-                           0,
-                           false,
-                           true}
-                .execute(t_robot);
+                KickBallSkill{kick_angle, 0, 150, true}.execute(t_robot);
+            }
         }
         else
         {
@@ -134,20 +133,25 @@ void GkTactic::execute(Robot &t_robot)
     }
 }
 
-void GkTactic::shirje(Robot &t_robot)
+void GkTactic::shirje(Robot &t_robot, bool kharaki)
 {
     Common::logDebug("GK Shirje");
+    VelocityProfile profile = VelocityProfile::mamooli();
+    if (kharaki) {
+        profile = VelocityProfile::kharaki();
+    }
 
-    VelocityProfile profile = VelocityProfile::kharaki();
-    profile.acceleration *= 1.5f;
-
-#if 0
+#if 1
     float intercept_t = -1.0f;
     float max_wait_t  = std::numeric_limits<float>::lowest();
+    Common::Circle goalie_circle(Field::ownGoal(), Common::field().penalty_area_depth - 200.0f);
 
-    for (float t = 0.0f; t < 2.0f; t += 0.1f)
+    for (float t = 0.0f; t < 5.0f; t += 0.1f)
     {
         const Common::Vec2 point = predictBall(t).position;
+        if (!goalie_circle.inside(point) || Field::isOut(point)) {
+            continue;
+        }
 
         if (std::fabs(point.x) > Common::field().width)
         {
@@ -157,11 +161,6 @@ void GkTactic::shirje(Robot &t_robot)
         const float robot_reach_t = t_robot.calculateReachTime(point, profile);
         const float wait_t = t - robot_reach_t;
 
-        if (wait_t > 0.0f)
-        {
-            break;
-        }
-
         Common::logTrace("t: {}, wait:{}", t, wait_t);
 
         if (wait_t > max_wait_t)
@@ -169,18 +168,38 @@ void GkTactic::shirje(Robot &t_robot)
             max_wait_t  = wait_t;
             intercept_t = t;
         }
+
+        if (wait_t > 1.5f)
+        {
+            break;
+        }
     }
 
     Common::logDebug("intercept t: {}", intercept_t);
+     Common::Vec2 target = predictBall(intercept_t).position;
 
-    const Common::Vec2 target = predictBall(intercept_t).position;
+    Common::Line ball_line = State::world().ball.line();
+    const Common::Vec2 ball_line_clossest = ball_line.closestPoint(t_robot.state().position);
+    const float dis_to_closest = ball_line_clossest.distanceTo(t_robot.state().position);
+
+    if (intercept_t < 0.0f || max_wait_t < 1.0f) {
+        target = ball_line.intersect(Field::ownGoalLine()).value_or(ball_line_clossest);
+    }
+    else if (dis_to_closest < Common::field().robot_radius * 0.5f)
+    {
+        target = ball_line_clossest;
+    }
 #else
     Common::Line        ball_line  = State::world().ball.line();
-    const Common::Vec2 target = ball_line.closestPoint(t_robot.state().position);
+    Common::Vec2 target = ball_line.closestPoint(t_robot.state().position);
+    if (fabs(State::world().ball.position.x) + Common::field().robot_radius >= fabs(t_robot.state().position.x) ) {
+        target = ball_line.intersect(Field::ownGoalLine()).value_or(target);
+    }
 #endif
 
     t_robot.face(State::world().ball.position);
     //    ans = ((ans - t_robot.state().position) * 2.0f) + t_robot.state().position;
+    profile.acceleration *= 3.f;
     t_robot.navigate(target, profile, getNavigationFlags());
     t_robot.chip(150);
 }
@@ -188,10 +207,12 @@ void GkTactic::shirje(Robot &t_robot)
 NavigationFlags GkTactic::getNavigationFlags() const
 {
     NavigationFlags flags = NavigationFlags::NoOwnPenaltyArea;
-    if (State::ref().running())
+    if (State::ref().running() || State::ref().theirPenaltyInPLay())
         flags |= NavigationFlags::NoExtraMargin;
     if (State::ref().ourBallPlacement())
         flags |= NavigationFlags::BallPlacementLine;
+    if (State::ref().theirPenaltyInPLay())
+        flags |= NavigationFlags::NoBallObstacle;
     return flags;
 }
 } // namespace Tyr::Soccer

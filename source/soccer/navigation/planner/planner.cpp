@@ -9,12 +9,13 @@ Common::Vec2 Planner::nearestFree(Common::Vec2 state, const float t_margin)
     const float acceptable_free_dis = 50.0f;
 
     // clamp the position to be inside the field
-    const float margin = Common::field().boundary_width - Common::field().robot_radius;
-    if (std::fabs(state.x) > Common::field().width + margin)
-        state.x = Common::sign(state.x) * (Common::field().width + margin);
+    const float margin_x = Common::field().goal_boundary_width - Common::field().robot_radius;
+    const float margin_y = Common::field().boundary_width - Common::field().robot_radius;
+    if (std::fabs(state.x) > Common::field().width + margin_x)
+        state.x = Common::sign(state.x) * (Common::field().width + margin_x);
 
-    if (std::fabs(state.y) > Common::field().height + margin)
-        state.y = Common::sign(state.y) * (Common::field().height + margin);
+    if (std::fabs(state.y) > Common::field().height + margin_y)
+        state.y = Common::sign(state.y) * (Common::field().height + margin_y);
 
     if (!m_map->inside(state))
         return state;

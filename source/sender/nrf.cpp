@@ -4,24 +4,23 @@
 
 namespace Tyr::Sender
 {
-
 static Common::Vec2 shoot_coeffs[Common::Config::Common::kMaxRobots] = {
-    {4.45f, 2.59f},  //  0
-    {4.48f, 2.6f},   //  1
-    {3.42f, 3.43f},  //  2
-    {6.22f, -0.43f}, //  3
-    {9.74f, 12.8f},  //  4
-    {4.46f, 2.66f},  //  5
-    {9.74f, 12.8f},  //  6
-    {4.02f, 3.38f},  //  7
-    {1.0f, 0.0f},    //  8*
-    {1.0f, 0.0f},    //  9*
-    {1.0f, 0.0f},    // 10*
-    {1.0f, 0.0f},    // 11*
-    {1.0f, 0.0f},    // 12*
-    {1.0f, 0.0f},    // 13*
-    {1.0f, 0.0f},    // 14*
-    {1.0f, 0.0f},    // 15*
+    {6.666667f, 1.0f},        // 0
+    {5.416667f, 6.791667f},   // 1
+    {3.846154f, 9.153846f},   // 2
+    {6.666667f, 6.0f},        // 3
+    {13.448276f, 17.206897f}, // 4
+    {5.294118f, 7.294118f},   // 5
+    {7.358491f, 26.113208f},  // 6
+    {3.902439f, 7.097561f},   // 7
+    {1.0f, 0.0f},             // 8
+    {1.0f, 0.0f},             // 9
+    {1.0f, 0.0f},             // 10
+    {1.0f, 0.0f},             // 11
+    {1.0f, 0.0f},             // 12
+    {1.0f, 0.0f},             // 13
+    {1.0f, 0.0f},             // 14
+    {1.0f, 0.0f},             // 15
 };
 
 static Common::Vec2 chip_coeffs[Common::Config::Common::kMaxRobots] = {
@@ -94,8 +93,8 @@ void Nrf::queueCommand(const Command &command)
         data[2] = 12; // Command to move with new protocol
 
         // TODO: verify this magic number. motion is in mm/s
-        convert_float_to_2x_buff(data + 3, command.motion.x / 20.f);
-        convert_float_to_2x_buff(data + 5, command.motion.y / 20.f);
+        convert_float_to_2x_buff(data + 3, command.motion.x / 22.f);
+        convert_float_to_2x_buff(data + 5, command.motion.y / 22.f);
         convert_float_to_2x_buff(data + 7, command.target_angle.deg());
 
         convert_float_to_2x_buff(data + 9, command.current_angle.deg());

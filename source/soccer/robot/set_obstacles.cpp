@@ -3,14 +3,14 @@
 namespace Tyr::Soccer
 {
 // This is 500 mm in the rules, but we add some extra to avoid
-static constexpr float ballAreaRadius = 550.0f;
+static constexpr float ballAreaRadius = 600.0f;
 
 // We allow errt points to be 250 mm outside the field,
 // so set this to some higher value
-static constexpr float penaltyAreaExtensionBehindGoal = 300.0f;
+static constexpr float penaltyAreaExtensionBehindGoal = 800.0f;
 
 // This is 200 mm in the rules, but we add some extra to avoid
-static constexpr float bigPenaltyAddition = 220.0f;
+static constexpr float bigPenaltyAddition = 400.0f;
 
 static float calculateRobotRadius(const Common::RobotState &state)
 {
@@ -49,7 +49,7 @@ void Robot::setObstacles(const NavigationFlags t_flags)
 
     const bool oppPenaltyBig = State::ref().freeKick() || State::ref().stop();
 
-    const bool their_half = State::ref().theirKickoff() || !!(t_flags & NavigationFlags::TheirHalf);
+    const bool their_half = State::ref().kickoff();
 
     const bool ball_placement_line = State::ref().theirBallPlacement() || !!(t_flags & NavigationFlags::BallPlacementLine);
 
@@ -86,7 +86,9 @@ void Robot::setObstacles(const NavigationFlags t_flags)
     }
 
     float ball_radius = 0.0f;
-    if (!!(t_flags & NavigationFlags::BallObstacle) || !State::ref().allowedNearBall())
+    if (!!(t_flags & NavigationFlags::NoBallObstacle))
+    {}
+    else if (!!(t_flags & NavigationFlags::BallObstacle) || !State::ref().allowedNearBall())
         ball_radius = ballAreaRadius;
     else if (!!(t_flags & NavigationFlags::BallMediumObstacle))
         ball_radius = 230.0f;
