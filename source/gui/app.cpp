@@ -88,6 +88,7 @@ bool Application::initialize(const int t_width, const int t_height)
     else
     {
         m_sender_hub->registerSender<Sender::Nrf>();
+        m_sender_hub->registerSender<Sender::ZmqRobotSender>();
     }
 
 
