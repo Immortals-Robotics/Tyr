@@ -84,8 +84,8 @@ penalty_area_mark_distance = 400.0
     speed = 500.0
 
     [[soccer.robot_physical_status]]
-    has_chip_kick = true
-    has_direct_kick = true
+    has_chip_kick = false
+    has_direct_kick = false
     has_dribbler = false
     id = 0
     is_3D_printed = false
@@ -114,7 +114,7 @@ penalty_area_mark_distance = 400.0
     [[soccer.robot_physical_status]]
     has_chip_kick = true
     has_direct_kick = true
-    has_dribbler = false
+    has_dribbler = true
     id = 4
     is_3D_printed = false
 
@@ -128,7 +128,7 @@ penalty_area_mark_distance = 400.0
     [[soccer.robot_physical_status]]
     has_chip_kick = true
     has_direct_kick = true
-    has_dribbler = false
+    has_dribbler = true
     id = 6
     is_3D_printed = false
 

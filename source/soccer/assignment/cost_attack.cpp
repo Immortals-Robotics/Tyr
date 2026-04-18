@@ -60,6 +60,8 @@ int Ai::attackRoleCost(const int t_robot_idx, const Assignment &t_assignment)
     float caps_score = 1.0f;
     if (!physical_status.is_3D_printed)
         caps_score *= 0.8f;
+    if (!physical_status.has_dribbler)
+        caps_score *= 0.5f;
     if (!physical_status.has_direct_kick && t_assignment.needs_shoot)
         caps_score *= 0.1f;
     if (!physical_status.has_chip_kick && t_assignment.needs_chip)
