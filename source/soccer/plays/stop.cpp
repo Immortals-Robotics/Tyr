@@ -23,7 +23,7 @@ void Ai::stop()
     DefTactic{1}.execute(m_own_robot[m_def1]);
     DefTactic{2}.execute(m_own_robot[m_def2]);
 
-    bool attack_sent = false;
+    bool attack_sent = !m_is_defending;
     int  zone_idx    = 0;
     for (int mid_idx = 0; mid_idx < m_prioritized_mids.size(); ++mid_idx)
     {

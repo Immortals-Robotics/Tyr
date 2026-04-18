@@ -49,7 +49,7 @@ void GkTactic::execute(Robot &t_robot)
 
         // our penalty area
         static constexpr float area_extension_size     = 200.0f;
-        static constexpr float area_notch              = 600.0f;
+        static constexpr float area_notch              = 1000.0f;
         const float            penalty_area_half_width = Common::field().penalty_area_width / 2.0f;
 
         const Common::Vec2 start{Field::ownGoal().x, -(penalty_area_half_width + area_extension_size)};

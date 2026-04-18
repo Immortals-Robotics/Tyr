@@ -88,7 +88,7 @@ void Ai::normalPlayAtt()
     const bool opp_attacker_in_range = findKickerOpp(-1, 150.0f).has_value();
 
     static int kick_pass_hys = 0;
-    const int max_hys = static_cast<int>(Common::config().vision.vision_frame_rate * 0.5);
+    const int max_hys = static_cast<int>(Common::config().vision.vision_frame_rate * 1.0);
 
     if (m_timer.time().seconds() < 0.5) {
         kick_pass_hys = 0;
@@ -136,7 +136,7 @@ void Ai::normalPlayAtt()
         chip_pow  = 100.f * target_pos.distanceTo(m_world_state.ball.position) /
                    8000.0f;
         chip_pow = std::clamp(chip_pow, 15.0f, 100.f);
-        chip_pow = 40.0f;
+        chip_pow = 20.0f;
         float kick_power = 3000.0f;
 
         if (shootBlocked(m_world_state.ball.position, target_pos, 2000.0, 150.0)) {
