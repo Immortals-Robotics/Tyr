@@ -23,8 +23,8 @@ constexpr int kImmediate = 1;
 
 // Populate the robot IPs you want to target. Empty entries are ignored.
 constexpr std::array<std::string_view, Common::Config::Common::kMaxRobots> kRobotIps = {
-    "", "", "", "", "192.168.188.101", "", "192.168.188.93", "",
-    "192.168.188.130", "", "", "", "", "", "", "",
+    "", "", "", "", "192.168.188.5", "", "192.168.188.2", "",
+    "192.168.188.6", "", "", "", "", "", "", "",
 };
 
 std::string endpointForRobot(const int t_robot_id)
@@ -147,6 +147,11 @@ bool ZmqRobotSender::send(const CommandsWrapper &t_wrapper)
             continue;
         }
 
+        if (command.halted)
+        {
+            continue;
+        }
+
         immortals::MikonaCommand mikona_command;
         mikona_command.set_charge(!command.halted);
         mikona_command.set_discharge(command.halted);
@@ -157,8 +162,8 @@ bool ZmqRobotSender::send(const CommandsWrapper &t_wrapper)
         robot_command.set_vy(command.motion.y * 1.2f / 1000.0f);
         robot_command.set_current_angle(command.current_angle.deg());
         robot_command.set_target_angle(command.target_angle.deg());
-        robot_command.set_chip(getShootPower(command) * 1.5f / 1000.0f);
-        robot_command.set_shoot(0.0f);
+        robot_command.set_chip(getShootPower(command) * 0.7f / 1000.0f);
+        robot_command.set_shoot((command.chip > 10 && getShootPower(command) == 0) ? 5.0f : 0.0f);
         robot_command.set_dribbler_speed(command.dribbler);
         robot_command.set_dribbler_force(command.dribbler > 0.0f ? kDefaultDribblerForce : 0.0f);
 
