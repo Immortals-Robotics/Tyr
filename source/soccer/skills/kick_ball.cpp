@@ -79,6 +79,10 @@ void KickBallSkill::execute(Robot &t_robot)
     robot.shoot(m_kick);
     robot.chip(m_chip);
 
+    if (!m_is_gk && t_robot.state().position.distanceTo(ball.position) < 200.0f)
+    {
+        robot.dribble(3.0f);
+    }
 }
 
 NavigationFlags KickBallSkill::getNavigationFlags(const Robot &t_robot) const

@@ -21,5 +21,7 @@ void WaitForBallSkill::execute(Robot &t_robot)
     t_robot.navigate(receiver_pos, VelocityProfile::mamooli());
 
     t_robot.target.angle = receiver_pos.angleWith(State::world().ball.position);
+
+    t_robot.dribble(3.0f);
 }
 } // namespace Tyr::Soccer
