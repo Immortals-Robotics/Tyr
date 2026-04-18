@@ -56,6 +56,7 @@ endif ()
 # Set data paths
 add_compile_definitions(DATA_DIR="${CMAKE_SOURCE_DIR}/data")
 add_compile_definitions(LOG_DIR="${CMAKE_SOURCE_DIR}/log")
+add_compile_definitions(FMT_CONSTEVAL=)
 
 add_subdirectory(source/common)
 add_subdirectory(source/sender)
