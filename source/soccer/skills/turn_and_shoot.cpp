@@ -29,7 +29,7 @@ void TurnAndShootSkill::execute(Robot &t_robot)
     const Common::Angle to_ball_angle =
         (effective_ball_pos - t_robot.state().position).toAngle();
 
-    const float angle_to_target = (shoot_angle - to_ball_angle).deg();
+    const float angle_to_target = (shoot_angle - t_robot.state().angle).deg();
     const float angle_error     = std::fabs(angle_to_target);
 
     Common::logDebug("turn_and_shoot angle_error: {}", angle_error);
