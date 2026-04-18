@@ -41,10 +41,10 @@ void KickBallSkill::execute(Robot &t_robot)
     // +1 means the robot is nicely behind the ball, 0 means mostly to the side, -1 means in front of it.
     const float ball_target_dot = to_target.dot(to_ball);
     // Exponent < 1 makes the clearance grow a bit faster as alignment gets worse.
-    const float r_scale_factor  = 2.0f * std::pow((1.0f - ball_target_dot) / 2.f, 0.5f) - 1.0f;
+    const float r_scale_factor  = 4.0f * std::pow((1.0f - ball_target_dot) / 2.6f, 0.5f) - 1.0f;
 
     // Wider path when the robot is in front of / beside the ball, tighter path when already behind it.
-    const float r = std::min(m_is_gk ? 70.f + 120.0f * r_scale_factor: 50.0f + 120.0f * r_scale_factor, 500.0f);
+    const float r = std::min(m_is_gk ? 70.f + 120.0f * r_scale_factor: 70.0f + 120.0f * r_scale_factor, 600.0f);
     const float behind_ball_distance = Common::field().robot_radius + r;
 
     const Common::Vec2 behind_ball_pos = ball.position.circleAroundPoint(m_angle, behind_ball_distance);
@@ -62,6 +62,7 @@ void KickBallSkill::execute(Robot &t_robot)
     auto vel_profile        = VelocityProfile::mamooli();
     if (t_robot.state().position.distanceTo(ball.position) < 30.0f) {
         vel_profile = VelocityProfile::kharaki();
+        vel_profile.acceleration *=3;
     }
     t_robot.navigate(final_pos, vel_profile, navigation_flags);
 
